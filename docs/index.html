@@ -44,9 +44,9 @@
       <p class="lede">长期学习路线的公开档案。每个 Day / Week 可点击展开，保留学习正文、文章和视频链接，以及可渲染的 Mermaid 架构图。</p>
     </header>
     <section class="metrics" aria-label="档案统计">
-      <span class="metric"><strong>22</strong> 个 Day / Week 档案</span>
+      <span class="metric"><strong>26</strong> 个 Day / Week 档案</span>
       <span class="metric"><strong>20</strong> 篇原始全文</span>
-      <span class="metric">当前已同步至 Day 17</span>
+      <span class="metric">当前已同步至 Day 21</span>
     </section>
     <section class="guide">
       <h2>GitHub 使用说明</h2>
@@ -2136,6 +2136,131 @@ DTC与日志Tag / 测试用例编号 / 待确认参数</code></pre>
 <p>总分：100/100；通信、异常、诊断、测试均非 0，满足交付门禁。</p></article>
   </div>
 </details>
+<details class="lesson">
+  <summary>
+    <span class="lesson-title">Day 19 - 虚拟化通信：VirtIO、虚拟中断、Guest 生命周期</span>
+    <span class="lesson-meta">已同步</span>
+  </summary>
+  <div class="lesson-body">
+    <p class="archive-note">2026-08-11 正式任务归档。作业待验收。</p>
+    <article>
+      <h2>Day 19 - 虚拟化通信</h2>
+      <p>本课承接核间通信，将“共享队列 + 通知 + 状态机 + 复位恢复”放入 Hypervisor 隔离的多操作系统环境。重点是前端、后端和 Guest 生命周期之间的责任边界，而不是只记 VirtIO 名词。</p>
+      <h3>已归档范围</h3>
+      <ul>
+        <li>VirtIO 前端/后端、virtqueue 与共享内存缓冲区。</li>
+        <li>虚拟中断、请求受理与最终完成证据的区别。</li>
+        <li>Guest 创建、启动、运行、暂停、恢复、崩溃与重建后的状态重同步。</li>
+        <li>超时、重试、旧消息隔离、诊断日志和故障注入测试。</li>
+      </ul>
+      <p>产出物：虚拟化通信接口契约与 Guest 生命周期状态表。未经项目确认的超时、重试上限、队列深度与恢复窗口均为“待确认参数”。</p>
+    </article>
+  </div>
+</details>
+<details class="lesson">
+  <summary>
+    <span class="lesson-title">Day 20 - 时间同步 I：RTC、GNSS、T-Box、网络时间、AUTOSAR Time Base</span>
+    <span class="lesson-meta">已同步</span>
+  </summary>
+  <div class="lesson-body">
+    <p class="archive-note">2026-08-11 正式任务归档。作业待验收。</p>
+    <article>
+      <h2>Day 20 - 时间同步 I</h2>
+      <p>本课讨论车内如何建立可信时间：RTC 提供基础保持时间，GNSS、T-Box 与网络时间提供外部参考，时间管理组件将来源、质量与有效性统一为 AUTOSAR Time Base 可使用的时间语义。</p>
+      <h3>已归档范围</h3>
+      <ul>
+        <li>RTC、GNSS、T-Box、NTP/gPTP 与 AUTOSAR Time Base 的角色和边界。</li>
+        <li>时间源优先级、时间质量、HOLDOVER、源切换和复位后的重新同步。</li>
+        <li>绝对时间用于跨域关联；单调时间用于本机排序、耗时与超时分析。</li>
+        <li>跨域日志、DTC、抓包字段和时间异常注入测试。</li>
+      </ul>
+      <p>产出物：座舱时间源优先级与同步契约表。时间偏差、收敛时限、保持时长和日志精度均为“待确认参数”。</p>
+    </article>
+  </div>
+</details>
+<details class="lesson">
+  <summary>
+    <span class="lesson-title">Week 6 - 周五反思总结</span>
+    <span class="lesson-meta">当日仅出题</span>
+  </summary>
+  <div class="lesson-body">
+    <p class="archive-note">2026-08-14，星期五，Asia/Shanghai。覆盖 Day 19 虚拟化通信与 Day 20 时间同步 I；当天不新增 Day 21 专题，也不公开参考答案。</p>
+    <article>
+      <h2>本周核心主线</h2>
+      <p>座舱多操作系统与多域协同，不仅要能通信，还要在 Guest 重启、时钟失效和网络波动时保持可解释、可恢复、可追溯。请把 VirtIO 链路中的控制、数据和状态，连接到时间源、时间质量和跨域证据链中。</p>
+      <h3>本周总架构图</h3>
+      <pre class="mermaid">flowchart LR
+    HMI[HMI / 应用] --> GS[Guest OS 服务]
+    GS --> VF[VirtIO Frontend]
+    VF --> VQ[Virtqueue / 共享内存]
+    VQ --> VB[VirtIO Backend]
+    VB --> DEV[物理设备 / 驱动]
+    HV[Hypervisor] --> GS
+    VB --> VI[虚拟中断 / 完成通知]
+    VI --> GS
+    RTC[RTC] --> TM[时间管理 / Time Base]
+    GNSS[GNSS 时间源] --> TM
+    TBOX[T-Box / 网络时间] --> TM
+    TM --> AUTOSAR[AUTOSAR Time Base]
+    AUTOSAR --> LOG[日志 / 诊断 / 跨域事件]
+    AUTOSAR --> GS</pre>
+      <h3>类真实车载场景</h3>
+      <ol>
+        <li>倒车过程中中控 Guest 重建：说明哪些队列、设备与 HMI 状态必须重新同步，哪些历史请求必须作废，以及各层完成证据是什么。</li>
+        <li>地下停车场出库后时间跳变：说明时间源切换如何影响日志、定时任务、诊断与跨域关联，并列出最小证据集。</li>
+      </ol>
+      <h3>综合题（独立作答）</h3>
+      <ol>
+        <li>画出 VirtIO 请求从发起到最终完成的时序图，区分 ACK 与 Completed。</li>
+        <li>为 Guest 崩溃并重建设计前端、后端、共享队列与上层业务的恢复状态表。</li>
+        <li>说明 Guest 已启动、VirtIO 已连接与 HMI 可用各自需要的完成证据。</li>
+        <li>画出 RTC、GNSS、T-Box/网络时间、时间管理与 AUTOSAR Time Base 的关系，并标注时间有效性判断位置。</li>
+        <li>针对跨域日志顺序异常，写出假设树、证据清单和验证步骤。</li>
+        <li>结合任一场景写出一条可验证的架构约束；所有阈值均标为“待确认参数”。</li>
+      </ol>
+      <h3>反思任务与提交</h3>
+      <p>独立完成 300—500 字反思：写出最易混淆的两个概念、如何区分控制流/数据流/状态流/时间关系、最关键的一条完成证据、一个未解决工程问题及补强计划。请将综合题、架构图和反思文章提交至当前 Week 6 线程；提交后再逐题批改并给出“通过、需补答、未通过”结论。</p>
+      <h3>学习状态台账</h3>
+      <ul>
+        <li>当前：Week 6 / Day 20 / 阶段二“通信、中间件与时间体系”。</li>
+        <li>本周已完成正式学习主题：Day 19、Day 20；作业均待验收。</li>
+        <li>下一专题：Day 21“时间同步 II”（仅预告，尚未进入正式教学）。</li>
+        <li>薄弱点、错题与已掌握能力：待独立作答和批改后确认。</li>
+        <li>待进入最终方案：多 OS/Hypervisor 通信与资源隔离、时间同步方案、跨域日志诊断与证据链。</li>
+        <li>待确认参数：时间源优先级、漂移范围、同步收敛时限、Guest 重建时限、队列深度、重试上限与日志精度。</li>
+      </ul>
+    </article>
+  </div>
+</details>
+<details class="lesson">
+  <summary>
+    <span class="lesson-title">Day 21 - 时间同步 II：Camera、Audio、传感器、HMI 和日志时间戳对齐</span>
+    <span class="lesson-meta">已同步</span>
+  </summary>
+  <div class="lesson-body">
+    <p class="archive-note">2026-08-24 正式任务归档。作业待验收。</p>
+    <article>
+      <h2>Day 21 - 时间同步 II</h2>
+      <p>本课承接 Day 20 的可信时间源与 Time Base，进一步解决 Camera、Audio、传感器、HMI、日志、Trace 和网络抓包如何落到同一条可解释时间线。重点不是让所有模块打印相同格式，而是明确每个时间戳的采样点、时钟域、精度、有效性和跨域换算关系。</p>
+      <h3>已归档范围</h3>
+      <ul>
+        <li>Camera 帧的曝光开始/结束、采集完成与送显时间，Audio 帧位置、采集/播放时间，以及传感器采样时间的语义边界。</li>
+        <li>HMI 请求、ACK、Completed 和首帧可见的时间点区分，避免把“消息已受理”误判为“用户已经看到或听到”。</li>
+        <li>Android、Yocto/Linux、MCU 与外部 ECU 的单调时间、RTC/绝对时间、bootId/epoch、clockId 和偏差换算。</li>
+        <li>日志、DTC、抓包、寄存器/计数器、Reset Reason 与 Trace 的统一字段和故障窗口拼接。</li>
+        <li>时钟漂移、跳变、源切换、模块复位和时间服务重启后的失效标记、重新同步与旧数据隔离。</li>
+      </ul>
+      <p>产出物：跨域时间同步与日志时间线对齐模板。Camera/Audio/传感器采样点、允许偏差、漂移上限、同步收敛时限、日志精度与故障窗口长度均为“待确认参数”。</p>
+      <h3>学习状态台账</h3>
+      <ul>
+        <li>当前：Week 7 / Day 21 / 阶段二“通信、中间件与时间体系”。</li>
+        <li>已完成专题：Day 20 可信时间源与 Time Base；Day 21 跨媒体、传感器、HMI 与证据链时间对齐。</li>
+        <li>下一专题：Day 22“Android Activity、Window、Task 与 Focus”（仅预告）。</li>
+        <li>薄弱点与错题：待 Day 21 作业提交和批改后确认。</li>
+      </ul>
+    </article>
+  </div>
+</details>
     </section>
     <footer>来源：智能座舱架构师成长计划 V2.0 已创建学习任务。未恢复原始独立正文的条目会明确标注，不以摘要冒充全文。</footer>
   </main>
@@ -2145,3 +2270,4 @@ DTC与日志Tag / 测试用例编号 / 待确认参数</code></pre>
   </script>
 </body>
 </html>
+
