@@ -1,0 +1,13 @@
+flowchart TD
+  A["本地与在线视频异常"] --> B{"触发与源状态有效?"}
+  B -- 否 --> B1["网络/文件读取停滞"]
+  B -- 是 --> C{"数据/Buffer/音频流推进?"}
+  C -- 否 --> C1["demux/MediaCodec 错误"]
+  C -- 是 --> D{"策略、合成或路由正确?"}
+  D -- 否 --> D1["输出 Surface 失效"]
+  D -- 是 --> E{"物理输出与反馈闭环?"}
+  E -- 否 --> E1["AudioTrack underrun 或停止不完整"]
+  B1 --> R["新 Generation/Session 恢复"]
+  C1 --> R
+  D1 --> R
+  E1 --> R

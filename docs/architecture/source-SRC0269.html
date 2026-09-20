@@ -1,0 +1,674 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Yocto_SPI_User_Manual_V1.1.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Yocto_SPI_User_Manual_V1.1.pdf</h1><p>SRC0269 · 原来源 ID S206 · PDF物理页 · 16 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MT8676软件资料/User Manual/Yocto/Chinese Version/MT8676_Yocto_SPI_User_Manual_V1.1.pdf</p><p>SHA-256：<code>2397734a51c2dd97e166bee5d534cd6d7cb4c2a62aee976959deb6b7733187a1</code></p><p>原文件大小：831,286 字节</p></details><div class="actions"><a class="button" href="materials/SRC0269.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Yocto_SPI_User_Manual_V1.1.pdf 原 PDF" src="materials/SRC0269.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0269.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024-2025 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version:  1.1 
+Release date:  2025-03-24
+MT8676 Yocto SPI 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0269.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024-2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8676 Yocto SPI 
+User Manual 
+Confidential B 
+版本记录 
+版本 日期 作者 描述 
+1.0 2024-08-12 薛佳 正式版 
+1.1 2025-03-24 甘文超 增加章节 1.3.2 节点配置 
+ 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0269.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024-2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8676 Yocto SPI 
+User Manual 
+Confidential B 
+目录 
+版本记录 ··········································································································································································· 2 
+目录 ··················································································································································································· 3 
+图片目录 ··········································································································································································· 4 
+表格目录 ··········································································································································································· 4 
+1 SPI ············································································································································································· 5 
+1.1 概述·········································································································································································· 5 
+ 简单介绍 ······················································································································································ 5 
+ 名词解释 ······················································································································································ 5 
+1.2 架构/流程概述 ························································································································································ 6 
+ SPI 介绍 ························································································································································ 6 
+ MT8676 SPI 特征 ·········································································································································· 6 
+ SPI 传输格式 ················································································································································· 8 
+ 接口说明 ······················································································································································ 8 
+ 编程指南 ······················································································································································ 9 
+1.3 配置/客制化指南 ·················································································································································· 10 
+ 设备树 ························································································································································ 10 
+ 节点配置 ···················································································································································· 11 
+ PAD_SEL ······················································································································································ 11 
+ 频率 ···························································································································································· 12 
+ SPI 模式 ······················································································································································ 12 
+ FIFO 和 DMA 模式 ······································································································································ 12 
+ 支持多个设备 ············································································································································ 13 
+ 测试和调试 ················································································································································ 13 
+1.4 常见问题/故障排查 ·············································································································································· 14 
+ SPI 问题调试方法 ······································································································································· 14 
+ dts 配置 ······················································································································································ 14 
+ 确认 GPIO 模式 ·········································································································································· 14 
+ 测量波形 ···················································································································································· 15 
+ 如何打印 SPI 寄存器信息 ·························································································································· 15 
+ 寻求 MTK 帮助 ··········································································································································· 15 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0269.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024-2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8676 Yocto SPI 
+User Manual 
+Confidential B 
+附件一 附加条款 ····························································································································································· 16 
+ 
+ 
+图片目录 
+图 1-1. SPI Master 和 SPI Slave 之间的引脚连接 ····················································································································· 6 
+图 1-2. 四种通信模式波形 ························································································································································ 7 
+图 1-3. 主设备与多设备引脚连接 ············································································································································ 7 
+图 1-4. SPI 传输格式 ·································································································································································· 8 
+ 
+表格目录 
+表 1-1. 名词解释········································································································································································ 5 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0269.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024-2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8676 Yocto SPI 
+User Manual 
+Confidential B 
+1 SPI 
+1.1 概述 
+ 简单介绍 
+本章节介绍 MT8676 SPI 控制器的硬件、软件及其功能。  
+ 名词解释 
+表 1-1. 名词解释 
+缩写 解释 
+CPHA Clock Phase 时钟相位 
+CPOL Clock Polarity 时钟极性 
+CS Chip Select 芯片选择引脚 
+DMA Direct Memory Access 直接内存访问 
+FIFO First In First Out 先进先出 
+MISO Master In Slave Out, SPI Master 输入数据和 SPI Slave 输出数据 
+MOSI Master Out Slave In, SPI Master 输出数据和 SPI Slave 输入数据 
+PIO Programmed Input/Output Model 编程输入/输出模型 
+SCLK SPI Clock, SPI Master (SPI Controller) 与 SPI Slave 数据传输频率 
+SPI Serial Peripheral Interface 串行外设接口 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0269.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024-2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Yocto SPI 
+User Manual 
+Confidential B 
+1.2 架构/流程概述 
+ SPI 介绍 
+SPI 接口是一种串行、四引脚传输协议。图 1-1 是 SPI MasterError! Reference source not found.与 SPI Slave 之间的连
+接示例。SPI 控制器接口是一个主机，负责与从机之间的数据传输。通常 SPI 会接的设备有：闪存、触控板等。 
+ 
+ MT8676 SPI 特征 
+• 提供 8 个 SPI 端口 
+• 支持 DMA 和 FIFO 模式两种传输模式  
+• FIFO 模式在一次传输中最多支持 32 个字节 
+• 如果传输长度小于 1024 字节，则 DMA 模式最多支持 1024 字节 
+• DMA 模式支持 1024 字节的倍数（长度 = 循环次数 * 1024，1 ≤循环次数≤ 256） 
+• 最大传输 频率为 52 MHz 
+• 有四种通信模式可用（模式 0、1、2、3），参见图 1-2 
+• 这基本上定义了 MOSI 线路切换的 SCLK 边沿、主机对 MISO 线路进行采样的 SCLK 边沿和 SCLK 信号稳定电平（即
+时钟电平，当时钟未激活时，高电平或低电平）。每种模式都由一对称为  “时钟极性”（CPOL）和“时钟相
+位”（CPHA）的参数定义 
+SPI 
+Master 
+ 
+CS 
+CLK 
+MOSI 
+MISO 
+CS 
+CLK 
+MOSI 
+MISO 
+SPI 
+Slave 
+ 
+ 图 1-1. SPI Master 和 SPI Slave 之间的引脚连接 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0269.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024-2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8676 Yocto SPI 
+User Manual 
+Confidential B 
+ 
+图 1-2. 四种通信模式波形 
+ 
+• SPI 控制器只有一个 CS 引脚，也就是说，它只能支持单从。但是，您可以将 GPIO 用作 CS 来支持多个设备。如
+图 1-3 所示。 
+ 
+CS2（GPIOy） 
+MOSI 
+CLK 
+SPI Slave 1 
+SPI Master 
+GPIO 
+SPI Slave 2 
+SPI slave 3 
+MISO 
+CS1（GPIOx） 
+CS3（GPIOz） 
+ 
+图 1-3. 主设备与多设备引脚连接 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0269.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024-2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 Yocto SPI 
+User Manual 
+Confidential B 
+ SPI 传输格式 
+在 DMA 模式下，要传输的数据应提前在系统中准备好。在 PIO 模式下，系统应首先推送传输到 SPI TX FIFO 的数
+据。收到 START 命令后，SPI 将连续向 Slave 发送数据，同时从 Slave 接收数据。 
+ 
+ 
+图 1-4. SPI 传输格式 
+ 接口说明 
+1.2.4.1 spi_sync 
+原型 参数 返回值 
+int spi_sync（struct 
+spi_device *spi, struct 
+spi_message *message） 
+SPI：结构体 spi_device 的指针 
+成功返回 0，否则返回错误码 
+Message ：结构体 spi_message 的指针 
+ 
+1.2.4.2 spi_async 
+原型 参数 返回值 
+int spi_async（struct 
+spi_device *spi, struct 
+spi_message *message） 
+SPI：结构体 spi_device 的指针 
+成功返回 0，否则返回错误码 
+Message：结构体 spi_message 的指针 
+ 
+1.2.4.3 spi_write_then_read 
+此例程的参数始终使用小型缓冲区进行复制，不应将其用于超过 32 个字节。性能敏感型或批量传输代码应改为使
+用带有 dma 安全缓冲区的 spi_{async，sync}（） 调用。 
+原型 参数 返回值 
+int spi_write_then_read
+（struct spi_device *spi，
+const void *txbuf, unsigned 
+SPI：结构体 spi_device 的指针 
+成功返回 0，否则返回错误码 txbuf：要写入的数据 
+n_tx：txbuf 的大小（以字节为单位） 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0269.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024-2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8676 Yocto SPI 
+User Manual 
+Confidential B 
+原型 参数 返回值 
+n_tx, unsigned n_tx， void 
+*rxbuf， unsigned n_rx ） 
+rxbuf：数据将被读到的缓冲区 
+n_rx：rxbuf 的大小（以字节为单位） 
+ 
+ 编程指南 
+1.2.5.1 以 spi_sync 传输数据 
+数据在 SPI 控制器和 SPI 从设备之间交换，因此发送数据的步骤与接收数据的步骤相同。  
+例如，发送和接收数据： 
+struct spi_message msg; 
+struct spi_transfer xfer; 
+ 
+spi_message_init（&amp;msg）; 
+memset（&amp;xfer， 0， sizeof（xfer））; 
+ 
+xfer.tx_buf = local_tx_buf; 
+xfer.rx_buf = local_rx_buf; 
+xfer.len = data_length; 
+spi_message_add_tail（&amp;xfer， &amp;msg）; 
+ 
+ret = spi_sync（spi， &amp;msg）; 
+if（ret） { 
+ ......; 
+} 
+ 
+1.2.5.2 以 spi_async 传输数据 
+函数spi_sync 是同步的。如果客户想使用异步函数，请改用 spi_async。请注意，回调函数应注册到 
+spi_message.complete。 
+源代码路径：kernel-4.14/drivers/spi/spi.c. 
+spi_message.complete callback function: 
+ 
+static void xxxxxx_complete(void *args) 
+{ 
+ //transfer was success……; 
+} 
+ 
+Sending and receiving data in asynchronous: 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0269.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024-2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8676 Yocto SPI 
+User Manual 
+Confidential B 
+ 
+struct spi_message msg; 
+struct spi_transfer xfer; 
+ 
+spi_message_init(&amp;msg); 
+memset(&amp;xfer, 0, sizeof(xfer)); 
+ 
+xfer.tx_buf = local_tx_buf; 
+xfer.rx_buf = local_rx_buf; 
+xfer.len = data_length; 
+spi_message_add_tail(&amp;xfer, &amp;msg); 
+ 
+msg.complete = xxxxxx_complete; 
+msg.context = args; 
+ 
+ret = spi_async(spi, &amp;msg); 
+if(ret) { 
+ ……; 
+} 
+ 
+1.3 配置/客制化指南 
+ 设备树 
+源代码路径：kernel-4.14/arch/arm64/boot/dts/mediatek/ 
+• 添加 pinctrl 以设置 SPI pinmux 
+&amp;pio { 
+ spi_pins： spi@0 { 
+  pins_spi { 
+   pinmux = &lt;PINMUX_GPIOxxx__FUNC_SPIM1_CSB&gt;， 
+     &lt; PINMUX_GPIOxxx__FUNC_SPIM1_CLK &gt;， 
+     &lt; PINMUX_GPIOxxx__FUNC_SPIM1_MO &gt;， 
+     &lt; PINMUX_GPIOxxx__FUNC_SPIM1_MI &gt;; 
+   bias-disable; 
+  }; 
+ }; 
+}; 
+ 
+ 
+• 在 SPI 总线上添加从设备 
+&amp;spi { 
+ pinctrl-names = &quot;default&quot;; 
+ pinctrl-0 = &lt;&amp;spi_pins&gt;; 
+ status = &quot;okay&quot;; 
+ spidev0: spi@0 { 
+  compatible = &quot;mediatek,spi-mt65xx-test&quot;; 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0269.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024-2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8676 Yocto SPI 
+User Manual 
+Confidential B 
+  reg = &lt;0&gt;; 
+  spi-max-frequency = &lt;1000000&gt;; 
+                }; 
+      }; 
+  
+ 节点配置 
+设备树中 SPI 节点默认是 “disabled” 状态: status = &quot;disabled&quot;： 
+spi: spi@xxxxxxxx { 
+   compatible = &quot;mediatek,mtxxxx-spi&quot;; 
+   mediatek,pad-select = &lt;0&gt;; 
+   ...... 
+   ...... 
+   status = &quot;disabled&quot;;//默认关闭 
+  }; 
+ 
+使用时，在对应 project dts 中进行配置: status = &quot;okay&quot;： 
+&amp;spi { 
+ pinctrl-names = &quot;default&quot;; 
+ pinctrl-0 = &lt;&amp;spi_pins&gt;; 
+ mediatek,pad-select = &lt;0&gt;;  
+ status = &quot;okay&quot;;//手动配置打开 
+ spidev0: spi@0 { 
+  compatible = &quot;mediatek,spi-mt65xx-test&quot;; 
+  reg = &lt;0&gt;; 
+  spi-max-frequency = &lt;1000000&gt;; 
+                 }; 
+     }; 
+ 
+ PAD_SEL 
+在某些 IC 上，一组 SPI 会有不同的 GPIO 可以选择，根据 GPIO 表格信息确定 SPI 使用哪组 GPIO。比如在 MT8675
+上 SPI4 有SPI4_A/SPI4_B/SPI4_C。 
+此时需要在 dts 中添加mediatek,pad-select = &lt;x&gt;; 
+&amp;spi { 
+ pinctrl-names = &quot;default&quot;; 
+ pinctrl-0 = &lt;&amp;spi_pins&gt;; 
+ mediatek,pad-select = &lt;0&gt;; //x = 0 1 2 分别对应A B C。 
+ status = &quot;okay&quot;; 
+ spidev0: spi@0 { 
+  compatible = &quot;mediatek,spi-mt65xx-test&quot;; 
+  reg = &lt;0&gt;; 
+  spi-max-frequency = &lt;1000000&gt;; 
+                 }; 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0269.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024-2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8676 Yocto SPI 
+User Manual 
+Confidential B 
+     };  
+ 
+ 频率 
+SPI 控制器支持偶数倍分频，支持的最大频率 SPI 控制器为 52 MHz，SPI_SCK ≤ 52MHz。 
+您可以通过两种方式设置 SPI_CLK： 
+1. 在设备树中，配置属性 spi-max-frequency ，例如，spi-max-frequency = &lt;1000000&gt;; 设置默认 SPI_CLK 
+= 1MHz。  
+2. 在设备驱动中，配置结构 spi_transfer 的字段speed_hz，例如 xfer-&gt;speed_hz = 1000000; 设置 SPI_CLK 
+= 1MHz，它将在此次传输生效。 
+ SPI 模式 
+您可以通过两种方式设置 SPI 模式： 
+1. 在设备树中设置 SPI 模式 
+&amp;spi { 
+pinctrl-names = &quot;default&quot;; 
+pinctrl-0 = &lt;&amp;spi_pins&gt;; 
+status = &quot;okay&quot;; 
+spidev0: spi@0 { 
+ compatible = &quot;mediatek,spi-mt65xx-test&quot;; 
+ reg = &lt;0&gt;; 
+ spi-cpol = &lt;0&gt;; 
+ spi-cpha = &lt;0&gt;; 
+ spi-max-frequency = &lt;1000000&gt;; 
+        }; 
+      }; 
+ 
+2. 在设备驱动程序中设置 SPI 模式 
+static int xxxxxx_probe(struct spi_device *spi) 
+{ 
+ ……; 
+ spi-&gt;mode = SPI_MODE_0; // SPI_MODE_0, SPI_MODE_1, SPI_MODE_2, SPI_MODE_3 
+ ……; 
+} 
+ 
+ FIFO 和 DMA 模式 
+SPI 控制器支持 DMA 模式和 FIFO 模式传输数据。控制器通过传输数据长度自动选择。FIFO 模式的长度小于或等于
+32 字节，DMA 模式的长度 大于 32 字节。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0269.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024-2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8676 Yocto SPI 
+User Manual 
+Confidential B 
+ 支持多个设备 
+如果要在 SPI 总线上添加多个设备，可以使用 GPIO 作为支持 SPI_CS。例如，在 SPI 总线 0 上添加两个 SPI deivce，
+使用 GPIO136 和 GPIO30 作为 SPI_CS1 和 SPI_CS2，如下所示（GPIO 编号仅作示例使用，请以实际为准）： 
+&amp;pio { 
+ spi_pins: spi@0 { 
+pins_spi { 
+   pinmux = //&lt;PINMUX_GPIO136__FUNC_SPIM1_CSB&gt;, //SPI native cs 
+     &lt; PINMUX_GPIO137__FUNC_SPIM1_CLK &gt;, 
+     &lt; PINMUX_GPIO138__FUNC_SPIM1_MO &gt;, 
+     &lt; PINMUX_GPIO139__FUNC_SPIM1_MI &gt;;  
+   bias-disable; 
+  }; 
+pins_spi_cs { 
+   pinmux = &lt; PINMUX_GPIO136__FUNC_SPIM1_CSB &gt;, //SPI_CS1 
+    &lt; PINMUX_GPIO30__FUNC_GPIO30 &gt;, //SPI_CS2 
+   output-high; 
+  }; 
+ 
+ }; 
+}; 
+ 
+&amp;spi { 
+pinctrl-names = &quot;default&quot;; 
+pinctrl-0 = &lt;&amp;spi_pins&gt;; 
+cs-gpios = &lt;&amp;pio 136 0&gt;,&lt;&amp;pio 30 0&gt;; 
+status = &quot;okay&quot;; 
+spidev0: spi@0 { 
+                            compatible = &quot;xxxxxx&quot;; 
+                            reg = &lt;0&gt;; 
+               spi-max-frequency = &lt;1000000&gt;; 
+ }; 
+spidev1: spi@1 { 
+                            compatible = &quot;xxxxxx&quot;; 
+                            reg = &lt;1&gt;; 
+               spi-max-frequency = &lt;1000000&gt;; 
+ }; 
+}; 
+ 
+ 测试和调试 
+您可以按照上面介绍的步骤配置 SPI 后验证 数据传输功能是否正常，例如验证 SPI 总线 0： 
+将 SPI_MOSI 连接到硬件平台上的 SPI_MISO，将spi-mt65xx-dev.c 作设备驱动。 
+ 
+输入下列测试命令： 
+echo -w len=32 &gt; /sys/ bus/spi/devices/spixxx/spi 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0269.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024-2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+MT8676 Yocto SPI 
+User Manual 
+Confidential B 
+echo -w len=1024 &gt; /sys/ bus/spi/devices/spixxx/spi 
+ 
+spixxx 代表不同组的 SPI，以实际显示为准。 
+ 
+1.4 常见问题/故障排查 
+ SPI 问题调试方法 
+大多数遇到的 SPI 问题都可先尝试通过如下方式调试： 
+• 检查 dts 配置、GPIO 模式、pad-select 属性是否正确 
+• 检查 SPI 寄存器信息是否正确 
+• 测量波形是否符合预期，比如 TX 数据是否正确打出、电压值是否正常 
+• 若收数据发生异常且比较有规律，比如移位，可以尝试降低 速度或调整 tick_dly 的值 
+• 设备驱动代码写法是否标准，比如 TX、RX 缓冲区是否分配，TX、RX 数据长度是否一样 
+ 
+ dts 配置 
+请按照前文的提供的信息，检查 dts 配置是否正确 
+ 
+ 确认 GPIO 模式 
+内核里查看引脚的状态 
+输入以下命令: 
+# cd /sys 
+# find –name mt_gpio 
+# cat mt_gpio // 
+ 
+要输入绝对路径 
+e.g., 
+# cat /sys/devices/platform/soc/1000b000.pinctrl/mt_gpio 
+PIN: [MODE] [DIR] [DOUT] [DIN] [PULL_EN] [PULL_SEL] [IES] [SMT] [DRIVE] ( [R1] [R0] ) 
+0: 0 0 0 0 1 0 1 0 0 
+1: 0 0 0 0 1 0 1 0 0 
+2: 0 1 1 1 1 0 1 0 0 
+3: 6 0 0 0 1 0 1 0 0 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0269.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024-2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+MT8676 Yocto SPI 
+User Manual 
+Confidential B 
+ 测量波形 
+使用示波器测量 SPI 波形是否符合预期。 
+ 
+ 如何打印 SPI 寄存器信息 
+在driver/spi/spi-mt65xx.c 中添加如下内容 
+#define LOG_CLOSE   0 
+#define LOG_OPEN    1 
+u8 spi_log_status = LOG_OPEN; 
+ 
+#define spi_debug(fmt, args...) do { \ 
+ if (spi_log_status == LOG_OPEN) {\ 
+  pr_info(&quot;[spi]%s() &quot; fmt, __func__, ##args);\ 
+ } \ 
+} while (0) 
+ 
+ 
+static void spi_dump_reg(struct mtk_spi *mdata) 
+{ 
+ spi_debug(&quot;||**************%s**************||\n&quot;, __func__); 
+ spi_debug(&quot;cfg0:0x%.8x\n&quot;, readl(mdata-&gt;base + SPI_CFG0_REG)); 
+ spi_debug(&quot;cfg1:0x%.8x\n&quot;, readl(mdata-&gt;base + SPI_CFG1_REG)); 
+ spi_debug(&quot;cfg2:0x%.8x\n&quot;, readl(mdata-&gt;base + SPI_CFG2_REG)); 
+ spi_debug(&quot;cmd :0x%.8x\n&quot;, readl(mdata-&gt;base + SPI_CMD_REG)); 
+ spi_debug(&quot;tx_s:0x%.8x\n&quot;, readl(mdata-&gt;base + SPI_TX_SRC_REG)); 
+ spi_debug(&quot;rx_d:0x%.8x\n&quot;, readl(mdata-&gt;base + SPI_RX_DST_REG)); 
+ spi_debug(&quot;status1:0x%.8x\n&quot;, readl(mdata-&gt;base + SPI_STATUS1_REG)); 
+ spi_debug(&quot;pad_sel:0x%.8x\n&quot;, readl(mdata-&gt;base + SPI_PAD_SEL_REG)); 
+ spi_debug(&quot;||**************%s end**************||\n&quot;, __func__); 
+} 
+ 
+分别在mtk_spi_fifo_transfer()and mtk_spi_dma_transfer()两个函数中调用
+mtk_spi_enable_transfer() 之前调用spi_dump_reg()。 
+ 
+ 寻求 MTK 帮助 
+若经过前文的排查仍无法解决您的问题，向 MTK 寻求帮助时顺便提供前文提到的包含 SPI 寄存器信息的相关日
+志、波形图、dts、cat mt_gpio 等信息。 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0269.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024-2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 16 
+MT8676 Yocto SPI 
+User Manual 
+Confidential B 
+附件一 附加条款 
+您(或您所代表的公司或其他法律主体，以下合称「您」)是否得取得、下载与使用本文件及其相关信息皆应以您接受本附加条款为先决要件。
+您对于本文件之使用、取得或下载即表示您已接受本附加条款并同意受本附加条款之拘束。若您不同意受本附加条款之拘束，您将不得使用、
+取得或下载本文件并应立即删除或毁弃所有本文件之副本。 
+ 
+本文件含有联发科技股份有限公司及其关联公司（以下合称「联发科技」）或其授权人之机密信息及专有信息，仅供您为本文件所描述之联发
+科技芯片组作内部使用而不得用于其他任何目的（包括但不限于确认或提供支持任何对联发科技、其供货商及/或其直接或间接客户所提潜在
+专利侵权主张的证据）。禁止未经授权使用或揭露本文件及其中所含信息。您同意赔偿联发科技因您未经授权使用或揭露本文件及其中所含信
+息之一部或全部导致联发科技所受之任何损失或损害。 
+ 
+联发科技及其授权人保有本文件的所有权及组成所有权之各项权利且未针对任何知识产权授权（无论明示或默示、透过禁反言原则或其他方
+式）。联发科技得随时变更本文件内容而无须另行通知。联发科技无须承担与使用或信赖本文件相关或因使用或信赖本文件致生之任何责任，
+包括但不限于间接损害或附带损害赔偿责任。 
+ 
+本文件及联发科技所提供关于本文件之任何其他材料、信息或技术支持，均以现况交付为准，联发科技不负任何明示、默示、法定或其他形式
+之担保责任，特别是适销性、不侵权、针对特定用途之适用性、完整性或正确性之担保责任或任何由贸易惯例或交易、履行过程所生之担保责
+任。对于联发科技为符合您所提规格或遵循特定标准或标准组织的要求所作之交付物，联发科技亦不应承担任何责任。 
+ 
+于未对前述条款造成限制之情形下，联发科技不对其产品任何特定用途之适用性承担任何保证或担保责任，亦不承担任何因产品、电路或软件
+之应用或使用致生之赔偿责任。您同意您应单独承担关于整合您的产品与联发科技产品所涉及之设计、验证与测试之所有责任，并应确保前述
+整合产品符合相关标准及任何安全性要求或其他要件。 
+ 
+本附加条款及所有与本附加条款或本文件相关之行为应以台湾法律管辖、解释与阐明，不适用冲突法原则。 
+ 
+ 
+ 
+ 
+  
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

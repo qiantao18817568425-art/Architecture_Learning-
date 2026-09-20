@@ -1,0 +1,19 @@
+flowchart TD
+  A[UI state changed] --> B{traversal/draw produced?}
+  B -- no --> B1[UI thread blocked or invalidation lost]
+  B -- yes --> C{Buffer queued with signaled fence?}
+  C -- no --> C1[dequeue blocked, render fail, fence unsignaled]
+  C -- yes --> D{SF acquired and latched new frame?}
+  D -- no --> D1[stale Layer, transaction, consumer or backlog]
+  D -- yes --> E{HWC validate/present completed?}
+  E -- no --> E1[composition resource or HAL failure]
+  E -- yes --> F{DRM commit/vblank and panel output?}
+  F -- no --> F1[driver, connector, bridge, panel or backlight]
+  B1 --> R[quiesce + capture ownership snapshot]
+  C1 --> R
+  D1 --> R
+  E1 --> R
+  F1 --> R
+  R --> S[release old resources and recreate new Generation]
+  S --> T[produce unique test frame]
+  T --> U[verify latch, present, vblank and visible result]

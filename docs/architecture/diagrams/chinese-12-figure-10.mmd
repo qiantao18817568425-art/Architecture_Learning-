@@ -1,0 +1,13 @@
+flowchart TD
+  A["Voice/eCall/xCall异常"] --> B{"触发与源状态有效?"}
+  B -- 否 --> B1["SDK Client 未初始化或服务 DOWN"]
+  B -- 是 --> C{"数据/Buffer/音频流推进?"}
+  C -- 否 --> C1["fb_modemServices/Telephony 未 Ready"]
+  C -- 是 --> D{"策略、合成或路由正确?"}
+  D -- 否 --> D1["呼叫回调丢失或旧 Session"]
+  D -- 是 --> E{"物理输出与反馈闭环?"}
+  E -- 否 --> E1["Audio route 未建立或物理通路无声"]
+  B1 --> R["新 Generation/Session 恢复"]
+  C1 --> R
+  D1 --> R
+  E1 --> R

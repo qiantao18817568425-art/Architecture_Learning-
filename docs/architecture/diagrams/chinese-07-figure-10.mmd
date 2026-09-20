@@ -1,0 +1,5 @@
+%% Vehicle reverse feedback
+flowchart RL
+  C["consumer command"] --> M["FDBus/SOME-IP"] --> V["VehicleIF/CanService"] --> E["encoded command"] --> B["CAN output boundary"]
+  B -. "bus/actuator feedback" .-> V
+  V -. "fresh published state" .-> C

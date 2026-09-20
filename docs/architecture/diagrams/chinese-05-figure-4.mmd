@@ -1,0 +1,20 @@
+flowchart TD
+  C["call/register"] --> R{"service registered?"}
+  R -- no --> N["service not registered"]
+  R -- yes --> T["transaction"]
+  N --> Y
+  T --> D{"process death?"}
+  D -- yes --> X["DeadObjectException / DeathRecipient"]
+  D -- no --> Q{"capacity?"}
+  Q -- no --> F["FAILED_TRANSACTION / TransactionTooLargeException / thread-pool exhaustion"]
+  Q -- yes --> O{"consumer updates?"}
+  O -- no --> B["callback invoked but consumer state machine does not consume/update"]
+  O -- yes --> V
+  X --> Y["discover new service + re-register"]
+  Y --> G{"old generation retired?"}
+  G -- no --> Z["reconnect obtains a new service but old callback/session remains stale"]
+  G -- yes --> V["readback + business verify"]
+  F --> W["drain/retire failed or stale work"]
+  B --> W
+  Z --> W
+  W --> V

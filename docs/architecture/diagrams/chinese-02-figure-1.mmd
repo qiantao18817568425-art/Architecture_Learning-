@@ -1,0 +1,10 @@
+flowchart LR
+  APP["Guest 应用/服务"] --> API["Guest OS/HAL API"]
+  API --> FE["Guest Frontend"]
+  FE --> VQ["virtqueue/共享内存\nDescriptor + Buffer"]
+  VQ --> BE["Host Backend"]
+  BE --> PD["Host 物理驱动"]
+  PD --> DEV["物理设备"]
+  DEV -. "中断/DMA完成" .-> PD
+  PD -. "Used Ring/虚拟中断" .-> FE
+  FE -. "完成/Buffer归还" .-> APP

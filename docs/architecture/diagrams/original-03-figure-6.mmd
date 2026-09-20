@@ -1,0 +1,8 @@
+flowchart LR
+  FS["local-fs.target\nremote-fs.target"] --> MODEM["fb_modem.service\nfb_modemServices"]
+  TEL["mtktelephonyservice.service"] ==>|"Requires"| MODEM
+  MODEM -->|"After + Requires"| POWER["fb_powermgr.service\nfb_powerMgr"]
+  MODEM -->|"After（排序）"| AUDIO["fb_audio.service\nfb_audioServices"]
+  SOUND["sound.target"] ==>|"Requires"| AUDIO
+  MOUNT["/var/run /data /run"] ==>|"RequiresMountsFor"| LOG["fb_logmgr.service\nfb_logMgr"]
+  JOURNAL["systemd-journald.socket"] ==>|"After + Requires"| LOG

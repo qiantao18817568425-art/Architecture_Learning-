@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-test('all 24 Chinese and 17 original chapters have full text and beginner guides',()=>{
+test('all 25 Chinese and 17 original chapters have full text and beginner guides',()=>{
  const data=JSON.parse(read('content/architecture.json'));
- assert.equal(data.chapters.length,24);assert.equal(data.originals.length,17);
+ assert.equal(data.chapters.length,25);assert.equal(data.originals.length,17);
  for(const item of [...data.chapters,...data.originals]){
   const html=read(`docs/architecture/${item.edition==='original'?'original-':''}${item.id}.html`);
   assert.ok(html.includes('新手导读'));assert.ok(html.includes('项目练习'));assert.ok(html.includes('本章目录'));

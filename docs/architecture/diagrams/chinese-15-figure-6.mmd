@@ -1,0 +1,10 @@
+stateDiagram-v2
+  [*] --> Created
+  Created --> Owned: create/allocate
+  Owned --> Transferred: queue/send/register
+  Transferred --> Consumed: acquire/callback/apply
+  Consumed --> Released: release/close/deinit
+  Released --> [*]
+  Transferred --> Orphaned: owner death/timeout
+  Orphaned --> Reclaimed: death cleanup/new Generation
+  Reclaimed --> [*]

@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>三张架构图阅读指南 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details open><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a aria-current="page" href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 01</div><div class="chapter-title"><p class="eyebrow">CHAPTER 01 · 中文版全文</p><h1>三张架构图阅读指南</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=01">并排对比两套正文 ↗</a><a class="button secondary" href="original-01.html">对照原版解释 ↗</a><button class="button" data-read="01" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>三张图为何看起来不是同一套层级？</h2><p>分层图解释软件职责，部署图解释在哪里运行，通信图解释如何交接。它们是同一系统的不同观察角度。一个服务在图中出现两次不必然是两个实例。</p><ol><li><strong>怎么读：</strong>先看三张原图，再找同名模块；逐条写出箭头的方向、传递对象和两端角色，最后查模块字典。</li><li><strong>项目练习：</strong>以车辆状态显示为例，在三图中分别定位数据源、跨域通道和 Android 消费者。找不到的连接标为待确认。</li><li><strong>自检：</strong>你能区分部署位置、调用关系与数据流吗？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#01-三张架构图的阅读方法">01 三张架构图的阅读方法</a><a class="depth-2" href="#2026-09-20-校订三张基线图之外增加专项视图">2026-09-20 校订：三张基线图之外增加专项视图</a><a class="depth-2" href="#11-先确定视图再解释方框">1.1 先确定视图，再解释方框</a><a class="depth-2" href="#12-原始图">1.2 原始图</a><a class="depth-3" href="#图-1androidaaos-guest-内部分层图">图 1：Android/AAOS Guest 内部分层图</a><a class="depth-3" href="#图-2整机部署与资源归属图">图 2：整机部署与资源归属图</a><a class="depth-3" href="#图-3跨域通信与协议链路图">图 3：跨域通信与协议链路图</a><a class="depth-2" href="#13-六类方框与两类不是模块的元素">1.3 六类方框与两类“不是模块”的元素</a><a class="depth-2" href="#14-同名不等同身份要靠运行时证据">1.4 同名不等同：身份要靠运行时证据</a><a class="depth-2" href="#15-四种方向命令状态buffer-与反馈">1.5 四种方向：命令、状态、Buffer 与反馈</a><a class="depth-3" href="#命令方向">命令方向</a><a class="depth-3" href="#状态事件方向">状态/事件方向</a><a class="depth-3" href="#媒体-buffer-方向">媒体 Buffer 方向</a><a class="depth-3" href="#反馈确认方向">反馈/确认方向</a><a class="depth-2" href="#16-逻辑业务链与物理承载链">1.6 逻辑业务链与物理承载链</a><a class="depth-2" href="#17-统一链路模型">1.7 统一链路模型</a><a class="depth-2" href="#18-关联标识怎样把各域日志串成一条链">1.8 关联标识：怎样把各域日志串成一条链</a><a class="depth-2" href="#19-三图对应表">1.9 三图对应表</a><a class="depth-2" href="#110-系统上下文">1.10 系统上下文</a><a class="depth-2" href="#111-一次正确读图的最小步骤">1.11 一次正确读图的最小步骤</a><a class="depth-2" href="#112-阶段章节归属">1.12 阶段章节归属</a></details><article id="chapter-text"><h1 id="01-三张架构图的阅读方法">01 三张架构图的阅读方法</h1>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>三张架构图阅读指南 · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details open><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a aria-current="page" href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 01</div><div class="chapter-title"><p class="eyebrow">CHAPTER 01 · 中文版全文</p><h1>三张架构图阅读指南</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=01">并排对比两套正文 ↗</a><a class="button secondary" href="original-01.html">对照原版解释 ↗</a><button class="button" data-read="01" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>三张图为何看起来不是同一套层级？</h2><p>分层图解释软件职责，部署图解释在哪里运行，通信图解释如何交接。它们是同一系统的不同观察角度。一个服务在图中出现两次不必然是两个实例。</p><ol><li><strong>怎么读：</strong>先看三张原图，再找同名模块；逐条写出箭头的方向、传递对象和两端角色，最后查模块字典。</li><li><strong>项目练习：</strong>以车辆状态显示为例，在三图中分别定位数据源、跨域通道和 Android 消费者。找不到的连接标为待确认。</li><li><strong>自检：</strong>你能区分部署位置、调用关系与数据流吗？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#01-三张架构图的阅读方法">01 三张架构图的阅读方法</a><a class="depth-2" href="#2026-09-20-校订三张基线图之外增加专项视图">2026-09-20 校订：三张基线图之外增加专项视图</a><a class="depth-2" href="#11-先确定视图再解释方框">1.1 先确定视图，再解释方框</a><a class="depth-2" href="#12-原始图">1.2 原始图</a><a class="depth-3" href="#图-1androidaaos-guest-内部分层图">图 1：Android/AAOS Guest 内部分层图</a><a class="depth-3" href="#图-2整机部署与资源归属图">图 2：整机部署与资源归属图</a><a class="depth-3" href="#图-3跨域通信与协议链路图">图 3：跨域通信与协议链路图</a><a class="depth-2" href="#13-六类方框与两类不是模块的元素">1.3 六类方框与两类“不是模块”的元素</a><a class="depth-2" href="#14-同名不等同身份要靠运行时证据">1.4 同名不等同：身份要靠运行时证据</a><a class="depth-2" href="#15-四种方向命令状态buffer-与反馈">1.5 四种方向：命令、状态、Buffer 与反馈</a><a class="depth-3" href="#命令方向">命令方向</a><a class="depth-3" href="#状态事件方向">状态/事件方向</a><a class="depth-3" href="#媒体-buffer-方向">媒体 Buffer 方向</a><a class="depth-3" href="#反馈确认方向">反馈/确认方向</a><a class="depth-2" href="#16-逻辑业务链与物理承载链">1.6 逻辑业务链与物理承载链</a><a class="depth-2" href="#17-统一链路模型">1.7 统一链路模型</a><a class="depth-2" href="#18-关联标识怎样把各域日志串成一条链">1.8 关联标识：怎样把各域日志串成一条链</a><a class="depth-2" href="#19-三图对应表">1.9 三图对应表</a><a class="depth-2" href="#110-系统上下文">1.10 系统上下文</a><a class="depth-2" href="#111-一次正确读图的最小步骤">1.11 一次正确读图的最小步骤</a><a class="depth-2" href="#112-阶段章节归属">1.12 阶段章节归属</a></details><article id="chapter-text"><h1 id="01-三张架构图的阅读方法">01 三张架构图的阅读方法</h1>
 <h2 id="2026-09-20-校订三张基线图之外增加专项视图">2026-09-20 校订：三张基线图之外增加专项视图</h2>
 <p>本章保留原三图及其节点 ID，作为 MT8676 历史资料基线。本次新增第四张“盟博 OS 服务展开图”，见 <a href="18.html">18 章</a>，并用 MTK Camera 手册和项目 Camera 图建立 <a href="19.html">跨域/物理/资源三个视图</a>。</p>
 <p>读图顺序调整为：整机 OS/设备归属 → 原三图模块位置 → MBOS 管理/服务/HAL → Camera 控制与数据通路 → 生命周期与证据。层级图、部署图、业务时序图和容量图回答不同问题，不能用模块位置补出未画明的调用关系。</p>
@@ -31,11 +31,11 @@
 <td>3+3 与 2+4 PQDIP 分配冲突显式保留</td>
 </tr>
 </tbody></table>
-<p>依据：<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S038 · MT8668_Hypervisor_System_LLA_User_Manual_CN_V1.1.pdf · PDF第5-9页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S297 · MT8668最终Camera架构与DDR解读.md<small>〔本地来源〕</small></span>。图中 Qnx 名称不单独证明部署系统是 QNX；硬件引脚、CID、服务名均须记录版本。</p>
+<p>依据：<a href="source-SRC0002.html#page-6">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页</a> <a href="source-SRC0003.html#page-5">S038 · MT8668_Hypervisor_System_LLA_User_Manual_CN_V1.1.pdf · PDF第5-9页</a> <a href="source-SRC0004.html">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md</a> <a href="source-SRC0005.html">S297 · MT8668最终Camera架构与DDR解读.md</a>。图中 Qnx 名称不单独证明部署系统是 QNX；硬件引脚、CID、服务名均须记录版本。</p>
 <hr>
 <h2 id="11-先确定视图再解释方框">1.1 先确定视图，再解释方框</h2>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>阅读原图时把“在哪一层”与“怎样执行”分开。层级和已有箭头继续按原图；PVT/MTK 用于解释箭头两端实际交接的请求、状态、buffer 和完成条件。例如 Camera 的框仍在原位置，新增解释说明 Yocto 硬件服务和 Android 客户端角色；不因存在两个 camerahalserver 就在总图新增一个 OS。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S145 · MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF第6-8页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页<small>〔本地来源〕</small></span></p>
+<p>阅读原图时把“在哪一层”与“怎样执行”分开。层级和已有箭头继续按原图；PVT/MTK 用于解释箭头两端实际交接的请求、状态、buffer 和完成条件。例如 Camera 的框仍在原位置，新增解释说明 Yocto 硬件服务和 Android 客户端角色；不因存在两个 camerahalserver 就在总图新增一个 OS。<a href="source-SRC0006.html#page-6">S145 · MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF第6-8页</a> <a href="source-SRC0002.html#page-6">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页</a></p>
 <p>三张图不是三套互相替代的架构，而是同一类座舱系统的三个观察角度：</p>
 <ul>
 <li>图 1 是 <strong>Android/AAOS Guest 内部分层视图</strong>：从应用、Framework、
@@ -54,7 +54,1791 @@ CarService、VehicleHAL 与 TBox 通信模块的关系。[可信度：架构图�
 →“证据允许下什么结论”，而不是看到相邻方框就直接画调用链。</p>
 <h2 id="12-原始图">1.2 原始图</h2>
 <h3 id="图-1androidaaos-guest-内部分层图">图 1：Android/AAOS Guest 内部分层图</h3>
-<p><figure><a href="assets/01.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/01.jpg" alt="图1：Android/AAOS Guest 内部分层图"></a><figcaption>图1：Android/AAOS Guest 内部分层图 · 点击查看原图</figcaption></figure></p>
+<p><figure class="mermaid-figure diagram-reading" id="android-layers-chinese"><figcaption>Android / AAOS Guest 分层 · Mermaid</figcaption><p class="diagram-guide">先看总览，再选择软件层查看全部模块。排列与颜色用于阅读分区，不表示调用或启动顺序。</p><label class="diagram-view-picker" for="android-layers-chinese-view">阅读视图 <select id="android-layers-chinese-view" data-diagram-view><option value="android-layers-chinese-overview">总览 · 先看边界与层级</option><option value="android-layers-chinese-applications">Application</option><option value="android-layers-chinese-java">JAVA Services</option><option value="android-layers-chinese-media">JAVA Services / Media</option><option value="android-layers-chinese-car">Car Services</option><option value="android-layers-chinese-native">Native Services</option><option value="android-layers-chinese-system">System</option><option value="android-layers-chinese-runtime">Android Runtime</option><option value="android-layers-chinese-infra">Infra</option><option value="android-layers-chinese-libs">Librays（原图拼写）</option><option value="android-layers-chinese-external">External</option><option value="android-layers-chinese-hal">HAL</option><option value="android-layers-chinese-kernel">Kernel</option><option value="android-layers-chinese-complete">完整结构图 · 全部模块</option></select></label><details id="android-layers-chinese-overview" class="diagram" open data-panel="android-layers-chinese-overview"><summary>总览 · 先看边界与层级</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/android-layers-chinese-overview.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="总览 · 先看边界与层级，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+application[&quot;Application · 应用层&lt;br/&gt;27 个模块 · 含 Voice Recognition / Iflytek&quot;]
+framework[&quot;Framework · 框架层&lt;br/&gt;JAVA Services · JAVA Services / Media · Car Services&lt;br/&gt;Native Services · System&quot;]
+subgraph support_a[&quot; &quot;]
+direction LR
+runtime[&quot;Android Runtime&lt;br/&gt;ART · Core Libraries&quot;]
+infra[&quot;Infra&lt;br/&gt;FDBUS · MB_ipc · vsomeip 等&quot;]
+runtime ~~~ infra
+end
+subgraph support_b[&quot; &quot;]
+direction LR
+libs[&quot;Libraries（源图：Librays）&lt;br/&gt;Bionic · SQLite · 图形 / 媒体库等&quot;]
+external[&quot;External&lt;br/&gt;文件系统 / 网络工具等&quot;]
+libs ~~~ external
+end
+hal[&quot;HAL · 硬件抽象层&lt;br/&gt;24 个模块 · 含 VehicleHAL、MBOS HAL&quot;]
+kernel[&quot;Kernel · 内核层&lt;br/&gt;20 个模块 · 原图包含 BootLoader&quot;]
+application ~~~ framework ~~~ support_a ~~~ support_b ~~~ hal ~~~ kernel
+style support_a fill:transparent,stroke:transparent
+style support_b fill:transparent,stroke:transparent
+classDef app fill:#e3f2eb,stroke:#4d8a70,color:#183b32
+classDef frameworkStyle fill:#e7eefb,stroke:#5b7da9,color:#183352
+classDef base fill:#f2eee4,stroke:#a09068,color:#493d22
+class application app
+class framework frameworkStyle
+class runtime,infra,libs,external,hal,kernel base</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+application[&quot;Application · 应用层&lt;br/&gt;27 个模块 · 含 Voice Recognition / Iflytek&quot;]
+framework[&quot;Framework · 框架层&lt;br/&gt;JAVA Services · JAVA Services / Media · Car Services&lt;br/&gt;Native Services · System&quot;]
+subgraph support_a[&quot; &quot;]
+direction LR
+runtime[&quot;Android Runtime&lt;br/&gt;ART · Core Libraries&quot;]
+infra[&quot;Infra&lt;br/&gt;FDBUS · MB_ipc · vsomeip 等&quot;]
+runtime ~~~ infra
+end
+subgraph support_b[&quot; &quot;]
+direction LR
+libs[&quot;Libraries（源图：Librays）&lt;br/&gt;Bionic · SQLite · 图形 / 媒体库等&quot;]
+external[&quot;External&lt;br/&gt;文件系统 / 网络工具等&quot;]
+libs ~~~ external
+end
+hal[&quot;HAL · 硬件抽象层&lt;br/&gt;24 个模块 · 含 VehicleHAL、MBOS HAL&quot;]
+kernel[&quot;Kernel · 内核层&lt;br/&gt;20 个模块 · 原图包含 BootLoader&quot;]
+application ~~~ framework ~~~ support_a ~~~ support_b ~~~ hal ~~~ kernel
+style support_a fill:transparent,stroke:transparent
+style support_b fill:transparent,stroke:transparent
+classDef app fill:#e3f2eb,stroke:#4d8a70,color:#183b32
+classDef frameworkStyle fill:#e7eefb,stroke:#5b7da9,color:#183352
+classDef base fill:#f2eee4,stroke:#a09068,color:#493d22
+class application app
+class framework frameworkStyle
+class runtime,infra,libs,external,hal,kernel base</code></pre></details></details><details id="android-layers-chinese-applications" class="diagram"  data-panel="android-layers-chinese-applications"><summary>Application</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/android-layers-chinese-applications.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Application，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph applications[&quot;Application&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a1[&quot;Launcher&quot;]
+a4[&quot;MediaCenter&quot;]
+a7[&quot;CarSettings&quot;]
+a10[&quot;Calendar&quot;]
+a13[&quot;CoreService&quot;]
+a16[&quot;BtPhone&quot;]
+a19[&quot;E-Manul&quot;]
+a22[&quot;UserCenter&quot;]
+a25[&quot;MojiWeather&quot;]
+a1 ~~~ a4 ~~~ a7 ~~~ a10 ~~~ a13 ~~~ a16 ~~~ a19 ~~~ a22 ~~~ a25
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a2[&quot;SystemUI&quot;]
+a5[&quot;FileManager&quot;]
+a8[&quot;FactoryMode&quot;]
+a11[&quot;AcSettings&quot;]
+a14[&quot;OTA&quot;]
+a17[&quot;SentryMode&quot;]
+a20[&quot;Online Video&quot;]
+a23[&quot;GaoDeMap&quot;]
+a26[&quot;ChangBaKTV&quot;]
+a2 ~~~ a5 ~~~ a8 ~~~ a11 ~~~ a14 ~~~ a17 ~~~ a20 ~~~ a23 ~~~ a26
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a3[&quot;NotificationCenter&quot;]
+a6[&quot;TaskCube&quot;]
+a9[&quot;Hicar&quot;]
+a12[&quot;SpeechAgent&quot;]
+a15[&quot;SmartSence&quot;]
+a18[&quot;CrossCountry&quot;]
+a21[&quot;SceneMode&quot;]
+a24[&quot;ThemeStore&quot;]
+a3 ~~~ a6 ~~~ a9 ~~~ a12 ~~~ a15 ~~~ a18 ~~~ a21 ~~~ a24
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+subgraph voice[&quot;Voice Recognition&quot;]
+direction TB
+subgraph layout_row_5[&quot; &quot;]
+direction LR
+a27[&quot;Iflytek&quot;]
+end
+end
+layout_row_1 ~~~ voice
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent
+style layout_row_5 fill:transparent,stroke:transparent</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph applications[&quot;Application&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a1[&quot;Launcher&quot;]
+a4[&quot;MediaCenter&quot;]
+a7[&quot;CarSettings&quot;]
+a10[&quot;Calendar&quot;]
+a13[&quot;CoreService&quot;]
+a16[&quot;BtPhone&quot;]
+a19[&quot;E-Manul&quot;]
+a22[&quot;UserCenter&quot;]
+a25[&quot;MojiWeather&quot;]
+a1 ~~~ a4 ~~~ a7 ~~~ a10 ~~~ a13 ~~~ a16 ~~~ a19 ~~~ a22 ~~~ a25
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a2[&quot;SystemUI&quot;]
+a5[&quot;FileManager&quot;]
+a8[&quot;FactoryMode&quot;]
+a11[&quot;AcSettings&quot;]
+a14[&quot;OTA&quot;]
+a17[&quot;SentryMode&quot;]
+a20[&quot;Online Video&quot;]
+a23[&quot;GaoDeMap&quot;]
+a26[&quot;ChangBaKTV&quot;]
+a2 ~~~ a5 ~~~ a8 ~~~ a11 ~~~ a14 ~~~ a17 ~~~ a20 ~~~ a23 ~~~ a26
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a3[&quot;NotificationCenter&quot;]
+a6[&quot;TaskCube&quot;]
+a9[&quot;Hicar&quot;]
+a12[&quot;SpeechAgent&quot;]
+a15[&quot;SmartSence&quot;]
+a18[&quot;CrossCountry&quot;]
+a21[&quot;SceneMode&quot;]
+a24[&quot;ThemeStore&quot;]
+a3 ~~~ a6 ~~~ a9 ~~~ a12 ~~~ a15 ~~~ a18 ~~~ a21 ~~~ a24
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+subgraph voice[&quot;Voice Recognition&quot;]
+direction TB
+subgraph layout_row_5[&quot; &quot;]
+direction LR
+a27[&quot;Iflytek&quot;]
+end
+end
+layout_row_1 ~~~ voice
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent
+style layout_row_5 fill:transparent,stroke:transparent</code></pre></details></details><details id="android-layers-chinese-java" class="diagram"  data-panel="android-layers-chinese-java"><summary>JAVA Services</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/android-layers-chinese-java.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="JAVA Services，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph java[&quot;JAVA Services&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a28[&quot;Activity Manager&quot;]
+a31[&quot;Media&quot;]
+a34[&quot;Resource Manager&quot;]
+a37[&quot;USB Service&quot;]
+a40[&quot;Power Manager&quot;]
+a43[&quot;WifiService&quot;]
+a46[&quot;Package Manager&quot;]
+a49[&quot;Bluetooth &amp; BT Profiles&quot;]
+a28 ~~~ a31 ~~~ a34 ~~~ a37 ~~~ a40 ~~~ a43 ~~~ a46 ~~~ a49
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a29[&quot;Notification Manager&quot;]
+a32[&quot;WifiService&quot;]
+a35[&quot;Input Manager&quot;]
+a38[&quot;Location Service&quot;]
+a41[&quot;Network Service&quot;]
+a44[&quot;AudioService&quot;]
+a47[&quot;Content Provider&quot;]
+a50[&quot;Storage Manager&quot;]
+a29 ~~~ a32 ~~~ a35 ~~~ a38 ~~~ a41 ~~~ a44 ~~~ a47 ~~~ a50
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a30[&quot;InputMethod Service&quot;]
+a33[&quot;SystemUI&quot;]
+a36[&quot;Window Manager&quot;]
+a39[&quot;BroadCast Radio&quot;]
+a42[&quot;Telephony&quot;]
+a45[&quot;Bluetooth&quot;]
+a48[&quot;Connectivity Service&quot;]
+a51[&quot;MBOS Manager&quot;]
+a30 ~~~ a33 ~~~ a36 ~~~ a39 ~~~ a42 ~~~ a45 ~~~ a48 ~~~ a51
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph java[&quot;JAVA Services&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a28[&quot;Activity Manager&quot;]
+a31[&quot;Media&quot;]
+a34[&quot;Resource Manager&quot;]
+a37[&quot;USB Service&quot;]
+a40[&quot;Power Manager&quot;]
+a43[&quot;WifiService&quot;]
+a46[&quot;Package Manager&quot;]
+a49[&quot;Bluetooth &amp; BT Profiles&quot;]
+a28 ~~~ a31 ~~~ a34 ~~~ a37 ~~~ a40 ~~~ a43 ~~~ a46 ~~~ a49
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a29[&quot;Notification Manager&quot;]
+a32[&quot;WifiService&quot;]
+a35[&quot;Input Manager&quot;]
+a38[&quot;Location Service&quot;]
+a41[&quot;Network Service&quot;]
+a44[&quot;AudioService&quot;]
+a47[&quot;Content Provider&quot;]
+a50[&quot;Storage Manager&quot;]
+a29 ~~~ a32 ~~~ a35 ~~~ a38 ~~~ a41 ~~~ a44 ~~~ a47 ~~~ a50
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a30[&quot;InputMethod Service&quot;]
+a33[&quot;SystemUI&quot;]
+a36[&quot;Window Manager&quot;]
+a39[&quot;BroadCast Radio&quot;]
+a42[&quot;Telephony&quot;]
+a45[&quot;Bluetooth&quot;]
+a48[&quot;Connectivity Service&quot;]
+a51[&quot;MBOS Manager&quot;]
+a30 ~~~ a33 ~~~ a36 ~~~ a39 ~~~ a42 ~~~ a45 ~~~ a48 ~~~ a51
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent</code></pre></details></details><details id="android-layers-chinese-media" class="diagram"  data-panel="android-layers-chinese-media"><summary>JAVA Services / Media</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/android-layers-chinese-media.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="JAVA Services / Media，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph media[&quot;JAVA Services / Media&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+a52[&quot;Media Scanner&quot;]
+a53[&quot;Media Provider&quot;]
+a54[&quot;Media Player&quot;]
+a52 ~~~ a53 ~~~ a54
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph media[&quot;JAVA Services / Media&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+a52[&quot;Media Scanner&quot;]
+a53[&quot;Media Provider&quot;]
+a54[&quot;Media Player&quot;]
+a52 ~~~ a53 ~~~ a54
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent</code></pre></details></details><details id="android-layers-chinese-car" class="diagram"  data-panel="android-layers-chinese-car"><summary>Car Services</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/android-layers-chinese-car.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Car Services，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph car[&quot;Car Services&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a55[&quot;Car Lib&quot;]
+a58[&quot;CarBluetooth UserService&quot;]
+a61[&quot;RadioService&quot;]
+a64[&quot;CarMedia Service&quot;]
+a67[&quot;CarDiagnosticService&quot;]
+a70[&quot;CarNight Service&quot;]
+a55 ~~~ a58 ~~~ a61 ~~~ a64 ~~~ a67 ~~~ a70
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a56[&quot;Car Service&quot;]
+a59[&quot;CarConfigurationService&quot;]
+a62[&quot;CarLocation Service&quot;]
+a65[&quot;CarProperty Service&quot;]
+a68[&quot;CarInfo Service&quot;]
+a71[&quot;CarProjection Service&quot;]
+a56 ~~~ a59 ~~~ a62 ~~~ a65 ~~~ a68 ~~~ a71
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a57[&quot;CarBluetooth Service&quot;]
+a60[&quot;CarInput Service&quot;]
+a63[&quot;CarPower Service&quot;]
+a66[&quot;TboxService&quot;]
+a69[&quot;CarDrivingStateService&quot;]
+a72[&quot;CarPowerManagementService&quot;]
+a57 ~~~ a60 ~~~ a63 ~~~ a66 ~~~ a69 ~~~ a72
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph car[&quot;Car Services&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a55[&quot;Car Lib&quot;]
+a58[&quot;CarBluetooth UserService&quot;]
+a61[&quot;RadioService&quot;]
+a64[&quot;CarMedia Service&quot;]
+a67[&quot;CarDiagnosticService&quot;]
+a70[&quot;CarNight Service&quot;]
+a55 ~~~ a58 ~~~ a61 ~~~ a64 ~~~ a67 ~~~ a70
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a56[&quot;Car Service&quot;]
+a59[&quot;CarConfigurationService&quot;]
+a62[&quot;CarLocation Service&quot;]
+a65[&quot;CarProperty Service&quot;]
+a68[&quot;CarInfo Service&quot;]
+a71[&quot;CarProjection Service&quot;]
+a56 ~~~ a59 ~~~ a62 ~~~ a65 ~~~ a68 ~~~ a71
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a57[&quot;CarBluetooth Service&quot;]
+a60[&quot;CarInput Service&quot;]
+a63[&quot;CarPower Service&quot;]
+a66[&quot;TboxService&quot;]
+a69[&quot;CarDrivingStateService&quot;]
+a72[&quot;CarPowerManagementService&quot;]
+a57 ~~~ a60 ~~~ a63 ~~~ a66 ~~~ a69 ~~~ a72
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent</code></pre></details></details><details id="android-layers-chinese-native" class="diagram"  data-panel="android-layers-chinese-native"><summary>Native Services</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/android-layers-chinese-native.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Native Services，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph native[&quot;Native Services&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a73[&quot;Surface Flinger&quot;]
+a76[&quot;Camera Service&quot;]
+a79[&quot;Audio Policy&quot;]
+a82[&quot;BT Service&quot;]
+a73 ~~~ a76 ~~~ a79 ~~~ a82
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a74[&quot;Input Flinger&quot;]
+a77[&quot;Boot Animation&quot;]
+a80[&quot;AndroidAuto Service&quot;]
+a83[&quot;BroadCast RadioService&quot;]
+a74 ~~~ a77 ~~~ a80 ~~~ a83
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a75[&quot;MediaServer&quot;]
+a78[&quot;Audio Flinger&quot;]
+a81[&quot;CarPlay Service&quot;]
+a84[&quot;MBOS Service&quot;]
+a75 ~~~ a78 ~~~ a81 ~~~ a84
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph native[&quot;Native Services&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a73[&quot;Surface Flinger&quot;]
+a76[&quot;Camera Service&quot;]
+a79[&quot;Audio Policy&quot;]
+a82[&quot;BT Service&quot;]
+a73 ~~~ a76 ~~~ a79 ~~~ a82
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a74[&quot;Input Flinger&quot;]
+a77[&quot;Boot Animation&quot;]
+a80[&quot;AndroidAuto Service&quot;]
+a83[&quot;BroadCast RadioService&quot;]
+a74 ~~~ a77 ~~~ a80 ~~~ a83
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a75[&quot;MediaServer&quot;]
+a78[&quot;Audio Flinger&quot;]
+a81[&quot;CarPlay Service&quot;]
+a84[&quot;MBOS Service&quot;]
+a75 ~~~ a78 ~~~ a81 ~~~ a84
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent</code></pre></details></details><details id="android-layers-chinese-system" class="diagram"  data-panel="android-layers-chinese-system"><summary>System</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/android-layers-chinese-system.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="System，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph system[&quot;System&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a85[&quot;Update Engine&quot;]
+a88[&quot;vold&quot;]
+a91[&quot;lmkd&quot;]
+a94[&quot;FCM Service&quot;]
+a85 ~~~ a88 ~~~ a91 ~~~ a94
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a86[&quot;AVM&quot;]
+a89[&quot;Tbox Service&quot;]
+a92[&quot;ADAS Service&quot;]
+a86 ~~~ a89 ~~~ a92
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a87[&quot;RVC&quot;]
+a90[&quot;netd&quot;]
+a93[&quot;MBLog&quot;]
+a87 ~~~ a90 ~~~ a93
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph system[&quot;System&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a85[&quot;Update Engine&quot;]
+a88[&quot;vold&quot;]
+a91[&quot;lmkd&quot;]
+a94[&quot;FCM Service&quot;]
+a85 ~~~ a88 ~~~ a91 ~~~ a94
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a86[&quot;AVM&quot;]
+a89[&quot;Tbox Service&quot;]
+a92[&quot;ADAS Service&quot;]
+a86 ~~~ a89 ~~~ a92
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a87[&quot;RVC&quot;]
+a90[&quot;netd&quot;]
+a93[&quot;MBLog&quot;]
+a87 ~~~ a90 ~~~ a93
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent</code></pre></details></details><details id="android-layers-chinese-runtime" class="diagram"  data-panel="android-layers-chinese-runtime"><summary>Android Runtime</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/android-layers-chinese-runtime.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android Runtime，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph runtime[&quot;Android Runtime&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+a95[&quot;ART&quot;]
+a96[&quot;Core Libraries&quot;]
+a95 ~~~ a96
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph runtime[&quot;Android Runtime&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+a95[&quot;ART&quot;]
+a96[&quot;Core Libraries&quot;]
+a95 ~~~ a96
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent</code></pre></details></details><details id="android-layers-chinese-infra" class="diagram"  data-panel="android-layers-chinese-infra"><summary>Infra</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/android-layers-chinese-infra.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Infra，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph infra[&quot;Infra&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a97[&quot;FDBUS&quot;]
+a100[&quot;MB_ipc&quot;]
+a103[&quot;vsomeip&quot;]
+a97 ~~~ a100 ~~~ a103
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a98[&quot;canservice&quot;]
+a101[&quot;protobuf&quot;]
+a98 ~~~ a101
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a99[&quot;boost&quot;]
+a102[&quot;Update_server&quot;]
+a99 ~~~ a102
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph infra[&quot;Infra&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a97[&quot;FDBUS&quot;]
+a100[&quot;MB_ipc&quot;]
+a103[&quot;vsomeip&quot;]
+a97 ~~~ a100 ~~~ a103
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a98[&quot;canservice&quot;]
+a101[&quot;protobuf&quot;]
+a98 ~~~ a101
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a99[&quot;boost&quot;]
+a102[&quot;Update_server&quot;]
+a99 ~~~ a102
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent</code></pre></details></details><details id="android-layers-chinese-libs" class="diagram"  data-panel="android-layers-chinese-libs"><summary>Librays（原图拼写）</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/android-layers-chinese-libs.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Librays（原图拼写），可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph libs[&quot;Librays（原图拼写）&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a104[&quot;Webkit&quot;]
+a107[&quot;CarPlay plug-in&quot;]
+a110[&quot;Chromium&quot;]
+a113[&quot;Bluetooth Stack&quot;]
+a104 ~~~ a107 ~~~ a110 ~~~ a113
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a105[&quot;OpenMax&quot;]
+a108[&quot;OpenGLES&quot;]
+a111[&quot;iAP2&quot;]
+a105 ~~~ a108 ~~~ a111
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a106[&quot;Bionic&quot;]
+a109[&quot;SQLite&quot;]
+a112[&quot;StageFright plug&quot;]
+a106 ~~~ a109 ~~~ a112
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph libs[&quot;Librays（原图拼写）&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a104[&quot;Webkit&quot;]
+a107[&quot;CarPlay plug-in&quot;]
+a110[&quot;Chromium&quot;]
+a113[&quot;Bluetooth Stack&quot;]
+a104 ~~~ a107 ~~~ a110 ~~~ a113
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a105[&quot;OpenMax&quot;]
+a108[&quot;OpenGLES&quot;]
+a111[&quot;iAP2&quot;]
+a105 ~~~ a108 ~~~ a111
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a106[&quot;Bionic&quot;]
+a109[&quot;SQLite&quot;]
+a112[&quot;StageFright plug&quot;]
+a106 ~~~ a109 ~~~ a112
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent</code></pre></details></details><details id="android-layers-chinese-external" class="diagram"  data-panel="android-layers-chinese-external"><summary>External</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/android-layers-chinese-external.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="External，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph external[&quot;External&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a114[&quot;exfat tool&quot;]
+a117[&quot;tf_hot_plug&quot;]
+a114 ~~~ a117
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a115[&quot;wpa_supplicant_8&quot;]
+a118[&quot;e2fs[ rpgs ]（原图标签待核）&quot;]
+a115 ~~~ a118
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a116[&quot;ntfs_tool&quot;]
+a119[&quot;logd&quot;]
+a116 ~~~ a119
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph external[&quot;External&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a114[&quot;exfat tool&quot;]
+a117[&quot;tf_hot_plug&quot;]
+a114 ~~~ a117
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a115[&quot;wpa_supplicant_8&quot;]
+a118[&quot;e2fs[ rpgs ]（原图标签待核）&quot;]
+a115 ~~~ a118
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a116[&quot;ntfs_tool&quot;]
+a119[&quot;logd&quot;]
+a116 ~~~ a119
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent</code></pre></details></details><details id="android-layers-chinese-hal" class="diagram"  data-panel="android-layers-chinese-hal"><summary>HAL</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/android-layers-chinese-hal.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="HAL，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph hal[&quot;HAL&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a120[&quot;Audio&quot;]
+a123[&quot;Bluetooth&quot;]
+a126[&quot;RIL&quot;]
+a129[&quot;Camera&quot;]
+a132[&quot;Lights&quot;]
+a135[&quot;AudioControl&quot;]
+a138[&quot;tbox&quot;]
+a141[&quot;mbsensors&quot;]
+a120 ~~~ a123 ~~~ a126 ~~~ a129 ~~~ a132 ~~~ a135 ~~~ a138 ~~~ a141
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a121[&quot;Media&quot;]
+a124[&quot;Power&quot;]
+a127[&quot;DRM&quot;]
+a130[&quot;Sensors&quot;]
+a133[&quot;Location&quot;]
+a136[&quot;radio&quot;]
+a139[&quot;configstoreHAL&quot;]
+a142[&quot;MBOS HAL&quot;]
+a121 ~~~ a124 ~~~ a127 ~~~ a130 ~~~ a133 ~~~ a136 ~~~ a139 ~~~ a142
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a122[&quot;Display&quot;]
+a125[&quot;USB&quot;]
+a128[&quot;BroadCastRadio&quot;]
+a131[&quot;WIFI&quot;]
+a134[&quot;BootCtrl&quot;]
+a137[&quot;VehicleHAL&quot;]
+a140[&quot;mbgnss&quot;]
+a143[&quot;mblogd&quot;]
+a122 ~~~ a125 ~~~ a128 ~~~ a131 ~~~ a134 ~~~ a137 ~~~ a140 ~~~ a143
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph hal[&quot;HAL&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a120[&quot;Audio&quot;]
+a123[&quot;Bluetooth&quot;]
+a126[&quot;RIL&quot;]
+a129[&quot;Camera&quot;]
+a132[&quot;Lights&quot;]
+a135[&quot;AudioControl&quot;]
+a138[&quot;tbox&quot;]
+a141[&quot;mbsensors&quot;]
+a120 ~~~ a123 ~~~ a126 ~~~ a129 ~~~ a132 ~~~ a135 ~~~ a138 ~~~ a141
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a121[&quot;Media&quot;]
+a124[&quot;Power&quot;]
+a127[&quot;DRM&quot;]
+a130[&quot;Sensors&quot;]
+a133[&quot;Location&quot;]
+a136[&quot;radio&quot;]
+a139[&quot;configstoreHAL&quot;]
+a142[&quot;MBOS HAL&quot;]
+a121 ~~~ a124 ~~~ a127 ~~~ a130 ~~~ a133 ~~~ a136 ~~~ a139 ~~~ a142
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a122[&quot;Display&quot;]
+a125[&quot;USB&quot;]
+a128[&quot;BroadCastRadio&quot;]
+a131[&quot;WIFI&quot;]
+a134[&quot;BootCtrl&quot;]
+a137[&quot;VehicleHAL&quot;]
+a140[&quot;mbgnss&quot;]
+a143[&quot;mblogd&quot;]
+a122 ~~~ a125 ~~~ a128 ~~~ a131 ~~~ a134 ~~~ a137 ~~~ a140 ~~~ a143
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent</code></pre></details></details><details id="android-layers-chinese-kernel" class="diagram"  data-panel="android-layers-chinese-kernel"><summary>Kernel</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/android-layers-chinese-kernel.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Kernel，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph kernel[&quot;Kernel&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a144[&quot;iAP2/MFI&quot;]
+a147[&quot;Codec&quot;]
+a150[&quot;RTC&quot;]
+a153[&quot;Network&quot;]
+a156[&quot;Sensor&quot;]
+a159[&quot;ethernet&quot;]
+a162[&quot;Peripheral(UART SPI GPIO ADC...)&quot;]
+a144 ~~~ a147 ~~~ a150 ~~~ a153 ~~~ a156 ~~~ a159 ~~~ a162
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a145[&quot;Scheduler&quot;]
+a148[&quot;OpenGL&quot;]
+a151[&quot;DRM&quot;]
+a154[&quot;Memory&quot;]
+a157[&quot;MT66XX&quot;]
+a160[&quot;USB&quot;]
+a163[&quot;BootLoader&quot;]
+a145 ~~~ a148 ~~~ a151 ~~~ a154 ~~~ a157 ~~~ a160 ~~~ a163
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a146[&quot;ALSA&quot;]
+a149[&quot;eMMC/UFS/SD&quot;]
+a152[&quot;MDP&quot;]
+a155[&quot;VFS&quot;]
+a158[&quot;CCCI&quot;]
+a161[&quot;Camera&quot;]
+a146 ~~~ a149 ~~~ a152 ~~~ a155 ~~~ a158 ~~~ a161
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph kernel[&quot;Kernel&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a144[&quot;iAP2/MFI&quot;]
+a147[&quot;Codec&quot;]
+a150[&quot;RTC&quot;]
+a153[&quot;Network&quot;]
+a156[&quot;Sensor&quot;]
+a159[&quot;ethernet&quot;]
+a162[&quot;Peripheral(UART SPI GPIO ADC...)&quot;]
+a144 ~~~ a147 ~~~ a150 ~~~ a153 ~~~ a156 ~~~ a159 ~~~ a162
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a145[&quot;Scheduler&quot;]
+a148[&quot;OpenGL&quot;]
+a151[&quot;DRM&quot;]
+a154[&quot;Memory&quot;]
+a157[&quot;MT66XX&quot;]
+a160[&quot;USB&quot;]
+a163[&quot;BootLoader&quot;]
+a145 ~~~ a148 ~~~ a151 ~~~ a154 ~~~ a157 ~~~ a160 ~~~ a163
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a146[&quot;ALSA&quot;]
+a149[&quot;eMMC/UFS/SD&quot;]
+a152[&quot;MDP&quot;]
+a155[&quot;VFS&quot;]
+a158[&quot;CCCI&quot;]
+a161[&quot;Camera&quot;]
+a146 ~~~ a149 ~~~ a152 ~~~ a155 ~~~ a158 ~~~ a161
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent</code></pre></details></details><details id="android-layers-chinese-complete" class="diagram"  data-panel="android-layers-chinese-complete"><summary>完整结构图 · 全部模块</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/android-layers-chinese-complete.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="完整结构图 · 全部模块，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph applications[&quot;Application&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a1[&quot;Launcher&quot;]
+a4[&quot;MediaCenter&quot;]
+a7[&quot;CarSettings&quot;]
+a10[&quot;Calendar&quot;]
+a13[&quot;CoreService&quot;]
+a16[&quot;BtPhone&quot;]
+a19[&quot;E-Manul&quot;]
+a22[&quot;UserCenter&quot;]
+a25[&quot;MojiWeather&quot;]
+a1 ~~~ a4 ~~~ a7 ~~~ a10 ~~~ a13 ~~~ a16 ~~~ a19 ~~~ a22 ~~~ a25
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a2[&quot;SystemUI&quot;]
+a5[&quot;FileManager&quot;]
+a8[&quot;FactoryMode&quot;]
+a11[&quot;AcSettings&quot;]
+a14[&quot;OTA&quot;]
+a17[&quot;SentryMode&quot;]
+a20[&quot;Online Video&quot;]
+a23[&quot;GaoDeMap&quot;]
+a26[&quot;ChangBaKTV&quot;]
+a2 ~~~ a5 ~~~ a8 ~~~ a11 ~~~ a14 ~~~ a17 ~~~ a20 ~~~ a23 ~~~ a26
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a3[&quot;NotificationCenter&quot;]
+a6[&quot;TaskCube&quot;]
+a9[&quot;Hicar&quot;]
+a12[&quot;SpeechAgent&quot;]
+a15[&quot;SmartSence&quot;]
+a18[&quot;CrossCountry&quot;]
+a21[&quot;SceneMode&quot;]
+a24[&quot;ThemeStore&quot;]
+a3 ~~~ a6 ~~~ a9 ~~~ a12 ~~~ a15 ~~~ a18 ~~~ a21 ~~~ a24
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+subgraph voice[&quot;Voice Recognition&quot;]
+direction TB
+subgraph layout_row_5[&quot; &quot;]
+direction LR
+a27[&quot;Iflytek&quot;]
+end
+end
+layout_row_1 ~~~ voice
+end
+subgraph framework[&quot;Framework&quot;]
+direction TB
+subgraph java[&quot;JAVA Services&quot;]
+direction TB
+subgraph layout_row_6[&quot; &quot;]
+direction LR
+subgraph layout_row_7[&quot; &quot;]
+direction TB
+a28[&quot;Activity Manager&quot;]
+a31[&quot;Media&quot;]
+a34[&quot;Resource Manager&quot;]
+a37[&quot;USB Service&quot;]
+a40[&quot;Power Manager&quot;]
+a43[&quot;WifiService&quot;]
+a46[&quot;Package Manager&quot;]
+a49[&quot;Bluetooth &amp; BT Profiles&quot;]
+a28 ~~~ a31 ~~~ a34 ~~~ a37 ~~~ a40 ~~~ a43 ~~~ a46 ~~~ a49
+end
+subgraph layout_row_8[&quot; &quot;]
+direction TB
+a29[&quot;Notification Manager&quot;]
+a32[&quot;WifiService&quot;]
+a35[&quot;Input Manager&quot;]
+a38[&quot;Location Service&quot;]
+a41[&quot;Network Service&quot;]
+a44[&quot;AudioService&quot;]
+a47[&quot;Content Provider&quot;]
+a50[&quot;Storage Manager&quot;]
+a29 ~~~ a32 ~~~ a35 ~~~ a38 ~~~ a41 ~~~ a44 ~~~ a47 ~~~ a50
+end
+subgraph layout_row_9[&quot; &quot;]
+direction TB
+a30[&quot;InputMethod Service&quot;]
+a33[&quot;SystemUI&quot;]
+a36[&quot;Window Manager&quot;]
+a39[&quot;BroadCast Radio&quot;]
+a42[&quot;Telephony&quot;]
+a45[&quot;Bluetooth&quot;]
+a48[&quot;Connectivity Service&quot;]
+a51[&quot;MBOS Manager&quot;]
+a30 ~~~ a33 ~~~ a36 ~~~ a39 ~~~ a42 ~~~ a45 ~~~ a48 ~~~ a51
+end
+layout_row_7 ~~~ layout_row_8 ~~~ layout_row_9
+end
+end
+subgraph media[&quot;JAVA Services / Media&quot;]
+direction TB
+subgraph layout_row_10[&quot; &quot;]
+direction LR
+a52[&quot;Media Scanner&quot;]
+a53[&quot;Media Provider&quot;]
+a54[&quot;Media Player&quot;]
+a52 ~~~ a53 ~~~ a54
+end
+end
+subgraph car[&quot;Car Services&quot;]
+direction TB
+subgraph layout_row_11[&quot; &quot;]
+direction LR
+subgraph layout_row_12[&quot; &quot;]
+direction TB
+a55[&quot;Car Lib&quot;]
+a58[&quot;CarBluetooth UserService&quot;]
+a61[&quot;RadioService&quot;]
+a64[&quot;CarMedia Service&quot;]
+a67[&quot;CarDiagnosticService&quot;]
+a70[&quot;CarNight Service&quot;]
+a55 ~~~ a58 ~~~ a61 ~~~ a64 ~~~ a67 ~~~ a70
+end
+subgraph layout_row_13[&quot; &quot;]
+direction TB
+a56[&quot;Car Service&quot;]
+a59[&quot;CarConfigurationService&quot;]
+a62[&quot;CarLocation Service&quot;]
+a65[&quot;CarProperty Service&quot;]
+a68[&quot;CarInfo Service&quot;]
+a71[&quot;CarProjection Service&quot;]
+a56 ~~~ a59 ~~~ a62 ~~~ a65 ~~~ a68 ~~~ a71
+end
+subgraph layout_row_14[&quot; &quot;]
+direction TB
+a57[&quot;CarBluetooth Service&quot;]
+a60[&quot;CarInput Service&quot;]
+a63[&quot;CarPower Service&quot;]
+a66[&quot;TboxService&quot;]
+a69[&quot;CarDrivingStateService&quot;]
+a72[&quot;CarPowerManagementService&quot;]
+a57 ~~~ a60 ~~~ a63 ~~~ a66 ~~~ a69 ~~~ a72
+end
+layout_row_12 ~~~ layout_row_13 ~~~ layout_row_14
+end
+end
+subgraph native[&quot;Native Services&quot;]
+direction TB
+subgraph layout_row_15[&quot; &quot;]
+direction LR
+subgraph layout_row_16[&quot; &quot;]
+direction TB
+a73[&quot;Surface Flinger&quot;]
+a76[&quot;Camera Service&quot;]
+a79[&quot;Audio Policy&quot;]
+a82[&quot;BT Service&quot;]
+a73 ~~~ a76 ~~~ a79 ~~~ a82
+end
+subgraph layout_row_17[&quot; &quot;]
+direction TB
+a74[&quot;Input Flinger&quot;]
+a77[&quot;Boot Animation&quot;]
+a80[&quot;AndroidAuto Service&quot;]
+a83[&quot;BroadCast RadioService&quot;]
+a74 ~~~ a77 ~~~ a80 ~~~ a83
+end
+subgraph layout_row_18[&quot; &quot;]
+direction TB
+a75[&quot;MediaServer&quot;]
+a78[&quot;Audio Flinger&quot;]
+a81[&quot;CarPlay Service&quot;]
+a84[&quot;MBOS Service&quot;]
+a75 ~~~ a78 ~~~ a81 ~~~ a84
+end
+layout_row_16 ~~~ layout_row_17 ~~~ layout_row_18
+end
+end
+subgraph system[&quot;System&quot;]
+direction TB
+subgraph layout_row_19[&quot; &quot;]
+direction LR
+subgraph layout_row_20[&quot; &quot;]
+direction TB
+a85[&quot;Update Engine&quot;]
+a88[&quot;vold&quot;]
+a91[&quot;lmkd&quot;]
+a94[&quot;FCM Service&quot;]
+a85 ~~~ a88 ~~~ a91 ~~~ a94
+end
+subgraph layout_row_21[&quot; &quot;]
+direction TB
+a86[&quot;AVM&quot;]
+a89[&quot;Tbox Service&quot;]
+a92[&quot;ADAS Service&quot;]
+a86 ~~~ a89 ~~~ a92
+end
+subgraph layout_row_22[&quot; &quot;]
+direction TB
+a87[&quot;RVC&quot;]
+a90[&quot;netd&quot;]
+a93[&quot;MBLog&quot;]
+a87 ~~~ a90 ~~~ a93
+end
+layout_row_20 ~~~ layout_row_21 ~~~ layout_row_22
+end
+end
+java ~~~ media ~~~ car ~~~ native ~~~ system
+end
+subgraph runtime[&quot;Android Runtime&quot;]
+direction TB
+subgraph layout_row_23[&quot; &quot;]
+direction LR
+a95[&quot;ART&quot;]
+a96[&quot;Core Libraries&quot;]
+a95 ~~~ a96
+end
+end
+subgraph infra[&quot;Infra&quot;]
+direction TB
+subgraph layout_row_24[&quot; &quot;]
+direction LR
+subgraph layout_row_25[&quot; &quot;]
+direction TB
+a97[&quot;FDBUS&quot;]
+a100[&quot;MB_ipc&quot;]
+a103[&quot;vsomeip&quot;]
+a97 ~~~ a100 ~~~ a103
+end
+subgraph layout_row_26[&quot; &quot;]
+direction TB
+a98[&quot;canservice&quot;]
+a101[&quot;protobuf&quot;]
+a98 ~~~ a101
+end
+subgraph layout_row_27[&quot; &quot;]
+direction TB
+a99[&quot;boost&quot;]
+a102[&quot;Update_server&quot;]
+a99 ~~~ a102
+end
+layout_row_25 ~~~ layout_row_26 ~~~ layout_row_27
+end
+end
+subgraph libs[&quot;Librays（原图拼写）&quot;]
+direction TB
+subgraph layout_row_28[&quot; &quot;]
+direction LR
+subgraph layout_row_29[&quot; &quot;]
+direction TB
+a104[&quot;Webkit&quot;]
+a107[&quot;CarPlay plug-in&quot;]
+a110[&quot;Chromium&quot;]
+a113[&quot;Bluetooth Stack&quot;]
+a104 ~~~ a107 ~~~ a110 ~~~ a113
+end
+subgraph layout_row_30[&quot; &quot;]
+direction TB
+a105[&quot;OpenMax&quot;]
+a108[&quot;OpenGLES&quot;]
+a111[&quot;iAP2&quot;]
+a105 ~~~ a108 ~~~ a111
+end
+subgraph layout_row_31[&quot; &quot;]
+direction TB
+a106[&quot;Bionic&quot;]
+a109[&quot;SQLite&quot;]
+a112[&quot;StageFright plug&quot;]
+a106 ~~~ a109 ~~~ a112
+end
+layout_row_29 ~~~ layout_row_30 ~~~ layout_row_31
+end
+end
+subgraph external[&quot;External&quot;]
+direction TB
+subgraph layout_row_32[&quot; &quot;]
+direction LR
+subgraph layout_row_33[&quot; &quot;]
+direction TB
+a114[&quot;exfat tool&quot;]
+a117[&quot;tf_hot_plug&quot;]
+a114 ~~~ a117
+end
+subgraph layout_row_34[&quot; &quot;]
+direction TB
+a115[&quot;wpa_supplicant_8&quot;]
+a118[&quot;e2fs[ rpgs ]（原图标签待核）&quot;]
+a115 ~~~ a118
+end
+subgraph layout_row_35[&quot; &quot;]
+direction TB
+a116[&quot;ntfs_tool&quot;]
+a119[&quot;logd&quot;]
+a116 ~~~ a119
+end
+layout_row_33 ~~~ layout_row_34 ~~~ layout_row_35
+end
+end
+subgraph hal[&quot;HAL&quot;]
+direction TB
+subgraph layout_row_36[&quot; &quot;]
+direction LR
+subgraph layout_row_37[&quot; &quot;]
+direction TB
+a120[&quot;Audio&quot;]
+a123[&quot;Bluetooth&quot;]
+a126[&quot;RIL&quot;]
+a129[&quot;Camera&quot;]
+a132[&quot;Lights&quot;]
+a135[&quot;AudioControl&quot;]
+a138[&quot;tbox&quot;]
+a141[&quot;mbsensors&quot;]
+a120 ~~~ a123 ~~~ a126 ~~~ a129 ~~~ a132 ~~~ a135 ~~~ a138 ~~~ a141
+end
+subgraph layout_row_38[&quot; &quot;]
+direction TB
+a121[&quot;Media&quot;]
+a124[&quot;Power&quot;]
+a127[&quot;DRM&quot;]
+a130[&quot;Sensors&quot;]
+a133[&quot;Location&quot;]
+a136[&quot;radio&quot;]
+a139[&quot;configstoreHAL&quot;]
+a142[&quot;MBOS HAL&quot;]
+a121 ~~~ a124 ~~~ a127 ~~~ a130 ~~~ a133 ~~~ a136 ~~~ a139 ~~~ a142
+end
+subgraph layout_row_39[&quot; &quot;]
+direction TB
+a122[&quot;Display&quot;]
+a125[&quot;USB&quot;]
+a128[&quot;BroadCastRadio&quot;]
+a131[&quot;WIFI&quot;]
+a134[&quot;BootCtrl&quot;]
+a137[&quot;VehicleHAL&quot;]
+a140[&quot;mbgnss&quot;]
+a143[&quot;mblogd&quot;]
+a122 ~~~ a125 ~~~ a128 ~~~ a131 ~~~ a134 ~~~ a137 ~~~ a140 ~~~ a143
+end
+layout_row_37 ~~~ layout_row_38 ~~~ layout_row_39
+end
+end
+subgraph kernel[&quot;Kernel&quot;]
+direction TB
+subgraph layout_row_40[&quot; &quot;]
+direction LR
+subgraph layout_row_41[&quot; &quot;]
+direction TB
+a144[&quot;iAP2/MFI&quot;]
+a147[&quot;Codec&quot;]
+a150[&quot;RTC&quot;]
+a153[&quot;Network&quot;]
+a156[&quot;Sensor&quot;]
+a159[&quot;ethernet&quot;]
+a162[&quot;Peripheral(UART SPI GPIO ADC...)&quot;]
+a144 ~~~ a147 ~~~ a150 ~~~ a153 ~~~ a156 ~~~ a159 ~~~ a162
+end
+subgraph layout_row_42[&quot; &quot;]
+direction TB
+a145[&quot;Scheduler&quot;]
+a148[&quot;OpenGL&quot;]
+a151[&quot;DRM&quot;]
+a154[&quot;Memory&quot;]
+a157[&quot;MT66XX&quot;]
+a160[&quot;USB&quot;]
+a163[&quot;BootLoader&quot;]
+a145 ~~~ a148 ~~~ a151 ~~~ a154 ~~~ a157 ~~~ a160 ~~~ a163
+end
+subgraph layout_row_43[&quot; &quot;]
+direction TB
+a146[&quot;ALSA&quot;]
+a149[&quot;eMMC/UFS/SD&quot;]
+a152[&quot;MDP&quot;]
+a155[&quot;VFS&quot;]
+a158[&quot;CCCI&quot;]
+a161[&quot;Camera&quot;]
+a146 ~~~ a149 ~~~ a152 ~~~ a155 ~~~ a158 ~~~ a161
+end
+layout_row_41 ~~~ layout_row_42 ~~~ layout_row_43
+end
+end
+applications ~~~ framework ~~~ runtime ~~~ infra ~~~ libs ~~~ external ~~~ hal ~~~ kernel
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent
+style layout_row_5 fill:transparent,stroke:transparent
+style layout_row_6 fill:transparent,stroke:transparent
+style layout_row_7 fill:transparent,stroke:transparent
+style layout_row_8 fill:transparent,stroke:transparent
+style layout_row_9 fill:transparent,stroke:transparent
+style layout_row_10 fill:transparent,stroke:transparent
+style layout_row_11 fill:transparent,stroke:transparent
+style layout_row_12 fill:transparent,stroke:transparent
+style layout_row_13 fill:transparent,stroke:transparent
+style layout_row_14 fill:transparent,stroke:transparent
+style layout_row_15 fill:transparent,stroke:transparent
+style layout_row_16 fill:transparent,stroke:transparent
+style layout_row_17 fill:transparent,stroke:transparent
+style layout_row_18 fill:transparent,stroke:transparent
+style layout_row_19 fill:transparent,stroke:transparent
+style layout_row_20 fill:transparent,stroke:transparent
+style layout_row_21 fill:transparent,stroke:transparent
+style layout_row_22 fill:transparent,stroke:transparent
+style layout_row_23 fill:transparent,stroke:transparent
+style layout_row_24 fill:transparent,stroke:transparent
+style layout_row_25 fill:transparent,stroke:transparent
+style layout_row_26 fill:transparent,stroke:transparent
+style layout_row_27 fill:transparent,stroke:transparent
+style layout_row_28 fill:transparent,stroke:transparent
+style layout_row_29 fill:transparent,stroke:transparent
+style layout_row_30 fill:transparent,stroke:transparent
+style layout_row_31 fill:transparent,stroke:transparent
+style layout_row_32 fill:transparent,stroke:transparent
+style layout_row_33 fill:transparent,stroke:transparent
+style layout_row_34 fill:transparent,stroke:transparent
+style layout_row_35 fill:transparent,stroke:transparent
+style layout_row_36 fill:transparent,stroke:transparent
+style layout_row_37 fill:transparent,stroke:transparent
+style layout_row_38 fill:transparent,stroke:transparent
+style layout_row_39 fill:transparent,stroke:transparent
+style layout_row_40 fill:transparent,stroke:transparent
+style layout_row_41 fill:transparent,stroke:transparent
+style layout_row_42 fill:transparent,stroke:transparent
+style layout_row_43 fill:transparent,stroke:transparent</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph applications[&quot;Application&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a1[&quot;Launcher&quot;]
+a4[&quot;MediaCenter&quot;]
+a7[&quot;CarSettings&quot;]
+a10[&quot;Calendar&quot;]
+a13[&quot;CoreService&quot;]
+a16[&quot;BtPhone&quot;]
+a19[&quot;E-Manul&quot;]
+a22[&quot;UserCenter&quot;]
+a25[&quot;MojiWeather&quot;]
+a1 ~~~ a4 ~~~ a7 ~~~ a10 ~~~ a13 ~~~ a16 ~~~ a19 ~~~ a22 ~~~ a25
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a2[&quot;SystemUI&quot;]
+a5[&quot;FileManager&quot;]
+a8[&quot;FactoryMode&quot;]
+a11[&quot;AcSettings&quot;]
+a14[&quot;OTA&quot;]
+a17[&quot;SentryMode&quot;]
+a20[&quot;Online Video&quot;]
+a23[&quot;GaoDeMap&quot;]
+a26[&quot;ChangBaKTV&quot;]
+a2 ~~~ a5 ~~~ a8 ~~~ a11 ~~~ a14 ~~~ a17 ~~~ a20 ~~~ a23 ~~~ a26
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a3[&quot;NotificationCenter&quot;]
+a6[&quot;TaskCube&quot;]
+a9[&quot;Hicar&quot;]
+a12[&quot;SpeechAgent&quot;]
+a15[&quot;SmartSence&quot;]
+a18[&quot;CrossCountry&quot;]
+a21[&quot;SceneMode&quot;]
+a24[&quot;ThemeStore&quot;]
+a3 ~~~ a6 ~~~ a9 ~~~ a12 ~~~ a15 ~~~ a18 ~~~ a21 ~~~ a24
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+subgraph voice[&quot;Voice Recognition&quot;]
+direction TB
+subgraph layout_row_5[&quot; &quot;]
+direction LR
+a27[&quot;Iflytek&quot;]
+end
+end
+layout_row_1 ~~~ voice
+end
+subgraph framework[&quot;Framework&quot;]
+direction TB
+subgraph java[&quot;JAVA Services&quot;]
+direction TB
+subgraph layout_row_6[&quot; &quot;]
+direction LR
+subgraph layout_row_7[&quot; &quot;]
+direction TB
+a28[&quot;Activity Manager&quot;]
+a31[&quot;Media&quot;]
+a34[&quot;Resource Manager&quot;]
+a37[&quot;USB Service&quot;]
+a40[&quot;Power Manager&quot;]
+a43[&quot;WifiService&quot;]
+a46[&quot;Package Manager&quot;]
+a49[&quot;Bluetooth &amp; BT Profiles&quot;]
+a28 ~~~ a31 ~~~ a34 ~~~ a37 ~~~ a40 ~~~ a43 ~~~ a46 ~~~ a49
+end
+subgraph layout_row_8[&quot; &quot;]
+direction TB
+a29[&quot;Notification Manager&quot;]
+a32[&quot;WifiService&quot;]
+a35[&quot;Input Manager&quot;]
+a38[&quot;Location Service&quot;]
+a41[&quot;Network Service&quot;]
+a44[&quot;AudioService&quot;]
+a47[&quot;Content Provider&quot;]
+a50[&quot;Storage Manager&quot;]
+a29 ~~~ a32 ~~~ a35 ~~~ a38 ~~~ a41 ~~~ a44 ~~~ a47 ~~~ a50
+end
+subgraph layout_row_9[&quot; &quot;]
+direction TB
+a30[&quot;InputMethod Service&quot;]
+a33[&quot;SystemUI&quot;]
+a36[&quot;Window Manager&quot;]
+a39[&quot;BroadCast Radio&quot;]
+a42[&quot;Telephony&quot;]
+a45[&quot;Bluetooth&quot;]
+a48[&quot;Connectivity Service&quot;]
+a51[&quot;MBOS Manager&quot;]
+a30 ~~~ a33 ~~~ a36 ~~~ a39 ~~~ a42 ~~~ a45 ~~~ a48 ~~~ a51
+end
+layout_row_7 ~~~ layout_row_8 ~~~ layout_row_9
+end
+end
+subgraph media[&quot;JAVA Services / Media&quot;]
+direction TB
+subgraph layout_row_10[&quot; &quot;]
+direction LR
+a52[&quot;Media Scanner&quot;]
+a53[&quot;Media Provider&quot;]
+a54[&quot;Media Player&quot;]
+a52 ~~~ a53 ~~~ a54
+end
+end
+subgraph car[&quot;Car Services&quot;]
+direction TB
+subgraph layout_row_11[&quot; &quot;]
+direction LR
+subgraph layout_row_12[&quot; &quot;]
+direction TB
+a55[&quot;Car Lib&quot;]
+a58[&quot;CarBluetooth UserService&quot;]
+a61[&quot;RadioService&quot;]
+a64[&quot;CarMedia Service&quot;]
+a67[&quot;CarDiagnosticService&quot;]
+a70[&quot;CarNight Service&quot;]
+a55 ~~~ a58 ~~~ a61 ~~~ a64 ~~~ a67 ~~~ a70
+end
+subgraph layout_row_13[&quot; &quot;]
+direction TB
+a56[&quot;Car Service&quot;]
+a59[&quot;CarConfigurationService&quot;]
+a62[&quot;CarLocation Service&quot;]
+a65[&quot;CarProperty Service&quot;]
+a68[&quot;CarInfo Service&quot;]
+a71[&quot;CarProjection Service&quot;]
+a56 ~~~ a59 ~~~ a62 ~~~ a65 ~~~ a68 ~~~ a71
+end
+subgraph layout_row_14[&quot; &quot;]
+direction TB
+a57[&quot;CarBluetooth Service&quot;]
+a60[&quot;CarInput Service&quot;]
+a63[&quot;CarPower Service&quot;]
+a66[&quot;TboxService&quot;]
+a69[&quot;CarDrivingStateService&quot;]
+a72[&quot;CarPowerManagementService&quot;]
+a57 ~~~ a60 ~~~ a63 ~~~ a66 ~~~ a69 ~~~ a72
+end
+layout_row_12 ~~~ layout_row_13 ~~~ layout_row_14
+end
+end
+subgraph native[&quot;Native Services&quot;]
+direction TB
+subgraph layout_row_15[&quot; &quot;]
+direction LR
+subgraph layout_row_16[&quot; &quot;]
+direction TB
+a73[&quot;Surface Flinger&quot;]
+a76[&quot;Camera Service&quot;]
+a79[&quot;Audio Policy&quot;]
+a82[&quot;BT Service&quot;]
+a73 ~~~ a76 ~~~ a79 ~~~ a82
+end
+subgraph layout_row_17[&quot; &quot;]
+direction TB
+a74[&quot;Input Flinger&quot;]
+a77[&quot;Boot Animation&quot;]
+a80[&quot;AndroidAuto Service&quot;]
+a83[&quot;BroadCast RadioService&quot;]
+a74 ~~~ a77 ~~~ a80 ~~~ a83
+end
+subgraph layout_row_18[&quot; &quot;]
+direction TB
+a75[&quot;MediaServer&quot;]
+a78[&quot;Audio Flinger&quot;]
+a81[&quot;CarPlay Service&quot;]
+a84[&quot;MBOS Service&quot;]
+a75 ~~~ a78 ~~~ a81 ~~~ a84
+end
+layout_row_16 ~~~ layout_row_17 ~~~ layout_row_18
+end
+end
+subgraph system[&quot;System&quot;]
+direction TB
+subgraph layout_row_19[&quot; &quot;]
+direction LR
+subgraph layout_row_20[&quot; &quot;]
+direction TB
+a85[&quot;Update Engine&quot;]
+a88[&quot;vold&quot;]
+a91[&quot;lmkd&quot;]
+a94[&quot;FCM Service&quot;]
+a85 ~~~ a88 ~~~ a91 ~~~ a94
+end
+subgraph layout_row_21[&quot; &quot;]
+direction TB
+a86[&quot;AVM&quot;]
+a89[&quot;Tbox Service&quot;]
+a92[&quot;ADAS Service&quot;]
+a86 ~~~ a89 ~~~ a92
+end
+subgraph layout_row_22[&quot; &quot;]
+direction TB
+a87[&quot;RVC&quot;]
+a90[&quot;netd&quot;]
+a93[&quot;MBLog&quot;]
+a87 ~~~ a90 ~~~ a93
+end
+layout_row_20 ~~~ layout_row_21 ~~~ layout_row_22
+end
+end
+java ~~~ media ~~~ car ~~~ native ~~~ system
+end
+subgraph runtime[&quot;Android Runtime&quot;]
+direction TB
+subgraph layout_row_23[&quot; &quot;]
+direction LR
+a95[&quot;ART&quot;]
+a96[&quot;Core Libraries&quot;]
+a95 ~~~ a96
+end
+end
+subgraph infra[&quot;Infra&quot;]
+direction TB
+subgraph layout_row_24[&quot; &quot;]
+direction LR
+subgraph layout_row_25[&quot; &quot;]
+direction TB
+a97[&quot;FDBUS&quot;]
+a100[&quot;MB_ipc&quot;]
+a103[&quot;vsomeip&quot;]
+a97 ~~~ a100 ~~~ a103
+end
+subgraph layout_row_26[&quot; &quot;]
+direction TB
+a98[&quot;canservice&quot;]
+a101[&quot;protobuf&quot;]
+a98 ~~~ a101
+end
+subgraph layout_row_27[&quot; &quot;]
+direction TB
+a99[&quot;boost&quot;]
+a102[&quot;Update_server&quot;]
+a99 ~~~ a102
+end
+layout_row_25 ~~~ layout_row_26 ~~~ layout_row_27
+end
+end
+subgraph libs[&quot;Librays（原图拼写）&quot;]
+direction TB
+subgraph layout_row_28[&quot; &quot;]
+direction LR
+subgraph layout_row_29[&quot; &quot;]
+direction TB
+a104[&quot;Webkit&quot;]
+a107[&quot;CarPlay plug-in&quot;]
+a110[&quot;Chromium&quot;]
+a113[&quot;Bluetooth Stack&quot;]
+a104 ~~~ a107 ~~~ a110 ~~~ a113
+end
+subgraph layout_row_30[&quot; &quot;]
+direction TB
+a105[&quot;OpenMax&quot;]
+a108[&quot;OpenGLES&quot;]
+a111[&quot;iAP2&quot;]
+a105 ~~~ a108 ~~~ a111
+end
+subgraph layout_row_31[&quot; &quot;]
+direction TB
+a106[&quot;Bionic&quot;]
+a109[&quot;SQLite&quot;]
+a112[&quot;StageFright plug&quot;]
+a106 ~~~ a109 ~~~ a112
+end
+layout_row_29 ~~~ layout_row_30 ~~~ layout_row_31
+end
+end
+subgraph external[&quot;External&quot;]
+direction TB
+subgraph layout_row_32[&quot; &quot;]
+direction LR
+subgraph layout_row_33[&quot; &quot;]
+direction TB
+a114[&quot;exfat tool&quot;]
+a117[&quot;tf_hot_plug&quot;]
+a114 ~~~ a117
+end
+subgraph layout_row_34[&quot; &quot;]
+direction TB
+a115[&quot;wpa_supplicant_8&quot;]
+a118[&quot;e2fs[ rpgs ]（原图标签待核）&quot;]
+a115 ~~~ a118
+end
+subgraph layout_row_35[&quot; &quot;]
+direction TB
+a116[&quot;ntfs_tool&quot;]
+a119[&quot;logd&quot;]
+a116 ~~~ a119
+end
+layout_row_33 ~~~ layout_row_34 ~~~ layout_row_35
+end
+end
+subgraph hal[&quot;HAL&quot;]
+direction TB
+subgraph layout_row_36[&quot; &quot;]
+direction LR
+subgraph layout_row_37[&quot; &quot;]
+direction TB
+a120[&quot;Audio&quot;]
+a123[&quot;Bluetooth&quot;]
+a126[&quot;RIL&quot;]
+a129[&quot;Camera&quot;]
+a132[&quot;Lights&quot;]
+a135[&quot;AudioControl&quot;]
+a138[&quot;tbox&quot;]
+a141[&quot;mbsensors&quot;]
+a120 ~~~ a123 ~~~ a126 ~~~ a129 ~~~ a132 ~~~ a135 ~~~ a138 ~~~ a141
+end
+subgraph layout_row_38[&quot; &quot;]
+direction TB
+a121[&quot;Media&quot;]
+a124[&quot;Power&quot;]
+a127[&quot;DRM&quot;]
+a130[&quot;Sensors&quot;]
+a133[&quot;Location&quot;]
+a136[&quot;radio&quot;]
+a139[&quot;configstoreHAL&quot;]
+a142[&quot;MBOS HAL&quot;]
+a121 ~~~ a124 ~~~ a127 ~~~ a130 ~~~ a133 ~~~ a136 ~~~ a139 ~~~ a142
+end
+subgraph layout_row_39[&quot; &quot;]
+direction TB
+a122[&quot;Display&quot;]
+a125[&quot;USB&quot;]
+a128[&quot;BroadCastRadio&quot;]
+a131[&quot;WIFI&quot;]
+a134[&quot;BootCtrl&quot;]
+a137[&quot;VehicleHAL&quot;]
+a140[&quot;mbgnss&quot;]
+a143[&quot;mblogd&quot;]
+a122 ~~~ a125 ~~~ a128 ~~~ a131 ~~~ a134 ~~~ a137 ~~~ a140 ~~~ a143
+end
+layout_row_37 ~~~ layout_row_38 ~~~ layout_row_39
+end
+end
+subgraph kernel[&quot;Kernel&quot;]
+direction TB
+subgraph layout_row_40[&quot; &quot;]
+direction LR
+subgraph layout_row_41[&quot; &quot;]
+direction TB
+a144[&quot;iAP2/MFI&quot;]
+a147[&quot;Codec&quot;]
+a150[&quot;RTC&quot;]
+a153[&quot;Network&quot;]
+a156[&quot;Sensor&quot;]
+a159[&quot;ethernet&quot;]
+a162[&quot;Peripheral(UART SPI GPIO ADC...)&quot;]
+a144 ~~~ a147 ~~~ a150 ~~~ a153 ~~~ a156 ~~~ a159 ~~~ a162
+end
+subgraph layout_row_42[&quot; &quot;]
+direction TB
+a145[&quot;Scheduler&quot;]
+a148[&quot;OpenGL&quot;]
+a151[&quot;DRM&quot;]
+a154[&quot;Memory&quot;]
+a157[&quot;MT66XX&quot;]
+a160[&quot;USB&quot;]
+a163[&quot;BootLoader&quot;]
+a145 ~~~ a148 ~~~ a151 ~~~ a154 ~~~ a157 ~~~ a160 ~~~ a163
+end
+subgraph layout_row_43[&quot; &quot;]
+direction TB
+a146[&quot;ALSA&quot;]
+a149[&quot;eMMC/UFS/SD&quot;]
+a152[&quot;MDP&quot;]
+a155[&quot;VFS&quot;]
+a158[&quot;CCCI&quot;]
+a161[&quot;Camera&quot;]
+a146 ~~~ a149 ~~~ a152 ~~~ a155 ~~~ a158 ~~~ a161
+end
+layout_row_41 ~~~ layout_row_42 ~~~ layout_row_43
+end
+end
+applications ~~~ framework ~~~ runtime ~~~ infra ~~~ libs ~~~ external ~~~ hal ~~~ kernel
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent
+style layout_row_5 fill:transparent,stroke:transparent
+style layout_row_6 fill:transparent,stroke:transparent
+style layout_row_7 fill:transparent,stroke:transparent
+style layout_row_8 fill:transparent,stroke:transparent
+style layout_row_9 fill:transparent,stroke:transparent
+style layout_row_10 fill:transparent,stroke:transparent
+style layout_row_11 fill:transparent,stroke:transparent
+style layout_row_12 fill:transparent,stroke:transparent
+style layout_row_13 fill:transparent,stroke:transparent
+style layout_row_14 fill:transparent,stroke:transparent
+style layout_row_15 fill:transparent,stroke:transparent
+style layout_row_16 fill:transparent,stroke:transparent
+style layout_row_17 fill:transparent,stroke:transparent
+style layout_row_18 fill:transparent,stroke:transparent
+style layout_row_19 fill:transparent,stroke:transparent
+style layout_row_20 fill:transparent,stroke:transparent
+style layout_row_21 fill:transparent,stroke:transparent
+style layout_row_22 fill:transparent,stroke:transparent
+style layout_row_23 fill:transparent,stroke:transparent
+style layout_row_24 fill:transparent,stroke:transparent
+style layout_row_25 fill:transparent,stroke:transparent
+style layout_row_26 fill:transparent,stroke:transparent
+style layout_row_27 fill:transparent,stroke:transparent
+style layout_row_28 fill:transparent,stroke:transparent
+style layout_row_29 fill:transparent,stroke:transparent
+style layout_row_30 fill:transparent,stroke:transparent
+style layout_row_31 fill:transparent,stroke:transparent
+style layout_row_32 fill:transparent,stroke:transparent
+style layout_row_33 fill:transparent,stroke:transparent
+style layout_row_34 fill:transparent,stroke:transparent
+style layout_row_35 fill:transparent,stroke:transparent
+style layout_row_36 fill:transparent,stroke:transparent
+style layout_row_37 fill:transparent,stroke:transparent
+style layout_row_38 fill:transparent,stroke:transparent
+style layout_row_39 fill:transparent,stroke:transparent
+style layout_row_40 fill:transparent,stroke:transparent
+style layout_row_41 fill:transparent,stroke:transparent
+style layout_row_42 fill:transparent,stroke:transparent
+style layout_row_43 fill:transparent,stroke:transparent</code></pre></details></details><p class="note">按源图容器与标签重建。源图没有跨层调用箭头，重绘不添加调用关系。第三方金色块为原图标记；同名 WifiService 两次出现保留。e2fs 标签清晰度不足，明确待核。 完整结构图保留全部原始模块；总览只做导航，详细内容见各层或各域。</p><details class="original-reference"><summary>查看源文件原图作对照</summary><a href="assets/01.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/01.jpg" alt="Android / AAOS Guest 分层 源图"></a></details></figure></p>
 <p>这张图回答“Android Guest 内部有哪些层和服务”。例如 Application 层出现
 Launcher、SystemUI、CarSettings、MediaCenter 等应用；Framework 中既有 Java
 Services，也有 Car Services、Native Services 和 System 组件；再往下是 Runtime、
@@ -63,7 +1847,1189 @@ Infra、Libraries、External、HAL 与 Kernel。[可信度：架构图确认]
 <p>它<strong>不直接回答</strong>某应用一定调用哪个服务、哪个进程拥有某设备、Binder 接口名是什么，
 也不说明每个方框都是独立进程。容器只证明“被归入该层/组”，不证明运行时拓扑。</p>
 <h3 id="图-2整机部署与资源归属图">图 2：整机部署与资源归属图</h3>
-<p><figure><a href="assets/02.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/02.jpg" alt="图2：整机部署与资源归属图"></a><figcaption>图2：整机部署与资源归属图 · 点击查看原图</figcaption></figure></p>
+<p><figure class="mermaid-figure diagram-reading" id="deployment-chinese"><figcaption>整机部署与资源归属 · Mermaid</figcaption><p class="diagram-guide">先看总览，再选择运行域查看全部模块。排列与颜色用于阅读分区，不表示调用或启动顺序。</p><label class="diagram-view-picker" for="deployment-chinese-view">阅读视图 <select id="deployment-chinese-view" data-diagram-view><option value="deployment-chinese-overview">总览 · 先看边界与层级</option><option value="deployment-chinese-MCU">MCU 域</option><option value="deployment-chinese-sos">Host / SOS YOCTO</option><option value="deployment-chinese-android">Guest / UOS Android</option><option value="deployment-chinese-tbox">Guest / UOS Tbox</option><option value="deployment-chinese-nebula">Nebula os</option><option value="deployment-chinese-complete">完整结构图 · 全部模块</option></select></label><details id="deployment-chinese-overview" class="diagram" open data-panel="deployment-chinese-overview"><summary>总览 · 先看边界与层级</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/deployment-chinese-overview.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="总览 · 先看边界与层级，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart LR
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph MCU[&quot;独立 MCU 域&quot;]
+direction TB
+msw[&quot;SWCs · RTE / E2E&lt;br/&gt;OS · BSW · MCAL · FBL&quot;]
+mhw[&quot;MCU 硬件&quot;]
+msw ~~~ mhw
+end
+subgraph soc[&quot;SoC 部署视图&quot;]
+direction TB
+subgraph domains[&quot;图示软件域&quot;]
+direction TB
+subgraph domain_row1[&quot; &quot;]
+direction LR
+host[&quot;SOS / YOCTO · Host&lt;br/&gt;应用 · OS Runtime&lt;br/&gt;Infrastructure · Drivers&quot;]
+android[&quot;UOS Android · Guest&lt;br/&gt;应用 · AOSP / CarService / MBOS&lt;br/&gt;Runtime · HAL · Infrastructure&lt;br/&gt;Kernel &amp; Drivers&quot;]
+host ~~~ android
+end
+subgraph domain_row2[&quot; &quot;]
+direction LR
+tbox[&quot;UOS Tbox · Guest&lt;br/&gt;Application / Tbox · GPS&lt;br/&gt;Telephony · 虚拟连接 / 时钟&lt;br/&gt;Kernel &amp; Drivers / ccci&quot;]
+nebula[&quot;Nebula os&lt;br/&gt;UOS / SOS VM process&lt;br/&gt;Micro Kernel&quot;]
+tbox ~~~ nebula
+end
+domain_row1 ~~~ domain_row2
+end
+hv[&quot;Hypervisor&quot;]
+hw[&quot;SoC 硬件&quot;]
+domains ~~~ hv ~~~ hw
+end
+MCU ~~~ soc
+style domain_row1 fill:transparent,stroke:transparent
+style domain_row2 fill:transparent,stroke:transparent
+style MCU fill:#fff3e4,stroke:#bc9258
+style soc fill:#edf5f0,stroke:#678c76
+classDef guest fill:#e8effb,stroke:#7c95b6,color:#183352
+class android,tbox guest</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart LR
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph MCU[&quot;独立 MCU 域&quot;]
+direction TB
+msw[&quot;SWCs · RTE / E2E&lt;br/&gt;OS · BSW · MCAL · FBL&quot;]
+mhw[&quot;MCU 硬件&quot;]
+msw ~~~ mhw
+end
+subgraph soc[&quot;SoC 部署视图&quot;]
+direction TB
+subgraph domains[&quot;图示软件域&quot;]
+direction TB
+subgraph domain_row1[&quot; &quot;]
+direction LR
+host[&quot;SOS / YOCTO · Host&lt;br/&gt;应用 · OS Runtime&lt;br/&gt;Infrastructure · Drivers&quot;]
+android[&quot;UOS Android · Guest&lt;br/&gt;应用 · AOSP / CarService / MBOS&lt;br/&gt;Runtime · HAL · Infrastructure&lt;br/&gt;Kernel &amp; Drivers&quot;]
+host ~~~ android
+end
+subgraph domain_row2[&quot; &quot;]
+direction LR
+tbox[&quot;UOS Tbox · Guest&lt;br/&gt;Application / Tbox · GPS&lt;br/&gt;Telephony · 虚拟连接 / 时钟&lt;br/&gt;Kernel &amp; Drivers / ccci&quot;]
+nebula[&quot;Nebula os&lt;br/&gt;UOS / SOS VM process&lt;br/&gt;Micro Kernel&quot;]
+tbox ~~~ nebula
+end
+domain_row1 ~~~ domain_row2
+end
+hv[&quot;Hypervisor&quot;]
+hw[&quot;SoC 硬件&quot;]
+domains ~~~ hv ~~~ hw
+end
+MCU ~~~ soc
+style domain_row1 fill:transparent,stroke:transparent
+style domain_row2 fill:transparent,stroke:transparent
+style MCU fill:#fff3e4,stroke:#bc9258
+style soc fill:#edf5f0,stroke:#678c76
+classDef guest fill:#e8effb,stroke:#7c95b6,color:#183352
+class android,tbox guest</code></pre></details></details><details id="deployment-chinese-MCU" class="diagram"  data-panel="deployment-chinese-MCU"><summary>MCU 域</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/deployment-chinese-MCU.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MCU 域，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph MCU[&quot;MCU 域&quot;]
+direction TB
+subgraph swcs[&quot;SWCs&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+m1[&quot;仪表应用&quot;]
+m4[&quot;警示灯控制&quot;]
+m7[&quot;功能安全&quot;]
+m1 ~~~ m4 ~~~ m7
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+m2[&quot;行车电脑&quot;]
+m5[&quot;ADAS应用&quot;]
+m8[&quot;功能诊断&quot;]
+m2 ~~~ m5 ~~~ m8
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+m3[&quot;电源管理&quot;]
+m6[&quot;DSP控制&quot;]
+m3 ~~~ m6
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+subgraph rte[&quot;RTE&quot;]
+direction TB
+subgraph layout_row_5[&quot; &quot;]
+direction LR
+e2e[&quot;E2E&quot;]
+end
+end
+subgraph layout_row_6[&quot; &quot;]
+direction LR
+mos[&quot;OS&quot;]
+bsw[&quot;BSW&quot;]
+mos ~~~ bsw
+end
+subgraph mcal[&quot;MCAL&quot;]
+direction TB
+subgraph layout_row_7[&quot; &quot;]
+direction LR
+can[&quot;CAN&quot;]
+spi[&quot;SPI&quot;]
+can ~~~ spi
+end
+end
+subgraph layout_row_8[&quot; &quot;]
+direction LR
+fbl[&quot;FBL&quot;]
+mhw[&quot;MCU 硬件&quot;]
+fbl ~~~ mhw
+end
+swcs ~~~ rte ~~~ layout_row_6 ~~~ mcal ~~~ layout_row_8
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent
+style layout_row_5 fill:transparent,stroke:transparent
+style layout_row_6 fill:transparent,stroke:transparent
+style layout_row_7 fill:transparent,stroke:transparent
+style layout_row_8 fill:transparent,stroke:transparent</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph MCU[&quot;MCU 域&quot;]
+direction TB
+subgraph swcs[&quot;SWCs&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+m1[&quot;仪表应用&quot;]
+m4[&quot;警示灯控制&quot;]
+m7[&quot;功能安全&quot;]
+m1 ~~~ m4 ~~~ m7
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+m2[&quot;行车电脑&quot;]
+m5[&quot;ADAS应用&quot;]
+m8[&quot;功能诊断&quot;]
+m2 ~~~ m5 ~~~ m8
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+m3[&quot;电源管理&quot;]
+m6[&quot;DSP控制&quot;]
+m3 ~~~ m6
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+subgraph rte[&quot;RTE&quot;]
+direction TB
+subgraph layout_row_5[&quot; &quot;]
+direction LR
+e2e[&quot;E2E&quot;]
+end
+end
+subgraph layout_row_6[&quot; &quot;]
+direction LR
+mos[&quot;OS&quot;]
+bsw[&quot;BSW&quot;]
+mos ~~~ bsw
+end
+subgraph mcal[&quot;MCAL&quot;]
+direction TB
+subgraph layout_row_7[&quot; &quot;]
+direction LR
+can[&quot;CAN&quot;]
+spi[&quot;SPI&quot;]
+can ~~~ spi
+end
+end
+subgraph layout_row_8[&quot; &quot;]
+direction LR
+fbl[&quot;FBL&quot;]
+mhw[&quot;MCU 硬件&quot;]
+fbl ~~~ mhw
+end
+swcs ~~~ rte ~~~ layout_row_6 ~~~ mcal ~~~ layout_row_8
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent
+style layout_row_5 fill:transparent,stroke:transparent
+style layout_row_6 fill:transparent,stroke:transparent
+style layout_row_7 fill:transparent,stroke:transparent
+style layout_row_8 fill:transparent,stroke:transparent</code></pre></details></details><details id="deployment-chinese-sos" class="diagram"  data-panel="deployment-chinese-sos"><summary>Host / SOS YOCTO</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/deployment-chinese-sos.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Host / SOS YOCTO，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph sos[&quot;Host / SOS YOCTO&quot;]
+direction TB
+subgraph sapps[&quot;Application&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+avm[&quot;AVM&quot;]
+rvc[&quot;RVC&quot;]
+avm ~~~ rvc
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+cluster[&quot;Cluster&quot;]
+adas[&quot;ADAS&quot;]
+cluster ~~~ adas
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+dms[&quot;DMS&quot;]
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+subgraph runtime[&quot;OS Runtime&quot;]
+direction TB
+subgraph layout_row_5[&quot; &quot;]
+direction LR
+weston[&quot;Weston&quot;]
+camera[&quot;Camera&quot;]
+gst[&quot;Gstreamer&quot;]
+weston ~~~ camera ~~~ gst
+end
+end
+subgraph infra[&quot;Infrastructure&quot;]
+direction TB
+subgraph layout_row_6[&quot; &quot;]
+direction LR
+subgraph layout_row_7[&quot; &quot;]
+direction TB
+life[&quot;Lifecycle&quot;]
+vehicle[&quot;VehicleIF&quot;]
+life ~~~ vehicle
+end
+subgraph layout_row_8[&quot; &quot;]
+direction TB
+soa[&quot;SOA/IPC&quot;]
+audio[&quot;AudioMgr&quot;]
+soa ~~~ audio
+end
+subgraph layout_row_9[&quot; &quot;]
+direction TB
+cans[&quot;CanService&quot;]
+log[&quot;LogMgr&quot;]
+cans ~~~ log
+end
+layout_row_7 ~~~ layout_row_8 ~~~ layout_row_9
+end
+end
+subgraph drivers[&quot;Drivers&quot;]
+direction TB
+subgraph layout_row_10[&quot; &quot;]
+direction LR
+subgraph layout_row_11[&quot; &quot;]
+direction TB
+isp[&quot;ISP&quot;]
+eth[&quot;Ethernet&quot;]
+isp ~~~ eth
+end
+subgraph layout_row_12[&quot; &quot;]
+direction TB
+display[&quot;Display&quot;]
+end
+subgraph layout_row_13[&quot; &quot;]
+direction TB
+aud[&quot;Audio&quot;]
+end
+layout_row_11 ~~~ layout_row_12 ~~~ layout_row_13
+end
+end
+sapps ~~~ runtime ~~~ infra ~~~ drivers
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent
+style layout_row_5 fill:transparent,stroke:transparent
+style layout_row_6 fill:transparent,stroke:transparent
+style layout_row_7 fill:transparent,stroke:transparent
+style layout_row_8 fill:transparent,stroke:transparent
+style layout_row_9 fill:transparent,stroke:transparent
+style layout_row_10 fill:transparent,stroke:transparent
+style layout_row_11 fill:transparent,stroke:transparent
+style layout_row_12 fill:transparent,stroke:transparent
+style layout_row_13 fill:transparent,stroke:transparent</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph sos[&quot;Host / SOS YOCTO&quot;]
+direction TB
+subgraph sapps[&quot;Application&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+avm[&quot;AVM&quot;]
+rvc[&quot;RVC&quot;]
+avm ~~~ rvc
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+cluster[&quot;Cluster&quot;]
+adas[&quot;ADAS&quot;]
+cluster ~~~ adas
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+dms[&quot;DMS&quot;]
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+subgraph runtime[&quot;OS Runtime&quot;]
+direction TB
+subgraph layout_row_5[&quot; &quot;]
+direction LR
+weston[&quot;Weston&quot;]
+camera[&quot;Camera&quot;]
+gst[&quot;Gstreamer&quot;]
+weston ~~~ camera ~~~ gst
+end
+end
+subgraph infra[&quot;Infrastructure&quot;]
+direction TB
+subgraph layout_row_6[&quot; &quot;]
+direction LR
+subgraph layout_row_7[&quot; &quot;]
+direction TB
+life[&quot;Lifecycle&quot;]
+vehicle[&quot;VehicleIF&quot;]
+life ~~~ vehicle
+end
+subgraph layout_row_8[&quot; &quot;]
+direction TB
+soa[&quot;SOA/IPC&quot;]
+audio[&quot;AudioMgr&quot;]
+soa ~~~ audio
+end
+subgraph layout_row_9[&quot; &quot;]
+direction TB
+cans[&quot;CanService&quot;]
+log[&quot;LogMgr&quot;]
+cans ~~~ log
+end
+layout_row_7 ~~~ layout_row_8 ~~~ layout_row_9
+end
+end
+subgraph drivers[&quot;Drivers&quot;]
+direction TB
+subgraph layout_row_10[&quot; &quot;]
+direction LR
+subgraph layout_row_11[&quot; &quot;]
+direction TB
+isp[&quot;ISP&quot;]
+eth[&quot;Ethernet&quot;]
+isp ~~~ eth
+end
+subgraph layout_row_12[&quot; &quot;]
+direction TB
+display[&quot;Display&quot;]
+end
+subgraph layout_row_13[&quot; &quot;]
+direction TB
+aud[&quot;Audio&quot;]
+end
+layout_row_11 ~~~ layout_row_12 ~~~ layout_row_13
+end
+end
+sapps ~~~ runtime ~~~ infra ~~~ drivers
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent
+style layout_row_5 fill:transparent,stroke:transparent
+style layout_row_6 fill:transparent,stroke:transparent
+style layout_row_7 fill:transparent,stroke:transparent
+style layout_row_8 fill:transparent,stroke:transparent
+style layout_row_9 fill:transparent,stroke:transparent
+style layout_row_10 fill:transparent,stroke:transparent
+style layout_row_11 fill:transparent,stroke:transparent
+style layout_row_12 fill:transparent,stroke:transparent
+style layout_row_13 fill:transparent,stroke:transparent</code></pre></details></details><details id="deployment-chinese-android" class="diagram"  data-panel="deployment-chinese-android"><summary>Guest / UOS Android</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/deployment-chinese-android.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Guest / UOS Android，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph android[&quot;Guest / UOS Android&quot;]
+direction TB
+subgraph aapp[&quot;Application&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a1[&quot;车载应用&quot;]
+a4[&quot;地图导航&quot;]
+a1 ~~~ a4
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a2[&quot;生态应用&quot;]
+a5[&quot;语音识别&quot;]
+a2 ~~~ a5
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a3[&quot;行车记录仪&quot;]
+a6[&quot;远程监控&quot;]
+a3 ~~~ a6
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+subgraph layout_row_5[&quot; &quot;]
+direction LR
+subgraph layout_row_6[&quot; &quot;]
+direction TB
+aosp[&quot;AOSP&quot;]
+art[&quot;Runtime&quot;]
+adrivers[&quot;Kernel &amp; Drivers / Ethernet&quot;]
+aosp ~~~ art ~~~ adrivers
+end
+subgraph layout_row_7[&quot; &quot;]
+direction TB
+cars[&quot;CarService&quot;]
+hal[&quot;HAL&quot;]
+cars ~~~ hal
+end
+subgraph layout_row_8[&quot; &quot;]
+direction TB
+mbos[&quot;MBOS&quot;]
+ainfra[&quot;Infrastructure&quot;]
+mbos ~~~ ainfra
+end
+layout_row_6 ~~~ layout_row_7 ~~~ layout_row_8
+end
+aapp ~~~ layout_row_5
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent
+style layout_row_5 fill:transparent,stroke:transparent
+style layout_row_6 fill:transparent,stroke:transparent
+style layout_row_7 fill:transparent,stroke:transparent
+style layout_row_8 fill:transparent,stroke:transparent</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph android[&quot;Guest / UOS Android&quot;]
+direction TB
+subgraph aapp[&quot;Application&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+a1[&quot;车载应用&quot;]
+a4[&quot;地图导航&quot;]
+a1 ~~~ a4
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+a2[&quot;生态应用&quot;]
+a5[&quot;语音识别&quot;]
+a2 ~~~ a5
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+a3[&quot;行车记录仪&quot;]
+a6[&quot;远程监控&quot;]
+a3 ~~~ a6
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+subgraph layout_row_5[&quot; &quot;]
+direction LR
+subgraph layout_row_6[&quot; &quot;]
+direction TB
+aosp[&quot;AOSP&quot;]
+art[&quot;Runtime&quot;]
+adrivers[&quot;Kernel &amp; Drivers / Ethernet&quot;]
+aosp ~~~ art ~~~ adrivers
+end
+subgraph layout_row_7[&quot; &quot;]
+direction TB
+cars[&quot;CarService&quot;]
+hal[&quot;HAL&quot;]
+cars ~~~ hal
+end
+subgraph layout_row_8[&quot; &quot;]
+direction TB
+mbos[&quot;MBOS&quot;]
+ainfra[&quot;Infrastructure&quot;]
+mbos ~~~ ainfra
+end
+layout_row_6 ~~~ layout_row_7 ~~~ layout_row_8
+end
+aapp ~~~ layout_row_5
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent
+style layout_row_5 fill:transparent,stroke:transparent
+style layout_row_6 fill:transparent,stroke:transparent
+style layout_row_7 fill:transparent,stroke:transparent
+style layout_row_8 fill:transparent,stroke:transparent</code></pre></details></details><details id="deployment-chinese-tbox" class="diagram"  data-panel="deployment-chinese-tbox"><summary>Guest / UOS Tbox</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/deployment-chinese-tbox.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Guest / UOS Tbox，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph tbox[&quot;Guest / UOS Tbox&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+t[&quot;Application / Tbox&quot;]
+conn[&quot;Virtual conninfra&quot;]
+t ~~~ conn
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+gps[&quot;GPS&quot;]
+clk[&quot;Virtual CLK&quot;]
+gps ~~~ clk
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+tel[&quot;Telephony Service&quot;]
+ccci[&quot;Kernel &amp; Drivers / ccci Driver&quot;]
+tel ~~~ ccci
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph tbox[&quot;Guest / UOS Tbox&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+t[&quot;Application / Tbox&quot;]
+conn[&quot;Virtual conninfra&quot;]
+t ~~~ conn
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+gps[&quot;GPS&quot;]
+clk[&quot;Virtual CLK&quot;]
+gps ~~~ clk
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+tel[&quot;Telephony Service&quot;]
+ccci[&quot;Kernel &amp; Drivers / ccci Driver&quot;]
+tel ~~~ ccci
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent</code></pre></details></details><details id="deployment-chinese-nebula" class="diagram"  data-panel="deployment-chinese-nebula"><summary>Nebula os</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/deployment-chinese-nebula.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Nebula os，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph nebula[&quot;Nebula os&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+uvm[&quot;UOS VM process&quot;]
+svm[&quot;SOS VM process&quot;]
+micro[&quot;Micro Kernel&quot;]
+uvm ~~~ svm ~~~ micro
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph nebula[&quot;Nebula os&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+uvm[&quot;UOS VM process&quot;]
+svm[&quot;SOS VM process&quot;]
+micro[&quot;Micro Kernel&quot;]
+uvm ~~~ svm ~~~ micro
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent</code></pre></details></details><details id="deployment-chinese-complete" class="diagram"  data-panel="deployment-chinese-complete"><summary>完整结构图 · 全部模块</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/deployment-chinese-complete.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="完整结构图 · 全部模块，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph MCU[&quot;MCU 域&quot;]
+direction TB
+subgraph swcs[&quot;SWCs&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+m1[&quot;仪表应用&quot;]
+m4[&quot;警示灯控制&quot;]
+m7[&quot;功能安全&quot;]
+m1 ~~~ m4 ~~~ m7
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+m2[&quot;行车电脑&quot;]
+m5[&quot;ADAS应用&quot;]
+m8[&quot;功能诊断&quot;]
+m2 ~~~ m5 ~~~ m8
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+m3[&quot;电源管理&quot;]
+m6[&quot;DSP控制&quot;]
+m3 ~~~ m6
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+subgraph rte[&quot;RTE&quot;]
+direction TB
+subgraph layout_row_5[&quot; &quot;]
+direction LR
+e2e[&quot;E2E&quot;]
+end
+end
+subgraph layout_row_6[&quot; &quot;]
+direction LR
+mos[&quot;OS&quot;]
+bsw[&quot;BSW&quot;]
+mos ~~~ bsw
+end
+subgraph mcal[&quot;MCAL&quot;]
+direction TB
+subgraph layout_row_7[&quot; &quot;]
+direction LR
+can[&quot;CAN&quot;]
+spi[&quot;SPI&quot;]
+can ~~~ spi
+end
+end
+subgraph layout_row_8[&quot; &quot;]
+direction LR
+fbl[&quot;FBL&quot;]
+mhw[&quot;MCU 硬件&quot;]
+fbl ~~~ mhw
+end
+swcs ~~~ rte ~~~ layout_row_6 ~~~ mcal ~~~ layout_row_8
+end
+subgraph soc[&quot;SoC 部署视图&quot;]
+direction TB
+subgraph domains[&quot;图示软件域&quot;]
+direction TB
+subgraph tbox[&quot;Guest / UOS Tbox&quot;]
+direction TB
+subgraph layout_row_9[&quot; &quot;]
+direction LR
+subgraph layout_row_10[&quot; &quot;]
+direction TB
+t[&quot;Application / Tbox&quot;]
+conn[&quot;Virtual conninfra&quot;]
+t ~~~ conn
+end
+subgraph layout_row_11[&quot; &quot;]
+direction TB
+gps[&quot;GPS&quot;]
+clk[&quot;Virtual CLK&quot;]
+gps ~~~ clk
+end
+subgraph layout_row_12[&quot; &quot;]
+direction TB
+tel[&quot;Telephony Service&quot;]
+ccci[&quot;Kernel &amp; Drivers / ccci Driver&quot;]
+tel ~~~ ccci
+end
+layout_row_10 ~~~ layout_row_11 ~~~ layout_row_12
+end
+end
+subgraph sos[&quot;Host / SOS YOCTO&quot;]
+direction TB
+subgraph sapps[&quot;Application&quot;]
+direction TB
+subgraph layout_row_13[&quot; &quot;]
+direction LR
+subgraph layout_row_14[&quot; &quot;]
+direction TB
+avm[&quot;AVM&quot;]
+rvc[&quot;RVC&quot;]
+avm ~~~ rvc
+end
+subgraph layout_row_15[&quot; &quot;]
+direction TB
+cluster[&quot;Cluster&quot;]
+adas[&quot;ADAS&quot;]
+cluster ~~~ adas
+end
+subgraph layout_row_16[&quot; &quot;]
+direction TB
+dms[&quot;DMS&quot;]
+end
+layout_row_14 ~~~ layout_row_15 ~~~ layout_row_16
+end
+end
+subgraph runtime[&quot;OS Runtime&quot;]
+direction TB
+subgraph layout_row_17[&quot; &quot;]
+direction LR
+weston[&quot;Weston&quot;]
+camera[&quot;Camera&quot;]
+gst[&quot;Gstreamer&quot;]
+weston ~~~ camera ~~~ gst
+end
+end
+subgraph infra[&quot;Infrastructure&quot;]
+direction TB
+subgraph layout_row_18[&quot; &quot;]
+direction LR
+subgraph layout_row_19[&quot; &quot;]
+direction TB
+life[&quot;Lifecycle&quot;]
+vehicle[&quot;VehicleIF&quot;]
+life ~~~ vehicle
+end
+subgraph layout_row_20[&quot; &quot;]
+direction TB
+soa[&quot;SOA/IPC&quot;]
+audio[&quot;AudioMgr&quot;]
+soa ~~~ audio
+end
+subgraph layout_row_21[&quot; &quot;]
+direction TB
+cans[&quot;CanService&quot;]
+log[&quot;LogMgr&quot;]
+cans ~~~ log
+end
+layout_row_19 ~~~ layout_row_20 ~~~ layout_row_21
+end
+end
+subgraph drivers[&quot;Drivers&quot;]
+direction TB
+subgraph layout_row_22[&quot; &quot;]
+direction LR
+subgraph layout_row_23[&quot; &quot;]
+direction TB
+isp[&quot;ISP&quot;]
+eth[&quot;Ethernet&quot;]
+isp ~~~ eth
+end
+subgraph layout_row_24[&quot; &quot;]
+direction TB
+display[&quot;Display&quot;]
+end
+subgraph layout_row_25[&quot; &quot;]
+direction TB
+aud[&quot;Audio&quot;]
+end
+layout_row_23 ~~~ layout_row_24 ~~~ layout_row_25
+end
+end
+sapps ~~~ runtime ~~~ infra ~~~ drivers
+end
+subgraph android[&quot;Guest / UOS Android&quot;]
+direction TB
+subgraph aapp[&quot;Application&quot;]
+direction TB
+subgraph layout_row_26[&quot; &quot;]
+direction LR
+subgraph layout_row_27[&quot; &quot;]
+direction TB
+a1[&quot;车载应用&quot;]
+a4[&quot;地图导航&quot;]
+a1 ~~~ a4
+end
+subgraph layout_row_28[&quot; &quot;]
+direction TB
+a2[&quot;生态应用&quot;]
+a5[&quot;语音识别&quot;]
+a2 ~~~ a5
+end
+subgraph layout_row_29[&quot; &quot;]
+direction TB
+a3[&quot;行车记录仪&quot;]
+a6[&quot;远程监控&quot;]
+a3 ~~~ a6
+end
+layout_row_27 ~~~ layout_row_28 ~~~ layout_row_29
+end
+end
+subgraph layout_row_30[&quot; &quot;]
+direction LR
+subgraph layout_row_31[&quot; &quot;]
+direction TB
+aosp[&quot;AOSP&quot;]
+art[&quot;Runtime&quot;]
+adrivers[&quot;Kernel &amp; Drivers / Ethernet&quot;]
+aosp ~~~ art ~~~ adrivers
+end
+subgraph layout_row_32[&quot; &quot;]
+direction TB
+cars[&quot;CarService&quot;]
+hal[&quot;HAL&quot;]
+cars ~~~ hal
+end
+subgraph layout_row_33[&quot; &quot;]
+direction TB
+mbos[&quot;MBOS&quot;]
+ainfra[&quot;Infrastructure&quot;]
+mbos ~~~ ainfra
+end
+layout_row_31 ~~~ layout_row_32 ~~~ layout_row_33
+end
+aapp ~~~ layout_row_30
+end
+subgraph nebula[&quot;Nebula os&quot;]
+direction TB
+subgraph layout_row_34[&quot; &quot;]
+direction LR
+uvm[&quot;UOS VM process&quot;]
+svm[&quot;SOS VM process&quot;]
+micro[&quot;Micro Kernel&quot;]
+uvm ~~~ svm ~~~ micro
+end
+end
+tbox ~~~ sos ~~~ android ~~~ nebula
+end
+subgraph layout_row_35[&quot; &quot;]
+direction LR
+hv[&quot;Hypervisor&quot;]
+hw[&quot;SOC 硬件&quot;]
+hv ~~~ hw
+end
+domains ~~~ layout_row_35
+end
+MCU ~~~ soc
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent
+style layout_row_5 fill:transparent,stroke:transparent
+style layout_row_6 fill:transparent,stroke:transparent
+style layout_row_7 fill:transparent,stroke:transparent
+style layout_row_8 fill:transparent,stroke:transparent
+style layout_row_9 fill:transparent,stroke:transparent
+style layout_row_10 fill:transparent,stroke:transparent
+style layout_row_11 fill:transparent,stroke:transparent
+style layout_row_12 fill:transparent,stroke:transparent
+style layout_row_13 fill:transparent,stroke:transparent
+style layout_row_14 fill:transparent,stroke:transparent
+style layout_row_15 fill:transparent,stroke:transparent
+style layout_row_16 fill:transparent,stroke:transparent
+style layout_row_17 fill:transparent,stroke:transparent
+style layout_row_18 fill:transparent,stroke:transparent
+style layout_row_19 fill:transparent,stroke:transparent
+style layout_row_20 fill:transparent,stroke:transparent
+style layout_row_21 fill:transparent,stroke:transparent
+style layout_row_22 fill:transparent,stroke:transparent
+style layout_row_23 fill:transparent,stroke:transparent
+style layout_row_24 fill:transparent,stroke:transparent
+style layout_row_25 fill:transparent,stroke:transparent
+style layout_row_26 fill:transparent,stroke:transparent
+style layout_row_27 fill:transparent,stroke:transparent
+style layout_row_28 fill:transparent,stroke:transparent
+style layout_row_29 fill:transparent,stroke:transparent
+style layout_row_30 fill:transparent,stroke:transparent
+style layout_row_31 fill:transparent,stroke:transparent
+style layout_row_32 fill:transparent,stroke:transparent
+style layout_row_33 fill:transparent,stroke:transparent
+style layout_row_34 fill:transparent,stroke:transparent
+style layout_row_35 fill:transparent,stroke:transparent</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph MCU[&quot;MCU 域&quot;]
+direction TB
+subgraph swcs[&quot;SWCs&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+m1[&quot;仪表应用&quot;]
+m4[&quot;警示灯控制&quot;]
+m7[&quot;功能安全&quot;]
+m1 ~~~ m4 ~~~ m7
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+m2[&quot;行车电脑&quot;]
+m5[&quot;ADAS应用&quot;]
+m8[&quot;功能诊断&quot;]
+m2 ~~~ m5 ~~~ m8
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+m3[&quot;电源管理&quot;]
+m6[&quot;DSP控制&quot;]
+m3 ~~~ m6
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+subgraph rte[&quot;RTE&quot;]
+direction TB
+subgraph layout_row_5[&quot; &quot;]
+direction LR
+e2e[&quot;E2E&quot;]
+end
+end
+subgraph layout_row_6[&quot; &quot;]
+direction LR
+mos[&quot;OS&quot;]
+bsw[&quot;BSW&quot;]
+mos ~~~ bsw
+end
+subgraph mcal[&quot;MCAL&quot;]
+direction TB
+subgraph layout_row_7[&quot; &quot;]
+direction LR
+can[&quot;CAN&quot;]
+spi[&quot;SPI&quot;]
+can ~~~ spi
+end
+end
+subgraph layout_row_8[&quot; &quot;]
+direction LR
+fbl[&quot;FBL&quot;]
+mhw[&quot;MCU 硬件&quot;]
+fbl ~~~ mhw
+end
+swcs ~~~ rte ~~~ layout_row_6 ~~~ mcal ~~~ layout_row_8
+end
+subgraph soc[&quot;SoC 部署视图&quot;]
+direction TB
+subgraph domains[&quot;图示软件域&quot;]
+direction TB
+subgraph tbox[&quot;Guest / UOS Tbox&quot;]
+direction TB
+subgraph layout_row_9[&quot; &quot;]
+direction LR
+subgraph layout_row_10[&quot; &quot;]
+direction TB
+t[&quot;Application / Tbox&quot;]
+conn[&quot;Virtual conninfra&quot;]
+t ~~~ conn
+end
+subgraph layout_row_11[&quot; &quot;]
+direction TB
+gps[&quot;GPS&quot;]
+clk[&quot;Virtual CLK&quot;]
+gps ~~~ clk
+end
+subgraph layout_row_12[&quot; &quot;]
+direction TB
+tel[&quot;Telephony Service&quot;]
+ccci[&quot;Kernel &amp; Drivers / ccci Driver&quot;]
+tel ~~~ ccci
+end
+layout_row_10 ~~~ layout_row_11 ~~~ layout_row_12
+end
+end
+subgraph sos[&quot;Host / SOS YOCTO&quot;]
+direction TB
+subgraph sapps[&quot;Application&quot;]
+direction TB
+subgraph layout_row_13[&quot; &quot;]
+direction LR
+subgraph layout_row_14[&quot; &quot;]
+direction TB
+avm[&quot;AVM&quot;]
+rvc[&quot;RVC&quot;]
+avm ~~~ rvc
+end
+subgraph layout_row_15[&quot; &quot;]
+direction TB
+cluster[&quot;Cluster&quot;]
+adas[&quot;ADAS&quot;]
+cluster ~~~ adas
+end
+subgraph layout_row_16[&quot; &quot;]
+direction TB
+dms[&quot;DMS&quot;]
+end
+layout_row_14 ~~~ layout_row_15 ~~~ layout_row_16
+end
+end
+subgraph runtime[&quot;OS Runtime&quot;]
+direction TB
+subgraph layout_row_17[&quot; &quot;]
+direction LR
+weston[&quot;Weston&quot;]
+camera[&quot;Camera&quot;]
+gst[&quot;Gstreamer&quot;]
+weston ~~~ camera ~~~ gst
+end
+end
+subgraph infra[&quot;Infrastructure&quot;]
+direction TB
+subgraph layout_row_18[&quot; &quot;]
+direction LR
+subgraph layout_row_19[&quot; &quot;]
+direction TB
+life[&quot;Lifecycle&quot;]
+vehicle[&quot;VehicleIF&quot;]
+life ~~~ vehicle
+end
+subgraph layout_row_20[&quot; &quot;]
+direction TB
+soa[&quot;SOA/IPC&quot;]
+audio[&quot;AudioMgr&quot;]
+soa ~~~ audio
+end
+subgraph layout_row_21[&quot; &quot;]
+direction TB
+cans[&quot;CanService&quot;]
+log[&quot;LogMgr&quot;]
+cans ~~~ log
+end
+layout_row_19 ~~~ layout_row_20 ~~~ layout_row_21
+end
+end
+subgraph drivers[&quot;Drivers&quot;]
+direction TB
+subgraph layout_row_22[&quot; &quot;]
+direction LR
+subgraph layout_row_23[&quot; &quot;]
+direction TB
+isp[&quot;ISP&quot;]
+eth[&quot;Ethernet&quot;]
+isp ~~~ eth
+end
+subgraph layout_row_24[&quot; &quot;]
+direction TB
+display[&quot;Display&quot;]
+end
+subgraph layout_row_25[&quot; &quot;]
+direction TB
+aud[&quot;Audio&quot;]
+end
+layout_row_23 ~~~ layout_row_24 ~~~ layout_row_25
+end
+end
+sapps ~~~ runtime ~~~ infra ~~~ drivers
+end
+subgraph android[&quot;Guest / UOS Android&quot;]
+direction TB
+subgraph aapp[&quot;Application&quot;]
+direction TB
+subgraph layout_row_26[&quot; &quot;]
+direction LR
+subgraph layout_row_27[&quot; &quot;]
+direction TB
+a1[&quot;车载应用&quot;]
+a4[&quot;地图导航&quot;]
+a1 ~~~ a4
+end
+subgraph layout_row_28[&quot; &quot;]
+direction TB
+a2[&quot;生态应用&quot;]
+a5[&quot;语音识别&quot;]
+a2 ~~~ a5
+end
+subgraph layout_row_29[&quot; &quot;]
+direction TB
+a3[&quot;行车记录仪&quot;]
+a6[&quot;远程监控&quot;]
+a3 ~~~ a6
+end
+layout_row_27 ~~~ layout_row_28 ~~~ layout_row_29
+end
+end
+subgraph layout_row_30[&quot; &quot;]
+direction LR
+subgraph layout_row_31[&quot; &quot;]
+direction TB
+aosp[&quot;AOSP&quot;]
+art[&quot;Runtime&quot;]
+adrivers[&quot;Kernel &amp; Drivers / Ethernet&quot;]
+aosp ~~~ art ~~~ adrivers
+end
+subgraph layout_row_32[&quot; &quot;]
+direction TB
+cars[&quot;CarService&quot;]
+hal[&quot;HAL&quot;]
+cars ~~~ hal
+end
+subgraph layout_row_33[&quot; &quot;]
+direction TB
+mbos[&quot;MBOS&quot;]
+ainfra[&quot;Infrastructure&quot;]
+mbos ~~~ ainfra
+end
+layout_row_31 ~~~ layout_row_32 ~~~ layout_row_33
+end
+aapp ~~~ layout_row_30
+end
+subgraph nebula[&quot;Nebula os&quot;]
+direction TB
+subgraph layout_row_34[&quot; &quot;]
+direction LR
+uvm[&quot;UOS VM process&quot;]
+svm[&quot;SOS VM process&quot;]
+micro[&quot;Micro Kernel&quot;]
+uvm ~~~ svm ~~~ micro
+end
+end
+tbox ~~~ sos ~~~ android ~~~ nebula
+end
+subgraph layout_row_35[&quot; &quot;]
+direction LR
+hv[&quot;Hypervisor&quot;]
+hw[&quot;SOC 硬件&quot;]
+hv ~~~ hw
+end
+domains ~~~ layout_row_35
+end
+MCU ~~~ soc
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent
+style layout_row_5 fill:transparent,stroke:transparent
+style layout_row_6 fill:transparent,stroke:transparent
+style layout_row_7 fill:transparent,stroke:transparent
+style layout_row_8 fill:transparent,stroke:transparent
+style layout_row_9 fill:transparent,stroke:transparent
+style layout_row_10 fill:transparent,stroke:transparent
+style layout_row_11 fill:transparent,stroke:transparent
+style layout_row_12 fill:transparent,stroke:transparent
+style layout_row_13 fill:transparent,stroke:transparent
+style layout_row_14 fill:transparent,stroke:transparent
+style layout_row_15 fill:transparent,stroke:transparent
+style layout_row_16 fill:transparent,stroke:transparent
+style layout_row_17 fill:transparent,stroke:transparent
+style layout_row_18 fill:transparent,stroke:transparent
+style layout_row_19 fill:transparent,stroke:transparent
+style layout_row_20 fill:transparent,stroke:transparent
+style layout_row_21 fill:transparent,stroke:transparent
+style layout_row_22 fill:transparent,stroke:transparent
+style layout_row_23 fill:transparent,stroke:transparent
+style layout_row_24 fill:transparent,stroke:transparent
+style layout_row_25 fill:transparent,stroke:transparent
+style layout_row_26 fill:transparent,stroke:transparent
+style layout_row_27 fill:transparent,stroke:transparent
+style layout_row_28 fill:transparent,stroke:transparent
+style layout_row_29 fill:transparent,stroke:transparent
+style layout_row_30 fill:transparent,stroke:transparent
+style layout_row_31 fill:transparent,stroke:transparent
+style layout_row_32 fill:transparent,stroke:transparent
+style layout_row_33 fill:transparent,stroke:transparent
+style layout_row_34 fill:transparent,stroke:transparent
+style layout_row_35 fill:transparent,stroke:transparent</code></pre></details></details><p class="note">源图是分域与分层视图，没有画出设备调用连线。Mermaid 保留域、模块和 Hypervisor / SoC 标签，不把垂直位置转换成调用箭头。MCU 仍是独立硬件域。 完整结构图保留全部原始模块；总览只做导航，详细内容见各层或各域。</p><details class="original-reference"><summary>查看源文件原图作对照</summary><a href="assets/02.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/02.jpg" alt="整机部署与资源归属 源图"></a></details></figure></p>
 <p>这张图把独立 MCU 与 SoC 分开；SoC 上方由 Hypervisor 承载多个域。SOS/Yocto
 区域被标为 Host，Android 与 TBox 被标为 Guest，Nebula OS 区域出现 UOS VM
 process、SOS VM process 和 Micro Kernel。[可信度：架构图确认]
@@ -72,7 +3038,179 @@ process、SOS VM process 和 Micro Kernel。[可信度：架构图确认]
 虚拟机边界隔离”。但图中纵向位置仍不能自动转换为私有启动顺序；例如先启动哪个 VM、
 哪个服务发布 Ready，需要 Hypervisor 配置、systemd unit 和启动日志确认。</p>
 <h3 id="图-3跨域通信与协议链路图">图 3：跨域通信与协议链路图</h3>
-<p><figure><a href="assets/03.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/03.jpg" alt="图3：跨域通信与协议链路图"></a><figcaption>图3：跨域通信与协议链路图 · 点击查看原图</figcaption></figure></p>
+<p><figure class="mermaid-figure" id="communications-chinese"><figcaption>跨域通信与协议链路 · Mermaid</figcaption><details  class="diagram" open data-panel="communications-chinese"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/communications-chinese.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="跨域通信与协议链路，可使用方向键滚动"><pre class="mermaid">flowchart TB
+ subgraph sos[&quot;SOS / Yocto&quot;]
+ subgraph cluster[&quot;Cluster&quot;]
+ sc[&quot;Client&quot;]
+ cc[&quot;CanClient&quot;]
+ end
+ cs[&quot;CanService&quot;]
+ sic[&quot;Clients(SOME/IP)&quot;]
+ sroute[&quot;Routingmanaged / SOME/IP守护进程&quot;]
+ sdoip[&quot;DoIP / Diagnostics&quot;]
+ subgraph sfdb[&quot;FDBus&quot;]
+ sns[&quot;name_server(fdbus)&quot;]
+ shs[&quot;host_server(fdbus)&quot;]
+ end
+ end
+ subgraph android[&quot;UOS / Android&quot;]
+ app[&quot;app&quot;]
+ car[&quot;CarService&quot;]
+ vhal[&quot;VehicleHal&quot;]
+ mhal[&quot;MBOSHAL&quot;]
+ ch[&quot;Client Hal / Proxy&quot;]
+ sh[&quot;Service Hal / Proxy&quot;]
+ cp[&quot;Client / Proxy&quot;]
+ ss[&quot;Service / Stub&quot;]
+ ac[&quot;Clients(SOME/IP)&quot;]
+ ar[&quot;Routingmanaged / SOME/IP守护进程&quot;]
+ ad[&quot;DoIP / Master&quot;]
+ subgraph afdb[&quot;FDBus&quot;]
+ ans[&quot;name_server(fdbus)&quot;]
+ end
+ end
+ subgraph mcu[&quot;MCU&quot;]
+ subgraph di[&quot;DI&quot;]
+ dswc[&quot;SWC&quot;]
+ end
+ subgraph ivi[&quot;IVI&quot;]
+ nswc[&quot;SWC / Network&quot;]
+ iswc[&quot;SWC&quot;]
+ end
+ com[&quot;Com&quot;]
+ vi[&quot;Vehicle Interface&quot;]
+ ipcl[&quot;IPCL&quot;]
+ end
+ subgraph tbox[&quot;UOS / TBox&quot;]
+ subgraph ta[&quot;TBOX-APP&quot;]
+ update[&quot;update&quot;]
+ xcall[&quot;xcall&quot;]
+ health[&quot;health_monitor&quot;]
+ modem[&quot;modem_service&quot;]
+ syslog[&quot;syslog&quot;]
+ dynamic[&quot;dynamic&quot;]
+ business[&quot;business&quot;]
+ gnss[&quot;gnss_server&quot;]
+ mc[&quot;communication(mcu)&quot;]
+ core[&quot;core communication&quot;]
+ end
+ dk[&quot;CanService / DK CAN&quot;]
+ subgraph tfdb[&quot;FDBus&quot;]
+ tns[&quot;name_server(fdbus)&quot;]
+ end
+ end
+ sc &lt;--&gt;|API| sic
+ cc &lt;--&gt;|FDBus| cs
+ cs &lt;--&gt;|FDBus| vhal
+ cs &lt;--&gt;|FDBus| mhal
+ app &lt;--&gt;|Binder| car
+ car &lt;--&gt;|Binder| vhal
+ app &lt;--&gt;|Binder| mhal
+ ch &lt;--&gt;|API| cp
+ sh &lt;--&gt;|API| ss
+ cp &lt;--&gt;|API| ac
+ ss &lt;--&gt;|API| ac
+ sic &lt;--&gt;|Attach| sroute
+ ac &lt;--&gt;|Attach| ar
+ sroute &lt;--&gt;|SOME/IP| ar
+ cs &lt;--&gt;|SPI| ipcl
+ ipcl &lt;--&gt;|SPI| dk
+ dk &lt;--&gt;|SPI| mc
+ mc &lt;--&gt;|IPCL| core
+ core &lt;--&gt;|FDBus：容器级关系| tfdb
+ vi &lt;--&gt;|IPCL / feature1| ipcl
+ iswc &lt;--&gt;|IPCL / feature2| ipcl
+ dswc &lt;--&gt;|RTE| com
+ dswc &lt;--&gt;|RTE| vi
+ dswc &lt;--&gt;|RTE| nswc
+ nswc &lt;--&gt;|RTE| com
+ com &lt;--&gt;|RTE| vi</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TB
+ subgraph sos[&quot;SOS / Yocto&quot;]
+ subgraph cluster[&quot;Cluster&quot;]
+ sc[&quot;Client&quot;]
+ cc[&quot;CanClient&quot;]
+ end
+ cs[&quot;CanService&quot;]
+ sic[&quot;Clients(SOME/IP)&quot;]
+ sroute[&quot;Routingmanaged / SOME/IP守护进程&quot;]
+ sdoip[&quot;DoIP / Diagnostics&quot;]
+ subgraph sfdb[&quot;FDBus&quot;]
+ sns[&quot;name_server(fdbus)&quot;]
+ shs[&quot;host_server(fdbus)&quot;]
+ end
+ end
+ subgraph android[&quot;UOS / Android&quot;]
+ app[&quot;app&quot;]
+ car[&quot;CarService&quot;]
+ vhal[&quot;VehicleHal&quot;]
+ mhal[&quot;MBOSHAL&quot;]
+ ch[&quot;Client Hal / Proxy&quot;]
+ sh[&quot;Service Hal / Proxy&quot;]
+ cp[&quot;Client / Proxy&quot;]
+ ss[&quot;Service / Stub&quot;]
+ ac[&quot;Clients(SOME/IP)&quot;]
+ ar[&quot;Routingmanaged / SOME/IP守护进程&quot;]
+ ad[&quot;DoIP / Master&quot;]
+ subgraph afdb[&quot;FDBus&quot;]
+ ans[&quot;name_server(fdbus)&quot;]
+ end
+ end
+ subgraph mcu[&quot;MCU&quot;]
+ subgraph di[&quot;DI&quot;]
+ dswc[&quot;SWC&quot;]
+ end
+ subgraph ivi[&quot;IVI&quot;]
+ nswc[&quot;SWC / Network&quot;]
+ iswc[&quot;SWC&quot;]
+ end
+ com[&quot;Com&quot;]
+ vi[&quot;Vehicle Interface&quot;]
+ ipcl[&quot;IPCL&quot;]
+ end
+ subgraph tbox[&quot;UOS / TBox&quot;]
+ subgraph ta[&quot;TBOX-APP&quot;]
+ update[&quot;update&quot;]
+ xcall[&quot;xcall&quot;]
+ health[&quot;health_monitor&quot;]
+ modem[&quot;modem_service&quot;]
+ syslog[&quot;syslog&quot;]
+ dynamic[&quot;dynamic&quot;]
+ business[&quot;business&quot;]
+ gnss[&quot;gnss_server&quot;]
+ mc[&quot;communication(mcu)&quot;]
+ core[&quot;core communication&quot;]
+ end
+ dk[&quot;CanService / DK CAN&quot;]
+ subgraph tfdb[&quot;FDBus&quot;]
+ tns[&quot;name_server(fdbus)&quot;]
+ end
+ end
+ sc &lt;--&gt;|API| sic
+ cc &lt;--&gt;|FDBus| cs
+ cs &lt;--&gt;|FDBus| vhal
+ cs &lt;--&gt;|FDBus| mhal
+ app &lt;--&gt;|Binder| car
+ car &lt;--&gt;|Binder| vhal
+ app &lt;--&gt;|Binder| mhal
+ ch &lt;--&gt;|API| cp
+ sh &lt;--&gt;|API| ss
+ cp &lt;--&gt;|API| ac
+ ss &lt;--&gt;|API| ac
+ sic &lt;--&gt;|Attach| sroute
+ ac &lt;--&gt;|Attach| ar
+ sroute &lt;--&gt;|SOME/IP| ar
+ cs &lt;--&gt;|SPI| ipcl
+ ipcl &lt;--&gt;|SPI| dk
+ dk &lt;--&gt;|SPI| mc
+ mc &lt;--&gt;|IPCL| core
+ core &lt;--&gt;|FDBus：容器级关系| tfdb
+ vi &lt;--&gt;|IPCL / feature1| ipcl
+ iswc &lt;--&gt;|IPCL / feature2| ipcl
+ dswc &lt;--&gt;|RTE| com
+ dswc &lt;--&gt;|RTE| vi
+ dswc &lt;--&gt;|RTE| nswc
+ nswc &lt;--&gt;|RTE| com
+ com &lt;--&gt;|RTE| vi</code></pre></details></details><p class="note">按原图明确协议连接重建；SOME/IP、FDBus、Binder、SPI、IPCL、RTE、Attach、API 使用文字标注。TBox 应用集合到通信层的汇聚箭头原图未区分单个应用，因此不推断每个应用都直连每个端点。DoIP 块原图没有完整诊断路由，不补画。</p><details class="original-reference"><summary>查看源文件原图作对照</summary><a href="assets/03.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/03.jpg" alt="跨域通信与协议链路 源图"></a></details></figure></p>
 <p>这张图把协议作为图例放在顶部，并在域内画出 Client、Proxy、Stub、服务、守护进程
 和命名服务。它适合回答“这一段看起来使用什么通信机制”“哪一个方框像生产者或
 消费者”“跨域前后有哪些转换点”。[可信度：架构图确认] [证据：original-diagram-03]</p>
@@ -177,7 +3315,7 @@ Buffer，下游消费并归还；还需跟踪 Buffer ID、时间戳、Fence 和�
 订阅回调到达。反过来，业务状态错误也不一定是物理断链，可能是反序列化、路由、缓存、
 代际或状态机问题。</p>
 <h2 id="17-统一链路模型">1.7 统一链路模型</h2>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-01-figure-1"><figcaption>三张架构图阅读指南 · 图 1 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-01-figure-1"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-01-figure-1.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="三张架构图阅读指南 · 图 1，可使用方向键滚动"><pre class="mermaid">flowchart LR
   SRC[&quot;Source\n信号源/用户意图&quot;] --&gt; PROD[&quot;Producer\n采集/生成&quot;]
   PROD --&gt; SER[&quot;Serialize\n编码/封装&quot;]
   SER --&gt; CH[&quot;Channel\n会话/主题&quot;]
@@ -185,7 +3323,7 @@ Buffer，下游消费并归还；还需跟踪 Buffer ID、时间戳、Fence 和�
   TR --&gt; RT[&quot;Router\n服务发现/分发&quot;]
   RT --&gt; CON[&quot;Consumer\n缓存/业务逻辑&quot;]
   CON --&gt; RES[&quot;User Result\n显示/声音/执行&quot;]
-  RES -. &quot;ACK/回读/首帧&quot; .-&gt; SRC</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  RES -. &quot;ACK/回读/首帧&quot; .-&gt; SRC</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   SRC[&quot;Source\n信号源/用户意图&quot;] --&gt; PROD[&quot;Producer\n采集/生成&quot;]
   PROD --&gt; SER[&quot;Serialize\n编码/封装&quot;]
   SER --&gt; CH[&quot;Channel\n会话/主题&quot;]
@@ -193,7 +3331,7 @@ Buffer，下游消费并归还；还需跟踪 Buffer ID、时间戳、Fence 和�
   TR --&gt; RT[&quot;Router\n服务发现/分发&quot;]
   RT --&gt; CON[&quot;Consumer\n缓存/业务逻辑&quot;]
   CON --&gt; RES[&quot;User Result\n显示/声音/执行&quot;]
-  RES -. &quot;ACK/回读/首帧&quot; .-&gt; SRC</code></pre></details></details><p>实线箭头表示本次业务数据的主方向；虚线箭头表示反馈闭环，不承诺具体反馈一定回到原始
+  RES -. &quot;ACK/回读/首帧&quot; .-&gt; SRC</code></pre></details></details></figure><p>实线箭头表示本次业务数据的主方向；虚线箭头表示反馈闭环，不承诺具体反馈一定回到原始
 物理源。<code>Serialize</code> 到 <code>Channel</code> 的箭头意味着数据进入协议语义，<code>Channel</code> 到
 <code>Transport</code> 表示会话/主题依赖某种物理或虚拟承载；<code>Router</code> 到 <code>Consumer</code> 表示路由
 成功后仍需消费与状态机处理。该模型是诊断框架，不是 MT8676 私有接口图。
@@ -359,7 +3497,7 @@ Buffer，下游消费并归还；还需跟踪 Buffer ID、时间戳、Fence 和�
 </tbody></table>
 <p>所有表格对应关系都受 occurrence 约束：它用于帮助导航，不是进程合并表。</p>
 <h2 id="110-系统上下文">1.10 系统上下文</h2>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TB
+<figure class="mermaid-figure" id="chinese-01-figure-2"><figcaption>三张架构图阅读指南 · 图 2 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-01-figure-2"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-01-figure-2.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="三张架构图阅读指南 · 图 2，可使用方向键滚动"><pre class="mermaid">flowchart TB
   MCU[&quot;独立 MCU\nRTE/SWC/MCAL&quot;] &lt;--&gt;|&quot;SPI/IPCL/车辆消息&quot;| HV[&quot;SoC + Hypervisor&quot;]
   HV --&gt; SOS[&quot;SOS/Yocto Host\n驱动/后端/车辆与显示服务&quot;]
   HV --&gt; AND[&quot;UOS Android Guest\n应用/AOSP/CarService/HAL&quot;]
@@ -368,7 +3506,7 @@ Buffer，下游消费并归还；还需跟踪 Buffer ID、时间戳、Fence 和�
   SOS &lt;--&gt;|&quot;虚拟设备/IPC/以太网&quot;| AND
   SOS &lt;--&gt;|&quot;虚拟通信/IPC（直接承载待确认）&quot;| TBOX
   NEB -.-&gt;|&quot;VM process 控制语义待确认&quot;| SOS
-  NEB -.-&gt;|&quot;VM process 控制语义待确认&quot;| AND</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TB
+  NEB -.-&gt;|&quot;VM process 控制语义待确认&quot;| AND</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TB
   MCU[&quot;独立 MCU\nRTE/SWC/MCAL&quot;] &lt;--&gt;|&quot;SPI/IPCL/车辆消息&quot;| HV[&quot;SoC + Hypervisor&quot;]
   HV --&gt; SOS[&quot;SOS/Yocto Host\n驱动/后端/车辆与显示服务&quot;]
   HV --&gt; AND[&quot;UOS Android Guest\n应用/AOSP/CarService/HAL&quot;]
@@ -377,7 +3515,7 @@ Buffer，下游消费并归还；还需跟踪 Buffer ID、时间戳、Fence 和�
   SOS &lt;--&gt;|&quot;虚拟设备/IPC/以太网&quot;| AND
   SOS &lt;--&gt;|&quot;虚拟通信/IPC（直接承载待确认）&quot;| TBOX
   NEB -.-&gt;|&quot;VM process 控制语义待确认&quot;| SOS
-  NEB -.-&gt;|&quot;VM process 控制语义待确认&quot;| AND</code></pre></details></details><p>MCU 与 Hypervisor 之间的双向箭头表示图中可见的跨芯片/跨域车辆通信方向，不限定
+  NEB -.-&gt;|&quot;VM process 控制语义待确认&quot;| AND</code></pre></details></details></figure><p>MCU 与 Hypervisor 之间的双向箭头表示图中可见的跨芯片/跨域车辆通信方向，不限定
 具体 Topic。Hypervisor 指向各域的箭头表示“承载/隔离关系”，不是业务调用。SOS 与
 Android 的双向箭头表示可能存在虚拟设备或 IPC 数据交换；SOS 与 TBox 之间只表示
 概念上的虚拟通信需求，原图没有证明直接承载，需设备分配、Host Backend 或接口配置
@@ -485,4 +3623,93 @@ Android 的双向箭头表示可能存在虚拟设备或 IPC 数据交换；SOS 
 <p>第 07、08、09 章分别拥有 SOS/Yocto、MCU、TBox 域内机制；第 10～14 章引用这些机制构造车辆、显示、相机、驾驶辅助、音频、语音、通信模组和系统生命周期业务流程，并为每条流程保留证据等级、最早断点、资源所有权和恢复后验证。</p>
 <hr>
 <p><a href="index.html">返回主题导航</a> · <a href="22.html">本次来源索引</a></p>
-</article><nav class="pager"><a href="00.html">← 上一步：前言</a><a href="02.html">下一步：整机与虚拟化架构 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#01-三张架构图的阅读方法">01 三张架构图的阅读方法</a><a class="depth-2" href="#2026-09-20-校订三张基线图之外增加专项视图">2026-09-20 校订：三张基线图之外增加专项视图</a><a class="depth-2" href="#11-先确定视图再解释方框">1.1 先确定视图，再解释方框</a><a class="depth-2" href="#12-原始图">1.2 原始图</a><a class="depth-3" href="#图-1androidaaos-guest-内部分层图">图 1：Android/AAOS Guest 内部分层图</a><a class="depth-3" href="#图-2整机部署与资源归属图">图 2：整机部署与资源归属图</a><a class="depth-3" href="#图-3跨域通信与协议链路图">图 3：跨域通信与协议链路图</a><a class="depth-2" href="#13-六类方框与两类不是模块的元素">1.3 六类方框与两类“不是模块”的元素</a><a class="depth-2" href="#14-同名不等同身份要靠运行时证据">1.4 同名不等同：身份要靠运行时证据</a><a class="depth-2" href="#15-四种方向命令状态buffer-与反馈">1.5 四种方向：命令、状态、Buffer 与反馈</a><a class="depth-3" href="#命令方向">命令方向</a><a class="depth-3" href="#状态事件方向">状态/事件方向</a><a class="depth-3" href="#媒体-buffer-方向">媒体 Buffer 方向</a><a class="depth-3" href="#反馈确认方向">反馈/确认方向</a><a class="depth-2" href="#16-逻辑业务链与物理承载链">1.6 逻辑业务链与物理承载链</a><a class="depth-2" href="#17-统一链路模型">1.7 统一链路模型</a><a class="depth-2" href="#18-关联标识怎样把各域日志串成一条链">1.8 关联标识：怎样把各域日志串成一条链</a><a class="depth-2" href="#19-三图对应表">1.9 三图对应表</a><a class="depth-2" href="#110-系统上下文">1.10 系统上下文</a><a class="depth-2" href="#111-一次正确读图的最小步骤">1.11 一次正确读图的最小步骤</a><a class="depth-2" href="#112-阶段章节归属">1.12 阶段章节归属</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>
+</article><section class="evidence-excerpts" id="evidence-excerpts"><h2>本章引用的材料内容</h2><p>下面直接展示引用页的文字开头，可展开核对。打开材料页可看全部物理页及完整 PDF，图表和版式以 PDF 为准。提取原文不代表已经逐页验证其适用于当前项目。</p><details><summary>MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF 第 6 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+Confidential B 
+MT8668 Hypervisor Camera  
+User Manual 
+1.2 架构 
+ 
+图 1-1. Camera 虚拟化架构 
+ 
+目前， MT8668 使用 Yocto + Andriod 的双系统组合，Yocto OS 作为 Host，Android OS 作为 Guest。 
+相应地，Yocto 端 Camera 作为 Host， 所有 Camera 相关的硬件，以及对应的 driver 和 SW 逻辑控制都放在 Yocto
+端；Android 端 Camera 作为 Guest，从 Yocto 端获取相关的图像数据。两者之间是基于 RpcBinder + Vsock 的方式来
+实现跨域通信，Android 端 Camera 跨域将 Request 发送给 Yocto 端，Yocto 端接收到 Request 后，经过处理后，将
+图像数据填充到 buffer 中，并将相关 Result 再跨域回传给 Android 端。 
+1.2.1 Android 端 Camera  
+Android 端 Camera 架构如图 1-1 左边所示。从上往下的层次分布依次是 APK、Java Framework、Cameraserver、
+Camerahalserver。除 Camerahalserver 外，其余 Layer 的实现与单 Android OS 无差别。 
+Camerahalserver 又大致分为 3 层： 
+ 
+1. AIDL Adaptor Layer 
+主要负责与 Cameraserver 进行 binder 交互 
+2. Android Adaptor Layer 
+主要负责处理与 Android 强相关的逻辑控制 
+3. Camera Feature Layer 
+底层 Camera 对外提供的功能接口 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0002.html#page-6">阅读整页及原图 →</a></details><details><summary>MT8668_Hypervisor_System_LLA_User_Manual_CN_V1.1.pdf · PDF 第 5 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8668 Hypervisor System LLA 
+ User Manual 
+Confidential B 
+1 Hypervisor System 
+MT8668 Hypervisor system 由 Yocto sos、yocto uos、Android 和 Thyp SDK 四大部分组成。 
+ 
+1.1 Build 命令 
+对于 Hypervisor 3os，需要编译 Yocto auto8668p1_64_sos、auto8668p1_64_uos 和 Android auto8668p1_64 _vm_uos。
+编译指令如 1.1.1 和 1.1.2 章节所示。由于编译过程中会设置一些环境变量，为了避免 Yocto 和 Android 互相干扰，
+建议使用两个不同的终端分别编译 Yocto 和 Android。Yocto 的编译产物：SOS 和 UOS 在 build/tmp/deploy/ 
+auto8668p1_64_sos 目录下。Android 的编译产物在 out/target/product/auto8668p1_64_vm_uos/merged 目录下。编
+译完成后，请将 Android 生成的 dtbo.img、boot.img、vendor_boot.img、init_boot.img、userdata.img、super.img、
+vbmeta.img、vbmeta_system.img、vbmeta_vendor.img，tee.img、scp.img 这十一个 images 复制到 SOS 的编译目录。 
+ 
+1.1.1 Hypervisor Android 编译 
+MT8668 使用 LD2.0 build，请参考 MOL: https://online.mediatek.com/apps/quickstart/QS00266。 
+Build 命令： 
+Python vendor/mediatek/proprietary/scripts/releasetools/split_build_helper.py –run 
+full_${Project}-${mode} 
+ 
+例： 
+Python vendor/mediatek/proprietary/scripts/releasetools/split_build_helper.py –run 
+full_auto8668p1_64_vm_uos-userdebug 
+输出：生成目录out/target/product/${project}/merged 
+ 
+LD2.0 会产生 out_sys &amp; out_hal &amp; out_krn &amp; out 这些文件夹用来存放每个叠层的图片。 
+详情请参考：https://online.mediatek.com/apps/quickstart/QS00178. 
+ 
+查询 Build 命令： 
+Python vendor/mediatek/proprietary/scripts/releasetools/split_build_helper.py 
+full_${Project}-${mode} 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0003.html#page-5">阅读整页及原图 →</a></details><details><summary>MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF 第 6 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Hypervisor Camera 
+User Manual 
+Confidential B 
+ 控制流程  
+ 
+图 1-3. MW 类图 
+ 
+图 1-3 主要是入口层和定制层之间的类流交互图。主要是上层通过  CameraProvider 的 open 接口获取 Camera，
+Camera 通过调用 Camera TurboEngine 获取 CustomizationManager。CustomizationManager 是定制层的管理器，通过
+它实现对客户定制行为的管理。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0006.html#page-6">阅读整页及原图 →</a></details></section><nav class="pager"><a href="00.html">← 上一步：前言</a><a href="02.html">下一步：整机与虚拟化架构 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#01-三张架构图的阅读方法">01 三张架构图的阅读方法</a><a class="depth-2" href="#2026-09-20-校订三张基线图之外增加专项视图">2026-09-20 校订：三张基线图之外增加专项视图</a><a class="depth-2" href="#11-先确定视图再解释方框">1.1 先确定视图，再解释方框</a><a class="depth-2" href="#12-原始图">1.2 原始图</a><a class="depth-3" href="#图-1androidaaos-guest-内部分层图">图 1：Android/AAOS Guest 内部分层图</a><a class="depth-3" href="#图-2整机部署与资源归属图">图 2：整机部署与资源归属图</a><a class="depth-3" href="#图-3跨域通信与协议链路图">图 3：跨域通信与协议链路图</a><a class="depth-2" href="#13-六类方框与两类不是模块的元素">1.3 六类方框与两类“不是模块”的元素</a><a class="depth-2" href="#14-同名不等同身份要靠运行时证据">1.4 同名不等同：身份要靠运行时证据</a><a class="depth-2" href="#15-四种方向命令状态buffer-与反馈">1.5 四种方向：命令、状态、Buffer 与反馈</a><a class="depth-3" href="#命令方向">命令方向</a><a class="depth-3" href="#状态事件方向">状态/事件方向</a><a class="depth-3" href="#媒体-buffer-方向">媒体 Buffer 方向</a><a class="depth-3" href="#反馈确认方向">反馈/确认方向</a><a class="depth-2" href="#16-逻辑业务链与物理承载链">1.6 逻辑业务链与物理承载链</a><a class="depth-2" href="#17-统一链路模型">1.7 统一链路模型</a><a class="depth-2" href="#18-关联标识怎样把各域日志串成一条链">1.8 关联标识：怎样把各域日志串成一条链</a><a class="depth-2" href="#19-三图对应表">1.9 三图对应表</a><a class="depth-2" href="#110-系统上下文">1.10 系统上下文</a><a class="depth-2" href="#111-一次正确读图的最小步骤">1.11 一次正确读图的最小步骤</a><a class="depth-2" href="#112-阶段章节归属">1.12 阶段章节归属</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

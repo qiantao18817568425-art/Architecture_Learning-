@@ -1,0 +1,5 @@
+%% Audio abnormal recovery
+flowchart TB
+  T["route race / XRUN / clock drift"] --> E["first control or PCM discontinuity"] --> F["AudioMgr/ALSA/downstream boundary"]
+  F --> U["mute/noise/dropout"] --> O["route state + PCM status + XRUN + clock"]
+  O --> C["mute; drain/drop; close period/buffer owner"] --> R["reopen and restore route"] --> V["readback + continuous audible output"]

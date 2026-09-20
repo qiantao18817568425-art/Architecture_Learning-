@@ -1,0 +1,10 @@
+flowchart TB
+  MCU["独立 MCU\nRTE/SWC/MCAL"] <-->|"SPI/IPCL/车辆消息"| HV["SoC + Hypervisor"]
+  HV --> SOS["SOS/Yocto Host\n驱动/后端/车辆与显示服务"]
+  HV --> AND["UOS Android Guest\n应用/AOSP/CarService/HAL"]
+  HV --> TBOX["UOS TBox Guest\n通信模组业务"]
+  HV --> NEB["Nebula OS\nVM 管理相关方框"]
+  SOS <-->|"虚拟设备/IPC/以太网"| AND
+  SOS <-->|"虚拟通信/IPC（直接承载待确认）"| TBOX
+  NEB -.->|"VM process 控制语义待确认"| SOS
+  NEB -.->|"VM process 控制语义待确认"| AND

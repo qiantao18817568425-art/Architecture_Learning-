@@ -1,0 +1,481 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>mtk_nne_framework_introduction.pptx · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>mtk_nne_framework_introduction.pptx</h1><p>SRC0317 · 幻灯片 · 40 个阅读单元</p><p class="note">原材料可查阅；未逐页作项目结论验证。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>DOC\mtk_nne_framework_introduction.pptx</p><p>SHA-256：<code>ea0d7120325d0bf3cb4ba4b0f0b33d1e5de593e2efc3fc6f2baebb56cc99c1ab</code></p><p>原文件大小：2,075,103 字节</p></details><div class="actions"><a class="button" href="materials/SRC0317.pptx" download>下载完整原文件</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><p class="note">文字按文档结构提取，图片按包内顺序列出；布局、连线和图文对应关系以原文件为准。</p><article id="source-text"><section class="source-page" id="page-1"><h2>幻灯片 1</h2><pre class="source-text">MTK NNE framework introduction
+MTK audio team</pre></section><section class="source-page" id="page-2"><h2>幻灯片 2</h2><pre class="source-text">2
+Introduction 
+MTK NNE framework and Interface
+Model deployment
+Test with MTK NNE framework
+Troubleshooting
+Agenda
+
+
+
+
+</pre></section><section class="source-page" id="page-3"><h2>幻灯片 3</h2><pre class="source-text">3
+The MTK NNE framework is used to simplify the steps of testing and developing an NNE application on MTK platforms.
+Up to 4 models can be deployed on MTK NNE framework.
+The MTK NNE framework is developed with  Xtensa  NNE SDK V1.4p2 .
+Introduction</pre></section><section class="source-page" id="page-4"><h2>幻灯片 4</h2><pre class="source-text">4
+NNE   related folder structure
+ADSP_PATH
+HIFI5_SP
+api
+middleware
+nne_model
+model
+sample
+common
+drivers
+V1.4p2
+nne
+
+  Place the
+   tflite  model
+
+  Place the model
+  test code
+
+  NNE APIs supported
+  by MTK</pre></section><section class="source-page" id="page-5"><h2>幻灯片 5</h2><pre class="source-text">
+
+
+5
+HiFi5 Structure with NNE
+NNE
+I-Cache
+64 KB
+D-Cache
+128 KB
+D-Cache
+128 KB
+I-Cache
+64 KB
+L2TCM
+768 KB
+HiFi5 DSP  CoreA
+HiFi5 DSP  Core B
+NN:
+32 8x8
+NN:
+32 8x8
+I-TCM
+32 KB
+I-TCM
+32 KB
+D-TCM
+36 KB
+D-TCM
+64  KB
+Bus Interconnect
+UBUF
+128 KB
+Int bus
+Int bus
+interrupt</pre></section><section class="source-page" id="page-6"><h2>幻灯片 6</h2><pre class="source-text">6
+NNE inference flow</pre></section><section class="source-page" id="page-7"><h2>幻灯片 7</h2><pre class="source-text">7
+NNE inference flow (2)</pre></section><section class="source-page" id="page-8"><h2>幻灯片 8</h2><pre class="source-text">8
+Please enable the option “ CFG_NNE_SUPPORT ”   by modifying the default value from  no  to  yes  and rebuild the ADSP image.
+Path: ${ADSP_PATH}/HIFI5_SP/project/${PLATFORM}/HIFI5_ B /platform/platform.mk
+To test models, please enable the option  “ CFG_NNE_SAMPLE_SUPPORT ” as well
+The  CFG_NNE_SAMPLE_SUPPORT  only takes effect when  CFG_NNE_SUPPORT  is enabled.
+There is a sample project demonstrating the way to enable MTK NNE framework. Please refer to the project  ${PLATFORM}-sample-project- nne .
+Path: Path: ${ADSP_PATH}/HIFI5_SP/project/${PLATFORM}/HIFI5_B/${PLATFORM}-sample-project-nne/project.mk
+Enable MTK NNE framework in HiFi5 DSP
+
+Not enabled
+enabled
+Enable MTK NNE framework
+
+
+
+
+Test models
+(MTK NNE framework must be enabled)
+
+
+
+</pre></section><section class="source-page" id="page-9"><h2>幻灯片 9</h2><pre class="source-text">9
+To develop an algorithm/application for NNE, the following c flags are necessary. Please add these  C flags  in the  library’s build script .
+Makefile  example:
+ ${ADSP_PATH}/middleware/nne_model/sample/makefile_nne_sample.mk
+Developer note – C flags
+CFLAGS += \ -DTF_LITE_STATIC_MEMORY \ -DTF_LITE_DISABLE_X86_NEON \ -DXTENSA \ -DTF_LITE_MCU_DEBUG_LOG \ -DTF_LITE_USE_CTIME \ -DMAX_RFFT_PWR=9 \ -DMIN_RFFT_PWR=MAX_RFFT_PWR \ -DHIFI5 \ -DNNLIB_HIFI5 \ -DDMA=1</pre></section><section class="source-page" id="page-10"><h2>幻灯片 10</h2><pre class="source-text">10
+Developer note – NNE op resolver
+If developers want to use NNE to accelerate Neural Network computations. The  op_resolver  ( MicroMutableOpResolver ) should  call  AddNneCustom ()  to enable the NNE op resolver.</pre></section><section class="source-page" id="page-11"><h2>幻灯片 11</h2><pre class="source-text">11
+Please refer to the sample code in the following paths to develop NNE applications
+${ADSP_PATH}/HIFI5_SP/middleware/nne_model/sample/src/nne_sample_person_detect.cc
+${ADSP_PATH}/HIFI5_SP/middleware/nne_model/sample/src/nne_sample_micro_speech_lstm.cc
+Developer note – NNE sample code</pre></section><section class="source-page" id="page-12"><h2>幻灯片 12</h2><pre class="source-text">12
+These APIs are helper functions to run an NNE inference simply. They can be used not only in test functions but also applications. 
+These APIs are defined in the  nne_test_helper.h
+NNE test helper APIs
+APIs
+Description 
+mtk_interpreter_init
+The function is a helper function to create a  tflite :: MicroInterpreter
+mtk_interpreter_release
+The function is a helper function to destruct a  tflite :: MicroInterpreter
+mtk_interpreter_invoke_test
+The function is a helper function to call the  tflite :: MicroInterpreter -&gt;Invoke()</pre></section><section class="source-page" id="page-13"><h2>幻灯片 13</h2><pre class="source-text">13
+NNE test helper APIs (1)
+API
+arguments
+return
+mtk_interpreter_init
+char * network_name
+void * interpreter
+void * tensor_arena
+size_t   tensor_arena_size
+void * p_op_resolver
+int  kNumResourceVariables
+Return type: void *
+Return: the address of interpreter (the same as the input argument  interpreter  )                NULL if initialization for the interpreter failed.
+
+Description
+
+
+Defined in  nne_test_helper.h
+The function is a helper function to create a  tflite :: MicroInterpreter .
+The function does not allocate memory. The arguments  interpreter ,  tensor_arena , and  p_op_resolver   should be allocated  through  Aurisys  ( arsi_query_wroking_buf_size ())  before calling this function. 
+Moreover, the argument  p_op_resolver   should be added required  op_resolvers   before calling this function (please see this  page ).
+If developer needs an interpreter other than a  tflite :: MicroInterpreter , this function is not applicable to the usage. Please follows the constructor of the desired Interpreter to create an instance.
+
+API
+arguments
+return
+mtk_interpreter_release
+void *interpreter
+Return type: void
+Return: no return
+
+Description  
+
+
+Defined in  nne_test_helper.h
+The function is a helper function to destruct a  tflite :: MicroInterpreter .
+The function does not free the memory. It only call the destructor of  tflite :: MicroInterpreter , so  developers should free the memory space of interpreter after calling this function . 
+</pre></section><section class="source-page" id="page-14"><h2>幻灯片 14</h2><pre class="source-text">14
+NNE test helper APIs (2)
+API
+arguments
+return
+mtk_interpreter_invoke_test
+char * network_name
+void * p_interpreter
+void * input_buf
+size_t   input_buf_size
+void * output_buf
+size_t   output_buf_size
+Return type: int
+Return: the result of interpreter invoke test. This function will return the following values. 0: finish interpreter invoke -1: argument is NULL -2: arguments  input_buf_size  or  output_buf_size  are 0 -3: input  buf  size is smaller than the model input size       output  buf  size is smaller than the model output size -4: error encountered when processing interpreter-&gt;Invoke();
+
+Description  
+
+
+Defined in  nne_test_helper.h
+The function is a helper function to call the  tflite :: MicroInterpreter -&gt;Invoke().
+The function does not allocate memory, so the arguments interpreter,  input_buf , and  output_buf  should be allocated a memory space first.
+Moreover, the argument interpreter should be initialized first before calling this function. Developers can use  mtk_interpreter_init () to create a  tflite :: MicroInterpreter  for the test.
+</pre></section><section class="source-page" id="page-15"><h2>幻灯片 15</h2><pre class="source-text">15
+If developers want to further improve the performance of NNE inference, please used the  MTK NNE framework APIs  described in the next page to implement the interpreter initialization and invocation.
+NNE test helper APIs (3)</pre></section><section class="source-page" id="page-16"><h2>幻灯片 16</h2><pre class="source-text">16
+The MTK NNE framework APIs are used to obtain necessary materials for the NNE infrastructure, such as model data and network context.
+If the model is built in the ADSP image, there is a network name corresponding to the model. Developers can get the network info through the network name.
+After obtaining the network info, developers can use it to create an TFLM interpreter, and call interpreter-&gt;invoke() to run NNE inference.
+These APIs are defined in the  xa_network_api.h
+MTK NNE framework APIs
+APIs
+Description 
+mtk_network_info_get
+The function is used to get the  network_info  prebuilt in  adsp  image.
+mtk_network_get_model
+The function is used to get the buffer of the model stored in the  network_info .
+mtk_network_get_external_context
+This function is used to get the address of TNNE external context.
+is_nne_enabled
+The function is used to check if NNE is initialized in the ADSP system.</pre></section><section class="source-page" id="page-17"><h2>幻灯片 17</h2><pre class="source-text">17
+API
+arguments
+return
+mtk_network_info_get
+char * network_name
+Return type:  network_info_t  *
+Return: address of the instance of  network_info_t  or NULL if no network is found for the given name.
+
+Description  
+
+
+Defined in  xa_network_api.h
+The function is used to get the  network_info  prebuilt in  adsp  image.
+The argument  network_name   is the ‘ name ’ entry defined  in the model config . About the model config, please see the  page .
+
+API
+arguments
+Return
+mtk_network_info_get
+network_info_t *nw_info
+Return type: unsigned char *
+Return: the address of the model or NULL if no network is found for the given name.
+
+Description  
+
+
+Defined in  xa_network_api.h
+The function is used to get the buffer of the model stored in the  network_info . 
+
+MTK NNE framework APIs (1)</pre></section><section class="source-page" id="page-18"><h2>幻灯片 18</h2><pre class="source-text">18
+API
+arguments
+return
+mtk_network_get_external_context
+
+network_info_t *nw_info
+Return type: Struct  XaTnneNetworkContext  *
+Return: the address of the struct  XaTnneNetworkContext
+
+Description  
+
+
+Defined in  xa_network_api.h
+This function is used to get the address of TNNE external context.
+
+API
+arguments
+Return
+is_nne_enabled
+void (no argument)
+Return type: bool
+Return: true if NNE is enabled and initialized. Otherwise, return false.
+
+Description  
+
+
+Defined in  xa_network_api.h
+The function is used to check if NNE is initialized in the ADSP system.
+
+MTK NNE framework APIs (2)</pre></section><section class="source-page" id="page-19"><h2>幻灯片 19</h2><pre class="source-text">19
+The model configuration needs to be set according to the hardware specifications
+xtensa_core  = ${PLATFORM}_b
+If using DX-4, please set as mt6991_b
+Read/ write_delay  = 560 cycles
+Dram access worst latency: 700 ns
+700 ns = 560 cycles in 800M
+maxAxiBurstLen  = 256
+xnnefreq  = 800
+dspfreq  = 800
+Model deployment - Model config</pre></section><section class="source-page" id="page-20"><h2>幻灯片 20</h2><pre class="source-text">20
+There are 2 ways to deploy models to ADSP. Use one of the following to add models:
+Copy  all  models from the NNE SDK
+Please note that the way  replaces   all the previous models . If developers want to add models without replacing old ones, please use the next way.
+Add models manually
+Ways to deploy models to ADSP</pre></section><section class="source-page" id="page-21"><h2>幻灯片 21</h2><pre class="source-text">21
+Steps
+Place models into the NNE SDK
+Run NNE SDK build
+Copy the produced models from the NNE SDK
+#1 Copy all models from the NNE SDK</pre></section><section class="source-page" id="page-22"><h2>幻灯片 22</h2><pre class="source-text">22
+Place the model (. tflite  file) in the following path
+${NNE_SDK_PATH}/networks/ tflite /
+Add the model to the  nw_list : 
+File: ${NNE_SDK_PATH}/networks/ nw_in /nw_list.txt
+Add model example
+networkName  =  person_detect_int8 , priority =  0 , instances = 1
+
+
+#1 Copy all models from the NNE SDK  Step1. Place models into the NNE SDK
+The file name of the model excluding  . tflite   file extension
+The priority of the model.
+0 has the highest priority, multiple model can have same priority
+Instances is optional.</pre></section><section class="source-page" id="page-23"><h2>幻灯片 23</h2><pre class="source-text">23
+Command
+$ cd ${NNE_SDK_PATH}/build
+$ ./nne110.sh -- test_app   tflm  --clean --core hifi5
+The above commands would trigger NNE SDK build flow, and the corresponding NNE custom  tflite  files are placed in the following path
+${NNE_SDK_PATH}/networks/ nw_out /${MODEL_NAME}_files/ ${MODEL_NAME}_ nne_custom.tflite
+After finishing NNE SDK build flow, the NNE custom  tflite  files will be converted to C headers. Please check the following path.
+${NNE_SDK_PATH}/test/ tflm /include /${MODEL_NAME}_ model_data.h
+
+#1 Copy all models from the NNE SDK  Step2. Run NNE SDK build</pre></section><section class="source-page" id="page-24"><h2>幻灯片 24</h2><pre class="source-text">24
+Copy all the model headers ( Note 1 ) to the following path. The model headers are inside the path  $(NNE_SDK)/test/ tflm / inc
+${ADSP_PATH}/HIFI5_SP/middleware/ nne_model /model/v1.4p2/ inc
+Copy the  $(NNE_SDK)/test/ tflm / inc / xa_network_model_data.h   to the following path
+${ADSP_PATH}/HIFI5_SP/middleware/ nne_model /model/v1.4p2/ inc
+Copy  $(NNE_SDK)/test/tflm/src/xa_network_model_data.cc  to the following path and rename to  xa_network_model_data.c   ( Note 2 )
+${ADSP_PATH}/HIFI5_SP/middleware/ nne_model /model/v1.4p2/ src
+Rebuild ADSP image
+Note
+If there are multiple models defined in the nw_list.txt, the NNE SDK would generate a model header for each model. The model header name is suffixed with  _ model_data.h .
+Please note that the  xa_network_model_data.cc  must be renamed to  C  file because the ADSP build script does not support  CC  file currently.
+#1 Copy all models from the NNE SDK Step3. Copy the produced models from the NNE SDK</pre></section><section class="source-page" id="page-25"><h2>幻灯片 25</h2><pre class="source-text">25
+Steps
+Place models into the NNE SDK (same as the 1 st  way)
+Run NNE SDK build (same as the 1 st  way)
+Modify the  xa_network_model_data.c /.h manually
+
+The step 1 and 2 are the same for both the 1 st  and 2 nd  methods.
+#2 Add models manually</pre></section><section class="source-page" id="page-26"><h2>幻灯片 26</h2><pre class="source-text">26
+Copy all the model headers to the following path. The model headers are inside the path  $(NNE_SDK)/test/ tflm / inc
+${ADSP_PATH}/HIFI5_SP/middleware/ nne_model /model/v1.4p2/ inc
+modify
+${ADSP_PATH}/HIFI5_SP/middleware/ nne_model /model/v1.4p2/ inc / xa_network_model_data.h
+“#define NETWORKS_COUNT 2” ,   Please modify the number following NETWORKS_COUNT to the desired number of models to be run on the ADSP.
+${ADSP_PATH}/HIFI5_SP/middleware/ nne_model /model/v1.4p2/ src / xa_network_model_data.c
+Include “${MODEL_NAME}_ model_data.h ”
+xa_nw_models  adds ${MODEL_NAME}_ nne_custom_tflite
+xa_nw_priorities  adds priorities for models (0 has the largest priority)
+xa_nw_name  adds  model names
+
+#2 Add models manually Step3. Modify the  xa_network_model_data.c /.h manually</pre></section><section class="source-page" id="page-27"><h2>幻灯片 27</h2><pre class="source-text">
+
+
+
+27
+Here is a sample adding 2 models  new_test_network1  and  new_test_network2 .
+#2 Add models manually Step3. Modify the  xa_network_model_data.c /.h manually example
+The model number you want to
+run on  adsp . In this sample, the
+Number is  4
+Add the model headers 
+created by NNE SDK
+Add the binary data of models
+to  xa_nw_models
+Define the priority of models
+to  xa_nw_priorities . 0 has the largest priority.
+Add the name of models
+to  xa_nw_name .
+The name of model is the 
+same as the name attribute
+written in the model’s  cfg  file
+xa_network_model_data.h
+xa_network_model_data.c</pre></section><section class="source-page" id="page-28"><h2>幻灯片 28</h2><pre class="source-text">28
+NNE sample is a small framework to test models with NNE. To use NNE sample, developers should create and register a  nne_sample_handler  for their model. Here is the steps to test the models.
+Create a  nne_sample_handler , the members are shown in the following table. Implement the  init ,  start , and  deinit  callbacks of the NNE sample code
+Developers can leverage the NNE test helper APIs to implement the start callback, please see the next page for example.
+Register the  nne_sample_handler  
+Modify the file: ${ADSP_PATH}/middleware/ nne_model /sample/ src / nne_sample_registration.c
+use  register_sample_handler (struct  nne_sample_handler  *) to register the  nne  sample handler
+For example:  register_sample_handler (&amp; sample_handler_pd );
+Build  libmtnne_sample.a
+Rebuilt ADSP image
+NNE sample
+Member 
+Type 
+Descrption  
+nw_name
+char *
+Model name
+init
+void (*)(void)
+a callback to initialize the NNE sample code
+start
+void (*)(void)
+a callback to start the NNE sample code, this is the major part to run the NNE inference
+deinit
+void (*)(void)
+a callback to  deinitialize  the NNE sample code</pre></section><section class="source-page" id="page-29"><h2>幻灯片 29</h2><pre class="source-text">29
+Please see the sample code in the following path
+${ADSP_PATH}/middleware/nne_model/sample/src/nne_sample_person_detect.cc
+The start callback can be simply implemented by the NNE test helper functions (please see the  page  for detail)
+NNE sample (1) - Create a  nne_sample_handler</pre></section><section class="source-page" id="page-30"><h2>幻灯片 30</h2><pre class="source-text">30
+Modify the following file to register the  nne  sample handler
+ ${ADSP_PATH}/middleware/ nne_model /sample/ src / nne_sample_registration.c
+NNE sample (2) - Register the  nne_sample_handler</pre></section><section class="source-page" id="page-31"><h2>幻灯片 31</h2><pre class="source-text">31
+NNE sample (3) - Build  libmtnne_sample.a
+Build
+command: 
+make -f makefile_nne_sample.mk all  ADSP_PROJECT= mtXXXX XTENSA_TOOLS_VERSION=RI-2023.11-linux TFLM_BASE=${LOCAL_TFLM_PATH} 
+Example (DX-4): make -f makefile_nne_sample.mk all ADSP_PROJECT=mt6991 XTENSA_TOOLS_VERSION=RI-2023.11-linux TFLM_BASE=../v1_4_2/ dsp / tflm / tflite -micro 
+Path: ${ADSP_PATH}/middleware/ nne_model /sample
+Output lib:  ${ADSP_PATH}/middleware/ nne_model /sample/ libmtnne_sample.a</pre></section><section class="source-page" id="page-32"><h2>幻灯片 32</h2><pre class="source-text">32
+After registering the  nne  sample handler, developers can test models with the following APIs
+NNE sample – Test 
+API
+arguments
+return
+run_all_nne_sample
+void (no argument)
+Return type: void
+Return: no return
+
+Description  
+
+
+Defined in  nne_sample.h
+This API runs all the registered  nne_sample_handlers .
+
+API
+arguments
+Return
+run_nne_sample
+char * nw_name
+Return type: void
+Return: no return
+
+Description  
+
+
+Defined in  nne_sample.h
+This API runs specific  nne_sample_handlers  that have the same  nw_name  as the argument  nw_name   (the  nw_ name   is the same as the name defined in the model config) .
+</pre></section><section class="source-page" id="page-33"><h2>幻灯片 33</h2><pre class="source-text">33
+Take Person Detect INT8 model as example:
+Memory usage
+item
+description
+
+Memory (Byte)
+Memory (MB)
+1
+NNE Driver
+Fix size
+410624
+0.3916 MB
+2
+Model (person_detect_int8 _nne_custom .tflite)
+Size depends on the model
+357344 
+(person_detect_int8.tflite size: 300568)
+0.3407 MB
+3
+Tensor arena
+(TensorFlow Lite Micro 的 working buffer)
+Size depends on the model
+
+406528
+0.3876 MB
+
+Total
+
+1174496
+1.12 MB</pre></section><section class="source-page" id="page-34"><h2>幻灯片 34</h2><pre class="source-text">34
+How long does the initialization take?
+The model initialization will be completed during ADSP boot time, and retrieving the initialized models using the MTK APIs will not take much time.
+Does the model need to allocate another memory block to store?
+TFLite  model is built in the ADSP   image, so developers do not need to allocate memory for models
+How to check if the NNE is active ？
+If the following 2 lines are shown in the ADSP log, that means the NNE is active.       [ wake_lock_FromISR ] lock by  nne  /  [ wake_unlock_FromISR ] unlock by  nne
+Q&amp;A   (1)</pre></section><section class="source-page" id="page-35"><h2>幻灯片 35</h2><pre class="source-text">35
+In the sample code, the initialization is done by obtaining the model through its name. How is this name configured?
+The model name needs to match the 'name' field in the model's  cfg  file. For example, for the model 'person_detect_int8', its model name can be found in the 'name' field within the file networks/ nw_in /configs/person_detect_int8.cfg.
+Q&amp;A   (2)</pre></section><section class="source-page" id="page-36"><h2>幻灯片 36</h2><pre class="source-text">36
+The NNE simulation experiment has a slow inference speed, taking 14 minutes for a single sample.
+The cache setting in HWCFG HiFi5_NNE_2023_11 bypasses the address range from 0x4000_0000 to 0x6000_0000, so the NNE simulation is run without caching and gets a worse performance.
+The solution is to add the following settings to FDFLAGS in ${NNE_SDK}/test/ tflm / makefile_network_test , which will set 0x4000_0000 to 0x6000_0000 as cacheable.
+- Wl ,-- defsym =_ memmap_cacheattr_reset =0x41111 1 40
+NNE   simulation runs slowly</pre></section><section class="source-page" id="page-37"><h2>幻灯片 37</h2><pre class="source-text">37
+ADSP encounters exception when copies data to input tensor.
+This may be caused by missing C flags. Please check if the C flags in this  page  are defined in the library build script.
+Alternatively, developers can print the size of tensor using the following code
+printf (&quot;%s  sizeof ( TfLiteTensor ):%d\n&quot;, __ func __,  sizeof ( TfLiteTensor ));
+The correct size of  TfLiteTensor  is 40 bytes, If the size shown is 60 bytes, it means the C flags are not correctly added in the build script.
+ADSP exception when copy data to tensor</pre></section><section class="source-page" id="page-38"><h2>幻灯片 38</h2><pre class="source-text">38
+Build Error: header not found
+The TFLM headers can not be found.
+Please refer to ${NNE_SDK_PATH}/test/ tflm / makefile_network_test  to include the TensorFlow headers in the build script. Add the following snippet and include $(INCLUDES) in the build command.
+Note:  TFLM_BASE  is the local TFLM path, which, in the case of the NNE SDK, will point to the path ${NNE_SDK_PATH}/ dsp / tflm / tflite -micro.</pre></section><section class="source-page" id="page-39"><h2>幻灯片 39</h2><pre class="source-text">39
+Encountered linker error while building HIFI5_SP
+Error message:   error   adding   symbols: file in wrong format.
+If look at the generated .o files, you will find that they are not normal binaries but LLVM IR  bitcode .
+Root cause: The reason is that the build script includes &quot; - flto &quot; in CFLAGS, which is a flag for linker to perform image optimization. Therefore, the compiled .o files will be in LLVM IR (Intermediate Representation).
+Solution: remove the &quot;- flto &quot; flag in the library build script.
+Link error with – flto  flag
+
+</pre></section><section class="source-page" id="page-40"><h2>幻灯片 40</h2><pre class="source-text">Thank  you</pre></section></article><section><h2>材料中的原图</h2><figure><a href="materials/SRC0317-image1.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image1.png" alt="mtk_nne_framework_introduction.pptx 内嵌原图 1"></a><figcaption>原图 1 · 点击放大</figcaption></figure><figure><a href="materials/SRC0317-image2.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image2.png" alt="mtk_nne_framework_introduction.pptx 内嵌原图 2"></a><figcaption>原图 2 · 点击放大</figcaption></figure><figure><a href="materials/SRC0317-image3.jpeg" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image3.jpeg" alt="mtk_nne_framework_introduction.pptx 内嵌原图 3"></a><figcaption>原图 3 · 点击放大</figcaption></figure><figure><a href="materials/SRC0317-image4.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image4.png" alt="mtk_nne_framework_introduction.pptx 内嵌原图 4"></a><figcaption>原图 4 · 点击放大</figcaption></figure><figure><a href="materials/SRC0317-image5.svg" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image5.svg" alt="mtk_nne_framework_introduction.pptx 内嵌原图 5"></a><figcaption>原图 5 · 点击放大</figcaption></figure><figure><a href="materials/SRC0317-image6.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image6.png" alt="mtk_nne_framework_introduction.pptx 内嵌原图 6"></a><figcaption>原图 6 · 点击放大</figcaption></figure><figure><a href="materials/SRC0317-image7.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image7.png" alt="mtk_nne_framework_introduction.pptx 内嵌原图 7"></a><figcaption>原图 7 · 点击放大</figcaption></figure><figure><a href="materials/SRC0317-image8.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image8.png" alt="mtk_nne_framework_introduction.pptx 内嵌原图 8"></a><figcaption>原图 8 · 点击放大</figcaption></figure><figure><a href="materials/SRC0317-image9.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image9.png" alt="mtk_nne_framework_introduction.pptx 内嵌原图 9"></a><figcaption>原图 9 · 点击放大</figcaption></figure><figure><a href="materials/SRC0317-image10.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image10.png" alt="mtk_nne_framework_introduction.pptx 内嵌原图 10"></a><figcaption>原图 10 · 点击放大</figcaption></figure><figure><a href="materials/SRC0317-image11.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image11.png" alt="mtk_nne_framework_introduction.pptx 内嵌原图 11"></a><figcaption>原图 11 · 点击放大</figcaption></figure><figure><a href="materials/SRC0317-image12.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image12.png" alt="mtk_nne_framework_introduction.pptx 内嵌原图 12"></a><figcaption>原图 12 · 点击放大</figcaption></figure><figure><a href="materials/SRC0317-image13.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image13.png" alt="mtk_nne_framework_introduction.pptx 内嵌原图 13"></a><figcaption>原图 13 · 点击放大</figcaption></figure><figure><a href="materials/SRC0317-image14.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image14.png" alt="mtk_nne_framework_introduction.pptx 内嵌原图 14"></a><figcaption>原图 14 · 点击放大</figcaption></figure><figure><a href="materials/SRC0317-image15.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image15.png" alt="mtk_nne_framework_introduction.pptx 内嵌原图 15"></a><figcaption>原图 15 · 点击放大</figcaption></figure><figure><a href="materials/SRC0317-image16.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image16.png" alt="mtk_nne_framework_introduction.pptx 内嵌原图 16"></a><figcaption>原图 16 · 点击放大</figcaption></figure><figure><a href="materials/SRC0317-image17.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image17.png" alt="mtk_nne_framework_introduction.pptx 内嵌原图 17"></a><figcaption>原图 17 · 点击放大</figcaption></figure><figure><a href="materials/SRC0317-image18.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image18.png" alt="mtk_nne_framework_introduction.pptx 内嵌原图 18"></a><figcaption>原图 18 · 点击放大</figcaption></figure><figure><a href="materials/SRC0317-image19.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image19.png" alt="mtk_nne_framework_introduction.pptx 内嵌原图 19"></a><figcaption>原图 19 · 点击放大</figcaption></figure><figure><a href="materials/SRC0317-image20.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image20.png" alt="mtk_nne_framework_introduction.pptx 内嵌原图 20"></a><figcaption>原图 20 · 点击放大</figcaption></figure><figure><a href="materials/SRC0317-image21.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0317-image21.png" alt="mtk_nne_framework_introduction.pptx 内嵌原图 21"></a><figcaption>原图 21 · 点击放大</figcaption></figure></section></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">幻灯片 1</a><a href="#page-2">幻灯片 2</a><a href="#page-3">幻灯片 3</a><a href="#page-4">幻灯片 4</a><a href="#page-5">幻灯片 5</a><a href="#page-6">幻灯片 6</a><a href="#page-7">幻灯片 7</a><a href="#page-8">幻灯片 8</a><a href="#page-9">幻灯片 9</a><a href="#page-10">幻灯片 10</a><a href="#page-11">幻灯片 11</a><a href="#page-12">幻灯片 12</a><a href="#page-13">幻灯片 13</a><a href="#page-14">幻灯片 14</a><a href="#page-15">幻灯片 15</a><a href="#page-16">幻灯片 16</a><a href="#page-17">幻灯片 17</a><a href="#page-18">幻灯片 18</a><a href="#page-19">幻灯片 19</a><a href="#page-20">幻灯片 20</a><a href="#page-21">幻灯片 21</a><a href="#page-22">幻灯片 22</a><a href="#page-23">幻灯片 23</a><a href="#page-24">幻灯片 24</a><a href="#page-25">幻灯片 25</a><a href="#page-26">幻灯片 26</a><a href="#page-27">幻灯片 27</a><a href="#page-28">幻灯片 28</a><a href="#page-29">幻灯片 29</a><a href="#page-30">幻灯片 30</a><a href="#page-31">幻灯片 31</a><a href="#page-32">幻灯片 32</a><a href="#page-33">幻灯片 33</a><a href="#page-34">幻灯片 34</a><a href="#page-35">幻灯片 35</a><a href="#page-36">幻灯片 36</a><a href="#page-37">幻灯片 37</a><a href="#page-38">幻灯片 38</a><a href="#page-39">幻灯片 39</a><a href="#page-40">幻灯片 40</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

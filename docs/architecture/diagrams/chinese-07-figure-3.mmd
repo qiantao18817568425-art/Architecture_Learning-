@@ -1,0 +1,5 @@
+%% Wayland normal
+flowchart TB
+  C["client surface/buffer"] --> W["Wayland protocol"] --> WC["Weston compositor"]
+  WC --> A["DRM/KMS atomic state"] --> FB["framebuffer"] --> P["plane"] --> R["CRTC"] --> N["connector"] --> D["display driver"] --> O["physical output"]
+  O -. "vblank/present observation" .-> C

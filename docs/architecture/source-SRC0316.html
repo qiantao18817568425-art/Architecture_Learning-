@@ -1,0 +1,550 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>Lib_Verifier_User_Guide_V1.9.0.pptx · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>Lib_Verifier_User_Guide_V1.9.0.pptx</h1><p>SRC0316 · 幻灯片 · 38 个阅读单元</p><p class="note">原材料可查阅；未逐页作项目结论验证。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>DOC\Lib_Verifier_User_Guide_V1.9.0.pptx</p><p>SHA-256：<code>35d50ada4b608faa96bb3b6312b9c946c68ffc127af172ee20e216fe48099a04</code></p><p>原文件大小：2,665,037 字节</p></details><div class="actions"><a class="button" href="materials/SRC0316.pptx" download>下载完整原文件</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><p class="note">文字按文档结构提取，图片按包内顺序列出；布局、连线和图文对应关系以原文件为准。</p><article id="source-text"><section class="source-page" id="page-1"><h2>幻灯片 1</h2><pre class="source-text">Aurisys Lib Verifier User Guide</pre></section><section class="source-page" id="page-2"><h2>幻灯片 2</h2><pre class="source-text">Lib verifier introduction
+Aurisys interface version
+File/Folder structure description
+Build/run the demo lib &amp; lib verifier
+For x86 Linux environment
+For Android
+For Xplorer simulator
+For MRV PDK
+Outline
+3 rd  party lib verification
+Verification flow
+Test Config Structure
+Update makefile/Android.mk
+Check test result
+Lib dump parser
+3 rd  party release package to mtk
+2</pre></section><section class="source-page" id="page-3"><h2>幻灯片 3</h2><pre class="source-text">Aurisys lib verifier package include
+A reference implementation of aurisys library
+Simple test environment to
+Development &amp; test 3 rd  party aurisys wrapper on  simulator of DSP
+Help 3 rd  party to do unit test before release to MTK 
+Aurisys Lib Verifier Introduction
+
+Lib verifier on simulator
+
+Aurisys framework on device
+3 rd  party  MUST   do the library verification before release
+
+Release to MTK
+MTK integrate the 3 rd  party on device
+
+Demo
+Aurisys Library
+Lib verifier on simulator
+
+3 rd  party implement
+Aurisys library
+MTK provide demo library &amp; lib verifier
+Aurisys Library Development Flow
+3 rd  party
+Aurisys Library
+3 rd  party
+Aurisys Library
+3</pre></section><section class="source-page" id="page-4"><h2>幻灯片 4</h2><pre class="source-text">Lib Verifier Version
+4
+Aurisys  API Version
+Support  Anrdroid  Version
+1.3.0
+P
+1.4.0
+Q
+1.5.0
+R
+1.6.0
+S
+1.7.0
+T
+1.8.0
+U, V
+1.9.0
+W
+
+
+The following table describes which  Aurisys  API version is used in each Android version.</pre></section><section class="source-page" id="page-5"><h2>幻灯片 5</h2><pre class="source-text">Folder/File name
+Allow 3 rd  party  modfiy  it
+Description
+Interface/
+No
+aurisys lib interface header files 
+[Except] Only allow 3 rd  party to add  library entry point to  arsi_library_entry_points.h
+libaurisysdemo /
+Yes
+3 rd  party aurisys lib reference implementation
+lib_dump_parser /
+Yes
+3 rd  party lib dump parser reference implementation
+lib_verifier / pcm /
+Yes
+Input/output pcm folder
+lib_verifier /vendor/
+Yes
+3 rd  party parameter files
+lib_verifier/*.c &amp; .h
+No
+Lib verifier implementation
+lib_verifier / device_config.h
+3 rd  party can extend it
+Define the device’s configuration
+lib_verifier / test_case_config.h
+Yes
+Define the test case which is depends on aurisys  lib’s capability
+lib_verifier /Android.mk
+Yes
+Makefile  for Android build system
+lib_verifier/ makefile
+Yes
+GNU  makefile  for linux
+.settings
+Bin
+. cproject
+.project
+Xxproject
+Makefile
+Yes
+Xplorer simulator project  files
+src /
+test/
+Yes
+MRV PDK project files
+File/Folder Structure Description
+5</pre></section><section class="source-page" id="page-6"><h2>幻灯片 6</h2><pre class="source-text">Build demo lib &amp; lib verifier
+cd  API/V1.x.x/ lib_verifier
+make
+
+
+
+Run lib verifier &amp; output test result to test_result.txt
+./ aurisys_lib_verifier  &gt; test_result.txt
+You can check the test_result.txt to know the failure case &amp; related debug message
+
+
+x86 linux environment  -Build/Run Demo Lib &amp; Lib Verifier
+6</pre></section><section class="source-page" id="page-7"><h2>幻灯片 7</h2><pre class="source-text">Build demo lib &amp; lib verifier on Android BSP
+Copy API/V1.x.x to $ANDROID_ROOT/vendor/ mediatek /proprietary/external/ lib_verifier
+cd  $ANDROID_ROOT
+Build demo library
+make  libaurisysdemo
+Build lib verifier
+make  aurisys_lib_verifier
+Push demo lib &amp; lib verifier to device
+adb  root &amp;  adb  remount
+adb  push out/target/product/$PROJECT/vendor/lib/ libaurisysdemo.so  /vendor/lib/
+adb  push out/target/product/$PROJECT/vendor/bin/ aurisys_lib_verifier  /vendor/bin/
+adb  shell  chmod  777 /vendor/bin/ aurisys_lib_verifier
+Run lib verifier &amp; output log to lib_verifier_test_result.txt
+adb  shell &quot; aurisys_lib_verifier  &gt; / sdcard /lib_verifier_test_result.txt&quot;
+You can check the lib_verifier_test_result.txt to know the failure case &amp; related debug message
+Android environment  –  Build/Run Demo Lib &amp; Lib Verifier
+7</pre></section><section class="source-page" id="page-8"><h2>幻灯片 8</h2><pre class="source-text">Put  CONFIG\HiFi3 \ hifi3_eiger_win32.tgz  under {install root}\ XtDevTools \downloads\RG-2016.4\builds 
+IDE open XPG View and install  hifi3_eiger_win32.tgz &amp; RG-2017-6 package
+
+
+
+
+
+
+
+
+
+After installation done, you can find the hifi3_eiger HW configure 
+
+	
+
+Xplorer Simulator  –   Build/Run Demo Lib &amp; Lib Verifier   –   Install MTK HW Configuration
+1
+2
+3
+4
+5
+
+6
+7
+The config file is hw dependent, please contact the MTK  adsp  window
+8</pre></section><section class="source-page" id="page-9"><h2>幻灯片 9</h2><pre class="source-text">9
+
+Xplorer Simulator - Import Lib Verifier Workspace
+1
+2
+3
+4
+Select the lib verifier workspace folder
+
+Workspace imported</pre></section><section class="source-page" id="page-10"><h2>幻灯片 10</h2><pre class="source-text">10
+Select the target project with  LibVerifier  
+Configure HW configuration with hifi3_eiger
+build project
+Run or debug
+Xplorer Simulator - Build &amp; Run Lib Verifier
+1
+2
+3
+4
+4</pre></section><section class="source-page" id="page-11"><h2>幻灯片 11</h2><pre class="source-text">11
+Please install RV PDK first
+Add  LibVerifier  to MRV PDK workspace
+Create “ LibVerifier ” folder in {PDK_ROOT}/ sdk /Demo folder
+Copy lib verifier sources to the  “ LibVerifier ” folder
+Generate  makefiles
+Run configure.py in  {PDK_ROOT}/ sdk /
+Open MRV PDK IDE
+Run runIDE.sh in  {PDK_ROOT}/ sdk /Demo
+MRV PDK - Import PDK Lib Verifier Projects
+Aurisys dev packages
+1
+Create  LibVerifier  folder
+
+
+Copy files
+2
+Choose what Lib Verifier version you want
+Ex: For U OS: 1.8.0
+RV PDK Demo project folder
+</pre></section><section class="source-page" id="page-12"><h2>幻灯片 12</h2><pre class="source-text">12
+Import the generated project -  LibVerifier
+File -&gt; Import
+Existing Projects into Workspace -&gt; Next
+Click the Browse  button of Select root directory
+Select the “build” folder of RV PDK and click OK button
+Select the Projects of “ LibVerifier ”
+Click “Finish” button
+MRV PDK - Import PDK  Lib Verifier  Projects
+1
+2
+2
+3
+4
+5
+6
+4</pre></section><section class="source-page" id="page-13"><h2>幻灯片 13</h2><pre class="source-text">13
+Double click the “Build Targets” you want (ex: [exe]RV55.elf)
+
+
+
+
+
+Check build pass log
+MRV PDK - Build</pre></section><section class="source-page" id="page-14"><h2>幻灯片 14</h2><pre class="source-text">14
+Run projects
+Click the run button
+Click the “Run Configuration” item
+Double click the “Hardware Debugging” item to new configuration
+Select the elf file of  LibVerifier  project to run
+Ex: XXX/Demo/ build / LibVerifier /test/ MRV55.elf
+Select the Configuration you want
+“RV55 Moderate Simulation” : For profiling the cycle count of RV55
+Click the “Run” button
+MRV PDK - Run
+1
+2
+3
+5
+4
+6
+The log of running result</pre></section><section class="source-page" id="page-15"><h2>幻灯片 15</h2><pre class="source-text">15
+If you got build error message like below
+
+
+
+
+
+CFLAG follow the recommended setting
+-Wall  - mcoproc   - Werror    - mlongcalls    - LNO:simd   - ffunction -sections  - Wno -error=format - fdata -sections
+Trouble Shooting</pre></section><section class="source-page" id="page-16"><h2>幻灯片 16</h2><pre class="source-text">3 rd  party lib verification
+
+16</pre></section><section class="source-page" id="page-17"><h2>幻灯片 17</h2><pre class="source-text">17
+3 rd  party library source code integration
+Replace the demo lib implementation in  libaurisysdemo / with yours
+Add 3 rd  party library entry function declaration to interface/ arsi_library_entry_points.h
+
+
+
+Configure the test case in  lib_verifier / test_case_config.h
+Playback:  mtk_playback_test_case_list
+Record:  mtk_record_test_case_list
+VoIP:  mtk_voip_test_case_list
+Phone call:  mtk_phone_call_test_case_list
+Update  makefile
+Update  makefile  or Android.mk if you add new source files
+Compile &amp; Run
+Check the test result 
+Verification Flow
+Add 3 rd  party library’s declaration here</pre></section><section class="source-page" id="page-18"><h2>幻灯片 18</h2><pre class="source-text">18
+Config  the test case with 3rd party library's capability
+Test_case_config.h
+Note: 
+1. Add l2sram size test list since V1.8.0, and 3 rd  party can extend it.</pre></section><section class="source-page" id="page-19"><h2>幻灯片 19</h2><pre class="source-text">19
+
+Playback Test Config Structure
+struct   playback_test_case_config_t
+
+Member
+Description
+const char * test_case_name
+This  string is used to show in test result
+NULL string imply it’s end of test case list
+void (* arsi_assign_lib_fp )(AurisysLibInterface *lib)
+Configure the entry  function of test case
+string_buf_t   param_file_path
+The  library’s parameter file path
+task_scene_t   task_scene
+Define the working  scene of test case
+uint32_t  frame_size
+Define the frame size of  test case
+You can define many frame size which library supported
+Ex: {5,20}
+uint32_t  working_sample_rate
+Define the sample rate of test case
+You can define many sample rate which library supported
+Ex: {8000, 16000}
+uint32_t  audio_format
+Define the audio format of test case
+You can define many  audio format  which library supported
+Ex: {AUDIO_FORMAT_PCM_16_BIT,AUDIO_FORMAT_PCM_32_BIT}
+uint8_t interleave
+Define the pcm is interleave  or not
+Lib verifier only support non-interleave format now
+Will support interleave format soon
+uint8_t  dl_in_ch
+Define  the number of downlink input channel of test case
+uint8_t  dl_out_ch
+Define  the number of downlink output channel of test case
+profile_config_t   profile_config
+Define  the profiles of test case
+int8_t  audio_mode
+Define  the  audio_mode  of test case
+audio_source_t   input_source
+Define  the input   source  of test case
+int32_t mem_l2sram_size      (since V1.8.0)
+Define the available l2sram memory size of the test case</pre></section><section class="source-page" id="page-20"><h2>幻灯片 20</h2><pre class="source-text">20
+
+Record Test Config Structure
+struct   record_call_test_case_config_t
+
+Member
+Description
+const char * test_case_name
+This  string is used to show in test result
+NULL string imply it’s end of test case list
+void (* arsi_assign_lib_fp )(AurisysLibInterface *lib)
+Configure the entry  function of test case
+string_buf_t   param_file_path
+The  library’s parameter file path
+task_scene_t   task_scene
+Define the working  scene of test case
+uint32_t  frame_size
+Define the frame size of  test case
+You can define many frame size which library supported
+Ex: {5,20}
+uint32_t  working_sample_rate
+Define the sample rate of test case
+You can define many sample rate which library supported
+Ex: {8000, 16000}
+uint32_t  audio_format
+Define the audio format of test case
+You can define many  audio format  which library supported
+Ex: {AUDIO_FORMAT_PCM_16_BIT,AUDIO_FORMAT_PCM_32_BIT}
+uint8_t interleave
+Define the pcm is interleave  or not
+Lib verifier only support non-interleave format now
+Will support interleave format soon
+uint8_t  ul_in_ch
+Define  the number of uplink input channel of test case
+uint8_t  ul_ref_in_ch
+Define  the number of uplink reference input channel of test case
+uint8_t  ul_out_ch
+Define  the number of uplink output channel of test case
+profile_config_t   profile_config
+Define  the profiles of test case
+int8_t  audio_mode
+Define  the  audio_mode  of test case
+audio_source_t   input_source
+Define  the input   source  of test case
+int32_t  mem_slb_size
+Define the available  slb  memory size of the test case
+int32_t mem_l2sram_size     (since V1.8.0)
+Define the available l2sram memory size of the test case</pre></section><section class="source-page" id="page-21"><h2>幻灯片 21</h2><pre class="source-text">21
+
+Phone Call/VoIP Test Config Structure
+struct   phone_call_test_case_config_t  /  struct   voip_test_case_config_t
+
+Member
+Description
+const char * test_case_name
+This  string is used to show in test result
+NULL string imply it’s end of test case list
+void (* arsi_assign_lib_fp )(AurisysLibInterface *lib)
+Configure the entry  function of test case
+string_buf_t   param_file_path
+The  library’s parameter file path
+task_scene_t   task_scene
+Define the working  scene of test case
+uint32_t  frame_size
+Define the frame size of  test case
+You can define many frame size which library supported, Ex: {5,20}
+uint32_t  working_sample_rate
+Define the sample rate of test case
+You can define many sample rate which library supported, Ex: {8000, 16000}
+uint32_t  audio_format
+Define the audio format of test case
+You can define many  audio format  which library supported
+Ex: {AUDIO_FORMAT_PCM_16_BIT,AUDIO_FORMAT_PCM_32_BIT}
+uint8_t interleave
+Define the pcm is interleave  or not
+Lib verifier only support non-interleave format now
+Will support interleave format soon
+uint8_t  ul_in_ch
+Define  the number of uplink input channel of test case
+uint8_t  ul_ref_in_ch
+Define  the number of uplink reference input channel of test case
+uint8_t  ul_out_ch
+Define  the number of uplink output channel of test case
+uint8_t  dl_in_ch
+Define  the number of downlink input channel of test case
+uint8_t  dl_ref_in_ch
+Define  the number of downlink reference input channel of test case
+uint8_t  dl_out_ch
+Define  the number of downlink output channel of test case
+profile_config_t   profile_config
+Define  the profiles of test case
+int8_t  audio_mode
+Define  the  audio_mode  of test case
+audio_source_t   input_source
+Define  the input   source  of test case
+int32_t  mem_slb_size
+Define the available  slb  memory size of the test case
+Int32_t mem_l2sram_size     (since V1.8.0)
+Define the available l2sram memory size of the test case</pre></section><section class="source-page" id="page-22"><h2>幻灯片 22</h2><pre class="source-text">22
+Config the test case with 3rd party library's capability.
+If the library supports multiple input/output devices, 3rd party should extend the config list.
+Mind that since V1.8.0,  audio_device_t  changed to an array type, and each array item represents only one device.
+device_config.h
+</pre></section><section class="source-page" id="page-23"><h2>幻灯片 23</h2><pre class="source-text">23
+Update  Makefile
+If you add new source files, please update OBJECTS variable
+If the target environment support file I/O,
+You can specify the pcm input/output path
+If you add new header files, please update HEADERS variable
+API/V1.x.x/ lib_verifier / makefile</pre></section><section class="source-page" id="page-24"><h2>幻灯片 24</h2><pre class="source-text">24
+Update Android.mk
+If you add new source file, please update LOCAL_SRC_FILES variable
+If the target environment support file I/O,
+You can specify the pcm input/output path
+API/V1.X.X/ lib_verifier /Android.mk
+API/V1.X.X/ libaurisysdemo /Android.mk
+If you add new source file, please update LOCAL_SRC_FILES variable</pre></section><section class="source-page" id="page-25"><h2>幻灯片 25</h2><pre class="source-text">25
+Below are the test result example
+Check Test Result – Pass Case
+
+Test case information
+
+3 rd  party lib log
+
+Test result: PASS
+It’s 23 th  VOIP test case
+It’s 533 th  total test case</pre></section><section class="source-page" id="page-26"><h2>幻灯片 26</h2><pre class="source-text">Lib_verifier.h
+26
+
+Check Test Result – Failure Case
+
+Error message
+
+
+demo_lib.c
+
+Root cause
+Test result: Fail</pre></section><section class="source-page" id="page-27"><h2>幻灯片 27</h2><pre class="source-text">Lib dump parser
+
+27</pre></section><section class="source-page" id="page-28"><h2>幻灯片 28</h2><pre class="source-text">28
+Lib dump is designed for 3 rd  party dumping their debug information while signal processing
+Customer can provide the lib dump file to 3 rd  party for trouble shooting
+Strongly recommend 3 rd  party implement it
+Lib dump parser is a reference implementation for parsing the lib dump file on Linux
+Compile
+cd  API/ Vx.x.x / lib_dump_parser
+make
+Run
+./ demo_decode_dump  ../lib_verifier/pcm/Lib_dump.dat
+Compile &amp; Run Lib Dump Parser</pre></section><section class="source-page" id="page-29"><h2>幻灯片 29</h2><pre class="source-text">3 rd  party release to mtk
+
+29</pre></section><section class="source-page" id="page-30"><h2>幻灯片 30</h2><pre class="source-text">30
+3 rd  party release aurisys lib to MTK MUST contain below files
+The 3 rd  party library &amp; aurisys wrapper
+The parameter file that library needed
+aurisys_config.xml
+Please refer to the “XML Descriptor for Aurisys” section in Aurisys_Development_Tutorial.doc
+This xml configuration must match the test case configuration of lib verifier
+The lib verifier package which 3 rd  party used
+MTK have to review if there is any invalid modification
+The output log of lib verifier
+Confirm that 3 rd  party lib can pass all verifier test
+Release Packages</pre></section><section class="source-page" id="page-31"><h2>幻灯片 31</h2><pre class="source-text">appendix
+
+31</pre></section><section class="source-page" id="page-32"><h2>幻灯片 32</h2><pre class="source-text">32
+DO NOT  edit files in interface/
+arsi_api.h
+arsi_api_version.h
+arsi_call_type.h
+arsi_type.h
+audio_task.h
+wrapped_audio.h
+wrapped_errors.h
+except
+arsi_library_entry_points.h
+
+
+
+
+
+
+Please notify  MediaTek  SWRD if you want to change this file
+
+NEVER Change API Files!!</pre></section><section class="source-page" id="page-33"><h2>幻灯片 33</h2><pre class="source-text">33
+Entry points – Dynamic Link (HAL)
+dynamic_link_arsi_assign_lib_fp
+lib_demo.so
+API
+3 rd  party libraries
+libfvaudio.so
+lib_iir.so
+user
+dlopen ()</pre></section><section class="source-page" id="page-34"><h2>幻灯片 34</h2><pre class="source-text">Entry points - Static Link( FreeRTOS )
+arsi_library_entry_points.h
+demo_arsi_assign_lib_fp
+FV_arsi_assign_lib_fp
+iir_arsi_assign_lib_fp
+API
+3 rd  party libraries
+user
+lib_demo.a
+libfvaudio.a
+lib_iir.a
+34</pre></section><section class="source-page" id="page-35"><h2>幻灯片 35</h2><pre class="source-text">35
+Dump for processing (VM/EPL/…)
+Get  max  dump  buf  size of one frame
+Audio
+Driver
+Lib
+arsi_query_max_debug_dump_buf_size
+arsi_process_ul_buf
+dump  bufs
+dump  bufs
+sdcard
+Lib decode program
+
+
+
+PCM / time info / gain / …</pre></section><section class="source-page" id="page-36"><h2>幻灯片 36</h2><pre class="source-text">
+Any string you want
+36
+Lib Version</pre></section><section class="source-page" id="page-37"><h2>幻灯片 37</h2><pre class="source-text">New Parsing API
+Before V1.3.0
+// phase out after V1.3.0
+After V1.3.0
+Ex: &quot;   SetAudioCustomScene =app1,aa= bb,cc = dd ”
+
+demo_arsi_assign_lib_fp
+// phase out after V1.3.0
+new
+37</pre></section><section class="source-page" id="page-38"><h2>幻灯片 38</h2><pre class="source-text">Thank  you 
+Question s and Discussions</pre></section></article><section><h2>材料中的原图</h2><figure><a href="materials/SRC0316-image1.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image1.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 1"></a><figcaption>原图 1 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image2.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image2.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 2"></a><figcaption>原图 2 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image3.jpeg" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image3.jpeg" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 3"></a><figcaption>原图 3 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image4.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image4.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 4"></a><figcaption>原图 4 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image5.svg" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image5.svg" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 5"></a><figcaption>原图 5 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image6.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image6.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 6"></a><figcaption>原图 6 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image7.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image7.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 7"></a><figcaption>原图 7 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image8.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image8.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 8"></a><figcaption>原图 8 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image9.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image9.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 9"></a><figcaption>原图 9 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image10.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image10.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 10"></a><figcaption>原图 10 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image11.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image11.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 11"></a><figcaption>原图 11 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image12.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image12.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 12"></a><figcaption>原图 12 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image13.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image13.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 13"></a><figcaption>原图 13 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image14.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image14.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 14"></a><figcaption>原图 14 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image15.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image15.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 15"></a><figcaption>原图 15 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image16.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image16.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 16"></a><figcaption>原图 16 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image17.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image17.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 17"></a><figcaption>原图 17 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image18.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image18.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 18"></a><figcaption>原图 18 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image19.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image19.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 19"></a><figcaption>原图 19 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image20.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image20.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 20"></a><figcaption>原图 20 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image21.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image21.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 21"></a><figcaption>原图 21 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image22.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image22.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 22"></a><figcaption>原图 22 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image23.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image23.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 23"></a><figcaption>原图 23 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image24.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image24.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 24"></a><figcaption>原图 24 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image25.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image25.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 25"></a><figcaption>原图 25 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image26.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image26.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 26"></a><figcaption>原图 26 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image27.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image27.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 27"></a><figcaption>原图 27 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image28.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image28.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 28"></a><figcaption>原图 28 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image29.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image29.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 29"></a><figcaption>原图 29 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image30.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image30.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 30"></a><figcaption>原图 30 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image31.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image31.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 31"></a><figcaption>原图 31 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image32.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image32.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 32"></a><figcaption>原图 32 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image33.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image33.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 33"></a><figcaption>原图 33 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image34.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image34.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 34"></a><figcaption>原图 34 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image35.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image35.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 35"></a><figcaption>原图 35 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image36.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image36.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 36"></a><figcaption>原图 36 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image37.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image37.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 37"></a><figcaption>原图 37 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image38.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image38.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 38"></a><figcaption>原图 38 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image39.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image39.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 39"></a><figcaption>原图 39 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image40.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image40.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 40"></a><figcaption>原图 40 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image41.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image41.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 41"></a><figcaption>原图 41 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image42.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image42.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 42"></a><figcaption>原图 42 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image43.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image43.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 43"></a><figcaption>原图 43 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image44.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image44.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 44"></a><figcaption>原图 44 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image45.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image45.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 45"></a><figcaption>原图 45 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image46.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image46.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 46"></a><figcaption>原图 46 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image47.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image47.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 47"></a><figcaption>原图 47 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image48.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image48.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 48"></a><figcaption>原图 48 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image49.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image49.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 49"></a><figcaption>原图 49 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image50.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image50.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 50"></a><figcaption>原图 50 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image51.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image51.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 51"></a><figcaption>原图 51 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image52.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image52.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 52"></a><figcaption>原图 52 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image53.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image53.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 53"></a><figcaption>原图 53 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image54.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image54.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 54"></a><figcaption>原图 54 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image55.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image55.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 55"></a><figcaption>原图 55 · 点击放大</figcaption></figure><figure><a href="materials/SRC0316-image56.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0316-image56.png" alt="Lib_Verifier_User_Guide_V1.9.0.pptx 内嵌原图 56"></a><figcaption>原图 56 · 点击放大</figcaption></figure></section></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">幻灯片 1</a><a href="#page-2">幻灯片 2</a><a href="#page-3">幻灯片 3</a><a href="#page-4">幻灯片 4</a><a href="#page-5">幻灯片 5</a><a href="#page-6">幻灯片 6</a><a href="#page-7">幻灯片 7</a><a href="#page-8">幻灯片 8</a><a href="#page-9">幻灯片 9</a><a href="#page-10">幻灯片 10</a><a href="#page-11">幻灯片 11</a><a href="#page-12">幻灯片 12</a><a href="#page-13">幻灯片 13</a><a href="#page-14">幻灯片 14</a><a href="#page-15">幻灯片 15</a><a href="#page-16">幻灯片 16</a><a href="#page-17">幻灯片 17</a><a href="#page-18">幻灯片 18</a><a href="#page-19">幻灯片 19</a><a href="#page-20">幻灯片 20</a><a href="#page-21">幻灯片 21</a><a href="#page-22">幻灯片 22</a><a href="#page-23">幻灯片 23</a><a href="#page-24">幻灯片 24</a><a href="#page-25">幻灯片 25</a><a href="#page-26">幻灯片 26</a><a href="#page-27">幻灯片 27</a><a href="#page-28">幻灯片 28</a><a href="#page-29">幻灯片 29</a><a href="#page-30">幻灯片 30</a><a href="#page-31">幻灯片 31</a><a href="#page-32">幻灯片 32</a><a href="#page-33">幻灯片 33</a><a href="#page-34">幻灯片 34</a><a href="#page-35">幻灯片 35</a><a href="#page-36">幻灯片 36</a><a href="#page-37">幻灯片 37</a><a href="#page-38">幻灯片 38</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

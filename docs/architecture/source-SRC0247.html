@@ -1,0 +1,523 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Hypervisor_Vcodec_User_Manual_V1.2.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Hypervisor_Vcodec_User_Manual_V1.2.pdf</h1><p>SRC0247 · 原来源 ID S182 · PDF物理页 · 14 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MT8676软件资料/User Manual/Hypervisor/English Version/MT8676_Hypervisor_Vcodec_User_Manual_V1.2.pdf</p><p>SHA-256：<code>4e82f0cb886e5414fb29e593684bac3e731738204be92b5a66e89c24340a5fe2</code></p><p>原文件大小：759,935 字节</p></details><div class="actions"><a class="button" href="materials/SRC0247.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Hypervisor_Vcodec_User_Manual_V1.2.pdf 原 PDF" src="materials/SRC0247.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0247.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version:                  1.2 
+Release date:        2024-11-25 
+MT8676 Hypervisor Vcodec 
+User Manual 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0247.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8676 Hypervisor Vcodec 
+User Manual 
+Confidential B 
+Version History 
+Version Date Author Description 
+1.0 2024-10-28 Yougao.Liu Official version 
+1.1 2024-11-11 Yougao.Liu Added the scope of application for the video playback 
+architecture in Section 1.3.1.2 
+1.2 2024-11-25 Yougao.Liu Removed “Yocto+Android” in Section 1.3.1.2 and 1.3.1.3 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0247.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8676 Hypervisor Vcodec 
+User Manual 
+Confidential B 
+Table of Contents 
+Version History ·································································································································································· 2 
+Table of Contents ······························································································································································· 3 
+List of Figures ····································································································································································· 3 
+List of Tables ······································································································································································ 3 
+1 Basic Introduction to Video Encoding and Decoding ·································································································· 4 
+1.1 Purpose ···································································································································································· 4 
+1.2 Scope ········································································································································································ 4 
+ Abbreviation·················································································································································· 4 
+ Performance ················································································································································· 4 
+1.3 Architecture/Process Overview ································································································································ 5 
+ Software Architecture ··································································································································· 5 
+1.4 Configuration/Customization Guide ························································································································· 7 
+ Configuration of the Decoder Codec ············································································································ 7 
+ Configuration of the Channel Supported by the Decoder ············································································ 8 
+ Configuration of Secure Decoder ·················································································································· 8 
+ Configuration of the Encoder Codec ············································································································· 8 
+ Configuration of the Channel Supported by the Encoder ············································································· 9 
+ Configuration of Secure Encoder ·················································································································· 9 
+ Customization of the Playback Feature ······································································································· 10 
+1.5 Common Issues/Troubleshooting ·························································································································· 10 
+ MTK C2_hal CMD ········································································································································ 10 
+ MMDVFS CMD ············································································································································ 10 
+ VCodec CMD ··············································································································································· 11 
+ Video Dump Feature ··································································································································· 11 
+ Black Screen ················································································································································ 12 
+ Screen Distortion ········································································································································ 12 
+ Occurrence of Lagging or Freezing ·············································································································· 13 
+Exhibit 1 Terms and Conditions ········································································································································ 14 
+ 
+ 
+List of Figures 
+Figure 1-1. Android OS playback architecture ···························································································································· 6 
+Figure 1-2. Hypervisor OS playback architecture ······················································································································· 7 
+Figure 1-3. Hypervisor OS SVP playback architecture ················································································································ 7 
+ 
+List of Tables 
+Table 1-1. Abbreviation ······························································································································································ 4 
+Table 1-2. Video file format ························································································································································ 5 
+Table 1-3. Vcodec performace ···················································································································································· 5 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0247.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8676 Hypervisor Vcodec 
+User Manual 
+Confidential B 
+1 Basic Introduction to Video Encoding and Decoding 
+1.1 Purpose 
+The specific system architecture is described in this architecture design document to ensure that hardware resources can 
+be effectively shared in a virtualized environment between Android and Yocto systems, providing users with a coherent 
+and high-performance experience. 
+ 
+1.2 Scope 
+This document focuses on describing the high-level architecture of the system, covering design considerations from the 
+hardware layer to the application layer, as well as communication and interaction among different components. 
+ Abbreviation 
+Table 1-1. Abbreviation 
+Abbreviation Explanation 
+AV1 AOMedia Video 1 
+CC Cryptographic Checksum 
+CMD Command 
+H.264 MPEG-4 Part 10, Advanced Video Coding, MPEG-4 AVC 
+HAL Hardware Abstraction Layer 
+HDR High Dynamic Range 
+Mbps Megabits Per Second 
+OPP Operating Performance Point 
+PS Location Probability 
+SVP Secure Video Playback 
+TS Time Slot 
+V4L2 Video for Linux Two 
+VCodec Video Codec 
+VCP Video CoProcess 
+Vdec Video Decoder 
+Venc Video Encoder 
+VirtIO Virt Input/Output 
+ 
+ Performance 
+The video file formats currently supported in the system are shown in Table 1-2. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0247.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8676 Hypervisor Vcodec 
+User Manual 
+Confidential B 
+Table 1-2. Video file format 
+Container File Extension 8676 Android U0 Comment 
+MKV “.mkv”,”mka” √ - 
+MP4 “.mp4”,”.m4a”,”.m4v”,”.3g2”,”.3gp”,”.3gpp”,”3gpp2” √ - 
+PS ”.mpg” √ VOB is not supported 
+TS “.ts”,”.m2ts”,”.mts” √ - 
+WEBM “.webm” √ - 
+AVI “.avi” X Android S phase out 
+WMV “.wmv”,”.asf” X Android S phase out 
+FLV “.flv”,”.f4v” X Android S phase out 
+RMVB “.rmvb”,”.rm” X - 
+ 
+ 
+Specific supported parameter list information for the video codec module is provided in Table 1-3. 
+Table 1-3. Vcodec performace 
+Category Codec 
+Spec 
+Resolution Frame Rate Bit Rate Bit Depth Profile/Level  
+Decoder H.264 4096x2176 60 160 Mbps 8/10 CBP , MP , HP , high 10 / 5.2 
+H.265 4096x2176 60 160 Mbps 8/10 Main / 5.1 
+Main 10 / 5.1 
+VP9 4096x2176 60 120 Mbps 8/10 Profile 0/2 
+AV1 4096x2176 60 120 Mbps 8/10 Main/level5.1 
+Encoder H.264 3840x2160 60 160 Mbps 8/10 BP , MP , HP; High 10 / 5.2 
+H.265  3840x2160 60 160 Mbps 8/10 Main, Main10 / 5.1 
+Concurrency 
+(HW capability) 
+- 4K60 VDEC + 4K60 VENC or equivalent throughput 
+ 
+ 
+1.3 Architecture/Process Overview 
+ Software Architecture 
+The architecture diagram related to video playback in the current system is the main focus of this chapter. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0247.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Hypervisor Vcodec 
+User Manual 
+Confidential B 
+1.3.1.1 Android 
+The architecture of video playback in a single system is depicted in Figure 1-1. 
+ 
+ 
+Figure 1-1. Android OS playback architecture 
+ 
+1.3.1.2 Hypervisor 
+The architecture of video playback in the Hypervisor system is shown in Figure 1-2. It is based on L(w/Vcodec)+A or L(w/o 
+Vcodec)+L(w/o Vcodec)+A. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0247.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8676 Hypervisor Vcodec 
+User Manual 
+Confidential B 
+ 
+Figure 1-2. Hypervisor OS playback architecture 
+ 
+1.3.1.3 Hypervisor SVP  
+The architecture for SVP in the Hypervisor system is illustrated in Figure 1-3. 
+ 
+ 
+Figure 1-3. Hypervisor OS SVP playback architecture 
+ 
+1.4 Configuration/Customization Guide 
+ Configuration of the Decoder Codec 
+The codec information supported by the decoder configured in the system is depicted in the following diagram. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0247.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 Hypervisor Vcodec 
+User Manual 
+Confidential B 
+ 
+ 
+ Configuration of the Channel Supported by the Decoder 
+The information on the number of the channels supported by the decoder configured in the system is depicted in the 
+figure below. 
+ 
+ 
+ Configuration of Secure Decoder 
+The configuration information for secure decoders in the system is depicted in the following diagram. 
+ 
+ 
+ 
+ Configuration of the Encoder Codec 
+The configuration information corresponding to the supported encoders in the system is depicted in the following diagram. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0247.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8676 Hypervisor Vcodec 
+User Manual 
+Confidential B 
+ 
+ 
+ Configuration of the Channel Supported by the Encoder 
+The configuration information of the number of channels supported by the encoder in the system is depicted in the 
+following diagram. 
+ 
+ 
+ Configuration of Secure Encoder 
+The configuration information for the secure encoder supported in the system is depicted in the following diagram. 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0247.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8676 Hypervisor Vcodec 
+User Manual 
+Confidential B 
+ Customization of the Playback Feature 
+1.4.7.1 HDR 
+Specific project customization support is required for HDR functionality. 
+ 
+1.4.7.2 SVP Playback 
+Customized support for the SVP feature requires specific project customization. 
+ 
+1.5 Common Issues/Troubleshooting 
+ MTK C2_hal CMD 
+C2MtkComponent: 
+All C2MTK_ALOGV logs of C2MtkComponent should be enabled 
+adb shell &quot;setprop vendor.mtk.c2.enable.comp.log 2&quot; 
+ 
+C2MtkVdec: 
+Enable C2MTK_ALOGV logs of C2MtkVdec 
+adb shell &quot;setprop vendor.mtk.c2.enable.vdec.log 2&quot; 
+ 
+C2MtkVenc: 
+Enable C2MTK_ALOGV logs of C2MtkVenc 
+adb shell &quot;setprop vendor.mtk.c2.enable.venc.log 2&quot; 
+ 
+C2MtkBufferManager: 
+Enable C2MTK_ALOGV logs of C2MtkBufferManager 
+Enable C2MTK_ALOGV internal logs of C2MtkBufferManager 
+adb shell &quot;setprop vendor.mtk.c2.enable.bm.log 2&quot; 
+adb shell &quot;setprop vendor.mtk.c2.enable.bm.internal.log 1&quot; 
+ 
+VCodec: 
+All debug level logs for VCodec should be enabled. 
+Enable debug level logs by &lt;TAG&gt; filter. E.g. V4L2Device 
+adb shell &quot;setprop vendor.mtk.c2.enable.vcodec.log.V4L2Device 4&quot; 
+adb shell &quot;setprop vendor.mtk.c2.enable.vcodec.log 4&quot; 
+adb shell &quot;setprop vendor.mtk.c2.enable.vcodec.log.&lt;TAG&gt; 4&quot; 
+ 
+ MMDVFS CMD 
+Clock is forced to a specific step by OPP . 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0247.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8676 Hypervisor Vcodec 
+User Manual 
+Confidential B 
+param1: 0→ Vcore  1→vmm 
+OPP 0: highest clock rate 
+adb shell &quot;echo 0 0 &gt; /sys/module/mtk_mmdvfs_debug/parameters/force_step&quot; 
+ 
+Vote clock to the specific step by OPP:  
+adb shell &quot;echo 0 0 &gt; /sys/module/mtk_mmdvfs_debug/parameters/vote_step&quot; 
+ 
+Dump current clk: 
+adb shell &quot;echo fmeter &gt; /proc/clkdbg ; cat /proc/clkdbg | grep –e vdec –e cam&quot; 
+ 
+Dump MMDVFS OPP: 
+adb shell &quot;cat /proc/mmdvfs/mmdvfs_opp&quot; 
+ VCodec CMD 
+Vcodec log Enable/Disable 
+1: Enable 
+2: Disable 
+adb shell &quot;echo 1 &gt; /sys/module/mtk_vcodec_dec_v2/parameters/mtk_vcodec_dbg&quot; 
+ 
+Control the log level for Vcodec. 
+codec_log:  Common codec log level (0~31) 
+vpud_log: Vcodec wrap log level (0~7) 
+job_log: Job log level (0~7)s 
+adb shell &quot;echo -codec_log 7 -vpud_log 3 -job_log 3 &gt; 
+/sys/module/mtk_vcodec_dec_v2/parameters/mtk_vdec_vcp_log&quot; 
+ 
+ Video Dump Feature 
+Input dump for the decoder (bit-stream for decoding) 
+The dumped file is saved in \data\vendor\vcodec\vdec_input_&lt;timestamp&gt;_&lt;instance&gt;.bs 
+E.g., \data\vendor\vcodec\vdec_input_20200716T133851.521_0xE80D6000.bs 
+adb shell &quot;setprop vendor.mtk.c2.vdec.dump.input 1&quot; 
+ 
+Dump of decoded video frames from the decoder output. 
+The dumped file is saved 
+in \data\vendor\vcodec\vdec_output_&lt;timestamp&gt;_&lt;instance&gt;_W&lt;width&gt;H&lt;height&gt;.yuv 
+E.g., \data\vendor\vcodec\vdec_output_20200716T133851.521_0xE80D6000_W1280H720.yuv 
+adb shell &quot;setprop vendor.mtk.c2.vdec.dump.output 1&quot; 
+ 
+Dump of decoded video frames from the decoder after color conversion. 
+The dumped file is saved in: 
+\data\vendor\vcodec\vdec_output_cc_&lt;timestamp&gt;_&lt;instance&gt;_W&lt;width&gt;H&lt;height&gt;.yuv 
+E.g., \data\vendor\vcodec\vdec_output_cc_20200716T133851.521_0xE80D6000_W1280H720.yuv 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0247.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8676 Hypervisor Vcodec 
+User Manual 
+Confidential B 
+adb shell &quot;setprop vendor.mtk.c2.vdec.dump.output.cc 1&quot; 
+ 
+A binary debugging log containing decoder profiling data has been dumped. 
+The dumped file is saved in \data\vendor\vcodec\vdec_profiling_&lt;timestamp&gt;_&lt;instance&gt;.dat 
+E.g., \data\vendor\vcodec\vdec_profiling_20200716T133851.521_0xE80D6000.dat 
+adb shell &quot;setprop vendor.mtk.c2.vdec.profiling 1&quot; 
+ 
+ Black Screen 
+• Verify if the video file is functioning correctly. 
+• Ensure that the video decoding module is started up normally. 
+adb shell &quot;setprop vendor.mtk.c2.enable.vdec.log 2&quot; 
+ 
+Confirm in the logcat logs if there is information similar to the following: 
+CCodec: allocate(c2.mtk.vp9.decoder) 
+C2MtkComponentStore: find: name=c2.mtk.vp9.decoder, key=c2.mtk.vp9.decoder 
+C2MtkVdec: [0xB400007D63859720] IntfImpl: name=c2.mtk.vp9.decoder 
+ 
+• Confirm that the decoding data is normal. 
+Confirm that the decoding module has received the normal video stream data: 
+adb shell &quot;setprop vendor.mtk.c2.vdec.dump.input 1 
+ 
+• Is the GPU forced to be OK? 
+adb shell service call SurfaceFlinger 1008 i32 1 
+ 
+• The display module's functionality is confirmed to be normal. 
+Refer to the display document to confirm the display logic. 
+If all the above points are satisfactory, the detailed log analysis for issue localization needs to be performed by the Video 
+playback owner. 
+ 
+ Screen Distortion 
+• Confirm that the decoding data is normal. 
+Confirm that the decoding module has received the normal video stream data: 
+adb shell &quot;setprop vendor.mtk.c2.vdec.dump.input 1 
+ 
+• Is the GPU forced to be OK? 
+adb shell service call SurfaceFlinger 1008 i32 1 
+ 
+• The display module's functionality is confirmed to be normal. 
+Refer to the display document to confirm the display logic. 
+If all the above points are satisfactory, the detailed log analysis to identify the issue needs to be performed by the video 
+playback owner. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0247.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8676 Hypervisor Vcodec 
+User Manual 
+Confidential B 
+ Occurrence of Lagging or Freezing 
+• Verify if the video file is functioning correctly. 
+• Ensure the video decoding module is started up normally. 
+adb shell &quot;setprop vendor.mtk.c2.enable.vdec.log 2&quot; 
+ 
+Confirm in the logcat logs if there is information similar to the following: 
+CCodec: allocate(c2.mtk.vp9.decoder) 
+C2MtkComponentStore: find: name=c2.mtk.vp9.decoder, key=c2.mtk.vp9.decoder 
+C2MtkVdec: [0xB400007D63859720] IntfImpl: name=c2.mtk.vp9.decoder 
+ 
+• The display module's functionality is confirmed to be normal. 
+Refer to the display document to confirm the display logic. 
+If all the above points are satisfactory, video playback owner needs to carefully examine the log to locate the issue. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0247.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+MT8676 Hypervisor Vcodec 
+User Manual 
+Confidential B 
+Exhibit 1 Terms and Conditions 
+Your access to and use of this document and the information contained herein (collectively this “Document”) is subject to your (including the corporation 
+or other legal entity you represent, collectively “You”) acceptance of the terms and conditions set forth below (“T&amp;C”).  By using, accessing or 
+downloading this Document, You are accepting the T&amp;C and agree to be bound by the T&amp;C.  If You don’t agree to the T&amp;C, You may not use this 
+Document and shall immediately destroy any copy thereof. 
+ 
+This Document contains information that is confidential and proprietary to MediaTek Inc. and/or its affiliates (collectively “MediaTek”) or its licensors 
+and is provided solely for Your internal use with MediaTek’s chipset(s) described in this Document and shall not be used for any other purposes (including 
+but not limited to identifying or providing evidence to support any potential patent infringement claim against MediaTek or any of MediaTek’s suppliers 
+and/or direct or indirect customers).  Unauthorized use or disclosure of the information contained herein is prohibited.  You agree to indemnify 
+MediaTek for any loss or damages suffered by MediaTek for Your unauthorized use or disclosure of this Document, in whole or in part. 
+ 
+MediaTek and its licensors retain titles and all ownership rights in and to this Document and no license (express or implied, by estoppels or otherwise) to 
+any intellectual propriety rights is granted hereunder.  This Document is subject to change without further notification.  MediaTek does not assume any 
+responsibility arising out of or in connection with any use of, or reliance on, this Document, and specifically disclaims any and all liability, including, 
+without limitation, consequential or incidental damages. 
+ 
+THIS DOCUMENT AND ANY OTHER MATERIALS OR TECHNICAL SUPPORT PROVIDED BY MEDIATEK IN CONNECTION WITH THIS DOCUMENT, IF ANY, ARE 
+PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE.  MEDIATEK SPECIFICALLY DISCLAIMS 
+ALL WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, COMPLETENESS OR ACCURACY AND ALL 
+WARRANTIES ARISING OUT OF TRADE USAGE OR OUT OF A COURSE OF DEALING OR COURSE OF PERFORMANCE.  MEDIATEK SHALL NOT BE RESPONSIBLE 
+FOR ANY MEDIATEK DELIVERABLES MADE TO MEET YOUR SPECIFICATIONS OR TO CONFORM TO A PARTICULAR STANDARD OR OPEN FORUM. 
+ 
+Without limiting the generality of the foregoing, MediaTek makes no warranty, representation or guarantee regarding the suitability of its products for 
+any particular purpose, nor does MediaTek assume any liability arising out of the application or use of any product, circuit or software.  You agree that 
+You are solely responsible for the designing, validating and testing Your product incorporating MediaTek’s product and ensure such product meets 
+applicable standards and any safety, security or other requirements. 
+ 
+The above T&amp;C and all acts in connection with the T&amp;C or this Document shall be governed, construed and interpreted in accordance with the laws of 
+Taiwan, without giving effect to the principles of conflicts of law. 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

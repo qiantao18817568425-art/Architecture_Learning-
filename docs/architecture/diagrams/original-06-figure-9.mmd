@@ -1,0 +1,9 @@
+flowchart TB
+  A[Lifecycle owner creates resource] --> B[wrapper obtains native handle]
+  B --> C[producer/consumer connects]
+  C --> D[use buffers/layers/callbacks]
+  D --> E[stop incoming work]
+  E --> F[drain/cancel outstanding work]
+  F --> G[disconnect/release/close]
+  G --> H[remove Layer and unregister callback]
+  H --> I[reference and counters return to baseline]

@@ -1,0 +1,1376 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>正文引用记录.json · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>正文引用记录.json</h1><p>SRC0051 · 全文 · 1 个阅读单元</p><p class="note">原材料可查阅；未逐页作项目结论验证。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>架构知识——中文版/修订记录/2026-09-20-正文深化/正文引用记录.json</p><p>SHA-256：<code>b6c786990af0bda334854715c7d39fdbc738492f9183d169820bd887fb2936af</code></p><p>原文件大小：38,997 字节</p></details><div class="actions"><a class="button" href="materials/SRC0051.json" download>下载完整原文件</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><article id="source-text"><section class="source-page" id="page-1"><h2>全文 1</h2><pre class="source-text">[
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/00-前言.md&quot;,
+    &quot;id&quot;: &quot;DAY1&quot;,
+    &quot;pages&quot;: null,
+    &quot;source&quot;: &quot;GitHub Pages a4fe4eaa70ff44aeb9e27068c71514f050f0ba06&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/00-前言.md&quot;,
+    &quot;id&quot;: &quot;DAY2&quot;,
+    &quot;pages&quot;: null,
+    &quot;source&quot;: &quot;GitHub Pages a4fe4eaa70ff44aeb9e27068c71514f050f0ba06&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/01-三张架构图阅读指南.md&quot;,
+    &quot;id&quot;: &quot;S145&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/01-三张架构图阅读指南.md&quot;,
+    &quot;id&quot;: &quot;S019&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S038&quot;,
+    &quot;pages&quot;: &quot;5-9&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S278&quot;,
+    &quot;pages&quot;: &quot;4-6&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S283&quot;,
+    &quot;pages&quot;: &quot;4-5&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S147&quot;,
+    &quot;pages&quot;: &quot;5-10&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S021&quot;,
+    &quot;pages&quot;: &quot;5-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S028&quot;,
+    &quot;pages&quot;: &quot;5-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S045&quot;,
+    &quot;pages&quot;: &quot;2-4&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S049&quot;,
+    &quot;pages&quot;: &quot;4-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S263&quot;,
+    &quot;pages&quot;: &quot;1-5&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;U002&quot;,
+    &quot;pages&quot;: &quot;1-2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S145&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S019&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/03-MT8676-SDK与UMDP.md&quot;,
+    &quot;id&quot;: &quot;S075&quot;,
+    &quot;pages&quot;: &quot;5-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/03-MT8676-SDK与UMDP.md&quot;,
+    &quot;id&quot;: &quot;U038&quot;,
+    &quot;pages&quot;: &quot;9-13&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/03-MT8676-SDK与UMDP.md&quot;,
+    &quot;id&quot;: &quot;E007&quot;,
+    &quot;pages&quot;: &quot;3-4&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;MBOS-20260920&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;MBOS-20260920&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;MBOS-20260920&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;MBOS-20260920&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;S145&quot;,
+    &quot;pages&quot;: &quot;4-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;S019&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;U039&quot;,
+    &quot;pages&quot;: &quot;4-18&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;U047&quot;,
+    &quot;pages&quot;: &quot;12&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;S045&quot;,
+    &quot;pages&quot;: &quot;2-4&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;S049&quot;,
+    &quot;pages&quot;: &quot;4-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;S281&quot;,
+    &quot;pages&quot;: &quot;2-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;S272&quot;,
+    &quot;pages&quot;: &quot;3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;S273&quot;,
+    &quot;pages&quot;: &quot;3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;U002&quot;,
+    &quot;pages&quot;: &quot;1-2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;MBOS-20260920&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;MBOS-20260920&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;MBOS-20260920&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;U039&quot;,
+    &quot;pages&quot;: &quot;4-18&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;S145&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;S019&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/05-通信机制与异常诊断基础.md&quot;,
+    &quot;id&quot;: &quot;MBOS-20260920&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/05-通信机制与异常诊断基础.md&quot;,
+    &quot;id&quot;: &quot;S281&quot;,
+    &quot;pages&quot;: &quot;2-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/05-通信机制与异常诊断基础.md&quot;,
+    &quot;id&quot;: &quot;S281&quot;,
+    &quot;pages&quot;: &quot;2-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/05-通信机制与异常诊断基础.md&quot;,
+    &quot;id&quot;: &quot;E005&quot;,
+    &quot;pages&quot;: &quot;3-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/05-通信机制与异常诊断基础.md&quot;,
+    &quot;id&quot;: &quot;U038&quot;,
+    &quot;pages&quot;: &quot;4-13&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/05-通信机制与异常诊断基础.md&quot;,
+    &quot;id&quot;: &quot;S282&quot;,
+    &quot;pages&quot;: &quot;4-5&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/05-通信机制与异常诊断基础.md&quot;,
+    &quot;id&quot;: &quot;DAY18&quot;,
+    &quot;pages&quot;: null,
+    &quot;source&quot;: &quot;GitHub Pages a4fe4eaa70ff44aeb9e27068c71514f050f0ba06&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/06-Android内部机制与稳定性.md&quot;,
+    &quot;id&quot;: &quot;S145&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/06-Android内部机制与稳定性.md&quot;,
+    &quot;id&quot;: &quot;S019&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/06-Android内部机制与稳定性.md&quot;,
+    &quot;id&quot;: &quot;U047&quot;,
+    &quot;pages&quot;: &quot;6-10&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/06-Android内部机制与稳定性.md&quot;,
+    &quot;id&quot;: &quot;S261&quot;,
+    &quot;pages&quot;: &quot;2-5&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/06-Android内部机制与稳定性.md&quot;,
+    &quot;id&quot;: &quot;E003&quot;,
+    &quot;pages&quot;: &quot;3-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/07-SOS-Yocto内部机制.md&quot;,
+    &quot;id&quot;: &quot;U039&quot;,
+    &quot;pages&quot;: &quot;9-18&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/07-SOS-Yocto内部机制.md&quot;,
+    &quot;id&quot;: &quot;S019&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/07-SOS-Yocto内部机制.md&quot;,
+    &quot;id&quot;: &quot;S145&quot;,
+    &quot;pages&quot;: &quot;8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/07-SOS-Yocto内部机制.md&quot;,
+    &quot;id&quot;: &quot;S296&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/07-SOS-Yocto内部机制.md&quot;,
+    &quot;id&quot;: &quot;S049&quot;,
+    &quot;pages&quot;: &quot;4-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/07-SOS-Yocto内部机制.md&quot;,
+    &quot;id&quot;: &quot;S045&quot;,
+    &quot;pages&quot;: &quot;2-4&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/07-SOS-Yocto内部机制.md&quot;,
+    &quot;id&quot;: &quot;S263&quot;,
+    &quot;pages&quot;: &quot;1-5&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/07-SOS-Yocto内部机制.md&quot;,
+    &quot;id&quot;: &quot;S281&quot;,
+    &quot;pages&quot;: &quot;2-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/08-MCU内部机制.md&quot;,
+    &quot;id&quot;: &quot;S281&quot;,
+    &quot;pages&quot;: &quot;2-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/08-MCU内部机制.md&quot;,
+    &quot;id&quot;: &quot;E005&quot;,
+    &quot;pages&quot;: &quot;3-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/08-MCU内部机制.md&quot;,
+    &quot;id&quot;: &quot;E006&quot;,
+    &quot;pages&quot;: &quot;1-2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/08-MCU内部机制.md&quot;,
+    &quot;id&quot;: &quot;S265&quot;,
+    &quot;pages&quot;: &quot;4-6&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/08-MCU内部机制.md&quot;,
+    &quot;id&quot;: &quot;S037&quot;,
+    &quot;pages&quot;: &quot;4-10&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/09-TBox通信模组内部机制.md&quot;,
+    &quot;id&quot;: &quot;S075&quot;,
+    &quot;pages&quot;: &quot;5-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/09-TBox通信模组内部机制.md&quot;,
+    &quot;id&quot;: &quot;S279&quot;,
+    &quot;pages&quot;: &quot;2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/09-TBox通信模组内部机制.md&quot;,
+    &quot;id&quot;: &quot;S304&quot;,
+    &quot;pages&quot;: &quot;1-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/09-TBox通信模组内部机制.md&quot;,
+    &quot;id&quot;: &quot;U002&quot;,
+    &quot;pages&quot;: &quot;1-2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/09-TBox通信模组内部机制.md&quot;,
+    &quot;id&quot;: &quot;S305&quot;,
+    &quot;pages&quot;: &quot;2-4&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/09-TBox通信模组内部机制.md&quot;,
+    &quot;id&quot;: &quot;S272&quot;,
+    &quot;pages&quot;: &quot;3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/09-TBox通信模组内部机制.md&quot;,
+    &quot;id&quot;: &quot;S273&quot;,
+    &quot;pages&quot;: &quot;3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/10-车辆仪表与诊断业务流程.md&quot;,
+    &quot;id&quot;: &quot;S281&quot;,
+    &quot;pages&quot;: &quot;2-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/10-车辆仪表与诊断业务流程.md&quot;,
+    &quot;id&quot;: &quot;S281&quot;,
+    &quot;pages&quot;: &quot;2-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/10-车辆仪表与诊断业务流程.md&quot;,
+    &quot;id&quot;: &quot;MBOS-20260920&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/10-车辆仪表与诊断业务流程.md&quot;,
+    &quot;id&quot;: &quot;S281&quot;,
+    &quot;pages&quot;: &quot;2-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;S145&quot;,
+    &quot;pages&quot;: &quot;8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;S019&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;S296&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;S297&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;S019&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;U047&quot;,
+    &quot;pages&quot;: &quot;6-10&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;S296&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;S285&quot;,
+    &quot;pages&quot;: &quot;2-5&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;U047&quot;,
+    &quot;pages&quot;: &quot;11&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;U039&quot;,
+    &quot;pages&quot;: &quot;9-18&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;S028&quot;,
+    &quot;pages&quot;: &quot;5-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;DAY33&quot;,
+    &quot;pages&quot;: null,
+    &quot;source&quot;: &quot;GitHub Pages a4fe4eaa70ff44aeb9e27068c71514f050f0ba06&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;S019&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;U047&quot;,
+    &quot;pages&quot;: &quot;6-10&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;S045&quot;,
+    &quot;pages&quot;: &quot;2-4&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;S281&quot;,
+    &quot;pages&quot;: &quot;2-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;S263&quot;,
+    &quot;pages&quot;: &quot;1-5&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;S052&quot;,
+    &quot;pages&quot;: &quot;1&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;S045&quot;,
+    &quot;pages&quot;: &quot;2-4&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;S049&quot;,
+    &quot;pages&quot;: &quot;4-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;S049&quot;,
+    &quot;pages&quot;: &quot;4-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;S052&quot;,
+    &quot;pages&quot;: &quot;1&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;DAY34&quot;,
+    &quot;pages&quot;: null,
+    &quot;source&quot;: &quot;GitHub Pages a4fe4eaa70ff44aeb9e27068c71514f050f0ba06&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;S045&quot;,
+    &quot;pages&quot;: &quot;2-4&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;S049&quot;,
+    &quot;pages&quot;: &quot;4-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S075&quot;,
+    &quot;pages&quot;: &quot;5-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S282&quot;,
+    &quot;pages&quot;: &quot;4-5&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S279&quot;,
+    &quot;pages&quot;: &quot;2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S304&quot;,
+    &quot;pages&quot;: &quot;1-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S279&quot;,
+    &quot;pages&quot;: &quot;2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;U002&quot;,
+    &quot;pages&quot;: &quot;1-2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S265&quot;,
+    &quot;pages&quot;: &quot;4-6&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S262&quot;,
+    &quot;pages&quot;: &quot;3-4&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S272&quot;,
+    &quot;pages&quot;: &quot;3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S273&quot;,
+    &quot;pages&quot;: &quot;3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S305&quot;,
+    &quot;pages&quot;: &quot;2-4&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S279&quot;,
+    &quot;pages&quot;: &quot;2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;U002&quot;,
+    &quot;pages&quot;: &quot;1-2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;U047&quot;,
+    &quot;pages&quot;: &quot;8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;S145&quot;,
+    &quot;pages&quot;: &quot;8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;U039&quot;,
+    &quot;pages&quot;: &quot;17-18&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;S035&quot;,
+    &quot;pages&quot;: &quot;5-6&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;S265&quot;,
+    &quot;pages&quot;: &quot;4-6&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;S037&quot;,
+    &quot;pages&quot;: &quot;4-10&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;U002&quot;,
+    &quot;pages&quot;: &quot;1-2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;S030&quot;,
+    &quot;pages&quot;: &quot;8-10&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;MBOS-20260920&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;S075&quot;,
+    &quot;pages&quot;: &quot;5-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;U038&quot;,
+    &quot;pages&quot;: &quot;11-13&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;DAY33&quot;,
+    &quot;pages&quot;: null,
+    &quot;source&quot;: &quot;GitHub Pages a4fe4eaa70ff44aeb9e27068c71514f050f0ba06&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;S030&quot;,
+    &quot;pages&quot;: &quot;8-10&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/15-统一诊断手册.md&quot;,
+    &quot;id&quot;: &quot;U002&quot;,
+    &quot;pages&quot;: &quot;1-2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/15-统一诊断手册.md&quot;,
+    &quot;id&quot;: &quot;U047&quot;,
+    &quot;pages&quot;: &quot;8-9&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/15-统一诊断手册.md&quot;,
+    &quot;id&quot;: &quot;U028&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/15-统一诊断手册.md&quot;,
+    &quot;id&quot;: &quot;S278&quot;,
+    &quot;pages&quot;: &quot;4-6&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/15-统一诊断手册.md&quot;,
+    &quot;id&quot;: &quot;E003&quot;,
+    &quot;pages&quot;: &quot;3-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/15-统一诊断手册.md&quot;,
+    &quot;id&quot;: &quot;S019&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/15-统一诊断手册.md&quot;,
+    &quot;id&quot;: &quot;U039&quot;,
+    &quot;pages&quot;: &quot;15-18&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/15-统一诊断手册.md&quot;,
+    &quot;id&quot;: &quot;S075&quot;,
+    &quot;pages&quot;: &quot;5-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/15-统一诊断手册.md&quot;,
+    &quot;id&quot;: &quot;S265&quot;,
+    &quot;pages&quot;: &quot;4-6&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构知识——中文版/15-统一诊断手册.md&quot;,
+    &quot;id&quot;: &quot;WEEK10&quot;,
+    &quot;pages&quot;: null,
+    &quot;source&quot;: &quot;GitHub Pages a4fe4eaa70ff44aeb9e27068c71514f050f0ba06&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/00-前言.md&quot;,
+    &quot;id&quot;: &quot;DAY1&quot;,
+    &quot;pages&quot;: null,
+    &quot;source&quot;: &quot;GitHub Pages a4fe4eaa70ff44aeb9e27068c71514f050f0ba06&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/00-前言.md&quot;,
+    &quot;id&quot;: &quot;DAY2&quot;,
+    &quot;pages&quot;: null,
+    &quot;source&quot;: &quot;GitHub Pages a4fe4eaa70ff44aeb9e27068c71514f050f0ba06&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/01-三张架构图阅读指南.md&quot;,
+    &quot;id&quot;: &quot;S145&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/01-三张架构图阅读指南.md&quot;,
+    &quot;id&quot;: &quot;S019&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S038&quot;,
+    &quot;pages&quot;: &quot;5-9&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S278&quot;,
+    &quot;pages&quot;: &quot;4-6&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S283&quot;,
+    &quot;pages&quot;: &quot;4-5&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S147&quot;,
+    &quot;pages&quot;: &quot;5-10&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S021&quot;,
+    &quot;pages&quot;: &quot;5-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S028&quot;,
+    &quot;pages&quot;: &quot;5-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S045&quot;,
+    &quot;pages&quot;: &quot;2-4&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S049&quot;,
+    &quot;pages&quot;: &quot;4-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S263&quot;,
+    &quot;pages&quot;: &quot;1-5&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;U002&quot;,
+    &quot;pages&quot;: &quot;1-2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S145&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/02-整机与虚拟化架构.md&quot;,
+    &quot;id&quot;: &quot;S019&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/03-MT8676-SDK与UMDP.md&quot;,
+    &quot;id&quot;: &quot;S075&quot;,
+    &quot;pages&quot;: &quot;5-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/03-MT8676-SDK与UMDP.md&quot;,
+    &quot;id&quot;: &quot;U038&quot;,
+    &quot;pages&quot;: &quot;9-13&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/03-MT8676-SDK与UMDP.md&quot;,
+    &quot;id&quot;: &quot;E007&quot;,
+    &quot;pages&quot;: &quot;3-4&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;MBOS-20260920&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;MBOS-20260920&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;MBOS-20260920&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;MBOS-20260920&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;S145&quot;,
+    &quot;pages&quot;: &quot;4-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;S019&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;U039&quot;,
+    &quot;pages&quot;: &quot;4-18&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;U047&quot;,
+    &quot;pages&quot;: &quot;12&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;S045&quot;,
+    &quot;pages&quot;: &quot;2-4&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;S049&quot;,
+    &quot;pages&quot;: &quot;4-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;S281&quot;,
+    &quot;pages&quot;: &quot;2-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;S272&quot;,
+    &quot;pages&quot;: &quot;3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;S273&quot;,
+    &quot;pages&quot;: &quot;3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;U002&quot;,
+    &quot;pages&quot;: &quot;1-2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;MBOS-20260920&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;MBOS-20260920&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;MBOS-20260920&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;U039&quot;,
+    &quot;pages&quot;: &quot;4-18&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;S145&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/04-三图模块字典.md&quot;,
+    &quot;id&quot;: &quot;S019&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/05-通信机制与异常诊断基础.md&quot;,
+    &quot;id&quot;: &quot;MBOS-20260920&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/05-通信机制与异常诊断基础.md&quot;,
+    &quot;id&quot;: &quot;S281&quot;,
+    &quot;pages&quot;: &quot;2-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/05-通信机制与异常诊断基础.md&quot;,
+    &quot;id&quot;: &quot;S281&quot;,
+    &quot;pages&quot;: &quot;2-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/05-通信机制与异常诊断基础.md&quot;,
+    &quot;id&quot;: &quot;E005&quot;,
+    &quot;pages&quot;: &quot;3-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/05-通信机制与异常诊断基础.md&quot;,
+    &quot;id&quot;: &quot;U038&quot;,
+    &quot;pages&quot;: &quot;4-13&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/05-通信机制与异常诊断基础.md&quot;,
+    &quot;id&quot;: &quot;S282&quot;,
+    &quot;pages&quot;: &quot;4-5&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/05-通信机制与异常诊断基础.md&quot;,
+    &quot;id&quot;: &quot;DAY18&quot;,
+    &quot;pages&quot;: null,
+    &quot;source&quot;: &quot;GitHub Pages a4fe4eaa70ff44aeb9e27068c71514f050f0ba06&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/06-Android内部机制与稳定性.md&quot;,
+    &quot;id&quot;: &quot;S145&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/06-Android内部机制与稳定性.md&quot;,
+    &quot;id&quot;: &quot;S019&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/06-Android内部机制与稳定性.md&quot;,
+    &quot;id&quot;: &quot;U047&quot;,
+    &quot;pages&quot;: &quot;6-10&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/06-Android内部机制与稳定性.md&quot;,
+    &quot;id&quot;: &quot;S261&quot;,
+    &quot;pages&quot;: &quot;2-5&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/06-Android内部机制与稳定性.md&quot;,
+    &quot;id&quot;: &quot;E003&quot;,
+    &quot;pages&quot;: &quot;3-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/07-SOS-Yocto内部机制.md&quot;,
+    &quot;id&quot;: &quot;U039&quot;,
+    &quot;pages&quot;: &quot;9-18&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/07-SOS-Yocto内部机制.md&quot;,
+    &quot;id&quot;: &quot;S019&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/07-SOS-Yocto内部机制.md&quot;,
+    &quot;id&quot;: &quot;S145&quot;,
+    &quot;pages&quot;: &quot;8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/07-SOS-Yocto内部机制.md&quot;,
+    &quot;id&quot;: &quot;S296&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/07-SOS-Yocto内部机制.md&quot;,
+    &quot;id&quot;: &quot;S049&quot;,
+    &quot;pages&quot;: &quot;4-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/07-SOS-Yocto内部机制.md&quot;,
+    &quot;id&quot;: &quot;S045&quot;,
+    &quot;pages&quot;: &quot;2-4&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/07-SOS-Yocto内部机制.md&quot;,
+    &quot;id&quot;: &quot;S263&quot;,
+    &quot;pages&quot;: &quot;1-5&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/07-SOS-Yocto内部机制.md&quot;,
+    &quot;id&quot;: &quot;S281&quot;,
+    &quot;pages&quot;: &quot;2-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/08-MCU内部机制.md&quot;,
+    &quot;id&quot;: &quot;S281&quot;,
+    &quot;pages&quot;: &quot;2-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/08-MCU内部机制.md&quot;,
+    &quot;id&quot;: &quot;E005&quot;,
+    &quot;pages&quot;: &quot;3-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/08-MCU内部机制.md&quot;,
+    &quot;id&quot;: &quot;E006&quot;,
+    &quot;pages&quot;: &quot;1-2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/08-MCU内部机制.md&quot;,
+    &quot;id&quot;: &quot;S265&quot;,
+    &quot;pages&quot;: &quot;4-6&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/08-MCU内部机制.md&quot;,
+    &quot;id&quot;: &quot;S037&quot;,
+    &quot;pages&quot;: &quot;4-10&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/09-TBox通信模组内部机制.md&quot;,
+    &quot;id&quot;: &quot;S075&quot;,
+    &quot;pages&quot;: &quot;5-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/09-TBox通信模组内部机制.md&quot;,
+    &quot;id&quot;: &quot;S279&quot;,
+    &quot;pages&quot;: &quot;2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/09-TBox通信模组内部机制.md&quot;,
+    &quot;id&quot;: &quot;S304&quot;,
+    &quot;pages&quot;: &quot;1-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/09-TBox通信模组内部机制.md&quot;,
+    &quot;id&quot;: &quot;U002&quot;,
+    &quot;pages&quot;: &quot;1-2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/09-TBox通信模组内部机制.md&quot;,
+    &quot;id&quot;: &quot;S305&quot;,
+    &quot;pages&quot;: &quot;2-4&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/09-TBox通信模组内部机制.md&quot;,
+    &quot;id&quot;: &quot;S272&quot;,
+    &quot;pages&quot;: &quot;3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/09-TBox通信模组内部机制.md&quot;,
+    &quot;id&quot;: &quot;S273&quot;,
+    &quot;pages&quot;: &quot;3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/10-车辆仪表与诊断业务流程.md&quot;,
+    &quot;id&quot;: &quot;S281&quot;,
+    &quot;pages&quot;: &quot;2-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/10-车辆仪表与诊断业务流程.md&quot;,
+    &quot;id&quot;: &quot;S281&quot;,
+    &quot;pages&quot;: &quot;2-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/10-车辆仪表与诊断业务流程.md&quot;,
+    &quot;id&quot;: &quot;MBOS-20260920&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/10-车辆仪表与诊断业务流程.md&quot;,
+    &quot;id&quot;: &quot;S281&quot;,
+    &quot;pages&quot;: &quot;2-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;S145&quot;,
+    &quot;pages&quot;: &quot;8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;S019&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;S296&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;S297&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;S019&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;U047&quot;,
+    &quot;pages&quot;: &quot;6-10&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;S296&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;S285&quot;,
+    &quot;pages&quot;: &quot;2-5&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;U047&quot;,
+    &quot;pages&quot;: &quot;11&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;U039&quot;,
+    &quot;pages&quot;: &quot;9-18&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;S028&quot;,
+    &quot;pages&quot;: &quot;5-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;DAY33&quot;,
+    &quot;pages&quot;: null,
+    &quot;source&quot;: &quot;GitHub Pages a4fe4eaa70ff44aeb9e27068c71514f050f0ba06&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/11-显示相机与驾驶辅助业务流程.md&quot;,
+    &quot;id&quot;: &quot;S019&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;U047&quot;,
+    &quot;pages&quot;: &quot;6-10&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;S045&quot;,
+    &quot;pages&quot;: &quot;2-4&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;S281&quot;,
+    &quot;pages&quot;: &quot;2-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;S263&quot;,
+    &quot;pages&quot;: &quot;1-5&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;S052&quot;,
+    &quot;pages&quot;: &quot;1&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;S045&quot;,
+    &quot;pages&quot;: &quot;2-4&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;S049&quot;,
+    &quot;pages&quot;: &quot;4-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;S049&quot;,
+    &quot;pages&quot;: &quot;4-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;S052&quot;,
+    &quot;pages&quot;: &quot;1&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;DAY34&quot;,
+    &quot;pages&quot;: null,
+    &quot;source&quot;: &quot;GitHub Pages a4fe4eaa70ff44aeb9e27068c71514f050f0ba06&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;S045&quot;,
+    &quot;pages&quot;: &quot;2-4&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/12-音频与语音业务流程.md&quot;,
+    &quot;id&quot;: &quot;S049&quot;,
+    &quot;pages&quot;: &quot;4-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S075&quot;,
+    &quot;pages&quot;: &quot;5-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S282&quot;,
+    &quot;pages&quot;: &quot;4-5&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S279&quot;,
+    &quot;pages&quot;: &quot;2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S304&quot;,
+    &quot;pages&quot;: &quot;1-3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S279&quot;,
+    &quot;pages&quot;: &quot;2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;U002&quot;,
+    &quot;pages&quot;: &quot;1-2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S265&quot;,
+    &quot;pages&quot;: &quot;4-6&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S262&quot;,
+    &quot;pages&quot;: &quot;3-4&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S272&quot;,
+    &quot;pages&quot;: &quot;3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S273&quot;,
+    &quot;pages&quot;: &quot;3&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S305&quot;,
+    &quot;pages&quot;: &quot;2-4&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;S279&quot;,
+    &quot;pages&quot;: &quot;2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;U002&quot;,
+    &quot;pages&quot;: &quot;1-2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/13-通信模块业务流程.md&quot;,
+    &quot;id&quot;: &quot;U047&quot;,
+    &quot;pages&quot;: &quot;8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;S145&quot;,
+    &quot;pages&quot;: &quot;8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;U039&quot;,
+    &quot;pages&quot;: &quot;17-18&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;S035&quot;,
+    &quot;pages&quot;: &quot;5-6&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;S265&quot;,
+    &quot;pages&quot;: &quot;4-6&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;S037&quot;,
+    &quot;pages&quot;: &quot;4-10&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;U002&quot;,
+    &quot;pages&quot;: &quot;1-2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;S030&quot;,
+    &quot;pages&quot;: &quot;8-10&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;MBOS-20260920&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;S075&quot;,
+    &quot;pages&quot;: &quot;5-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;U038&quot;,
+    &quot;pages&quot;: &quot;11-13&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;DAY33&quot;,
+    &quot;pages&quot;: null,
+    &quot;source&quot;: &quot;GitHub Pages a4fe4eaa70ff44aeb9e27068c71514f050f0ba06&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/14-系统生命周期业务流程.md&quot;,
+    &quot;id&quot;: &quot;S030&quot;,
+    &quot;pages&quot;: &quot;8-10&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/15-统一诊断手册.md&quot;,
+    &quot;id&quot;: &quot;U002&quot;,
+    &quot;pages&quot;: &quot;1-2&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/15-统一诊断手册.md&quot;,
+    &quot;id&quot;: &quot;U047&quot;,
+    &quot;pages&quot;: &quot;8-9&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/15-统一诊断手册.md&quot;,
+    &quot;id&quot;: &quot;U028&quot;,
+    &quot;pages&quot;: null
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/15-统一诊断手册.md&quot;,
+    &quot;id&quot;: &quot;S278&quot;,
+    &quot;pages&quot;: &quot;4-6&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/15-统一诊断手册.md&quot;,
+    &quot;id&quot;: &quot;E003&quot;,
+    &quot;pages&quot;: &quot;3-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/15-统一诊断手册.md&quot;,
+    &quot;id&quot;: &quot;S019&quot;,
+    &quot;pages&quot;: &quot;6-8&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/15-统一诊断手册.md&quot;,
+    &quot;id&quot;: &quot;U039&quot;,
+    &quot;pages&quot;: &quot;15-18&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/15-统一诊断手册.md&quot;,
+    &quot;id&quot;: &quot;S075&quot;,
+    &quot;pages&quot;: &quot;5-7&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/15-统一诊断手册.md&quot;,
+    &quot;id&quot;: &quot;S265&quot;,
+    &quot;pages&quot;: &quot;4-6&quot;
+  },
+  {
+    &quot;file&quot;: &quot;架构资料——原版/mt8676-architecture/chapters/15-统一诊断手册.md&quot;,
+    &quot;id&quot;: &quot;WEEK10&quot;,
+    &quot;pages&quot;: null,
+    &quot;source&quot;: &quot;GitHub Pages a4fe4eaa70ff44aeb9e27068c71514f050f0ba06&quot;
+  }
+]</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">全文 1</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

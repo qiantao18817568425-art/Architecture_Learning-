@@ -1,0 +1,15 @@
+flowchart TD
+  A[open/configure/capture] --> B{device + Session valid?}
+  B -- no --> B1[service/device death or stale Session]
+  B -- yes --> C{request reaches HAL and sensor?}
+  C -- no --> C1[configuration/permission/provider]
+  C -- yes --> D{buffer and fence returned?}
+  D -- no --> D1[ISP/driver/target backpressure]
+  D -- yes --> E{consumer releases frames?}
+  E -- no --> E1[Image not closed or Surface stalled]
+  B1 --> R[stop old Generation]
+  C1 --> R
+  D1 --> R
+  E1 --> R
+  R --> S[close targets, Session, Device in reverse order]
+  S --> T[reopen + unique frame + metadata readback]

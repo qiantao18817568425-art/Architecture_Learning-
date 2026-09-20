@@ -1,0 +1,32 @@
+flowchart TB
+ subgraph managers["MBOs"]
+ monm["MBOSMonitorManager"]
+ ipcm["MBOSIpcManager"]
+ winm["MBWindowManager"]
+ diagm["MBOSDiagnosticManager<br/>OS 层已弃用"]
+ tboxm["MBOSTBoxManager"]
+ confm["MBOSConfigstoreManager"]
+ end
+ subgraph service["MBOsService"]
+ monitor["MonitorService<br/>Storage / Stability / CPU / Mem / BSP / Qnx"]
+ ipc["IpcService"]
+ window["MBWindowManagerService<br/>手势监测"]
+ diag["DiagnosticService<br/>已去掉对应服务"]
+ end
+ subgraph config["configstore-service_hal"]
+ offline["OfflineConfigStroe<br/>/mbconfig/config/mbconfigstore/offlineconfig.txt"]
+ end
+ subgraph hal["MBOS_Hal"]
+ server["IpcServer<br/>FDBus Service：mb.os<br/>AVM / DVR / DMS / HMI 数据"]
+ hud["IpcClientHud<br/>FDBus Client：mb.qnx.ivi_service<br/>IVI 数据"]
+ update["IpcClientUpdate"]
+ disp["IpcClientDispUpdate"]
+ cmd["IpcClientCmd<br/>FDBus Client：mb.qnxcmd_service<br/>与 Yocto 通信"]
+ qnx["MonitorQnx<br/>FDBus：svc://mb.diagnostics<br/>CanClient：mb.can"]
+ bsp["MonitorBsp<br/>/proc/wlan_ssr_event<br/>/proc/pcie_state"]
+ end
+ managers <-->|Binder：容器级关系| service
+ managers <-->|Binder：容器级关系| config
+ service <-->|Binder：容器级关系| hal
+ classDef retired fill:#f6f6f6,stroke:#777,stroke-dasharray:5 5,color:#444
+ class diagm,diag retired

@@ -1,0 +1,458 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Hypervisor_GNSS_User_Manual_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Hypervisor_GNSS_User_Manual_V1.0.pdf</h1><p>SRC0233 · 原来源 ID S168 · PDF物理页 · 11 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MT8676软件资料/User Manual/Hypervisor/English Version/MT8676_Hypervisor_GNSS_User_Manual_V1.0.pdf</p><p>SHA-256：<code>14958f21236f05586caa4aa472693ff476bac4ada9d67b4df6e5271c2d789fdd</code></p><p>原文件大小：562,151 字节</p></details><div class="actions"><a class="button" href="materials/SRC0233.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Hypervisor_GNSS_User_Manual_V1.0.pdf 原 PDF" src="materials/SRC0233.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0233.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version:  1.0 
+Release date:  2024-11-13
+MT8676 Hypervisor GNSS User Manual 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0233.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8676 Hypervisor GNSS 
+User Manual 
+Confidential B 
+Version History 
+Version Date Author Description 
+1.0 2024-11-13 Neo.Sun Official release 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0233.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8676 Hypervisor GNSS 
+User Manual 
+Confidential B 
+Table of Contents 
+Version History ·································································································································································· 2 
+Table of Contents ······························································································································································· 3 
+List of Figures ····································································································································································· 3 
+List of Tables ······································································································································································ 3 
+1 GNSS ·········································································································································································· 4 
+1.1 Overview ·································································································································································· 4 
+ Brief introduction ·········································································································································· 4 
+ GNSS Abbreviations ······································································································································ 4 
+1.2 Architecture/Process Overview ································································································································ 4 
+ GNSS Architecture ········································································································································· 4 
+1.3 Configuration/Customization Guideline ··················································································································· 5 
+ Fixed Rate Configuration ······························································································································· 5 
+ Multi-Satellite Navigation System Configuration ·························································································· 6 
+1.4 GNSS API··································································································································································· 6 
+ Code Path ······················································································································································ 6 
+ GpsInterface ·················································································································································· 7 
+ CallBack ························································································································································· 7 
+ Demo Code ··················································································································································· 8 
+1.5 Frequently Asked Questions/Troubleshooting ········································································································· 9 
+ Issues Related to Logs ··································································································································· 9 
+ Testing-related Issues ···································································································································· 9 
+ GNSS Path ··················································································································································· 10 
+Exhibit 1 Terms and Conditions ········································································································································ 11 
+ 
+List of Figures 
+Figure 1-1.GNSS architecture ···················································································································································· 5 
+Figure 1-2. Fixed Rate configuration ·········································································································································· 6 
+Figure 1-3. GNSS configuration ·················································································································································· 6 
+Figure 1-4. MNLD test ······························································································································································ 10 
+ 
+List of Tables 
+Table 1-1. Abbreviations ····························································································································································· 4 
+ 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0233.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8676 Hypervisor GNSS 
+User Manual 
+Confidential B 
+1 GNSS 
+1.1 Overview 
+ Brief introduction 
+This section introduces the basic functions of MT8676 Global Navigation Satellite System (GNSS) and solutions to common 
+issues. 
+ GNSS Abbreviations 
+Table 1-1. Abbreviations 
+Abbreviation Explanation 
+COLD start With time-assisted information, the end user will not encounter this scenario. 
+FULL start Without any auxiliary information, equivalent to the scenario where an end user 
+uses a positioning application for the first time after purchasing a mobile phone. 
+GNSS Global Navigation Satellite System 
+Hot start With all auxiliary information, the end user’s current positioning occurs less than 2 
+to 4 hours after the last positioning. 
+NMEA 
+National Marine Electronics Association. A communication protocol used for data 
+exchange between marine electronic devices, widely applied in GPS/GNSS receiver 
+data output. 
+TTFF Time To First Fix. The time required for a navigation device to successfully acquire 
+the first valid positioning data from startup. 
+UOS User Operating System 
+WARM start With time and location-assisted information, the end user’s current positioning 
+occurs more than 2 to 4 hours after the last positioning. 
+ 
+1.2 Architecture/Process Overview 
+ GNSS Architecture 
+MT8676 GNSS architecture is as follows, GNSS is in T-box UOS which is also called Yocto UOS: 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0233.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8676 Hypervisor GNSS 
+User Manual 
+Confidential B 
+ 
+Figure 1-1.GNSS architecture 
+ 
+1.3 Configuration/Customization Guideline 
+ Fixed Rate Configuration 
+The fixed rate refers to the rate at which GNSS reports location information. Currently, the MT8676 supports fixed rates of: 
+1Hz, 2Hz, 5Hz, and 10Hz, with a default configuration of 1Hz output. The method to modify the fixed rate is as follows: 
+ 
+Method 1: Modify the code and configure the fix_interval parameter. fix_interval = 100 corresponds to 10Hz; fix_interval = 
+1000 corresponds to 1Hz. 
+Modifications are required in the Yocto environment at 
+/src/connectivity/gps/4.0/mtk_mnld/mnld_entity/src/gps_controller.c. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0233.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Hypervisor GNSS 
+User Manual 
+Confidential B 
+ 
+Figure 1-2. Fixed Rate configuration 
+ 
+Method 2: Dynamically modify the configuration file, take effect after restarting GNSS, modify on the Yocto side. 
+Command: echo fix_interval=1000 &gt;&gt; /data/etc/gnss/mnl.prop    /Configured to 1Hz, effective 
+after restarting GPS. 
+ 
+ Multi-Satellite Navigation System Configuration 
+ MT8676 supports GPS + GLONASS + Galileo + BeiDou multi-satellite navigation positioning systems. The GNSS operation 
+mode is configured to MTK_CONFIG_GPS_GLONASS_BEIDOU_GALILEO_NAVIC. The default configuration provides optimal 
+GNSS performance. Use the default configuration. 
+ 
+ 
+Figure 1-3. GNSS configuration 
+ 
+1.4 GNSS API 
+ Code Path 
+Code path: 
+/src/connectivity/gps/4.0/gps_hal 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0233.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8676 Hypervisor GNSS 
+User Manual 
+Confidential B 
+ GpsInterface 
+typedef struct { 
+    size_t          size;    // Set sizeof(GpsInterface) 
+int (*init)(GpsCallbacks_ext* callbacks);        // Initialize callback 
+    int   (*start)( void );                                               //gps start  
+    int   (*stop)( void );                                               //gps stop  
+    void  (*cleanup)( void );                                      //cleanup gps 
+ 
+    int   (*inject_time)(GpsUtcTime time, int64_t timeReference,int uncertainty);         
+// Inject UTC time 
+ 
+    int  (*inject_location)(double latitude, double longitude, float accuracy); 
+// Inject the current location from another location provider. Latitude and longitude are in 
+degrees, and accuracy is in meters. 
+ 
+    void  (*delete_aiding_data)(GpsAidingData flags); 
+// Specify that information defined in flags will not be used during the next startup call. 
+For cold startup, GPS_DELETE_ALL will be passed. 
+ 
+int   (*set_position_mode)(GpsPositionMode mode, GpsPositionRecurrence recurrence, 
+              uint32_t min_interval, uint32_t preferred_accuracy, uint32_t preferred_time, 
+              bool lowPowerMode); 
+// The main purpose is to set the reporting frequency of nmea and location: min_interval 
+ 
+    const void* (*get_extension)(const char* name); 
+// Obtain a pointer to extension information 
+    
+    int  (*inject_fused_location)(double latitude, double longitude, float accuracy); 
+// Inject fused location 
+  
+     int   (*fix_interval)(uint32_t interval); 
+       // Dynamically set the reporting frequency, 100: 10Hz, 1000: 1Hz 
+ 
+     int   (*op_mode)(uint8_t opmode); 
+// Dynamically set operation mode 
+ 
+     int   (*elevation_angle)(uint8_t angle); 
+// Dynamically set elevation angle constraint 
+    
+    int   (*l5_disable)(bool disable); 
+// Dynamically set L5 to enable or disable 
+ 
+    int   (*gps_start_week_num)(uint32_t week); 
+//Dynamically set GPS start week number 
+ 
+ CallBack 
+typedef struct { 
+    
+    gps_location_ext_callback location_cb;     // Callback for reporting location; retrieve location 
+from here, commonly used. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0233.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 Hypervisor GNSS 
+User Manual 
+Confidential B 
+    gps_status_callback status_cb;                     // GPS status callback, GPS status such as start 
+and stop 
+    gps_sv_status_callback sv_status_cb;          //sv status callback 
+    gps_nmea_callback nmea_cb;                       // Callback for reporting NMEA data; retrieve NMEA 
+data from this point, commonly used. 
+gps_set_capabilities set_capabilities_cb; // Capabilities are used in XTS certification. Obtain 
+supported capabilities before executing specific test items. 
+gps_acquire_wakelock acquire_wakelock_cb;      // Request callback for wakelock 
+gps_release_wakelock release_wakelock_cb;        // Callback for wakelock status 
+    gps_create_thread create_thread_cb;                     // Callback for creating a thread 
+gps_request_utc_time request_utc_time_cb;         // Callback for obtaining UTC time 
+gnss_set_system_info set_system_info_cb;            // Callback for setting system information 
+gnss_sv_status_ext_callback gnss_sv_status_cb;   //Obtain the GNSS SV status extension callback 
+ 
+    gnss_set_name_callback set_name_cb;                  //set nmea callback 
+     
+    gnss_request_location_callback request_location_cb;    //request locktion callback 
+gps_location_ext_callback agps_location_cb;       // Obtain AGPS location 
+ 
+gnss_output_rtcm3_callback output_rtcm3_cb;       // Retrieve RTCM callback 
+gnss_set_signal_type_capabilities_callback set_signal_type_callback; // Set signal type capabilities, 
+such as carrier frequency. 
+ 
+ Demo Code 
+Refer to the usage of mnld_test to invoke GpsInterface and callback. 
+Mnld_test path: src/connectivity/gps/4.0/gnss_test 
+ 
+For example: to call init and fix_interval in GpsInterface 
+GpsInterface_ext* mnld_test_gpsinfs = NULL; 
+GpsCallbacks_ext* mnld_test_cbs = NULL; 
+mnld_test_cbs = (GpsCallbacks_ext*)calloc(1, sizeof(GpsCallbacks_ext)); 
+ mnld_test_cbs-&gt;size = sizeof(GpsCallbacks_ext); 
+ struct gps_device_t_ext *gpsdev = NULL; 
+gpsdev = &amp;linux_gps_device;                      // Define variable initialization 
+ mnld_test_gpsinfs = (GpsInterface_ext*)gpsdev-&gt;get_gps_interface(gpsdev); 
+  if(mnld_test_gpsinfs != NULL) 
+   { 
+         LOGI(&quot;mnld_test_gpsinfs is not null&quot;);                                                                                                                                                  
+mnld_test_gpsinfs-&gt;init(mnld_test_cbs); 
+          mnld_test_gpsinfs-&gt;fix_interval(1000); 
+     } 
+ 
+The use of callbacks can also refer to mnld_test, mnld_fm_gps_location_callback, and mnld_fm_gps_status_callback, 
+which are all callback receiving functions, for example: 
+GpsCallbacks_ext mnld_fm_gps_callbacks = { 
+    .size = sizeof(GpsCallbacks_ext), 
+    .location_cb = mnld_fm_gps_location_callback, 
+    .status_cb = mnld_fm_gps_status_callback, 
+…… 
+ 
+Examine the mnld_test code closely; it contains specific interface calls and callback usage. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0233.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8676 Hypervisor GNSS 
+User Manual 
+Confidential B 
+ 
+1.5 Frequently Asked Questions/Troubleshooting 
+ Issues Related to Logs 
+• What logs do MediaTek engineers need for problem analysis? 
+The Android side requires: /data/debuglogger/mobilelog 
+T-box UOS (Yocto) side requires: /data/debuglogger/mobilelog, and NMEA log 
+The T-box UOS (Yocto) mobilelog is enabled by default; to enable the NMEA log, you need to create the 
+/data/etc/gnss/mnl.prop file and write the following in it: 
+debug.dbg2file=1 
+debug.filename=/data/debuglogger/gpsdebug.log 
+ 
+After saving and restarting, the NMEA log will appear in /data/debuglogger/gpsdebug.log. 
+ 
+• How to connect powergps 
+First, enter the following command: 
+adb shell &quot;echo \&quot;pmtk.serial.port=7000\&quot; &gt; /data/etc/gnss/mnl.prop&quot; 
+adb shell &quot;echo \&quot;debug_type=0\&quot; &gt;&gt; /data/etc/gnss/mnl.prop&quot; 
+adb shell &quot;echo \&quot;debug.debug_nmea=1\&quot; &gt;&gt; /data/etc/gnss/mnl.prop&quot; 
+adb shell &quot;echo \&quot;debug.dbg2file=1\&quot; &gt;&gt; /data/etc/gnss/mnl.prop&quot; 
+adb shell &quot;echo \&quot;debug.filename=/data/debuglogger/gpsdebug.log\&quot; &gt;&gt; 
+/data/etc/gnss/mnl.prop&quot; 
+ 
+After restarting, enter the following again: 
+adb forward tcp:7000 tcp:7000 
+ 
+And use mnld_test to open GPS: 
+adb shell 
+mnld_test start c &amp; 
+ 
+ Testing-related Issues 
+• Before testing, it is necessary to check whether there is satellite signal and whether it is in an open sky environment. 
+Testing the GNSS satellite search or positioning function requires an open sky  environment for the signal, such as an 
+open outdoor area or a laboratory with a signal amplifier. 
+The ability to locate is based on the prerequisite that there are more than 6 satellites with a CNR of 40~43 dBm. ---&gt; 
+When measuring GNSS , it is important to pay attention to this; if the current signal environment does not meet the 
+requirements, place a comparison device in the same environment for comparison. 
+ 
+• How to test the TTFF of these startup methods: FULL start, WARM start, COLD start, and HOT start? 
+On the Android side, use YGPS in engineering mode or execute the following adb command to open Y GPS. Test using 
+the FULL, COLD, WARM, and HOT buttons: 1. Access engineering mode. 2. Open YGPS using adb command. 3. Select 
+FULL, COLD, WARM, or HOT button for testing. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0233.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8676 Hypervisor GNSS 
+User Manual 
+Confidential B 
+adb shell am  start com.mediatek.ygps/.YgpsActivity 
+ 
+T-box UOS (Yocto) side can utilize mnld_test. 
+Start test(open gps): mnld_test –h 
+ 
+ 
+Figure 1-4. MNLD test 
+  
+According to the prompt, for example, if you need to test a cold start, you can use the following command: 
+mnld_test start c &amp; 
+ 
+Enter the following command to log data to the serial port, which allows viewing of TTFF and other information. 
+journalctl -f --no-tail -o short-precise |grep mnldtest 
+ 
+ GNSS Path 
+Source code: 
+Android: vendor\mediatek\proprietary\hardware\connectivity\gnss 
+T-box UOS (Yocto): src/connectivity/gps/4.0 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0233.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8676 Hypervisor GNSS 
+User Manual 
+Confidential B 
+Exhibit 1 Terms and Conditions 
+Your access to and use of this document and the information contained herein (collectively this “Document”) is subject to your (including the corporation 
+or other legal entity you represent, collectively “You”) acceptance of the terms and conditions set forth below (“T&amp;C”).  By using, accessing or 
+downloading this Document, You are accepting the T&amp;C and agree to be bound by the T&amp;C.  If You don’t agree to the T&amp;C, You may not use this 
+Document and shall immediately destroy any copy thereof. 
+ 
+This Document contains information that is confidential and proprietary to MediaTek Inc. and/or its affiliates (collectively “MediaTek”) or its licensors 
+and is provided solely for Your internal use with MediaTek’s chipset(s) described in this Document and shall not be used for any other purposes (including 
+but not limited to identifying or providing evidence to support any potential patent infringement claim against MediaTek or any of MediaTek’s suppliers 
+and/or direct or indirect customers).  Unauthorized use or disclosure of the information contained herein is prohibited.  You agree to indemnify 
+MediaTek for any loss or damages suffered by MediaTek for Your unauthorized use or disclosure of this Document, in whole or in part. 
+ 
+MediaTek and its licensors retain titles and all ownership rights in and to this Document and no license (express or implied, by estoppels or otherwise) to 
+any intellectual propriety rights is granted hereunder.  This Document is subject to change without further notification.  MediaTek does not assume any 
+responsibility arising out of or in connection with any use of, or reliance on, this Document, and specifically disclaims any and all liability, including, 
+without limitation, consequential or incidental damages. 
+ 
+THIS DOCUMENT AND ANY OTHER MATERIALS OR TECHNICAL SUPPORT PROVIDED BY MEDIATEK IN CONNECTION WITH THIS DOCUMENT, IF ANY, ARE 
+PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE.  MEDIATEK SPECIFICALLY DISCLAIMS 
+ALL WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, COMPLETENESS OR ACCURACY AND ALL 
+WARRANTIES ARISING OUT OF TRADE USAGE OR OUT OF A COURSE OF DEALING OR COURSE OF PERFORMANCE.  MEDIATEK SHALL NOT BE RESPONSIBLE 
+FOR ANY MEDIATEK DELIVERABLES MADE TO MEET YOUR SPECIFICATIONS OR TO CONFORM TO A PARTICULAR STANDARD OR OPEN FORUM. 
+ 
+Without limiting the generality of the foregoing, MediaTek makes no warranty, representation or guarantee regarding the suitability of its products for 
+any particular purpose, nor does MediaTek assume any liability arising out of the application or use of any product, circuit or software.  You agree that 
+You are solely responsible for the designing, validating and testing Your product incorporating MediaTek’s product and ensure such product meets 
+applicable standards and any safety, security or other requirements. 
+ 
+The above T&amp;C and all acts in connection with the T&amp;C or this Document shall be governed, construed and interpreted in accordance with the laws of 
+Taiwan, without giving effect to the principles of conflicts of law. 
+ 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

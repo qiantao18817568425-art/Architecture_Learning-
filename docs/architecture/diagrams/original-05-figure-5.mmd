@@ -1,0 +1,13 @@
+sequenceDiagram
+  participant S as Service endpoint
+  participant H as host server
+  participant N as name server
+  participant C as Client endpoint
+  participant A as Consumer
+  S->>H: register service
+  H->>N: publish availability
+  C->>N: discover
+  N-->>C: endpoint/generation
+  C->>S: session + request/subscribe
+  S-->>C: reply/publish topic
+  C-->>A: callback

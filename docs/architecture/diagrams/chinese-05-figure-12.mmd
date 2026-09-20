@@ -1,0 +1,7 @@
+flowchart LR
+  P["header/payload"] --> F["frame + CRC + Sequence/Generation"]
+  F --> Q["queue + DMA/FIFO"]
+  Q --> S["SPI controller/wire"]
+  S --> R["RX DMA/FIFO + IRQ"]
+  R --> A["validate + reassembly"]
+  A --> C["callback"]

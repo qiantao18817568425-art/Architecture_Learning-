@@ -1,0 +1,15 @@
+sequenceDiagram
+ participant App as 上层应用
+ participant Client as FIBO SDK Client
+ participant Server as FIBO SDK Server
+ participant Lower as 底层接口
+ App->>Client: 发送调用请求
+ Client->>Client: 解析 API 命令，进行数据封装
+ Client->>Server: 发送请求
+ Server->>Server: 解析命令、封装数据
+ Server->>Lower: 发送请求
+ Lower-->>Server: 返回请求结果
+ Server->>Server: 处理结果、返回给 Client 侧
+ Server-->>Client: 返回请求结果
+ Client->>Client: 处理业务结果，生成 API 返回结果
+ Client-->>App: 返回调用结果

@@ -1,0 +1,9 @@
+flowchart LR
+  A[Android 时区属性] -->|prop_get / prop_watch| S[SOS 时区]
+  S -->|prop_set_only_uos| U[UOS 时区]
+  AT[Android 日历时间更新] --> R[RTC driver]
+  R -->|virtio| ST[SOS 系统时间]
+  ST --> E[event / udev]
+  E --> P[属性与监听回调]
+  P -->|prop_set_only_uos| UT[TBox UOS 系统时间]
+  N[NTP / systemd-timesyncd] -.联网时可能另行校时.-> UT

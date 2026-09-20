@@ -1,0 +1,1582 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>P39.A03.H5(MT8676T) 车规级5G车载无线模块_V2.2 20250919.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>P39.A03.H5(MT8676T) 车规级5G车载无线模块_V2.2 20250919.pdf</h1><p>SRC0340 · PDF物理页 · 34 个阅读单元</p><p class="note">原材料可查阅；未逐页作项目结论验证。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>P39.A03.H5(MT8676T) 车规级5G车载无线模块_V2.2 20250919.pdf</p><p>SHA-256：<code>b3d907d5dd48430f5a34667ad52bffa7bfb909dc5be3093a3b67e2faa55af56e</code></p><p>原文件大小：2,502,194 字节</p></details><div class="actions"><a class="button" href="materials/SRC0340.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="P39.A03.H5(MT8676T) 车规级5G车载无线模块_V2.2 20250919.pdf 原 PDF" src="materials/SRC0340.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0340.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">专业车联网智能硬件方案提供商
+车 规 级 5 G 车 载 无 线 模 块
+产品名称：车载无线模块
+英文名称：Vehicle wireless module
+产品型号：P39.A03.H5
+芯片平台：MT8676（5G版）
+硬件版本：V2.1
+文档版本：V2.2
+发布日期：2025.9.19
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0340.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+2 / 34
+修订记录
+序号 版本 时间 修订人 修订内容
+1 V1.0 2024.2.23 黄清华 首次发版
+2 V2.0 2024.7.16 黄清华 更新模块尺寸图纸，修改引脚定义，更新
+模块尺寸图，修订 ANT 焊盘露铜
+3 V2.1 2025.1.9 黄清华 模块更新为 BGA 封装、更新硬件框图、修
+订引脚定义
+4 V2.1 2025.6.3 唐士锵 增加国内频段 BOM，删除 EVDO，修正 5G
+网络速率等
+5 V2.2 2025.9.19 唐士锵
+增加文档版本号、工作电压、产品特性表
+注释；完善 SoC 型号；修订模块引脚分布
+图和模块尺寸图；
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0340.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+3 / 34
+目 录
+一、 产品综述 ............................................................................................4
+二、 产品主要特性表 ................................................................................5
+三、 模块功能框图 ....................................................................................9
+四、 突出亮点及特性 ..............................................................................10
+五、 模块引脚定义 ..................................................................................11
+六、 模块引脚分布图 ..............................................................................31
+七、 模块尺寸图 ......................................................................................32
+八、 天线接口说明 ..................................................................................33
+九、 SMT 参考炉温曲线 ..........................................................................34
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0340.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+4 / 34
+一、 产品综述
+P39.A03.H5 是 掌 锐 电 子 推 出 的 一 款 基 于 MediaTek MT8676 芯 片 打
+造 的 车 规 级 5G智 能 座 舱 核 心 模 块 ，系 统 设 计 符 合 AEC-Q104标 准 ，具 有
+功 能 丰 富 ， 尺 寸 小 ， 功 耗 低 ， 性 能 优 等 特 点 。 满 足 汽 车 智 能 化 ， 联 网
+化 的 需 求 。 帮 助 客 户 缩 短 项 目 开 发 周 期 ， 减 少 研 发 成 本 。 本 模 块 集 成
+了 5G ， GNSS 4M2B ， WiFi 6E 和 BT 5.3 无 线 通 讯 功 能 。 可 实 现 多 屏 同
+显 /异 显 、 多 屏 多 用 户 、 Hypervisor、 仪 表 投 屏 、 HUD、 T-Box、 AVM、
+DMS、 OMS、 DVR等 功 能 。
+主 控 芯 片 采 用 64位 8核 处 理 器 ， 1核 Makalu-ELP， 3核 Makalu， 4核
+Klein，主 频 2.9GHz，算 力 170K DMIPS。采 用 4nm低 功 耗 芯 片 制 程 工 艺 。
+集 成 Mali-G615 MC6@1.2GHz GPU ， 图 形 图 像 处 理 能 力 高 达 1.8T
+FLOPS。集 成 APU 780，AI算 力 20 TOPS。可 实 现 最 大 19路 摄 像 头 接 入 ，
+Video encode 能 力 达 4K2K@60fps。 显 示 输 出 可 支 持 8屏 异 显 6屏 异 触 ，
+最 大 支 持 24G LPDDR5x, 搭 载 Hypervisor三 系 统 。模 块 采 用 贴 片 式 工 艺 ，
+共 580个 BGA引 脚 。
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0340.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+5 / 34
+二、 产品主要特性表
+产品特性 描述
+SoC MediaTek MT8676T/EZA（ExposedDie 封装）
+CPU
+1* Makalu-ELP@2.9GHz +3* Makalu@2.8GHz +4* Klein@2.0GHz
+算力：170K DMIPS
+GPU
+6*Mail-G615@1.2GHz
+算力：1.8T FLOPS
+APU
+2* MDLA 5.0@1.35GHz +1* MVPU@1.215GHz
+算力：20 TOPS，NeuroPilot 7
+RAM
+LPDDR5x *2+ UFS 3.1
+8G *2 + 128G（标配）
+12G/16G/24G + 128G/256G（选配
+*
+）
+DRAM 带宽
+4* 16bit，Max 7500Mbps；
+最大容量 24GB
+OS Yocto(SOS) + Yocto(UOS) + Android U(UOS)
+工作温度 – 40 度～＋85 度（选配车规级 Memory）
+存储温度 – 40 度～＋95 度
+尺寸 59.5mm * 59.5mm * 5.4mm
+工作电压 DC 3.6V-4.2V Type：4.0V
+抗静电
+HBM：≤±2000V；
+CDM：≤±500V；
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0340.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+6 / 34
+网
+络
+频
+段
+中国版
+不覆盖中国台湾/香港
+（选配
+*
+）
+GSM： 900/1800MHz
+WCDMA： B1/B5/B8
+FDD-LTE： B1/B3/B5/B8
+TDD-LTE： B34/B38/B39/B40/B41
+NR： N1/N3/N5/N8/N28A/N41/N78/N79
+全球版
+部分频段无法覆盖
+（选配
+*
+）
+GSM： 850/900/1800/1900MHz
+WCDMA： B1/B2/B4/B5/B6/B8/B19
+FDD-LTE：
+B1/B2/B3/B4/B5/B7/B8/B12/B13/B14/B17/
+B18/B19/B20/B25/B26/B28/B66/B71
+Rx Only：B32/B75/B76
+TDD-LTE： B34/B38/B39/B40/B41
+FDD NRSA： N1/N2/N3/N5/N7/N8/N20/N25/N28/N66/N71/N75/N76
+TDD NRSA： N38/N40/N41/N77/N78/N79
+网络速率
+5G NRSA：
+NR Sub6 3CC R16；
+Up to 5.11Gbps downlink, 2.5Gbps uplink；
+4G LTE：
+LTE CAT-18
+Up to 1.2Gbps downlink, 210Mbps uplink；
+3G UMTS： Up to 21Mbps downlink, 11.5Mbps uplink；
+WiFi
+WiFi 6E，支持 2.4GHz / 5GHz / 6GHz
+**
+频段，支持 DBDC；
+支持 802.11a/b/g/n/ac/ax 技术
+兼容 802.11 d/e/h/i/j/k/r/v 技术
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0340.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+7 / 34
+Bluetooth
+支持 Bluetooth v5.3；
+支持 BT/BLE dual mode；
+GNSS
+支持 L1：GPS(QZSS)/GLONASS/BeiDou/Galileo
+支持 L5：GPS/BeiDou-III B2A/Galileo-E5a/NavIC
+IMU BMI323（选配
+*
+）
+SIM 双 SIM 卡，支持热插拔
+TF 卡 支持 SD/SDIO 3.0，最大支持 2T；
+LCM
+显示接口：2 路 MIPI_DSI 和 1 路 DP 1.4，最多支持 3 路 DSC；
+输出带宽：DSI，每路 4-lane，2.5Gbps/lane；
+DP 1.4，4-lane（shared with USB3.1），8.1Gbps/lane；
+显示屏 ×6，6 屏异显异触；
+Camera
+摄像头接口：6 路 MIPI_CSI；3 路内置 ISP；
+输入带宽：CSI，每路 4-lane，6.5Gbps/lane；
+摄像头 ×19；
+Video decode H.265/H.264/VP9/AV1：4K2K@60fps
+Video encode H.265/H.264：4K2K@60fps
+ADSP 2* HiFi-3@800MHz
+应
+用
+接
+口
+GPIO*89 89 个，部分 IO 口只能做 GPIO 功能，不能做中断功能使用；
+UART*4
+UART 0 为 Debug 专用；
+UART 1~3 可外接设备；
+USB*1 USB 3.1 + USB 2.0，OTG and Device mode Switch
+PCIe*1 PCIe Gen3 1-lane
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0340.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+8 / 34
+I2C*17
+14 路 I2C 接口（6 路可配置 I3C）；
+3 路 SCP I2C；
+SPI*6
+5 路 SPI（SPI0，SPI1，SPI2，SPI3，SPI4）；
+最大可以调整到 6 路 SPI口（SPI7）；
+I2S*5
+4 路 I2S IN+OUT（I2S0、I2S1、I2S2、I2S6）；
+1 路 FM I2S IN；
+TDM*2
+1 路 TDM OUT，最大支持 8CH；
+1 路 TDM IN，最大支持 8CH；
+PWM*4 最大 4 PWM CH
+选配
+*
+：配置存在 BOM 差异，非标准配置功能；
+6GHz
+**
+：WiFi 6GHz 由于各国家/地区政策原因，支持的信道各异。如中国大陆地区暂不支持；
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0340.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+9 / 34
+三、 模块功能框图
+模 块 硬 件 框 图
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0340.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+10 / 34
+四、 突出亮点及特性
+ 支 持 多 屏 异 显 ；
+ 支 持 19路 摄 像 头 接 入 ， 可 支 持 AVM、 DMS、 OMS、 DVR等 ；
+ 集 成 GNSS/Wi-Fi/BT；
+ LTE CAT-18；
+ 支 持 LPDDR5x；
+ 集 成 8核 CPU， 台 积 电 4nm制 程 ；
+ 集 成 T-Box；
+ 1.8TFLOPS GPU算 力 ；
+ 20TOPS APU算 力 ；
+ 支 持 Hypervisor；
+ IATF 16949 qualified；
+ 研 发 流 程 遵 从 ASPICE；
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0340.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+11 / 34
+五、 模块引脚定义
+1) MT8676 中所有 SPI,I2C,UART,I2S,GPIO,EINT,TDM 口电压域都是 1.8v，请注意电压匹配
+2) SIM2（IO/RST/CLK）未使时可以做 GPIO（1.8V 电压域）使用。
+3) T 卡 data/cmd/clk/rst 接口默认为 SDIO 模式，不使用 TF 卡时可以当做 GPIO(1.8V 电压域)使用。
+对应 MT8676 芯
+片 PIN
+模块
+PIN
+模块定义 描述&amp;备注
+1 D_GND
+AP5 2 CSI2B_RDN1 MIPI CSI2B 的 DATA1-N
+AP6 3 CSI2B_RDP1 MIPI CSI2B 的 DATA1-P
+4 D_GND
+AN3 5 CSI2A_RCP MIPI CSI2A 的 CLK-P
+AN4 6 CSI2A_RCN MIPI CSI2A 的 CLK-N
+AM5 7 CSI2A_RDN2 MIPI CSI2A 的 DATA2-N
+AM6 8 CSI2A_RDP2 MIPI CSI2A 的 DATA2-P
+9 D_GND
+10 D_GND
+11 D_GND
+12 D_GND
+MT6363_L12 13 VIO18_PMU 系统 IO 电平 1.8V 供电输出,200MA
+AN6 14 CSI2A_RDP0 MIPI CSI2A 的 DATA0-P
+AN5 15 CSI2A_RDN0 MIPI CSI2A 的 DATA0-N
+AR5 16 CSI2B_RDN3 MIPI CSI2B 的 DATA3-N
+AR6 17 CSI2B_RDP3 MIPI CSI2B 的 DATA3-P
+AV10 18 GPIO117_URXD2
+MT8676 UART2_RX,用于与外设数据通
+讯;GPIO117,EINT117;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AV9 19 GPIO121_UTXD2
+MT8676 UART2_TX,用于与外设数据通
+讯;GPIO121,EINT121;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AT18 20 SCL9 I2C9 的 SCL,I3C9 的 SCL,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+21 D_GND
+22 D_GND
+AU18 23 SDA9 I2C9 的 SDA,I3C9 的 SDA,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AU12 24 GPIO129
+GPIO129,此 IO 口只能做 GPIO 功能,不能做中断功能;可以
+复用成其它 Func,请参考 MT8676_GPIO_Application_Spec
+表格
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0340.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+12 / 34
+AV12 25 GPIO125_CAM_CL
+K2
+默认配置是 CAM_CLK2,若要复用成 GPIO125 请注意修
+改软件配置，此 IO 口不能做中断功能；可以复用成其它
+Func,请参考 MT8676_GPIO_Application_Spec 表格
+26 D_GND
+27 D_GND
+AT3 28 CSI1A_RDP2 MIPI CSI1A 的 DATA2-P
+AU3 29 CSI1A_RDN2 MIPI CSI1A 的 DATA2-N
+AU13 30 SCL12 I2C12 的 SCL,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AU14 31 SCL8 I2C8 的 SCL,I3C8 的 SCL,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AU11 32 GPIO126_CAM_CL
+K3
+默认配置是 CAM_CLK3,若要复用成 GPIO126 请注意修
+改软件,此 IO 口只能做 GPIO 功能,不能做中断功能;可以
+复用成其它 Func,请参考 MT8676_GPIO_Application_Spec
+表格
+AU10 33 GPIO130
+GPIO130,此 IO 口只能做 GPIO 功能,不能做中断功能;可以
+复用成其它 Func,请参考 MT8676_GPIO_Application_Spec
+表格
+AR9 34 GPIO118_CAM_RS
+T3
+CAM_RST3;GPIO118,EINT118;可以复用成其它 Func,请
+参考 MT8676_GPIO_Application_Spec 表格
+AW20 35 GPIO35_AP_GOO
+D
+GPIO35,EINT35,AP_GOOD;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AV15 36 SDA8 I2C8 的 SDA,I3C8 的 SDA,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AV14 37 SDA12 I2C12 的 SDA,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AU4 38 CSI1A_RDN0 MIPI CSI1A 的 DATA0-N
+AT4 39 CSI1A_RDP0 MIPI CSI1A 的 DATA0-P
+AV4 40 CSI1A_RCP MIPI CSI1A 的 CLK-P
+AW4 41 CSI1A_RCN MIPI CSI1A 的 CLK-N
+AU15 42 SCL13 I2C13 的 SCL,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AV16 43 SDA13 I2C13 的 SDA,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AV20 44 SDA1 I2C1 的 SDA,I3C1 的 SDA,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AW9 45 GPIO122 GPIO122,EINT122;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+46 D_GND
+AU20 47 SCL1 I2C1 的 SCL,I3C1 的 SCL,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+48 D_GND
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0340.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+13 / 34
+AU21 49 GPIO104_TDM_LR
+CK
+GPIO104,EINT104,DM_LRCK;可以复用成其它 Func,请参
+考 MT8676_GPIO_Application_Spec 表格
+AV5 50 CSI1B_RDN1 MIPI CSI1B 的 DATA1-N
+AU5 51 CSI1B_RDP1 MIPI CSI1B 的 DATA1-P
+AT5 52 CSI1B_RDP3 MIPI CSI1B 的 DATA3-P
+AT6 53 CSI1B_RDN3 MIPI CSI1B 的 DATA3-N
+AY21 54 GPIO100_TDMIN_
+DATA0
+GPIO100,EINT100,TDMIN_DATA0;可以复用成其它
+Func,请参考 MT8676_GPIO_Application_Spec 表格
+AU23 55 GPIO95_TDMOUT
+_DATA0
+GPIO95,EINT95,TDMOUT_DATA0;可以复用成其它
+Func,请参考 MT8676_GPIO_Application_Spec 表格
+BC20 56 GPIO34_KPROW1 KPROW1,GPIO34,EINT34;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+BA20 57 GPIO31_KPCOL1 KPCOL1,GPIO31,EINT31;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AY20 58 GPIO32_KPCOL0 KPCOL0,GPIO32,EINT32;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+BB20 59 EINT33_SD SD 卡中断 EINT33,GPIO33;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+60 D_GND
+AW21 61 GPIO99_TDM_BC
+K
+GPIO99,EINT99,TDM_BCK;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+62 D_GND
+63 D_GND
+AY2 64 CSI0A_RCP MIPI CSI0A 的 CLK-P
+BA1 65 CSI0A_RCN MIPI CSI0A 的 CLK-N
+AV26 66 BPI_D_BUS4 BPI_D_BUS4,GPIO89,EINT89;可以复用成其它 Func,请参
+考 MT8676_GPIO_Application_Spec 表格
+AU22 67 GPIO97 GPIO97,EINT97;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+BC21 68 GPIO103_LGA-DA
+T3
+备用天线切换检测脚 3;GPIO103,EINT103;可以复用成其
+它 Func,请参考 MT8676_GPIO_Application_Spec 表格
+BB21 69 GPIO102 GPIO102,EINT102;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AV24 70 GPIO93_PWM_2 GPIO93,EINT93，建议做 PWM2 功能;可以复用成其它
+Func,请参考 MT8676_GPIO_Application_Spec 表格
+BA21 71 GPIO101 GPIO101,EINT101;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AV27 72 BPI_D_BUS2 BPI_D_BUS2,GPIO87,EINT87;可以复用成其它 Func,请参
+考 MT8676_GPIO_Application_Spec 表格
+AV21 73 GPIO98 GPIO98,EINT98;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AW3 74 CSI0A_RDN0 MIPI CSI0A 的 DATA0-N
+AW2 75 CSI0A_RDP0 MIPI CSI0A 的 DATA0-P
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0340.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+14 / 34
+AV2 76 CSI0A_RDP2 MIPI CSI0A 的 DATA2-P
+AW1 77 CSI0A_RDN2 MIPI CSI0A 的 DATA2-N
+AT32 78 URXD0 MT8676 UART0_RX,用于与外设数据通讯，建议用于
+debug
+AV31 79 UTXD0 MT8676 UART0_TX,用于与外设数据通讯，建议用于
+debug
+AV22 80 GPIO96 GPIO96,EINT96;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AU26 81 BPI_D_BUS5 BPI_D_BUS5,GPIO90,EINT90;可以复用成其它 Func,请参
+考 MT8676_GPIO_Application_Spec 表格
+AW38 82 GPIO111 GPIO111,EINT111;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AU24 83 GPIO94_PWM_3 GPIO94,EINT94，建议做 PWM3 功能;可以复用成其它
+Func,请参考 MT8676_GPIO_Application_Spec 表格
+AV30 84 GPIO209_JTRST JTRST,GPIO209,此 IO 口不能做中断功能;可以复用成其
+它 Func,请参考 MT8676_GPIO_Application_Spec 表格
+AU29 85 GPIO212_JTDI JTDI,GPIO212,此 IO 口不能做中断功能;可以复用成其它
+Func,请参考 MT8676_GPIO_Application_Spec 表格
+BB2 86 CSI0B_RDN1 MIPI CSI0B 的 DATA1-N
+BA2 87 CSI0B_RDP1 MIPI CSI0B 的 DATA1-P
+AY3 88 CSI0B_RDP3 MIPI CSI0B 的 DATA3-P
+BA3 89 CSI0B_RDN3 MIPI CSI0B 的 DATA3-N
+AU30 90 GPIO211_JTMS JTMS,GPIO211,此 IO 口不能做中断功能;可以复用成其它
+Func,请参考 MT8676_GPIO_Application_Spec 表格
+AU31 91 GPIO210_JTCK JTCK,GPIO210,此 IO 口不能做中断功能;可以复用成其它
+Func,请参考 MT8676_GPIO_Application_Spec 表格
+92 D_GND
+AW39 93 GPIO112 GPIO112,EINT112;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AV38 94 GPIO113 GPIO113,EINT113;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AY38 95 GPIO107 GPIO107,EINT107;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AV34 96 EINT6_ACC ACC 通知脚,EINT6,GPIO6;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AV29 97 GPIO213_JTDO JTDO,GPIO213,此 IO 口不能做中断功能;可以复用成其它
+Func,请参考 MT8676_GPIO_Application_Spec 表格
+98 D_GND
+99 D_GND
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0340.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+15 / 34
+AU36 100 GPIO65 GPIO65,EINT65;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AT34 101 GPIO131_DISP_P
+WM GPIO131,可复用成 DISP_PWM,此 IO 口不能做中断功能
+102 D_GND
+AU33 103 GPIO5_IDDIG IDDIG,EINT5,GPIO5;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+BA39 104 GPIO108 GPIO108,EINT108;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AV39 105 GPIO114 GPIO114,EINT114;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+BB38 106 GPIO105 GPIO105,EINT105;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AW37 107 GPIO109 GPIO109,EINT109;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AU34 108 EINT4_BACK 倒车通知脚 BACK,EINT4,GPIO4;可以复用成其它 Func,
+请参考 MT8676_GPIO_Application_Spec 表格
+109 D_GND
+AV32 110 SDA7 I2C7 的 SDA,I3C7 的 SDA,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AV35 111 GPIO62 GPIO62,EINT62;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+112 D_GND
+AW32 113 SCL7 I2C7 的 SCL,I3C7 的 SCL,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+114 D_GND
+AU32 115 SDA0 I2C0 的 SDA,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AY39 116 GPIO110 GPIO110,EINT110;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+BA38 117 GPIO106 GPIO106,EINT106;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+118 D_GND
+AV33 119 SCL0 I2C0 的 SCL,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+120 D_GND
+AV25 121 GPIO91_DP_TX_H
+PD
+DP 的热插拔,EINT91,GPIO91;可以复用成其它 Func,请参
+考 MT8676_GPIO_Application_Spec 表格
+AV36 122 GPIO63 GPIO63,EINT63;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AU35 123 GPIO132_DISP_P
+WM1
+GPIO132,可复用成 DISP_PWM1,此 IO 口不能做中断功能,
+可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0340.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+16 / 34
+AU25 124 GPIO92_DP_OC_E
+N
+DP 的 EN 脚,EINT92,GPIO92;可以复用成其它 Func,请参
+考 MT8676_GPIO_Application_Spec 表格
+125 D_GND
+126 D_GND
+127 NC NC 脚，悬空
+128 NC NC 脚，悬空
+129 D_GND
+130 D_GND
+131 D_GND
+132 D_GND
+133 D_GND
+134 ANT3 5G 天线 3
+135 D_GND
+136 D_GND
+137 D_GND
+138 D_GND
+139 ANT1 5G 天线 1
+140 D_GND
+141 D_GND
+142 D_GND
+143 NC NC 脚，悬空
+AF35 144 I2S1_DO I2S1_DO，EINT22,GPIO22;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AF34 145 I2S1_DI I2S1_DI，EINT21,GPIO21;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+146 D_GND
+147 D_GND
+148 ECALL_BACKUP_
+ANT5 ECALL_ANT5 备用天线
+149 D_GND
+AE35 150 I2S1_LRCK I2S1_LRCK，EINT20,GPIO20;可以复用成其它 Func,请参
+考 MT8676_GPIO_Application_Spec 表格
+AE34 151 I2S1_BCK I2S1_BCK，EINT19,GPIO19;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+152 D_GND
+153 D_GND
+154 NC NC 脚，悬空
+155 NC NC 脚，悬空
+AH36 156 I2S2_DO I2S2_DO，EINT26,GPIO26;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AH35 157 I2S2_DI I2S2_DI，EINT25,GPIO25;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+158 D_GND
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0340.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+17 / 34
+159 D_GND
+160 ANT0 5G 天线 0
+161 D_GND
+AG36 162 I2S2_LRCK I2S2_LRCK，EINT24,GPIO24;可以复用成其它 Func,请参
+考 MT8676_GPIO_Application_Spec 表格
+AG35 163 I2S2_BCK I2S2_BCK，EINT23,GPIO23;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+164 NC NC 脚，悬空
+165 NC NC 脚，悬空
+166 D_GND
+167 D_GND
+AG38 168 I2S0_DI I2S0_DI，EINT17,GPIO17;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AG37 169 I2S0_DO I2S0_DO，EINT18,GPIO18;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+170 D_GND
+171 D_GND
+172 NC NC 脚，悬空
+173 D_GND
+AF36 174 I2S0_LRCK I2S0_LRCK，EINT16,GPIO16;可以复用成其它 Func,请参
+考 MT8676_GPIO_Application_Spec 表格
+AF37 175 I2S0_BCK I2S0_BCK，EINT15,GPIO15;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+176 NC NC 脚，悬空
+177 NC NC 脚，悬空
+178 NC NC 脚，悬空
+179 NC NC 脚，悬空
+AE37 180 SDA6 I2C6 的 SDA,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AE36 181 SCL6 I2C6 的 SCL,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+182 D_GND
+183 D_GND
+184 ANT2 5G 天线 2
+185 D_GND
+186 D_GND
+187 D_GND
+AU28 188 BPI_D_BUS1 GPIO86,EINT86;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+189 NC NC 脚，悬空
+190 NC NC 脚，悬空
+MT6373_H14 191 VUSB_PMU AUDIO CODEC 芯片 MT6338 的供电 3.0V，不用请悬空
+192 NC NC 脚，悬空
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-18"><h2>PDF物理页 18</h2><a href="materials/SRC0340.pdf#page=18" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+18 / 34
+193 NC NC 脚，悬空
+194 D_GND
+195 D_GND
+196 GYRO_SENTRY_I
+NT GYRO_SENTRY_INT，IMU 中断脚通知底板，哨兵模式
+197 NC NC 脚，悬空
+198 NC NC 脚，悬空
+199 NC NC 脚，悬空
+200 NC NC 脚，悬空
+201 D_GND
+202 D_GND
+203 D_GND
+204 NC NC 脚，悬空
+205 NC NC 脚，悬空
+206 NC NC 脚，悬空
+207 NC NC 脚，悬空
+208 NC NC 脚，悬空
+209 NC NC 脚，悬空
+210 NC NC 脚，悬空
+211 NC NC 脚，悬空
+212 D_GND
+213 NC NC 脚，悬空
+214 NC NC 脚，悬空
+215 NC NC 脚，悬空
+216 NC NC 脚，悬空
+217 NC NC 脚，悬空
+218 NC NC 脚，悬空
+F13 219 GPIO0_FMI2S_LR
+CK
+此 IO 口在核心板有 12K 电阻上拉，用于核心板的 Boot
+trapping 配置，除了做 I2S 功能，非必要尽量优先选择其
+他 IO 口替代，也不要做上下拉配置。
+FMI2S_LRCK,GPIO0,SCP_EINT0;可以复用成其它 Func，
+请参考 MT8676_GPIO_Application_Spec 表格
+220 D_GND
+221 D_GND
+222 NC NC 脚，悬空
+223 NC NC 脚，悬空
+224 D_GND
+G31 225 GPIO84 GPIO184,EINT184;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+226 NC NC 脚，悬空
+F29 227 SCL3 I2C3 的 SCL,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+228 NC NC 脚，悬空
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-19"><h2>PDF物理页 19</h2><a href="materials/SRC0340.pdf#page=19" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+19 / 34
+229 NC NC 脚，悬空
+230 D_GND
+231 D_GND
+232 NC NC 脚，悬空
+233 NC NC 脚，悬空
+L37 234 MSDC1_DATA0 SD1 卡 DATA0,GPIO74,EINT74;可以复用成其它 Func,请
+参考 MT8676_GPIO_Application_Spec 表格
+M35 235 MSDC1_DATA3 SD1 卡 DATA3,GPIO77,EINT77;可以复用成其它 Func,请
+参考 MT8676_GPIO_Application_Spec 表格
+G28 236 SDA3 I2C3 的 SDA,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+MT6373_G12 237 VSIM2_PMU SIM 卡 2 供电输出, 1.86/2.9V 200MA
+L38 238 SIM2_SIO SIM 卡 2 的数据口,GPIO71,EINT71，不用 SIM2 时可以当
+做 GPIO 口或中断功能。
+M39 239 SIM2_SRST SIM 卡 2 的复位,GPIO70,EINT70,不用 SIM2 时可以当做
+GPIO 口或中断功能。
+M36 240 MSDC1_DATA2 SD1 卡 DATA2,GPIO76,EINT76;可以复用成其它 Func,请
+参考 MT8676_GPIO_Application_Spec 表格
+M34 241 MSDC1_DATA1 SD1 卡 DATA1,GPIO75,EINT75;可以复用成其它 Func,请
+参考 MT8676_GPIO_Application_Spec 表格
+AA37 242 DP_AUXP DP1.4 AUXP
+AA36 243 DP_AUXN DP1.4 AUXN
+AC37 244 USB_DM USB2.0 DM
+AC36 245 USB_DP USB2.0 DP
+L36 246 MSDC1_CMD SD1 卡 CMD,GPIO73,EINT73;可以复用成其它 Func,请参
+考 MT8676_GPIO_Application_Spec 表格
+L35 247 MSDC1_CLK SD1 卡 CLK,GPIO72,EINT72;可以复用成其它 Func,请参
+考 MT8676_GPIO_Application_Spec 表格
+M38 248 SIM2_SCLK SIM 卡 2 的时钟,GPIO69,EINT69,不用 SIM2 时可以当做
+GPIO 口或中断功能。
+249 D_GND
+MT6373_F12 250 VSIM1_PMU SIM 卡 1 供电输出, 1.86/2.9V 200MA
+K36 251 SIM1_SCLK SIM 卡 1 的时钟,GPIO66,EINT66,不用 SIM1 时可以当做
+GPIO 口或中断功能。
+K34 252 SIM1_SIO SIM 卡 1 的数据口,GPIO68,EINT68，不用 SIM1 时可以当
+做 GPIO 口或中断功能。
+W32 253 DP_LN1_TXP_P2 DP1.4 LN1 TXP
+W33 254 DP_LN1_TXN_P2 DP1.4 LN1 TXN
+Y34 255 DP_LN0_TXN_P2 DP1.4 LN0 TXN
+Y35 256 DP_LN0_TXP_P2 DP1.4 LN0 TXP
+257 D_GND
+K35 258 SIM1_SRST SIM 卡 1 的复位,GPIO67,EINT67,不用 SIM2 时可以当做
+GPIO 口或中断功能。
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-20"><h2>PDF物理页 20</h2><a href="materials/SRC0340.pdf#page=20" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+20 / 34
+259 D_GND
+Y38 260 SSUSB_TXP_P1 USB3.0 SSUSB_TXP_P1;不用 USB3.0 时可复用为 DP1.4
+LN2 TXP
+Y39 261 SSUSB_TXN_P1 USB3.0 SSUSB_TXN_P1;不用 USB3.0 时可复用为 DP1.4
+LN2 TXN
+W36 262 SSUSB_RXN_P1 USB3.0 SSUSB_RXN_P1;不用 USB3.0 时可复用为 DP1.4
+LN3 TXN
+W37 263 SSUSB_RXP_P1 USB3.0 SSUSB_RXP_P1;不用 USB3.0 时可复用为 DP1.4
+LN3 TXP
+264 D_GND
+265 D_GND
+T37 266 DSI1_D0N MIPI DSI1 的 D0N
+R38 267 DSI1_CKN MIPI DSI1 的 CKN
+268 D_GND
+R39 269 DSI1_CKP MIPI DSI1 的 CKP
+T38 270 DSI1_D0P MIPI DSI1 的 D0P
+R36 271 DSI1_D1N MIPI DSI1 的 D1N
+R37 272 DSI1_D1P MIPI DSI1 的 D1P
+U38 273 DSI1_D2N MIPI DSI1 的 D2N
+U39 274 DSI1_D2P MIPI DSI1 的 D2P
+275 D_GND
+P37 276 DSI1_D3P MIPI DSI1 的 D3P
+N37 277 DSI1_D3N MIPI DSI1 的 D3N
+U36 278 DSI0_D2P MIPI DSI0 的 D2P
+U35 279 DSI0_D2N MIPI DSI0 的 D2N
+P33 280 DSI0_D3N MIPI DSI0 的 D3N
+P34 281 DSI0_D3P MIPI DSI0 的 D3P
+P35 282 DSI0_D1N MIPI DSI0 的 D1N
+P36 283 DSI0_D1P MIPI DSI0 的 D1P
+F30/NC 284 SPI3_CSB_SWTP SPI3_CSB_SWTP，GPIO28,EINT28;可以复用成其它 Func,
+请参考 MT8676_GPIO_Application_Spec 表格
+G29 285 SPI3_CK SPI3_CK，GPIO27,EINT27;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+G30 286 SPI3_MO SPI3_MO，GPIO30,EINT30;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+F31 287 SPI3_MI SPI3_MI，GPIO29,EINT29;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+288 D_GND
+T35 289 DSI0_D0P MIPI DSI0 的 D0P
+T34 290 DSI0_D0N MIPI DSI0 的 D0N
+291 NC NC 脚，悬空
+292 NC NC 脚，悬空
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-21"><h2>PDF物理页 21</h2><a href="materials/SRC0340.pdf#page=21" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+21 / 34
+R34 293 DSI0_CKN MIPI DSI0 的 CKN
+R35 294 DSI0_CKP MIPI DSI0 的 CKP
+F24 295 PERIEN_CHG_EN
+B_GPIO133
+GPIO133,此 IO 口不能做中断功能,可以复用成其它 Func,
+请参考 MT8676_GPIO_Application_Spec 表格
+G33 296 SPI4_CSB SPI4_CSB;GPIO37,EINT37;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+F34 297 SPI4_MO SPI4_MO;GPIO39,EINT39;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+G34 298 SPI4_MI SPI4_MO;GPIO38,EINT38;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+F33 299 SPI4_CK SPI4_MO;GPIO36,EINT36;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+300 NC NC 脚，悬空
+301 NC NC 脚，悬空
+302 NC NC 脚，悬空
+303 NC NC 脚，悬空
+304 NC NC 脚，悬空
+305 NC NC 脚，悬空
+306 NC NC 脚，悬空
+307 NC NC 脚，悬空
+N5 308 GPIO191 GPIO191,可复用成 GPS_L5_ELNA_EN,此 IO 口不能做中
+断功能,请参考 MT8676_GPIO_Application_Spec 表格
+G26 309 GPIO136 GPIO136,此 IO 口不能做中断功能,可以复用成其它 Func,
+请参考 MT8676_GPIO_Application_Spec 表格
+G21 310 GPIO227 GPIO227,此 IO 口不能做中断功能,可以复用成其它 Func,
+请参考 MT8676_GPIO_Application_Spec 表格
+G23 311 GPIO231 GPIO231,此 IO 口不能做中断功能,可以复用成其它 Func,
+请参考 MT8676_GPIO_Application_Spec 表格
+F32 312 SYSRSTB 系统复位,低有效
+E20 313 GPIO223 GPIO223,此 IO 口不能做中断功能,可以复用成其它 Func,
+请参考 MT8676_GPIO_Application_Spec 表格
+314 NC NC 脚，悬空
+315 D_GND
+316 NC NC 脚，悬空
+317 NC NC 脚，悬空
+MT6363_N2/
+P2 318 VS1_PMIC AUDIO CODEC 芯片 MT6338 的供电，不用请悬空
+AV37 319 SCP_GPIO_6338_E
+N
+AUDIO CODEC 芯片 MT6338 的 EN 脚，可以复用成其它
+Func,请参考 MT8676_GPIO_Application_Spec 表格
+F23 320 GPIO230 GPIO230,此 IO 口不能做中断功能,可以复用成其它 Func,
+请参考 MT8676_GPIO_Application_Spec 表格
+F22 321 GPIO228 GPIO228,此 IO 口不能做中断功能,可以复用成其它 Func,
+请参考 MT8676_GPIO_Application_Spec 表格
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-22"><h2>PDF物理页 22</h2><a href="materials/SRC0340.pdf#page=22" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+22 / 34
+G25 322 SCL5 I2C5 的 SCL,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+F26 323 GPIO135 GPIO135,此 IO 口不能做中断功能,可以复用成其它 Func,
+请参考 MT8676_GPIO_Application_Spec 表格
+G27 324 AUD_I2C_SCL
+AUDIO CODEC 芯片 MT6338 的 I2C_SCL，可以复用成
+其它 Func,请参考 MT8676_GPIO_Application_Spec 表格,
+不用请悬空
+F27 325 AUD_I2C_SDA
+AUDIO CODEC 芯片 MT6338 的 I2C_SDA，可以复用成
+其它 Func,请参考 MT8676_GPIO_Application_Spec 表格,
+不用请悬空
+326 NC NC 脚，悬空
+G22 327 AUD_DAT_MISO0 AUDIO CODEC 芯片 MT6338 的 AUDIO IF 接口，
+AUD_DAT_MISO0，不用请悬空
+G20 328 AUD_DAT_MOSI1
+此 IO 专用脚建议 NC，在核心板内部是有 Boot trapping
+配置的，非必要尽量优先选择其他 IO 口替代，也不要做
+上下拉配置。
+AUDIO CODEC 芯片的 AUDIO IF 接口，
+AUD_DAT_MOSI1，不用请悬空
+F20 329 AUD_DAT_MOSI0
+此 IO 专用脚建议 NC，在核心板内部是有 Boot trapping
+配置的，非必要尽量优先选择其他 IO 口替代，也不要做
+上下拉配置。
+AUDIO CODEC 芯片的 AUDIO IF 接口，
+AUD_DAT_MOSI0，不用请悬空
+D20 330 AUD_CLK_MOSI AUDIO CODEC 芯片 MT6338 的 AUDIO IF 接口，
+AUD_CLK_MOSI，不用请悬空
+B5 331 RTC32K_1V8_F AUDIO CODEC 芯片 MT6338 的 RTC_CLK 32KHz，不用
+请悬空
+332 NC NC 脚，悬空
+F25 333 SDA5 I2C5 的 SDA,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+D19 334 GPIO43_DSI_TE GPIO43,EINT43,可复用成 DSI_TE,请参考
+MT8676_GPIO_Application_Spec 表格
+335 D_GND
+336 NC NC 脚，悬空
+G24 337 SCP_EINT_6338 AUDIO CODEC 芯片 MT6338 的中断脚，可以复用成其
+它 Func,请参考 MT8676_GPIO_Application_Spec 表格
+C20 338 SRCLKENA0 AUDIO CODEC 芯片 MT6338 的待机控制信号脚
+SRCLKENA0，不用请悬空
+339 D_GND
+340 D_GND
+H16 341 SPI2_MI SPI2_MI;GPIO13,EINT13;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-23"><h2>PDF物理页 23</h2><a href="materials/SRC0340.pdf#page=23" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+23 / 34
+F19 342 GPIO60_CTP0_RS
+T
+GPIO60,EINT60,可复用成 CTP0_RST,请参考
+MT8676_GPIO_Application_Spec 表格
+E19 343 GPIO41_LCM_RST GPIO41,EINT41,可复用成 LCM_RST,请参考
+MT8676_GPIO_Application_Spec 表格
+G19 344 GPIO61_CTP1_RS
+T
+GPIO61,EINT61,可复用成 CTP1_RST,可以复用成其它
+Func,请参考 MT8676_GPIO_Application_Spec 表格
+G18 345 EINT10_CTP1
+ramdump/full dump 专用功能口，系统变砖后 debug。建议
+连接测试点以及按键，低有效，建议默认上拉。若一直被
+拉低会一直进入 aee 模式，系统会一直重启。
+G12 346 GPIO3_FMI2S_BC
+K
+GPIO3,SCP EINT3,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+G15 347 GPIO42_DSI1_TE GPIO42,EINT42,可复用成 DSI_TE,可以复用成其它 Func,
+请参考 MT8676_GPIO_Application_Spec 表格
+F16 348 SPI2_MO SPI2_MO;GPIO14,EINT14;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+F15 349 SPI2_CK SPI2_CK;GPIO11,EINT11;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+G16 350 SPI2_CSB SPI2_CSB;GPIO12,EINT12;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+F18 351 EINT9_CTP0 EINT9,GPIO9,建议复用成 CTP0 的中断,可以复用成其它
+Func,请参考 MT8676_GPIO_Application_Spec 表格
+G14 352 GPIO40_LCM1_RS
+T
+GPIO40,EINT40,可复用成 LCM1_RST,可以复用成其它
+Func,请参考 MT8676_GPIO_Application_Spec 表格
+G13 353 GPIO1 GPIO1,SCP EINT1,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+R4 354 GPIO178 GPIO178,此 IO 口不能做中断功能,请参考
+MT8676_GPIO_Application_Spec 表格
+R6 355 GPIO183 GPIO183,此 IO 口不能做中断功能,可以复用成其它 Func,
+请参考 MT8676_GPIO_Application_Spec 表格
+R5 356 GPIO180_URXD3 GPIO183,此 IO 口不能做中断功能,可以复用成 URXD3,请
+参考 MT8676_GPIO_Application_Spec 表格
+P3 357 GPIO181_UTXD3
+GPIO181,此 IO 口不能做中断功能,可以复用成 UTXD3,可
+以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+P2 358 GPIO175_PCIE_CL
+KREQN
+GPIO175,此 IO 口不能做中断功能,可以复用成
+PCIE_CLKREQN,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+P4 359 GPIO182 GPIO182,此 IO 口不能做中断功能,可以复用成其它 Func,
+请参考 MT8676_GPIO_Application_Spec 表格
+R1 360 GPIO174_PCIE_W
+AKEN
+GPIO174,此 IO 口不能做中断功能,可以复用成
+PCIE_WAKEN,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-24"><h2>PDF物理页 24</h2><a href="materials/SRC0340.pdf#page=24" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+24 / 34
+F12 361 GPIO2 GPIO2,SCP EINT2,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+G10 362 SCP_SDA3 SCP_I2C3 的 SDA;I3C3_SDA,可以复用成其它 Func,请参
+考 MT8676_GPIO_Application_Spec 表格
+F10 363 SCP_SCL3 SCP_I2C3 的 SCL;I3C3_SCL,可以复用成其它 Func,请参
+考 MT8676_GPIO_Application_Spec 表格
+F7 364 SPI7_MO SPI7_MO;GPIO57,EINT57;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+G7 365 SPI7_MI SPI7_MI;GPIO56,EINT56;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+G6 366 SPI7_CSB SPI7_CSB;GPIO55,EINT55;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+F6 367 SPI7_CK SPI7_CK;GPIO54,EINT54;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+P1 368 GPIO176 GPIO176,此 IO 口不能做中断功能,请参考
+MT8676_GPIO_Application_Spec 表格
+R2 369 GPIO173_PCIE_PE
+RSTN
+GPIO173,此 IO 口不能做中断功能,可以复用成
+PCIE_PERSTN,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+R3 370 GPIO179 GPIO179,此 IO 口不能做中断功能,请参考
+MT8676_GPIO_Application_Spec 表格
+M6 371 GPIO188 GPIO188,此 IO 口不能做中断功能,可以复用成其它 Func,
+请参考 MT8676_GPIO_Application_Spec 表格
+T5 372 GPIO177 GPIO177,此 IO 口不能做中断功能,请参考
+MT8676_GPIO_Application_Spec 表格
+F8 373 GPIO169_UTXD1
+GPIO169,此 IO 口不能做中断功能,可以复用成 UTXD1,以
+及 SCP_I3C2_SCL,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+G8 374 GPIO170_URXD1
+GPIO170,此 IO 口不能做中断功能,可以复用成 URXD1,以
+及 SCP_I3C2_SDA,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+G11 375 GPIO59_INT_SIM2 GPIO59,EINT59,可复用成 INT_SIM2,可以复用成其它
+Func,请参考 MT8676_GPIO_Application_Spec 表格
+376 D_GND
+377 NC NC 脚，悬空
+T6 378 GPIO128_CAM_CL
+K5
+默认配置是 CAM_CLK5,若要复用成 GPIO128 请注意修
+改软件配置，此 IO 口不能做中断功能；可以复用成其它
+Func,请参考 MT8676_GPIO_Application_Spec 表格
+U6 379 GPIO124_CAM_CL
+K1
+默认配置是 CAM_CLK1,若要复用成 GPIO124 请注意修
+改软件配置，此 IO 口不能做中断功能；可以复用成其它
+Func,请参考 MT8676_GPIO_Application_Spec 表格
+380 D_GND
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-25"><h2>PDF物理页 25</h2><a href="materials/SRC0340.pdf#page=25" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+25 / 34
+381 D_GND
+T7 382 GPIO127_CAM_CL
+K4
+默认配置是 CAM_CLK4,若要复用成 GPIO127 请注意修
+改软件配置，此 IO 口不能做中断功能；可以复用成其它
+Func,请参考 MT8676_GPIO_Application_Spec 表格
+U7 383 GPIO123_CAM_CL
+K0
+默认配置是 CAM_CLK0,若要复用成 GPIO123 请注意修
+改软件配置，此 IO 口不能做中断功能；可以复用成其它
+Func,请参考 MT8676_GPIO_Application_Spec 表格
+384 D_GND
+385 NC NC 脚，悬空
+386 NC NC 脚，悬空
+387 NC NC 脚，悬空
+388 NC NC 脚，悬空
+389 NC NC 脚，悬空
+390 D_GND
+391 NC NC 脚，悬空
+392 NC NC 脚，悬空
+393 NC NC 脚，悬空
+394 NC NC 脚，悬空
+MT6685_E6 395 BBCK5 AUDIO CODEC 芯片 MT6338 的 26Mhz 时钟输入，
+MT6685 的 26Mhz 时钟输出，不用请悬空
+396 D_GND
+397 D_GND
+398 NC NC 脚，悬空
+399 D_GND
+400 D_GND
+401 D_GND
+402 D_GND
+403 WIFI_BT_ANT1 WIFI_BT 天线 1
+404 D_GND
+T2 405 GPIO119_CAM_RS
+T4
+GPIO119,EINT119,可以复用成 CAM_RST4,可以复用成
+其它 Func,请参考 MT8676_GPIO_Application_Spec 表格
+U2 406 GPIO115_CAM_RS
+T0
+GPIO115,EINT115,可以复用成 CAM_RST0,可以复用成
+其它 Func,请参考 MT8676_GPIO_Application_Spec 表格
+P5 407 GPIO186_I2SIN6_0
+_DI
+GPIO186,此 IO 口不能做中断功能,可以复用成 I2S6_DI,
+可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+Y6 408 PCIE_LN0_TXP PCIE_LN0 的 TXP
+Y5 409 PCIE_LN0_TXN PCIE_LN0 的 TXN
+410 D_GND
+411 D_GND
+412 WIFI_BT_ANT0 WIFI_BT 天线 0
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-26"><h2>PDF物理页 26</h2><a href="materials/SRC0340.pdf#page=26" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+26 / 34
+413 D_GND
+Y2 414 PCIE_LN0_RXN PCIE_LN0 的 RXN
+Y1 415 PCIE_LN0_RXP PCIE_LN0 的 RXP
+R7 416 GPIO184_I2SIN6_0
+_BCK
+GPIO184,此 IO 口不能做中断功能,可以复用成 I2S6_BCK,
+可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+P7 417 GPIO187_I2SOUT6
+_0_DO
+GPIO187,此 IO 口不能做中断功能,可以复用成 I2S6_DO,
+可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+P6 418 GPIO185_I2SIN6_0
+_LRCK
+GPIO185,此 IO 口不能做中断功能,可以复用成
+I2S6_LRCK,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+U4 419 SCL10 I2C10 的 SCL,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AA3 420 PCIE_CKP PCIE 的 CKP
+AA4 421 PCIE_CKN PCIE 的 CKN
+422 D_GND
+423 D_GND
+424 GPS_ANT GPS 天线
+425 D_GND
+426 NC NC 脚，悬空
+427 NC NC 脚，悬空
+U5 428 SDA10 I2C10 的 SDA,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+T1 429 GPIO120_CAM_RS
+T5
+GPIO120,EINT120;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+M5 430 GPIO189 GPIO189,此 IO 口不能做中断功能,可以复用成其它 Func,
+请参考 MT8676_GPIO_Application_Spec 表格
+AC4 431 GPIO220 GPIO220,此 IO 口不能做中断功能,可以复用成其它 Func,
+请参考 MT8676_GPIO_Application_Spec 表格
+432 NC NC 脚，悬空
+433 NC NC 脚，悬空
+434 D_GND
+435 D_GND
+AK3 436 CSI5A_RDN0 MIPI CSI5A 的 DATA0-N
+AJ3 437 CSI5A_RDP0 MIPI CSI5A 的 DATA0-P
+AH3 438 CSI5A_RDN2 MIPI CSI5A 的 DATA2-N
+AH2 439 CSI5A_RDP2 MIPI CSI5A 的 DATA2-P
+U3 440 GPIO116_CAM_RS
+T1
+GPIO116,EINT116;可以复用成 CAM_RST1,可以复用成
+其它 Func,请参考 MT8676_GPIO_Application_Spec 表格
+V4 441 SCL11 I2C11 的 SCL,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-27"><h2>PDF物理页 27</h2><a href="materials/SRC0340.pdf#page=27" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+27 / 34
+V5 442 SDA11 I2C11 的 SCL,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+V3 443 SCL4 I2C4 的 SCL,I3C4 的 SCL,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AK2 444 CSI5A_RCP MIPI CSI5A 的 CLK-P
+AK1 445 CSI5A_RCN MIPI CSI5A 的 CLK-N
+AL2 446 CSI5B_RDP1 MIPI CSI5B 的 DATA1-P
+AL3 447 CSI5B_RDN1 MIPI CSI5B 的 DATA1-N
+AJ6 448 CSI4A_RDN0 MIPI CSI4A 的 DATA0-N
+AH6 449 CSI4A_RDP0 MIPI CSI4A 的 DATA0-P
+AM1 450 CSI5B_RDN3 MIPI CSI5B 的 DATA3-N
+AM2 451 CSI5B_RDP3 MIPI CSI5B 的 DATA3-P
+V2 452 SDA4 I2C4 的 SDA,I3C4 的 SDA,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+W3 453 SDA2 I2C2 的 SDA,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+W4 454 SCL2 I2C2 的 SCL,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+455 D_GND
+AG5 456 CSI4A_RDP2 MIPI CSI4A 的 DATA2-P
+AG6 457 CSI4A_RDN2 MIPI CSI4A 的 DATA2-N
+AJ7 458 CSI4B_RDP1 MIPI CSI4B 的 DATA1-P
+AK7 459 CSI4B_RDN1 MIPI CSI4B 的 DATA1-N
+AL6 460 CSI4B_RDN3 MIPI CSI4B 的 DATA3-N
+AL7 461 CSI4B_RDP3 MIPI CSI4B 的 DATA3-P
+AJ4 462 CSI4A_RCN MIPI CSI4A 的 CLK-P
+AJ5 463 CSI4A_RCP MIPI CSI4A 的 CLK-N
+AC5 464 GPIO221_LGA-DA
+T0
+GPIO221_LGA-DAT0;GPIO221,此 IO 口不能做中断功能,
+可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AE3 465 SPI1_CK SPI1_CK;GPIO50,EINT50;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AE2 466 SPI1_CSB SPI1_CSB;GPIO51,EINT51;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AE6 467 GPIO79_MSDC2_C
+MD
+GPIO79,EINT79,可以复用成 MSDC2_CMD,可以复用成
+其它 Func,请参考 MT8676_GPIO_Application_Spec 表格
+AB5 468 GPIO44_LGA-DAT
+1
+GPIO44_LGA-DAT1;GPIO44,EINT44;可以复用成其它
+Func,请参考 MT8676_GPIO_Application_Spec 表格
+AB6 469 GPIO45 GPIO45,EINT45,可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+470 D_GND
+471 D_GND
+AP2 472 CSI3A_RDP0 MIPI CSI3A 的 DATA0-P
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-28"><h2>PDF物理页 28</h2><a href="materials/SRC0340.pdf#page=28" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+28 / 34
+AP3 473 CSI3A_RDN0 MIPI CSI3A 的 DATA0-N
+AD2 474 SPI0_MO SPI0_MO;GPIO49,EINT49;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AF7 475 GPIO78_MSDC2_C
+LK
+GPIO78,EINT78,可以复用成 MSDC2_CLK,可以复用成其
+它 Func,请参考 MT8676_GPIO_Application_Spec 表格
+AC6 476 GPIO80_MSDC2_D
+ATA0
+GPIO80,EINT80,可以复用成 MSDC2_DATA0,可以复用
+成其它 Func,请参考 MT8676_GPIO_Application_Spec 表
+格
+AF2 477 SPI1_MO SPI1_MO;GPIO53,EINT53;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AF3 478 SPI1_MI SPI1_MI;GPIO52,EINT52;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AD7 479 GPIO82_MSDC2_D
+ATA2
+GPIO82,EINT82,可以复用成 MSDC2_DATA2,可以复用
+成其它 Func,请参考 MT8676_GPIO_Application_Spec 表
+格
+AC7 480 GPIO81_MSDC2_D
+ATA1
+GPIO81,EINT81,可以复用成 MSDC2_DATA1,可以复用
+成其它 Func,请参考 MT8676_GPIO_Application_Spec 表
+格
+AC2 481 SPI0_CSB SPI0_CSB;GPIO47,EINT47;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AR3 482 CSI3A_RCN MIPI CSI3A 的 CLK-N
+AR2 483 CSI3A_RCP MIPI CSI3A 的 CLK-P
+AT1 484 CSI3B_RDP1 MIPI CSI3B 的 DATA1-P
+AT2 485 CSI3B_RDN1 MIPI CSI3B 的 DATA1-N
+AC3 486 SPI0_CK SPI0_CK;GPIO46,EINT46;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AE7 487 GPIO83_MSDC2_D
+ATA3
+GPIO83,EINT83,可以复用成 MSDC2_DATA3,可以复用
+成其它 Func,请参考 MT8676_GPIO_Application_Spec 表
+格
+488 D_GND
+AE5 489 GPIO134 GPIO134,此 IO 口不能做中断功能,可以复用成其它 Func,
+请参考 MT8676_GPIO_Application_Spec 表格
+490 D_GND
+491 D_GND
+492 D_GND
+AD3 493 SPI0_MI SPI0_MI;GPIO48,EINT48;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+AU2 494 CSI3B_RDN3 MIPI CSI3B 的 DATA3-N
+AU1 495 CSI3B_RDP3 MIPI CSI3B 的 DATA3-P
+AN1 496 CSI3A_RDP2 MIPI CSI3A 的 DATA2-P
+AN2 497 CSI3A_RDN2 MIPI CSI3A 的 DATA2-N
+F11 498 INT_SIM1 INT_SIM1;GPIO58,EINT58;可以复用成其它 Func,请参考
+MT8676_GPIO_Application_Spec 表格
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-29"><h2>PDF物理页 29</h2><a href="materials/SRC0340.pdf#page=29" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+29 / 34
+499 D_GND
+MT6373_J14 500 VIBR_PMU LDO 电源输出,1.8/2.8/3.0/3.3V/200mA 可供外部负载使
+用
+501 D_GND
+MT6373_K14 502 VTP_PMU VTP 供电输出 1.8/2.8/3.0/3.3V 200mA
+MT6373_J12 503 VIO28_PMU VIO28_PMU ,1.8/2.8/3.0/3.3V/200mA SENSOR 供电
+MT6373_N14 504 VMCH_PMU T 卡供电 LDO 输出 2.9V/800mA
+MT6363_K7 505 VBUS VBUS 对应 MT8676 底板上的 VUSB_5V_IN,检测 USB 插
+入
+506 D_GND 电源地
+507 D_GND 电源地
+508 VBAT 系统 4.0V 供电输入
+509 VBAT 系统 4.0V 供电输入
+510 D_GND 电源地
+511 D_GND 电源地
+MT6363_L5 512 PWRKEY_SW POWERKEY ,系统开关机键,电平为 4.0V，默认高电平低
+有效
+513 D_GND 电源地
+514 D_GND 电源地
+515 D_GND 电源地
+516 VBAT 系统 4.0V 供电输入
+517 VBAT 系统 4.0V 供电输入
+518 VBAT 系统 4.0V 供电输入
+519 VBAT 系统 4.0V 供电输入
+520 VBAT 系统 4.0V 供电输入
+521 VBAT 系统 4.0V 供电输入
+522 D_GND 电源地
+523 D_GND 电源地
+524 VBAT 系统 4.0V 供电输入
+525 VBAT 系统 4.0V 供电输入
+526 D_GND 电源地
+527 D_GND 电源地
+528 D_GND 电源地
+G1 D_GND
+G2 D_GND
+G3 D_GND
+G4 D_GND
+G5 D_GND
+G6 D_GND
+G7 D_GND
+G8 D_GND
+G9 D_GND
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-30"><h2>PDF物理页 30</h2><a href="materials/SRC0340.pdf#page=30" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+30 / 34
+G10 D_GND
+G11 D_GND
+G12 D_GND
+G13 D_GND
+G14 D_GND
+G15 D_GND
+G16 D_GND
+G17 D_GND
+G18 D_GND
+G19 D_GND
+G20 D_GND
+G21 D_GND
+G22 D_GND
+G23 D_GND
+G24 D_GND
+G25 D_GND
+G26 D_GND
+G27 D_GND
+G28 D_GND
+G29 D_GND
+G30 D_GND
+G31 D_GND
+G32 D_GND
+G33 D_GND
+G34 D_GND
+G35 D_GND
+G36 D_GND
+G37 D_GND
+G38 D_GND
+G39 D_GND
+G40 D_GND
+G41 D_GND
+G42 D_GND
+G43 D_GND
+G44 D_GND
+G45 D_GND
+G46 D_GND
+G47 D_GND
+G48 D_GND
+G49 D_GND
+G50 D_GND
+G51 D_GND
+G52 D_GND
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-31"><h2>PDF物理页 31</h2><a href="materials/SRC0340.pdf#page=31" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+31 / 34
+六、 模块引脚分布图
+核 心 板 Top vi ew （ 焊 盘 面 ）
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-32"><h2>PDF物理页 32</h2><a href="materials/SRC0340.pdf#page=32" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+32 / 34
+七、 模块尺寸图
+模 块 尺 寸 ： 59.5mm * 59.5mm * 5.4mm。 模 块 厚 度 不 含 上 屏 蔽 罩 ，
+盖 上 屏 蔽 罩 后 厚 度 为 5.6mm；模 块 贴 片 到 底 板 后 ，BGA 高 度 ：0.35mm
+± 0.05mm。 如 要 PIN2PIN MT8678 平 台 需 要 按 P41 产 品 规 格 书 预 留 ；
+注 ： 下 图 中 心 28mm*27mm 区 域 底 板 PCB 设 计 需 要 挖 空 。
+核 心 板 Bot t om vi ew （ 焊 盘 面 ）
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-33"><h2>PDF物理页 33</h2><a href="materials/SRC0340.pdf#page=33" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+33 / 34
+八、 天线接口说明
+核 心 板 Bot t om vi ew （ 焊 盘 面 ）
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section><section class="source-page" id="page-34"><h2>PDF物理页 34</h2><a href="materials/SRC0340.pdf#page=34" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐秘密，未经许可不得扩散
+34 / 34
+九、 SMT 参考炉温曲线
+炉 温 测 试 需 要 在 模 块 位 置 接 热 偶 测 试 点 ， 保 证 模 块 位 置 达 到 需 要
+的 温 度 。 推 荐 的 炉 温 曲 线 图 如 下 所 示 ： （ 无 铅 SMT 回 流 焊 ）
+推 荐 的 炉 温 测 试 控 制 要 求 如 下 ：
+注 ： 推 荐 曲 线 供 参 考 ， 客 户 可 以 根 据 实 际 生 产 的 锡 膏 和 设 备 条 件 进 行 优 化 。
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档
+深圳市掌锐电子有限公司
+保密文档</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a><a href="#page-18">PDF物理页 18</a><a href="#page-19">PDF物理页 19</a><a href="#page-20">PDF物理页 20</a><a href="#page-21">PDF物理页 21</a><a href="#page-22">PDF物理页 22</a><a href="#page-23">PDF物理页 23</a><a href="#page-24">PDF物理页 24</a><a href="#page-25">PDF物理页 25</a><a href="#page-26">PDF物理页 26</a><a href="#page-27">PDF物理页 27</a><a href="#page-28">PDF物理页 28</a><a href="#page-29">PDF物理页 29</a><a href="#page-30">PDF物理页 30</a><a href="#page-31">PDF物理页 31</a><a href="#page-32">PDF物理页 32</a><a href="#page-33">PDF物理页 33</a><a href="#page-34">PDF物理页 34</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

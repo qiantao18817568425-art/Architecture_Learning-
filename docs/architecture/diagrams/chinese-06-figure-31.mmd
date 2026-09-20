@@ -1,0 +1,14 @@
+sequenceDiagram
+  participant C as Client state machine
+  participant P as Binder Proxy
+  participant D as Binder driver
+  participant S as Service Stub/worker
+  participant B as Service business
+  C->>P: request with Request ID + Generation
+  P->>D: transaction
+  D->>S: dispatch
+  S->>B: execute and update authoritative state
+  B-->>S: result/current version
+  S-->>C: reply or callback
+  C->>C: validate Generation + apply state
+  C->>B: authoritative state readback

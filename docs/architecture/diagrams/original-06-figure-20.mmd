@@ -1,0 +1,14 @@
+flowchart TD
+  A[memory grows] --> B{workload-scaled and releasable?}
+  B -- yes --> B1[cache/high-water behavior]
+  B -- no --> C{owner/reference identified?}
+  C -- no --> C1[collect heap/native/graphics ownership]
+  C -- yes --> D{pressure causes reclaim or kill?}
+  D -- kill --> D1[LMKD/process death symptoms]
+  D -- stall --> D2[reclaim thrash/latency/ANR risk]
+  B1 --> R[return idle and resample]
+  C1 --> R
+  D1 --> R
+  D2 --> R
+  R --> S[release leak owner + retire Generation]
+  S --> T[repeat workload + verify convergence]

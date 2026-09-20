@@ -1,0 +1,13 @@
+sequenceDiagram
+  participant App as Upper Application
+  participant Client as Favalon Client
+  participant Server as SDK Server
+  participant Lower as Lower Platform
+  App->>Client: GET/SET request
+  Client->>Client: 校验参数/建立等待上下文
+  Client->>Server: 序列化请求
+  Server->>Lower: 转换并调用底层接口
+  Lower-->>Server: 执行结果/数据
+  Server-->>Client: response
+  Client->>Client: 按请求上下文匹配并解除等待
+  Client-->>App: 返回值与输出参数

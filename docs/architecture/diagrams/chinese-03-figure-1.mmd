@@ -1,0 +1,8 @@
+flowchart LR
+  APP["Upper Application"] --> API["Favalon SDK API"]
+  API --> CL["FIBO SDK Client"]
+  CL <-->|"Socket"| SV["FIBO SDK Server"]
+  SV --> LOW["Lower Business Interface"]
+  LOW -. "result/event" .-> SV
+  SV -. "response/callback" .-> CL
+  CL -. "return/callback" .-> APP

@@ -1,0 +1,14 @@
+sequenceDiagram
+  participant ECU as Vehicle ECU
+  participant MCU as MCU COM/RTE/SWC
+  participant Transport as SPI/IPCL
+  participant CS as CanService
+  participant CL as Cluster
+  participant DISP as Display
+  ECU->>MCU: vehicle state + counter
+  MCU->>Transport: decoded value + validity + generation
+  Transport->>CS: received sample
+  CS->>CL: publish / callback
+  CL->>CL: priority + flash + mutual exclusion
+  CL->>DISP: render and present
+  Note over MCU,DISP: compare source, receive, consume and present timestamps

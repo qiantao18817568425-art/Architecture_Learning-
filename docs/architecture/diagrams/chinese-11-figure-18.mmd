@@ -1,0 +1,13 @@
+flowchart TD
+  A["Android/SOS 跨域显示异常"] --> B{"触发与源状态有效?"}
+  B -- 否 --> B1["Guest descriptor 枯竭"]
+  B -- 是 --> C{"数据/Buffer/音频流推进?"}
+  C -- 否 --> C1["共享内存映射/可见性异常"]
+  C -- 是 --> D{"策略、合成或路由正确?"}
+  D -- 否 --> D1["跨域 Fence 或 IRQ 丢失"]
+  D -- 是 --> E{"物理输出与反馈闭环?"}
+  E -- 否 --> E1["VM 重建后 Backend 未重绑"]
+  B1 --> R["新 Generation/Session 恢复"]
+  C1 --> R
+  D1 --> R
+  E1 --> R

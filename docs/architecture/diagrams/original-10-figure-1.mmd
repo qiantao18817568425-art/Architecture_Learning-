@@ -1,0 +1,10 @@
+flowchart TB
+  P["power/reset 与当前 Generation 有效"] --> O["OS/VM 与 IPC 承载可用"]
+  O --> S["FDBUS 进程启动"]
+  S --> L["listener/transport ready"]
+  L --> R["registry/endpoint 注册完成"]
+  R --> D["依赖数据与初始快照可用"]
+  D --> F["FDBUS business READY"]
+  F --> H["HMI 获取 READY，连接/订阅"]
+  H --> C["当前代首个有效样本被消费"]
+  C --> U["Cluster/HMI Ready"]

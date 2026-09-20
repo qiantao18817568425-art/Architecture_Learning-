@@ -1,0 +1,452 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8668最终Camera架构与DDR解读.md · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8668最终Camera架构与DDR解读.md</h1><p>SRC0005 · 原来源 ID S297 · 全文 · 1 个阅读单元</p><p class="note">有引用的指定页/文本核对；未宣称全文逐页审阅。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>Camera架构/MT8668最终Camera架构与DDR解读.md</p><p>SHA-256：<code>a22d7ea836e595e6b43f52196c14af0d3fb6f59fcb818806bc18b4a0b6194199</code></p><p>原文件大小：17,384 字节</p></details><div class="actions"><a class="button" href="materials/SRC0005.md" download>下载完整原文件</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><article id="source-text"><section class="source-page" id="page-1"><h2>全文 1</h2><pre class="source-text"># MT8668 最终 Camera 架构与 DDR 解读
+
+&gt; 版本日期：2026-09-04  
+&gt; 适用范围：当前已确认的 `3840×1536` 环视组合输入、MT8668 Camera P1/P2/PQDIP/MML 分流，以及 Yocto/Android 双系统 Camera 使用方式。  
+&gt; 结论边界：本文把“图纸/会议已确认”“按 UYVY 估算”“仍需 MTK 实测”分开表述。`Mpixel/s` 是图像硬件吞吐，`MB/s/GB/s` 才是 DDR 字节流量。
+
+## 1. 最终结论
+
+最终建议按以下架构冻结：
+
+1. 四路环视 Camera（前、右、后、左）分别以 GMSL2 3 Gbps 接入域控侧 MAX96712。
+2. 域控侧 MAX96712 一路通过 CSI-2 C-PHY/3 trios 接入域控本地 SoC；另一路通过两组 CSI-2 D-PHY/2 Lane 接到两颗 MAX96717。
+3. 两颗 MAX96717 分别形成两条 GMSL2 6 Gbps AVM 输出：`前+右`、`后+左`。
+4. 结合本项目会议方案，下游 MAX96712 作为 MT8668 侧接收器，将两路组合流送入 MT8668 CSI/P1。若硬件原理图对该接收 ECU 的命名不同，只替换节点名称，不改变本文的数据组织和 DDR 模型。
+5. 每路组合图确认为 `3840×1536`，由两个 `1920×1536` 方向图横向排列：
+   - Composite 0：前 + 右；
+   - Composite 1：后 + 左。
+6. MT8668 Camera HAL Server 在 Yocto Host 侧统一管理硬件和 pipeline；Android Guest 通过 RpcBinder + VSOCK 发送 Request、接收 Result。
+7. 若 AVM/DVR 必须得到独立方向图，P2 使用 PQDIP + MML 分流：PQDIP 承担左/右/后面向 AVM 和 DVR 的 6 个输出 stream，MML 承担 AVM 前视 1 个输出 stream。
+8. DDR 方案的优先级为：
+   - 优先让 AVM/DVR 共享物理输出 buffer；
+   - 其次由 P2/PQDIP/MML 硬件拆图；
+   - 避免 App/CPU memcpy 拆图；
+   - 若硬件能在完整组合帧落 DDR 前完成流式拆分，DDR 最优，但必须由 MTK 明确支持。
+
+## 2. 已确认的物理拓扑
+
+![已确认的 SerDes 物理拓扑](camera-physical-topology-confirmed.jpg)
+
+```mermaid
+flowchart LR
+    F[环视前&lt;br/&gt;GMSL2 3 Gbps]
+    R[环视右&lt;br/&gt;GMSL2 3 Gbps]
+    B[环视后&lt;br/&gt;GMSL2 3 Gbps]
+    L[环视左&lt;br/&gt;GMSL2 3 Gbps]
+
+    D[MAX96712&lt;br/&gt;域控侧解串/聚合]
+    SOC[域控本地 SoC]
+    S0[MAX96717&lt;br/&gt;Serializer 0]
+    S1[MAX96717&lt;br/&gt;Serializer 1]
+    RX[MAX96712&lt;br/&gt;MT8668 接收侧]
+    MTK[MT8668&lt;br/&gt;CSI / P1]
+
+    F --&gt; D
+    R --&gt; D
+    B --&gt; D
+    L --&gt; D
+    D --&gt;|CSI-2 C-PHY / 3 trios| SOC
+    D --&gt;|CSI-2 D-PHY / 2 Lane| S0
+    D --&gt;|CSI-2 D-PHY / 2 Lane| S1
+    S0 --&gt;|GMSL2 6 Gbps&lt;br/&gt;前+右 3840×1536| RX
+    S1 --&gt;|GMSL2 6 Gbps&lt;br/&gt;后+左 3840×1536| RX
+    RX --&gt;|CSI-2 两路组合流| MTK
+```
+
+### 2.1 组合图布局
+
+按当前命名顺序，采用横向拼接：
+
+```text
+Composite 0：3840 × 1536
+┌──────────────────────┬──────────────────────┐
+│ Front                │ Right                │
+│ x=0, y=0             │ x=1920, y=0          │
+│ w=1920, h=1536       │ w=1920, h=1536       │
+└──────────────────────┴──────────────────────┘
+
+Composite 1：3840 × 1536
+┌──────────────────────┬──────────────────────┐
+│ Rear                 │ Left                 │
+│ x=0, y=0             │ x=1920, y=0          │
+│ w=1920, h=1536       │ w=1920, h=1536       │
+└──────────────────────┴──────────────────────┘
+```
+
+上表的 ROI 坐标以“无额外边界/padding、顺序与图纸命名一致”为前提。正式接口仍应冻结：
+
+- 实际像素格式是 UYVY 还是 YUYV；
+- `input_stride` 和每行 padding；
+- 两个方向之间是否有 blanking/保护像素；
+- 组合顺序是否固定；
+- SOF、时间戳和左右半帧是否来自同一采集时刻。
+
+## 3. MT8668 内部最终数据路径
+
+```mermaid
+flowchart TD
+    C0[Composite 0&lt;br/&gt;前+右 3840×1536]
+    C1[Composite 1&lt;br/&gt;后+左 3840×1536]
+    P1[P1&lt;br/&gt;CSI 接收与采集]
+    HAL[Yocto Camera HAL Server&lt;br/&gt;CameraTurboEngine]
+    P2[P2&lt;br/&gt;后处理编排]
+    PQ0[PQDIP HW0]
+    PQ1[PQDIP HW1]
+    MML[MML]
+    AF[AVM Front]
+    AR[AVM Right]
+    AB[AVM Rear]
+    AL[AVM Left]
+    DR[DVR Right]
+    DB[DVR Rear]
+    DL[DVR Left]
+    AYO[Yocto AVM]
+    AND[Android DVR]
+
+    C0 --&gt; P1
+    C1 --&gt; P1
+    P1 --&gt; HAL --&gt; P2
+    P2 --&gt; PQ0
+    P2 --&gt; PQ1
+    P2 --&gt; MML
+    MML --&gt; AF --&gt; AYO
+    PQ0 --&gt; AR --&gt; AYO
+    PQ0 --&gt; DR --&gt; AND
+    PQ1 --&gt; AB --&gt; AYO
+    PQ1 --&gt; DB --&gt; AND
+    PQ1 --&gt; AL --&gt; AYO
+    PQ1 --&gt; DL --&gt; AND
+```
+
+### 3.1 P1
+
+P1 负责从 CSI 接收图像并建立第一阶段输出。对本方案来说，P1 输入是两路 `3840×1536` YUV 组合流。
+
+MT8668 Camera Driver 文档确认：
+
+- Sensor/bridge 的实际输出格式应在驱动中配置为 UYVY 或 YUYV；
+- 宽需满足 16 倍数、高需满足 4 倍数；`3840×1536` 满足这一对齐条件；
+- 多 VC 场景需要正确配置 channel 和 VC 描述；
+- P1 直出只适用于一路 stream、YUYV、输出尺寸与 Sensor 尺寸一致的特定场景。
+
+因此，环视组合图需要拆成多个输出时不能直接套用 P1 直出条件，应进入 P2。
+
+### 3.2 P2、PQDIP 与 MML
+
+P2 是处理流程，PQDIP/MML 是执行硬件：
+
+```text
+P1 输出组合图
+→ P2 配置 crop / output stream
+→ PQDIP 或 MML 读取输入
+→ 写入方向图 buffer
+→ Camera HAL 返回 Result
+```
+
+当前分配：
+
+| 方向 | 消费者 | 输出数 | 处理资源 |
+| --- | --- | ---: | --- |
+| 前 | AVM | 1 | MML |
+| 右 | AVM + DVR | 2 | PQDIP |
+| 后 | AVM + DVR | 2 | PQDIP |
+| 左 | AVM + DVR | 2 | PQDIP |
+| 合计 |  | 7 | PQDIP 6 + MML 1 |
+
+按 `1920×1536@25fps` 重新计算后，单路不再是此前 `1920×1526` 的 73.248 Mpixel/s，而是：
+
+```text
+1920 × 1536 × 25 = 73.728 Mpixel/s
+```
+
+PQDIP 单实例承担 3 路时：
+
+```text
+73.728 × 3 = 221.184 Mpixel/s/HW
+```
+
+若会议采用的单实例边界仍为约 250 Mpixel/s，则理论余量：
+
+```text
+250 - 221.184 = 28.816 Mpixel/s
+```
+
+不足以再增加一条 73.728 Mpixel/s 输出。因此 `PQDIP 6 + MML 1` 的资源分流结论仍成立，但最终需用 1536 高度重新提交 MTK/PVT 评估。
+
+若输出提高到 30 fps：
+
+```text
+单路 = 1920 × 1536 × 30 = 88.4736 Mpixel/s
+单实例三路 = 265.4208 Mpixel/s
+```
+
+该数值已经超过会议口径中的约 250 Mpixel/s，所以不能把 25 fps 的分配直接用于 30 fps。
+
+## 4. Yocto/Android Camera 虚拟化
+
+MT8668 Hypervisor Camera 文档明确的系统关系是：
+
+```text
+Yocto = Host
+Android = Guest
+Camera 硬件、驱动、Camerahalserver 和主要控制逻辑 = Yocto
+Android Request → RpcBinder/VSOCK → Yocto
+Yocto 完成 pipeline → 填充 buffer → Result 返回 Android
+```
+
+```mermaid
+sequenceDiagram
+    participant A as Android App
+    participant G as Android Camera Guest
+    participant V as RpcBinder / VSOCK
+    participant H as Yocto Camera HAL Server
+    participant P as P1/P2/PQDIP/MML
+    A-&gt;&gt;G: configureStreams / Request
+    G-&gt;&gt;V: 跨域 Request
+    V-&gt;&gt;H: 合并配置与请求
+    H-&gt;&gt;P: 建立 pipeline、提交 buffer
+    P--&gt;&gt;H: 完成图像处理 / fence signal
+    H--&gt;&gt;V: Result + buffer 引用
+    V--&gt;&gt;G: 跨域 Result
+    G--&gt;&gt;A: 图像帧
+```
+
+DDR 设计上应坚持“控制面跨域、像素面共享”：Request/Result 可通过 RPC/VSOCK 传递，但整帧像素数据不应通过 RPC memcpy。目标应是 DMA-BUF/共享内存引用加同步 fence。MT8676 Camera Virtualization 材料展示了 `virtio-vdmabuf` 的 Guest/Host buffer 共享机制；MT8668 项目是否使用完全相同接口，需要用实际 BSP 版本确认。
+
+## 5. Camera DDR 的正确解读
+
+### 5.1 先区分四个指标
+
+| 指标 | 单位 | 回答的问题 |
+| --- | --- | --- |
+| GMSL line rate | Gbit/s | Camera/域控之间的物理串行链路能力 |
+| CSI-2 payload/line rate | Gbit/s | SerDes 到 SoC 入口能传多少数据 |
+| PQDIP/MML throughput | Mpixel/s | 图像硬件每秒能处理多少像素 |
+| DDR traffic | MB/s 或 GB/s | 图像 buffer 在内存中每秒实际读写多少字节 |
+
+`250 Mpixel/s` 不能直接写成 `250 MB/s`。换算 DDR 必须乘 `byte/pixel`，并分别计算每次读和每次写。
+
+### 5.2 计算假设
+
+以下估算采用：
+
+- 单方向：`1920×1536`；
+- 两个方向横拼：`3840×1536`；
+- 两张组合图共四个方向；
+- YUV422 packed（UYVY/YUYV）：`2 byte/pixel`；
+- 数值使用十进制 MB/s、GB/s；
+- 暂不计 stride padding、协议 blanking、IOMMU、突发效率和仲裁损失。
+
+定义：
+
+```text
+S = 单方向图完整经过一次 DDR 读或写
+P = 四个方向完整经过一次 DDR 读或写 = 4S
+```
+
+### 5.3 基础 Payload
+
+| 项目 | 25 fps | 30 fps |
+| --- | ---: | ---: |
+| 单方向 `1920×1536` 像素吞吐 | 73.728 Mpixel/s | 88.4736 Mpixel/s |
+| 单方向 S（YUV422） | 147.456 MB/s | 176.9472 MB/s |
+| 单张组合图 `3840×1536` | 294.912 MB/s | 353.8944 MB/s |
+| 两张组合图/四方向 P | 589.824 MB/s | 707.7888 MB/s |
+| 七个独立输出写入 `1.75P` | 1.032192 GB/s | 1.2386304 GB/s |
+
+### 5.4 GMSL 链路核算
+
+按 YUV422 有效 payload 粗算：
+
+| 链路 | 25 fps payload | 30 fps payload | 图中线速率 |
+| --- | ---: | ---: | ---: |
+| 单 Camera `1920×1536` | 1.179648 Gbit/s | 1.4155776 Gbit/s | 3 Gbps |
+| 双 Camera 组合 `3840×1536` | 2.359296 Gbit/s | 2.8311552 Gbit/s | 6 Gbps |
+
+从纯 payload 看有余量；正式结论仍要加入 GMSL 编码/FEC、CSI blanking、包头和平台保留裕量，不能仅用有效像素除以线速率。
+
+### 5.5 三种 DDR 场景
+
+#### 场景 A：流式拆分，完整 Composite 不落 DDR
+
+```text
+CSI/P1 line or tile path
+→ 硬件直接生成 7 个方向输出
+→ 只写方向图 buffer
+```
+
+Camera 生产侧写入：
+
+```text
+1.75P
+= 1.032192 GB/s @25fps
+= 1.2386304 GB/s @30fps
+```
+
+若再加 AVM/DVR 对 7 个输出的正常读取，端到端约为：
+
+```text
+3.5P
+= 2.064384 GB/s @25fps
+= 2.4772608 GB/s @30fps
+```
+
+这是最佳目标，不代表 MT8668 当前 P1→P2/PQDIP/MML 已确认能做到。必须由 MTK 回答“完整 Composite 第一次落 DDR 的位置”。
+
+#### 场景 B：Composite 先落 DDR，P2 读一次，再写 7 个输出
+
+生产侧最小模型：
+
+```text
+P1 写 Composite       = 1P
+P2 读 Composite       = 1P
+P2 写 7 个输出        = 1.75P
+合计                  = 3.75P
+```
+
+| 项目 | 25 fps | 30 fps |
+| --- | ---: | ---: |
+| Camera 生产侧最小 DDR | 2.211840 GB/s | 2.654208 GB/s |
+| 再加七路消费者读取 `+1.75P` | 3.244032 GB/s | 3.8928384 GB/s |
+
+这是当前“两个 Composite 输入、七个物理输出 buffer”较合理的下界模型。
+
+实际值可能更高，因为：
+
+- PQDIP/MML 可能分别读取同一 Composite 的不同区域；
+- AVM 与 DVR 的同方向输出可能无法共享一次硬件写回；
+- stride 大于有效行宽；
+- 可能存在格式转换或隐式 copy；
+- 编码器、GPU、显示还会再次读取；
+- DDR 仲裁与突发访问效率不是 100%。
+
+#### 场景 C：左/右/后在 AVM 与 DVR 之间共享物理输出 buffer
+
+若 Camera HAL 只生成前、右、后、左四个物理 buffer，然后把右/后/左分别引用给 AVM 与 DVR：
+
+```text
+P1 写 Composite       = 1P
+P2 读 Composite       = 1P
+P2 写四方向输出       = 1P
+生产侧                = 3P
+```
+
+| 项目 | 25 fps | 30 fps |
+| --- | ---: | ---: |
+| Camera 生产侧 | 1.769472 GB/s | 2.1233664 GB/s |
+| 加 AVM 4 路和 DVR 3 路读取 | 2.801664 GB/s | 3.3619968 GB/s |
+
+相比七个独立物理输出，25 fps 可减少约 442.368 MB/s 的持续写 DDR 流量，30 fps 可减少约 530.8416 MB/s。代价是 buffer 生命周期更复杂：必须等 AVM 和 DVR 都 release 后才能复用，并隔离慢消费者。
+
+### 5.6 DDR 文档应该怎样理解
+
+MT8668 DDR 用户手册确认平台支持 LPDDR5X，最高 DRAM data rate 为 7500 Mbps，最大 DRAM 容量为 24 GB。但这两项不能直接证明 Camera 场景“DDR 一定够”：
+
+- 24 GB 是容量，不是带宽；
+- 7500 Mbps 是每 pin data rate，不是应用可独占的 GB/s；
+- 理论峰值还需要实际 channel、总线宽度和板级频率；
+- 可持续带宽低于理论峰值；
+- Display、GPU、Vcodec、CPU、NPU、ISP、PQDIP/MML 都会同时竞争 DDR。
+
+因此评审 Camera DDR 时，不能只做“Camera GB/s ÷ DDR 理论峰值”。要看并发最坏场景的实测平均、峰值、QoS、延迟和掉帧。
+
+## 6. 最终 Camera 架构建议
+
+### 6.1 推荐主方案
+
+```text
+两路 3840×1536 Composite
+→ MT8668 MAX96712 / CSI
+→ Yocto P1
+→ P2
+   ├─ PQDIP：左、右、后方向
+   └─ MML：前方向
+→ 四个方向物理 buffer
+→ AVM/DVR 通过引用共享同方向 buffer
+→ Android 仅跨域 Request/Result 和 buffer 引用
+```
+
+推荐把“业务 stream 数”和“物理写回 buffer 数”分开：业务仍可看到 AVM 4 路 + DVR 3 路，但底层争取只生成 4 个物理方向 buffer。这样既保留多应用独立接口，又避免相同像素重复写 DDR。
+
+### 6.2 可接受备选
+
+如果 AVM 与 DVR 因格式、尺寸、安全域或生命周期无法共享 buffer，则维持 PQDIP 6 + MML 1 的七输出结构，但把 3.75P/5.5P 模型作为 DDR 评审起点，并做全并发压力测试。
+
+### 6.3 不推荐方案
+
+- App/CPU memcpy 拆图；
+- 通过 RPC/VSOCK 传完整像素数据；
+- 没有确认 stride/offset 支持就让 MediaCodec 直接吃 Composite；
+- 只用 25 fps 结果推断 30 fps；
+- 只比较 LPDDR 理论峰值，不测最坏并发。
+
+## 7. 与 DVR 前视和 DMS 的关系
+
+### 7.1 DVR 独立前视
+
+DVR 独立前视应继续走独立 Camera/P1 路径，不占环视 Composite 的 PQDIP/MML 拆图预算。
+
+若采用 P1 直出，需要满足 MTK 文档条件：
+
+- 只有一路输出 stream；
+- 输出为 YUYV；
+- App 请求尺寸与 Sensor 输出一致。
+
+若还要缩放、改格式或同时产生多路输出，则需要 P2/其他硬件，不能继续称为 P1 直出。
+
+### 7.2 DMS
+
+DMS 继续采用独立 RAW 路径：
+
+```text
+DMS Sensor RAW10
+→ SerDes / CSI
+→ P1
+→ RAW16 unpacked
+→ EVS HAL / DMS Algo
+```
+
+DMS 不计入环视七路拆图，但必须在整机 DDR 压力测试中作为并发负载加入。
+
+## 8. 必须向 MTK/SerDes/应用方冻结的参数
+
+| 类别 | 必须确认 |
+| --- | --- |
+| Composite | 3840×1536、横拼顺序、ROI、是否有 padding/blanking |
+| 格式 | UYVY 或 YUYV、byte order、stride、sizeimage、对齐 |
+| 帧率 | 25 fps 还是 30 fps；输入/输出不一致时的丢帧规则 |
+| 同步 | 两个半图是否同 SOF、时间戳来源、异常半帧处理 |
+| P1/P2 | Composite 第一次落 DDR 的位置、P2 输入实际读取次数 |
+| PQDIP | 两个 HW 实例的保证吞吐、三输出并发限制、25/30 fps 实测 |
+| MML | Camera 可用实例、剩余能力、与 Display 的共享/仲裁 |
+| 多消费者 | AVM/DVR 能否共享同一物理 buffer、引用计数和超时策略 |
+| 跨域 | MT8668 实际 DMA-BUF/virtio-vdmabuf 接口、fence 传递方式 |
+| 编码 | MediaCodec/Vcodec 对 Composite stride、offset、crop 的支持 |
+| SerDes | 3/6 Gbps 模式的有效 payload、FEC/编码开销和误码恢复 |
+
+## 9. 验收测试建议
+
+1. 分别验证 `3840×1536@25fps` 和 `@30fps`。
+2. 同时打开 AVM 4 路、DVR 左/右/后、DVR 独立前视和 DMS。
+3. 同时运行显示、视频编码、GPU UI 和 DMS 算法，形成最坏并发。
+4. 采集 P1/P2/PQDIP/MML 实际 fps、队列深度和处理时间。
+5. 采集 DDR 平均/峰值带宽、频点、QoS/仲裁和 stall。
+6. 对比四物理 buffer 共享方案与七物理输出方案的 DDR 差值。
+7. 统计至少 30 分钟持续运行中的掉帧、重复帧、时间戳漂移和端到端 P95/P99 延迟。
+8. 注入 AVM/DVR 慢消费者、Android 重启、VSOCK 断连和 Sensor ESD，确认 buffer 能回收且其他流不被拖死。
+9. 在高温和降频条件下复测，不能只看室温峰值能力。
+
+## 10. 一句话评审结论
+
+&gt; 当前最终 Camera 架构应冻结为“两路 `3840×1536` 横向 Composite 输入 MT8668，Yocto Camera HAL 在 P2 内以 PQDIP 处理左/右/后、MML 处理前视，并优先让 AVM/DVR 共享四个方向物理 buffer”；按 UYVY、25 fps 估算，Composite 先落 DDR 且生成七个独立输出时，Camera 生产侧 DDR 下界约 2.212 GB/s，连同七路消费者读取约 3.244 GB/s；30 fps 下分别约 2.654 GB/s 和 3.893 GB/s，必须用 MTK 硬件计数器和整机最坏并发实测确认。
+
+## 11. 依据材料
+
+- 用户提供的 SerDes 拓扑图（四路 GMSL2 3 Gbps、MAX96712、两颗 MAX96717、两路 AVM GMSL2 6 Gbps）。
+- `MT8668_Yocto_Camera_Driver_User_Manual_CN_V1.0.pdf`：Sensor format、分辨率/对齐、VC 配置。
+- `MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf`：Yocto Host/Android Guest、Camera HAL、P1/P2、Multi-Open、P1 直出条件。
+- `MT8668_Yocto_DDR_User_Manual_CN_V1.0.pdf`：LPDDR5X、最高 7500 Mbps data rate、最大 24 GB。
+- `MT8676_Camera_Virtualization 1.pdf`：Guest/Host DMA-BUF 共享机制参考；MT8668 接口需按实际 BSP 确认。
+- 前次会议《奇瑞 8668 DVR&amp;AVM PQDIP-MML 分流方案》的带宽计算和 Action 结论。
+
+</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">全文 1</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

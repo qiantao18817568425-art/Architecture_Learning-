@@ -1,0 +1,12 @@
+sequenceDiagram
+  participant S as Source
+  participant C as Client
+  participant V as Service
+  participant U as Consumer
+  S->>C: Generation G2 / Sequence 81
+  C->>V: Request ID R7 / Session S2
+  V-->>C: timeout
+  V-->>C: late response R7
+  C--xU: reject old/expired result
+  C->>V: new Request ID R8
+  V-->>U: current result G2/R8

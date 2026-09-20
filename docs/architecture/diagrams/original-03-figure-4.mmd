@@ -1,0 +1,19 @@
+sequenceDiagram
+  participant App as Upper Application
+  participant Client as Favalon Client
+  participant Server as SDK Server
+  participant Supervisor as systemd/fb_procMgr
+  App->>Client: init/create handle
+  App->>Client: REGISTER callback/event
+  Client->>Server: 建立订阅
+  Server-->>Client: event
+  Client-->>App: callback
+  Server-xServer: process death
+  Supervisor->>Server: restart
+  Server-->>Client: 新服务实例 Ready
+  Client-->>App: service state event（若合同提供）
+  App->>Client: 重建/确认 Handle
+  App->>Client: 重新 REGISTER
+  Client->>Server: 建立新代际订阅
+  Server-->>Client: new event
+  Client-->>App: callback with new generation

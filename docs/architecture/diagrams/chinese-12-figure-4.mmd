@@ -1,0 +1,13 @@
+flowchart TD
+  A["导航播报与 Duck/Mute异常"] --> B{"触发与源状态有效?"}
+  B -- 否 --> B1["AudioFocus 拒绝或回调丢失"]
+  B -- 是 --> C{"数据/Buffer/音频流推进?"}
+  C -- 否 --> C1["duck/mute 策略错误"]
+  C -- 是 --> D{"策略、合成或路由正确?"}
+  D -- 否 --> D1["AudioTrack 无数据或 underrun"]
+  D -- 是 --> E{"物理输出与反馈闭环?"}
+  E -- 否 --> E1["DSP route/功放无物理输出"]
+  B1 --> R["新 Generation/Session 恢复"]
+  C1 --> R
+  D1 --> R
+  E1 --> R

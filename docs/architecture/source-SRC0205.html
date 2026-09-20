@@ -1,0 +1,991 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Android_USB_User_Manual_ V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Android_USB_User_Manual_ V1.0.pdf</h1><p>SRC0205 · 原来源 ID S138 · PDF物理页 · 20 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MT8676软件资料/User Manual/Android/English Version/MT8676_Android_USB_User_Manual_ V1.0.pdf</p><p>SHA-256：<code>afa3d415e857143e01ffb0397c6e3e4b2d965b4264aa160c8195de2eed9ea335</code></p><p>原文件大小：727,520 字节</p></details><div class="actions"><a class="button" href="materials/SRC0205.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Android_USB_User_Manual_ V1.0.pdf 原 PDF" src="materials/SRC0205.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0205.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version:  1.0 
+Release date:  2024-08-12
+MT8676 Andriod USB 
+User Manual 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0205.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8676 Android USB 
+User Manual 
+Confidential B 
+Version History 
+Version Date Author Description 
+1.0 2024-08-12 Zhanyong Wang Official release 
+ 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0205.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8676 Android USB 
+User Manual 
+Confidential B 
+Table of Contents 
+Version History ·································································································································································· 2 
+Table of Contents ······························································································································································· 3 
+List of Figures ····································································································································································· 4 
+1 MTK USB ···································································································································································· 5 
+1.1 Overview ·································································································································································· 5 
+1.2 MTK USB Architecture Relation Overview················································································································ 5 
+1.3 MTK USB Kernel Configuration ································································································································· 6 
+ MTK USB Connector Status ··························································································································· 7 
+ MTK USB Kernel General USB Connector Configuration ··············································································· 8 
+ MTK USB USBIF Compatibility Patch to Cherry-pick ····················································································· 8 
+1.4 MT8676 USBIF Compliance Program for xHCI USB 2.0 ···························································································· 9 
+ Some Background Information ····················································································································· 9 
+ How to Enable xHCI USB 2.0 Toolkits? ········································································································ 10 
+1.5 Parameters to Tune xHCI USB 2.0 Eye-pattern Quality ·························································································· 10 
+ Tune Phy RG_USB20_VRT_VREF_SEL Parameters ······················································································· 10 
+ Tune Phy RG_USB20_TERM_VREF_SEL Parameter ····················································································· 10 
+ Tune PHY RG_USB20_HSTX_SRCCTRL Parameter ······················································································· 11 
+ Tune PHY RG_USB20_PHY_REV Parameter································································································· 11 
+1.6 How to Tune USBIF Eye-pattern Parameter in xHCI?······························································································ 12 
+ How to Locate Position of hqa? ·················································································································· 12 
+ Change hqa Directory as Current Work Directory ······················································································· 12 
+ Some Files for Params of Eye-pattern to Tune ···························································································· 12 
+ USBIF USB 2.0 Compliance Toolkit ·············································································································· 12 
+ Force USB 3.1 Gen1 Compliance Mode for USB 3.0 Compliance ································································ 13 
+1.7 How to Understand u2p, Index Parameters for CLI: RG* or hqa ············································································ 13 
+ hqa ······························································································································································ 13 
+ RG* ······························································································································································ 15 
+ ·· Don't Forget to Send USB Engineer These Suitable Value of These Parameter Registers Tied in Eye-pattern 
+Report·····································································································································································  16 
+1.8 How to Tune Eye-pattern Parameters in Device Mode USBIF Compliance Test ····················································· 16 
+ Eye-pattern Parameters Location in Device Mode ······················································································ 16 
+ Eye-pattern Parameters Value in Device Mode ·························································································· 17 
+ Change Eye-pattern Parameters Setting in Device Mode ··········································································· 17 
+ Don't Forget to Send USB Engineer These Suitable Value of These Parameter Registers Tied in Eye-pattern 
+Report  ···································································································································································· 17 
+1.9 How to Understand u3p Parameter for CLI: usb3hqa for USB 3.1 Gen1 USBIF Compliance Test ··························· 18 
+ usb3hqa ······················································································································································ 18 
+1.9.1.1 Recommend to Use Human Easy Commands to Trigger Compliance Mode································· 18 
+1.9.1.2 Force RG Enter USB 3.1 Gen1 USBIF Compliance Mode in Expert Manner ·································· 18 
+1.10 xHCI USB 2.0 USBIF Compliance Test ····················································································································· 19 
+ Host High-speed Signal Quality (EL_2, EL_3, EL_6, EL_7) ··········································································· 19 
+ Host Controller Packet Parameter (EL_21, EL_22, EL_23, EL_25, EL_55) ···················································· 19 
+ Host CHIRP Timing (EL_33, EL_34, EL_35) ·································································································· 19 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0205.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8676 Android USB 
+User Manual 
+Confidential B 
+ Host Suspend/Resume timing (EL_39, EL_41) ···························································································· 19 
+ Host Test J/K, SE0_NAK (EL_8, EL_9) ··········································································································· 19 
+ Drop Test ····················································································································································· 19 
+Exhibit 1 Terms and Conditions ········································································································································ 20 
+ 
+ 
+List of Figures 
+Figure 1-1. MT8676 MTK USB HW Diagram ······························································································································· 5 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0205.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8676 Android USB 
+User Manual 
+Confidential B 
+1 MTK USB 
+1.1 Overview 
+Both the Host and Device can support up to USB 3.1 Gen1 (5GHz), with BC1.2 when a USB 2.0 Device is used. 
+• Host xHCI supports USB 3.0 Physical Port, USB 2.0 Physical Port and up to 32 EPs. 
+• Device MTU3 supports 8 TX/RX EPs with 8K SRAM, and there are 8 USB MTK Classic Accessory Channel queues. 
+ 
+1.2 MTK USB Architecture Relation Overview 
+ 
+Figure 1-1 shows the block diagram of MTK USB in Demo Board. 
+ 
+ 
+Figure 1-1. MT8676 MTK USB HW diagram 
+ 
+MT8676 has a unique MTK USB IP. The MTK SLT Demo Board named MT8676_P1V1_SMT2 is used to split USB 2.0 and USB 
+3.1: 
+• Wired Type-C Port: Plans to make it connected with Desktop, and it acts as Device for ADB debug usage. 
+• Wired Type-A Port: Plans to make it support the Open USB Jack, and it acts as Host for any USB device. 
+ 
+Anyway, we have to just keep one port wired in Type-C Jack or Type-A Jack for logical connection well, since there is not 
+designed in switcher control to make one port wired in Type-C Jack or Type-A Jack for logical connection automatically. 
+Keep physical connection on one port so that it could obey USBIF compliance requirement. 
+ 
+• Type-C Port: 
+USB2.0 Port is plugging in USB line wired with Desktop, make it default Device mode, and concern USB-A port without any 
+USB device.  SMT1 does not support Type-C yet in SMT1 Demo board. 
+ 
+• Type-A Port:  
+USB3.1 Gen1 Port is plugging in any USB device with USB 3.0 or lower version, it fully supports the USB 3.1 Gen1 spec. The 
+following CLI commands should be used to switch it to Host mode. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0205.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Android USB 
+User Manual 
+Confidential B 
+ 
+Keep Power Save active. 
+su  
+echo lock &gt; /sys/power/wake_lock 
+ 
+Host mode: 
+echo 2 &gt;/sys/devices/platform/soc/11201000.usb0/mode 
+ 
+Device mode： 
+echo 3 &gt;/sys/devices/platform/soc/11201000.usb0/mode 
+ 
+None mode: 
+echo 0 &gt;/sys/devices/platform/soc/11201000.usb0/mode 
+ 
+Note: 
+• To recommend using these sequences to change USB Role:   …--&gt;None-→ Host-→None---Device---None-→… 
+ 
+1.3 MTK USB Kernel Configuration 
+• Location of MTU3:  
+&lt;work project&gt;/kernel/kernel_device_modules-6.1/drivers/usb/mtu3 
+ 
+• The Kernel of MTU3 should be configured as: 
+CONFIG_DEVICE_MODULES_USB_MTU3=m 
+CONFIG_DEVICE_MODULES_USB_MTU3_DUAL_ROLE=y 
+ 
+• Property list of MTU3:  
+Note: For property that is not listed here, it is not recommended for you to change it except that you are an expert. 
+– mediatek,u3p-dis-msk: each 1 bit means one port, with the LSB bit0 representing Port1, and so on. 
+– enable-nanual-drd: It is seldom used since it is only applicable in some scenarios without USB role or extcon. 
+– usb-role-switch: It is mainly used since it is perfect for the upstream. 
+– extcon: It only can be used since the upstream prefers not to use this style. 
+ 
+• Location of xHCI: 
+&lt;work project&gt;/kernel/kernel_device_modules-6.1/drivers/misc/mediatek/usb_xhci  
+ 
+• The Kernel of xHCI should be configured as: 
+CONFIG_DEVICE_MODULES_USB_XHCI_MTK=m 
+ 
+• Property list of xHCI:  
+Note: For property that is not listed here, it is not recommended for you to change it except that you are an expert. 
+– usb3-lpm-capable: Each 1 bit represents one port, with the LSB bit0 representing Port1, and so on. 
+If the parent node is MTU3, this property is ignored. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0205.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8676 Android USB 
+User Manual 
+Confidential B 
+• Location of xSPHY:  
+&lt;work project&gt;/kernel/kernel_device_modules-6.1/drivers/phy/mediatek 
+ 
+• The Kernel of xSPHY should be configured as: 
+CONFIG_DEVICE_MODULES_PHY_MTK_XSPHY=m 
+ 
+• Property list of xSPHY:  
+Note: For property that is not listed here, it is not recommended for you to change it except that you are an expert. 
+• For the parameters of the device eye pattern: 
+– mediatek,eye-src 
+– mediatek,eye-vrt 
+– mediatek,eye-term 
+– mediatek,rev6 
+ 
+• Regarding the host eye-pattern parameters: 
+– mediatek,eye-src-host 
+– mediatek,eye-vrt-hos 
+– mediatek,eye-term-host 
+– mediatek,rev6-host 
+– mediatek,discth 
+ 
+ MTK USB Connector Status 
+SMT1 
+Po
+rt 
+TYPE A OTG TYPE C （RTQ7883） Jack Comment 
+I2C 
+(5th) 
+vBus 
+CTRL 
+Switcher Ena
+ble 
+Intr 
+vBus 
+Ctrl 
+vBus 
+Fault 
+I
+D 
+vBus
+Det 
+vBus 
+CTRL 
+S
+C
+L 
+S
+D
+A 
+P
+MI
+C 
+GP
+IO 
+Mux 
+Power 
+Mux 
+Sel 
+Ena
+ble 
+Type
+C Intr 
+Po
+rt0 
+Yes   Yes Choose One in Type-C and Type-
+A 
+      6   1
+6
+3 
+1
+6
+4 
+        98   Type
+C 
+Default Device with USB 2.0, and 
+Manual switch USB Role 
+                  101 102     Type
+A 
+Default Device with USB 2.0, and 
+Manual switch USB Role 
+                          Micro
+USB 
+  
+SMT2 
+Po
+rt 
+TYPE A OTG TYPE C （RTQ7883） Jack Comment 
+I2C (5 
+th) 
+vBus 
+CTRL 
+Switcher Ena
+ble 
+Type
+C Intr 
+vBus 
+Ctrl 
+vBus 
+Fault 
+I
+D 
+vBus
+Det 
+vBus 
+CTRL 
+S
+C
+L 
+S
+D
+A 
+P
+MI
+C 
+GP
+IO 
+Mux 
+Power 
+Mux 
+Sel 
+Ena
+ble 
+Type
+C Intr 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0205.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 Android USB 
+User Manual 
+Confidential B 
+Po
+rt0 
+Yes   Yes Choose One in Type-C and Type-
+A 
+      6   1
+6
+3 
+1
+6
+4 
+        98 48 Type
+C 
+  
+                  101 102     Type
+A 
+Obey Type-C Role 
+                          Micro
+USB 
+  
+ 
+ MTK USB Kernel General USB Connector Configuration 
+• Location of USB CONN:  
+&lt;work project&gt;/kernel/kernel_device_modules-6.1/drivers/misc/mediatek/extcon 
+ 
+• The Kernel of USB CONN should be configured as: 
+CONFIG_DEVICE_MODULES_USB_CONN_GPIO=m 
+ 
+• Property list of USB CONN:  
+One of id-gpio or vbus-gpio must be present, and both can also be present. 
+– id-gpio: GPIO for the USB ID pin. See GPIO binding. 
+– vbus-gpio: GPIO for the USB VBUS pin. 
+– Wakeup source: GPIO used for wake source. 
+ 
+ MTK USB USBIF Compatibility Patch to Cherry-pick 
+These patches need to be cherry-picked to your local project. You can proceed with the process. 
+The customer project manager is assigned to them. 
+ 
+https://gerrit.mediatek.inc/c/quark/kernel_device_modules-6.1/+/8792849 
+https://gerrit.mediatek.inc/c/quark/kernel_device_modules-6.1/+/8931041 
+https://gerrit.mediatek.inc/c/quark/kernel_device_modules-6.1/+/8931042 
+ 
+cd &lt;work project&gt;/kernel/kernel_device_modules-6.1/ 
+git apply &lt;braaa.patch&gt; 
+ 
+• Location of USBIF compatibility patch: 
+&lt;work project&gt;/kernel/kernel_device_modules-6.1/drivers/misc/mediatek/usb_xhci  
+&lt;work project&gt;/kernel/kernel_device_modules-6.1/drivers/usb/mtu3 
+&lt;work project&gt;/kernel/kernel_device_modules-6.1/drivers/phy/mediatek 
+ 
+• USBIF compatibility patch should be configured as: 
+CONFIG_DEVICE_MODULES_USB_MTK_HQA_TEST=y 
+ 
+Notes: 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0205.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8676 Android USB 
+User Manual 
+Confidential B 
+• To locate the position of 'hqa' in Host mode, use the following command: find /sys/devices -name hqa -type 
+f. 
+• The 'lsusb' command should display the USB devices that are plugged in, helping you to confirm whether it is in host 
+mode or not. 
+ 
+ 
+ 
+1.4 MT8676 USBIF Compliance Program for xHCI USB 2.0 
+ Some Background Information 
+MT8676 can support 1 USB 2.0 High-Speed port, and Phy register layout information is provided. 
+ 
+port        offset    bank 
+u2 port0    0x0000    MISC 
+            0x0100    FMREG 
+            0x0300    U2PHY_COM 
+u3 port0    0x0700    SPLLC 
+            0x0800    CHIP 
+            0x0900    U3PHYD 
+            0x0a00    U3PHYD_BANK2 
+            0x0b00    U3PHYA 
+            0x0c00    U3PHYA_DA 
+u2 port1    0x1000    MISC 
+            0x1100    FMREG 
+            0x1300    U2PHY_COM 
+u3 port1    0x1700    SPLLC 
+            0x1800    CHIP 
+            0x1900    U3PHYD 
+            0x1a00    U3PHYD_BANK2 
+            0x1b00    U3PHYA 
+            0x1c00    U3PHYA_DA 
+u2 port2    0x2000    MISC 
+            0x2100    FMREG 
+            0x2300    U2PHY_COM 
+ 
+port        offset    bank 
+The MISC value for u2 port0 is 0x0000. 
+            0x0100    FMREG 
+            0x0300    U2PHY_COM 
+u3 port0    0x0700    SPLLC 
+            0x0800    CHIP 
+            0x0900    U3PHYD 
+            0x0a00    U3PHYD_BANK2 
+            0x0b00    U3PHYA 
+            0x0c00    U3PHYA_DA 
+U2 port1: 0x1000 MISC 
+            0x1100    FMREG 
+            0x1300    U2PHY_COM 
+The u3 port1 is configured with the value 0x1700 for the SPLLC. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0205.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8676 Android USB 
+User Manual 
+Confidential B 
+            0x1800    CHIP 
+            0x1900    U3PHYD 
+            0x1a00    U3PHYD_BANK2 
+            0x1b00    U3PHYA 
+            0x1c00    U3PHYA_DA 
+The u2 port2 has an address of 0x2000 in the MISC. 
+            0x2100    FMREG 
+            0x2300    U2PHY_COM 
+ 
+ How to Enable xHCI USB 2.0 Toolkits? 
+CONFIG_DEVICE_MODULES_USB_MTK_HQA_TEST=y 
+CONFIG_DEBUG_FS=y 
+ 
+1.5 Parameters to Tune xHCI USB 2.0 Eye-pattern Quality 
+  Tune Phy RG_USB20_VRT_VREF_SEL Parameters  
+• VRT reference voltage selection 
+– Register:  
+ 
+– Bit field: 
+ 
+ Tune Phy RG_USB20_TERM_VREF_SEL Parameter 
+• HS_TX TERM reference voltage selection 
+– Register:  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0205.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8676 Android USB 
+User Manual 
+Confidential B 
+ 
+– Bit field: 
+ 
+ 
+ Tune PHY RG_USB20_HSTX_SRCCTRL Parameter 
+• High speed slew rate control 
+– Register: 
+              
+– Bit field: 
+ 
+ Tune PHY RG_USB20_PHY_REV Parameter 
+• High speed pre-emphasis control 
+– Register: 
+ 
+– Bit field: 
+31:30 RG_USB20_PHY_REV:    pre-emphasis control 
+          2b'00 means no drive 
+          2b'01 means 1st gear 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0205.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8676 Android USB 
+User Manual 
+Confidential B 
+          2b'10 means 2nd gear 
+          2b'11 means 3rd gear 
+ 
+1.6 How to Tune USBIF Eye-pattern Parameter in xHCI? 
+ How to Locate Position of hqa? 
+su 
+dmesg -n 1 
+Find files named 'hqa' under the '/sys' directory. 
+ 
+You can now view the following echo statement below. 
+ 
+/sys/devices/platform/soc/11201000.usb0/11200000.xhci0/hqa 
+/sys/devices/platform/soc/11201000.usb0/11200000.xhci0 is location of hqa. 
+ 
+ Change hqa Directory as Current Work Directory 
+cd /sys/devices/platform/soc/11201000.usb0/11200000.xhci0 
+ 
+ls -al 
+You should watch these hqa and RG* files relations below. 
+ 
+ Some Files for Params of Eye-pattern to Tune 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_CHGDT_EN 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_USB20_BGR_DIV 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_USB20_DISCTH 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_USB20_HSTX_SRCTRL 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_USB20_INTR_EN 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_USB20_PHY_REV 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_USB20_PLL_BW 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_USB20_REV4 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_USB20_SQTH 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_USB20_TERM_VREF_SEL 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_USB20_VRT_VREF_SEL 
+ 
+ USBIF USB 2.0 Compliance Toolkit 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 hqa 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0205.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8676 Android USB 
+User Manual 
+Confidential B 
+ Force USB 3.1 Gen1 Compliance Mode for USB 3.0 Compliance 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 usb3hqa 
+ 
+1.7 How to Understand u2p, Index Parameters for CLI: RG* or hqa 
+ hqa 
+To obtain online help, type cat hqa to access a wealth of useful information. 
+  
+echo -n item port-id &gt; hqa 
+ 
+General format: USB&lt;spec:20 or 30) Port&lt;port-id: n&gt; 
+ 
+The chosen item should be one of the following statements: 
+test.j: Test_J 
+test.k: Test_K 
+test.se0: Test_SE0_NAK 
+test.packet: Test_PACKET 
+test.suspend: Port Suspend 
+test.resume: Port Resume 
+test.enumbus: Enumerate Bus 
+test.getdesc: Get Device Descriptor 
+test.debug: Debug port information 
+pm.u1u2: Port U1,U2 
+ 
+Select a suitable port ID number from the options provided in the online help. 
+ 
+USB30 Port1: 0x0A0003C0 
+ 
+The USB30 Port1 indicates that it complies with the USB 3.1 Gen1 specification, with a port ID of 1. 
+ 
+USB20 Port2: 0x00000E03 
+USB20 Port2 PORTMSC[31,28] 4b'0000: 0x00000000 
+ 
+The USB20 Port2 indicates that it follows the USB 2.0 specification, with a port ID of 2. 
+ 
+PORTMSC[31,28] is debug information feedback, bitmap means TEST_J, TEST_K, TEST_SE0_NAK and TEST_PACKET for 
+compliance analog test item. 
+ 
+You have to reboot DUT to clean PORTMSC[31,28] before manipulating next MAC compliance experiment. 
+ 
+Note:  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0205.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+MT8676 Android USB 
+User Manual 
+Confidential B 
+test.debug is not special for compliance design, while it is special for debug which port to expect. It is useful when you don’t understand 
+mapping relation between real port and port to expect.  
+ 
+The test item information is utilized for exporting log information through the use of printk. 
+The HQA relation information can be obtained using a CLI command. 
+dmesg |grep xhci 
+ 
+Example: Plug in one USB device into the expected port, and use the following commands: 
+ 
+console:/sys/devices/platform/soc/11201000.usb0/11200000.xhci0 # cat hqa 
+info: 
+        echo -n item port-id &gt; hqa 
+port-id: based on the number of USB3 ports, e.g. 
+                xHCI with 1 u3p, 2 u2p: 1st u2p-id is 2(1+1), 2nd is 3 
+items: 
+        test.j: Test_J 
+        test.k: Test_K 
+        test.se0: Test_SE0_NAK 
+        test.packet: Test_PACKET 
+        test.suspend: Port Suspend 
+        test.resume: Port Resume 
+        test.enumbus: Enumerate Bus 
+test.getdesc: Get Device Descriptor 
+test.debug: debug Port information 
+        pm.u1u2: Port U1,U2 
+USB30 Port1: 0x00001203 
+Powered, connected, and enabled. Link: U0. PortSpeed: SuperSpeed Gen1x1. Change: Wake: 
+USB20 Port2: 0x0A0002A0 
+Powered, not connected, disabled link: RxDetect PortSpeed: UNKNOWN-Speed Change: Wake: WCE 
+WOE 
+USB20 Port2 PORTMSC[31,28] 4b'0000: 0x00000000 
+console:/sys/devices/platform/soc/11201000.usb0/11200000.xhci0 # echo -n test.debug 1 &gt;hqa 
+console:/sys/devices/platform/soc/11201000.usb0/11200000.xhci0 # dmesg |grep xhci 
+[  612.198919] sh: xhci-mtk 11200000.xhci0: [name:xhci_mtk_hcd_v2&amp;][0] test.debug 
+[  612.198966] sh: xhci-mtk 11200000.xhci0: [name:xhci_mtk_hcd_v2&amp;][1] 1 
+[  612.198990] sh: xhci-mtk 11200000.xhci0: [name:xhci_mtk_hcd_v2&amp;]mu3h t_debug_port test 
+port1 
+[  612.199016] sh: usb 2-1: [name:xhci_mtk_hcd_v2&amp;]configured 
+[  612.199035] sh: usb 2-1: [name:xhci_mtk_hcd_v2&amp;]New USB device found, idVendor=13fe, 
+idProduct=6300, bcdDevice= 1.00 
+[  612.199059] sh: usb 2-1: [name:xhci_mtk_hcd_v2&amp;]New USB device strings: Mfr=1, Product=2, 
+SerialNumber=3 
+[  612.199078] sh: usb 2-1: [name:xhci_mtk_hcd_v2&amp;]Product: USB DISK 3.0 
+[  612.199096] sh: usb 2-1: [name:xhci_mtk_hcd_v2&amp;]Manufacturer: 
+[  612.199111] sh: usb 2-1: [name:xhci_mtk_hcd_v2&amp;]SerialNumber: 0700378539191802 
+[  612.199128] sh: usb 2-1: [name:xhci_mtk_hcd_v2&amp;]D:  Ver= 3.20 Cls=00(&gt;ifc ) Sub=00 
+Prot=00 MxPS= 9 #Cfgs=  1 
+[  612.199155] sh: usb 2-1: [name:xhci_mtk_hcd_v2&amp;]P:  Vendor=13fe ProdID=6300 Rev= 1.00 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0205.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+MT8676 Android USB 
+User Manual 
+Confidential B 
+ RG* 
+Get online help by typing cat RG_USB20_TERM_VREF_SEL, then you can get many useful information. 
+ 
+echo -n u2p index binary_format_value &gt; RG_USB20_TERM_VREF_SEL 
+ 
+General format: USB&lt;spec:20 or 30&gt; Port&lt;u2p: n&gt; (Phy&lt;index: m&gt; enable) 
+ 
+USB20 Port2: 0x00000E03 
+USB 2.0 Port 2 (Phy0: enabled): 0x11E40000 0x000004004 
+        RG_CHGDT_EN            = 1b0 
+        RG_USB20_BGR_DIV       = 2b10 
+        RG_USB20_DISCTH        = 4b1001 
+        RG_USB20_HSTX_SRCTRL   = 3b011 
+        RG_USB20_INTR_EN       = 1b1 
+        RG_USB20_PHY_REV       = 2b01 
+        RG_USB20_PLL_BW        = 3b011 
+        RG_USB20_REV4          = 1b0 
+        RG_USB20_SQTH          = 4b0010 
+        RG_USB20_TERM_VREF_SEL = 3b100 
+        RG_USB20_VRT_VREF_SEL  = 3b100 
+USB20 Port2 (Phy0: enabled) means it's USB20 that follows the USB 2.0 spec, and its u2p is 2; its index is 0. 
+ 
+The following is a Demo: 
+For USB 2.0,  tune this  RG_USB20_VRT_VREF_SEL  = 3b100 less, then cat RG_USB20_VRT_VREF_SEL. 
+Usage: current HQA setting check 
+USB30 Port1: 0x0A0002A0 
+USB20 Port2: 0x0A0002A0 
+USB20 Port2 (Phy0: enable): 0x11E40000 0x000004004 
+        RG_CHGDT_EN            = 1b0 
+        RG_USB20_BGR_DIV       = 2b10 
+        RG_USB20_DISCTH        = 4b1001 
+        RG_USB20_HSTX_SRCTRL   = 3b011 
+        RG_USB20_INTR_EN       = 1b1 
+        RG_USB20_PHY_REV       = 2b01 
+        RG_USB20_PLL_BW        = 3b011 
+        RG_USB20_REV4          = 1b0 
+        RG_USB20_SQTH          = 4b0010 
+        RG_USB20_TERM_VREF_SEL = 3b100 
+        RG_USB20_VRT_VREF_SEL  = 3b100 
+ 
+RG_USB20_VRT_VREF_SEL usage: 
+echo u2p index 3b011 &gt; RG_USB20_VRT_VREF_SEL 
+parameter: u2p: 2 
+parameter: index: 0 
+e.g.: echo 2 0 3b101 &gt; RG_USB20_VRT_VREF_SEL 
+port2 binding phy 0, tune 3b'010 as VRT_VREF value 
+ 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0205.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 16 
+MT8676 Android USB 
+User Manual 
+Confidential B 
+Note:  
+14:12 RG_USB20_VRT_VREF_SEL 
+VRT reference voltage selection (shared circuit): 000: 
+700mV 001: 720mV 010: 740mV 011: 760mV 100: 
+770mV 101: 780mV 110: 800mV 111: 820mV 
+ 
+ Don't Forget to Send USB Engineer These Suitable Value of These 
+Parameter Registers Tied in Eye-pattern Report 
+Submit your parameters tied in eye-pattern to *.dts file of your project. 
+&amp;u2port0 { 
+mediatek,eye-src-host = &lt;0x04&gt;; 
+mediatek,eye-vrt-host = &lt;0x04&gt;; 
+mediatek,eye-term-host = &lt;0x07&gt;; 
+mediatek,rev6-host = &lt;0x07&gt;;  
+status = “okay” 
+} 
+1.8 How to Tune Eye-pattern Parameters in Device Mode USBIF Compliance 
+Test 
+ 
+Toolkit: https://www.usb.org/document-library/xhsett 
+Manual Guide: https://www.usb.org/sites/default/files/HSETT_Instruction_0_4_1.pdf 
+ 
+ Eye-pattern Parameters Location in Device Mode 
+console:/proc/mtk_usb/usb-phy0/u2_phy # ls -al 
+total 0 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0205.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 17 
+MT8676 Android USB 
+User Manual 
+Confidential B 
+dr-xr-xr-x 8 root root 0 2024-03-28 13:20 . 
+dr-xr-xr-x 4 root root 0 2024-03-28 13:20 .. 
+-rw-r--r-- 1 root root 0 2024-03-28 13:20 discth 
+-rw-r--r-- 1 root root 0 2024-03-28 13:20 intr_ofs 
+-rw-r--r-- 1 root root 0 2024-03-28 13:20 phy_rev6 
+-rw-r--r-- 1 root root 0 2024-03-28 13:20 rx_sqth 
+-rw-r--r-- 1 root root 0 2024-03-28 13:20 term_sel 
+-rw-r--r-- 1 root root 0 2024-03-28 13:20 vrt_sel 
+ Eye-pattern Parameters Value in Device Mode 
+console:/proc/mtk_usb/usb-phy0/u2_phy # cat * 
+discth = 1001 
+intr_ofs = 0 
+intr_val = 100011 
+phy_rev6 = 01 
+rx_sqth = 0010 
+term_sel = 100 
+vrt_sel = 010 
+ 
+ Change Eye-pattern Parameters Setting in Device Mode 
+The values should be changed to the '0' prefixed binary system format. 
+For example, if discth = 1001, it means its value is in base 9. To convert it to base 10, follow the step below: 
+echo 01010 &gt; discth 
+ 
+ Don't Forget to Send USB Engineer These Suitable Value of These 
+Parameter Registers Tied in Eye-pattern Report 
+Submit your parameters tied in eye-pattern to *.dts file of your project: 
+&amp;u2port0 { 
+mediatek,eye-src = &lt;0x04&gt;; 
+mediatek,eye-vrt = &lt;0x04&gt;; 
+mediatek,eye-term = &lt;0x07&gt;; 
+mediatek,rev6 = &lt;0x07&gt;;  
+status = “okay” 
+} 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-18"><h2>PDF物理页 18</h2><a href="materials/SRC0205.pdf#page=18" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 18 
+MT8676 Android USB 
+User Manual 
+Confidential B 
+1.9 How to Understand u3p Parameter for CLI: usb3hqa for USB 3.1 Gen1 
+USBIF Compliance Test 
+ usb3hqa 
+1.9.1.1 Recommend to Use Human Easy Commands to Trigger Compliance Mode 
+Online help can be obtained by typing cat usb3hqa, which will provide a wealth of useful information. 
+  
+echo -n item port-id &gt; usb3hqa 
+ 
+General format: USB&lt;spec:30) Port&lt;port-id: n&gt; 
+Type the following command in the CLI: cat usb3hqa 
+ 
+Select a suitable port ID number from the options provided in the online help. 
+      USB30 Port1: 0x0A0003C0 
+ 
+The USB30 Port1 indicates that it adheres to the USB 3.1 Gen1 specification, with a port ID of 1. 
+ 
+PORTPLS[8,5] is debug information feedback, bitmap means U0,U1, U2 and so on, here 0x0A means “Compliance mode” 
+for analog compliance testing. 
+ 
+Note: 
+• Type cli: cat usb3hqa | grep Compliance to confirm whether it is in Compliance mode. 
+ 
+1.9.1.2 Force RG Enter USB 3.1 Gen1 USBIF Compliance Mode in Expert Manner 
+console:/sys/devices/platform/soc/11201000.usb0/11200000.xhci0 # cat reg 
+SSUSB register operation interface help info. 
+  rx - read xhci  reg: offset [len] 
+  rm - read mu3d  reg: offset [len] 
+  ri - read ippc  reg: offset [len] 
+  rp - read phy3  reg: offset [len] 
+  ru - read phy2  reg: offset [len] 
+  wx - write xhci reg: offset value 
+  wm - write mu3d reg: offset value 
+  wi - write ippc reg: offset value 
+  wp - write phy3 reg: offset value 
+  wu - write phy2 reg: offset value 
+  sx - set xhci mac reg bits: offset bit_start mask value 
+  sm - set mu3d mac reg bits: offset bit_start mask value 
+  si - set ippc     reg bits: offset bit_start mask value 
+  sp - set phy3     reg bits: offset bit_start mask value 
+  su - set phy2     reg bits: offset bit_start mask value 
+  px - print xhci mac reg bits: offset bit_start mask 
+  pm - print mu3d mac reg bits: offset bit_start mask 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-19"><h2>PDF物理页 19</h2><a href="materials/SRC0205.pdf#page=19" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 19 
+MT8676 Android USB 
+User Manual 
+Confidential B 
+  pi - print ippc     reg bits: offset bit_start mask 
+  pp - print phy3     reg bits: offset bit_start mask 
+  pu - print phy2     reg bits: offset bit_start mask 
+ 
+Note: 
+• Numbers should be HEX, except bit_star (DEC) 
+echo wx 0x420 0x10340 &gt; reg 
+ 
+1.10 xHCI USB 2.0 USBIF Compliance Test 
+ Host High-speed Signal Quality (EL_2, EL_3, EL_6, EL_7) 
+CLI:  echo -n test.packet [port] &gt; hqa 
+ Host Controller Packet Parameter (EL_21, EL_22, EL_23, EL_25, EL_55) 
+ CLI:  echo -n test.getdesc [port] &gt; hqa 
+ Host CHIRP Timing (EL_33, EL_34, EL_35) 
+CLI:  echo –n test.enumbus [port] &gt; hqa 
+ Host Suspend/Resume timing (EL_39, EL_41) 
+CLI (suspend):  echo -n test.suspend [port] &gt; hqa 
+CLI (resume):   echo -n test.resume [port] &gt; hqa 
+ Host Test J/K, SE0_NAK (EL_8, EL_9) 
+CLI  (J): echo -n test.j [port] &gt; hqa 
+CLI  (K): echo -n test.k [port] &gt; hqa 
+CLI  (SE0): echo -n test.se0 [port] &gt; hqa 
+ Drop Test 
+CLI: none 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-20"><h2>PDF物理页 20</h2><a href="materials/SRC0205.pdf#page=20" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 20 
+MT8676 Android USB 
+User Manual 
+Confidential B 
+Exhibit 1 Terms and Conditions 
+Your access to and use of this document and the information contained herein (collectively this “Document”) is subject to your (including the corporation 
+or other legal entity you represent, collectively “You”) acceptance of the terms and conditions set forth below (“T&amp;C”).  By using, accessing or 
+downloading this Document, You are accepting the T&amp;C and agree to be bound by the T&amp;C.  If You don’t agree to the T&amp;C, You may not use this 
+Document and shall immediately destroy any copy thereof. 
+ 
+This Document contains information that is confidential and proprietary to MediaTek Inc. and/or its affiliates (collectively “MediaTek”) or its licensors 
+and is provided solely for Your internal use with MediaTek’s chipset(s) described in this Document and shall not be used for any other purposes (including 
+but not limited to identifying or providing evidence to support any potential patent infringement claim against MediaTek or any of MediaTek’s suppliers 
+and/or direct or indirect customers).  Unauthorized use or disclosure of the information contained herein is prohibited.  You agree to indemnify 
+MediaTek for any loss or damages suffered by MediaTek for Your unauthorized use or disclosure of this Document, in whole or in part. 
+ 
+MediaTek and its licensors retain titles and all ownership rights in and to this Document and no license (express or implied, by estoppels or otherwise) to 
+any intellectual propriety rights is granted hereunder.  This Document is subject to change without further notification.  MediaTek does not assume any 
+responsibility arising out of or in connection with any use of, or reliance on, this Document, and specifically disclaims any and all liability, including, 
+without limitation, consequential or incidental damages. 
+ 
+THIS DOCUMENT AND ANY OTHER MATERIALS OR TECHNICAL SUPPORT PROVIDED BY MEDIATEK IN CONNECTION WITH THIS DOCUMENT, IF ANY, ARE 
+PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE.  MEDIATEK SPECIFICALLY DISCLAIMS 
+ALL WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, COMPLETENESS OR ACCURACY AND ALL 
+WARRANTIES ARISING OUT OF TRADE USAGE OR OUT OF A COURSE OF DEALING OR COURSE OF PERFORMANCE.  MEDIATEK SHALL NOT BE RESPONSIBLE 
+FOR ANY MEDIATEK DELIVERABLES MADE TO MEET YOUR SPECIFICATIONS OR TO CONFORM TO A PARTICULAR STANDARD OR OPEN FORUM. 
+ 
+Without limiting the generality of the foregoing, MediaTek makes no warranty, representation or guarantee regarding the suitability of its products for 
+any particular purpose, nor does MediaTek assume any liability arising out of the application or use of any product, circuit or software.  You agree that 
+You are solely responsible for the designing, validating and testing Your product incorporating MediaTek’s product and ensure such product meets 
+applicable standards and any safety, security or other requirements. 
+ 
+The above T&amp;C and all acts in connection with the T&amp;C or this Document shall be governed, construed and interpreted in accordance with the laws of 
+Taiwan, without giving effect to the principles of conflicts of law. 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a><a href="#page-18">PDF物理页 18</a><a href="#page-19">PDF物理页 19</a><a href="#page-20">PDF物理页 20</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

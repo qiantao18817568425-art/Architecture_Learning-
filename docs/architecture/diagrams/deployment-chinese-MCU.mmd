@@ -1,0 +1,70 @@
+%%{init: {"flowchart": {"nodeSpacing": 18, "rankSpacing": 8, "padding": 12}, "themeVariables": {"fontSize": "16px"}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph MCU["MCU 域"]
+direction TB
+subgraph swcs["SWCs"]
+direction TB
+subgraph layout_row_1[" "]
+direction LR
+subgraph layout_row_2[" "]
+direction TB
+m1["仪表应用"]
+m4["警示灯控制"]
+m7["功能安全"]
+m1 ~~~ m4 ~~~ m7
+end
+subgraph layout_row_3[" "]
+direction TB
+m2["行车电脑"]
+m5["ADAS应用"]
+m8["功能诊断"]
+m2 ~~~ m5 ~~~ m8
+end
+subgraph layout_row_4[" "]
+direction TB
+m3["电源管理"]
+m6["DSP控制"]
+m3 ~~~ m6
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+subgraph rte["RTE"]
+direction TB
+subgraph layout_row_5[" "]
+direction LR
+e2e["E2E"]
+end
+end
+subgraph layout_row_6[" "]
+direction LR
+mos["OS"]
+bsw["BSW"]
+mos ~~~ bsw
+end
+subgraph mcal["MCAL"]
+direction TB
+subgraph layout_row_7[" "]
+direction LR
+can["CAN"]
+spi["SPI"]
+can ~~~ spi
+end
+end
+subgraph layout_row_8[" "]
+direction LR
+fbl["FBL"]
+mhw["MCU 硬件"]
+fbl ~~~ mhw
+end
+swcs ~~~ rte ~~~ layout_row_6 ~~~ mcal ~~~ layout_row_8
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent
+style layout_row_5 fill:transparent,stroke:transparent
+style layout_row_6 fill:transparent,stroke:transparent
+style layout_row_7 fill:transparent,stroke:transparent
+style layout_row_8 fill:transparent,stroke:transparent

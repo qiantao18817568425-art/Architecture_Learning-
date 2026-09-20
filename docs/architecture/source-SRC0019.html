@@ -1,0 +1,631 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>Vsock api 文档v2.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>Vsock api 文档v2.0.pdf</h1><p>SRC0019 · 原来源 ID U038 · PDF物理页 · 13 个阅读单元</p><p class="note">有引用的指定页/文本核对；未宣称全文逐页审阅。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>培训材料/PVT技术分享文档/Vsock api 文档v2.0.pdf</p><p>SHA-256：<code>dff007dcc6b0465339e9753e3b513fbac5d40cf2fbaf43c88b79b1319fa882fe</code></p><p>原文件大小：345,846 字节</p></details><div class="actions"><a class="button" href="materials/SRC0019.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="Vsock api 文档v2.0.pdf 原 PDF" src="materials/SRC0019.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0019.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Vsock api 文档
+GRTNBL20241118 Copyright © 2020 GoldenRiver Technologies Co., Ltd. All rights reserved. 1
+Vsock api 文档 v2.0
+GRTNBL20241118
+v2.0 2024/12/07
+公开 或 内部使用
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0019.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Vsock api 文档
+GRTNBL20241118 Copyright © 2020 GoldenRiver Technologies Co., Ltd. All rights reserved. 2
+目录
+变更履历表 ...................................................................................................3
+一. VSOCK 介绍 ............................................................................................. 4
+二. 使用方法 ................................................................................................ 9
+1. VSOCK 使用方法 ................................................................................... 9
+2. VSOCKX 使用方法 .................................................................................11
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0019.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Vsock api 文档
+GRTNBL20241118 Copyright © 2020 GoldenRiver Technologies Co., Ltd. All rights reserved. 3
+变更履历表
+版本 日期 修订人 修订内容
+v0.1 init version
+v1.0 2024/11/18 杜光辉 release version
+v1.1 2024/11/30 杜光辉 添加 vsockx 使用方法
+v2.0 2024/12/09 杜光辉 请 owner review 后修订部分内容
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0019.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Vsock api 文档
+GRTNBL20241118 Copyright © 2020 GoldenRiver Technologies Co., Ltd. All rights reserved. 4
+一. VSOCK 介绍
+Vsocks 是一种在 VM 与其主机操作系统之间直接提供套接字通信（流或数据报）的方
+法。主机和每个 VM 都有一个 32 位的 CID（上下文标识符），并且可以连接或绑定
+到一个 32 位的端口号。&lt; 1024 的端口是特权端口。
+特殊值
+有几个特殊地址：
+VMADDR_CID_ANY(-1U)表示任何要绑定的地址；
+VMADDR_CID_HYPERVISOR(0)保留用于管理程序中内置的服务；
+VMADDR_CID_LOCAL(1)是本地通信(回送)的众所周知的地址；
+VMADDR_CID_HOST(2)是主机的众所周知的地址。
+特殊常数 VMADDR_PORT_ANY(-1U)表示要绑定的任何端口号。
+VMADDR_CID_LOCAL(1)将数据包定向到生成数据包的同一主机。这对于在单个主机上测
+试应用程序和调试很有用。
+可以将通过 IOCTL_VM_SOCKETS_GET_LOCAL_CID 获得的本地 CID 用于相同的目的，但是
+最好使用 VMADDR_CID_LOCAL。
+名称 值 描述
+VMADDR_PORT_ANY -1 绑定到随机可用端口
+VMADDR_CID_ANY -1 绑定到 CID（只在虚拟机
+内生效）
+VMADDR_CID_HYPERVISOR 0 管理程序的 CID
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0019.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Vsock api 文档
+GRTNBL20241118 Copyright © 2020 GoldenRiver Technologies Co., Ltd. All rights reserved. 5
+VMADDR_CID_RESERVED 1 预定的 CID
+VMADDR_CID_HOST 2 主机 CID
+struct sockaddr_vm
+C++
+struct sockaddr_vm {
+__kernel_sa_family_t svm_family;
+unsigned short svm_reserved1;
+unsigned int svm_port;
+unsigned int svm_cid;
+unsigned char svm_zero[sizeof(struct sockaddr) - sizeof(sa_family_t) -
+sizeof(unsigned short) - sizeof(unsigned int) - sizeof(unsigned int)];
+};
+• svm_family 始终设置为 AF_VSOCK。 svm_reserved1 始终设置为 0。svm_port 包
+含主机字节顺序的端口号。低于 1024 的端口号称为特权端口。只有具有
+CAP_NET_BIND_SERVICE 功能的进程才能将(2)绑定到这些端口号。 svm_zero 必须为
+零。
+ioctl(socket, IOCTL_VM_SOCKETS_GET_LOCAL_CID, &amp;cid);
+其中 IOCTL_VM_SOCKETS_GET_LOCAL_CID 获取本地计算机的 CID。该参数是一个指向无
+符号 int 的指针。
+绑定时考虑使用 VMADDR_CID_ANY，而不是使用 IOCTL_VM_SOCKETS_GET_LOCAL_CID 获取
+本地 CID。
+int socket（int af，int type，int protocol）
+• af 参数：af 为协议族，地址族（Address Family），也就是 IP 地址类型，常用
+的有 AF_INET：IPv4 协议
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0019.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Vsock api 文档
+GRTNBL20241118 Copyright © 2020 GoldenRiver Technologies Co., Ltd. All rights reserved. 6
+￮ AF_INET6：IPv6 协议
+￮ AF_LOCAL：UNIX 域协议
+￮ AF_ROUTE：路由套接字
+￮ AF_KEY：密钥套接字
+• type 参数：types 指明通信字节流类型，其取值如：
+￮ SOCK_STREAM：流式套接字（TCP 方式）
+￮ SOCK_DGRAM：数据包套接字（UDP 方式）
+￮ SOCK_RAM：原始套接字
+• protocol 参数：protocol 表示传输协议，常用的有 IPPROTO_TCP 和
+IPPTOTO_UDP，分别表示 TCP 传输协议和 UDP 传输协议。通常设置为 0。
+成功时返回文件描述符，失败时返回-1，并设置 errno.
+int bind（int sock， struct sockaddr *addr, socklen_t
+addrlen）;
+• sock 参数：sock 为 socket 描述符。
+• addr ：绑定的地址
+• addrlen：地址长度
+成功时返回 0，失败时返回-1，并设置 errno;
+int connect（int sock， struct sockaddr *serv_addr，
+socklen_t addrlen）;
+• sock 参数：sock 为 socket 描述符。
+• addr ：绑定的地址
+• addrlen：地址长度
+成功时返回 0，失败时返回-1，并设置 errno;
+int listen(int sock,int backlog);
+• sock 参数：sock 为需要进入监听状态的套接字。
+• backlog 参数：backlog 为请求队列的最大长度。
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0019.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Vsock api 文档
+GRTNBL20241118 Copyright © 2020 GoldenRiver Technologies Co., Ltd. All rights reserved. 7
+成功时返回 0，失败时返回-1，并设置 errno;
+int accept（int sock， struct sockaddr *addr，
+socklen_t *addrlen）
+• sock 参数：sock 为服务器端套接字
+• addr 参数：addr 为 sockaddr_in 结构体变量。
+• addrlen 参数：addrlen 为参数 addr 的长度，可由 sizeof() 求得。
+返回值：一个新的套接字，用于与客户端通信。
+int close(int fd);
+• -fd :要关闭的文件描述符
+数据的接收和发送
+ssize_t read(int fd, void* buf, size_t nbytes);
+• fd：将要从该 fd 上读取数据；
+• buf：保存所读取数据的缓冲区；
+• nbytes：能够读取的最大字节数；
+size_t 与 ssize_t 是通过 typedef 声明定义的元数据类型，主要是兼容不同位数的操
+作系统数据类型的差异（如 int32、int64），为了与用户自己定义的数据类型区别
+开，以_t 结尾。
+--成功时返回字节数，遇到文件结尾返回 0，失败时返回-1;
+ssize_t write(int fd, const void* buf, size_t nbytes);
+• fd：数据想要写入的 sockfd；
+• buf：保存将要写入数据的缓冲区；
+• nbytes：将要写入的字节数
+与 write()相对应的是 read()函数，用来读取数据
+--成功时返回写入的字节数，失败时返回-1;
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0019.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Vsock api 文档
+GRTNBL20241118 Copyright © 2020 GoldenRiver Technologies Co., Ltd. All rights reserved. 8
+错误说明
+• EACCES
+没有 CAP_NET_BIND_SERVICE 功能，无法绑定到特权端口。
+• EADDRINUSE
+无法绑定到已使用的端口。
+• EADDRNOTAVAIL
+无法找到用于绑定的空闲端口或无法绑定到非本地 CID。
+• EINVAL
+无效的参数。这包括：尝试绑定已经绑定的套接字，提供无效的 struct
+sockaddr_vm，以及其他输入验证错误。
+• ENOPROTOOPT
+setsockopt(2)或 getsockopt(2)中的套接字选项无效。
+• ENOTCONN
+无法在未连接的套接字上执行操作。
+• EOPNOTSUPP
+不支持该操作。这包括：未针对 send(2)系列的系统调用实现的 MSG_OOB 标志和针对
+recv(2)系列的系统调用的 MSG_PEEK。
+• EPROTONOSUPPORT
+无效的套接字协议号。协议应始终为 0。
+• ESOCKTNOSUPPORT
+套接字(2)中不支持的套接字类型。仅 SOCK_STREAM 和 SOCK_DGRAM 有效。
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0019.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Vsock api 文档
+GRTNBL20241118 Copyright © 2020 GoldenRiver Technologies Co., Ltd. All rights reserved. 9
+二. 使用方法
+1. VSOCK 使用方法
+server 端通讯案例
+C++
+int main()
+{
+int s = socket(AF_VSOCK, SOCK_STREAM, 0);
+const struct sockaddr_vm addr = {
+.svm_family = AF_VSOCK,
+.svm_prot = 9999,
+.svm_cid = VMADDR_CID_HOST,
+}
+bind(s,(const sockaddr *)&amp;addr, sizeof(struct sockaddr_vm));
+listen(s, 0);
+struct sockaddr_vm peer_addr;
+socklen_t peer_addr_size = sizeof(struct sockaddr_vm);
+int peer_fd = accept(s,(sockaddr *)&amp;peer_addr,&amp;peer_ddr_size);
+char buf[54];
+ssize_t msg_len;
+while ((msg_len = recv(peer_fd ,&amp;buf, 64, 0)) &gt; 0){
+printf(&quot;Received %zd bytes: %.*s\n&quot;, msg_len, msg_len, buf);
+}
+return 0;
+}
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0019.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Vsock api 文档
+GRTNBL20241118 Copyright © 2020 GoldenRiver Technologies Co., Ltd. All rights reserved. 10
+client 端通讯案例
+C++
+int main()
+{
+int s = socket(AF_VSOCK, SOCK_STREAM, 0);
+struct sockaddr_vm ddr;
+memset(&amp;addr, 0,sizeof(struct sockaddr_vm));
+addr.svm_family = AF_VSOCK;
+addr.svm_prot = 9999;
+addr.svm_cid = VMADDR_CID_HOST;
+int rc = connect(s, &amp;addr, sizeof(struct sockaddr_vm));
+if(rc &lt; 0){
+printf(&quot;rc = %d %s\n&quot;, rc, strerror(errno));
+return rv;
+}
+send(s &quot;Hello,world!&quot;, 13, 0);
+close(s);
+return 0;
+}
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0019.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Vsock api 文档
+GRTNBL20241118 Copyright © 2020 GoldenRiver Technologies Co., Ltd. All rights reserved. 11
+2. VSOCKX 使用方法
+vsockx 是谦川基于 vsock 开发的 UOS 之间 socket 通信的方式, 区别在于实现方式和用法,
+客户只需要关心用法即可
+对于原生的 vsock
+tbox CID:4
+android CID:3
+SOS CID:2 //VMADDR_CID_HOST
+对于 UOS 间 vsock,即 vsockx
+tbox CID:4
+android CID: 2 //VMADDR_CID_HOST
+server 端通讯案例
+C++
+#define AF_VSOCKX AF_DECnet
+int main()
+{
+int s = socket(AF_VSOCKX, SOCK_STREAM, 0);
+const struct sockaddr_vm addr = {
+.svm_family = AF_VSOCK,
+.svm_prot = 9999,
+.svm_cid = VMADDR_CID_HOST,
+}
+bind(s,(const sockaddr *)&amp;addr, sizeof(struct sockaddr_vm));
+listen(s, 0);
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0019.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Vsock api 文档
+GRTNBL20241118 Copyright © 2020 GoldenRiver Technologies Co., Ltd. All rights reserved. 12
+struct sockaddr_vm peer_addr;
+socklen_t peer_addr_size = sizeof(struct sockaddr_vm);
+int peer_fd = accept(s,(sockaddr *)&amp;peer_addr,&amp;peer_ddr_size);
+char buf[54];
+ssize_t msg_len;
+while ((msg_len = recv(peer_fd ,&amp;buf, 64, 0)) &gt; 0){
+printf(&quot;Received %zd bytes: %.*s\n&quot;, msg_len, msg_len, buf);
+}
+return 0;
+}
+client 端通讯案例
+C++
+#define AF_VSOCKX AF_DECnet
+int main()
+{
+int s = socket(AF_VSOCKX, SOCK_STREAM, 0);
+struct sockaddr_vm ddr;
+memset(&amp;addr, 0,sizeof(struct sockaddr_vm));
+addr.svm_family = AF_VSOCK;
+addr.svm_prot = 9999;
+addr.svm_cid = VMADDR_CID_HOST;
+int rc = connect(s, &amp;addr, sizeof(struct sockaddr_vm));
+if(rc &lt; 0){
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0019.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Vsock api 文档
+GRTNBL20241118 Copyright © 2020 GoldenRiver Technologies Co., Ltd. All rights reserved. 13
+printf(&quot;rc = %d %s\n&quot;, rc, strerror(errno));
+return rv;
+}
+send(s &quot;Hello,world!&quot;, 13, 0);
+close(s);
+return 0;
+}
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

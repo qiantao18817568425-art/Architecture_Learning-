@@ -1,0 +1,497 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>Tbox_Telephony_MD and mdlog SOP.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>Tbox_Telephony_MD and mdlog SOP.pdf</h1><p>SRC0039 · 原来源 ID S305 · PDF物理页 · 14 个阅读单元</p><p class="note">有引用的指定页/文本核对；未宣称全文逐页审阅。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>培训材料/PVT技术分享文档/modem抓取方式和常见的日志分析/Tbox_Telephony_MD and mdlog SOP.pdf</p><p>SHA-256：<code>0de6d012049cc85ed7edda783b32f77158b36d457fbe167fe66d51967c3c52ad</code></p><p>原文件大小：789,098 字节</p></details><div class="actions"><a class="button" href="materials/SRC0039.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="Tbox_Telephony_MD and mdlog SOP.pdf 原 PDF" src="materials/SRC0039.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0039.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Tbox_Telephony_MD and mdlog SOP 
+目录 
+modem log sop ................................................................................................................................ 2 
+一、 代码位置与编译流程........................................................................................................ 2 
+二、 Build-in 与启动规则 ......................................................................................................... 2 
+三、 日志存储与管理................................................................................................................ 2 
+四、Rotate 机制 ......................................................................................................................... 2 
+◼ 删除顺序：按优先级从低到高，删够目标量即停 ................................................................... 3 
+◼ 第二步：整文件夹清除逐文件删除仍不够时，递归删除文件夹内所有剩余文件，最后删
+除空文件夹本身 ................................................................................................................................... 4 
+五、控制命令............................................................................................................................. 4 
+六、Insight Log 相关 ................................................................................................................. 6 
+七、MD Log Filter ..................................................................................................................... 6 
+八、通过 NLT/ELT tool  配置 mdlog filter .............................................................................. 7 
+九、常见问题............................................................................................................................. 9 
+Tbox/Telephony/MD 测试 SOP ................................................................................................... 10 
+一、Tbox/Telephony/MD 常规测试 SOP ............................................................................... 10 
+1、Tbox/Telephony/MD 功能 .......................................................................................................... 10 
+2、MD EE 问题 ................................................................................................................................... 11 
+3、Modem 休眠唤醒与 MD low power 问题 .................................................................................. 11 
+4、AP CCCI driver 问题 ...................................................................................................................... 13 
+二、Tbox/Telephony/MD FT 场测 SOP.................................................................................. 13 
+1、测试设备准备 .............................................................................................................................. 13 
+2、设置测试 mdlog 模式 .................................................................................................................. 14 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0039.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">modem log sop 
+一、 代码位置与编译流程 
+• bb 文件位置 
+meta/meta-mediatek/recipes-devtools/mdlogger.bb 
+• 源码位置 
+src/devtool/mdlogger 
+二、 Build-in 与启动规则 
+• Build-in 规则 
+o 参考 debug_level.bbclass，判断 URL 和环境变量，决定 DEBUG_LEVEL 
+o 客户默认关闭，需配置 MTK_LOG_CUSTOMER_SUPPORT = &quot;yes&quot; 才 build-in 
+• 启动规则 
+o user 版本默认关闭，可通过命令开启 
+o https://online.mediatek.com/apps/faq/detail?faqid=FAQ19560&amp;list=SW 
+三、 日志存储与管理 
+• 存储路径 
+o 日志存储于 /data/debuglogger/mdlog1 目录，每次 start/stop 都会生成新的
+Folder 
+o 存储路径可以自定义来设定, 需要再 User Debug Load 下通过改 Property 方式
+进行, 修改 Property 需要将 emdlogger 关闭的前提下进行 
+▪ setprop debug.mdlogger.log2sd.path &lt;path&gt; 
+Note, 关闭 emdlogger 的命令: emdlogger_ctrl 7 
+设定好新的 Log 路径后需再重启 emdlogger;  
+▪ 开启 SD mode: emdlogger_ctrl 6 
+▪ 开启 PLS mode: emdlogger_ctrl 11 
+四、Rotate 机制 
+• SIZE 管控（仅 SD MODE 有 SIZE 管控，PLS/USB MODE 下无此机制） 
+ MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0039.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">o 总空间限制：默认 600MB, 低于 600MB 无效（因单文件 200MB, 且回收机制
+至少保留 3 份，实际空间不会低于 600MB）。 
+o 单个 log 文件限制：每个日志文件最大 200MB。 
+o 达到 200MB 自动切分：写满后自动新建下一个日志文件。 
+o 配置文件: /data/mdlog/mdlog_recycle_size_config 
+o build time 修改：通过 getLogRecycleSize 读取配置文件，读不到则用默认值（源
+码默认 600MB）如需更改默认值，在源码 getLogRecycleSize 的默认返回值处修
+改 
+o run time 修改, 可通过命令动态设定：  
+adb shell emdlogger_ctrl 21 &lt;size&gt; 
+&lt;size&gt;单位为 MB，写入配置文件，重启后生效 
+• 文件夹删除逻辑 
+◼ 触发条件: Recycle 线程每 15 秒检查一次日志根目录总大小，超过 Recycle 
+Size（默认 600MB）时触发清理。 
+◼ 文件夹分类：扫描日志根目录，按命名规则自动分类： 
+类别 识别规则 示例 
+普通文件夹 不含 _EE_ MDLog1_20260401_120000 
+EE 文件夹 含 _EE_ MDLog1_20260401_120000_EE_xxx 
+FullAndMini EE 含 _EE_ + _FullAndMini MDLog1_..._FullAndMini_EE_xxx 
+当前运行文件夹 file_tree_current.txt 最后
+一条 – 
+◼ 删除顺序：按优先级从低到高，删够目标量即停 
+日志根目录 
+├─ MDLog1_0401_100000/ ............ ← ⓪ 最先删（普通，无 .bin） 
+├─ MDLog1_0401_110000/ ............ ← ⓪ 
+├─ MDLog1_0401_120000/ ............ ← ⓪ 含 .bin，推迟删 
+├─ MDLog1_0401_130000/  ★正在写入  ← ① 只删内部旧文件，不删文件夹 
+├─ MDLog1_..._EE_xxx/ ............ ← ② EE，尽量保留 
+└─ MDLog1_..._FullAndMini_EE_/ .... ← ③ 最后才删 
+优先级 删除对象 删除方式 
+⓪ 普通文件夹（不含 .bin） 整个文件夹删除 
+① 普通文件夹（含 .bin dump） 整个文件夹删除 
+② 当前运行文件夹 仅删内部旧文件 
+ MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0039.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">优先级 删除对象 删除方式 
+③ EE 文件夹 整个文件夹删除 
+④ FullAndMini EE 文件夹 整个文件夹删除 
+同类别内按时间排序，**最旧的先删** 
+◼ 文件夹中 Log 删除逻辑: 
+◼ 进入某个文件夹清理时，分两步执行 
+◼ 第一步：逐文件删除 
+◆ 读取文件夹内 file_tree.txt，识别旧日志文件（.dmp.dmp / .bin.bin 
+/ .tmp），按类型分组后从最旧的开始逐个删除。 
+MDLog1_0401_130000/ 
+├── MDLog1_20260401_130000.muxz      ← 最旧，先删 
+├── MDLog1_20260401_130500.muxz      ← 次旧，再删 
+├── MDLog1_20260401_131000.muxz      ← 较新，保留 
+├── MDLog1_20260401_131500.muxz.tmp  ← 正在写入，保留 
+└── file_tree.txt 
+步骤 说明 
+计算保留数 按日志类型数量平均计算，默认至少保留几个 
+逐个删除 从最旧文件开始，每删一个检查是否已足够 
+递减保留数 未删够时减少保留数重试，当前运行文件夹最少
+保留 3 个 
+◼ 第二步：整文件夹清除逐文件删除仍不够时，递归删除文件夹内所有
+剩余文件，最后删除空文件夹本身 
+第一步（逐文件） ─删够?─→ 停止 
+        │ 不够 
+        ▼ 
+第二步（全清除） ─删够?─→ 停止 
+        │ 不够 
+        ▼ 
+    进入下一优先级文件夹 
+**当前运行文件夹**只执行第一步，不做整文件夹清除。 
+五、控制命令 
+命令 作用说明 是否影响重启后 备注 
+emdlogger_ctrl 1 获取当前
+logging mode 否 查询当前工作模式 
+emdlogger_ctrl 2 
+获取下次重启
+后的 logging 
+mode 
+否 查询配置文件中的自动启动模
+式 
+ MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0039.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">命令 作用说明 是否影响重启后 备注 
+emdlogger_ctrl 3 设为 USB 自动
+启动模式 是 修改 /data/mdlog/mdlog1_config，重
+启后生效 
+emdlogger_ctrl 4 设为 SD 自动
+启动模式 是 修改 /data/mdlog/mdlog1_config，重
+启后生效 
+emdlogger_ctrl 5 立即以 USB 模
+式开始日志 是 立即切换并写入配置，重启后
+保持 
+emdlogger_ctrl 6 立即以 SD 模
+式开始日志 是 立即切换并写入配置，重启后
+保持 
+emdlogger_ctrl 7 停止日志 是 立即停止并写入配置，重启后
+保持 stop 状态 
+emdlogger_ctrl 8 恢复日志 否 仅本次生效，pause 后 resume
+会新建 MDLog1_xxx folder 
+emdlogger_ctrl 9 暂停日志 否 仅本次生效 
+emdlogger_ctrl 10 查询日志是否
+暂停 否  
+emdlogger_ctrl 11 以 PLS 模式开
+始日志 是 
+立即切换并写入配置，重启后
+保持。建议在休眠唤醒测试或
+只关注 EE 时使用该模式 
+emdlogger_ctrl 12 Flush 日志 否 
+发送 flush 消息给 modem，收到
+ack 后返回 1/0，passive 模式下
+有效 
+emdlogger_ctrl 15 重置 modem 否  
+emdlogger_ctrl 17 测试 polling 模
+式 否  
+emdlogger_ctrl 18 
+查询 memory 
+dump 是否完
+成 
+否  
+emdlogger_ctrl 
+21 &lt;size&gt; 
+设置回收日志
+最大空间
+（MB） 
+是 写入配置，重启后生效 
+emdlogger_ctrl 22 
+&lt;gear_id&gt; 
+设置 CCB GEAR 
+ID 是 设定后需重启平台才生效 
+ MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0039.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">命令 作用说明 是否影响重启后 备注 
+emdlogger_ctrl 23 获取 CCB GEAR 
+ID 列表 否  
+emdlogger_ctrl 24 获取当前 CCB 
+GEAR ID 否  
+emdlogger_ctrl 25 获取 mdlog 
+filter list 否  
+emdlogger_ctrl 26 
+&lt;filter_file&gt; 
+更新 mdlog 
+filter 是 需先 stop mdlog，再更新
+filter，最后 start mdlog 
+emdlogger_ctrl 27 恢复 mdlog 
+filter 是 需先 stop mdlog，再恢复
+filter，最后 start mdlog 
+emdlogger_ctrl 28 Flush Insight 日
+志 否  
+六、Insight Log 相关 
+• System Trap 功能：支持 MD 主动 FLUSH PLS LOG。 
+• 注意事项：Insight Log 使用前需要先设置 PLS mode，且需要设置 gear id 为合适的
+值, 有些 gear id 默认不会分配 Insight log buffer;  
+o emdlogger_ctrl 7          //停止日志 
+o emdlogger_ctrl 11   //启动 PLS mdlog 
+o emdlogger_ctrl 28      //导出 Insight 日志 
+gear_id  insight log buffer size 
+1(CCB:2+20MB) 0.5 MB 
+4(CCB:2+30MB) 1 MB 
+12(CCB:2+62MB) 1 MB 
+13(CCB:2+94MB) 1 MB 
+14(CCB:2+14MB) 0.5 MB 
+16(CCB:2+190MB) 6 MB 
+2(CCB:2+10MB) No insight log buffer default 
+3(CCB:0+0MB) No insight log buffer default 
+11(CCB:2+2MB) No insight log buffer default 
+ 
+七、MD Log Filter 
+ MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0039.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Default MD Log Filter 可透过命令 emdlogger_ctrl 25 来获取到:  
+             
+  
+sh-3.2# emdlogger_ctrl 25 
+get mdlog filters: 
+/data/mdlog/filters/catcher_filter_LowPowerMonitor.bin 
+/data/mdlog/filters/catcher_filter_2_Standard.bin 
+/data/mdlog/filters/catcher_filter_1_Moderate.bin 
+/data/mdlog/filters/catcher_filter_4_UltraSlim.bin 
+/data/mdlog/filters/catcher_filter_3_Slim.bin 
+......... 
+若希望修改 Log filter 可通过 emdlogger_ctrl 26 &lt;filter_file&gt;来实现, 操作前后需要分
+别 emdlogger_ctrl 7 和 emdlogger_ctrl 8 操作 
+&gt;&gt;&gt;&gt; emdlogger_ctrl 7 
+emdlogger_ctrl 26 /data/mdlog/filters/catcher_filter_4_UltraSlim.bin 
+&gt;&gt;&gt;&gt; emdlogger_ctrl 8 
+八、通过 NLT/ELT tool  配置 mdlog filter  
+      1）打开 NLT/ELT tool, 导入 debuglogger\mdlog1 中的.EDB 文件 
+             
+ 
+      2）在左上角点击 Control 菜单 -&gt; Set Target Filter 
+ MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0039.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">3)  Import data/mdlog 下的 filter bin 或要使用的 filter bin (NLT 界面) 
+                     
+ 
+    4）设置 filter，移除勾选内容，Export 导出生成新的 filter 文件 
+ MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0039.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">5）将生成的 filter 文件 adb push 到 data/mdlog 中，并选择使用此filter 文件，重启生效 
+九、常见问题 
+Q：如何抓取抓取休眠期间 modem log? 
+A：使用 PLS mode 可以抓取休眠期间的 modem log，具体操作如下： 
+1.Start PLS mdlog： 
+emdlogger_ctrl 11 
+2.复现问题。 
+3.复现到问题后立即 唤醒系统，下 cmd flush 出 PLS log： 
+emdlogger_ctrl 12  
+Note：要快速 flush 导出，若等待时间稍长，问题 log 有可能会被覆盖。log 在
+/data/debuglogger/mdlog1 目录下 
+ MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0039.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Q：只关注 modem EE case 用什么 mode 抓 log？ 
+A：只关注 modem EE case 也使用 PLS mode 抓取 log。PLS mode 会抓取 modem  EE 时的
+log(原理：Modem EE 之后，就会唤醒 AP，AP 唤醒 MDlogger，MDlogger 会收到消息，去
+dump 那块 buffer 里面的 log) 
+Q：拉出的 log 文件为什么不齐全？ 
+A：可以看拉取下来的 mdlog1 内的 file_tree 文件。file_tree 文件记录着所有生成的 log 文
+件记录。如果你所需要的 log 文件在 file_tree 内存在，但是在实际文件夹中并没有，证明
+需要的 log 文件被 Rotate 机制已经删除。在拉取 modem log 时需要在问题发生后尽快拉
+出，否则就会有 log 文件被 Rotate 掉的情况，导致问题 log 被覆盖。 
+ 
+Q：我的系统内没有 emdloger 的 bin，怎么开启？ 
+A:    1.首先确认你的系统版本（userdebug / user）。 
+        2.如果是 user 版本，默认不 build-in emdlogger，是否 build-in 由
+MTK_LOG_CUSTOMER_SUPPORT 环境变量决定。配置 config: 
+MTK_LOG_CUSTOMER_SUPPORT = “yes”使 emdlogger Build-in 。 
+ 
+Tbox/Telephony/MD 测试 SOP 
+一、Tbox/Telephony/MD 常规测试 SOP 
+1、Tbox/Telephony/MD 功能 
+     1.1 NW/SIM/Call/SMS/Data 等功能问题: 
+1) 测试设备需要烧好校准，且接好天线。 
+2) 将时间同步为标准时间。 
+3) 需提供 log 资料: /data/debuglogger(mobilelog+mdlog) 
+4) 接收 Call/SMS fail 的问题，需提供拨打时间点、发送端 log 与运营商信令 log(有条件
+需提供)。且测试前发送端与接收端的系统时间都要设为标准时间，。 
+5) 若是 Data 网络传输问题，还需提供 netlog(tcpdump)。 
+   1.2 Data Throughput 问题 
+    1) 请参考 “ [FAQ17688] Speedtest 速率测试需知”，  
+    2)  需提供 log 资料如下： 
+ MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0039.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">a) 测试 Dev 的 /data/debuglogger(mobilelog+mdlog+netlog) 
+          b) 同地点同时间段，使用同 SIM 卡测试的 REF /data/debuglogger(mobilelog+mdlog+netlog) 
+          c) Dev 与 REF 设备，都需要各测试 10 次以上，除掉最高与最低值，取平均值做对比。 
+   1.3 netlog 提供方法: 
+   1) Android 端: 在 debugloggerUI 中开启 netlog 即可 
+   2) Yocto 端：adb shell -&gt;  tcpdump -i any -w /data/netlog.pcap 
+ 
+2、MD EE 问题 
+      2.1 需提供 log 资料如下： 
+1) /data/debuglogger(mobilelog+mdlog) 
+2) /data/aee_exp(MD EE db) 
+3) MD elf(from modem build load) 
+4) MD mem dump bin 
+           注: a) For 3OS，mdlog 在 tbox 中，还需提供 SOS 中的 debuglogger(mobilelog)。 
+                 b) HS1 阶段无 mdlog，HS2 阶段不一定有 mdlog。若无 mdlog，就不需要提供。 
+       2.2 参考 FAQ22955 
+              1) 提供 MD EE 必要问题信息 
+              2) Modem Exception 提交 eservice 的格式 
+        2.3 check MD state 
+              Tbox UOS(3OS) / SOS(2OS)  进入 adb shell  -&gt; cat /sys/kernel/ccci/boot 
+ 
+3、Modem 休眠唤醒与 MD low power 问题 
+3.1 测试环境及相关设置 
+        1) 平台有正确烧录 RF 校准参数。 
+        2) 是否有正确接上天线。 
+        3) 测试时是否有关闭 mdlog(建议关闭 mdlog 之后重启下平台) 
+        4) 测试的网络信号环境是否稳定。 
+        5) 是否有插上 SIM 卡，对比机是否使用同一张 SIM 卡在同一地点同一时间段测试。 
+        6) 若是 Yocto OS 或 hyp 2OS 或 hyp 3OS， Acc off 或灭屏时还需调用 ML_SetScreenOffUrcFilter 设
+置 filter URC，双卡版本 slot_id 0 与 1 都要设置。 
+        7) Acc off 或灭屏时，需断开所有公网与私网 data。若有私网 data 长链接，则无需断开私网。 
+ 
+  3.2 需提供的 log 资料 
+       1) Tbox UOS debuglog(mobile log) / SOS debuglog(mobile log) 
+       2) PLS mdlog 
+       3) 如果是 data(cccif dpmaif) MD 唤醒，还需提供对应的 netlog。 
+       4) 若是非唤醒功耗问题，须提供功耗图原始文件 (In .pt4/.pt5) 
+ 
+ MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0039.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">3.3 PLS mdlog 抓取方法 
+  3.3.1 Yocto 系统上操作方法 
+       1）adb shell cmd 操作方法 
+            a）GET_CCB_GEAR_ID_LIST，查看可设置的 CCB buffer 大小 
+                  emdlogger_ctrl 23 
+            b）SET_CCB_GEAR_ID ，例如: 最大值是 192M，CCB_GEAR_ID 是 16 
+                  emdlogger_ctrl 22 16 
+            c）SOS 中 adb reboot 或 断电重启设备 
+            d）Stop 普通 mdlog 
+                  emdlogger_ctrl 7 
+            e）Start PLS mdlog 
+                   emdlogger_ctrl 11 
+            f）复现问题 
+            g）复现到问题后立即 Acc on 或亮屏， 快速 flush 出 PLS APlog + mdlog  
+                   emdlogger_ctrl 12 
+                  注：要快速 flush 导出，若等待时间稍长，问题 log 有可能会被覆盖。log 在
+data/debuglogger 目录中。 
+            h)  可以参考 mdlog 控制命令列表，设置不同的 filter，延长抓取 PLS mdlog 的时长。例如： 
+                      emdlogger_ctrl 25                    //获取 mdlog filter list 
+                    emdlogger_ctrl 26 &lt;filter_file&gt;      //更新 mdlog filter 
+            I）以下是 bat 脚本监听 USB，退出 Acc off 时自动 flush PLS mdlog，降低人为操作延时影
+响。 
+                  
+adb_flush_yocto.
+bat  
+ 
+ 3.3.2 android 系统 上操作方法 
+       1）debugloggerUI/mtklogger UI  界面方法，参考以下 FAQ 
+             [FAQ25644] How to turn on passive log and get log 
+      2）adb shell cmd 操作方法(android R 及以上版本) 
+        a）Stop Modem Log 
+              adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name stop --ei cmd_target 2 -n 
+com.debug.loggerui/.framework.LogReceiver 
+              ---&gt;步骤 1 是需要确认 PLS mode 抓 mdlog 时未开始抓 log，如本来 mdlog 就是关闭的，则不需要 
+        b）Set PLS Mode 
+                  adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name switch_modem_log_mode_3 --ei cmd_target 
+1 -n com.debug.loggerui/.framework.LogReceiver 
+        c）Start Modem Log 
+              adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name start --ei cmd_target 2 -n 
+com.debug.loggerui/.framework.LogReceiver 
+        d）Set log flush path 
+                 adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name 
+silent_log_path,/resources/mtklog/mdlog --ei cmd_target 2 -n com.debug.loggerui/.framework.LogReceiver 
+              ----&gt; 路径默认是 data/debuglogger，如果不需要修改路径，步骤 4 可以省略 
+ MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0039.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">e）Do log flush  
+             adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name log_flush --ei cmd_target 2 -n 
+com.debug.loggerui/.framework.LogReceiver 
+           
+            android P 版本 flush cmd:  
+            adb shell am broadcast -a com.mediatek.log2server.EXCEPTION_HAPPEND -e path SaveLogManually -e 
+db_filename test --ez is_need_zip true --ez is_need_all_logs false -n 
+com.mediatek.mtklogger/.framework.LogReceiver 
+        f）在工模/debuglogerUI 中设置 slim 等模式，减少 mdlog 量打印，延长抓取 PLS mdlog
+时间。 
+        g）以下是 bat 脚本监听 USB，退出 Acc off 时自动 flush PLS mdlog，降低人为操作延时
+影响。供参考使用 
+              
+adb_flush_androi
+d.bat  
+ 
+4、AP CCCI driver 问题 
+    4.1 需提供的 log 资料 
+1) /data/debuglogger(mobilelog+mdlog) 
+2) /data/aee_exp(KE/HWT db) 
+3) /proc/ccci_dump 
+注: for 3OS，mdlog 在 tbox 中，还需提供 SOS 中的 debuglogger(mobilelog)。 
+    4.2 其它 check MD 状态方法 
+          1) Check MD state:  
+              Tbox UOS(3OS) / SOS(2OS)  进入 adb shell  -&gt; cat /sys/kernel/ccci/boot 
+          2) Code 中 enable CCCI debug log 
+               Path: 
+Yocto/src/kernel/linux/v6.x_mtxxx/co_device_module/drivers/misc/mediatek/eccci/ccci_core.c  
+              unsigned int ccci_debug_enable = CCCI_LOG_LEVEL;   -&gt; 修改为 unsigned int ccci_debug_enable 
+= CCCI_LOG_ALL_UART; 
+ 
+二、Tbox/Telephony/MD FT 场测 SOP 
+1、测试设备准备 
+    1.1 确保电量充足 
+         测试前保证车机电量充足。若是台架设备，请使用对应电源，确保台架设备稳定运
+行。 
+    1.2 时间同步  
+        将设备联网，同步为标准时间 
+ MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0039.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">1.3 确认设备有烧好 RF 校准 
+       a) AT  cmd 方式确认 
+          Gen93 平台 使用  AT+ECAL? 
+          +ECAL: 0 --&gt; RF calibration data are not complete 
+          +ECAL: 1 --&gt; RF calibration data are complete (would always returen 1 on customer's project) 
+ 
+          Gen97/98/99 平台使用 AT+EGMC=0,&quot;query_rf_cal_status&quot; 
+          +EGMC: &quot;query_rf_cal_status&quot;,&quot;valid?&quot;,&quot;no&quot; 
+           +EGMC: &quot;query_rf_cal_status&quot;,&quot;valid?&quot;,&quot;yes&quot; 
+           &quot;query_rf_cal_status&quot; 的回傳結果，yes 就代表 calibration data 無缺，no 則代表未校准好 
+ 
+       b) mdlog 确认方式，如下显示“All RF calibration data are valid”则表示校准 OK 
+         
+ 
+    1.4  确认设备天线正常 
+            请客户 RF HW RD 确认天线是否正常及连接方法是否正确。 
+ 
+    1.5 mdlog size 至少要设为 2000M 
+ 
+2、设置测试 mdlog 模式 
+      1）Acc on 时， 自动开启普通 SD 卡 mdlog 模式。 
+      2）Acc off 时，关闭普通 SD 卡 mdlog 模式，切换成 PLS mdlog 模式。 
+3）出现问题，要及时保存 log 到 PC 上。需提供 
+a) Yocto debuglogger(mobilelog+ mdlog) + aee_exp db + tcpdump(测试 data 网速必
+须提供) 
+b) Android debuglogger(mobilelog+netlog)，测试 data 网速必须提供 netlog 
+       注：建议客户将此模式做在 Acc on/Acc off 切换中 
+ MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

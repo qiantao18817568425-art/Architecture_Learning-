@@ -1,0 +1,26 @@
+flowchart TD
+  T["Tester"] --> L{"IP/TCP alive?"}
+  L -- no --> P["repair link/connect"]
+  L -- yes --> A{"routing activation/session accepted?"}
+  A -- no --> AR["routing activation rejected"]
+  A -- yes --> G{"logical address/target match?"}
+  G -- no --> GM["logical address/target mismatch"]
+  G -- yes --> S{"diagnostic session valid?"}
+  S -- no --> SI["TCP alive but diagnostic session invalid"]
+  S -- yes --> D{"gateway downstream reachable?"}
+  D -- no --> DU["gateway downstream unreachable"]
+  D -- yes --> R{"diagnostic response received?"}
+  R -- no --> TO["diagnostic response timeout"]
+  R -- yes --> C{"DoIP header + UDS correlation valid?"}
+  C -- no --> CI["mismatched/stale response"]
+  C -- yes --> OK["diagnostic result consumed"]
+  AR --> X["close stale transport/session"]
+  GM --> X
+  SI --> X
+  DU --> X
+  TO --> X
+  CI --> X
+  P --> N["reconnect IP/TCP"]
+  X --> N
+  N --> RA["rebuild routing activation + diagnostic session"]
+  RA --> V["UDS readback + user-result verify"]

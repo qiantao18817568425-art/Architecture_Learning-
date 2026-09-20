@@ -1,0 +1,87 @@
+flowchart TB
+ subgraph sos["SOS / Yocto"]
+ subgraph cluster["Cluster"]
+ sc["Client"]
+ cc["CanClient"]
+ end
+ cs["CanService"]
+ sic["Clients(SOME/IP)"]
+ sroute["Routingmanaged / SOME/IP守护进程"]
+ sdoip["DoIP / Diagnostics"]
+ subgraph sfdb["FDBus"]
+ sns["name_server(fdbus)"]
+ shs["host_server(fdbus)"]
+ end
+ end
+ subgraph android["UOS / Android"]
+ app["app"]
+ car["CarService"]
+ vhal["VehicleHal"]
+ mhal["MBOSHAL"]
+ ch["Client Hal / Proxy"]
+ sh["Service Hal / Proxy"]
+ cp["Client / Proxy"]
+ ss["Service / Stub"]
+ ac["Clients(SOME/IP)"]
+ ar["Routingmanaged / SOME/IP守护进程"]
+ ad["DoIP / Master"]
+ subgraph afdb["FDBus"]
+ ans["name_server(fdbus)"]
+ end
+ end
+ subgraph mcu["MCU"]
+ subgraph di["DI"]
+ dswc["SWC"]
+ end
+ subgraph ivi["IVI"]
+ nswc["SWC / Network"]
+ iswc["SWC"]
+ end
+ com["Com"]
+ vi["Vehicle Interface"]
+ ipcl["IPCL"]
+ end
+ subgraph tbox["UOS / TBox"]
+ subgraph ta["TBOX-APP"]
+ update["update"]
+ xcall["xcall"]
+ health["health_monitor"]
+ modem["modem_service"]
+ syslog["syslog"]
+ dynamic["dynamic"]
+ business["business"]
+ gnss["gnss_server"]
+ mc["communication(mcu)"]
+ core["core communication"]
+ end
+ dk["CanService / DK CAN"]
+ subgraph tfdb["FDBus"]
+ tns["name_server(fdbus)"]
+ end
+ end
+ sc <-->|API| sic
+ cc <-->|FDBus| cs
+ cs <-->|FDBus| vhal
+ cs <-->|FDBus| mhal
+ app <-->|Binder| car
+ car <-->|Binder| vhal
+ app <-->|Binder| mhal
+ ch <-->|API| cp
+ sh <-->|API| ss
+ cp <-->|API| ac
+ ss <-->|API| ac
+ sic <-->|Attach| sroute
+ ac <-->|Attach| ar
+ sroute <-->|SOME/IP| ar
+ cs <-->|SPI| ipcl
+ ipcl <-->|SPI| dk
+ dk <-->|SPI| mc
+ mc <-->|IPCL| core
+ core <-->|FDBus：容器级关系| tfdb
+ vi <-->|IPCL / feature1| ipcl
+ iswc <-->|IPCL / feature2| ipcl
+ dswc <-->|RTE| com
+ dswc <-->|RTE| vi
+ dswc <-->|RTE| nswc
+ nswc <-->|RTE| com
+ com <-->|RTE| vi

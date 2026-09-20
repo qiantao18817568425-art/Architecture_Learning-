@@ -1,0 +1,1082 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT6686_Datasheet_V1.4.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT6686_Datasheet_V1.4.pdf</h1><p>SRC0334 · 原来源 ID S249 · PDF物理页 · 30 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MTK8676硬件资料/MT6686_Datasheet_V1.4.pdf</p><p>SHA-256：<code>5d77a1dea0381cb1761ba942a5b40029a0d4d4da5ca6498878c0529d4b33cd92</code></p><p>原文件大小：1,235,407 字节</p></details><div class="actions"><a class="button" href="materials/SRC0334.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT6686_Datasheet_V1.4.pdf 原 PDF" src="materials/SRC0334.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0334.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version:  1.4 
+Release date:  2025-05-07 
+MT6686 Datasheet 
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0334.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT6686 RF System 
+Datasheet 
+Confidential B 
+Version History 
+Version Date Description 
+0.1 2022-01-24 Initial draft 
+0.2 2022-07-20 
+1. Corrected L1 and L5 channel label in Figure 1-1. 
+2. Updated VCN15 to VCN18 in Table 3-4. 
+3. Updated supply voltage information in Figure 3-1. 
+0.3 2022-08-17 
+1. Updated Table 3-4. 
+2. Added note in Section 3.7.1.1 that MT2737 does not support E5b 
+mode. 
+0.4 2022-09-02 Updated top marking format. 
+1.0 2024-01-30 
+1. Document structure rearrangement 
+2. Added Chapter 2 Terms and Abbreviations. 
+3. Revised sections 1.1.2.1, 4.3, and 4.5. 
+4. Revised Table 4 7 and Table 4 9. 
+1.1 2024-07-24 
+1. Corrected “50ms” to “50μs” in Section 4.3 Power On/Off Sequence. 
+2. Revised the ordering number in Table 7-1. MT6686 ordering 
+information. 
+3. Added Tstg information in Table 4-2. Recommended operating range. 
+4. Added Section 7.4 Storage. 
+1.2 2024-08-12 Added Chapter 5 Part Reliability and Chapter 6 Packing Information 
+(“Storage” Section is moved to 6.2 Storage) 
+1.3 2024-09-23 Added the maximum input level parameter to Table 4-9 to Table 4-13  
+1.4 2025-05-07 Updated the min. value of voltage swing and the typ. values of phase noise 
+in Table 4-7. Reference clock requirement 
+ 
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0334.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT6686 RF System 
+Datasheet 
+Confidential B 
+Table of Contents 
+Version History ·································································································································································· 2 
+Table of Contents ······························································································································································· 3 
+List of Figures ····································································································································································· 5 
+List of Tables ······································································································································································ 5 
+1 Introduction······························································································································································· 6 
+1.1 MT6686 Product Overview ······································································································································ 6 
+1.1.1 Functional Block Diagram ····························································································································· 6 
+1.1.2 Highlighted Features ····································································································································· 7 
+2 Terms and Abbreviations ··········································································································································· 8 
+2.1 Naming Convention ·················································································································································· 8 
+2.2 Abbreviations ··························································································································································· 9 
+3 Pin Information ························································································································································ 10 
+3.1 Pin Map ·································································································································································· 10 
+3.2 Pin Descriptions ······················································································································································ 11 
+4 Specifications ··························································································································································· 13 
+4.1 Electrical Characteristics ········································································································································ 13 
+4.1.1 Absolute Maximum Ratings ························································································································ 13 
+4.1.2 Operating Descriptions ······························································································································· 13 
+4.2 Supply Specifications ·············································································································································· 14 
+4.3 Power On/Off Sequence········································································································································· 15 
+4.4 Digital Logic Characteristics ···································································································································· 16 
+4.4.1 Timing Diagram Convention ························································································································ 16 
+4.4.2 Rising/Falling Time Definition ····················································································································· 16 
+4.4.3 Protocol ······················································································································································· 17 
+4.5 Reference Clock ······················································································································································ 18 
+4.6 GNSS ······································································································································································· 19 
+4.6.1 GNSS Radio Description ······························································································································ 19 
+4.6.2 GNSS Mode Definition ································································································································ 19 
+4.6.3 GNSS Specifications ····································································································································· 19 
+5 Part Reliability ························································································································································· 22 
+5.1 Qualification Summary ··········································································································································· 22 
+5.2 Device Characteristics ············································································································································ 23 
+6 Packing Information ················································································································································· 24 
+6.1 Carrier ···································································································································································· 24 
+6.1.1 Tape and Reel Information ·························································································································· 24 
+6.1.2 Aluminum Foil Bag ······································································································································ 27 
+6.1.3 Box and Carton ············································································································································ 27 
+6.2 Storage ··································································································································································· 27 
+6.2.1 Bagged ························································································································································ 27 
+6.2.2 Out-of-Bag ··················································································································································· 27 
+7 Package Information ················································································································································ 28 
+7.1 Top Marking ··························································································································································· 28 
+7.2 Ordering Information ············································································································································· 28 
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0334.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT6686 RF System 
+Datasheet 
+Confidential B 
+7.3 Mechanical Drawing ··············································································································································· 29 
+Exhibit 1 Terms and Conditions ········································································································································ 30 
+ 
+  
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0334.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT6686 RF System 
+Datasheet 
+Confidential B 
+List of Figures 
+Figure 1-1. MT6686 block diagram ············································································································································ 6 
+Figure 3-1. Overview of MT6686 pin map ································································································································ 10 
+Figure 4-1. Power-on sequence ················································································································································ 15 
+Figure 4-2. Timing diagram conventions ·································································································································· 16 
+Figure 4-3. Rising and falling times diagram ···························································································································· 16 
+Figure 4-4. 2-wire SPI timing diagram ······································································································································ 17 
+Figure 6-1. Carrier tape dimensions ········································································································································· 24 
+Figure 6-2. Cover tape ······························································································································································ 25 
+Figure 6-3. Reel dimensions ····················································································································································· 26 
+Figure 7-1. Top marking of MT6686 ········································································································································· 28 
+Figure 7-2. Physical dimension of MT6686 ······························································································································ 29 
+ 
+List of Tables 
+Table 2-1. I/O definitions ···························································································································································· 8 
+Table 2-2. Abbreviations ····························································································································································· 9 
+Table 3-1. MT6686 pin descriptions ········································································································································· 11 
+Table 4-1. Absolute maximum ratings ······································································································································ 13 
+Table 4-2. Recommended operating range ······························································································································ 13 
+Table 4-3. DVDD13_CEXT specifications ··································································································································· 14 
+Table 4-4. AVDD_GNSS/AVDD_XO/DVDD_TOP specifications ································································································· 14 
+Table 4-5. DVDD18_12_IO specifications ································································································································· 14 
+Table 4-6. Operating conditions of digital logics ······················································································································ 17 
+Table 4-7. Reference clock requirement··································································································································· 18 
+Table 4-8. Pin (XO_IN) input impedance ·································································································································· 18 
+Table 4-9. GNSS RF specifications (GPS-only mode or Galileo-only mode or GPS/Galileo mode) ··········································· 19 
+Table 4-10. GNSS RF specifications (GPS/GLONASS mode or Galileo/GLONASS mode) ·························································· 20 
+Table 4-11. GNSS RF specifications (GPS/BeiDou mode) ········································································································· 20 
+Table 4-12. GNSS RF specifications (GPS/GLONASS/BeiDou mode or GPS/GLONASS/Galileo mode) ····································· 21 
+Table 4-13. GNSS RF specifications (GPS-L5/Galileo E5a/IRNSS/BeiDou-3 B2a mode) ···························································· 21 
+Table 5-1. MT6686 product reliability qualification ················································································································· 22 
+Table 5-2. MT6686 package reliability qualification ················································································································· 22 
+Table 5-3. MT6686 device characteristics ································································································································ 23 
+Table 6-1. Aluminum foil bag specification ······························································································································ 27 
+Table 7-1. MT6686 ordering information ································································································································· 28 
+ 
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0334.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT6686 RF System 
+Datasheet 
+Confidential B 
+1 Introduction 
+1.1 MT6686 Product Overview 
+MT6686 is a GNSS L1-band and L5-band receiver front-end chip in a WLCSP package. It is a companion chip to 5G modems 
+such as MT6880/90, MT6980/90 or MT2737, which come with the ADC (analog-to-digital converter) to process the GNSS 
+receiver front-end signals. The interface driver/receiver buffer is designed to drive PCB trace loading. MT6686 does not 
+have its own dedicated crystal oscillator. It uses either an external (temperature compensated) oscillator or clock source 
+from the companion chips in the platform. 
+ 
+A simplified block diagram of MT6686 is shown in Figure 1-1.  
+ 
+1.1.1 Functional Block Diagram 
+Top
+2-wire 
+Control
+GPS w-wire
+GPS dig
+GPS RF
+L5 bandGPS Rx L5 IQ
+Top Clock
+Top Data
+HRSTB
+MN
+1.2G Antenna
+LNA
+GPS RF
+GPS RF
+GPIO0
+GPIO1
+(For eLNA Enable Control)
+XO In
+LNA
+GPS RF
+L1 bandGPS Rx L1 IQ
+LNA MN
+1.6G Antenna
+LNA
+GPS L1 RF In
+GPS L5 RF In
+ 
+Figure 1-1. MT6686 block diagram 
+ 
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0334.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT6686 RF System 
+Datasheet 
+Confidential B 
+1.1.2 Highlighted Features 
+• MT6686 is a GNSS chip which contains a L1-band receiver front-end and a L5-band receiver front-end in a WLCSP 
+package.  
+• MT6686 supports GNSS external LNA which can be controlled by the GPIO0 and GPIO1 pins via SPI interface with 
+modem chips. 
+ 
+1.1.2.1 GNSS 
+• RF supports simultaneous dual-band L1 and L5 operation. 
+• RF supports GPS, Galileo, GLONASS and BeiDou. 
+• Simultaneous reception of GPS + GLONASS + BeiDou + Galileo for more accurate positioning 
+• Built-in calibrations for PVT variation 
+• Supports external LNA. 
+• Multi-mode filters for different GNSS receiver modes 
+ 
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0334.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+8 
+Confidential B 
+2 Terms and Abbreviations 
+2.1 Naming Convention 
+Table 2-1. I/O definitions 
+Pad Attribute 
+AI Analog input (excluding pad circuitry) 
+AIO Analog bidirectional (excluding pad circuitry) 
+AO Analog output (excluding pad circuitry) 
+DI Digital input (CMOS) 
+DIO Bidirectional digital with CMOS input 
+GND Ground 
+P Voltage supply 
+High-Z High-impedance output 
+ 
+  
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0334.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+9 
+Confidential B 
+2.2 Abbreviations 
+Table 2-2. Abbreviations 
+Abbreviation Description 
+CMOS Complementary Metal-Oxide-Semiconductor 
+DC Direct Current 
+DIO Digital Input/Output 
+ESD Electrical Static Discharge 
+GNSS Global Navigation Satellite System 
+GPIO General Purpose Inputs-Outputs 
+GPS Global Positioning System 
+I/O Input/Output 
+IC Integrated Circuit 
+IF Intermediate Frequency 
+IQ In-phase and Quadrature-phase signals 
+eLNA (External) Low Noise Amplifier 
+LPF Low Pass Filter 
+MHz Megahertz 
+PCB Printed Circuit Board 
+PGA Programmable Gain Amplifier 
+PVT Process, Supply Voltage and Temperature 
+RF Radio Frequency 
+RX Receiver 
+SAW Surface Acoustic Wave  
+SPI Serial Peripheral Interface 
+WLCSP Wafer Level Chip Scale Package 
+ 
+  
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0334.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+10 
+Confidential B 
+3 Pin Information 
+3.1 Pin Map 
+ 
+Figure 3-1. Overview of MT6686 pin map 
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0334.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+11 
+Confidential B 
+3.2 Pin Descriptions 
+Table 3-1. MT6686 pin descriptions 
+Pin Name Pin Location I/O Type Description X Y 
+Power Supply I/O 
+AVDD_GNSS A-3 P 1.6 to 1.8V supply 1324.78 1324.78 
+AVDD_XO B-5 P 1.6 to 1.8V supply 546.78 935.78 
+DVDD_TOP B-4 P 1.6 to 1.8V supply 935.78 935.78 
+DVDD13_CEXT B-3 P 1.3V supply (for sleep mode only 
+- optional) 
+1324.78 935.78 
+DVDD18_12_IO D-6 P 1.8V/1.2V GPIO supply 157.78 157.78 
+Ground I/O 
+AVSS_GNSS A-2 GND GNSS ground 1713.78 1324.78 
+AVSS_GNSS B-2 GND GNSS ground 1713.78 935.78 
+AVSS_XO A-5 GND XO buffer ground 546.78 1324.78 
+AVSS_XO B-6 GND XO buffer ground 157.78 935.78 
+DVSS D-3 GND Digital ground 1324.78 157.78 
+RX I/O 
+GNSS_RF_IN_L1 B-1 AI L1-band GNSS RF input 2102.78 935.78 
+GNSS_RF_IN_L5 A-1 AI L5-band GNSS RF input 2102.78 1324.78 
+Baseband Analog Interface I/O 
+GNSS_Q_L1 C-1 AO L1-band GNSS Intermediate 
+Frequency (IF) receiver IQ signals 
+2102.78 546.78 
+GNSS_I_L1 D-1 AO L1-band GNSS IF receiver IQ 
+signals 
+2102.78 157.78 
+GNSS_Q_L5 C-2 AO L5-band GNSS IF receiver IQ 
+signals 
+1713.78 546.78 
+GNSS_I_L5 D-2  AO L5-band GNSS IF receiver IQ 
+signals 
+1713.78 157.78 
+Digital I/O 
+TOP_DATA C-5 DIO 2-wire data signal 546.78 546.78 
+TOP_CLK C-6 DI 2-wire clock signal 157.78 546.78 
+GPIO0 D-5 DIO eLNA control from companion 
+modem via SPI 
+546.78 157.78 
+GPIO1 D-4 DIO eLNA control from companion 
+modem via SPI 
+935.78 157.78 
+HRST_B C-4 DI Hardware reset from companion 
+modem 
+935.78 546.78 
+Xtal I/O 
+XO_IN A-6 AI Reference clock input  
+(26 MHz/52 MHz)  
+157.78 1324.78 
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0334.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+12 
+Confidential B 
+Table 3-1. MT6686 pin descriptions (continued) 
+Pin Name Pin Location I/O Type Description X Y 
+Others 
+SCAN_EN A-4 DI Tied to GND during operation. 
+For testing only. 
+935.78 1324.78 
+DVDD28_FS C-3 AIO eFuse FSOURCE pin tied to GND 
+during operation. 
+1324.78 546.78 
+ 
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0334.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+13 
+Confidential B 
+4 Specifications 
+4.1 Electrical Characteristics 
+4.1.1 Absolute Maximum Ratings 
+Operating MT6686 IC beyond these specifications can damage the device. Functional operation is not guaranteed under 
+these conditions. Functional operation under any absolute maximum condition for extended periods can affect the device 
+reliability. 
+ 
+Table 4-1. Absolute maximum ratings 
+Pin # Name Parameter Rating Unit 
+B-3 DVDD13_CEXT 1.3V supply 1.48 V 
+B-4 DVDD_TOP 1.6 to 1.8V supply 1.98 V 
+A-3 AVDD_GNSS 1.6 to 1.8V supply 1.98 V 
+B-5 AVDD_XO 1.6 to 1.8V supply 1.98 V 
+D-6 DVDD18_12_IO 1.8V/1.2V supply 2.0 V 
+- Tj Max. junction temperature 125 °C 
+All pins ESD protection (HBM) ±2,000 V 
+All pins ESD protection (CDM) ±500 V 
+ 
+4.1.2 Operating Descriptions 
+Table 4-2. Recommended operating range 
+Pin # Name Parameter Min. Typ. Max. Unit 
+B-3 DVDD13_CEXT 1.3V supply 1.25 1.3 1.4 V 
+B-4 DVDD_TOP 1.6 to 1.8V supply 1.5 1.6/1.8 1.89 V 
+A-3 AVDD_GNSS 1.6 to 1.8V supply 1.5 1.6/1.8 1.89 V 
+B-5 AVDD_XO 1.6 to 1.8V supply 1.5 1.6/1.8 1.89 V 
+D-6 DVDD18_12_IO 1.8V/1.2V supply 1.71 1.8 1.89 V 
+- Tj Commercial junction operating temperature 0 25 115 °C 
+Industry junction operating temperature -20 25 125 °C 
+- Ta Operation temperature -30 25 85 °C 
+- Tstg Storage temperature (1) -40  125 °C 
+(1) For complete storage conditions, please refer to Section 6.2 Storage. 
+  
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0334.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+14 
+Confidential B 
+4.2 Supply Specifications 
+The following tables list the power supply requirements. 
+ 
+Table 4-3. DVDD13_CEXT specifications 
+Test Item Min. Typ. Max. Unit Note 
+Output voltage, VCN13 1.25 1.3 1.4 V Optional, for sleep mode only 
+Output current - - 0.1 mA Static leakage current 
+ 
+Table 4-4. AVDD_GNSS/AVDD_XO/DVDD_TOP specifications 
+Test Item Min. Typ. Max. Unit Note 
+Output voltage, VCN18 1.5 1.6 to 1.8 1.89 V - 
+Output current - 25 - mA L1 + L5 
+ 
+Table 4-5. DVDD18_12_IO specifications 
+Test Item Min Typ. Max. Unit Note 
+Output voltage, VIO 1.71 
+1.14 
+1.8 
+1.2 
+1.89 
+1.26 
+V - 
+Output current - - 0.1 mA Static leakage current 
+ 
+  
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0334.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+15 
+Confidential B 
+4.3 Power On/Off Sequence 
+MT6686 uses two supply voltages, VIO and VCN18. The RSTB signal should only flag high 50μs after both VIO and VCN18 
+supplies are ready. The figure below shows the chip’s power-on sequence. 
+ 
+ 
+Figure 4-1. Power-on sequence 
+ 
+DVDD18_12_IO and AVDD_GNSS/AVDD_XO/DVDD_TOP 
+The I/O and internal control logic use the DVDD18_IO and AVDD_GNSS/AVDD_XO/DVDD_TOP supply pins. The supply 
+voltages to these pins should be powered on in the sequence shown above for the logic to function properly. Inappropriate 
+power-on sequence of DVDD18_IO and AVDD_GNSS/AVDD_XO/DVDD_TOP might lead to unexpected malfunction of 
+MT6686. 
+ 
+DVDD13_CEXT 
+If sleep mode is used to cut off the current consumption on the AVDD_GNSS/AVDD_XO/DVDD_TOP pins, an external 1.3V 
+supply is needed to keep the internal logic in the standby state. This supply voltage must be ready before entering the 
+sleep mode. 
+ 
+ 
+  
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0334.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+16 
+Confidential B 
+4.4 Digital Logic Characteristics 
+MT6686 timing characteristics and interface protocols are introduced in the following sections including general 
+comments. 
+ 
+4.4.1 Timing Diagram Convention 
+Figure 4-2 shows the conventions used with timing diagram throughout this document. 
+ 
+Waveform Description
+Signal is changing from low to high
+Signal is changing from high to low
+Don’t care or bus is driven
+Bus is changing from invalid to valid
+Bus is changing from high-Z to valid
+Denotes multiple clock periods
+X
+ 
+Figure 4-2. Timing diagram conventions 
+ 
+4.4.2 Rising/Falling Time Definition 
+Figure 4-3 is the rising and falling timing diagram. The actual signal timing curve is related to the external load conditions. 
+See Table 4-6 for the operating conditions of digital logics. 
+ 
+VDDIO
+VOH = 85%
+VOL = 15%
+0V
+Specified switch low points 
+(active terminated load)
+Actual switch low point
+Actual switch high pointSpecified switch low points 
+(active terminated load)
+ 
+Figure 4-3. Rising and falling times diagram 
+  
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0334.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+17 
+Confidential B 
+Table 4-6. Operating conditions of digital logics 
+Parameter Min. Typ. Max. Unit Note 
+VDD, supply of core power 1.17 1.3 1.43 V - 
+VDDIO, supply of I/O power 1.62 
+1.08 
+1.8 
+1.2 
+1.98 
+1.32 
+V - 
+VIH, input logic high voltage 0.7*VDD - VDD + 0.5 V - 
+VIL, input logic low voltage - - 0.3*VDDIO V - 
+VOH (DC), DC output high voltage 0.7*VDD - VDD + 0.5 V VDD = min, IOH = 1.5 mA 
+VOL (DC), DC output low voltage - - 0.3*VDD V VDD = min, IOL = 1.5 mA 
+ 
+4.4.3 Protocol 
+MT6686 uses the 2-wire control interface for the companion modem to program and control the chip. 
+ 
+4.4.3.1 2-Wire 
+The 2-wire bus of MT6686 is used by the SPI interface to access GPS and TOP command registers and configures/uses the 
+GPIO0 and GPIO1 pins as external LNA enable control. 
+ 
+The bit number of SDATA depends on different operating conditions, as shown in Figure 4-4. 
+ 
+SCLK
+SDATA
+25/33/49-bit data
+ 
+Figure 4-4. 2-wire SPI timing diagram 
+  
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-18"><h2>PDF物理页 18</h2><a href="materials/SRC0334.pdf#page=18" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+18 
+Confidential B 
+4.5 Reference Clock 
+The MT6686 device supports a clock of either 26 MHz (default) or 52 MHz. If the 52 MHz clock is used, initialize the DATA 
+pin to high state before releasing HRSTB from low to high state upon power-up. See Table 4-7 for the reference clock 
+requirement. 
+ 
+Table 4-7. Reference clock requirement 
+Parameter Condition Min. Typ. Max. Unit 
+Output frequency - - 26/52 - MHz 
+Input loading - - 3 5 pF 
+Duty cycle - 47 50 53 % 
+Rise/Fall time@20 to 80% - - - 2 ns 
+Voltage swing - 0.8 - 1.8 V 
+Phase noise 1 kHz - -127 - dBc/Hz 
+10 kHz - -139 - dBc/Hz 
+100 kHz - -148 - dBc/Hz 
+      
+Table 4-8 shows MT6686 XO_IN input impedance. 
+ 
+Table 4-8. Pin (XO_IN) input impedance 
+Parameter Condition Min. Typ. Max. Unit 
+XO_IN (Pin#A-6) Input loading - 3 5 pF 
+  
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-19"><h2>PDF物理页 19</h2><a href="materials/SRC0334.pdf#page=19" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+19 
+Confidential B 
+4.6 GNSS 
+4.6.1 GNSS Radio Description 
+The GNSS section consists of two separate RF receivers to provide simultaneous support of L1 and L5 frequency bands. For 
+optimum co-existence performance, two external RF Surface Acoustic Wave (SAW) filters and a LNA must be placed before 
+each of the receiver (see Figure 1-1). 
+ 
+For each RF receiver (L1 or L5 frequency bands), the simultaneous reception of signals from one or multiple constellations 
+is made possible by configuring the local oscillator and RX filter for different GNSS modes. 
+ 
+4.6.2 GNSS Mode Definition 
+L1 band operation 
+• GPS-only mode or Galileo-only mode 
+• GPS + Galileo mode 
+• GPS + GLONASS, Galileo + GLONASS, or GPS + Galileo + GLONASS mode 
+• GPS + BeiDou, Galileo + BeiDou, or GPS + Galileo + BeiDou mode 
+• GPS + GLONASS + BeiDou, Galileo + GLONASS + BeiDou, or GPS + Galileo + GLONASS + Galileo mode 
+The receiver sets LO to 1582.464 MHz and intermediate frequency filter to LPF with bandwidth of 24 MHz. 
+ 
+L5 band operation 
+• E5a mode 
+• E5a/E5b mode  
+Note: E5b is not supported by MT2737. 
+ 
+4.6.3 GNSS Specifications 
+Note: 
+(1) The specification value is valid at room temperature (25°C). 
+(2) All specifications are measured at the RF port unless otherwise specified. 
+(3) The system performance depends on the companion modem chip’s capability. 
+ 
+Table 4-9. GNSS RF specifications (GPS-only mode or Galileo-only mode or GPS/Galileo mode) 
+Parameter Condition Min. Typ. Max. Unit 
+RF input frequency - - 1575.42 - MHz 
+Maximum input level Peak power of close-in out-of-band jammer (beyond 
+the input frequency specified above) at RFIC input 
+- - -17 dBm 
+Input return loss Single-ended input and externally matched to 50Ω 
+source using matching network for all gain 
+-10 - - dB 
+Gain (Av) Low current mode with max. PGA gain - 58 - dB 
+NF High current mode with max. PGA gain - 3 - dB 
+ 
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-20"><h2>PDF物理页 20</h2><a href="materials/SRC0334.pdf#page=20" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+20 
+Confidential B 
+Table 4-9. GNSS RF specifications (GPS-only mode or Galileo-only mode or GPS/Galileo mode) (continued) 
+Parameter Condition Min. Typ. Max. Unit 
+Image rejection All mode - 35 - dB 
+DC offset - - ±50 ±100 mV 
+RX current High current mode - 7.7 - mA 
+ 
+Table 4-10. GNSS RF specifications (GPS/GLONASS mode or Galileo/GLONASS mode) 
+Parameter Condition Min. Typ. Max. Unit 
+RF input frequency GPS/GLONASS - 1575.42/ 
+1601.71 
+- MHz 
+Maximum input level Peak power of close-in out-of-band jammer 
+(beyond the input frequency specified above) 
+at RFIC input 
+- - -17 dBm 
+Input return loss Single-ended input and externally matched to 
+50Ω source using matching network for all 
+gain 
+-10 - - dB 
+Gain (Av) (integrated 
+average over Fc ±4M) 
+Low current mode with max. PGA gain - 58 - dB 
+NF (integrated average 
+over Fc ±4M) 
+High current mode with max. PGA gain - 3 - dB 
+Image rejection All gain mode - 35 - dB 
+DC offset - - ±50 ±100 mV 
+RX current High current mode - 8.5 - mA 
+ 
+Table 4-11. GNSS RF specifications (GPS/BeiDou mode) 
+Parameter Condition Min. Typ. Max. Unit 
+RF input frequency GPS/BeiDou - 1575.42/ 
+1561 
+- MHz 
+Maximum input level Peak power of close-in out-of-band jammer 
+(beyond the input frequency specified above) at 
+RFIC input 
+- - -17 dBm 
+Input return loss Single-ended l input and externally matched to 
+50Ω source using matching network for all gain 
+-10 - - dB 
+Gain (Av) (integrated 
+average over Fc ±4M) 
+Low current mode with max. PGA gain - 58 - dB 
+NF (integrated average over 
+Fc ±2M) 
+High current mode with max. PGA gain - 3 - dB 
+Image rejection All gain mode - 35 - dB 
+DC offset - - ±50 ±100 mV 
+RX current High current mode - 8.5 - mA 
+ 
+  
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-21"><h2>PDF物理页 21</h2><a href="materials/SRC0334.pdf#page=21" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+21 
+Confidential B 
+Table 4-12. GNSS RF specifications (GPS/GLONASS/BeiDou mode or GPS/GLONASS/Galileo mode) 
+Parameter Condition Min. Typ. Max. Unit 
+RF input frequency GPS/Galileo/GLONASS/BeiDou - 1575.42/ 
+1601.71/ 
+1561 
+- MHz 
+Maximum input level Peak power of close-in out-of-band jammer 
+(beyond the input frequency specified 
+above) at RFIC input 
+- - -17 dBm 
+Input return loss Single-ended input and externally matched 
+to 50Ω source using matching network for 
+all gain 
+-10 - - dB 
+Gain (Av) (integrated 
+average over Fc ±4M) 
+Low current mode with max. PGA gain - 58 - dB 
+NF (integrated average 
+over Fc ±2M) 
+High current mode with max. PGA gain - 3 - dB 
+Image rejection All gain mode - 35 - dB 
+DC offset - - ±50 ±100 mV 
+RX current High current mode - 10.6 - mA 
+ 
+Table 4-13. GNSS RF specifications (GPS-L5/Galileo E5a/IRNSS/BeiDou-3 B2a mode) 
+Parameter Condition Min. Typ. Max. Unit 
+RF input frequency GPS/GLONASS - 1176.45 - MHz 
+Maximum input level Peak power of close-in out-of-band jammer 
+(beyond the input frequency specified 
+above) at RFIC input 
+- - -17 dBm 
+Input return loss Single-ended input and externally matched 
+to 50Ω source using matching network for 
+all gain 
+-10 - - dB 
+Gain (Av) (integrated 
+average over Fc ±4M) 
+Low current mode with max. PGA gain - 58 - dB 
+NF (integrated average 
+over Fc ±4M) 
+High current mode with max. PGA gain - 3 - dB 
+Image rejection All gain mode - 35 - dB 
+DC offset - - ±50 ±100 mV 
+RX current High current mode - 10.5 - mA 
+ 
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-22"><h2>PDF物理页 22</h2><a href="materials/SRC0334.pdf#page=22" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+22 
+Confidential B 
+5 Part Reliability 
+5.1 Qualification Summary 
+Table 5-1. MT6686 product reliability qualification 
+Test Item and Condition Sample Size Result Reference 
+HTOL 
+Tj = 125°C 
+Vccmax for core and I/O 
+77 units x 3 lots Pass JESD22-A108 
+ESD - Human body mode 
+25 ± 5°C, 55 ± 10% R.H. 
+(±)2000V 
+Each condition 
+ x 3 units Pass JS-001-2017 
+ESD - Charged device mode 
+25 ± 5°C, 55 ± 10% R.H. 
+500V(+), 500V(-) 
+Each condition 
+ x 3 units Pass JS-002-2018 
+Latch up (I-test)  
+Class II 
+100mA 
+Each condition 
+ x 3 units Pass JEDEC EIA/JESD78 
+Latch up (Overvoltage) 
+Class II 
+1.5 * Vccmax 
+Each condition 
+ x 3 units Pass JEDEC EIA/JESD78 
+ 
+Table 5-2. MT6686 package reliability qualification 
+Test Item and Condition Number of 
+Assembly Lots Sample Size per Lot 
+Result 
+(Judged By Functional Test 
+and SAT) 
+Reference 
+Preconditioning 
+MSL1 3 75 Pass J-STD-020 
+Temperature cycling 
+Condition B 
+(-55°C to +125°C) 
+1,000 cycles 
+3 25 Pass JESD22-
+A104 
+Unbiased HAST 
+130° C / 85% R.H., 230 Kpa 
+ 96 hrs 
+3 25 Pass JESD22-
+A118 
+Biased HAST 
+110°C/85% R.H., 264 hrs 
+Vcc max for core &amp; IO 
+3 25 Pass JESD22-
+A110 
+High temperature storage 
+test (HTST) 
+150°C, 1,000 hrs 
+3 25 Pass JESD22-
+A103 
+ 
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-23"><h2>PDF物理页 23</h2><a href="materials/SRC0334.pdf#page=23" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+23 
+Confidential B 
+5.2 Device Characteristics 
+Table 5-3. MT6686 device characteristics 
+Device Name MT6686 
+Package Type WLCSP 
+Package Body Size 2.17x1.42x0.5mm 
+Lead Composition SAC405 
+Fab Process 55 nm 
+Fab Site TSMC 
+Assembly Site Advanced Semiconductor Engineering, Inc (ASE), Taiwan 
+Siliconware Precision Industries Co., Ltd. (SPIL), Taiwan 
+Solder Ball Pitch 0.35mm 
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-24"><h2>PDF物理页 24</h2><a href="materials/SRC0334.pdf#page=24" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+24 
+Confidential B 
+6 Packing Information  
+ 
+Package Size (mm) EA/Roll Tape Real/Carton Full Carton Q’ty 
+WLCSP 2.1655 x 1.4203 3,000 5 15,000 
+ 
+6.1 Carrier 
+6.1.1 Tape and Reel Information 
+The tape carries system conforms to EIA-541 standards. 
+ 
+An illustration of the MT6686 tape carrier and the corresponding dimensions are shown below of 3,000 EA per roll. 
+ 
+ 
+Figure 6-1. Carrier tape dimensions 
+ 
+  
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-25"><h2>PDF物理页 25</h2><a href="materials/SRC0334.pdf#page=25" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+25 
+Confidential B 
+ 
+Figure 6-2. Cover tape 
+ 
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-26"><h2>PDF物理页 26</h2><a href="materials/SRC0334.pdf#page=26" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+26 
+Confidential B 
+ 
+Figure 6-3. Reel dimensions 
+  
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-27"><h2>PDF物理页 27</h2><a href="materials/SRC0334.pdf#page=27" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+27 
+Confidential B 
+6.1.2 Aluminum Foil Bag 
+Table 6-1. Aluminum foil bag specification 
+Size Thickness Surface Impedance 
+400 x 430 mm 0.15 x 0.005 mm 105 – 1012 Ohm/SQ 
+ 
+6.1.3 Box and Carton 
+ Material Strength Size Printing 
+Box 3 Layer-B corrugated paper 12 Kgf/cm 340(L) x 325(W) x 50(H) mm Black (script, warming symbol, 
+indicate symbol RoHS) 
+Carton 5 Layer-AB corrugated paper 18 Kgf/cm 374(L) x 285(W) x 363(H) mm Black (script, warming symbol, 
+indicate symbol RoHS) 
+ 
+6.2 Storage 
+6.2.1 Bagged 
+The MT6686 devices must be delivered in sealed and aluminum foil bags (refer to Table 6-1 for the specification) along 
+with desiccants of 110 x 120 mm weighing 66g. The components should be packaged within tape and reel carriers, 
+adhering to warehouse control procedures utilizing the FIFO method. The shelf life is unlimited and does not require 
+special storage conditions. 
+ 
+6.2.2 Out-of-Bag 
+The device does not require special storage conditions provided, and it is maintained at conditions equal to or less than 
+30°C /85%RH. 
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-28"><h2>PDF物理页 28</h2><a href="materials/SRC0334.pdf#page=28" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+28 
+Confidential B 
+7 Package Information 
+7.1 Top Marking 
+ 
+Figure 7-1. Top marking of MT6686 
+ 
+7.2 Ordering Information 
+Table 7-1. MT6686 ordering information 
+Order Number Marking Operational Temperature Range Package 
+MT6686P/A MT6686 -40 to 85°C WLCSP 
+ 
+ 
+ 
+ESD CAUTION 
+MT6686 is an ESD (electrostatic discharge) sensitive device and may be damaged with ESD or spike voltage. Although 
+MT6686 comes with  built-in ESD protection circuitry, please handle it with care to avoid the permanent malfunction or 
+the performance degradation.  
+ 
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-29"><h2>PDF物理页 29</h2><a href="materials/SRC0334.pdf#page=29" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+29 
+Confidential B 
+7.3 Mechanical Drawing 
+ 
+Figure 7-2. Physical dimension of MT6686 
+  
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-30"><h2>PDF物理页 30</h2><a href="materials/SRC0334.pdf#page=30" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2022 - 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6686 RF System 
+Datasheet 
+30 
+Confidential B 
+Exhibit 1 Terms and Conditions 
+Your access to and use of this document and the information contained herein (collectively this “Document”) is subject to your (including the corporation 
+or other legal entity you represent, collectively “You”) acceptance of the terms and conditions set forth below (“T&amp;C”).  By using, accessing or 
+downloading this Document, You are accepting the T&amp;C and agree to be bound by the T&amp;C.  If You don’t agree to the T&amp;C, You may not use this 
+Document and shall immediately destroy any copy thereof. 
+ 
+This Document contains information that is confidential and proprietary to MediaTek Inc. and/or its affiliates (collectively “MediaTek”) or its licensors 
+and is provided solely for Your internal use with MediaTek’s chipset(s) described in this Document and shall not be used for any other purposes (including 
+but not limited to identifying or providing evidence to support any potential patent infringement claim against MediaTek or any of MediaTek’s suppliers 
+and/or direct or indirect customers).  Unauthorized use or disclosure of the information contained herein is prohibited.  You agree to indemnify 
+MediaTek for any loss or damages suffered by MediaTek for Your unauthorized use or disclosure of this Document, in whole or in part. 
+ 
+MediaTek and its licensors retain titles and all ownership rights in and to this Document and no license (express or implied, by estoppels or otherwise) to 
+any intellectual propriety rights is granted hereunder.  This Document is subject to change without further notification.  MediaTek does not assume any 
+responsibility arising out of or in connection with any use of, or reliance on, this Document, and specifically disclaims any and all liability, including, 
+without limitation, consequential or incidental damages. 
+ 
+THIS DOCUMENT AND ANY OTHER MATERIALS OR TECHNICAL SUPPORT PROVIDED BY MEDIATEK IN CONNECTION WITH THIS DOCUMENT, IF ANY, ARE 
+PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE.  MEDIATEK SPECIFICALLY DISCLAIMS 
+ALL WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, COMPLETENESS OR ACCURACY AND ALL 
+WARRANTIES ARISING OUT OF TRADE USAGE OR OUT OF A COURSE OF DEALING OR COURSE OF PERFORMANCE.  MEDIATEK SHALL NOT BE RESPONSIBLE 
+FOR ANY MEDIATEK DELIVERABLES MADE TO MEET YOUR SPECIFICATIONS OR TO CONFORM TO A PARTICULAR STANDARD OR OPEN FORUM. 
+ 
+Without limiting the generality of the foregoing, MediaTek makes no warranty, representation or guarantee regarding the suitability of its products for 
+any particular purpose, nor does MediaTek assume any liability arising out of the application or use of any product, circuit or software.  You agree that 
+You are solely responsible for the designing, validating and testing Your product incorporating MediaTek’s product and ensure such product meets 
+applicable standards and any safety, security or other requirements. 
+ 
+The above T&amp;C and all acts in connection with the T&amp;C or this Document shall be governed, construed and interpreted in accordance with the laws of 
+Taiwan, without giving effect to the principles of conflicts of law. 
+ 
+MediaTek Confidential
+ For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only
+MediaTek Confidential
+For cchuang@ pvetec.com Use Only</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a><a href="#page-18">PDF物理页 18</a><a href="#page-19">PDF物理页 19</a><a href="#page-20">PDF物理页 20</a><a href="#page-21">PDF物理页 21</a><a href="#page-22">PDF物理页 22</a><a href="#page-23">PDF物理页 23</a><a href="#page-24">PDF物理页 24</a><a href="#page-25">PDF物理页 25</a><a href="#page-26">PDF物理页 26</a><a href="#page-27">PDF物理页 27</a><a href="#page-28">PDF物理页 28</a><a href="#page-29">PDF物理页 29</a><a href="#page-30">PDF物理页 30</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

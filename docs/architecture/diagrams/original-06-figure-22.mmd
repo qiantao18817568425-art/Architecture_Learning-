@@ -1,0 +1,13 @@
+flowchart TD
+  A[response deadline missed] --> B[capture ANR traces]
+  B --> C{main thread state?}
+  C -- lock --> C1[lock inversion/deadlock]
+  C -- binder --> C2[synchronous remote wait]
+  C -- IO/CPU --> C3[blocking IO or heavy compute]
+  C -- idle --> C4[event not delivered/state mismatch]
+  C1 --> R[remove blocking dependency]
+  C2 --> R
+  C3 --> R
+  C4 --> R
+  R --> S[restart only if state cannot recover]
+  S --> T[replay event + latency/readback verification]

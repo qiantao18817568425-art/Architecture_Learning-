@@ -1,9 +1,9 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>系统生命周期业务流程 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details open><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a aria-current="page" href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 14</div><div class="chapter-title"><p class="eyebrow">CHAPTER 14 · 中文版全文</p><h1>系统生命周期业务流程</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=14">并排对比两套正文 ↗</a><a class="button secondary" href="original-14.html">对照原版解释 ↗</a><button class="button" data-read="14" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>重启、休眠和升级为什么要重建状态？</h2><p>这些操作改变资源可用性和状态有效期。重连后收到的旧回调可能来自前一次启动；升级文件写完也不代表新版本已经激活并可用。</p><ol><li><strong>怎么读：</strong>按启动→运行→休眠/唤醒→升级/恢复阅读，对照每一阶段的前置条件、完成条件和回退。</li><li><strong>项目练习：</strong>列一个 Camera 服务复位后的核对表：新会话、配置集合、buffer 清理、首个新帧、标定质量。</li><li><strong>自检：</strong>文件校验通过、持久化完成、激活成功、业务可用是否可以合并？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-7">Day 7</a> <a href="../index.html#day-8">Day 8</a> <a href="../index.html#day-16">Day 16</a> <a href="../index.html#day-19">Day 19</a> <a href="../index.html#day-33">Day 33</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#14-mt8676-系统生命周期业务流程">14 MT8676 系统生命周期业务流程</a><a class="depth-2" href="#2026-09-20-校订多域门控集中升级与断电证据">2026-09-20 校订：多域门控、集中升级与断电证据</a><a class="depth-2" href="#业务流程-flow-37">业务流程 FLOW-37</a><a class="depth-3" href="#冷启动hypervisorvmhmi">冷启动、Hypervisor、VM、HMI</a><a class="depth-3" href="#触发目标与边界">触发、目标与边界</a><a class="depth-3" href="#正常链">正常链</a><a class="depth-3" href="#分层子链与方向">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环">反馈闭环</a><a class="depth-3" href="#异常分支">异常分支</a><a class="depth-3" href="#日志与诊断">日志与诊断</a><a class="depth-3" href="#责任域">责任域</a><a class="depth-3" href="#证据与置信度">证据与置信度</a><a class="depth-2" href="#业务流程-flow-38">业务流程 FLOW-38</a><a class="depth-3" href="#accstrsuspendresume">ACC、STR、Suspend、Resume</a><a class="depth-3" href="#触发目标与边界-1">触发、目标与边界</a><a class="depth-3" href="#正常链-1">正常链</a><a class="depth-3" href="#分层子链与方向-1">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-1">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-1">反馈闭环</a><a class="depth-3" href="#异常分支-1">异常分支</a><a class="depth-3" href="#日志与诊断-1">日志与诊断</a><a class="depth-3" href="#责任域-1">责任域</a><a class="depth-3" href="#证据与置信度-1">证据与置信度</a><a class="depth-2" href="#业务流程-flow-39">业务流程 FLOW-39</a><a class="depth-3" href="#otaab-slot升级重启">OTA、A/B Slot、升级重启</a><a class="depth-3" href="#触发目标与边界-2">触发、目标与边界</a><a class="depth-3" href="#正常链-2">正常链</a><a class="depth-3" href="#分层子链与方向-2">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-2">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-2">反馈闭环</a><a class="depth-3" href="#异常分支-2">异常分支</a><a class="depth-3" href="#日志与诊断-2">日志与诊断</a><a class="depth-3" href="#责任域-2">责任域</a><a class="depth-3" href="#证据与置信度-2">证据与置信度</a><a class="depth-2" href="#业务流程-flow-40">业务流程 FLOW-40</a><a class="depth-3" href="#umdp-服务启动死亡自动重启和-client-重连">UMDP 服务启动、死亡、自动重启和 Client 重连</a><a class="depth-3" href="#触发目标与边界-3">触发、目标与边界</a><a class="depth-3" href="#正常链-3">正常链</a><a class="depth-3" href="#分层子链与方向-3">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-3">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-3">反馈闭环</a><a class="depth-3" href="#异常分支-3">异常分支</a><a class="depth-3" href="#日志与诊断-3">日志与诊断</a><a class="depth-3" href="#责任域-3">责任域</a><a class="depth-3" href="#证据与置信度-3">证据与置信度</a><a class="depth-2" href="#业务流程-supp-vm-kill-destroy-recreate-bfb45ac">业务流程 supp-vm-kill-destroy-recreate-bfb45ac</a><a class="depth-3" href="#vm-killdestroyrecreate">VM kill/destroy/recreate</a><a class="depth-3" href="#触发目标与边界-4">触发、目标与边界</a><a class="depth-3" href="#正常链-4">正常链</a><a class="depth-3" href="#分层子链与方向-4">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-4">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-4">反馈闭环</a><a class="depth-3" href="#异常分支-4">异常分支</a><a class="depth-3" href="#日志与诊断-4">日志与诊断</a><a class="depth-3" href="#责任域-4">责任域</a><a class="depth-3" href="#证据与置信度-4">证据与置信度</a><a class="depth-2" href="#业务流程-supp-factorymode-315592c">业务流程 supp-factorymode-315592c</a><a class="depth-3" href="#factorymode-和硬件诊断">FactoryMode 和硬件诊断</a><a class="depth-3" href="#触发目标与边界-5">触发、目标与边界</a><a class="depth-3" href="#正常链-5">正常链</a><a class="depth-3" href="#分层子链与方向-5">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-5">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-5">反馈闭环</a><a class="depth-3" href="#异常分支-5">异常分支</a><a class="depth-3" href="#日志与诊断-5">日志与诊断</a><a class="depth-3" href="#责任域-5">责任域</a><a class="depth-3" href="#证据与置信度-5">证据与置信度</a></details><article id="chapter-text"><h1 id="14-mt8676-系统生命周期业务流程">14 MT8676 系统生命周期业务流程</h1>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>系统生命周期业务流程 · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details open><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a aria-current="page" href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 14</div><div class="chapter-title"><p class="eyebrow">CHAPTER 14 · 中文版全文</p><h1>系统生命周期业务流程</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=14">并排对比两套正文 ↗</a><a class="button secondary" href="original-14.html">对照原版解释 ↗</a><button class="button" data-read="14" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>重启、休眠和升级为什么要重建状态？</h2><p>这些操作改变资源可用性和状态有效期。重连后收到的旧回调可能来自前一次启动；升级文件写完也不代表新版本已经激活并可用。</p><ol><li><strong>怎么读：</strong>按启动→运行→休眠/唤醒→升级/恢复阅读，对照每一阶段的前置条件、完成条件和回退。</li><li><strong>项目练习：</strong>列一个 Camera 服务复位后的核对表：新会话、配置集合、buffer 清理、首个新帧、标定质量。</li><li><strong>自检：</strong>文件校验通过、持久化完成、激活成功、业务可用是否可以合并？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-7">Day 7</a> <a href="../index.html#day-8">Day 8</a> <a href="../index.html#day-16">Day 16</a> <a href="../index.html#day-19">Day 19</a> <a href="../index.html#day-33">Day 33</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#14-mt8676-系统生命周期业务流程">14 MT8676 系统生命周期业务流程</a><a class="depth-2" href="#2026-09-20-校订多域门控集中升级与断电证据">2026-09-20 校订：多域门控、集中升级与断电证据</a><a class="depth-2" href="#业务流程-flow-37">业务流程 FLOW-37</a><a class="depth-3" href="#冷启动hypervisorvmhmi">冷启动、Hypervisor、VM、HMI</a><a class="depth-3" href="#触发目标与边界">触发、目标与边界</a><a class="depth-3" href="#正常链">正常链</a><a class="depth-3" href="#分层子链与方向">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环">反馈闭环</a><a class="depth-3" href="#异常分支">异常分支</a><a class="depth-3" href="#日志与诊断">日志与诊断</a><a class="depth-3" href="#责任域">责任域</a><a class="depth-3" href="#证据与置信度">证据与置信度</a><a class="depth-2" href="#业务流程-flow-38">业务流程 FLOW-38</a><a class="depth-3" href="#accstrsuspendresume">ACC、STR、Suspend、Resume</a><a class="depth-3" href="#触发目标与边界-1">触发、目标与边界</a><a class="depth-3" href="#正常链-1">正常链</a><a class="depth-3" href="#分层子链与方向-1">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-1">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-1">反馈闭环</a><a class="depth-3" href="#异常分支-1">异常分支</a><a class="depth-3" href="#日志与诊断-1">日志与诊断</a><a class="depth-3" href="#责任域-1">责任域</a><a class="depth-3" href="#证据与置信度-1">证据与置信度</a><a class="depth-2" href="#业务流程-flow-39">业务流程 FLOW-39</a><a class="depth-3" href="#otaab-slot升级重启">OTA、A/B Slot、升级重启</a><a class="depth-3" href="#触发目标与边界-2">触发、目标与边界</a><a class="depth-3" href="#正常链-2">正常链</a><a class="depth-3" href="#分层子链与方向-2">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-2">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-2">反馈闭环</a><a class="depth-3" href="#异常分支-2">异常分支</a><a class="depth-3" href="#日志与诊断-2">日志与诊断</a><a class="depth-3" href="#责任域-2">责任域</a><a class="depth-3" href="#证据与置信度-2">证据与置信度</a><a class="depth-2" href="#业务流程-flow-40">业务流程 FLOW-40</a><a class="depth-3" href="#umdp-服务启动死亡自动重启和-client-重连">UMDP 服务启动、死亡、自动重启和 Client 重连</a><a class="depth-3" href="#触发目标与边界-3">触发、目标与边界</a><a class="depth-3" href="#正常链-3">正常链</a><a class="depth-3" href="#分层子链与方向-3">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-3">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-3">反馈闭环</a><a class="depth-3" href="#异常分支-3">异常分支</a><a class="depth-3" href="#日志与诊断-3">日志与诊断</a><a class="depth-3" href="#责任域-3">责任域</a><a class="depth-3" href="#证据与置信度-3">证据与置信度</a><a class="depth-2" href="#业务流程-supp-vm-kill-destroy-recreate-bfb45ac">业务流程 supp-vm-kill-destroy-recreate-bfb45ac</a><a class="depth-3" href="#vm-killdestroyrecreate">VM kill/destroy/recreate</a><a class="depth-3" href="#触发目标与边界-4">触发、目标与边界</a><a class="depth-3" href="#正常链-4">正常链</a><a class="depth-3" href="#分层子链与方向-4">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-4">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-4">反馈闭环</a><a class="depth-3" href="#异常分支-4">异常分支</a><a class="depth-3" href="#日志与诊断-4">日志与诊断</a><a class="depth-3" href="#责任域-4">责任域</a><a class="depth-3" href="#证据与置信度-4">证据与置信度</a><a class="depth-2" href="#业务流程-supp-factorymode-315592c">业务流程 supp-factorymode-315592c</a><a class="depth-3" href="#factorymode-和硬件诊断">FactoryMode 和硬件诊断</a><a class="depth-3" href="#触发目标与边界-5">触发、目标与边界</a><a class="depth-3" href="#正常链-5">正常链</a><a class="depth-3" href="#分层子链与方向-5">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-5">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-5">反馈闭环</a><a class="depth-3" href="#异常分支-5">异常分支</a><a class="depth-3" href="#日志与诊断-5">日志与诊断</a><a class="depth-3" href="#责任域-5">责任域</a><a class="depth-3" href="#证据与置信度-5">证据与置信度</a><a class="depth-2" href="#启动图补充颜色与并行">启动图补充：颜色与并行</a></details><article id="chapter-text"><h1 id="14-mt8676-系统生命周期业务流程">14 MT8676 系统生命周期业务流程</h1>
 <h2 id="2026-09-20-校订多域门控集中升级与断电证据">2026-09-20 校订：多域门控、集中升级与断电证据</h2>
-<p>STR 按 Host 发起、Guest 完成、Host 再进入深度休眠的门控理解；息屏、Guest suspended 与整机低功耗是不同状态。GPIO/节点号码按平台/板级配置核实，不能照抄另一文档示例。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S265 · MT8676_Hypervisor_Suspend_Resume_Common_Flow.pdf · PDF第4-6页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S037 · MT8668_Hypervisor_Suspend_Resume_User_Manual_CN_V1.0.pdf · PDF第4-10页<small>〔本地来源〕</small></span></p>
-<p>MT8668 Hypervisor OTA LLA 文档描述集中升级：升级执行在 SOS，包构建合并 SOS、Yocto UOS、Android target files。该版本不支持 OS 单独升级、不支持 Android Virtual AB、不支持 OTA 更改分区布局；网络下载由 OEM 实现。因而新图中的多个 Update Client 不等于各 OS 可独立刷写。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S030 · MT8668_Hypervisor_OTA_LLA_User_Manual_CN_V1.0.pdf · PDF第8-10页<small>〔本地来源〕</small></span></p>
-<p>安全启动手册描述 BROM→LK2→后续镜像的校验，Hypervisor 校验 Guest LK2 的方法还依赖 Hypervisor 厂商；不能仅凭打开 TEE 判定整条信任链通过。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S035 · MT8668_Hypervisor_Secure_Boot_User_Manual_CN_V1.1.pdf · PDF第5-6页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E008 · MTK86系列平台基于虚拟化op-tee使用手册.pdf · PDF第3-6页<small>〔本地来源〕</small></span></p>
-<p>shutdown 时日志服务退出、DRAM pstore 丢失与块持久化要分别考虑。故障证据需覆盖关机前写入、卸载和下次启动读取，具体启用与容量按 BSP 验证。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S272 · MTK_Log_SOS_dump_uos_pstore.pdf · PDF第3页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S273 · MTK_Log_SOS_shutdown_pstore_dump_to_BLK.pdf · PDF第3页<small>〔本地来源〕</small></span> 生命周期恢复后还需重验时钟映射、服务会话和 buffer 新鲜度，见 <a href="20.html">20 章</a>。</p>
+<p>STR 按 Host 发起、Guest 完成、Host 再进入深度休眠的门控理解；息屏、Guest suspended 与整机低功耗是不同状态。GPIO/节点号码按平台/板级配置核实，不能照抄另一文档示例。<a href="source-SRC0035.html#page-4">S265 · MT8676_Hypervisor_Suspend_Resume_Common_Flow.pdf · PDF第4-6页</a> <a href="source-SRC0036.html#page-4">S037 · MT8668_Hypervisor_Suspend_Resume_User_Manual_CN_V1.0.pdf · PDF第4-10页</a></p>
+<p>MT8668 Hypervisor OTA LLA 文档描述集中升级：升级执行在 SOS，包构建合并 SOS、Yocto UOS、Android target files。该版本不支持 OS 单独升级、不支持 Android Virtual AB、不支持 OTA 更改分区布局；网络下载由 OEM 实现。因而新图中的多个 Update Client 不等于各 OS 可独立刷写。<a href="source-SRC0044.html#page-8">S030 · MT8668_Hypervisor_OTA_LLA_User_Manual_CN_V1.0.pdf · PDF第8-10页</a></p>
+<p>安全启动手册描述 BROM→LK2→后续镜像的校验，Hypervisor 校验 Guest LK2 的方法还依赖 Hypervisor 厂商；不能仅凭打开 TEE 判定整条信任链通过。<a href="source-SRC0045.html#page-5">S035 · MT8668_Hypervisor_Secure_Boot_User_Manual_CN_V1.1.pdf · PDF第5-6页</a> <a href="source-SRC0033.html#page-3">E008 · MTK86系列平台基于虚拟化op-tee使用手册.pdf · PDF第3-6页</a></p>
+<p>shutdown 时日志服务退出、DRAM pstore 丢失与块持久化要分别考虑。故障证据需覆盖关机前写入、卸载和下次启动读取，具体启用与容量按 BSP 验证。<a href="source-SRC0025.html#page-3">S272 · MTK_Log_SOS_dump_uos_pstore.pdf · PDF第3页</a> <a href="source-SRC0026.html#page-3">S273 · MTK_Log_SOS_shutdown_pstore_dump_to_BLK.pdf · PDF第3页</a> 生命周期恢复后还需重验时钟映射、服务会话和 buffer 新鲜度，见 <a href="20.html">20 章</a>。</p>
 <hr>
 <p>本章覆盖冷启动、ACC/STR Suspend/Resume、OTA A/B、UMDP 服务恢复，以及 VM 销毁重建和 FactoryMode 诊断编排。核心目标是区分启动、可用、Ready 和业务恢复。</p>
 <p>本章每张卡都从触发沿控制面和数据面追踪到最终消费，再沿反馈方向回到请求方；箭头表示诊断顺序，不声明原图未给出的物理直连。正常与异常图均是可执行的排查骨架，证据等级见每卡末尾。</p>
@@ -13,7 +13,7 @@
 <p>触发条件：上电/复位后 BootLoader 进入启动路径。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。冷启动按 BootLoader、Hypervisor、各 VM Ready 和 HMI 首帧分层；任一前级完成不自动证明后级已经恢复业务状态。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-14-figure-1"><figcaption>系统生命周期业务流程 · 图 1 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-14-figure-1"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-14-figure-1.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="系统生命周期业务流程 · 图 1，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;BootLoader/FBL&quot;]
   N1[&quot;Hypervisor/Micro Kernel&quot;]
   N0 --&gt; N1
@@ -24,7 +24,7 @@
   N4[&quot;服务依赖&quot;]
   N3 --&gt; N4
   N5[&quot;Launcher/Cluster/HMI Ready&quot;]
-  N4 --&gt; N5</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N4 --&gt; N5</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;BootLoader/FBL&quot;]
   N1[&quot;Hypervisor/Micro Kernel&quot;]
   N0 --&gt; N1
@@ -35,10 +35,10 @@
   N4[&quot;服务依赖&quot;]
   N3 --&gt; N4
   N5[&quot;Launcher/Cluster/HMI Ready&quot;]
-  N4 --&gt; N5</code></pre></details></details><p>正常链按当前 Generation 顺序推进：BootLoader/FBL&gt;Hypervisor/Micro Kernel&gt;SOS/Android/TBox VM&gt;Kernel/systemd/AOSP&gt;服务依赖&gt;Launcher/Cluster/HMI Ready。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N4 --&gt; N5</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：BootLoader/FBL&gt;Hypervisor/Micro Kernel&gt;SOS/Android/TBox VM&gt;Kernel/systemd/AOSP&gt;服务依赖&gt;Launcher/Cluster/HMI Ready。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向">分层子链与方向</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>保留原冷启动阶段图，用文档明确的局部依赖补解释：Camera Host需在Guest访问前就绪；Weston/client/GPU环境按其工程启动依赖检查；进程创建、服务发布、业务ready和真正首帧分别记录。MT8668 Secure Boot手册还将BROM、LK2和后续镜像校验区分，Hypervisor对Guest LK2的校验方法依厂商交付，不因系统能启动就自动完成全部信任链验收。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S145 · MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF第8页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U039 · weston介绍和应用.pdf · PDF第17-18页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S035 · MT8668_Hypervisor_Secure_Boot_User_Manual_CN_V1.1.pdf · PDF第5-6页<small>〔本地来源〕</small></span></p>
+<p>保留原冷启动阶段图，用文档明确的局部依赖补解释：Camera Host需在Guest访问前就绪；Weston/client/GPU环境按其工程启动依赖检查；进程创建、服务发布、业务ready和真正首帧分别记录。MT8668 Secure Boot手册还将BROM、LK2和后续镜像校验区分，Hypervisor对Guest LK2的校验方法依厂商交付，不因系统能启动就自动完成全部信任链验收。<a href="source-SRC0006.html#page-8">S145 · MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF第8页</a> <a href="source-SRC0021.html#page-17">U039 · weston介绍和应用.pdf · PDF第17-18页</a> <a href="source-SRC0045.html#page-5">S035 · MT8668_Hypervisor_Secure_Boot_User_Manual_CN_V1.1.pdf · PDF第5-6页</a></p>
 <table>
 <thead>
 <tr>
@@ -149,7 +149,7 @@
 <h3 id="反馈闭环">反馈闭环</h3>
 <p>库存定义的反馈是：Hypervisor、各 VM、systemd/AOSP 服务和 HMI 分阶段发布 Ready，最终首帧确认。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-14-figure-2"><figcaption>系统生命周期业务流程 · 图 2 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-14-figure-2"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-14-figure-2.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="系统生命周期业务流程 · 图 2，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;Boot/镜像校验失败&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -162,7 +162,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;Boot/镜像校验失败&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -175,7 +175,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：Boot/镜像校验失败；VM 未创建；virtio 后端未就绪；关键服务依赖或 HMI 首帧超时。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：Boot/镜像校验失败；VM 未创建；virtio 后端未就绪；关键服务依赖或 HMI 首帧超时。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断">日志与诊断</h3>
 <p>库存建议日志：bootloader/Hypervisor console；VM lifecycle；systemd-analyze；logcat boot；Cluster/Launcher first frame。</p>
 <table>
@@ -243,7 +243,7 @@
 <p>触发条件：ACC 状态变化或 STR 条件满足。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。ACC/STR 触发后先冻结新业务、等待 suspend ACK，再进入 Suspend；Resume 后重建句柄、订阅和初始快照，旧 callback 必须隔离。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链-1">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-14-figure-3"><figcaption>系统生命周期业务流程 · 图 3 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-14-figure-3"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-14-figure-3.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="系统生命周期业务流程 · 图 3，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;ACC/STR 信号&quot;]
   N1[&quot;MCU 电源状态机&quot;]
   N0 --&gt; N1
@@ -254,7 +254,7 @@
   N4[&quot;Suspend/Resume&quot;]
   N3 --&gt; N4
   N5[&quot;业务状态恢复&quot;]
-  N4 --&gt; N5</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N4 --&gt; N5</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;ACC/STR 信号&quot;]
   N1[&quot;MCU 电源状态机&quot;]
   N0 --&gt; N1
@@ -265,10 +265,10 @@
   N4[&quot;Suspend/Resume&quot;]
   N3 --&gt; N4
   N5[&quot;业务状态恢复&quot;]
-  N4 --&gt; N5</code></pre></details></details><p>正常链按当前 Generation 顺序推进：ACC/STR 信号&gt;MCU 电源状态机&gt;Hypervisor/VM Lifecycle&gt;PowerManager/fb_powerMgr&gt;Suspend/Resume&gt;业务状态恢复。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N4 --&gt; N5</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：ACC/STR 信号&gt;MCU 电源状态机&gt;Hypervisor/VM Lifecycle&gt;PowerManager/fb_powerMgr&gt;Suspend/Resume&gt;业务状态恢复。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向-1">分层子链与方向</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>MTK STR文档为原流程提供总体门控：Host发起，Guest完成相应阶段之后Host再进入深度休眠。此处的“完成”应由各域状态与设备动作确认，不能用Android息屏替代。唤醒后重验当前连接、时间映射、订阅/属性和新buffer；GPIO号与电源客户端配置按板级/BSP核实，平台参考图只作对应版本示例。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S265 · MT8676_Hypervisor_Suspend_Resume_Common_Flow.pdf · PDF第4-6页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S037 · MT8668_Hypervisor_Suspend_Resume_User_Manual_CN_V1.0.pdf · PDF第4-10页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U002 · 3OS time synchronization.pdf · PDF第1-2页<small>〔本地来源〕</small></span></p>
+<p>MTK STR文档为原流程提供总体门控：Host发起，Guest完成相应阶段之后Host再进入深度休眠。此处的“完成”应由各域状态与设备动作确认，不能用Android息屏替代。唤醒后重验当前连接、时间映射、订阅/属性和新buffer；GPIO号与电源客户端配置按板级/BSP核实，平台参考图只作对应版本示例。<a href="source-SRC0035.html#page-4">S265 · MT8676_Hypervisor_Suspend_Resume_Common_Flow.pdf · PDF第4-6页</a> <a href="source-SRC0036.html#page-4">S037 · MT8668_Hypervisor_Suspend_Resume_User_Manual_CN_V1.0.pdf · PDF第4-10页</a> <a href="source-SRC0016.html#page-1">U002 · 3OS time synchronization.pdf · PDF第1-2页</a></p>
 <table>
 <thead>
 <tr>
@@ -379,7 +379,7 @@
 <h3 id="反馈闭环-1">反馈闭环</h3>
 <p>库存定义的反馈是：MCU/VM/Power 服务完成 suspend ACK，Resume 后 generation 更新且关键状态重订阅。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支-1">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-14-figure-4"><figcaption>系统生命周期业务流程 · 图 4 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-14-figure-4"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-14-figure-4.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="系统生命周期业务流程 · 图 4，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;ACC debounce 错误&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -392,7 +392,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;ACC debounce 错误&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -405,7 +405,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：ACC debounce 错误；WakeLock 阻塞；VM suspend 超时；Resume 后旧 callback/资源未重绑。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：ACC debounce 错误；WakeLock 阻塞；VM suspend 超时；Resume 后旧 callback/资源未重绑。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断-1">日志与诊断</h3>
 <p>库存建议日志：MCU power state；systemd suspend；dumpsys power；fb_powerMgr journal；VM generation。</p>
 <table>
@@ -473,7 +473,7 @@
 <p>触发条件：OTA 包下载并通过签名/版本校验。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。OTA 按包签名校验、写入非活动 A/B Slot、切换启动目标、启动 health ACK 和必要时回滚闭环；写入完成不等于升级成功。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链-2">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-14-figure-5"><figcaption>系统生命周期业务流程 · 图 5 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-14-figure-5"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-14-figure-5.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="系统生命周期业务流程 · 图 5，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;OTA/Update Engine&quot;]
   N1[&quot;包校验&quot;]
   N0 --&gt; N1
@@ -484,7 +484,7 @@
   N4[&quot;重启/回滚&quot;]
   N3 --&gt; N4
   N5[&quot;版本确认&quot;]
-  N4 --&gt; N5</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N4 --&gt; N5</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;OTA/Update Engine&quot;]
   N1[&quot;包校验&quot;]
   N0 --&gt; N1
@@ -495,12 +495,12 @@
   N4[&quot;重启/回滚&quot;]
   N3 --&gt; N4
   N5[&quot;版本确认&quot;]
-  N4 --&gt; N5</code></pre></details></details><p>正常链按当前 Generation 顺序推进：OTA/Update Engine&gt;包校验&gt;BootCtrl/A-B Slot&gt;刷写&gt;重启/回滚&gt;版本确认。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N4 --&gt; N5</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：OTA/Update Engine&gt;包校验&gt;BootCtrl/A-B Slot&gt;刷写&gt;重启/回滚&gt;版本确认。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向-2">分层子链与方向</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>结合新版 Day 33，标定/算法配置的版本绑定和激活状态应纳入升级解释，但不改变本节集中升级架构。升级包写入成功不等于标定集合匹配，更不等于环视几何质量通过；建议分别记录校验、持久化、激活、图像质量与故障回退证据。具体文件名、签名/回滚实现和诊断编号须项目确认，不能复制教学平台示例。[最新站点 Day 33](http[本地资料库路径] <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S030 · MT8668_Hypervisor_OTA_LLA_User_Manual_CN_V1.0.pdf · PDF第8-10页<small>〔本地来源〕</small></span></p>
+<p>结合新版 Day 33，标定/算法配置的版本绑定和激活状态应纳入升级解释，但不改变本节集中升级架构。升级包写入成功不等于标定集合匹配，更不等于环视几何质量通过；建议分别记录校验、持久化、激活、图像质量与故障回退证据。具体文件名、签名/回滚实现和诊断编号须项目确认，不能复制教学平台示例。<a href="https://qiantao18817568425-art.github.io/Codex/">最新站点 Day 33</a> <a href="source-SRC0044.html#page-8">S030 · MT8668_Hypervisor_OTA_LLA_User_Manual_CN_V1.0.pdf · PDF第8-10页</a></p>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>本流程的A/B与升级抽象保留，MT8668 OTA LLA的具体实现须单列：在SOS集中执行升级，合并SOS、Yocto UOS、Android target files形成包；该文档版本不支持OS单独升级、Android Virtual AB和OTA更改分区布局，下载由OEM实现。MBOS多个Update Client表示业务端角色，不证明各OS可分别刷写。验证应覆盖镜像一致性、写入校验、下一启动slot与回退/断电场景。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S030 · MT8668_Hypervisor_OTA_LLA_User_Manual_CN_V1.0.pdf · PDF第8-10页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">MBOS-20260920 · 盟博OS架构-用户提供-20260920.png<small>〔本地来源〕</small></span></p>
+<p>本流程的A/B与升级抽象保留，MT8668 OTA LLA的具体实现须单列：在SOS集中执行升级，合并SOS、Yocto UOS、Android target files形成包；该文档版本不支持OS单独升级、Android Virtual AB和OTA更改分区布局，下载由OEM实现。MBOS多个Update Client表示业务端角色，不证明各OS可分别刷写。验证应覆盖镜像一致性、写入校验、下一启动slot与回退/断电场景。<a href="source-SRC0044.html#page-8">S030 · MT8668_Hypervisor_OTA_LLA_User_Manual_CN_V1.0.pdf · PDF第8-10页</a> <a href="source-SRC0022.html">MBOS-20260920 · 盟博OS架构-用户提供-20260920.png</a></p>
 <table>
 <thead>
 <tr>
@@ -611,7 +611,7 @@
 <h3 id="反馈闭环-2">反馈闭环</h3>
 <p>库存定义的反馈是：update_engine 标记目标 Slot，BootCtrl 重启进入新 Slot 并以版本/health ACK 确认，失败则回滚。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支-2">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-14-figure-6"><figcaption>系统生命周期业务流程 · 图 6 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-14-figure-6"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-14-figure-6.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="系统生命周期业务流程 · 图 6，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;包校验/空间失败&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -624,7 +624,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;包校验/空间失败&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -637,7 +637,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：包校验/空间失败；写 Slot 中断；BootCtrl 标记失败；新 Slot 启动/health 失败触发回滚。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：包校验/空间失败；写 Slot 中断；BootCtrl 标记失败；新 Slot 启动/health 失败触发回滚。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断-2">日志与诊断</h3>
 <p>库存建议日志：update_engine log；BootCtrl/boot_control HAL；Slot metadata；bootloader console；版本/回滚原因。</p>
 <table>
@@ -705,7 +705,7 @@
 <p>触发条件：systemd 启动 UMDP 或检测服务进程死亡。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。UMDP unit 的 Type=simple、Restart=always、ready=false 和 E_FIBO_UMDP_NOT_READY 分属不同证据；恢复必须创建新 Client Handle。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链-3">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-14-figure-7"><figcaption>系统生命周期业务流程 · 图 7 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-14-figure-7"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-14-figure-7.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="系统生命周期业务流程 · 图 7，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;systemd/umdpprocess.ini&quot;]
   N1[&quot;UMDP 服务&quot;]
   N0 --&gt; N1
@@ -718,7 +718,7 @@
   N5[&quot;Client 重连/重新订阅&quot;]
   N4 --&gt; N5
   N6[&quot;状态恢复&quot;]
-  N5 --&gt; N6</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N5 --&gt; N6</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;systemd/umdpprocess.ini&quot;]
   N1[&quot;UMDP 服务&quot;]
   N0 --&gt; N1
@@ -731,10 +731,10 @@
   N5[&quot;Client 重连/重新订阅&quot;]
   N4 --&gt; N5
   N6[&quot;状态恢复&quot;]
-  N5 --&gt; N6</code></pre></details></details><p>正常链按当前 Generation 顺序推进：systemd/umdpprocess.ini&gt;UMDP 服务&gt;Client Library&gt;服务死亡检测&gt;自动重启&gt;Client 重连/重新订阅&gt;状态恢复。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N5 --&gt; N6</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：systemd/umdpprocess.ini&gt;UMDP 服务&gt;Client Library&gt;服务死亡检测&gt;自动重启&gt;Client 重连/重新订阅&gt;状态恢复。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向-3">分层子链与方向</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>UMDP服务自动拉起仍按本章既有systemd/fb_procMgr基线解释，不把PVT另一个服务端示例等同UMDP实现。重连应重新确认Modem或对应业务ready、回调订阅、状态回读和当前会话；自动重启只恢复进程，不证明调用合同已经重新成立。跨域依赖还需重验VSOCK端点或Host服务是否可用。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S075 · MT8668_Yocto_T-Box_User_Manual_CN_V1.0.pdf · PDF第5-7页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U038 · Vsock api 文档v2.0.pdf · PDF第11-13页<small>〔本地来源〕</small></span></p>
+<p>UMDP服务自动拉起仍按本章既有systemd/fb_procMgr基线解释，不把PVT另一个服务端示例等同UMDP实现。重连应重新确认Modem或对应业务ready、回调订阅、状态回读和当前会话；自动重启只恢复进程，不证明调用合同已经重新成立。跨域依赖还需重验VSOCK端点或Host服务是否可用。<a href="source-SRC0018.html#page-5">S075 · MT8668_Yocto_T-Box_User_Manual_CN_V1.0.pdf · PDF第5-7页</a> <a href="source-SRC0019.html#page-11">U038 · Vsock api 文档v2.0.pdf · PDF第11-13页</a></p>
 <table>
 <thead>
 <tr>
@@ -845,7 +845,7 @@
 <h3 id="反馈闭环-3">反馈闭环</h3>
 <p>库存定义的反馈是：systemd Restart 后 fb_modemServices 等重新 Ready，Client 以新 generation 重连/重注册 callback 并查询状态确认。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支-3">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-14-figure-8"><figcaption>系统生命周期业务流程 · 图 8 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-14-figure-8"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-14-figure-8.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="系统生命周期业务流程 · 图 8，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;依赖 mtktelephonyservice/sound/mount 未 Ready&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -858,7 +858,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;依赖 mtktelephonyservice/sound/mount 未 Ready&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -871,7 +871,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：依赖 mtktelephonyservice/sound/mount 未 Ready；Restart storm/CPU limit；Client 保留旧 session；重新订阅或状态恢复缺失。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：依赖 mtktelephonyservice/sound/mount 未 Ready；Restart storm/CPU limit；Client 保留旧 session；重新订阅或状态恢复缺失。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断-3">日志与诊断</h3>
 <p>库存建议日志：systemctl status；systemctl show Restart； journalctl -u fb_modemServices；umdpprocess.ini；Client reconnect/generation。</p>
 <table>
@@ -939,7 +939,7 @@
 <p>触发条件：Hypervisor health monitor 判定 Guest 无响应或测试命令触发重建。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。VM kill、destroy、recreate 是三个阶段；新 VM 要完成虚拟资源重绑、服务 Ready 和业务恢复，旧 Generation 的中断与共享内存事件必须拒绝。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链-4">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-14-figure-9"><figcaption>系统生命周期业务流程 · 图 9 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-14-figure-9"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-14-figure-9.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="系统生命周期业务流程 · 图 9，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;故障检测&quot;]
   N1[&quot;Nebula OS/Hypervisor&quot;]
   N0 --&gt; N1
@@ -950,7 +950,7 @@
   N4[&quot;虚拟资源重绑&quot;]
   N3 --&gt; N4
   N5[&quot;业务状态恢复&quot;]
-  N4 --&gt; N5</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N4 --&gt; N5</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;故障检测&quot;]
   N1[&quot;Nebula OS/Hypervisor&quot;]
   N0 --&gt; N1
@@ -961,7 +961,7 @@
   N4[&quot;虚拟资源重绑&quot;]
   N3 --&gt; N4
   N5[&quot;业务状态恢复&quot;]
-  N4 --&gt; N5</code></pre></details></details><p>正常链按当前 Generation 顺序推进：故障检测&gt;Nebula OS/Hypervisor&gt;VM kill/destroy&gt;VM recreate&gt;虚拟资源重绑&gt;业务状态恢复。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N4 --&gt; N5</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：故障检测&gt;Nebula OS/Hypervisor&gt;VM kill/destroy&gt;VM recreate&gt;虚拟资源重绑&gt;业务状态恢复。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向-4">分层子链与方向</h3>
 <table>
 <thead>
@@ -1073,7 +1073,7 @@
 <h3 id="反馈闭环-4">反馈闭环</h3>
 <p>库存定义的反馈是：旧 VM 资源全部回收，新 VM generation Ready，virtio/backend 和业务订阅重新绑定确认。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支-4">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-14-figure-10"><figcaption>系统生命周期业务流程 · 图 10 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-14-figure-10"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-14-figure-10.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="系统生命周期业务流程 · 图 10，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;VM kill 未完成&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -1086,7 +1086,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;VM kill 未完成&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -1099,7 +1099,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：VM kill 未完成；共享内存/DMA Buffer 残留；virtio backend 旧 session；应用状态未恢复。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：VM kill 未完成；共享内存/DMA Buffer 残留；virtio backend 旧 session；应用状态未恢复。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断-4">日志与诊断</h3>
 <p>库存建议日志：Hypervisor/VM lifecycle；memory/IOMMU；virtqueue/backend；Guest boot；generation/rebind。</p>
 <table>
@@ -1167,7 +1167,7 @@
 <p>触发条件：工厂模式进入或产线/售后发起硬件测试。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。FactoryMode 编排 DoIP/UDS 与硬件自检，区分测试命令、ECU 响应、座舱本地资源检查和测试报告持久化。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链-5">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-14-figure-11"><figcaption>系统生命周期业务流程 · 图 11 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-14-figure-11"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-14-figure-11.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="系统生命周期业务流程 · 图 11，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;FactoryMode&quot;]
   N1[&quot;诊断 API/DoIP/UDS&quot;]
   N0 --&gt; N1
@@ -1176,7 +1176,7 @@
   N3[&quot;硬件自检&quot;]
   N2 --&gt; N3
   N4[&quot;结果展示/记录&quot;]
-  N3 --&gt; N4</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N3 --&gt; N4</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;FactoryMode&quot;]
   N1[&quot;诊断 API/DoIP/UDS&quot;]
   N0 --&gt; N1
@@ -1185,7 +1185,7 @@
   N3[&quot;硬件自检&quot;]
   N2 --&gt; N3
   N4[&quot;结果展示/记录&quot;]
-  N3 --&gt; N4</code></pre></details></details><p>正常链按当前 Generation 顺序推进：FactoryMode&gt;诊断 API/DoIP/UDS&gt;HAL/驱动&gt;硬件自检&gt;结果展示/记录。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N3 --&gt; N4</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：FactoryMode&gt;诊断 API/DoIP/UDS&gt;HAL/驱动&gt;硬件自检&gt;结果展示/记录。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向-5">分层子链与方向</h3>
 <table>
 <thead>
@@ -1297,7 +1297,7 @@
 <h3 id="反馈闭环-5">反馈闭环</h3>
 <p>库存定义的反馈是：每个 HAL/设备测试返回可追溯结果，DTC/报告保存并由界面确认。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支-5">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-14-figure-12"><figcaption>系统生命周期业务流程 · 图 12 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-14-figure-12"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-14-figure-12.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="系统生命周期业务流程 · 图 12，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;FactoryMode 权限/模式失败&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -1310,7 +1310,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;FactoryMode 权限/模式失败&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -1323,7 +1323,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：FactoryMode 权限/模式失败；HAL/驱动设备占用；UDS/DoIP 无响应；结果未持久化。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：FactoryMode 权限/模式失败；HAL/驱动设备占用；UDS/DoIP 无响应；结果未持久化。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断-5">日志与诊断</h3>
 <p>库存建议日志：FactoryMode log；HAL/driver self-test；DoIP/UDS trace；DTC/readback；测试报告。</p>
 <table>
@@ -1387,4 +1387,392 @@
 </ul>
 <hr>
 <p><a href="index.html">返回主题导航</a> · <a href="22.html">本次来源索引</a></p>
-</article><nav class="pager"><a href="20.html">← 上一步：跨域通信时间同步与状态一致性</a><a href="15.html">下一步：统一诊断手册 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#14-mt8676-系统生命周期业务流程">14 MT8676 系统生命周期业务流程</a><a class="depth-2" href="#2026-09-20-校订多域门控集中升级与断电证据">2026-09-20 校订：多域门控、集中升级与断电证据</a><a class="depth-2" href="#业务流程-flow-37">业务流程 FLOW-37</a><a class="depth-3" href="#冷启动hypervisorvmhmi">冷启动、Hypervisor、VM、HMI</a><a class="depth-3" href="#触发目标与边界">触发、目标与边界</a><a class="depth-3" href="#正常链">正常链</a><a class="depth-3" href="#分层子链与方向">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环">反馈闭环</a><a class="depth-3" href="#异常分支">异常分支</a><a class="depth-3" href="#日志与诊断">日志与诊断</a><a class="depth-3" href="#责任域">责任域</a><a class="depth-3" href="#证据与置信度">证据与置信度</a><a class="depth-2" href="#业务流程-flow-38">业务流程 FLOW-38</a><a class="depth-3" href="#accstrsuspendresume">ACC、STR、Suspend、Resume</a><a class="depth-3" href="#触发目标与边界-1">触发、目标与边界</a><a class="depth-3" href="#正常链-1">正常链</a><a class="depth-3" href="#分层子链与方向-1">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-1">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-1">反馈闭环</a><a class="depth-3" href="#异常分支-1">异常分支</a><a class="depth-3" href="#日志与诊断-1">日志与诊断</a><a class="depth-3" href="#责任域-1">责任域</a><a class="depth-3" href="#证据与置信度-1">证据与置信度</a><a class="depth-2" href="#业务流程-flow-39">业务流程 FLOW-39</a><a class="depth-3" href="#otaab-slot升级重启">OTA、A/B Slot、升级重启</a><a class="depth-3" href="#触发目标与边界-2">触发、目标与边界</a><a class="depth-3" href="#正常链-2">正常链</a><a class="depth-3" href="#分层子链与方向-2">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-2">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-2">反馈闭环</a><a class="depth-3" href="#异常分支-2">异常分支</a><a class="depth-3" href="#日志与诊断-2">日志与诊断</a><a class="depth-3" href="#责任域-2">责任域</a><a class="depth-3" href="#证据与置信度-2">证据与置信度</a><a class="depth-2" href="#业务流程-flow-40">业务流程 FLOW-40</a><a class="depth-3" href="#umdp-服务启动死亡自动重启和-client-重连">UMDP 服务启动、死亡、自动重启和 Client 重连</a><a class="depth-3" href="#触发目标与边界-3">触发、目标与边界</a><a class="depth-3" href="#正常链-3">正常链</a><a class="depth-3" href="#分层子链与方向-3">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-3">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-3">反馈闭环</a><a class="depth-3" href="#异常分支-3">异常分支</a><a class="depth-3" href="#日志与诊断-3">日志与诊断</a><a class="depth-3" href="#责任域-3">责任域</a><a class="depth-3" href="#证据与置信度-3">证据与置信度</a><a class="depth-2" href="#业务流程-supp-vm-kill-destroy-recreate-bfb45ac">业务流程 supp-vm-kill-destroy-recreate-bfb45ac</a><a class="depth-3" href="#vm-killdestroyrecreate">VM kill/destroy/recreate</a><a class="depth-3" href="#触发目标与边界-4">触发、目标与边界</a><a class="depth-3" href="#正常链-4">正常链</a><a class="depth-3" href="#分层子链与方向-4">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-4">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-4">反馈闭环</a><a class="depth-3" href="#异常分支-4">异常分支</a><a class="depth-3" href="#日志与诊断-4">日志与诊断</a><a class="depth-3" href="#责任域-4">责任域</a><a class="depth-3" href="#证据与置信度-4">证据与置信度</a><a class="depth-2" href="#业务流程-supp-factorymode-315592c">业务流程 supp-factorymode-315592c</a><a class="depth-3" href="#factorymode-和硬件诊断">FactoryMode 和硬件诊断</a><a class="depth-3" href="#触发目标与边界-5">触发、目标与边界</a><a class="depth-3" href="#正常链-5">正常链</a><a class="depth-3" href="#分层子链与方向-5">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-5">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-5">反馈闭环</a><a class="depth-3" href="#异常分支-5">异常分支</a><a class="depth-3" href="#日志与诊断-5">日志与诊断</a><a class="depth-3" href="#责任域-5">责任域</a><a class="depth-3" href="#证据与置信度-5">证据与置信度</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>
+<h2 id="启动图补充颜色与并行">启动图补充：颜色与并行</h2>
+<p>用户于 2026-09-20 补充的启动图明确：<strong>颜色表示启动阶段，多条执行线表示并行路径。</strong> 同一条线变色不意味着新线程；标注用的竖向虚线也不自动构成独立执行路径。SOS 用户空间继续推进时，nbl_vm_srv、nbl_vmm 和 Android 分支可重叠运行，仍受模块完成属性及 userdata / virtiofsd 等条件约束。图无统一时间刻度，不能由线段长度推算耗时。</p>
+<p>详见 <a href="24.html">24 启动时序与并行依赖逐步解读</a>。原架构图保持不变；新增说明以用户启动图为证据，精确依赖以对应版本 unit / init rc 和实测日志复核。</p>
+</article><section class="evidence-excerpts" id="evidence-excerpts"><h2>本章引用的材料内容</h2><p>下面直接展示引用页的文字开头，可展开核对。打开材料页可看全部物理页及完整 PDF，图表和版式以 PDF 为准。提取原文不代表已经逐页验证其适用于当前项目。</p><details><summary>MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF 第 8 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 Hypervisor Camera 
+User Manual 
+Confidential B 
+1.3 Camera Virtualization  
+ 架构 
+ 
+图 1-5. Camera Virtualization 架构 
+ 
+Hypervisor 系统 guest (Android) + host (Yocto) 同时在跑，对 guest 和 host 系统的操作也是单独进行。Android 端有一
+个 guest camerahalserver 进程，Yocto 端有一个 host camerahalserver 进程。APP 在 Android 端，camera 底层在 Yocto
+端 (mw/sensor/driver)，Android 端的 camerahalserver 以 guest 角色从 Yocto 端 camerahalserver 拿图。Yocto 端的
+camerahalserver 要先跑起来，Android 的 camera APP 才能打开。当需要重启 camerahalserver 时，也是 Yocto 先重
+启，然后再杀掉 Android 的 camerahalserver。 
+ 
+1.4 Debug Share  
+ Log 
+camerahalserver:  [3457][TINY_NATIVECAMERAMANAGER] open cam::0 + 
+camerahalserver:  [3457][RpcCamera] [RpcCamera] Cam::0, userId 0, logEn 0, ctor 
+camerahalserver:  [3995][TINY_NATIVECAMERA] [operator()] Power On Sensor Success 
+camerahalserver:  [3457][RpcCamera] [configure] Cam::0, userId 0 + 
+camerahalserver:  [3457][TINY_CAMERA] [configure] cam[0] user[0] configure + 
+camerahalserver:  [3457][TINY_IMAGEPROC] [addMultiCallback] [captureProc] add 
+callback:0x7f6002b350 for user:0 
+camerahalserver:  [4061][TINY_NATIVECAMERA] [0][operator()] [user::0]current pipeline 
+active ... 
+camerahalserver:  [4061][TINY_PIPELINE] ppl::0, active, root 0x7f60021fd0 + 
+camerahalserver:  [3457][TinyMW/TinyPolicy] [TinyMW/TinyPolicy::initialize] + 
+camerahalserver:  [3457][TinyMW/TinyPolicy] [TinyMW/TinyPolicy::initialize] - 
+camerahalserver:  [3457][TINY_PIPELINE] ppl::0, init + 
+Camera Feature Layer
+ CameraProvider
+ Camera
+CameraTurboEngine
+Camera Driver
+Camera HW
+Binder Interface
+ RpcCameraProvider
+ RpcCamera
+Camerahalserver
+Binder 
+Driver
+Gstreamer Framework
+mtkcamsrc
+Camera Feature Layer
+ CameraProvider
+ Camera
+Android Adaptor Layer
+Camera HIDL Interface
+Camerahalserver
+Camera Native Framework
+Camera Java Framework
+Camera APP
+VSOCK
+ VSOCK
+Cameraserver
+Android Yocto
+Userspace
+Kernel Android Request/Result
+Yocto Request/Result
+Merged Request/Result
+mtkmdp
+ h264enc
+ mp4mux
+ filesink
+h264parse
+mtkmdp
+ Dms algo
+ waylandsink
+APP
+MediaTek Confidential
+ 
+……本页余下内容见完整材料页。</pre><a href="source-SRC0006.html#page-8">阅读整页及原图 →</a></details><details><summary>3OS time synchronization.pdf · PDF 第 1 页</summary><pre class="source-text">时间时区同步说明文档 
+1 时区同步 
+1.1 时区同步原理 
+android 时区写入 prop→sos 端 prop_get 获取时区，同时开启 prop_watch
+函数，监控 android 那边时区变化。 
+当 android 时区变化时，sos 这边通过回调函数，同步 android 时区。在
+android 时区同步给 sos 时，sos 在回调函数内不仅同步了 android 时区同时也
+使用 prop_set_only_uos 函数，将此时 sos 时区信息发送到 uos 端；由此 uos
+获取 sos 时区，也即 android 时区 
+ 
+1.2 时区同步验证： 
+android 端输入： 
+setprop persist.sys.timezone Asia/Tokyo 或者 
+setprop persist.sys.timezone Asia/Shanghai 
+ 
+sos/uos 端输入 date  可以看到时区与 android 是一致的 
+ 
+2 时间同步 
+2.1  android 时间同步给 sos 
+android 时间改变，RTC driver 也会同步更新时间。此时 RTC driver 会获取
+到 android 系统时间通过 virtio 传输到 sos，sos drvier 获取到传输过来的时间
+之后设置为 sos 系统时间。 
+ 
+2.2  sos 时间同步给 tbox os 
+在 sos 收到 android 发送来时间后。发送一个 event 事件。通过 udev 捕获
+这个指定 event 事件，获取当前系统时间设置为 prop。同时注册对应监听 prop
+改变的回调。在回调中 调用 prop_set_only_uos，将这个带有时间信息的 prop 
+发送 tbox uos 端。 
+ 
+tbox os 端注册监听 prop 改变。收到 sos 发送 prop 之后，解析时间信息并
+设置为系统时间。 
+ 
+2.3 时间同步验证方法 
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM</pre><a href="source-SRC0016.html#page-1">阅读整页及原图 →</a></details><details><summary>MT8668_Yocto_T-Box_User_Manual_CN_V1.0.pdf · PDF 第 5 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8668 Yocto T-Box 
+ User Manual 
+Confidential B 
+1 T-Box 
+1.1 概述 
+ 简单介绍 
+本文介绍 Hypervisor T-Box 架构、API 使用及注意事项。 
+ 
+ T-Box 缩略词 
+表 1-1.缩略词 
+缩略词 全称 释义 
+API Application Programming Interface 应用程序编程接口 
+APN Access Point Name 接入点 
+T-Box Telematics-BOX 车联网控制单元 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0018.html#page-5">阅读整页及原图 →</a></details><details><summary>Vsock api 文档v2.0.pdf · PDF 第 11 页</summary><pre class="source-text">Vsock api 文档
+GRTNBL20241118 Copyright © 2020 GoldenRiver Technologies Co., Ltd. All rights reserved. 11
+2. VSOCKX 使用方法
+vsockx 是谦川基于 vsock 开发的 UOS 之间 socket 通信的方式, 区别在于实现方式和用法,
+客户只需要关心用法即可
+对于原生的 vsock
+tbox CID:4
+android CID:3
+SOS CID:2 //VMADDR_CID_HOST
+对于 UOS 间 vsock,即 vsockx
+tbox CID:4
+android CID: 2 //VMADDR_CID_HOST
+server 端通讯案例
+C++
+#define AF_VSOCKX AF_DECnet
+int main()
+{
+int s = socket(AF_VSOCKX, SOCK_STREAM, 0);
+const struct sockaddr_vm addr = {
+.svm_family = AF_VSOCK,
+.svm_prot = 9999,
+.svm_cid = VMADDR_CID_HOST,
+}
+bind(s,(const sockaddr *)&amp;addr, sizeof(struct sockaddr_vm));
+listen(s, 0);
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅</pre><a href="source-SRC0019.html#page-11">阅读整页及原图 →</a></details><details><summary>weston介绍和应用.pdf · PDF 第 17 页</summary><pre class="source-text">掌锐电子软件模块研究
+密级：外部公开第 16 页 共 19 页
+10 FAQ
+1，补充说明梳理依赖关系：weston 依赖哪些？哪些依赖 weston？简要说明依赖
+逻辑。
+答：被 weston 依赖：gpu（egl、gl）、display（drm）、input
+主要依赖的硬件模块，跟 weston 运行相关。
+依赖 weston：gpu_server
+gpu server 初始化会准备 opengl egl 环境，这些是 mali so 加载，mali 初始化 egl 的时候会
+尝试连接 weston, 连不上就会出问题。
+2，补充说明 weston server crash 后各 client 的最佳实践？
+答：client 主流的做法都是通过 wl_display_dispatch 检测与 server 连接状态
+weston demo
+egl 也是一样
+QT 也是如此</pre><a href="source-SRC0021.html#page-17">阅读整页及原图 →</a></details><details><summary>MTK_Log_SOS_dump_uos_pstore.pdf · PDF 第 3 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+ 3
+• UOS在进行suspend/shutdown过程中，若在mobile_log_d进程退出后，系统出现被block
+的情况，无落盘日志可以查看；
+• 新增：SOS在UOS开机/suspend/resume/shutdown等阶段，主动dump UOS的pstore日志
+做落盘，cover住UOS自身无法落盘日志的阶段。
+目的
+ MediaTek Confidential Release for
+PVT
+ MediaTek Confidential Release for
+PVT
+MediaTek Confidential Release for
+PVT</pre><a href="source-SRC0025.html#page-3">阅读整页及原图 →</a></details><details><summary>MTK_Log_SOS_shutdown_pstore_dump_to_BLK.pdf · PDF 第 3 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+ 3
+• 在shutdown/reboot的过程中，Yocto端mobile_log_d进程会被systemd第二轮（发送
+sigterm）杀掉，后续log无法落盘；
+• 现状：last_kmsg机制是将log通过ramoops写到DRAM中，而在shutdown最后阶段SOC会
+掉电， DRAM中的内容也会丢失；
+• 新增：增加pstore后端为blk，在shutdown过程中，blk设备卸载前将现场的kmsg/pmsg存
+到pstore的裸分区中，blk数据掉电也能保持，在下一次开机将日志读取出来存储到文件
+系统。
+目的
+ MediaTek Confidential Release for
+PVT
+ MediaTek Confidential Release for
+PVT
+MediaTek Confidential Release for
+PVT</pre><a href="source-SRC0026.html#page-3">阅读整页及原图 →</a></details><details><summary>MTK86系列平台基于虚拟化op-tee使用手册.pdf · PDF 第 3 页</summary><pre class="source-text">RAM /ROM 隔离，外围设备的硬件隔离，外部RAM 和ROM 的隔离等。Arm 提供的隔离技术可以参阅
+Arm 的技术
+⽂档，在此不再赘述。
+M ediaTek提供了功能更加强⼤的内存保护单元(SM PU )保证TrustZone所在的内存区域只能被安全
+的CPU 访问，阻⽌⾮安全的CPU ，以及各种外设通过各种⽅式访问TrustZone所在的内存区间。
+图1-3是预留的TEEm em ory和SM PU 保护这段reserverdm em ory的⽰例图。这段m em ory只允
+许SecureCPU 访问，即对应前⽂，只有CPU 处在S-EL0，S-EL1或EL3时才可以访问;其他场景，例
+如userspace程序，LinuxK ernel程序，hypervisor程序都⽆权访问此段m em ory。
+1.2 OP-TEE简洁
+OP-TEE是⼀个开源的SecureOS。图1-4是OP-TEE官⽅提供的架构图。
+OP-TEE内核是运⾏在S.EL1和S.EL0中的可信应⽤程序。可信应⽤程序通过TEE内部API与OP-TEE
+内核通信。TEE内部API是由G lobalPlatform 组织开发的标准API。G lobalPlatform 致⼒于开发标准
+API，这些API不仅⽀持OP-TEE，还⽀持许多不同的TEE。采⽤G P标准意味着在其他⽀持G P接⼝
+的TEE应⽤可以⽅便地移植到OP-TEE上，反之亦然，为OP-TEE设计的TEE应⽤也可以⽅便地移植
+到其他⽀持G P接⼝的TEE上。
+在⾮安全状态下，内核空间中有⼀个OP-TEE驱动程序。它负责处理与OP-TEE内核的低级别通信。
+在⾮安全⽤⼾空间（EL0）中，有⼀个⽤⼾空间库(libopenteec.so)实现了G lobalPlatform API。TEE
+ClientAPI是应⽤程序⽤来访问TA（可信应⽤程序）的接⼝。
+OP-TEE还包括⼀个称为tee-supplicant的组件。tee-supplicant处理OP-TEE需要返回到REEworld
+处理的事务，⽐如从⽂件系统中加载U TA，再⽐如TEE安全存储功能需要把加密后的数据保存在
+Flash或者RPM B中，但TEE本⾝⽆法读写flash或RPM B，需要切回REE，通过tee-supplicant完
+成读写。</pre><a href="source-SRC0033.html#page-3">阅读整页及原图 →</a></details><details><summary>MT8676_Hypervisor_Suspend_Resume_Common_Flow.pdf · PDF 第 4 页</summary><pre class="source-text">— 4 —
+1.1 概述
+本章节主要介绍 MT8676 Hypervisor Suspend/Resume 流程。
+在 MT8676 平台上，Suspend 即 Suspend to RAM，此状态使所有的设备进入低功耗状态，仅保留
+RAM 自刷新。
+Suspend Power State：
+• Tasks “freezed”
+• 外部设备/内部部分模块关电或者进入低功耗模式
+• System PLL/clock close
+• ARM off
+• DRAM 自刷新
+• PMIC 进入低功耗模式
+• VCORE off
+• SPM run
+• 等待硬件唤醒事件
+在 MT8676 Hypervisor（L+L+A）系统上， Host OS SoS 与 Guest OS Tbox 系统都是 Yocto， Guest
+OS IVI 系统是 Android。系统级 Suspend 由 Host OS 发起，触发 Guest OS 运行 Suspend Flow，
+Guest OS 都完成 Suspend Flow 之后，Host OS 可以进入 Suspend，Host OS Suspend 完成之后整
+个系统才能进入省电的深度休眠模式。
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料</pre><a href="source-SRC0035.html#page-4">阅读整页及原图 →</a></details><details><summary>MT8668_Hypervisor_Suspend_Resume_User_Manual_CN_V1.0.pdf · PDF 第 4 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8668 Hypervisor Suspend &amp; Resume 
+User Manual 
+Confidential B 
+1 Suspend/Resume 
+1.1 概述 
+本章节主要介绍 MT8668 Hypervisor Suspend/Resume 流程以及常见问题的处理方法。 
+ 
+在 MT8668 平台上，Suspend 即 Suspend to RAM，此状态使所有的设备进入低功耗状态，仅保留 RAM 自刷新。  
+ 
+Suspend Power State： 
+ 
+• Tasks “freezed” 
+• 外部设备/内部部分模块关电或者进入低功耗模式 
+• System PLL/clock close 
+• ARM off 
+• DRAM 自刷新 
+• PMIC 进入低功耗模式 
+• VCORE off 
+• SPM run 
+• 等待硬件唤醒事件 
+ 
+在 MT8668 Hypervisor（L+L+A）系统上， Host OS SoS 与 Guest OS T-Box 系统都是 Yocto， Guest OS IVI 系统是
+Android。系统级 Suspend 由 Host OS 发起，触发 Guest OS 运行 Suspend Flow，Guest OS 都完成 Suspend Flow 之
+后，Host OS 可以进入 Suspend，Host OS Suspend 完成之后整个系统才能进入省电的深度休眠模式。 
+ 
+1.2 架构/流程概要 
+ Hypervisor Suspend 流程 
+Hypervisor Suspend 框架图如图 1-1（以 EINT 触发系统进出休眠为例）： 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0036.html#page-4">阅读整页及原图 →</a></details><details><summary>MT8668_Hypervisor_OTA_LLA_User_Manual_CN_V1.0.pdf · PDF 第 8 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8668 Hypervisor OTA LLA  
+User Manual 
+Confidential B 
+• 支持断电接力升级 
+但它同时也具备如下限制： 
+• 不支持更新分区布局，即升级前后版本的分区布局必须保持一致，后续无法通过 OTA 修改分区布局 
+• 不支持 AB 分区 &amp; non-AB 分区之间相互升级 
+• 需要升级的分区镜像必须是 xxx.img 格式，例如：boot.img，不支持其它格式的文件 
+• 需要升级的分区类型必须为只读 (RO) 分区 
+• 不支持 Android Virtual AB (安卓虚拟 AB) 
+• 不支持 OS 单独升级 
+ 
+2.2.2 Hypervisor OTA 名词解释 
+表 2-1. 名词解释 
+缩略词 全称和释义 
+Bootctl Boot Control，A/B slot 标识结构体，存储在 misc 分区中 
+LK2 Little Kernel 2，微型内核 
+OTA Over-The-Air，空中下载升级，一种远程更新技术 
+SOS Server OS，Multi OS 系统内的 Host OS 
+UOS User OS，Multi OS 系统内的 Guest OS 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0044.html#page-8">阅读整页及原图 →</a></details><details><summary>MT8668_Hypervisor_Secure_Boot_User_Manual_CN_V1.1.pdf · PDF 第 5 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8668 Hypervisor Secure Boot 
+User Manual 
+Confidential B 
+ BootRom 
+BROM（BootROM）是 SoC ROM 内的软件，无法修改。它是应用处理器执行的第一个软件。主要工作总结如下 ： 
+• 对 SoC 进行基础的硬件配置（例如设置 PLL, 时钟等），以便启动系统。 
+• 从启动设备 UFS/eMMC/NAND/...）加载第一阶段引导程序以启动系统。 
+• 与主机 PC 端的工具通信，以加载下载代理（DA）软件，用于为没有软件或软件损坏的外部 Flash 进行镜像下
+载。 
+• 使用多个安全启动检查密钥，对第一阶段引导程序或下载代理进行安全启动检查。  
+ 
+1.2 安全启动 
+ 安全启动检查流程 
+安全启动检查流程用于从硬件信任根创建可信执行链。可以通过烧录 eFuse 中的 SBC_EN 来启用它。每次系统从上
+电复位中恢复时都会执行此流程。图 1-1 展示了基本的安全启动检查流程。详细描述如下。 
+ 
+1. 上电复位后， BROM 使用以下流程来验证非易失性存储器（ NVM，例如 eMMC 或 NAND）中的安全启动检查
+（SBC）公钥（SBC_PUBK）。BROM 依次使用来自 eFuse 的公钥 HASH（SBC_PUBK_HASH）。 
+(1) 从 eFuse 读取安全启动检查公钥（SBC_PUBK）的 HASH 值（SBC_PUBK_HASH）。  
+(2) 从 NVM 读取 SBC 公钥（SBC_PUBK）。 
+(3) 计算来自（2）的数据的 HASH 值。 
+(4) 检查来自（1）和（3）的数据是否相同。 
+ 
+2. BROM 加载并验证 bl2.img（Yocto LK2），这是第一阶段的引导加载程序。首先，BROM 将 Yocto LK2 从 NVM 读
+取到 SoC 的 SRAM 中，并使用安全启动检查公钥（SBC_PUBK）来认证 Yocto LK2。如果 Yocto LK2 验证成功，将
+执行 Yocto LK2。验证方法使用 SHA256 计算 HASH 值，RSA（2048 位）和 MTK 或 PSS 填充（由第一阶段引导加
+载程序的头部决定）来进行验证。 
+注意： 
+• 如果外部存储器是 NAND 闪存，BROM 支持第二份（副本）LK2。当 BROM 无法加载第一份（副本）LK2 时，BROM 会
+尝试加载/认证第二份（副本）LK2。 
+ 
+3. 在第一阶段引导加载程序之后，这时跑在 Yocto LK2 阶段，LK2 会校验 Yocto FIT 镜像，Hypervisor 以及安卓相关
+的镜像。 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0045.html#page-5">阅读整页及原图 →</a></details></section><nav class="pager"><a href="20.html">← 上一步：跨域通信时间同步与状态一致性</a><a href="24.html">下一步：启动时序与并行依赖逐步解读 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#14-mt8676-系统生命周期业务流程">14 MT8676 系统生命周期业务流程</a><a class="depth-2" href="#2026-09-20-校订多域门控集中升级与断电证据">2026-09-20 校订：多域门控、集中升级与断电证据</a><a class="depth-2" href="#业务流程-flow-37">业务流程 FLOW-37</a><a class="depth-3" href="#冷启动hypervisorvmhmi">冷启动、Hypervisor、VM、HMI</a><a class="depth-3" href="#触发目标与边界">触发、目标与边界</a><a class="depth-3" href="#正常链">正常链</a><a class="depth-3" href="#分层子链与方向">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环">反馈闭环</a><a class="depth-3" href="#异常分支">异常分支</a><a class="depth-3" href="#日志与诊断">日志与诊断</a><a class="depth-3" href="#责任域">责任域</a><a class="depth-3" href="#证据与置信度">证据与置信度</a><a class="depth-2" href="#业务流程-flow-38">业务流程 FLOW-38</a><a class="depth-3" href="#accstrsuspendresume">ACC、STR、Suspend、Resume</a><a class="depth-3" href="#触发目标与边界-1">触发、目标与边界</a><a class="depth-3" href="#正常链-1">正常链</a><a class="depth-3" href="#分层子链与方向-1">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-1">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-1">反馈闭环</a><a class="depth-3" href="#异常分支-1">异常分支</a><a class="depth-3" href="#日志与诊断-1">日志与诊断</a><a class="depth-3" href="#责任域-1">责任域</a><a class="depth-3" href="#证据与置信度-1">证据与置信度</a><a class="depth-2" href="#业务流程-flow-39">业务流程 FLOW-39</a><a class="depth-3" href="#otaab-slot升级重启">OTA、A/B Slot、升级重启</a><a class="depth-3" href="#触发目标与边界-2">触发、目标与边界</a><a class="depth-3" href="#正常链-2">正常链</a><a class="depth-3" href="#分层子链与方向-2">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-2">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-2">反馈闭环</a><a class="depth-3" href="#异常分支-2">异常分支</a><a class="depth-3" href="#日志与诊断-2">日志与诊断</a><a class="depth-3" href="#责任域-2">责任域</a><a class="depth-3" href="#证据与置信度-2">证据与置信度</a><a class="depth-2" href="#业务流程-flow-40">业务流程 FLOW-40</a><a class="depth-3" href="#umdp-服务启动死亡自动重启和-client-重连">UMDP 服务启动、死亡、自动重启和 Client 重连</a><a class="depth-3" href="#触发目标与边界-3">触发、目标与边界</a><a class="depth-3" href="#正常链-3">正常链</a><a class="depth-3" href="#分层子链与方向-3">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-3">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-3">反馈闭环</a><a class="depth-3" href="#异常分支-3">异常分支</a><a class="depth-3" href="#日志与诊断-3">日志与诊断</a><a class="depth-3" href="#责任域-3">责任域</a><a class="depth-3" href="#证据与置信度-3">证据与置信度</a><a class="depth-2" href="#业务流程-supp-vm-kill-destroy-recreate-bfb45ac">业务流程 supp-vm-kill-destroy-recreate-bfb45ac</a><a class="depth-3" href="#vm-killdestroyrecreate">VM kill/destroy/recreate</a><a class="depth-3" href="#触发目标与边界-4">触发、目标与边界</a><a class="depth-3" href="#正常链-4">正常链</a><a class="depth-3" href="#分层子链与方向-4">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-4">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-4">反馈闭环</a><a class="depth-3" href="#异常分支-4">异常分支</a><a class="depth-3" href="#日志与诊断-4">日志与诊断</a><a class="depth-3" href="#责任域-4">责任域</a><a class="depth-3" href="#证据与置信度-4">证据与置信度</a><a class="depth-2" href="#业务流程-supp-factorymode-315592c">业务流程 supp-factorymode-315592c</a><a class="depth-3" href="#factorymode-和硬件诊断">FactoryMode 和硬件诊断</a><a class="depth-3" href="#触发目标与边界-5">触发、目标与边界</a><a class="depth-3" href="#正常链-5">正常链</a><a class="depth-3" href="#分层子链与方向-5">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-5">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-5">反馈闭环</a><a class="depth-3" href="#异常分支-5">异常分支</a><a class="depth-3" href="#日志与诊断-5">日志与诊断</a><a class="depth-3" href="#责任域-5">责任域</a><a class="depth-3" href="#证据与置信度-5">证据与置信度</a><a class="depth-2" href="#启动图补充颜色与并行">启动图补充：颜色与并行</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

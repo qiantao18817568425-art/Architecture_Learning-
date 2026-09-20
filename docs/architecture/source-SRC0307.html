@@ -1,0 +1,872 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>ADSP_Debugging_Guideline.docx · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>ADSP_Debugging_Guideline.docx</h1><p>SRC0307 · 正文（不对应打印页码） · 1 个阅读单元</p><p class="note">原材料可查阅；未逐页作项目结论验证。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>DOC\ADSP_Debugging_Guideline.docx</p><p>SHA-256：<code>41bbeaf028ead70adb60b87fb1ae3d7ec2dd77c7ebbc686645342ef71f872d91</code></p><p>原文件大小：5,006,682 字节</p></details><div class="actions"><a class="button" href="materials/SRC0307.docx" download>下载完整原文件</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><p class="note">文字按文档结构提取，图片按包内顺序列出；布局、连线和图文对应关系以原文件为准。</p><article id="source-text"><section class="source-page" id="page-1"><h2>正文（不对应打印页码） 1</h2><pre class="source-text">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+A DSP  D ebugging Guideline A DSP  D ebugging Guideline
+A DSP  D ebugging Guideline
+A DSP  D ebugging Guideline
+
+
+Version: 1. 2
+Release date: 2025-04-23
+
+
+
+
+
+
+
+
+
+
+MediaTek Confidential A MediaTek Confidential A
+MediaTek Confidential A
+MediaTek Confidential A
+
+
+Version  History
+Version
+Date
+Description
+1.0
+2022-06- 1 6
+O fficial release
+1 .1
+2 023-0 6-12
+A dd case study part for common issues and debug method reference
+1.2
+2025-04-23
+Add RV debug information at  5. Exception dump extractor
+Add Task Monitor/Heap Memory Usage phase out information 
+MediaTek Confidential A MediaTek Confidential A
+MediaTek Confidential A
+MediaTek Confidential A
+
+Table of Contents
+Version History 2
+Table of Contents 3
+1 Preface 6
+2 Logging 7
+2.1 Overview 7
+3 Task Monitor 8
+3.1 DSP Loading Profiling and SW Activities 8
+3.2 Task Status Monitor by Logging 8
+4 Heap Memory Usage 9
+4.1 Monitor Heap Memory along with Task Monitor Log 9
+4.2 Detailed Information of Allocated Memory 9
+5 Exception Dump Extractor 10
+5.1 ADSP EE log 10
+5.2 Exception Dump Analysis  (Hifi) 12
+5.2.1 Exception Vector 12
+5.2.2 Exception Cause Table 13
+5.2.3 Exception Register 14
+5.2.4 Exception Flow and Assertion Implementation 14
+5.3 Exception Dump Analysis (RV) 16
+5.3.1 Exception Cause Table (RV) 16
+5.3.2 Exception Register (RV) 17
+6 Case Study 18
+6.1 Performance Issue Overview 18
+6.2 Heap Malloc Fail 18
+6.3 ADSP MPU Exception 20
+6.4 IPI Message Queue Overflow 22
+6.5 WDT ISR Trigger EE 24
+6.6 Stack Overflow 25
+6.7 Device APC Violation 27
+6.8 EMIMPU Violation 28
+6.9 DMA Transfer Timeout 29
+6.10 ADSP EE Trigger HAL Lock Timeout 30
+6.11 Insufficient ADSP System Ram Size 30
+7 Issue Feedback to MTK 33
+
+
+L ist  of  F igures
+MediaTek Confidential A MediaTek Confidential A Figure 3 1.  Example of Task Status Monitor 9
+MediaTek Confidential A
+MediaTek Confidential A
+Figure 4 1.  Example Task Heap Memory Usage Monitor 10
+Figure 4 2.  Example of Detailed Information of Allocated Memory 10
+Figure 5 1.  Example of ADSP Dump Extraction Result 11
+Figure 5 2 -2  Example of ADSP Dump Extraction Result (RV) 12
+Figure 5 3.  Example of ADSP Exception in adsp log 13
+Figure 5 4.  Exception Cause Procedure 14
+Figure 5 5.  Exception Flow - ADSP 15
+Figure 5 6.  Exception Flow – ADSP Core A Exception Example 16
+Figure 5 7 .   Assertion implementation 16
+Figure 5 8   Example of ADSP(RV) Exception in adsp log 17
+Figure 6 1. Heap Malloc Fail Example Log 19
+Figure 6 2 .  Malloc Fail Debug reference 20
+Figure 6 3. Example of Memory Selection Algorithm 20
+Figure 6 4. GDB Tool for Heap Analysis 20
+Figure 6 5. Memory Leakage Example Log 21
+Figure 6 6. ADSP MPU Exception Example Log 21
+Figure 6 7. ADSP MPU Violation Debug reference 22
+Figure 6 8. GDB Tool for Backtrace 22
+Figure 6 9. ADSP MPU Table Dump Example 23
+Figure 6 10. Message Queue Overflow Example Log 23
+Figure 6 11 .  Queue Overflow Debug reference 24
+Figure 6 12 .  Phone Call Scenario Runtime Profile by Ftrace 24
+Figure 6 13. WDT Timeout Example Log - 1 25
+Figure 6 14. WDT Timeout Example Log - 2 25
+Figure 6 15. WDT Timeout Debug reference 25
+Figure 6 16. Stack Overflow Example Log 26
+Figure 6 17. Stack Overflow Issue Debug reference 26
+Figure 6 18. GDB Tool for Stack Overflow Analysis 27
+Figure 6 19. Example of adsp_analysis.txt 27
+Figure 6 20 .  Example of adsp_heap_info.txt 27
+Figure 6 21 .  Example of pxStack 27
+Figure 6 22. Device APC Violation Example Log 28
+Figure 6 23. Device APC Violation Debug reference 28
+Figure 6 24. EMIMPU Violation Example Log 29
+Figure 6 25. Example of EMIMPU Backtrace in out.json 29
+Figure 6 26. Example of emi_mpu_output 29
+Figure 6 27. DMA Transfer Timeout Example Log 30
+Figure 6 28. HAL Lock Timeout Example Log 31
+Figure 6 29. HAL Lock Timeout Root Cause Reference 31
+Figure 6 30. Example of HAL Query ADSP State 31
+Figure 6 31. Insufficient ADSP Sysram Size Example Log 32
+Figure 6 32. Reference Solution of Insufficient ADSP Sysram 32
+Figure 6 33. ADSP Image Size Example Log 32
+
+
+List of Tables
+
+Table 2 1. Log Level 8
+Table 5 1. Exception Vector 14
+Table 5 2. Exception Cause Table 14
+Table 5 3. Exception Register Table 15
+Table 5 4  Exception Cause Table (RV) 17
+Table 5 5  Exception Register Table (RV) 18
+Table 6 1. ADSP Secure Region Permission and AID Reference 30
+
+
+Preface
+To enable the functionality for detailed debug info, we need to enable some configurations, they’re usually located in
+project\mt6xxx\HIFI3_A\platform\platform.mk       ## HiFi3  DSP A
+project\mt6xxx\HIFI3_B\platform\platform.mk       ## HiFi3  DSP B
+project\mt6xxx\HIFI3_A\platform\platform.mk       ## HiFi5  DSP A
+project\mt6xxx\HIFI3_B\platform\platform.mk       ## HiFi5  DSP B
+project\mt6 x xx\HIFI3_A\platform\inc\FreeRTOSConfig.h        ## HiFi3  DSP
+project\mt6xxx\HIFI5_A\platform\inc\FreeRTOSConfig.h        ## HiFi5  DSP
+project\mt6xxx\RV55_A\platform\platform.mk        ## RV5 5 DSP  A
+project\mt6xxx\RV55_ B \platform\platform.mk        ## RV5 5 DSP  B
+project\mt6xxx\ RV55_A \platform\inc\FreeRTOSConfig.h       ## RV55  DSP
+Please remember to enable all DSP core configurations if you want to enable the debug function in all DSP cores
+
+
+
+Logging
+Overview
+UART  log
+Port
+23P: please use UART3
+Other platforms: please use UART2
+Baudrate :  921600 
+Configuration
+CFG_UART_SUPPORT = yes
+HIFI Series
+project\mt6xxx\HIFI x _A\platform\platform.mk       ##   DSP  A
+project\mt6xxx\HIFIx_B\platform\platform.mk       ##   DSP B
+RV Series
+project\mt6xxx\ RV x_A\platform\platform.mk            ##   DSP A
+project\mt6xxx\ RV x_B\platform\platform.mk            ##   DSP B
+default  disable  for performance  concern
+N otice that if you want to enable UART log in all DSP cores in a multiple DSP Core platform, please remember to set the config in  all  cores
+  Runtime  Enable/Disable ADSP UART   log   (ADSP should be active to received command)
+ADSP Core  A   Enable
+adb shell &quot;echo  1  &gt; /sys/class/misc/adsp_ 0 /ipi_test&quot;
+ADSP Core  A   Disable
+  adb shell &quot;echo  0  &gt; /sys/class/misc/adsp_ 0 /ipi_test&quot;  
+ADSP Core  B   Enable
+adb shell &quot;echo  1  &gt; /sys/class/misc/adsp_ 1 /ipi_test&quot;
+ADSP Core  B   Disable
+adb shell &quot;echo  0  &gt; /sys/class/misc/adsp_ 1 /ipi_test&quot;
+Mobile log
+Integrated in MTK logger
+Path: /sdcard/mtklog/mobilelog/adsp_log_xxx
+Log Level
+With printf function,  AUD_LOG_V will not print log
+Table  2 1 .  Log Level
+System print
+Audio Feature print
+PRINTF_D
+AUD_LOG_D
+PRINTF_I
+A UD_LOG_I
+PRINTF_W
+A UD_LOG_W
+P RINTF_E
+A UD_LOG_E
+
+
+
+T ask Monitor
+DSP Loading Profiling and SW Activities
+Please refer to  ADSP_Profiling_Guideline.docx
+Task Status Monitor by Logging
+Phase out starting from DX 1
+Enable
+Set  CFG_TASK_MONITOR=yes
+Notice that if you want to  log task status in all  DSP cores  in a multiple DSP platform , please remember to set the config in  all  cores
+Task Status
+The log will show the following task status: [name] [state] [priority] [stack usage] [id]
+State
+B – Blocked
+R – Ready
+D – Detected (waiting clean up)
+S - Suspended, or Blocked without a timeout
+Stack
+Available stack size ,  The lower number the less free space.
+
+Figure  3 1 .  Example of  Task Status Monitor
+
+
+Heap  Memory Usage
+Monitor Heap Memory along with Task Monitor Log
+Phase out starting from DX1
+Enable
+Set  CFG_TASK_MONITOR=yes  in  platform.mk
+#define configUSE_MALLOC_MEMORY_USAGE  in   FreeRTOSConfig.h
+Notice that if you want to  monitor   heap usage in  task status in all DSP cores in a multiple DSP platform, please remember to set the config in all cores
+
+Figure  4 1 .  Example  Task Heap Memory Usage Monitor
+Detailed Information of Allocated Memory
+Enable
+#define configUSE_MALLOC_MEMORY_USAGE  in   FreeRTOSConfig.h
+#define configUSE_MALLOC_DEBUG_MSG_LEN    32      in   FreeRTOSConfig.h
+T hen we can get   the detailed heap memory information (size, by which task, program position)
+
+Figure  4 2 .  Example of  Detailed Information of Allocated Memory
+Exception Dump Extractor
+ADSP EE log
+Hifi Series  
+Trigger Exception by user command
+echo  238 &gt; sys/class/misc/adsp_0/ipi_test
+When system exception happens (EE   &amp; Kernel API)
+Assertion
+If the exception is caused by ASSERT, the filename and line information will be shown in aee screen and  __exp_main.txt  in db.
+Other cause
+S etup the exception dump extraction tool first, 
+[HIFI]  please refer to    TOOL\GDB_DUMP\GDB  Tool for ADSP Guide of aurisys package
+F ind  SYS_ADSP_DUMP   and the elf file of your current codebase
+cd hifi_debug/adsp_debug_tool
+Put the correspond  hifiX_X.elf  and  SYS_ADSP_DUMP
+./debug_adsp.sh ${platform} ${elf_path}
+Ex
+./debug_adsp.sh mt6983 hifi3_a.elf           ;# debug mt6983 hifi a
+./debug_adsp.sh mt6983 hifi3_b.elf           ;# debug mt6983 hifi b
+./debug_adsp.sh mt6985 hifi5_a.elf           ;# debug mt6985 hifi a
+./debug_adsp.sh mt6985 hifi5_b.elf           ;# debug mt6985 hifi b
+Then you can get backtrace information like this
+
+Figure  5 1 .  Example of ADSP  Dump Extraction Result
+
+RV Series
+Trigger Exception by user command
+echo 238 &gt; sys/class/misc/adsp_0/ipi_test
+Preparation : Put these to the &quot;${alps}/prebuilts/clang/md32rv/linux-x86/lldb_ v4 /&quot; folder
+SYS_ADSP_DUMP : 
+decompress the db.EE file, copy out the &quot;SYS_ADSP_DUMP&quot;
+Matches ELF file : 
+${alps}\out_vext\target\product\${project}\obj\TINYSYS_OBJ\tinysys-adsp_intermediates\RV55_A\rv55_a.elf
+${alps}\out_vext\target\product\${project}\obj\TINYSYS_OBJ\tinysys-adsp_intermediates\RV55_ B \rv55_ b .elf
+For MDSP_PDK, please refer to MDSP toolchain  release.  
+How-to-Use
+On  “ linux ”  server and cd &quot;${alps}/prebuilts/clang/md32rv/linux-x86/lldb_v4/&quot;
+E xample for platform mt6993
+$module load MDSP_PDK/1.16.0
+$ ./coredump_cmd_adsp.sh mt6993 rv55_a.elf SYS_ADSP_DUMP cmd;     # debug of rv55 (core 0)
+$ ./coredump_cmd_adsp.sh mt6993 rv55_b.elf SYS_ADSP_DUMP cmd;     # debug of rv55 (core 1)
+
+
+Figure  5 2 -2  Example of ADSP Dump Extraction Result  (RV)
+
+For checking backtrace, you need to check the freertos  awareness  report of the last running task.
+
+
+Exception Dump Analysis  (Hifi)
+
+
+Figure  5 3 .  Example of ADSP Exception in adsp log
+Exception Vector
+     Similar  to the interrupt, when DSP encounters error behaviors during executing, there would be exception happens. Then the program would jump to the Exception Vector. 
+Table  5 1 .  Exception Vector
+Vector
+M ain Cause
+Description
+UserExceptionVector
+EXCCAUSE
+operating modes: user vector mode
+KernelExceptionVector
+EXCCAUSE
+operating modes: kernel vector mode
+DoubleExceptionVector
+EXCCAUSE
+exception when handling exceptional condition
+PS   –   Process Status Register, it’s used to record the process status (please find isa_rm.pdf in xtensa tools to get more information).
+EXCCAUSE  register is used to record the exception id, we can check the exception cause table in next section to find what issue happened.
+
+
+Figure  5 4 .  Exception Cause  Procedure
+Exception Cause Table
+Common exception cause are listed in  the  following table. You can find more information in  isa_rm.pdf  in xtensa tools.
+Table  5 2 .  Exception Cause Table
+E XCAUSE
+Cause Name
+Cause Description
+E xample
+0
+IllegalInstructionCause
+Illegal instruction
+The Instruction on behalf of the execution does not exist, there may be a problem with the fetch instruction
+1
+SyscallCause
+SYSCALL instruction
+
+4
+Level1InterruptCause
+Level-1 interrupt as indicated by set level-1 bits in the INTERRUPT register
+Level 1 interrupt is treated as an exception, which will lead to the subsequent Interrupt handler [ it’s a  normal behavior]
+6
+IntegerDivideByZeroCause
+QUOS, QUOU, REMS, or REMU divisor operand is zero
+division by zero exception
+This is also currently used as a  m ethod to  trigger  the a ssert ion  forcibly  by developer.
+9
+LoadStoreAlignmentCause
+Load or store to an unaligned address
+This happens when the pointer is set to a certain data but in the MPU, because the value does not have address align, an exception will be triggered
+2 0 (0x14)
+InstFetchProhibitedCause
+An instruction fetch referenced a page mapped   with an attribute that does not permit instruction fetch
+Execute a non-MPU protected space instruction, usually a null function pointer will trigger
+2 8 (0x1c)
+LoadProhibitedCause
+A load referenced a page mapped with an   attribute that does not permit loads
+Read a non-MPU protected space, usually triggered by using a Null pointer
+2 9 (0x1d)
+StoreProhibitedCause
+A store referenced a page mapped with an   attribute that does not permit stores
+Read a non-MPU protected space, usually triggered by using a Null pointer
+
+Exception Register
+Table  5 3 .  Exception  Register  Table
+Register
+W idth  ( bits)
+R egister Name
+Comment
+E PC[1]
+3 2
+Exception program counter
+P rogram Counter of Exception
+EXCCAUSE
+3
+Cause of last exception
+C ause of Exception
+EXCVADDR
+3 2
+Virtual address that caused last fetch, load, or store exception
+The Address position that is being operated when Exception occurs, usually a Memory-related Exception
+EXCSAVE[1]
+3 2
+Save location for last exception
+The temporary storage location  to reserve information  w hen exception happens
+DEPC
+3 2
+Double exception PC
+U sed to reserve the PC value when double exception happens
+
+Exception Flow and Assertion Implementation  
+
+Figure  5 5 .  Exception  Flow  - ADSP
+
+
+Figure  5 6 .  Exception Flow –  ADSP   Co re A Exception Example
+
+
+Figure  5 7 .   Assertion  implementation
+
+
+
+
+
+
+
+
+Exception  Dump  Analysis  (RV)
+
+
+Figure  5 8   Example of ADSP (RV)  Exception in adsp log
+Exception Cause Table (RV)
+Common exception cause is listed in the following table.
+Table  5 4  Exception Cause Table (RV)
+EXCAUSE
+Cause Name
+Cause Description
+Example
+0 x0
+CAUSE_MISALIGNED_FETCH
+I nstruction address misaligned
+
+0x 1
+CAUSE_FAULT_FETCH
+Instruction access fault
+Run the address without write permission ( non- cache)
+0x2
+CAUSE_ILLEGAL_INSTRUCTION
+Illegal instruction
+
+0x4
+CAUSE_MISALIGNED_LOAD
+Load address misaligned
+
+0x5
+CAUSE_FAULT_LOAD
+Load access fault
+Read the address without write permission (non-cache)
+0x6
+CAUSE_MISALIGNED_STORE      
+Store address misaligned
+
+0x7
+CAUSE_FAULT_STORE
+Store access fault
+Write the address without write permission (non-cache)
+0xb
+CAUSE_MACHINE_ECALL   
+Environment call from M-mode
+Assertion  happens  by user
+0xc
+CAUSE_FETCH_PAGE_FAULT  
+Instruction page fault
+Run  the address without write permission  (cache)
+0xd
+CAUSE_LOAD_PAGE_FAULT       
+Load page fault
+Read  the address without write permission   (cache)
+0xf
+CAUSE_STORE_PAGE_FAULT  
+Store page fault
+W rite the address without write permission  (cache)
+
+Exception Register (RV)
+Table  5 5   Exception  Register  Table (RV)
+Register
+Register  Name
+Comment
+mepc
+Machine Exception Program Counter
+Program Counter of Exception
+mcause
+Machine Cause Register
+Cause of Exception , check by table
+mtval
+Machine Trap Value Register
+The Address position that is being operated when Exception occurs, usually a Memory-related Exception
+
+Case Study
+P erformance Issue Overview
+If there is  a  performance issue   (underflow, timeout, etc.) ,   p lease check the following items :
+Check adsp log
+Check adsp log first to check if there is blocking events.
+Mtk log path:   adb pull /storage/sdcard0/debuglogger/
+Exception db path:  adb pull /data/vendor/aee_exp
+Raise the DSP clock rate
+Just modify the feature MCPS table with a bigger value so that the DSP would run in a higher clock rate.
+If it works in a higher clock rate, we need to check if there is unexpected blocking or high loading tasks.
+Task  runtime   profile
+Use task runtime profile to check the overall task runtime .
+For detailed usage, please refer to TOOL/ADSP_FTRACE
+Cycle Counter
+Use cycle counter to check how many cycles consumed in a specified region
+Heap  M alloc Fail
+As shown in  Figure  6 1 . Heap Malloc Fail Example Log , i f there is  a  heap  malloc fail  issue ,  y ou can see the word  “malloc fail”  directly  in  ADSP  log.  Once malloc fail issue happens, p lease check the following items :
+E xample log
+
+Figure  6 1 .  Heap Malloc Fail Example Log
+Debug reference
+T he remaining  free  heap size  and total size  should be checked first , and you can find this information in ADSP log  as shown in  Figure  6 1 . Heap Malloc Fail Example Log .  In most malloc fail cases, the requested size is larger than the remaining free size.
+
+Figure  6 2 .  Malloc  F ail  Debug reference
+I ssue back to MTK: please refer to  D MA Transfer Timeout
+As shown in  Figure  6 27 . DMA Transfer Timeout Example Log , i f there is  a   DMA timeout  issue , y ou can see the word  &quot;DMA transfer timeout&quot;  directly  in adsp log. Once a DMA timeout  issue  happens, p lease check the following items :
+E xample log
+
+Figure  6 27 . DMA Transfer Timeout Example Log
+Debug reference
+C heck  which  task  caused exception
+I n most DMA timeout cases, the task is  aud_a2d  which is related to UART.  If you confirm that this is not a problem caused by your changes, please seek assistance from DRI for uart  / bt  owner ’s help.
+ADSP EE Trigger HAL Lock Timeout
+As shown in  Figure  6 28 . HAL Lock Timeout Example LogFigure  6 24 . EMIMPU Violation Example Log , i f there is  a HAL lock timeout  issue , y ou can see the word  “ AUD_WARNING(lock timeout!!) ”  directly  in main log. HAL lock timeout will trigger system API dump. Once a HAL lock timeout  issue  happens, p lease check the following items :
+E xample log
+
+Figure  6 28 . HAL Lock Timeout Example Log
+D ebug reference
+As shown in  Figure  6 29 . HAL Lock Timeout Root Cause Reference , t here are many reasons for  HAL lock  timeout, and ADSP  EE  is just one of them . ADSP EE may cause PCM open fail, thus result in HAL lock timeout.  This chapter only discusses the situation caused by ADSP EE .  Therefore, once there is a HAL lock timeout issue, please check whether there is any ADSP EE recently.  If yes, please debug from this  ADSP EE  direction  (ex. GDB tool).
+
+
+Figure  6 29 . HAL Lock Timeout Root Cause Reference
+
+F rom  Figure  6 30 . Example of HAL Query ADSP State , in this PCM open fail case, we can infer that the reason is ADSP system not ready. Please turn to ADSP log and DB for more debug information.
+
+Figure  6 30 . Example of HAL Query ADSP State
+As for the recovery detail, p lease refer to   Figure  5 6 .  Exception Flow – ADSP  Co re A Exception Example .
+Insufficient  ADS P System Ram Size
+At  software development stage, because the librar ies  used by MTK  may be  different from that of the customer s , customer s  may encounter the problem of insufficient ADSP ram . As shown in  Figure  6 31 . Insufficient ADSP Sysram Size Example LogFigure  6 24 . EMIMPU Violation Example Log , i f  ADSP system ram size is not enough, y ou can see  “sramx_reg overflowed by xx bytes”  directly  at build time. Once ADSP system ram size is not enough, p lease check the following items :
+E xample log
+
+Figure  6 31 . Insufficient ADSP Sysram Size Example Log
+Debug reference
+
+Figure  6 32 .  Reference  S olution  of Insufficient ADSP Sysram
+Enlarge ADSP sysram size
+P lease refer to  DOC\AudioDSP_Development_Tutorial.docx – Memory Configuration  part for detail.
+Get current sysram size from   lk log at bootup stage
+Take  Figure  6 33 . ADSP Image Size Example Log  as an example, this size includes ADSP dual core itcm, dtcm and sysram
+For each core
+Itcm: 256 KB (0x40000 bytes)
+Dtcm: 32 KB (0x8000 bytes)
+S ysram: 10 MB (0xa00000 bytes)
+T otal = 2 * (0x40000 + 0x8000 + 0xa00000) = 0x1490000
+
+Figure  6 33 . ADSP Image Size Example Log
+
+M ay encounter ADSP image partition size not enough
+Such issue may cause bootup fail problem.
+P lease feedback to MTK DRI and seek for partition’s help.
+
+I ssue Feedback to MTK
+C heck memory algorithm:  SELECT_MEMBLOCK_BY_ALGORITHM
+I f  SELECT_MEMBLOCK_BY_ALGORITHM   is defined as  BEST_FIT_ALGO , then it will choose the best fit memory block ; otherwise, it will use first fit algorithm.
+First-fit:  more efficiently  but may result in memory fragmentation
+B est-fit:  better use of  the whole  memory
+F ile: project/mtxxxx/HIFIX_A/platform/inc/FreeRTOSConfig.h
+
+
+Figure  6 3 .  Example of  Memory Selection Algorithm
+Us e GDB tool to check heap usage by task:
+Usage:
+Command:  (xt-gdb) mtk_adsp_heap
+O utput:  adsp_heap_info.txt
+Example:
+
+Figure  6 4 . GDB Tool for Heap Analysis
+O ptimization: check if there is unused memory.
+E nlarge sys tem  ram / heap  size:  
+If all tasks request memory normally, you may consider  increasing   the  heap size.
+For detailed SOP,  please refer to  Memory Configurations  part in  AudioDSP_Development_Tutorial.docx
+M emory leak:
+Memory leak occurs when programmers create a memory in heap and forget to delete it. 
+As shown in  Figure  6 5 . Memory Leakage Example Log , i n this malloc fail case, memory leakage issue happens in callsub task. If similar log  pattern  appears  in  adsp_heap_info.txt  (the same task keep s  requesting memory repeatedly  as you can see the cycle between   audio_messenger_ipi.c   and   audio_task_phone_call.c ) ,  we suggest that  you can check whether memory is free successfully when process end.
+
+Figure  6 5 .  Memory Leakage Example Log
+ADSP  M PU  Exception
+Xtensa processor configurations enabling the Memory Protection Unit (MPU), for example,
+have the ability to restrict the access rights of arbitrary memory regions .  If there is  a ADSP MPU exception  issue , the  exccause  may be 0x1c (load prohibited) or 0x1d (store prohibited).  Once such issue happens, p lease check the following items :
+E xample log
+
+Figure  6 6 . ADSP MPU  Exception  Example Log
+Debug reference
+
+Figure  6 7 . ADSP MPU Violation  Debug reference
+
+Use  GDB tool  to get backtrace information
+T o check the violation scenario
+Command:  (xt-gdb) bt
+E xample :
+D ouble confirmed the last pc by using command :  (xt-gdb) list   *$pc .
+
+Figure  6 8 . GDB Tool for Backtrace
+D ump MPU table to check memory region permission
+C ommand:  adb shell &quot;echo mpu_dump &gt; sys/kernel/debug/audiodsp X ; cat sys/kernel/debug/audiodsp X &quot;
+Result :
+T he MPU table dump format:  address/access right/memory type
+As shown in  Figure  6 9 . ADSP MPU Table Dump Example , here we t ake  address 0x1e0000c4 for an example . The desired address is located between entry#12 0x1e00000 0 &amp; entry#13 0x4d000000. Thus, 0x1e0000c4 has the same access right and memory type as entry#12  0x1e00000 0.
+For detailed access right and memory type, please refer to Xtensa document.
+
+Figure  6 9 . ADSP MPU Table Dump Example
+For most cases, the address you would like to access has read and write permission. However, i f the address  h as no permission, please use MPU API in  mpu.c  to set region permission.  
+mpu_set_region_attribute(void *vaddr, 
+uint32_t size,
+int32_t accessRights, 
+int32_t memoryType)
+
+IPI Message  Qu eue Overflow
+If there is  a queue overflow  issue , p lease check the following items :
+E xample log
+
+Figure  6 10 .  Message Queue Overflow Example Log
+Debug reference
+
+Figure  6 11 .  Qu eue  O verflow  Debug reference
+
+If m essage received too fast :
+C heck the message source first because it may not belong to ADSP system issue.
+If m essage processed too slow :
+To check whether the task is executed properly or not, you can use Ftrace tool.
+
+
+
+Figure  6 12 .  Phone Call Scenario Runtime Profile by Ftrace  
+W DT ISR Trigger EE
+The general WDT  is  trigge red in purpose  to notify AP that ADSP has an exception.   However ,  if the WDT is triggered without a n y  exception,  probably  it’s  because the tick cannot update ( xPortSysTickHandler ) for some reason .   T hen  it  cannot kick the WDT, and finally  results in  WDT timeout .  If there is  a WDT  issue , p lease check the following items :
+E xample log
+
+Figure  6 13 . WDT Timeout Example Log -   1
+
+Figure  6 14 . WDT Timeout Example Log -   2
+
+Debug reference
+
+Figure  6 15 . WDT Timeout  Debug reference
+Other IRQ keep s  triggering :
+If other  IRQ with higher  priority  than tick keep s  triggering, the tick handler won’t be served and finally results in WDT timeout.
+Example log is shown in  Figure  6 13 . WDT Timeout Example Log - 1 . The  exccause  is the return address of pxCurrentTCB; while the  excvaddr  is the stack point of pxCurrentTCB. Also, the irq status may be shown if the irq is not successfully cleared.
+D isable IRQ for a long time:
+B ecause IRQ is disabled in such case, WDT handler can’t be executed .  Thus, t here is no such  coredump  information to refer to .
+E xample log is shown in  Figure  6 14 . WDT Timeout Example Log - 2 .  You can check config register WDT latch data and IRQ status register.
+S tack Overflow
+As shown in  Figure  6 16 . Stack Overflow Example Log , i f there is  a stack overflow  issue , y ou can see the word  “stack overflow”  directly  in ADSP log.  If  stack overflow  issue  happens , p lease check the following items :
+E xample log
+
+Figure  6 16 . Stack Overflow Example Log
+Debug reference
+
+Figure  6 17 . Stack Overflow Issue  Debug reference
+U se GDB tool to check stack size
+You can confirm how much the current stack exceeds the stack during the  context switch .   However,  it does not mean that you can confirm how much the current stack exceeds during  execution .  As for the solution, please refer to the next step.
+Usage:
+C ommand:  (xt-gdb)  mtk_adsp_debug
+O utput:  adsp_analysis.txt 
+F rom  Figure  6 19 . Example of adsp_analysis.txt ,  we can infer to this result :
+pxTopOfStack – pxStack = -16  (b ytes)
+
+Figure  6 18 . GDB Tool for Stack Overflow Analysis
+
+
+Figure  6 19 . Example of adsp_analysis.txt
+U se GDB tool to check  heap  size
+A   s tack  o verflow  issue  usually  results in  memory corruption  issues.   Thus,  you can use the heap info rmation  to confirm how much  memory  has been  corrupted.
+Usage:
+C ommand:  (xt-gdb)  mtk_adsp_heap
+O utput: adsp_heap_info.txt 
+F rom  Figure  6 20 .   Example  of adsp_heap_info.txt , 
+Calculate the minimum memory added for stack
+From the information in  Figure  6 20 .   Example  of adsp_heap_info.txt  and  Figure  6 21 .  Example  of pxStack , it can be  observed  that the stack has stepped over from the original  address  0x55dd2380 to at least 0x55dd2200 ,   b ecause 0x55dd2200 can not  correctly point to the next memory block .   Therefore,  a conservative estimate is to increase 0x55dd2380 - 0x55dd2100 = 640 bytes
+Note that the FreeRTOS stack unit is 4   byte s , so the increased stack size should be  640/4 =  160 . T h e  number is  just  the minimum space that should be increased , and you  can increase  more  to ensure that  s tack  o verflow will not  happen frequently .
+The amount of stack is usually affected by the flow of the algorithm, and  we suggest that you can reserve a larger stack size i n the early stage of development .  U ntil the later stage ,   you can  use watermark to evaluate the overall space used  and check  whether there is a possibility of reduction .
+
+
+Figure  6 20 .   Example  of adsp_heap_info.txt
+
+
+Figure  6 21 .  Example  of pxStack
+D evice APC  Violation
+Each sub - system has its own DEVice Access Permission Control  (DEVAPC/DAPC)  to handle the security and data protection scheme of its own modules .  As shown in  Figure  6 22 . Device APC Violation Example Log , i f there is  a   devapc violation  issue , y ou can see the word  “ [DEVAPC] Violation ”  directly  in  SYS_KERNEL_LOG from DB . Devapc violation will trigger Kernel Exception (KE) , thus no ADSP core dump for GDB tool . Once a devapc violation  issue  happens, p lease check the following items :
+E xample log
+
+Figure  6 22 . Device APC Violation Example Log
+Dev apc violation  scope
+Permission denied
+Power/clock is not enabled
+Unalignment / out of bound / way_en
+Decode / slave error
+Debug reference
+
+Figure  6 23 . Device APC Violation  Debug reference
+Check master / violation address
+Conf irm that this address is the  one  you expect ed  to access
+C heck the violation address belongs to the slave (it does in most cases)
+Check p ower/clock
+O nce the devapc violation triggers, devapc mechanism will check slave pwr/clk.
+Check p ermission
+P ermissions are set in devapc_adsp.h, devapc_infra, devapc_peri, … in TF-A
+In most cases, the  addresses   that are expected  to be used ha ve  already been authorized
+C heck scenario
+Please  check   where to   access  th e address  accidently from the  s cenarios
+E MIMPU  Vi olation
+Although  ADSP  MPU cannot block  invalid  DMA transactions, it can  still  be protected by EMIMPU .  As shown in  Figure  6 24 . EMIMPU Violation Example Log , i f there is  an   EMIMPU violation  issue , y ou can see the word  “ EMI_MPU_Violation ”  directly  in out.json and emi_mpu_output file  from  DB.  EMIMPU violation will trigger kernel API dump.  Once  a n  EMIMPU violation  issue  happens , p lease check the following items :
+E xample log
+
+Figure  6 24 . EMIMPU Violation Example Log
+
+
+Figure  6 25 . Example of EMIMPU  Backtrace in  out.json
+
+Figure  6 26 . Example of  emi_mpu_output
+Debug reference
+C heck AID  from  emi_mpu_output
+A ID means the master who accesses the violation address.
+F or t he same master, secure and non-secure access  are  separate AID .
+P lease refer to  Table  6 1 .  A DSP Secure Region Permission and AID Reference  f or detailed AID description .  
+C heck  the  violation address from emi_mpu_output
+C heck  whether  the address is as expected or not  (the address you want to access) as well as the permission .
+C heck violation scenario
+T o narrow down where the transaction happens .
+C heck ADSP behaviors from ADSP log
+Table  6 1 .  A DSP Secure Region Permission and AID Reference
+Module
+ADSP ROM (SR 28)
+ADSP share (SR 29)
+AID permission
+secure ADSP-HiFi0 &amp; DMA0
+AID = 29*2+0 = 58
+permission=RW
+non-secure ADSP-HiFi0 &amp; DMA0
+AID = 29*2+1 = 59
+permission=RW
+secure ADSP-HiFi1 &amp; DMA1
+AID = 30*2+0 = 60
+permission=RW
+non-secure ADSP-HiFi1 &amp; DMA1
+AID = 30*2+1 = 61
+permission=RW
+secure CPU
+AID=120*2+0=240
+permission=RW
+non-secure CPU
+AID=120*2+1=241
+permission=R
+secure ADSP-Audio
+AID = 26*2+0 = 52
+AID = 27*2+0 = 54
+AID = 28*2+0 = 56
+permission=RW
+non-secure ADSP-Audio
+AID = 26*2+1 = 53
+AID = 27*2+1 = 55
+AID = 28*2+1 = 57
+permission=RW 
+secure ADSP-HiFi0 &amp; DMA0
+AID = 29*2+0 = 58
+permission=RW
+non-secure ADSP-HiFi0 &amp; DMA0
+AID = 29*2+1 = 59
+permission=RW
+secure ADSP-HiFi1 &amp; DMA1
+AID = 30*2+0 = 60
+permission=RW
+non-secure ADSP-HiFi1 &amp; DMA1
+AID = 30*2+1 = 61
+permission=RW
+secure CPU
+AID=120*2+0=240
+permission=RW
+non-secure CPU
+AID=120*2+1=241
+permission=RW
+
+D MA Transfer Timeout
+As shown in  Figure  6 27 . DMA Transfer Timeout Example Log , i f there is  a   DMA timeout  issue , y ou can see the word  &quot;DMA transfer timeout&quot;  directly  in adsp log. Once a DMA timeout  issue  happens, p lease check the following items :
+E xample log
+
+Figure  6 27 . DMA Transfer Timeout Example Log
+Debug reference
+C heck  which  task  caused exception
+I n most DMA timeout cases, the task is  aud_a2d   which  is related to UART.  If you confirm that this is not a problem caused by your changes, please seek assistance from DRI for uart  / bt  owner ’s help.
+ADSP EE Trigger HAL Lock Timeout
+As shown in  Figure  6 28 . HAL Lock Timeout Example Log Figure  6 24 . EMIMPU Violation Example Log , i f there is  a  HAL lock timeout  issue , y ou can see the word  “ AUD_WARNING(lock timeout!!) ”  directly  in  main log .  HAL lock timeout  will trigger  system  API dump. Once a  HAL lock timeout  issue  happens, p lease check the following items :
+E xample log
+
+Figure  6 28 . HAL Lock Timeout Example Log
+D ebug reference
+As shown in  Figure  6 29 . HAL Lock Timeout Root Cause Reference , t here are many reasons for  HAL lock  timeout, and ADSP  EE  is just one of them .   ADSP EE may cause PCM open fail, thus result in HAL lock timeout.  This chapter only discusses the situation caused by ADSP EE .  Therefore, once there is a HAL lock timeout issue, please check whether there is any ADSP EE recently.   If yes, please debug from this  ADSP EE  direction  (ex. GDB tool).
+
+
+Figure  6 29 . HAL Lock Timeout Root Cause Reference
+
+F rom  Figure  6 30 . Example of HAL Query ADSP State , in this PCM open fail case, we can infer that the reason is ADSP system not ready. Please turn to ADSP log and DB for more debug information.
+
+Figure  6 30 . Example of HAL Query ADSP State
+As for  the  recovery detail, p lease refer to   Figure  5 6 .  Exception Flow – ADSP  Co re A Exception Example .
+Insufficient  ADS P Sys tem R am  Size
+At  software development stage, because the librar ies  used by MTK  may be  different from that of the customer s , customer s  may encounter the problem of insufficient ADSP ram .  As shown in  Figure  6 31 . Insufficient ADSP Sysram Size Example Log Figure  6 24 . EMIMPU Violation Example Log , i f  ADSP system ram size is not enough, y ou can see  “sramx_reg overflowed by xx bytes”  directly   at  build  time . Once ADSP system ram size is not enough, p lease check the following items :
+E xample log
+
+Figure  6 31 . Insufficient ADSP Sysram Size Example Log
+Debug reference
+
+Figure  6 32 .  Reference  S olution  of Insufficient ADSP Sysram
+Enlarge ADSP sysram size
+P lease refer to  DOC\AudioDSP_Development_Tutorial.docx – Memory Configuration  part for detail.
+Get current sysram size from   lk log at boo t up stage
+Take  Figure  6 33 . ADSP Image Size Example Log  as an example, this size includes ADSP dual core itcm, dtcm and sysram
+For each core
+Itcm: 256 KB (0x40000 bytes)
+Dtcm: 32 KB (0x8000 bytes)
+S ysram: 10 MB (0xa00000 bytes)
+T otal = 2 * (0x40000 + 0x8000 + 0xa00000) = 0x1490000
+
+Figure  6 33 . ADSP Image Size Example Log
+
+M ay encounter ADSP image partition size not enough
+S uch issue may  cause  bootup fail problem.
+P lease feedback to MTK DRI and seek for partition’s help.
+
+I ssue Feedback to MTK
+Please provide the following debug information once issue happens:
+Issue basic information
+Platform
+L oad version
+R epeat ratio
+S cenario
+Feature side: p hone call / VoIP /  p layback / …
+S ystem side: bootup / suspend / resume / …
+P atch
+Pl ease confirm whether the issue happens only  if you add  your  patch
+M tk log including  adsp   log  (Audio DSP has an independent logging file)
+DSP coredump
+Please refer to  \TOOL\GDB_DEBUG  of the released Aurisys_exe_xx.xxxx.xx. You can extract the dump by xt-gdb to check the exception cause.
+Memory map file  ( hifi3_a.elf ) to decode coredump. Its location:
+A0 Structure
+If using default image: / vendor / mediatek / proprietary / ti nysys / freertos / adsp_lib
+If local build: / vendor / mediatek / prop rietary / tinysys / freertos / source / tinysys-scp_out
+B0 Structure
+If using default image:  /vendor/ me diatek/proprietary/tinysys/adsp/ adsp_imgs
+If local build:  /vendor/mediate/proprietary/tinysys/adsp/HIFI3/ tinysys_out
+Configurations
+HiFi3 A0 Structure
+tinysys_config.h  (Auto generated file to log the configurations of the specified project)
+default image: / vendor / mediatek / proprietary / ti nysys / freertos / adsp_lib
+local build: / vendor / mediatek / prop rietary / tinysys / freertos / source / tinysys-scp_out
+platform.mk
+vendor / mediatek / proprietary / tinysys / freertos / source / project / HIFI3_A /[platform]
+ProjectConfig.mk
+vendor / mediatek / proprietary / tinysys / freertos / source / project / HIFI3_A /[platform]/[project]
+HiFi3  B0 Structure
+tinysys_config.h  (Auto generated file to log the configurations of the specified project)
+default image:  /vendor/ me diatek/proprietary/tinysys/adsp/ adsp_imgs
+local build:  /vendor/mediate/proprietary/tinysys/adsp/HIFI3/ tinysys_out
+platform.mk
+vendor/mediate/proprietary/ ti nysys/adsp/HIFI3/project/[platform]/ HIFI3_ X/platform
+Project.mk
+vendor/mediate/proprietary/ ti nysys/adsp/HIFI3/project/[platform]/ HIFI3_ X/platform/[project]
+HiFi5  Structure
+tinysys_config.h  (Auto generated file to log the configurations of the specified project)
+default image:  /vendor/ me diatek/proprietary/tinysys/adsp/ adsp_imgs
+local build:  /vendor/mediate/proprietary/tinysys/adsp/HIFI5/ tinysys_out
+platform.mk
+vendor/mediate/proprietary/ ti nysys/adsp/HIFI5/project/[platform]/ HIFI 5 _ X/platform
+Project.mk
+vendor/mediate/proprietary/ ti nysys/adsp/HIFI5/project/[platform]/ HIFI 5 _ X/platform/[project]
+</pre></section></article><section><h2>材料中的原图</h2><figure><a href="materials/SRC0307-image47.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image47.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 1"></a><figcaption>原图 1 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image48.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image48.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 2"></a><figcaption>原图 2 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image49.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image49.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 3"></a><figcaption>原图 3 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image46.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image46.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 4"></a><figcaption>原图 4 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image1.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image1.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 5"></a><figcaption>原图 5 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image2.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image2.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 6"></a><figcaption>原图 6 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image3.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image3.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 7"></a><figcaption>原图 7 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image4.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image4.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 8"></a><figcaption>原图 8 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image5.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image5.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 9"></a><figcaption>原图 9 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image6.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image6.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 10"></a><figcaption>原图 10 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image7.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image7.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 11"></a><figcaption>原图 11 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image8.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image8.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 12"></a><figcaption>原图 12 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image9.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image9.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 13"></a><figcaption>原图 13 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image10.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image10.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 14"></a><figcaption>原图 14 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image11.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image11.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 15"></a><figcaption>原图 15 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image12.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image12.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 16"></a><figcaption>原图 16 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image13.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image13.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 17"></a><figcaption>原图 17 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image14.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image14.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 18"></a><figcaption>原图 18 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image15.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image15.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 19"></a><figcaption>原图 19 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image16.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image16.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 20"></a><figcaption>原图 20 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image17.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image17.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 21"></a><figcaption>原图 21 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image18.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image18.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 22"></a><figcaption>原图 22 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image19.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image19.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 23"></a><figcaption>原图 23 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image20.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image20.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 24"></a><figcaption>原图 24 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image21.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image21.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 25"></a><figcaption>原图 25 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image22.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image22.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 26"></a><figcaption>原图 26 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image23.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image23.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 27"></a><figcaption>原图 27 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image24.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image24.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 28"></a><figcaption>原图 28 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image25.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image25.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 29"></a><figcaption>原图 29 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image26.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image26.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 30"></a><figcaption>原图 30 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image27.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image27.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 31"></a><figcaption>原图 31 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image28.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image28.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 32"></a><figcaption>原图 32 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image29.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image29.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 33"></a><figcaption>原图 33 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image30.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image30.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 34"></a><figcaption>原图 34 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image31.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image31.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 35"></a><figcaption>原图 35 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image32.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image32.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 36"></a><figcaption>原图 36 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image33.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image33.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 37"></a><figcaption>原图 37 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image34.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image34.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 38"></a><figcaption>原图 38 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image35.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image35.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 39"></a><figcaption>原图 39 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image36.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image36.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 40"></a><figcaption>原图 40 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image37.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image37.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 41"></a><figcaption>原图 41 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image38.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image38.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 42"></a><figcaption>原图 42 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image39.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image39.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 43"></a><figcaption>原图 43 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image40.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image40.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 44"></a><figcaption>原图 44 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image41.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image41.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 45"></a><figcaption>原图 45 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image42.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image42.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 46"></a><figcaption>原图 46 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image43.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image43.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 47"></a><figcaption>原图 47 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image44.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image44.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 48"></a><figcaption>原图 48 · 点击放大</figcaption></figure><figure><a href="materials/SRC0307-image45.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0307-image45.png" alt="ADSP_Debugging_Guideline.docx 内嵌原图 49"></a><figcaption>原图 49 · 点击放大</figcaption></figure></section></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">正文（不对应打印页码） 1</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

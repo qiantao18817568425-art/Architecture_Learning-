@@ -1,0 +1,5 @@
+%% Yocto boot abnormal recovery
+flowchart TB
+  T["unit failure / watchdog / shutdown"] --> E["earliest failed unit or readiness gate"]
+  E --> D["dependents unavailable"] --> S["user symptom"] --> O["unit state + journal + resource counters"]
+  O --> C["stop admission; release resources"] --> R["restart dependency order"] --> G["new Generation"] --> V["readback + fresh result"]

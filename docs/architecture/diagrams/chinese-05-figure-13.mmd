@@ -1,0 +1,18 @@
+flowchart TD
+  E["enqueue"] --> Q{"queue accepts?"}
+  Q -- overflow --> O["overflow/backpressure"]
+  Q -- yes --> D{"DMA/FIFO advances?"}
+  D -- no --> S["stall"]
+  D -- yes --> W{"bytes clocked?"}
+  W -- no --> P["physical/config/reset"]
+  W -- yes --> I{"IRQ/reassembly?"}
+  I -- no --> M["missing IRQ/partial frame"]
+  I -- yes --> V{"CRC/Sequence/Generation valid?"}
+  V -- no --> X["reject/stale"]
+  V -- yes --> C["callback + consume"]
+  O --> R["quiesce + clear owned queues"]
+  P --> R
+  M --> R
+  X --> G["resynchronize generation"]
+  R --> G
+  G --> B["controlled message + readback"]

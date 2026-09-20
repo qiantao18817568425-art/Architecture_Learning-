@@ -1,0 +1,14 @@
+sequenceDiagram
+  participant P as Producer
+  participant Q as BufferQueue
+  participant C as Consumer/SF
+  P->>Q: connect
+  P->>Q: dequeue slot
+  P->>P: render into buffer
+  P->>Q: queue + acquire fence
+  C->>Q: acquire
+  C->>C: fence wait
+  C->>C: compose/present
+  C->>Q: release + release fence
+  Q-->>P: producer reuse
+  P->>Q: disconnect

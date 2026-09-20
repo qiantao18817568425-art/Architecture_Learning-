@@ -1,0 +1,14 @@
+flowchart TD
+  T["业务触发"] --> S{"源数据新鲜且属于当前 Generation?"}
+  S -- 否 --> F0["Client 未初始化"]
+  S -- 是 --> C{"Client/Service 会话 Ready?"}
+  C -- 否 --> F1["fb_modemServices 未 Ready"]
+  C -- 是 --> D{"数据、命令或资源持续推进?"}
+  D -- 否 --> F2["APN/注册失败"]
+  D -- 是 --> B{"业务反馈与最终状态一致?"}
+  B -- 否 --> F3["callback 丢失或旧 generation"]
+  F0 --> R["新 Generation/Session 恢复"]
+  F1 --> R
+  F2 --> R
+  F3 --> R
+  R --> V["重新查询、回读并验证资源释放"]

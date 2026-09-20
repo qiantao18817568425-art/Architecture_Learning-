@@ -1,0 +1,2699 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT6363_Design_Notice_for_MT8676_V01.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT6363_Design_Notice_for_MT8676_V01.pdf</h1><p>SRC0333 · 原来源 ID S248 · PDF物理页 · 85 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MTK8676硬件资料/MT6363_Design_Notice_for_MT8676_V01.pdf</p><p>SHA-256：<code>232daa16ff71548a5fca2be532a3272bcd834a8b5f26ef9ede317c8b5f2d9928</code></p><p>原文件大小：1,906,151 字节</p></details><div class="actions"><a class="button" href="materials/SRC0333.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT6363_Design_Notice_for_MT8676_V01.pdf 原 PDF" src="materials/SRC0333.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0333.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential B
+MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+MT6363 Design Notice
+for MT8676
+V0.1
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0333.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+Document Revision History
+2
+Revision Date Description
+V0.1 2024/02/02 Initial.
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0333.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential B
+3
+ MT6363 Introduction
+– General Description
+– MT8676 Power Grid
+– Buck Power Plan
+– LDO Power Plan
+ Function Description
+– Power ON/OFF Sequence
+– UVLO, System Reset, Long Press PWR KEY, EXT_PMIC_PG, WATCHDOG, HOMEKEY, Thermal Shutdown, DCAP, SPAR
+– I/O Power Domain
+– Un-used Pin Configuration
+– SPMI I/F
+– AUXADC
+Index
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0333.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential B
+4
+ DC/DC
+– Buck Converter List
+– Power Inductor Selection Guideline
+– Schematics and Layout Notice
+ LDO
+– Input Cap Table
+– Input Power Table
+– Output Cap Table
+– Layout Constraint
+Index
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0333.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential B
+5
+ Analog Power PCB Layout Constraint
+ Package
+– Package Outline
+– Ball-map
+Index
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0333.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+MT6363 Introduction
+6
+MT6363 Design Notice
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0333.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+7
+• The MT6363 is highly integrated with functions fulfilling all power requirements in smart phone 
+system.
+– Buck converters*10
+- VS1, VS2, VS3, BUCK1 ~ 7
+– LDOs*26
+– “GPIO + AUXADC”*7
+- GPIO function or AUXADC function can be chosen by pin-mux setting.
+MT6363 – General Description
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0333.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+MT8676 Power Grid: MT6363
+Note: 
+1. VRFIO18 LDO powers to WCN IC; VCN15 LDO powers to RF IC.
+8
+RF Power
+System 
+Power
+External 
+Power
+Camera 
+Power
+WCN 
+Power Peripherals
+Memory/
+Storage 
+Display 
+Power
+MT6363
+ON
+ON
+DCDC
+CORE
+SRAM
+BUCK1
+5A
+0.4V~1.19375V
+ON
+BUCK2
+5A
+0.4V~1.19375V
+BUCK3
+5A
+0.4~1.19375V
+BUCK5
+5A
+0.4~1.19375V
+CORE
+RF IC 
+DIGRF
+ON VIO18
+600mA
+1.8V
+VA15
+600mA
+1.5/1.8V
+VRF18
+600mA
+1.84V
+RF IC
+VRFIO18
+600mA
+1.82V
+VCN15
+300mA
+1.7/1.82V
+Consys, 
+MT6637
+VUFS18
+1200mA
+1.86V
+DVDDIO
+(IOBL)
+ON
+VA12_1
+600mA
+1.2V
+VA12_2
+600mA
+1.2V
+VCN13
+800mA
+1.35/0.9V
+VRF13
+800mA
+1.34V
+VRF12
+600mA
+1.24V
+VSRAM_CPUB
+600mA
+0.5~1.2V
+CPU-B 
+SRAM
+VUFS12
+1200mA
+1.2V
+ABB
+VSRAM_CPUM
+600mA
+0.5~1V
+VSRAM_CPUL
+1200mA
+0.5~1V
+CPU-L
+SRAM
+VSRAM_APU
+600mA
+0.5V~1V
+VSRAM_DIGRF
+600mA
+0.5V~1V
+VSRAM_MDFE
+600mA
+0.5V~1V
+VSRAM_MODEM
+1200mA
+0.5V~01V
+MODEM 
+SRAM
+ON
+BUCK6
+5A
+0.4V~1.19375V
+BUCK7
+5A
+0.4V~1.19375V
+ON
+BUCK4
+5A
+0.4V~1.19375V
+ON
+VS1
+2.6A
+1.8V~2.2V
+ON
+ABB
+DVDDIO
+VM18
+600mA
+1.84V
+LPDDR5
+VDD1
+ON
+RF IC
+OFF
+ON
+VS2
+4.5A
+1.2V~1.5V
+ON ABB
+ABB
+Consys, 
+MT6637
+OFF
+ON
+RF IC
+RF IC
+OFF
+ON
+ON
+ON
+VS3
+4.5A
+0.8V~1.193V
+VRF09
+800mA
+0.9V
+OFF RF IC
+ON
+ON RF IC, 
+DIGRF SRAM
+ON
+ON
+ON
+VAUX18
+50mA
+1.84V
+AUXADC
+VEMC
+800mA
+2.55/2.9/3V
+VTREF18
+50mA
+1.84V
+VDIG18
+10mA
+1.8V
+ON MT6363
+DIG
+ON
+BatteryOFF
+ON
+VSYS
+VIO75
+Sink50mA
+0.75V
+ON
+ON
+S1-LDO
+S2-LDO
+S3-LDO
+LDO
+ON OFF
+OFF
+APU
+SRAM
+GPU
+SRAM
+UFS3.x
+VCC
+LPDDR5
+VDD2H
+MODEM
+IO
+CPU-M 
+SRAM
+12V
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0333.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+9
+MT8676 Power Grid: MT6373, MT6319*2
+9
+MT6373
+MT6319
+RF Power
+System 
+Power
+External 
+Power
+Camera 
+Power
+WCN 
+Power Peripherals
+Memory/
+Storage 
+Display 
+Power
+Buck1
+5A
+0.4V~1.19375V
+GPUSTACK
+VANT18
+300mA
+1.8V
+VSYS
+Buck2
+5A
+0.4V~1.19375V
+Buck3
+5A
+0.4V~1.19375V
+VS1
+VAUD18
+300mA
+OFF
+OFF ANT &amp; GPS 
+Component
+ON
+ON
+Buck4
+5A
+0.4V~1.19375V
+Buck5
+5A
+0.4V~1.19375V
+Buck6
+5A
+0.4V~1.19375V
+Buck0
+5A
+0.4V~1.19375V
+LPDDR5
+VDD2L
+Buck7
+5A
+1.2V
+Buck8
+5A
+0.4V~1.19375V
+Buck9
+5A
+0.4V~1.19375V
+ON
+ON
+APU
+VRF18_AIF
+1200mA
+1.8V
+OFF
+VRFIO18_AIF
+600mA
+1.82V
+OFF
+VCN18IO
+600mA
+OFF
+VRF13_AIF
+1200mA
+1.3V
+OFF
+VRF12_AIF
+800mA
+1.24V
+VRF09_AIF
+1200mA
+0.9V
+OFF
+VSRAM_DIGRF_
+AIF
+600mA
+0.85V
+VS2
+VS3
+VAUX18
+50mA
+1.84V
+VDIG18
+10mA
+1.8V
+VCN33_1
+800mA
+3.3/3.4/3.5/3.6/2.8V
+VSIM2
+200mA
+1.86V/2.9V/3V
+VSIM1
+200mA
+1.86V/2.9V/3V
+SIM1
+VUSB
+200mA
+3.07V
+USB2.0 / 
+MT6338 Audio
+VMCH
+800mA
+3.0/1.8/1.86/2.9V
+SD card
+VMC
+200mA
+3.0/1.8/1.86/2.9V
+MT6373
+DIG
+AUXADCON VCN33_2
+800mA
+3.3/3.4/3.5/3.6/2.8V
+SIM2
+MSDC1
+OFF
+OFF
+OFF
+OFF
+OFF
+OFF
+ON
+ON
+VEFUSE
+200mA
+1.2V/1.8V
+eFuseOFF
+VCN33_3
+800mA
+3.3/3.4/3.5/3.6/2.8V
+OFF
+VIO28
+200mA
+1.8V/2.8V/3V/3.3V
+Sensor
+VIBR
+200mA
+1.8V/2.8V/3V/3.3V
+Vibrator
+VFP
+200mA
+1.8V/2.8V/3V/3.3V
+Finger Print
+VTP
+200mA
+1.8V/2.8V/3V/3.3V
+Touch Panel
+OFF
+OFF
+OFF
+OFF
+ON
+UFS
+VCCQ
+OFF
+VMDDR
+1200mA
+0.75V
+OFF
+VDD2_LDO
+Buck1
+5A
+0.4V~1.19375V
+Buck2
+5A
+0.4V~1.19375V
+Buck3
+5A
+0.4V~1.19375V
+Buck4
+5A
+0.4V~1.19375V
+MM
+ON
+MT6319OW/A
+ON CPU-L
+DSU
+CPU-B
+ON
+Buck1
+5A
+0.4V~1.19375V
+Buck2
+5A
+0.4V~1.19375V
+Buck4
+5A
+0.4V~1.19375V
+Buck3
+5A
+0.4V~1.19375V
+CPU-M
+ON
+MT6319UW/A
+ON LPDDR5
+VDDQ
+ON
+DDR PHY
+VMDDR
+ON
+ONRT5762E
+(option)
+UFS4.x
+VCC
+OFF
+MT6637
+MT6637
+MT6338
+AudioMM
+SRAM
+(option)
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0333.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+10
+Circuit Type Buck Name
+(Application name) Output Voltage (V) Boot Default (V) IOUT-MAX (mA)
+Buck
+BUCK1
+(VDIGRF_PMU)
+0.4 ~ 1.19
+(6.25 mV/step) ON (0.7) 5,000
+BUCK2/3
+(DVDD_MODEM)
+0.4 ~ 1.19
+(6.25 mV/step) ON (0.8) 10,000
+BUCK4
+(DVDD_SRAM_CORE)
+0.4 ~ 1.19
+(6.25 mV/step) ON (0.75) 5,000
+BUCK5
+(EMI_VDD2H)
+0.4 ~ 1.19
+(6.25 mV/step) ON (1.05) 5,000
+BUCK6/7
+(DVDD_CORE)
+0.4 ~ 1.19
+(6.25 mV/step) ON (0.75) 10,000
+VS1
+(VS1_PMIC)
+1.8 ~ 2.2
+(12.5 mV/step) ON (2.0) 2,600
+VS2
+(VS2_PMIC)
+1.2 ~ 1.5
+(12.5 mV/step) ON (1.45) 4,500
+VS3
+(VS3_PMIC)
+0.8 ~ 1.19
+(6.25 mV/step) ON (1.05) 4,500
+MT6363 – Buck Power Plan
+Note: 
+1) Please check the low power mode setting if peripheral application at VS1 or VIO18
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0333.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+11
+Circuit Type LDO Name Output Voltage (V) Boot Default (V) IOUT-MAX (mA) Application
+VDIG VDIG18 1.80 ON (1.8) 10 PMIC Interface
+ALDO VAUX18 1.84 ON (1.84) 50 AUXADC
+ALDO VTREF18 1.84 OFF 50 AUXADC pull-up
+DLDO VEMC 2.55/3 ON (2.55) 800 UFS
+MT6363 – LDO Power Plan (1/4)
+Note: 
+1) VDIG18, VAUX18, VTREF18 are PMIC internal reference power. DON’T share to other applications. 
+2) Default OFF LDO, voltage is set by software. 
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0333.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+12
+Circuit Type LDO Name Output Voltage (V) Boot Default (V) IOUT-MAX (mA) Application
+SLDO VIO18 1.8 ON (1.8) 600 I/O
+SLDO VA15 1.5 ON (1.5) 600 AP
+SLDO VM18 1.84 ON (1.84) 600 DRAM
+SLDO VRF18 1.84 OFF 600 RF
+SLDO VRFIO18 1.82 OFF 600 Connectivity
+SLDO VCN15 1.82 OFF 300 RF
+SLDO VUFS18 1.86 ON (1.86) 1,200 UART IO
+MT6363 – LDO Power Plan (2/4)
+Note: 
+1) VRFIO18 LDO powers to Connectivity IC
+2) VCN15 LDO powers to RF IC.
+3) Default OFF LDO, voltage is set by software. 
+Dedicated for IO, 
+not for other application
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0333.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+13
+Circuit Type LDO Name Output Voltage (V) Boot Default (V) IOUT-MAX (mA) Application
+SLDO VA12_1 1.2 ON (1.2) 600 AP
+SLDO VA12_2 1.2 ON (1.2) 600 AP
+SLDO VCN13 1.35 OFF 800 Connectivity
+SLDO VRF13 1.34 OFF 800 RF
+SLDO VRF12 1.24 ON (1.23) 600 RF
+SLDO VUFS12 1.2 ON (1.2) 1200 AP
+SLDO VSRAM_CPUB 0.5~1.1925 ON (0.75) 600 CPU_B SRAM
+SLDO VSRAM_CPUM 0.5~1.1925 ON (0.75) 600 CPU_M SRAM
+SLDO VSRAM_CPUL 0.5~1.1925 ON (0.75) 1,200 CPU_L SRAM
+MT6363 – LDO Power Plan (3/4)
+Note: 
+1) Default OFF LDO, voltage is set by software. 
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0333.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+14
+Circuit Type LDO Name Output Voltage (V) Boot Default (V) IOUT-MAX (mA) Application
+SLDO VRF09 0.9 OFF 800 RF
+SLDO VSRAM_MODEM 0.4~1.1925 ON (0.8) 1,200 MODEM SRAM
+SLDO VSRAM_DIGRF 0.4~1.1925 ON (0.85) 600 DIGRF SRAM
+SLDO VSRAM_MDFE 0.4~1.1925 ON (0.9) 600 GPU SRAM 
+SLDO VSRAM_APU 0.4~1.1925 ON (0.75) 600 APU SRAM
+MT6363 – LDO Power Plan (4/4)
+Note: 
+1) Default OFF LDO, voltage is set by software.
+2) VSRAM_MDFE powers to GPU_SRAM
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0333.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+Function Description
+15
+MT6363 Design Notice
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0333.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+16
+MT6363 – Power ON Sequence
+TDx_ON (ms) PWRKEY = L
+T (ms) Configuration Application
+TD01_ON 140.0 - CHRDETB = L Start Power ON
+TD00_ON 38.0 - PWRKEY = L Start Power ON
+TD1_ON 10 48 VAUX18 AuxADC
+TD2_ON 14 52 VS3 SLDO
+TD3_ON 15.5 53.5 BUCK4 VSRAM_CORE
+TD4_ON 17 55 VSRAM_APU APU SRAM
+TD5_ON 17 55 VSRAM_MODEM MODEM SRAM
+TD6_ON 18 56 VBUCK6 / VBUCK7 VCORE
+TD7_ON 19.5 57.5 VBUCK2 / VBUCK3 VMODEM
+TD8_ON 21 59 VBUCK1 VDIGRF
+TD9_ON 22.5 60.5 VS2 SLDO
+TD10_ON 24 62 VSRAM_MDFE GPU SRAM
+TD11_ON 24 62 VSRAM_DIGRF RF IC, DIGRF SRAM
+TD12_ON 25 63 VS1 SLDO
+TD13_ON 26.5 64.5 VIO075 IO
+TD14_ON 30.5 68.5 VA12_1 ABB
+TD15_ON 30.5 68.5 VA12_2 ABB
+TD16_ON 30.5 68.5 VRF12 RF
+TD17_ON 30.5 68.5 VUFS12 ABB
+TD18_ON 30.5 68.5 EXT_PMIC_EN1 Enable Sub-PMIC
+TD19_ON 30.5 68.5 VUFS18 DVDDIO(IOBL)
+TD20_ON 39 77 VA15 ABB
+TD21_ON 41 79 VIO18 DVDDIO
+TD22_ON 43 81 VM18 EMI_VDD1
+TD23_ON 44.5 82.5 VEMC UFS VCC
+TD24_ON 44.5 82.5 EXT_PMIC_EN2 Enable Sub-PMIC
+TD25_ON 44.5 82.5 VSRAM_CPUL CPU_L SRAM
+TD26_ON 45.5 83.5 VBUCK5 EMI_VDD2H
+TD27_ON 53.5 91.5 VSRAM_CPUB CPU_B SRAM
+TD28_ON 53.5 91.5 VSRAM_CPUM CPU_M SRAM
+TD29_ON 70 109.5 SYSRSTB -
+Note: 
+1) The timing parameters TD1_ON~TDN_ON are typical values (variation: ± 10%).
+2) The timing parameters TD00_ON~TD01_ON are typical values (variation: ± 20%).
+PWRKEY TD00_ON
+TD1_ON
+TD2_ON
+TDN_ON
+VR1
+VR2
+VR(N-1)
+VRN
+  
+  
+TD(N-1)_ON
+CHRDETB TD01_ON
+&lt;1ms
+VSYS
+VREF
+VDIG18 &lt;6ms
+VSYS  2V
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0333.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+17
+MT6373 – Power ON Sequence
+Note: The timing parameters TD0_ON~TDN_ON are typical values (variation: ± 10%).
+TDX_ON (ms) EN=Hi
+T (ms) Configuration Application
+TD0_ON 2.15~3.35 - EN = H
+(EXT_PMIC_EN1) enable
+TD1_ON 0 3.35 VAUX18 AUXADC
+TD2_ON 3 6.35 VBUCK7 UFS VCCQ
+TD3_ON 9.5 12.85 VUSB USB_PHY
+TD4_ON 11 14.35 VBUCK6 MM SRAM
+(option)
+TD5_ON 13 16.35 VBUCK8
+VBUCK9 APU
+TD6_ON 17 20.35 VBUCK5 VDD2L
+TD7_ON 17 20.35 VBUCK4 VMDDR
+TD8_ON 22 25.35
+VBUCK0
+VBUCK1
+VBUCK2
+VBUCK3
+GPU_STACK
+EN TD0_ON
+TD1_ON
+TD2_ON
+TDN_ON
+VR1
+VR2
+VRN
+  
+  
+&lt;1ms
+VSYS
+VREF
+VDIG18 &lt;6ms
+VSYS  2V
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-18"><h2>PDF物理页 18</h2><a href="materials/SRC0333.pdf#page=18" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+18
+MT6319 – Power ON Sequence
+MT6319COW T (ms) Configuration Application
+TD0_ON 0.8 ~ 2.0 EN = H
+(EXT_PMIC_EN2) Enable
+TD1_ON 4 VBUCK3 CPU_L
+TD2_ON 6 VBUCK1+2 MM
+TD3_ON 12 VBUCK4 CPU_B
+Note: The timing parameters are typical values (variation: ± 20%).
+MT6319CUW T (ms) Configuration Application
+TD0_ON 0.8 ~ 2.0 EN = H
+(EXT_PMIC_EN2) Enable
+TD1_ON 12 VBUCK3 EMI_VDDQ
+TD2_ON 14 VBUCK1+2 CPU_M
+TD3_ON 16 VBUCK4 No use
+EN TD0_ON
+TD1_ON
+TD2_ON
+VR1
+VR2
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-19"><h2>PDF物理页 19</h2><a href="materials/SRC0333.pdf#page=19" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+19
+MT6363 – Power OFF Sequence
+TDX_OFF (ms) Configuration Application
+TD0_OFF 0 SYSRSTB = L Start Power OFF
+TD1_OFF 2 EXT_PMIC_EN2 Disable Sub-PMIC
+TD2_OFF 10 EXT_PMIC_EN1 Disable Sub-PMIC
+TD3_OFF 10 VSRAM_CPUB CPU_B SRAM
+TD4_OFF 10 VSRAM_CPUM CPU_M SRAM
+TD5_OFF 24 VSRAM_CPUL CPU_L SRAM
+TD6_OFF 26 VBUCK5 EMI_VDD2H
+TD7_OFF 30 VM18 EMI_VDD1
+TD8_OFF 30 VEMC UFS_VCC
+TD9_OFF 32 VIO18 IO
+TD10_OFF 34 VA15 ABB
+TD11_OFF 68 VUFS18 DVDDIO(IOBL)
+TD12_OFF 68 VUFS12 ABB
+TD13_OFF 68 VA12_1 ABB
+TD14_OFF 68 VA12_2 ABB
+TD15_OFF 68 VRF12 RF
+TD16_OFF 70 VIO075 IO
+TD17_OFF 76 VS1 SLDO
+TD18_OFF 80 VSRAM_MDFE GPU SRAM
+TD19_OFF 80 VSRAM_DIGRF DIGRF SRAM
+TD20_OFF 82 VS2 SLDO
+TD21_OFF 86 VBUCK1 VDIGRF
+TD22_OFF 90 VBUCK2 / VBUCK3 VMODEM
+TD23_OFF 94 VBUCK6 / VBUCK7 VCORE
+TD24_OFF 98 VSRAM_APU APU SRAM
+TD25_OFF 98 VSRAM_MODEM MODEM SRAM
+TD26_OFF 102 VBUCK4 VSRAM_CORE
+TD27_OFF 106 VS3 SLDO
+TD28_OFF 106 VAUX18 AuxADC
+Note: 
+1. The timing parameters TD1_OFF~TDN_OFF are typical values (variation: ± 10%).
+2. Power-OFF sequence starts by SYSRSTB = Hi to Lo.
+3. VEMC/VAUX18 can be OFF by software driver control before SYSRSTB = L.
+SYSRSTB
+VF1 TD1_OFF
+VF2
+VF(N-1)
+VFN
+  
+  
+TD0_OFF
+TD2_OFF
+TD(N-1)_OFF
+TDN_OFF
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-20"><h2>PDF物理页 20</h2><a href="materials/SRC0333.pdf#page=20" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+20
+MT6373 – Power OFF Sequence
+TDX_OFF (ms) Configuration Application
+TD0_OFF &lt; 0.2 EN = L
+(EXT_PMIC_EN1) Disable
+TD1_OFF 0 VBUCK4 VMDDR
+TD2_OFF 4 VBUCK8
+VBUCK9 APU
+TD3_OFF 4 VBUCK5 VDD2L
+TD4_OFF 8 VBUCK6 MM SRAM
+(option)
+TD5_OFF 12
+VBUCK0
+VBUCK1
+VBUCK2
+VBUCK3
+GPU_STACK
+TD6_OFF 16 VUSB USB_PHY
+TD7_OFF 24 VAUX18 AUXADC
+TD8_OFF 40 VBUCK7 UFS VCCQ
+EN
+VF1 TD1_OFF
+VF2
+VFN
+  
+  
+TD0_OFF
+TD2_OFF
+TDN_OFF
+Note: 
+1. The timing parameters TD1_OFF~TDN_OFF are typical values (variation: ± 10%).
+2. Power-OFF sequence is completed after SYSRSTB = L.
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-21"><h2>PDF物理页 21</h2><a href="materials/SRC0333.pdf#page=21" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+21
+MT6319 – Power OFF Sequence
+Note: 
+1. The timing parameters are typical values (variation: ± 20%).
+2. Power-OFF sequence is completed after SYSRSTB=L
+3. MM can be OFF by software driver control before SYSRSTB=L.
+MT6319COW T (ms) Configuration Application
+TD0_OFF &lt;0.2 EN = L
+(EXT_PMIC_EN2) Disable
+TD1_OFF 0 VBUCK1+2 MM
+TD2_OFF 4 VBUCK4 CPU_B
+TD3_OFF 12 VBUCK3 CPU_L
+MT6319CUW T (ms) Configuration Application
+TD0_OFF &lt;0.2 EN = L
+(EXT_PMIC_EN2) Disable
+TD1_OFF 0 VBUCK3 EMI_VDDQ
+TD2_OFF 4 VBUCK1+2 CPU_M
+TD3_OFF 8 VBUCK4 No use
+VF1 TD1_OFF
+VF2
+TD0_OFF
+TD2_OFF
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-22"><h2>PDF物理页 22</h2><a href="materials/SRC0333.pdf#page=22" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+22
+MT6363 – UVLO (Under Voltage Lock Out)
+MT6363 UVLO
+Sensing pin VSYSSNS VBBSNS
+UVLO high threshold 2.6V ~ 3.2V (0.1V/step)
+Default: 2.9V
+2.6V ~ 3.2V (0.1V/step)
+Default: 2.9V
+UVLO low threshold 2.0V ~ 2.9V (0.1V/step)
+Default: 2.5V
+2.5V ~ 2.9V (0.1V/step)
+Default: 2.6V
+Accuracy ± 50 mV ± 50 mV
+Note: 
+1. If UVLO_OFF is set &lt; 2.5V, RG_UVLO2V0_DDLO_EN must be set to 1.
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-23"><h2>PDF物理页 23</h2><a href="materials/SRC0333.pdf#page=23" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+Main PMIC
+WDTRST B_IN
+SYSRSTB
+SoC
+WATCHDOG
+SYSRSTB
+Sub PMIC
+WDTRST B
+23
+MT6363 – System Reset
+• SYSRSTB Function
+- SYSRSTB is MT6363’s output only.
+- Reset to the default value and force the SoC restoration
+• SYSRSTB=Lo to Hi: MT6363 completes power-on sequence.
+- There are two events (PWRKEY=Lo &amp; CHRDETB=Lo) for MT6363 power-on sequence start.
+• SYSRSTB=Hi to Lo: MT6363 power-off or exception off
+- SYSRSTB pin output driving capability selection.
+• 7.5 mA (default)
+• Layout notice
+• SYSRSTB and WDTRSTB_IN need to be kept far from noise traces. 
+• If possible, add “GND” shielding to avoid noise coupling.
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-24"><h2>PDF物理页 24</h2><a href="materials/SRC0333.pdf#page=24" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+24
+MT6363 – CHRDETB
+• CHRDETB
+- There are two trigger events (PWRKEY=Lo &amp; CHRDETB=Lo) for MT6363 power-on sequence.
+• CHRDETB
+- Internal pull-up 40KΩ to VBBSNS
+- VIH: ≥ VBBSNS * 70%
+- VIL: ≤ VBBSNS * 30%
+- CHRDETB response time to power-on: 138ms ±20%
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-25"><h2>PDF物理页 25</h2><a href="materials/SRC0333.pdf#page=25" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+25
+MT6363 – PWRKEY
+• PWRKEY
+- There are two trigger events (PWRKEY=Lo &amp; CHRDETB=Lo) for MT6363 power-on sequence.
+• PWRKEY
+- Interrupt for press and release key
+- Multi-Keys combination with HOMEKEY for long press shutdown
+• Default: PWRKEY 8s long press shutdown
+- VIH: ≥ 1.45V
+- VIL: ≤ 0.3V
+- PWRKEY response time to power-on: 35ms ±20%
+PMIC-1
+HOMEKEY
+RESETB
+SoC
+SYSRSTB
+PMIC-2
+QONB
+PWRKEY
+1.8V
+1.8V
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-26"><h2>PDF物理页 26</h2><a href="materials/SRC0333.pdf#page=26" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+26
+MT6363 – PWRKEY Long Press Shutdown
+• PWRKEY long press shutdown
+- Timer spec.: 2/5/8 (default)/11 sec ±10%
+- Timer can be set by software. (CLK source = internal 32 kHz)
+- Key combination is selected by register.
+• Long press shutdown: Multi-Keys combination 
+- PWRKEY (default)
+- PWRKEY + HOMEKEY 
+- PWRKEY + HOMEKEY-2
+- PWRKEY + HOMEKEY + HOMEKEY-2
+• PWRKEY long press function
+- Force a PMIC shutdown. (default)
+• All power supplies are turned off except VDIG18.
+- Disable PWRKEY long press shutdown function
+• JUST change to others key combination and don’t let HOMEKEY/HOMEKEY-2 pull-down.
+PMIC-1
+HOMEKEY
+RESETB
+SoC
+SYSRSTB
+PMIC-2
+QONB
+PWRKEY
+1.8V
+1.8V
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-27"><h2>PDF物理页 27</h2><a href="materials/SRC0333.pdf#page=27" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+27
+• HOMEKEY , HOMEKEY2 function
+- Interrupt for press and release key
+- Multi-Keys combination with PWRKEY for long press shutdown
+- VIH: ≥ 0.7*(DVDD18_IO)
+- VIL: ≤ 0.3*(DVDD18_IO)
+- HOMEKEY/ HOMEKEY2 response time to interrupt: 34ms ±10%
+MT6363 – HOMEKEY , HOMEKEY2
+Ball name Function
+GPIO8 HOMEKEY
+GPIO9 HOMEKEY2
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-28"><h2>PDF物理页 28</h2><a href="materials/SRC0333.pdf#page=28" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+28
+MT6363 – Others PMIC Exception Alarm
+• To enable sub PMIC exception alarms:
+- MT6363’s EXT_PMIC_PG should be connected to FAULTBof sub PMIC.
+- MT6363’s EXT_PMIC_PG should be active low.
+- MT6363’s EXT_PMIC_PG has internal pull-up resistor of 40 kΩ to VSYS.
+- VIH: ≥ 0.7*VSYS
+- VIL: ≤ 0.3*VSYS
+• Sub PMIC exception conditions
+- UVLO off
+- OCP
+- Thermal shutdown
+- Sub PMIC VR power is not good.
+Main PMIC
+EXT_PMIC_EN
+SYSRSTB
+SoC
+SYSRSTB
+Sub PMIC
+FAULTB EN
+EXT_PMIC_PG
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-29"><h2>PDF物理页 29</h2><a href="materials/SRC0333.pdf#page=29" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+29
+• SW watchdog reset function (default: off)
+- MT6363 WDTRSTB_IN is input pin and should be connected to 
+SoC WATCHDOG.
+- If the SoC watchdog timeout is triggered, SoC will assert 
+WATCHDOGto low.
+- The PMICs will be reset if WDTRSTB_IN is logic low.
+• Watchdog reset option
+- RG reset: Reset PMIC register value. (default)
+- Cold reset: Shut down PMIC and then watchdog will 
+automatically re-power on. 
+• HW PMIC reset function
+- Response time: 1.7 ms
+- Power source is VIO18_PMU.
+Main PMIC
+WDTRST B_IN
+SYSRSTB
+SoC
+WATCHDOG
+SYSRSTB
+Sub PMIC
+WDTRST B
+MT6363 – SoC Watchdog Reset
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-30"><h2>PDF物理页 30</h2><a href="materials/SRC0333.pdf#page=30" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+150 ºC
+110 ºC
+PMU shuntdown
+PMU
+shutdown release
+110 ºC
+30
+MT6363 – Thermal Shutdown
+• HW control (±10°C)
+- TJ &gt; 150°C PMU HW shutdown 
+- HW shutdown release when TJ &lt; 110°C 
+• Pull PWRKEY = L for next power-on sequence.
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-31"><h2>PDF物理页 31</h2><a href="materials/SRC0333.pdf#page=31" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+31
+MT6363 – DCAP
+• Disable the charger in auto power on (DCAP) condition 
+when the temperature is high.
+- Enable flow
+• Enable DCAP by RG setting when the charger is plugged in 
+and BAT temp. &gt; HT shutdown level (default: 60⁰C).
+- Release flow
+• DCAP will be disabled automatically when the charger is unplugged.
+- Notice
+• Enable DCAP function 
+- Via MT6363 setting 
+- MT6375’s CHRDETB keep Low w/o WATCHDOG reset while charger in exist.
+※ DCAP enable flow needs to follow the programming guide.
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-32"><h2>PDF物理页 32</h2><a href="materials/SRC0333.pdf#page=32" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+32
+• Feature support condition
+- This feature is a power reboot function to handle sudden battery power drop event.
+- SPAR function is triggered by MT6685 where the RTC is designed in.
+- Once SPAR occurs, RTC_INT will be pulled high to reboot MT6363. 
+• Enabled by software
+- There are three time settings can be selected.
+• 0.3s, VRTC output needs coin cell or capacitor of &gt; 2.2 uF
+• 0.86s, VRTC output needs coin cell or capacitor of &gt; 4.7 uF
+• 1.83s, VRTC output needs coin cell or capacitor of &gt; 22 uF
+• Min. SPAR trigger condition: “duration of (VSYS &lt; UVLO)” &gt; 1 ms
+SPAR
+MT6363
+RTC_INT
+AP
+SPMISPMI
+FAULT_B
+MT6685
+EN
+VRTC28
+SPAR in 
+RTC 
+Macro
+VSYS
+UVLO/SPAR
+falling
+RTC Cap
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-33"><h2>PDF物理页 33</h2><a href="materials/SRC0333.pdf#page=33" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+33
+Pin name Power source – ball name Power source domain
+PWRKEY VBBSNS VSYS
+HOMEKEY , 
+HOMEKEY2 DVDD18_IO VIO18 (1.8V)
+CHRDETB VBBSNS VSYS
+SYSRSTB VIO18 VIO18 (1.8V)
+EXT_PMIC_EN VSYSSNS VSYS
+EXT_PMIC_PG VBBSNS VSYS
+WDTRSTB_IN DVDD18_IO VIO18 (1.8V)
+SRCLKEN_IN0,
+SRCLKEN_IN1 DVDD18_IO VIO18 (1.8V)
+EINT DVDD18_IO VIO18 (1.8V)
+RTC_INT VSYSSNS VSYS
+MT6363 – I/O Power Domain
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-34"><h2>PDF物理页 34</h2><a href="materials/SRC0333.pdf#page=34" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+34
+Pin name Description If un-used
+EXT_PMIC_EN1
+EXT_PMIC_EN2 Ext. PMIC enable pin Floating
+EXT_PMIC_PG Ext. PMIC PG pin Floating
+HOMEKEY
+HOMEKEY2 Key Floating
+RTC_INT RTC interrupt 
+for SPAR power-on Floating
+AUXADC_VINx AuxADC GND
+LDO_XX Default OFF
+un-used LDOs
+w/ remote sense: config as shown
+w/o remote sense: Floating 
+MT6363 – Un-used Pin Configuration
+Note: 
+1. Please check HOMEKEY/HOMEKEY-2 connection w/ PWRKEY long press shutdown function.
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-35"><h2>PDF物理页 35</h2><a href="materials/SRC0333.pdf#page=35" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+35
+Ball: EINT VEMC boot voltage
+Pull low to GND 2.55V
+Pull high to VIO18 3V
+MT6363 – HW Trapping for VEMC Boot Voltage
+• UFS VCC 2.5V or 3V
+- VEMC LDO with HW trapping design in MT6363 for UFS2.x VCC=3V &amp; UFS3.x VCC=2.5V
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-36"><h2>PDF物理页 36</h2><a href="materials/SRC0333.pdf#page=36" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+36
+SPMI
+• The SPMI is a two-wire interface: 
+- 1 serial bi-directional data signal (SDATA) 
+- 1 clock signal (SCLK) controlled by master
+• SPMI allows the use of up to PMIC*8 pcs on a single bus.
+• The power source of SPMI I/O is DVDD18_IO.
+• MT6363 supports up to 26 MHz for SPMI speed with load up to 50 pF.
+Layout Constraint of SPMI
+• SPMI_SCL and SPMI_SDA layout traces should be differential and use GND shielding to prevent noise coupling. 
+(e.g., VBUS, BUCK_LX, SWCHR_LX, BUCK input pin)
+• The traces should not overlap with noise sources on layers N+1 and N-1. 
+(e.g. VBUS, BUCK_LX, SWCHR_LX, BUCK input pin)
+• The max. length of SPMI bus between SoC and PMIC should be less than 6 inches.
+MT6363 – SPMI I/F
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-37"><h2>PDF物理页 37</h2><a href="materials/SRC0333.pdf#page=37" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+37
+• GPIO1~GPIO7(AUXADC_VIN1~AUXADC_VIN7)
+- The power source of AUXADC_VINx is VAUX18.
+- There are three pull-up voltage options:
+• Internal pull-up to VAUX18: internal pull-up resistor (30 kΩ / 100 kΩ / 400 kΩ).
+- The capacitance at AUXADC_VINx should be NC.
+• External pull-up to VTREF18 (pull- up resistor must be higher than 10kΩ)
+- The capacitance at AUXADC_VINx should be less than 1 nF and it should be put near the PMIC side.
+• External pull-up to VIO18 (pull- up resistor must be higher than 10kΩ)
+- The capacitance at AUXADC_VINx should be less than 1 uF and it should be put near the PMIC side.
+MT6363 – AUXADC
+Ball name AUXADC_VINx Application
+GPIO1 AUXADC_VIN1
+General purpose
+GPIO2 AUXADC_VIN2
+GPIO3 AUXADC_VIN3
+GPIO4 AUXADC_VIN4
+GPIO5 AUXADC_VIN5
+GPIO6 AUXADC_VIN6
+GPIO7 AUXADC_VIN7
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-38"><h2>PDF物理页 38</h2><a href="materials/SRC0333.pdf#page=38" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+• VIO075 is bias circuit, not LDO output.
+Bias: VIO075
+Circuit type IP name Output voltage (V) Boot default (V) Application
+VBIASN VIO075 0.75 ON (0.75) I/O
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-39"><h2>PDF物理页 39</h2><a href="materials/SRC0333.pdf#page=39" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+Function Description – DC-DC
+39
+MT6363 Design Notice
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-40"><h2>PDF物理页 40</h2><a href="materials/SRC0333.pdf#page=40" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+MT6363 buck
+(Application) Output de-coupling (min.) Output de-coupling (max.) Total COUT value
+(after de-rating)
+VS1
+(VS1_PMIC)
+0.47 uH
+10 uF*3
+0.47 uH
+22 uF*2 ≥ 15.6 uF #1
+VS2
+(VS2_PMIC)
+0.47 uH
+10 uF*3
+0.47 uH
+22 uF*2 ≥ 15.6 uF #1
+VS3
+(VS3_PMIC)
+0.47 uH
+10 uF*3
+0.47 uH
+22 uF*2 ≥ 15.6 uF #1
+BUCK1
+(VDIGRF_PMU)
+0.24 uH
+10uF*2
+0.24 uH
+22 uF*2 ≥ 10.3 uF #1
+BUCK2 + BUCK3 
+(DVDD_MODEM)
+0.24 uH*2
+10 uF*6
+0.24 uH*2
+22 uF*4 ≥ 30.9 uF #1
+BUCK4 
+(DVDD_SRAM_CORE)
+0.47 uH
+10uF*3
+0.47 uH
+22 uF*2 ≥ 15.6 uF #1
+BUCK5 
+(EMI_VDD2H)
+0.24 uH
+10uF*12
+0.24 uH
+22 uF*7 ≥ 61.8 uF #1
+BUCK6 + BUCK7 
+(DVDD_CORE)
+0.24 uH*2
+10uF*6
+0.24 uH*2
+22uF*4 ≥ 30.9 uF #1
+40
+Note #1: Total COUT value @1V derating for AC 
+0.01Vrms and overall operating temperature. 
+DC-DC: Buck Converter List
+Note:  1. Cap replacement plan: 10uF/0402/6.3V/X5R *2ea &lt;-&gt; 22uF/0603/6.3V/X5R *1ea
+2. There is no output current margin for peripheral application in VS1 &amp; VS2 power domains.
+3. Add external buck for VS1 or VS2 peripheral application if needed.
+4. Please check the low power mode setting if peripheral application at VS1 or VIO18
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-41"><h2>PDF物理页 41</h2><a href="materials/SRC0333.pdf#page=41" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+41
+• For inductors, we recommend following the notice below.
+- Follow the table below for inductor current rating.
+- Small size and high efficiency are our main objectives. The proposed low core loss and low DCR (copper 
+wire resistance) inductors are more efficient. For efficiency test conditions, refer to PMIC datasheet.
+Note: 
+1. The ISAT depends on inductance saturation. ( -30% reduction from initial L value )
+2. The ITEMP depends on ambient temperature (TA), and TJ should not exceed 125°C. 
+MT6363 buck
+(Application)
+Inductance (uH)
+MUST-BE
+ISAT,MAX (mA)
+MUST-BE
+VS1 0.47 ≥ 3099
+VS2 0.47 ≥ 4858
+VS3 0.47 ≥ 2487
+BUCK1
+(VDIGRF_PMU) 0.24 ≥ 2029
+BUCK2 + BUCK3 
+(DVDD_MODEM) 0.24*2 ≥ 4974
+BUCK4 
+(DVDD_SRAM_CORE) 0.47 ≥ 2533
+BUCK5 
+(EMI_VDD2H) 0.24 ≥ 5471
+BUCK6 + BUCK7 
+(DVDD_CORE) 0.24*2 ≥ 5909
+DC-DC: Power Inductor Selection Guideline
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-42"><h2>PDF物理页 42</h2><a href="materials/SRC0333.pdf#page=42" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+42
+• DC-DC layout guide #1
+- The concept of buck layout is as shown below.
+• All the input decoupling capacitors should be placed near PMIC. 
+- Buck GND balls should be connected to input capacitors firstly,
+and isolated from the nearby GND trace then connected to main GND plane.
+• The buck inductors should be placed near PMIC.
+DC-DC: Schematic and Layout Notice #1
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-43"><h2>PDF物理页 43</h2><a href="materials/SRC0333.pdf#page=43" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+43
+• DC-DC layout guide #2-1: Input capacitor
+- The concept of buck layout is as shown below.
+- Keep ground return path short. Stubs are not allowed.
+- To connect buck ground to main ground, you can select the green, yellow, or red path.
+• The green path is recommended. Ground returns from PMIC to input capacitor first, and then connects to the main 
+ground.
+• The yellow or red path is also acceptable, but note that only diverging ground paths underneath input capacitor ground 
+are allowed. 
+- For more layout constraint details, refer to “MT6985 SCH and PCB Design Check List”.
+PMIC BUCK
+Layer 1
+Layer 2
+Main GND
+GND ball
+CAP GND
+CIN
+Ground return path
+DC-DC: Schematic and Layout Notice #2-1
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-44"><h2>PDF物理页 44</h2><a href="materials/SRC0333.pdf#page=44" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+44
+• DC-DC layout guide #2-2: Input capacitor GND
+- Layout-1 &amp; Layout-2 example can be implement for MT6363 buck input GND.
+- Layout-2: 
+• GND_VS2/GND_BUCK1/GND_BUCK2/GND_BUCK3 can be one group.
+• GND_BUCK4/GND_BUCK5/GND_BUCK6/GND_BUCK7 can be one group.
+• GND_VS1/GND_VS3 can be one group.
+DC-DC: Schematic and Layout Notice #2-2
+VS3
+VS1
+BUCK4
+BUCK5
+BUCK6
+BUCK7
+Layout-2
+BUCK1 BUCK2
+BUCK3VS2
+Layout-1
+VS1
+VS3
+BUCK4
+BUCK5
+BUCK6
+BUCK7
+BUCK3
+BUCK2BUCK1
+VS2
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-45"><h2>PDF物理页 45</h2><a href="materials/SRC0333.pdf#page=45" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+45
+Note #1: Effective CINPx (2.2 uF) value ≥ 0.36 uF @5V derating for AC 0.2 Vrms and overall operating temperature
+Note #2: CINSYS = 10 uF/0402/6.3V/X5R*2
+• DC-DC layout guide #3-1: Input capacitor (10uF *2 + 2.2uF *10)
+DC-DC: Schematic and Layout Notice #3-1
+MT6363 Input trace Inductance (from CINSYS to PMIC ball) Inductance (from CINPx to PMIC ball)
+BUCK1
+BUCK4
+BUCK7
+VSYS_BUCKx
+GND_BUCKx
+10uF *2
+( L_PWR3 + L_GND3 + L_PWR0 + L_GND0 ) &lt; 2.4 nH
+CINPx=2.2uF/0201
+( L_PWR0 + L_GND0 ) &lt; 1 nH
+BUCK2
+BUCK3
+BUCK5
+BUCK6
+VSYS_BUCKx
+GND_BUCKx
+10uF *2
+( L_PWR3 + L_GND3 + L_PWR0 + L_GND0 ) &lt; 2.1 nH
+CINPx=2.2uF/0201
+( L_PWR0 + L_GND0 ) &lt; 1 nH
+VS1
+VS2
+VS3
+VSYS_VSx
+GND_VSx
+10uF *2
+( L_PWR3 + L_GND3 + L_PWR0 + L_GND0 ) &lt; 2.7 nH
+CINPx=2.2uF/0201
+( L_PWR0 + L_GND0 ) &lt; 2 nH
+Controller VSYS_SMPS
+GND_SMPS ( L_PWR2_1 + LPWR2_2 + L_GND2_2 + L_PWR1 + L_GND1 ) &lt; 11 nH ( L_PWR1 + L_GND1 ) &lt; 3 nH
+MT6363
+GND_SMPS
+VSYS_SMPS
+VSYS
+L_PWR2_2 L_PWR1
+L_GND2_2 L_GND1
+GND_xx
+L_PWR3 L_PWR0
+L_GND3 L_GND0
+CINSYS
+(10uF*2)
+CINPx
+(2.2uF)
+CINA
+(1uF)
+R
+(1 )L_PWR2_1
+VSYS_xxx
+# CINSYS &amp; CINPx must follow ref. design SCH and below constraint strictly, reduction may cause damaged issue.
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-46"><h2>PDF物理页 46</h2><a href="materials/SRC0333.pdf#page=46" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+46
+Note #1: CINPx =1uF/0201/6.3V/X5R
+Note #2: CINSYS =10uF/0402/6.3V/X5R*4
+• DC-DC layout guide #3-2: Input capacitor (10uF *4 + 1uF *10)
+DC-DC: Schematic and Layout Notice #3-2
+MT6363 Input trace Inductance (from CSYS to PMIC ball) Inductance (from CINSYS to PMIC ball) Inductance (from CINPx to PMIC ball)
+BUCK1~7,
+VS1,
+VS2,
+VS3
+VSYS_BUCKx
+GND_BUCKx
+VSYS_VSx
+GND_VSx
+22uF
+( L_PWR4 + L_GND4 + L_PWR3 
++ L_GND3 + L_PWR0 + L_GND0 ) 
+&lt; 4.5 nH
+10uF*4
+( L_PWR3 + L_GND3 + L_PWR0 + L_GND0 ) 
+&lt; 2 nH
+CINPx=1uF/0201
+( L_PWR0 + L_GND0 ) &lt; 0.6 nH
+Controller VSYS_SMPS
+GND_SMPS (L_PWR2_1+ L_PWR2_2 + L_GND2_2 + L_PWR1 + L_GND1 ) &lt; 11 nH ( L_PWR1 + L_GND1 ) &lt; 3 nH
+MT6363
+GND_SMPS
+VSYS_SMPS
+VSYS
+L_PWR2_2 L_PWR1
+L_GND2_2 L_GND1
+GND_xx
+L_PWR3 L_PWR0
+L_GND3 L_GND0
+CINSYS
+(10uF*4)
+CINPx
+(1uF)
+CINA
+(1uF)
+R
+(1 )L_PWR2_1
+VSYS_xxx
+CSYS
+(22uF)
+L_PWR4
+L_GND4
+VSYS
+# CINSYS &amp; CINPx must follow ref. design SCH and below constraint strictly, reduction may cause damaged issue.
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-47"><h2>PDF物理页 47</h2><a href="materials/SRC0333.pdf#page=47" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+47
+• DC-DC layout guide #3-3: Input capacitor example
+- L_PWR1 (VSYS_BUCKx to CINPx VSYS pad): 10-layer (green trace)
+- L_GND1 (GND_BUCKx to CINPx GND pad): 9-layer (purple trace)
+- Smaller L_GND1: larger size of purple trace 
+- Smaller L_PWR1: larger overlapping size of purple trace and green trace
+DC-DC: Schematic and Layout Notice #3-3
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-48"><h2>PDF物理页 48</h2><a href="materials/SRC0333.pdf#page=48" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+48
+• DC-DC layout guide #4: Remote sense
+- The feedback trace must be shielded from all noise sources, especially the clock signal and LX nodes of 
+DC/DC converter.
+• BUCK1_FB, GND_BUCK1_FB
+• BUCK2_FB, GND_BUCK2_FB
+• BUCK3_FB, GND_BUCK3_FB
+• BUCK4_FB, GND_BUCK4_FB
+• BUCK5_FB, GND_BUCK5_FB
+• BUCK6_FB, GND_BUCK6_FB
+• BUCK7_FB, GND_BUCK7_FB
+DC-DC: Schematic and Layout Notice #4
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-49"><h2>PDF物理页 49</h2><a href="materials/SRC0333.pdf#page=49" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+49
+• DC-DC layout guide #5: Remote sense
+- Find the path with the lowest inductance. The remote point can be located within Coutlowest L + 1 nH.
+- The capacitor of remote point needs to be greater than1 uF.
+- For example, in the case that Cout1 is a path with the lowest inductance:
+- If inductance between Cout1 and remote point 1 is L4, then L4 must be lower than 1 nH (L4 &lt; 1 nH).     
+- The remote point can be located between Cout1 and remote point 1.
+- Same rules are applicable to L2 &amp; L3 if they are the lowest inductance paths.
+- The cases above are for multipath. In case of single path, consider the only path the lowest inductance 
+path directly.
+- Inductance between Cout1 and other Cout (Cout2/Cout3) must be lower than 1.5 nH (L1 + L2 &lt; 1.5 nH/L1 + L3 
+&lt; 1.5 nH)
+Lout L2
+BUCK LX
+PMIC
+SoC
+L1
+L3
+Cout2 Cout1
+Cout3
+CPDN
+L4
+Remote pt. 1
+DC-DC: Schematic and Layout Notice #5
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-50"><h2>PDF物理页 50</h2><a href="materials/SRC0333.pdf#page=50" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+50
+• DC-DC layout guide #6: Remote sense
+A. Connect the GNDs of PDN capacitor and buck capacitor on the same layer before connecting them to the 
+main GND. (L8/L9 if SMT is in L10)
+B. GND_FB and VOUT_FB must be connected to PDN capacitor pads directly.
+C. PDN capacitor must be greater than 1 uF.
+D. PDN capacitor must be greater than 4 uF if PDN cap. and buck Cout do not follow rule A and B. 
+SOC Bucks
+Domain
+Buck Cap.
+LX
+PDN Cap.
+GND_FB
+SMT LayerPlane
+VOUT_FB
++
+-
+Main GND
+A.
+B.
+DC-DC: Schematic and Layout Notice #6
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-51"><h2>PDF物理页 51</h2><a href="materials/SRC0333.pdf#page=51" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+51
+Buck name LDO input ball  
+(direct-sense to) Max. R1 + R2 (mΩ) Max. L1 + L2 (nH) Max. L1 (nH)
+VSx VSx_LDO2 25 4 1
+DC-DC: Schematic and Layout Notice #7
+• DC-DC layout guide #7: Remote sense
+- The inductance between any Couts must be lower than 1 nH.
+VSx_LDO1
+VSx_LDO2
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-52"><h2>PDF物理页 52</h2><a href="materials/SRC0333.pdf#page=52" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+52
+DC-DC: Schematic and Layout Notice #8
+• DC-DC layout guide #7: Remote sense about VS1, VS2, VS3
+- VS1_FB (ball M5) MUST be connected to VS1_LDO1 (ball N12) and VS1_LDO2 (ball L13) before fan-out power trace.
+- VS2_FB (ball C13) MUST be connected to VS2_LDO1 (ball E13) and VS2_LDO2 (ball J13) before fan-out power trace.
+- VS3_FB (ball M7) MUST be connected to VS3_LDO1 (ball N8) and VS3_LDO2 (ball N10) before fan-out power trace.
+• Layout example:
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-53"><h2>PDF物理页 53</h2><a href="materials/SRC0333.pdf#page=53" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+53
+DC-DC: Schematic and Layout Notice #9
+Note:
+1. Buck controller power trace (VSYS_SMPS) must be single trace connected to battery VBAT_BUS directly, and it can’t be merge d with other traces.
+2. VSYS adds 1Ω ±5%/0201 resistor to VSYS_SMPS for noise rejection.
+Buck Input
+4 mil
+Bat. connector
+BAT_BUS
+22 uFGND
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-54"><h2>PDF物理页 54</h2><a href="materials/SRC0333.pdf#page=54" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+54
+• DC-DC layout guide #8: DRAM power capacitor
+A. Below DRAM power trace layout example for reference
+B. The 10uF/22uF output capacitors MUST place between power inductor and DRAM power ball.
+C. The buck FB sense point (C21) MUST close to 10uF/22uF output capacitors to pass MES.
+DC-DC: Schematic and Layout Notice #10
+PMIC
+C22
+4.3uF
+or 1uF
+C23
+4.3uF 
+or 1uF
+C24
+4.3uF 
+or 1uF
+22uF *N
+C21
+4.3uF or 1uF
+(FB sense)
+VDD2H,
+VDD2L,
+VDDQ
+PMIC
+22uF *N
+VDD2H,
+VDD2L,
+VDDQ
+C21
+4.3uF or 1uF
+(FB sense)
+C24
+4.3uF 
+or 1uF
+C23
+4.3uF 
+or 1uF
+C22
+4.3uF
+or 1uF
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-55"><h2>PDF物理页 55</h2><a href="materials/SRC0333.pdf#page=55" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+Function Description – LDO
+55
+MT6363 Design Notice
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-56"><h2>PDF物理页 56</h2><a href="materials/SRC0333.pdf#page=56" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+56
+Ball name Input capacitance (Typ.)
+VSYS_LDO1 2.2uF / 0201 / 6.3V / X5R
+VS1_LDO1,
+VS1_LDO2 10uF / 0402 / 6.3V / X5R*3 #1
+VS2_LDO1,
+VS2_LDO2 10uF / 0402 / 6.3V / X5R*3 #1
+VS3_LDO1,
+VS3_LDO2 10uF / 0402 / 6.3V / X5R*3 #1
+LDO: Input Capacitor Table
+Note: Common parts as 2.2uF/0201, 2.2uF/0402, 10uF/0402 can be used.
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-57"><h2>PDF物理页 57</h2><a href="materials/SRC0333.pdf#page=57" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+57
+LDO Control power ball Input power ball
+VRF13 VSYS_LDO1 VS2_LDO1
+VRF12 VSYS_LDO1 VS2_LDO1
+VUFS12 VSYS_LDO1 VS2_LDO1
+VSRAM_CPUB VSYS_LDO1 VS2_LDO1
+VSRAM_CPUM VSYS_LDO1 VS2_LDO1
+VSRAM_CPUL VSYS_LDO1 VS2_LDO2
+VA12_1 VSYS_LDO1 VS2_LDO2
+VA12_2 VSYS_LDO1 VS2_LDO2
+VCN13 VSYS_LDO1 VS2_LDO2
+VAUX18 VSYS_LDO1 VSYS_LDO1
+VTREF18 VSYS_LDO1 VSYS_LDO1
+VEMC VSYS_LDO1 VSYS_LDO1
+LDO: Input Power Table
+LDO Control power ball Input power ball
+VA15 VSYS_LDO1 VS1_LDO1
+VRF18 VSYS_LDO1 VS1_LDO1
+VRFIO18 VSYS_LDO1 VS1_LDO1
+VCN15 VSYS_LDO1 VS1_LDO1
+VM18 VSYS_LDO1 VS1_LDO1
+VIO18 VSYS_LDO1 VS1_LDO2
+VUFS18 VSYS_LDO1 VS1_LDO2
+VSRAM_APU VSYS_LDO1 VS3_LDO1
+VSRAM_MDFE VSYS_LDO1 VS3_LDO1
+VSRAM_DIGRF VSYS_LDO1 VS3_LDO1
+VSRAM_MOFEM VSYS_LDO1 VS3_LDO2
+VRF09 VSYS_LDO1 VS3_LDO2
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-58"><h2>PDF物理页 58</h2><a href="materials/SRC0333.pdf#page=58" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+58
+LDO: Output Capacitor Table (1/2)
+LDO name Application CO,min (uF) CO,max (uF)
+VDIG18 I/O 1 1
+VAUX18 AUXADC 1 2.2
+VTREF18 VTREF18 1 2.2
+VEMC UFS4.x 20 24.7
+VIO18 I/O 10.4 30
+VA15 VA15 1 11
+VM18 DRAM VDD1 6.9 20.6
+VRF18 RF 1.8V 9.4 11.6
+VRFIO18 Consys 1.7V 1 5.7
+VCN15 RFIO 1.82V 9.4 11.5
+VUFS18 IO (IOBL) 4.9 14.1
+LDO name Application CO,min (uF) CO,max (uF)
+VA12_1 ABB 1 11
+VA12_2 ABB 1 11
+VCN13 VCN13 9.4 19.1
+VRF13 VRF13 9.4 19.7
+VRF12 VRF12 3.2 6.6
+VUFS12
+(Local Sense) ABB 4.7 + 4.7 44
+VSRAM_CPUB SRAM_B 4.4 5.81
+VSRAM_CPUM SRAM_M 4.4 5.81
+VSRAM_CPUL SRAM_L 6.9 9.4
+VRF09 VRF09 19.4 24.1
+VSRAM_MODEM VSRAM_MODEM 6.9 9.4
+VSRAM_DIGRF VSRAM_DIGRF 4.4 5.81
+VSRAM_MDFE VSRAM_GPU 4.4 5.81
+VSRAM_APU VSRAM_APU 4.4 6.5
+Note: 
+1) VRFIO18 LDO powers to Connectivity IC
+2) VCN15 LDO powers to RF IC.
+3) The output capacitor can be removed if the LDO is off by default and the loading current is 0 mA
+Dedicated for IO, 
+not for other application
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-59"><h2>PDF物理页 59</h2><a href="materials/SRC0333.pdf#page=59" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+59
+Note : The output capacitor can be removed if the LDO is off by default and the loading current is 0 mA.
+LDO: Output Capacitor Table (2/2)
+LDO name Application PMIC side COUT (uF)
+VTREF18
+(default OFF) Not used NC
+VEMC
+(default ON) Enable pin 1
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-60"><h2>PDF物理页 60</h2><a href="materials/SRC0333.pdf#page=60" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+60
+LDO: Layout Constraint for LDO Stability (1/3)
+LDO layout constraint for stability
+LDO name L1 ≤ R1 ≤ C1min L2 ≤ R2 ≤ C2min C2max (C1+C2)max
+VIO18 20 nH 0.2Ω 1 uF 20 nH 0.2Ω 9.4 uF 29 uF 30 uF
+VA15 20 nH 0.2Ω 1 uF 20 nH 0.2Ω 0 uF 10 uF 11 uF
+VM18 7 nH 0.1Ω 2.2 uF 7 nH 0.1Ω 4.7 uF 18.4 uF 20.6 uF
+VRF18 20 nH 0.2Ω 4.7 uF 20 nH 0.2Ω 4.7 uF 6.9 uF 11.6 uF
+VRFIO18
+(for Consys) 20 nH 0.2Ω 1 uF 20 nH 0.2Ω 0 uF 4.7 uF 5.7 uF
+VCN15
+(for RFIO) 20 nH 0.2Ω 4.7 uF 20 nH 0.2Ω 4.7 uF 6.8 uF 11.5 uF
+VUFS18 7 nH 0.2Ω 4.7 uF 20 nH 0.2Ω 0.2 uF 9.4 uF 14.1 uF
+PMIC
+L1
+LDO
+R1
+C1
+L2 R2
+C2
+Application
+Note: This constraint for LDO stability; application PCB IR should be considered by another check.
+Dedicated for IO, 
+not for other application
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-61"><h2>PDF物理页 61</h2><a href="materials/SRC0333.pdf#page=61" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+61
+LDO: Layout Constraint for LDO Stability (2/3)
+LDO layout constraint for stability
+LDO name L1 ≤ R1 ≤ C1min L2 ≤ R2 ≤ C2min C2max (C1+C2)max
+VA12_1 20 nH 0.2Ω 1 uF 20 nH 0.2Ω 0 uF 10 uF 11 uF
+VA12_2 20 nH 0.2Ω 1 uF 20 nH 0.2Ω 0 uF 10 uF 11 uF
+VCN13 7 nH 0.2Ω 4.7 uF 20 nH 0.2Ω 4.7 uF 14.4 uF 19.1 uF
+VRF13 7 nH 0.2Ω 4.7 uF 20 nH 0.2Ω 4.7 uF 15 uF 19.7 uF
+VRF12 20 nH 0.2Ω 2.2 uF 20 nH 0.2Ω 1 uF 4.4 uF 6.6 uF
+VUFS12
+(Local Sense) 10 nH 0.2Ω 4.7 uF 20 nH 0.2Ω 4.7 uF 39.3 uF 44 uF
+VSRAM_CPUB 7 nH 0.2Ω 2.2 uF 20 nH 0.2Ω 2.2 uF 3.61 uF 5.81 uF
+VSRAM_CPUM 7 nH 0.2Ω 2.2 uF 20 nH 0.2Ω 2.2 uF 3.61 uF 5.81 uF
+VSRAM_CPUL 10 nH 0.1Ω 4.7 uF 10 nH 0.05Ω 2.2 uF 4.7 uF 9.4 uF
+PMIC
+L1
+LDO
+R1
+C1
+L2 R2
+C2
+Application
+Note: This constraint for LDO stability; application PCB IR should be considered by another check.
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-62"><h2>PDF物理页 62</h2><a href="materials/SRC0333.pdf#page=62" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+62
+PMIC
+L1
+LDO
+R1
+C1
+L2 R2
+C2
+Application
+LDO: Layout Constraint for LDO Stability (3/3)
+LDO layout constraint for stability
+LDO name L1 ≤ R1 ≤ C1min L2 ≤ R2 ≤ C2min C2max (C1+C2)max
+VRF09 10 nH 0.1Ω 10 uF 20 nH 0.2Ω 9.4 uF 14.1 uF 24.1 uF
+VSRAM_MODEM 10 nH 0.1Ω 4.7 uF 10 nH 0.05Ω 2.2 uF 4.7 uF 9.4 uF
+VSRAM_DIGRF 7 nH 0.2Ω 2.2 uF 20 nH 0.2Ω 2.2  uF 3.61 uF 5.81 uF
+VSRAM_MDFE 7 nH 0.2Ω 2.2 uF 20 nH 0.2Ω 2.2 uF 3.61 uF 5.81 uF
+VSRAM_APU 7 nH 0.2Ω 2.2 uF 20 nH 0.2Ω 2.2 uF 4.3 uF 6.5 uF
+VDIG18 20 nH 0.2Ω 1 uF 1 uF
+VAUX18 20 nH 0.2Ω 1 uF 20 nH 0.2Ω 0 uF 1.2 uF 2.2 uF
+VTREF18 20 nH 0.2Ω 1 uF 20 nH 0.2Ω 0 uF 1.2 uF 2.2 uF
+VEMC (UFS 3.1) 20 nH 0.2Ω 1 uF 20 nH 0.2Ω 4.7 uF 19 uF 20 uF
+VEMC (UFS 4.0) 20 nH 0.2Ω 10 uF 20 nH 0.2Ω 10 uF 14.7 uF 24.7 uF
+Note: This constraint for LDO stability; application PCB IR should be considered by another check.
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-63"><h2>PDF物理页 63</h2><a href="materials/SRC0333.pdf#page=63" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+63
+W (mil) W (um) H (um) t @1/3 oz (um) Len (cm) Trace inductance 
+(nH)
+Trace resistance 
+(mΩ)
+4 101.6 50 12 1.27 4.85 198
+LDO: Rough Guidelines for CAD Extraction
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-64"><h2>PDF物理页 64</h2><a href="materials/SRC0333.pdf#page=64" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+64
+LDO: Layout Constraint for LDO Need Star-connection
+• Some LDO applications need star-connection.
+- VIO18
+- VA15
+- VA12_1
+- VA12_2
+- VUFS12
+- VCN15
+- VRF18
+- VRF13
+- VRF12
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-65"><h2>PDF物理页 65</h2><a href="materials/SRC0333.pdf#page=65" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+• Place VREF/VDIG18 bypass capacitor as close as possible to the PMIC.
+• GND_VREF ball must be connected to the capacitor GND pad firstly, 
+and connect to main GND plane by via.
+• VREF capacitor is 100 nF.
+• VDIG18 capacitor is 1 uF.
+• Schematic example:
+LDO: Layout Constraint for VREF/VDIG18
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-66"><h2>PDF物理页 66</h2><a href="materials/SRC0333.pdf#page=66" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential B1. Trace width≧6mil
+2. Value and placement of capacitor please refer design notice
+Ball name LDO Imax Trace
+Length
+Trace
+Width
+Rpcb
+H=50um, 1/3 oz
+VAUX18 20mA 800mil 6mil 200mΩ
+VTREF 10mA 800mil 6mil 200mΩ
+VEMC (if used) 800mA 1200mil 18mil 100mΩ
+VIO18 600mA 1000mil 25mil 60mΩ
+VA15 600mA 850mil 25mil 50mΩ
+VM18 600mA 750mil 25mil 45mΩ
+VRF18 600mA 1200mil 18mil 100mΩ
+VCN15 300mA 800mil 6mil 200mΩ
+VRFIO18 600mA 800mil 6mil 200mΩ
+VUFS18 1200mA 1000mil 6mil 200mΩ
+VA12_1 600mA 680mil 25mil 40mΩ
+VA12_2 600mA 680mil 25mil 40mΩ
+VCN13 800mA 1200mil 18mil 100mΩ
+VRF13 800mA 1200mil 18mil 100mΩ
+VRF12 600mA 1000mil 10mil 150mΩ
+VUFS12 #1 1200mA 680mil 25mil 40mΩ
+VSRAM_CPUB 600mA 1200mil 18mil 100mΩ
+VSRAM_CPUM 600mA 1200mil 18mil 100mΩ
+VSRAM_CPUL #1 1200mA 120mil 10mil 18mΩ
+VSRAM_MODEM #1 1200mA 75mil 10mil 11mΩ
+VSRAM_MDFE 600mA 1200mil 18mil 100mΩ
+VSRAM_DIGRF 600mA 850mil 10mil 130mΩ
+VSRAM_APU 600mA 1200mil 18mil 100mΩ
+VRF09 #1 800mA 120mil 18mil 10mΩ
+LDO: Layout Constraint
+• Follow MES
+- VA15, VA12_1, VA12_2, VUFS12
+- VSRAM_xxx
+• Trace Under shielding case
+- VRF18, VCN15, VRFIO18
+- VRF13, VRF12, VCN13
+- VRF09, VRF09_S
+• Local Sense
+- VUFS12, VUFS12_S
+• Remote sense to application cap.
+- VSRAM_CPUL
+- VSRAM_MODEM_S, VRF09_S
+• Trace W/L can be adjusted by Imax.
+If trace is series 0Ω resister, 0Ω resister is having 0~50mΩ variation. 
+It would be drop voltage.
+Note #1: Rpcb from remote sense to application cap.
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-67"><h2>PDF物理页 67</h2><a href="materials/SRC0333.pdf#page=67" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+Analog Power PCB Layout Constraint
+67
+MT6363 Design Notice
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-68"><h2>PDF物理页 68</h2><a href="materials/SRC0333.pdf#page=68" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+68
+AP Analog Power List
+Voltage PMIC 
+Pin Name AP analog pin name
+1.5V MT6363: VA15
+AVDD15_UFS
+AVDD15_DSI
+AVDD15_SSUSB_P1
+AVDD15_SSUSB_P2
+AVDD15_USB
+AVDD15_CKSQ
+AVDD15_DRF
+AVDD15_APPLL
+AVDD15_APUPLL
+AVDD15_MDPLL
+AVDD15_EMI0
+AVDD15_EMI1
+AVDD15_EMI2
+AVDD15_EMI3
+AVDD15_WBG
+AVDD15_PCIE
+AVDD15_CSI
+AVDD15_PROC
+0.75V MT6363: BUCK4
+(DVDD_SRAM_CORE) AVDD08_DRV_DSI
+3.0V MT6373: VUSB AVDD33_USB
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-69"><h2>PDF物理页 69</h2><a href="materials/SRC0333.pdf#page=69" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+69
+AP Analog Power List
+Voltage PMIC 
+Pin Name AP analog pin name
+1.2V MT6363: VA12_1
+AVDD12_DSI
+AVDD12_USB
+AVDD12_CKSQ
+AVDD12_APPLL
+AVDD12_APUPLL
+AVDD12_MDPLL
+AVDD12_EMI0
+AVDD12_EMI1
+AVDD12_EMI2
+AVDD12_EMI3
+AVDD12_TSFDC_BM
+AVDD12_TSFDC_RM
+AVDD12_SSUSB_P1
+AVDD12_SSUSB_P2
+1.2V MT6363: VA12_2 AVDD12_UFS_RX AVDD12_UFS_TX
+1.2V MT6363: VUFS12 AVDD12_WBG
+AVDD12_PCIE AVDD12_CSI0 AVDD12_CSI1
+1.2V MT6363: VRF12 AVDD12_DRF AVDD12_DRF 
+(MT6195)
+1.2V MT6685: VBBCK AVDD12_CKBUF_UFS
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-70"><h2>PDF物理页 70</h2><a href="materials/SRC0333.pdf#page=70" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+AP Analog Layout Constraint
+◆ AVDD12_DRF layout constraint
+➢ VRF12_PMU and AVDD12_DRF_D star connect. Short pad route from PMIC side Cap.
+➢ Please be sure to follow “reference design” &amp; “PMIC MMD”
+◆ IR spec. 
+➢ Total path from PMIC LDO pin to AVDD power pin of AP-site
+➢ Target IR &lt; 2%
+▪ For each AVDDxx_xxxx path
+▪ Simulate all power pin currents at the same time 
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-71"><h2>PDF物理页 71</h2><a href="materials/SRC0333.pdf#page=71" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential B
+71Copyright © MediaTek Inc. All rights reserved.
+AP VA15 → AVDD15_xxx Layout Guideline 1
+            AP
+AVDD15_xxx1
+AVDD15_xxx2
+AVDD15_xxx3
+AVDD15_xxx4
+AVDD15_xxx5
+AVDD15_xxx6
+Cnx
+Cnx
+Cnx
+Cnx
+Cnx
+Cnx
+P1
+PMIC
+VA15
+C1
+Notice
+1. PCB drop voltage ≦ 30mV
+(PMIC VA15 ball to AP AVDD15_xxx ball)
+2. PCB Length/Width ≦ PCB Ratio
+Trace Trace Start Trace End
+Tr a c e  1 PM I C VA1 5  b a l l C1 0 . 3 0 0 A 3 0 mi l 2 0 0 mi l 7 0 . 3 o z 1 1 . 8 m 3 . 5 mV
+Tr a c e  2 C1 P1 0 . 3 0 0 A 1 8 mi l 8 0 0 mi l 44 0 . 3 o z 7 8 . 8 m 2 3 . 7 mV
+Tr a c e  3 P1 AP AVDD1 5 _ XXX b a l l 0 . 0 6 0 A 8 mi l 2 0 0 mi l 25 0 . 3 o z 4 4 . 3 m 2 . 7 mV
+PCB
+Length
+PCB
+Thickness
+PCB
+Resister
+PCB drop
+voltage
+Example Average
+current
+PCB
+Width
+PCB Ratio
+Length/Width
+Pass ≦30mV
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-72"><h2>PDF物理页 72</h2><a href="materials/SRC0333.pdf#page=72" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential B
+72Copyright © MediaTek Inc. All rights reserved.
+AP VA15 → AVDD15_xxx Layout Guideline 2
+            AP
+Group#1
+AVDD15_xxx1
+AVDD15_xxx2
+AVDD15_xxx3
+AVDD15_xxx4
+AVDD15_xxx5
+AVDD15_xxx6
+C1
+Cnx
+Cnx
+Cnx
+Cnx
+Cnx
+Cnx
+P1
+Group#2
+P2
+PMIC
+VA15
+Notice
+1. PCB drop voltage ≦ 30mV
+(PMIC VA15 ball to AP AVDD15_xxx ball)
+2. PCB Length/Width ≦ PCB Ratio
+- 72 -
+Pass ≦30mV
+Group#1: AVDD15_UFS, AVDD15_DSI, AVDD15_SSUSB_P1, AVDD15_SSUSB_P2, AVDD15_USB, AVDD15_CKSQ, AVDD15_DRF
+Group#2: AVDD15_APPLL, AVDD15_APUPLL, AVDD15_MDPLL, AVDD15_EMI0, AVDD15_EMI1, AVDD15_EMI2, AVDD15_EMI3, AVDD15_WBG, AVDD15_PCIE, AVDD15_CSI, AVDD15_PROC
+Trace Trace Start Trace End
+Tr a c e  1 PM I C VA1 5  b a l l C1 0 . 3 0 0 A 2 4 mi l 2 0 0 mi l 8 0 . 3 o z 1 4 . 8 m 4 . 4 mV
+Tr a c e  2 C1 P1 / P2 0 . 1 5 0 A 1 2 mi l 1 0 0 0 mi l 83 0 . 3 o z 1 4 7 . 8 m 2 2 . 2 mV
+Tr a c e  3 P1 / P2 AP AVDD1 5 _ XXX b a l l 0 . 0 6 0 A 8 mi l 2 5 0 mi l 31 0 . 3 o z 5 5 . 4 m 3 . 3 mV
+PCB
+Length
+PCB
+Thickness
+PCB
+Resister
+PCB drop
+voltage
+Example Average
+current
+PCB
+Width
+PCB Ratio
+Length/Width
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-73"><h2>PDF物理页 73</h2><a href="materials/SRC0333.pdf#page=73" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential B
+            AP
+AVDD12_xxx1
+AVDD12_xxx2
+AVDD12_xxx3
+AVDD12_xxx4
+AVDD12_xxx5
+AVDD12_xxx6
+Cnx
+Cnx
+Cnx
+Cnx
+Cnx
+Cnx
+P1
+PMIC
+VA12
+C1
+73Copyright © MediaTek Inc. All rights reserved.
+AP VA12_1 → AVDD12_xxx Layout Guideline 1
+- 73 -
+Notice
+1. PCB drop voltage ≦ 24mV
+(PMIC VA12_1 ball to AP AVDD12_xxx ball)
+2. PCB Length/Width ≦ PCB Ratio
+Trace Trace Start Trace End
+Tr a c e  1 PM I C VA1 2 _ 1  b a l l C1 0 . 5 0 0 A 3 6 mi l 2 0 0 mi l 6 0 . 3 o z 9 . 9 m 4 . 9 mV
+Tr a c e  2 C1 P1 0 . 5 0 0 A 3 2 mi l 5 5 0 mi l 17 0 . 3 o z 3 0 . 5 m 1 5 . 2 mV
+Tr a c e  3 P1 / P2 AP AVDD1 2 _ XXX b a l l 0 . 1 3 0 A 1 2 mi l 2 0 0 mi l 17 0 . 3 o z 2 9 . 6 m 3 . 8 mV
+PCB
+Length
+PCB
+Thickness
+PCB
+Resister
+PCB drop
+voltage
+Example Average
+current
+PCB
+Width
+PCB Ratio
+Length/Width
+Pass ≦24mV
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-74"><h2>PDF物理页 74</h2><a href="materials/SRC0333.pdf#page=74" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential B
+74Copyright © MediaTek Inc. All rights reserved.
+AP VA12_1 → AVDD12_xxx Layout Guideline 2
+- 74 -
+Notice
+1. PCB drop voltage ≦ 24mV
+(PMIC VA12_1 ball to AP AVDD12_xxx ball)
+2. PCB Length/Width ≦ PCB Ratio
+Trace Trace Start Trace End
+Tr a c e  1 PM I C VA1 2 _ 1
+b a l l C1 0 . 5 0 0 A 3 6 mi l 1 5 0 mi l 4 0 . 3 o z 7 . 4 m 3 . 7 mV
+Tr a c e  2 C1 P1 / P2 0 . 2 6 0 A 2 4 mi l 7 5 0 mi l 31 0 . 3 o z 5 5 . 4 m 1 4 . 4 mV
+Tr a c e  3 P1 / P2 AP AVDD1 2 _ XXX b a l l 0 . 1 3 0 A 8 mi l 2 0 0 mi l 25 0 . 3 o z 4 4 . 3 m 5 . 8 mV
+PCB
+Length
+PCB
+Thickness
+PCB
+Resister
+PCB drop
+voltage
+Example Average
+current
+PCB
+Width
+PCB Ratio
+Length/Width
+Pass ≦24mV
+AP
+AVDD12_xxx1
+AVDD12_xxx2
+AVDD12_xxx3
+AVDD12_xxx4
+AVDD12_xxx5
+AVDD12_xxx6
+Cnx
+Cnx
+Cnx
+Cnx
+Cnx
+CnxP2
+PMIC
+VA12_1
+C1
+P1
+Group#1
+Group#2
+Group#1: AVDD12_DSI, AVDD12_USB, AVDD12_CKSQ, AVDD12_APPLL, AVDD12_APUPLL, AVDD12_MDPLL, AVDD12_EMI0, AVDD12_EMI1, AVDD12_EMI2, AVDD12_EMI3, AVDD12_TSFDC_BM, AVDD12_TSFDC_RM
+Group#2: AVDD12_SSUSB_P1, AVDD12_SSUSB_P2
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-75"><h2>PDF物理页 75</h2><a href="materials/SRC0333.pdf#page=75" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential B
+75Copyright © MediaTek Inc. All rights reserved.
+AP VA12_2 → AVDD12_xxx Layout Guideline
+- 75 -
+Notice
+1. PCB drop voltage ≦ 24mV
+(PMIC VA12_2 ball to AP AVDD12_xxx ball)
+2. PCB Length/Width ≦ PCB Ratio
+Trace Trace Start Trace End
+Tr a c e  1 PM I C VA1 2 _ 2  b a l l C1 0 . 3 2 0 A 3 6 mi l 2 0 0 mi l 6 0 . 3 o z 9 . 9 m 3 . 2 mV
+Tr a c e  2 C1 P1 / P2 0 . 1 8 0 A 2 0 mi l 8 0 0 mi l 40 0 . 3 o z 7 1 . 0 m 1 2 . 8 mV
+Tr a c e  3 P1 / P2 AP AVDD1 2 _ UFS_ XX
+b a l l 0 . 1 8 0 A 8 mi l 2 0 0 mi l 25 0 . 3 o z 4 4 . 3 m 8 . 0 mV
+PCB
+Length
+PCB
+Thickness
+PCB
+Resister
+PCB drop
+voltage
+Example Average
+current
+PCB
+Width
+PCB Ratio
+Length/Width
+Pass ≦24mV
+AP
+AVDD12_UFS_RX
+AVDD12_UFS_TX
+Cnx
+Cnx
+P2
+PMIC
+VA12_2
+C1
+P1
+Group#1
+Group#2
+Group#1: AVDD12_UFS_RX 
+Group#2: AVDD12_UFS_TX
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-76"><h2>PDF物理页 76</h2><a href="materials/SRC0333.pdf#page=76" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential B
+76Copyright © MediaTek Inc. All rights reserved.
+AP VUFS12 → AVDD12_xxx Layout Guideline
+- 76 -
+Group#1: AVDD12_WBG, AVDD12_PCIE
+Group#2: AVDD12_CSI0 
+Group#3: AVDD12_CSI1
+Notice
+1. PCB drop voltage ≦ 24mV
+(PMIC VUFS12 ball to AP AVDD12_xxx ball)
+2. PCB Length/Width ≦ PCB Ratio
+Trace Trace Start Trace End
+Tr a c e  1 PM I C VA1 2 _ 1
+b a l l C1 0 . 6 6 0 A 3 6 mi l 1 5 0 mi l 4 0 . 3 o z 7 . 4 m 4 . 9 mV
+Tr a c e  2 C1 P1 / P2 / P3 0 . 2 5 0 A 3 2 mi l 8 5 0 mi l 27 0 . 3 o z 4 7 . 1 m 1 1 . 8 mV
+Tr a c e  3 P1 / P2 / P3 AP AVDD1 2 _ XXX b a l l 0 . 2 5 0 A 1 2 mi l 2 0 0 mi l 17 0 . 3 o z 2 9 . 6 m 7 . 4 mV
+PCB
+Length
+PCB
+Thickness
+PCB
+Resister
+PCB drop
+voltage
+Example Average
+current
+PCB
+Width
+PCB Ratio
+Length/Width
+Pass ≦24mV
+AP
+AVDD12_xxx1
+AVDD12_xxx2
+AVDD12_xxx3
+AVDD12_CSI0
+Cnx
+Cnx
+Cnx
+Cnx
+P2
+PMIC
+VUFS12
+C1
+P1
+Group#1
+Group#2
+Group#3
+AVDD12_CSI1
+Cnx
+P3
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-77"><h2>PDF物理页 77</h2><a href="materials/SRC0333.pdf#page=77" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential B
+          RF
+AVDD12_DRF
+         AP
+AVDD12_DRF
+P1
+PMIC
+VRF12
+C1
+Cnx
+P2
+SHORT PAD
+77Copyright © MediaTek Inc. All rights reserved.
+AP VRF12 → AVDD12_xxx Layout Guideline
+- 77 -
+Notice
+1. PCB drop voltage ≦ 24mV
+(PMIC VRF12 ball to AP AVDD12_DRF ball)
+2. PCB Length/Width ≦ PCB Ratio
+Tr a c e Tr a c e  St a r t Tr a c e  En d
+Tr a c e  1 PM I C VRF1 2  b a l l C1 0 . 2 8 0 A 2 4 mi l 1 0 0 mi l 4 0 . 3 o z 7 . 4 m 2 . 1 mV
+Tr a c e  2 C1 P1 / P2 0 . 1 4 0 A 1 6 mi l 1 0 0 0 mi l 63 0 . 3 o z 1 1 0 . 9 m 1 5 . 5 mV
+Tr a c e  3 P1 / P2 AP/ RF AVDD1 2 _ DRF 0 . 1 4 0 A 8 mi l 2 0 0 mi l 25 0 . 3 o z 4 4 . 3 m 6 . 2 mV
+PCB
+Le n g t h
+PCB
+Th i c k n e s s
+PCB
+Re s i s t e r
+PCB d r o p
+v o l t a g e
+Ex a mp l e Av e r a g e
+c u r r e n t
+PCB
+W i d t h
+PCB Ra t i o
+Le n g t h / W i d t h
+Pass ≦24mV
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-78"><h2>PDF物理页 78</h2><a href="materials/SRC0333.pdf#page=78" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential B
+78Copyright © MediaTek Inc. All rights reserved.
+AP AVDD12_CKBUF_UFS Layout Guideline
+- 78 -
+Notice
+1. PCB drop voltage ≦ 24mV
+(VBBCK ball to AP AVDD12_CKBUF_UFS ball)
+2. PCB Length/Width ≦ PCB Ratio
+Pass ≦24mV
+Tra c e Tra c e  S ta rt Tra c e  E n d
+Tra c e  1 P MIC  VB B C K C1 0 . 0 2 0 A 8 m il 2 0 0 m il 25 0 . 3 o z 4 4 . 3 m 0 . 9 m V
+Tra c e  2 C1 P1 0 . 0 2 0 A 8 m il 1 2 0 0 m il 150 0 . 3 o z 2 6 6 . 1 m 5 . 3 m V
+Tra c e  3 P1 AP  
+AVDD1 2 _ C KB UF _ UF S 0 . 0 2 0 A 8 m il 2 0 0 m il 25 0 . 3 o z 4 4 . 3 m 0 . 9 m V
+P C B  
+Le n g th
+P C B
+Th ic k n e s s
+P C B  
+R e s is te r
+P C B  d ro p  
+v o lta g e
+E x a m p le Av e ra g e  
+c u rre n t
+P C B  
+Wid th  
+P C B  R a tio  
+Le n g th /Wid th
+         
+                  AP
+AVDD12_CKBUF_UFS
+P1
+MT6685
+VBBCK
+C1
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-79"><h2>PDF物理页 79</h2><a href="materials/SRC0333.pdf#page=79" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential B
+79Copyright © MediaTek Inc. All rights reserved.
+AP AVDD08_DRV_DS Layout Guideline
+- 79 -
+Others …  AP
+PMIC
+MT6363
+BUCK4 AVDD08_DRV_DS
+C1 
+(3T)
+Cnx
+DVDD_SRAM_CORE
+DVDD_SRAM_CORE_FB
+SHORT PAD
+Notice
+1. PCB drop voltage ≦ 15mV
+(SRAM_CORE ball to AVDD08_DRV_DS ball)
+2. PCB Length/Width ≦ PCB Ratio
+Tr a c e Tr a c e  St a r t Tr a c e  En d
+Tr a c e  1 C1 AP AVDD0 8 _ DRV_ DS
+ b a l l 0 . 0 5 0 A 8 mi l 1 2 0 0 mi l 150 0 . 3 o z 2 6 6 . 1 m 1 3 . 3 mV
+PCB
+Le n g t h
+PCB
+Th i c k n e s s
+PCB
+Re s i s t e r
+PCB d r o p
+v o l t a g e
+Ex a mp l e Av e r a g e
+c u r r e n t
+PCB
+W i d t h
+PCB Ra t i o
+Le n g t h / W i d t h
+Pass ≦15mV
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-80"><h2>PDF物理页 80</h2><a href="materials/SRC0333.pdf#page=80" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential B
+80Copyright © MediaTek Inc. All rights reserved.
+AP AVDD33_USB Layout Guideline
+- 80 -
+ APPMIC
+VUSB AVDD33_USB
+C1
+Cnx
+Notice
+1. PCB drop voltage ≦ 30mV
+(PMIC VUSB ball to AP AVDD33_USB ball)
+2. PCB Length/Width ≦ PCB Ratio
+Pass ≦30mV
+Tr a c e Tr a c e  St a r t Tr a c e  En d
+Tr a c e  1 PM I C VUSB b a l l C1 0 . 0 4 0 A 1 2 mi l 1 0 0 0 mi l 83 0 . 3 o z 1 4 7 . 8 m 5 . 9 mV
+Tr a c e  2 C1 AP AVDD3 3 _ USB b a l l 0 . 0 4 0 A 8 mi l 1 0 0 0 mi l 125 0 . 3 o z 2 2 1 . 7 m 8 . 9 mV
+PCB
+Le n g t h
+PCB
+Th i c k n e s s
+PCB
+Re s i s t e r
+PCB d r o p
+v o l t a g e
+Ex a mp l e Av e r a g e
+c u r r e n t
+PCB
+W i d t h
+PCB Ra t i o
+Le n g t h / W i d t h
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-81"><h2>PDF物理页 81</h2><a href="materials/SRC0333.pdf#page=81" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Copyright © MediaTek Inc. All rights reserved.
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-82"><h2>PDF物理页 82</h2><a href="materials/SRC0333.pdf#page=82" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+Package
+82
+MT6363 Design Notice
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-83"><h2>PDF物理页 83</h2><a href="materials/SRC0333.pdf#page=83" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+MT6363: Package Outline
+54
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-84"><h2>PDF物理页 84</h2><a href="materials/SRC0333.pdf#page=84" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential BCONFIDENTIAL B
+MT6363: Ball-map
+55
+1 2 3 4 5 6 7 8 9 10 11 12 13 14
+A VSYS_BUCK7 VSYS_BUCK7 VSYS_BUCK3 BUCK3 GND_BUCK3 GND_BUCK2 BUCK2 VSYS_BUCK2 VSYS_BUCK1 BUCK1 GND_BUCK1 GND_VS2 VS2 VSYS_VS2 A
+B BUCK7 BUCK7 VSYS_BUCK3 BUCK3 GND_BUCK3 GND_BUCK2 BUCK2 VSYS_BUCK2 VSYS_BUCK1 BUCK1 GND_BUCK1 GND_VS2 VS2 VSYS_VS2 B
+C GND_BUCK7 GND_BUCK7 GND_BUCK7_
+FB VSYS_SMPS GND_BUCK3_
+FB BUCK3_FB BUCK2_FB GND_BUCK2_
+FB
+GND_BUCK1_
+FB BUCK1_FB VS2_FB C
+D GND_BUCK6 GND_BUCK6 BUCK7_FB GND_SMPS GND GND GND VRF13 VUFS12 D
+E BUCK6 BUCK6 SRCLKEN_IN0 DVDD18_IO GND GND GND GPIO7 EINT VRF12 VS2_LDO1 VUFS12_S E
+F VSYS_BUCK6 VSYS_BUCK6 BUCK6_FB GPIO8 SRCLKEN_IN1 GND GND GND GPIO6 SCP_VREQ_V
+AO RTC_32KIN VSRAM_CPU
+M VSRAM_CPUB F
+G VSYS_BUCK5 VSYS_BUCK5 GND_BUCK6_
+FB GPIO9 GND GND GND GPIO4 GPIO2 WDTRSTB_IN VSRAM_CPUL VSRAM_CPUL
+_S VCN13 G
+H BUCK5 BUCK5 GND_BUCK5_
+FB FSOURCE SPMI_M_SDA SPMI_M_SCL GPIO5 GPIO3 GPIO1 VA12_2 VA12_1 H
+J GND_BUCK5 GND_BUCK5 BUCK5_FB EXT_PMIC_EN
+2 EXT_PMIC_PG RTC_INT VDIG18 VAUX18 VS2_LDO2 VEMC J
+K GND_BUCK4 GND_BUCK4 EXT_PMIC_EN
+1 SYSRSTB VSYSSNS CHRDETB GND_VREF GND GND GND VTREF18 VSYS_LDO1 K
+L BUCK4 BUCK4 BUCK4_FB PMU_TESTM
+ODE PWRKEY VBBSNS VREF GND GND AVSS18_AUX
+ADC VIO18 VS1_LDO2 VUFS18 L
+M VSYS_BUCK4 VSYS_BUCK4 GND_BUCK4_
+FB VS1_FB VS3_FB VSRAM_APU VRF09 VRF09_S VCN15 VRFIO18 VIO075 M
+N VSYS_VS1 VS1 GND_VS1 GND_VS3 VS3 VSYS_VS3 VS3_LDO1 VS3_LDO2 VS1_LDO1 GND N
+P VSYS_VS1 VS1 GND_VS1 GND_VS3 VS3 VSYS_VS3 VSRAM_MDF
+E
+VSRAM_DIGR
+F
+VSRAM_MOD
+EM_S
+VSRAM_MOD
+EM VM18 VRF18 VA15 NC P
+1 2 3 4 5 6 7 8 9 10 11 12 13 14
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-85"><h2>PDF物理页 85</h2><a href="materials/SRC0333.pdf#page=85" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential B
+ MediaTek Confidential For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a><a href="#page-18">PDF物理页 18</a><a href="#page-19">PDF物理页 19</a><a href="#page-20">PDF物理页 20</a><a href="#page-21">PDF物理页 21</a><a href="#page-22">PDF物理页 22</a><a href="#page-23">PDF物理页 23</a><a href="#page-24">PDF物理页 24</a><a href="#page-25">PDF物理页 25</a><a href="#page-26">PDF物理页 26</a><a href="#page-27">PDF物理页 27</a><a href="#page-28">PDF物理页 28</a><a href="#page-29">PDF物理页 29</a><a href="#page-30">PDF物理页 30</a><a href="#page-31">PDF物理页 31</a><a href="#page-32">PDF物理页 32</a><a href="#page-33">PDF物理页 33</a><a href="#page-34">PDF物理页 34</a><a href="#page-35">PDF物理页 35</a><a href="#page-36">PDF物理页 36</a><a href="#page-37">PDF物理页 37</a><a href="#page-38">PDF物理页 38</a><a href="#page-39">PDF物理页 39</a><a href="#page-40">PDF物理页 40</a><a href="#page-41">PDF物理页 41</a><a href="#page-42">PDF物理页 42</a><a href="#page-43">PDF物理页 43</a><a href="#page-44">PDF物理页 44</a><a href="#page-45">PDF物理页 45</a><a href="#page-46">PDF物理页 46</a><a href="#page-47">PDF物理页 47</a><a href="#page-48">PDF物理页 48</a><a href="#page-49">PDF物理页 49</a><a href="#page-50">PDF物理页 50</a><a href="#page-51">PDF物理页 51</a><a href="#page-52">PDF物理页 52</a><a href="#page-53">PDF物理页 53</a><a href="#page-54">PDF物理页 54</a><a href="#page-55">PDF物理页 55</a><a href="#page-56">PDF物理页 56</a><a href="#page-57">PDF物理页 57</a><a href="#page-58">PDF物理页 58</a><a href="#page-59">PDF物理页 59</a><a href="#page-60">PDF物理页 60</a><a href="#page-61">PDF物理页 61</a><a href="#page-62">PDF物理页 62</a><a href="#page-63">PDF物理页 63</a><a href="#page-64">PDF物理页 64</a><a href="#page-65">PDF物理页 65</a><a href="#page-66">PDF物理页 66</a><a href="#page-67">PDF物理页 67</a><a href="#page-68">PDF物理页 68</a><a href="#page-69">PDF物理页 69</a><a href="#page-70">PDF物理页 70</a><a href="#page-71">PDF物理页 71</a><a href="#page-72">PDF物理页 72</a><a href="#page-73">PDF物理页 73</a><a href="#page-74">PDF物理页 74</a><a href="#page-75">PDF物理页 75</a><a href="#page-76">PDF物理页 76</a><a href="#page-77">PDF物理页 77</a><a href="#page-78">PDF物理页 78</a><a href="#page-79">PDF物理页 79</a><a href="#page-80">PDF物理页 80</a><a href="#page-81">PDF物理页 81</a><a href="#page-82">PDF物理页 82</a><a href="#page-83">PDF物理页 83</a><a href="#page-84">PDF物理页 84</a><a href="#page-85">PDF物理页 85</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

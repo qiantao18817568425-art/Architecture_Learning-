@@ -1,0 +1,619 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Android_DebugLoggerUI_User_Manual_V1.1.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Android_DebugLoggerUI_User_Manual_V1.1.pdf</h1><p>SRC0153 · 原来源 ID S086 · PDF物理页 · 17 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MT8676软件资料/User Manual/Android/Chinese Version/MT8676_Android_DebugLoggerUI_User_Manual_V1.1.pdf</p><p>SHA-256：<code>13d506954e8173f09c86ae2119f30f96da255967e301879494ccf56b2e4e8eb2</code></p><p>原文件大小：906,578 字节</p></details><div class="actions"><a class="button" href="materials/SRC0153.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Android_DebugLoggerUI_User_Manual_V1.1.pdf 原 PDF" src="materials/SRC0153.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0153.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version:  1.1 
+Release date:  2025-07-30
+MT8676 Android DebugLoggerUI  
+User Manual 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0153.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8676 Android DebuggLoggerUI 
+User Manual 
+Confidential B 
+版本记录 
+版本 日期 作者 描述 
+1.0 2024-07-11 张晶晶 正式版 
+1.1 2025-7-30 张晶晶 更新 debuglogger 介绍 
+ 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0153.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8676 Android DebuggLoggerUI 
+User Manual 
+Confidential B 
+目录 
+版本记录 ··········································································································································································· 2 
+目录 ··················································································································································································· 3 
+图片目录 ··········································································································································································· 3 
+表格目录 ··········································································································································································· 3 
+1 DebugLoggerUI ·························································································································································· 4 
+1.1 概述·········································································································································································· 4 
+ 简单介绍 ······················································································································································ 4 
+ 名词解释 ······················································································································································ 4 
+1.2 架构/流程概述 ························································································································································ 5 
+ DebugLogger 介绍 ········································································································································ 5 
+ DebugLogger 循环机制介绍 ························································································································ 6 
+ DebugLogger 存储介绍 ································································································································ 6 
+1.3 配置/客制化指南 ···················································································································································· 7 
+ DebugLogger 控制介绍 ································································································································ 7 
+ DebugLogger 配置介绍 ······························································································································ 10 
+ DebugLogger 设置介绍 ······························································································································ 12 
+ DebugLogger 设置触发 Tag Log ················································································································· 14 
+ DebugLogger 参考 FAQ ······························································································································ 15 
+1.4 DebugLogger 注意事项 ········································································································································· 16 
+附件一 附加条款 ···························································································································································· 17 
+ 
+ 
+图片目录 
+图 1-1. MTK log 流程 ································································································································································· 5 
+ 
+表格目录 
+表 1-1. 名词解释········································································································································································ 4 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0153.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8676 Android DebuggLoggerUI 
+User Manual 
+Confidential B 
+1 DebugLoggerUI 
+1.1 概述 
+ 简单介绍 
+本章节主要介绍 MTK 的 log 抓取工具 DebugLogger 的架构和此 log 工具出现异常时常用的调试方法。 
+ 
+ 名词解释 
+表 1-1. 名词解释 
+缩写 释义 
+boot__normal 重启前的 log 
+bootprof 关键进程初始化所用时间 
+bsp_log 进程调用 log 
+connsyslog Bluetooth/WiFi/GPS 的 log 
+crash_log 当应用程序发生崩溃时的 backtrace 以及进程信息 
+DebugLogger/MTKlogger MTK 设计的用来抓取 log 的调试工具 
+DebugLoggerUI java 层记录器用户界面（ UI），它可以启动/停止 log 工具并更改一些设置 
+events_log 进程创建/销毁等 log，活动生命周期 log 
+kernel_log Kernel/driver 层 log 
+Last_1_boot_normal 
+上一次开机的过程中，开机 log 还没有复制到 SD 卡 或 eMMC 中，又发生了
+重启，而上一次开机的 log 就保存在这个文件夹，数字 1 是开机次数 
+last_AndroidLog 关机时最后的 Android log 
+last_kmsg 上次关机时最后的 Kernel log 
+main_log Native/java 层的 log 
+mblog_history Mobile_log_d 运行 log 
+Mobile log 常用 log 记录 
+Mobile_log_d 底层运行 service，主要抓取记录 Main/Kernel log 等 
+Modem log 记录 Modem 的 log 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0153.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8676 Android DebuggLoggerUI 
+User Manual 
+Confidential B 
+缩写 释义 
+netlog Tcp dump log 
+pl_lk 开机阶段 Preloader/LK 的 log 
+properties 设备的所有属性，通常在该文件查询手机版本号和手机型号等信息 
+radio_log 通信系统的 log 
+scp_log SCP 模块的 log 
+sys_log system log， 例如 AMS/WMS 等 log 
+ 
+1.2 架构/流程概述  
+ DebugLogger 介绍 
+ 
+图 1-1. MTK log 流程 
+ 
+整个 MTK log 的机制由上层 MTKlogger+底层 mobile_log_d 组成。上层是 apk 层，负责下发指令，读取/写入配置文
+件，调用底层程序运行达到预期目的；底层是实际的执行者，程序跑起来之后会对配置文件进行读取，根据配置
+文件执行命令；mobile_log_d 主要是对 Android logd 的四个 log 文件进行读取，以及对各种 proc 节点下面的 log 的
+kmsg /atflog /scp log 等进行读取。这部分 MTK log 的操作实际上只是对于已有 log 的捞取整合，比如 atf 本身就有
+atf 的 log 节点， logd 本身就是 Android log 的机制。读取到 log 之后会创建 log 文件，将各种 log 收集落盘。 
+Listening 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0153.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Android DebuggLoggerUI 
+User Manual 
+Confidential B 
+创建 log 的基本方法：创建单个的 APlog 文件夹，将每种 log 写入，以链表的形式按照固定的速率进行读取写入。
+当所有 log 的总和达到单个 APlog 文件夹大小限制时，会对其内的 log 进行轮转，也是以链表的形式将最早的节点
+删除（链表的节点不区分 log 的种类，是按照 APlog 文件夹为最基本单位做循环）。当平台发生重启或上层的
+MTKlogger 下发开始/停止指令的时候，会新建一个 APlog 文件夹。随着不断创建新的 APlog 文件夹，总的 APplog
+文件夹的大小达到一定上限的时候，系统会删除最早的 aplog 文件夹，其原理同样也是以链表的形式做循环。 
+整个底层的 mobilelogd 的 log 文件系统全部是按照 Linux “一切皆文件”的思想来操作的。 
+ 
+ DebugLogger 循环机制介绍 
+关于 DebugLogger 下的 Mobile log 的结构，其下包含很多支 APlog。当停止录制 log， 再开始录制 log 时，就会生成
+一支新的 APlog。当平台重启时，重启后也会将 log 录制到新的 APlog 中。 
+故 Mobile log 设置了两个大小：   
+一个是单支 APlog 文件夹的大小上限。 当达到上限时，会删掉前面的 log（boot_normal 为开机 log，不会被删
+掉），不分 log 种类，只按时间顺序删除旧 log 文件。  
+另一个算法是根据 log 的大小决定单个文件的最大容量（实际上一般约几 M），所有 log 都达到上限后就创建新的
+log 文件。当 APlog 自身达到上限后， 则会删此文件夹下最早创建的那个 log 文件。 
+ 
+ DebugLogger 存储介绍 
+MTK log 的存储有三部分：首先，会从各个 log buffer 抓取 log 存放在 MTK log 的 buffer 里面； 其次，将 MTK log 
+buffer 里面的 log 存到 eMMC，此时文件格式为.curf； 最后，将完整的 log 写到 eMMC 中，此时文件格式没有.curf
+的后缀。 
+ 
+控制存储的 code（调节情况要看客户项目 log 的数量）： 
+logging.h： 
+#define BUFFER_SIZE        (256 * 1024)  // 256k 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0153.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8676 Android DebuggLoggerUI 
+User Manual 
+Confidential B 
+1.3 配置/客制化指南 
+ DebugLogger 控制介绍 
+ 
+ 
+1.3.1.1 主要用户界面 
+1. log 运行时间：开始录制后，正在抓取 log 的录制时间。 
+2. 每个 log 的运行状态：如果 log 正在运行，左侧图标则会由三角形变为图中所示的正方形。 
+3. log 存储：log 存储的路径以及 log 存储的剩余空间。 
+4. 控制面板：左侧按钮用于启动 Tag Log，右侧回收站图标表示清除已记录的 log， 中间按钮用于开始或暂停记
+录。 
+5. 设置页面入口：单击此图标，将出现详细的设置页面，如下图所示 。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0153.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 Android DebuggLoggerUI 
+User Manual 
+Confidential B 
+1.3.1.2 Log 设置 
+ 
+ 
+1. 通过开关的方式自定义抓取不同类型的 log。 
+2. 启用或禁用 Tag Log 功能(当系统发生异常，产生 DB 时，Tag Log 会保存异常时的平台 log)。 
+3. Log 存储路径 
+ 
+1.3.1.3 Mobile Log 设置 
+ 
+1. 当 Mobile log 开启时，通过勾选的方式自定义抓取不同类型的 log。如果勾选，那么所选的 log 类型就会被抓
+取，若未勾选，则该 log 将不会被抓取。 
+2. 设定最大 Mobile Log 的 log buffer size，如果抓取的 log 超过该值，那么就会删除旧的 log 文件，腾出 log buffer 
+size 循环利用。 
+3. 总 log buffer size，包括当前记录的 log 和所有以前的 Mobile log，即 Mobile log 所在的文件夹总的大小。 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0153.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8676 Android DebuggLoggerUI 
+User Manual 
+Confidential B 
+1.3.1.4 Modem Log 设置  
+ 
+1. 三种抓取 Modem log 的模式: 
+– USB 模式：需要连接 USB, 通过 ELT tool 抓取 Modem log; 
+– SD 模式： 直接保存 Modem log 在平台的data/debuglogger 目录下 
+– Passive log to SD 模式： 抓取 Modem 异常时的 log，保存在平台的 data/debuglogger 目录下 
+        
+2. 自动抓取 Modem 异常时的 log, 保存在平台的data/debuglogger 目录下 
+3. 在 Modem1 log 中保存方位信息 
+4. Modem 发生 EE 后，将重置 Modem 
+5. 总 Modem log 容量 
+ 
+1.3.1.5 Network Log 设置 
+ 
+1. 在 Network log 停止记录时，是否需要检查当前网络连接状态。如果启用，此操作将 ping 两个 IP 地址以确认当
+前连接状态。这些 ping 数据可能对分析与网络相关的问题非常有用，但会导致 log 记录停止持续约 12 秒。 
+2. 启用容量限制，检查每个 Network log 的大小是否符合给定值 
+3. Network log 容量 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0153.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8676 Android DebuggLoggerUI 
+User Manual 
+Confidential B 
+ DebugLogger 配置介绍 
+配置文件路径： 编译之前通过  mtklog-config-bsp-eng.prop &amp;&amp; mtklog -config-bsp-user.prop 文件配置  
+DebugLoggerUI 的默认值，文件路径: \device\mediatek\common\mtklog。mtklog-config-bsp-eng.prop 控制
+eng 版本，mtklog-config-bsp-user.prop 控制 user 和 userdebug 版本。 
+ 
+1.3.2.1 DebugLogger 配置 Log 的默认路径 
+配置内容: 
+mtklog_path = system_data/device_storage/portable_storage 
+ 
+1.3.2.2 DebugLogger 配置第一次开机自启的 Log 类型 
+com.mediatek.log.mobile.enabled = true 
+com.mediatek.log.modem.enabled = true 
+com.mediatek.log.net.enabled = true 
+com.mediatek.log.connsysfw.enabled = true 
+com.mediatek.log.gpshost.enabled = true 
+com.mediatek.log.bthost.enabled = true 
+ 
+eng 版本默认第一次开机都启动，其他版本默认不启动，可自行配置。  
+ 
+1.3.2.3 DebugLogger 配置 Log 循环录制大小 
+com.mediatek.log.mobile.maxsize = 500 //Single mobile log folder size 
+com.mediatek.log.mobile.totalmaxsize = 1000 //Total mobile log size 
+com.mediatek.log.modem.maxsize = 2000 
+com.mediatek.log.net.maxsize =600 
+com.mediatek.log.connsysfw.maxsize = 2000 
+com.mediatek.log.bthost.maxsize = 2000 
+ 
+按照需要修改对应选项即可，需要注意com.mediatek.log.mobile.maxsize 要小于
+com.mediatek.log.mobile.total.maxsize，配置的 log 缓存大小会循环存储，即当存储达到最大值时，如果有
+新的 log 就会把前面旧的 log 覆盖掉。 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0153.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8676 Android DebuggLoggerUI 
+User Manual 
+Confidential B 
+1.3.2.4 DebugLogger 配置 Mobile Log 中的子项 
+com.mediatek.log.mobile.AllMode = true 
+ 
+如果没有设定具体的 Mobile log 子项，那么所有的 sub log 均默认开启。 
+com.mediatek.log.mobile.AndroidLog = true 
+com.mediatek.log.mobile.KernelLog = true 
+com.mediatek.log.mobile.SCPLog = true 
+com.mediatek.log.mobile.ATFLog = true 
+com.mediatek.log.mobile.BSPLog = true 
+com.mediatek.log.mobile.MmediaLog = true 
+com.mediatek.log.mobile.SSPMLog = true 
+com.mediatek.log.mobile.ADSPLog = true 
+ 
+如果 Mobile log 子项没有设定，则默认使用 com.mediatek.log.mobile.AllMode 的设定值。 
+ 
+1.3.2.5 DebugLogger 配置开启 Tag Log 
+com.mediatek.log.taglog.enabled = true 
+ 
+默认值 : eng 版本默认为 true，其他为 false。 
+ 
+1.3.2.6 DebugLogger 配置当发生 EE 时，Modem Log 是否自动重启 
+com.mediatek.log.modem.autoreset.enabled = false 
+ 
+默认值是 false。 
+如果配置是 false，Modem log 就不会重启。 
+ 
+1.3.2.7 DebugLogger 配置 Modem Log 默认启动模式 
+com.mediatek.log.modem.mode = 2 
+ 
+1: USB 模式 
+2: SD Card 模式 
+3: PLS 模式 （Passive log to SD） 
+默认配置为第 2 种，即 SD Card 模式。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0153.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8676 Android DebuggLoggerUI 
+User Manual 
+Confidential B 
+ DebugLogger 设置介绍 
+除去 Home UI 的方式，您还可以直接使用 adb 的方式控制 debuglogger，适用于没有显示 debuglogger 界面的客
+户。 
+ 
+1.3.3.1 DebugLogger 设置启动和停止 
+命令格式： 
+adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name value --ei cmd_target 
+logTypes -n com.debug.loggerui/.framework.LogReceiver 
+ 
+value = start/stop 
+logTypes = 1 + 2 + 4 + 16 + 32 + 64 
+(MobileLog: 1, ModemLog: 2, NetworkLog: 4, GPSLog: 16, ConnsysFWLog: 32, BTHostLog: 64) 
+ 
+例 1：开启所有 log 
+adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name start --ei cmd_target 119 
+-n com.debug.loggerui/.framework.LogReceiver 
+ 
+例 2：关闭所有 log 
+adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name stop --ei cmd_target 119 
+-n com.debug.loggerui/.framework.LogReceiver 
+ 
+注意: 启动和停止命令需要间隔 15s 的时间。 
+ 
+例 3 : 停止 Modem log &amp; Network log  
+adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name stop --ei cmd_target 6 -n 
+com.debug.loggerui/.framework.LogReceiver 
+ 
+1.3.3.2 DebugLogger 查询运行状态 
+命令格式： 
+adb shell getprop logstatusproperty 
+ 
+Log 运行状态：1 代表正在运行， 0 代表停止。 
+ 
+其中 logstatusproperty 可以为如下值： 
+logstatusproperty of mobile: vendor.MB.running 
+logstatusproperty of modem log: vendor.mdlogger.Running 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0153.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8676 Android DebuggLoggerUI 
+User Manual 
+Confidential B 
+logstatusproperty of network log: vendor.mtklog.netlog.Running 
+logstatusproperty of GPSLog: vendor.gpsdbglog.enable 
+logstatusproperty of BTHost log: vendor.bthcisnoop.running 
+logstatusproperty of ConnsysFW log: vendor.connsysfw.running 
+ 
+例如：获取 Mobile log 的状态: adb shell getprop vendor.MB.running 
+ 
+1.3.3.3 DebugLogger 设置重启 
+命令格式 : 
+adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name restart --ei cmd_target 
+logTypes -n com.debug.loggerui/.framework.LogReceiver 
+ 
+logTypes=1+2+4+16+32+64  
+(MobileLog: 1, ModemLog: 2, NetworkLog: 4, GPSLog: 16, ConnsysFWLog: 32, BTHostLog: 64) 
+logTypes = -1 (all logs) 
+ 
+例如： 只重启 Mobile log 命令 
+adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name restart --ei cmd_target 1 
+-n com.debug.loggerui/.framework.LogReceiver 
+ 
+结果：只有 Mobile log 重启 
+ 
+1.3.3.4 DebugLogger 设置是否显示 Modem EE 内存转储完成对话框 
+命令格式：  
+adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name modem_auto_reset_value --
+ei cmd_target 2 -n com.debug.loggerui/.framework.LogReceiver 
+value = 1/0  (启用/禁用) 
+ 
+例如：显示 Modem EE 内存转储完成对话框 
+adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name modem_auto_reset_1 --ei 
+cmd_target 2 -n com.debug.loggerui/.framework.LogReceiver 
+ 
+1.3.3.5 DebugLogger 设置 Modem Log 模式 
+命令格式： 
+adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name 
+switch_modem_log_mode_value --ei cmd_target modemtype -n 
+com.debug.loggerui/.framework.LogReceiver 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0153.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+MT8676 Android DebuggLoggerUI 
+User Manual 
+Confidential B 
+ 
+value = 1/2/3 (USB/SD/PLS) 
+modemtype = 1/3 (md1/md3) 
+ 
+例如：将 Modem1 模式设置为 SD 模式 
+adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name switch_modem_log_mode_2 -
+-ei cmd_target 1 -n com.debug.loggerui/.framework.LogReceiver 
+ 
+1.3.3.6 DebugLogger 设置手动触发 EE 
+命令格式：  
+adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name force_modem_assert --ei 
+cmd_target 2 -n com.debug.loggerui/.framework.LogReceiver 
+ 
+1.3.3.7 DebugLogger 设置开启/关闭 Tag Log 
+命令格式： 
+adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name switch_taglog --ei 
+cmd_target value -n com.debug.loggerui/.framework.LogReceiver 
+ 
+value = 1/0 (启用/禁用) 
+ 
+例如: 启用 Tag log 
+adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name switch_taglog --ei 
+cmd_target 1 -n com.debug.loggerui/.framework.LogReceiver 
+ 
+ DebugLogger 设置触发 Tag Log 
+命令格式 ： 
+adb shell am broadcast -a com.mediatek.log2server.EXCEPTION_HAPPEND -e path 
+SaveLogManually -e db_filename yourFileName --ez is_need_zip needZipValue --ez 
+is_need_all_logs needAllLogValue -n com.debug.loggerui/.framework.LogReceiver 
+ 
+文件名称可自行决定 
+needZipValue = true/false （压缩文件/ 不压缩文件） 
+needAllLogValue = true/false （打包在 MTK log 文件夹里的所有 log /不打包所有 log ） 
+ 
+例如： 触发 Tag Log 压缩当前 log 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0153.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+MT8676 Android DebuggLoggerUI 
+User Manual 
+Confidential B 
+adb shell am broadcast -a com.mediatek.log2server.EXCEPTION_HAPPEND -e path 
+SaveLogManually -e db_filename test --ez is_need_zip true --ez is_need_all_logs false -n 
+com.debug.loggerui/.framework.LogReceiver 
+ 
+1.3.4.1 DebugLogger 设置显示 DebugLoggerUI 主界面 
+显示 DebugLoggerUI 主界面： 
+adb shell am start -n com.debug.loggerui/com.debug.loggerui.MainActivity 
+ 
+1.3.4.2 DebugLogger 设置 Log 大小 
+1. 设置 Mobile log 大小 
+adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name set_total_log_size_600 --
+ei cmd_target 1 -n com.debug.loggerui/.framework.LogReceiver 
+ 
+2. 设置 Mobile log 中单个 APlog 文件夹大小 
+adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name set_log_size_300 --ei 
+cmd_target 1 -n com.debug.loggerui/.framework.LogReceiver 
+ 
+3. 设置 Modem log 大小 
+adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name set_log_size_600 --ei 
+cmd_target 2 -n com.debug.loggerui/.framework.LogReceiver 
+ 
+4. 设置 Network log 大小 
+adb shell am broadcast -a com.debug.loggerui.ADB_CMD -e cmd_name set_log_size_200 --ei 
+cmd_target 4 -n com.debug.loggerui/.framework.LogReceiver 
+ 
+ DebugLogger 参考 FAQ 
+[FAQ13883] 如何配置 MTKlogger 各种参数 
+[FAQ12752] 如何修改 MTKlogger 默认存储容量大小 
+ 
+[FAQ19560] User 版本开启 MTK log 特别注意事项 
+[FAQ19362] 如何设置 Mobile log, Modem log, Network log 大小 
+[FAQ17814] 如何设置 MTKlogger 是否开机自启动 
+深入了解 Logging Tools: https://online.mediatek.com/apps/quickstart/QS00034 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0153.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 16 
+MT8676 Android DebuggLoggerUI 
+User Manual 
+Confidential B 
+1.4 DebugLogger 注意事项 
+1. 不建议客户对 MTK log 进行任何客制化（修改存储分区/功能新增），可以将问题提交至 eservice 寻求 MTK 的帮
+助； 
+2. 不建议客户在抓取 log 的时候对 MTK log 做任何额外操作（手动停止 MTK log service/修改 MTK log 存储路径）； 
+3.  把 log 从平台端保存到本地，只需要执行 
+adb pull /data/debuglogger 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0153.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 17 
+MT8676 Android DebuggLoggerUI 
+User Manual 
+Confidential B 
+附件一 附加条款 
+您(或您所代表的公司或其他法律主体，以下合称「您」)是否得取得、下载与使用本文件及其相关信息皆应以您接受本附加条款为先决要件。
+您对于本文件之使用、取得或下载即表示您已接受本附加条款并同意受本附加条款之拘束。若您不同意受本附加条款之拘束，您将不得使用、
+取得或下载本文件并应立即删除或毁弃所有本文件之副本。 
+ 
+本文件含有联发科技股份有限公司及其关联公司（以下合称「联发科技」）或其授权人之机密信息及专有信息，仅供您为本文件所描述之联发
+科技芯片组作内部使用而不得用于其他任何目的（包括但不限于确认或提供支持任何对联发科技、其供货商及/或其直接或间接客户所提潜在
+专利侵权主张的证据）。禁止未经授权使用或揭露本文件及其中所含信息。您同意赔偿联发科技因您未经授权使用或揭露本文件及其中所含信
+息之一部或全部导致联发科技所受之任何损失或损害。 
+ 
+联发科技及其授权人保有本文件的所有权及组成所有权之各项权利且未针对任何知识产权授权（无论明示或默示、透过禁反言原则或其他方
+式）。联发科技得随时变更本文件内容而无须另行通知。联发科技无须承担与使用或信赖本文件相关或因使用或信赖本文件致生之任何责任，
+包括但不限于间接损害或附带损害赔偿责任。 
+ 
+本文件及联发科技所提供关于本文件之任何其他材料、信息或技术支持，均以现况交付为准，联发科技不负任何明示、默示、法定或其他形式
+之担保责任，特别是适销性、不侵权、针对特定用途之适用性、完整性或正确性之担保责任或任何由贸易惯例或交易、履行过程所生之担保责
+任。对于联发科技为符合您所提规格或遵循特定标准或标准组织的要求所作之交付物，联发科技亦不应承担任何责任。 
+ 
+于未对前述条款造成限制之情形下，联发科技不对其产品任何特定用途之适用性承担任何保证或担保责任，亦不承担任何因产品、电路或软件
+之应用或使用致生之赔偿责任。您同意您应单独承担关于整合您的产品与联发科技产品所涉及之设计、验证与测试之所有责任，并应确保前述
+整合产品符合相关标准及任何安全性要求或其他要件。 
+ 
+本附加条款及所有与本附加条款或本文件相关之行为应以台湾法律管辖、解释与阐明，不适用冲突法原则。 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

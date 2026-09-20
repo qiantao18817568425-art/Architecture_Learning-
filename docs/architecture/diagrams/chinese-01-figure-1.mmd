@@ -1,0 +1,9 @@
+flowchart LR
+  SRC["Source\n信号源/用户意图"] --> PROD["Producer\n采集/生成"]
+  PROD --> SER["Serialize\n编码/封装"]
+  SER --> CH["Channel\n会话/主题"]
+  CH --> TR["Transport\nSPI/以太网/共享内存"]
+  TR --> RT["Router\n服务发现/分发"]
+  RT --> CON["Consumer\n缓存/业务逻辑"]
+  CON --> RES["User Result\n显示/声音/执行"]
+  RES -. "ACK/回读/首帧" .-> SRC

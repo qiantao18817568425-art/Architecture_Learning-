@@ -1,0 +1,63 @@
+%%{init: {"flowchart": {"nodeSpacing": 18, "rankSpacing": 8, "padding": 12}, "themeVariables": {"fontSize": "16px"}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph android["Guest / UOS Android"]
+direction TB
+subgraph aapp["Application"]
+direction TB
+subgraph layout_row_1[" "]
+direction LR
+subgraph layout_row_2[" "]
+direction TB
+a1["车载应用"]
+a4["地图导航"]
+a1 ~~~ a4
+end
+subgraph layout_row_3[" "]
+direction TB
+a2["生态应用"]
+a5["语音识别"]
+a2 ~~~ a5
+end
+subgraph layout_row_4[" "]
+direction TB
+a3["行车记录仪"]
+a6["远程监控"]
+a3 ~~~ a6
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+subgraph layout_row_5[" "]
+direction LR
+subgraph layout_row_6[" "]
+direction TB
+aosp["AOSP"]
+art["Runtime"]
+adrivers["Kernel & Drivers / Ethernet"]
+aosp ~~~ art ~~~ adrivers
+end
+subgraph layout_row_7[" "]
+direction TB
+cars["CarService"]
+hal["HAL"]
+cars ~~~ hal
+end
+subgraph layout_row_8[" "]
+direction TB
+mbos["MBOS"]
+ainfra["Infrastructure"]
+mbos ~~~ ainfra
+end
+layout_row_6 ~~~ layout_row_7 ~~~ layout_row_8
+end
+aapp ~~~ layout_row_5
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent
+style layout_row_5 fill:transparent,stroke:transparent
+style layout_row_6 fill:transparent,stroke:transparent
+style layout_row_7 fill:transparent,stroke:transparent
+style layout_row_8 fill:transparent,stroke:transparent

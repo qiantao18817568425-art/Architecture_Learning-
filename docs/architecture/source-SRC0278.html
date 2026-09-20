@@ -1,0 +1,499 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Yocto_Audio_User_Manual_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Yocto_Audio_User_Manual_V1.0.pdf</h1><p>SRC0278 · 原来源 ID S215 · PDF物理页 · 17 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MT8676软件资料/User Manual/Yocto/English Version/MT8676_Yocto_Audio_User_Manual_V1.0.pdf</p><p>SHA-256：<code>10a842dbdf313a2720f4715e1cbcfe1a1b26fa312fb387764361cdff54a168e4</code></p><p>原文件大小：1,463,299 字节</p></details><div class="actions"><a class="button" href="materials/SRC0278.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Yocto_Audio_User_Manual_V1.0.pdf 原 PDF" src="materials/SRC0278.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0278.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version:  1.0 
+Release date:  2024-08-12
+MT8676 Yocto Audio 
+User Manual 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0278.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8676 Yocto Audio 
+User Manual 
+Confidential B 
+Version History 
+Version Date Author Description 
+1.0 2024-08-12 Qimei Liu Official release 
+ 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0278.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8676 Yocto Audio 
+User Manual 
+Confidential B 
+Table of Contents 
+Version History ·································································································································································· 2 
+Table of Contents ······························································································································································· 3 
+List of Figures ····································································································································································· 3 
+List of Tables ······································································································································································ 3 
+1 Audio ········································································································································································· 4 
+1.1 Overview ·································································································································································· 4 
+ Brief Introduction ·········································································································································· 4 
+ Abbreviation·················································································································································· 4 
+1.2 Architecture/Process Overview ································································································································ 4 
+ Hardware ······················································································································································ 4 
+ Software ························································································································································ 8 
+ Audio Driver ·················································································································································· 8 
+1.3 Configuration/Customization Guideline ················································································································· 13 
+ Kernel DTS ··················································································································································· 13 
+ Audio Device Configuration ························································································································ 14 
+1.4 Frequently Asked Questions/Troubleshooting ······································································································· 15 
+ How to Test Audio Driver? ·························································································································· 15 
+ How to Enable Audio Log? ·························································································································· 16 
+Exhibit 1 Terms and Conditions ········································································································································ 17 
+ 
+ 
+List of Figures 
+Figure 1-1. Audio system ···························································································································································· 5 
+Figure 1-2. AFE block diagram ···················································································································································· 7 
+Figure 1-3. Yocto audio system ·················································································································································· 8 
+Figure 1-4. Audio driver architecture ········································································································································· 9 
+Figure 1-5. Audio driver components······································································································································· 10 
+Figure 1-6. Audio devices ························································································································································· 10 
+Figure 1-7. Audio CPU DAI ························································································································································ 11 
+Figure 1-8. DPCM devices························································································································································· 12 
+Figure 1-9. Playback &amp; capture devices ···································································································································· 13 
+Figure 1-10. MTK Audio DTS ····················································································································································· 14 
+Figure 1-11. Audio path for playing music ······························································································································· 15 
+ 
+List of Tables 
+Table 1-1. Abbreviation ······························································································································································ 4 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0278.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8676 Yocto Audio 
+User Manual 
+Confidential B 
+1 Audio 
+1.1 Overview 
+ Brief Introduction 
+This chapter introduces the hardware, software, and basic functionalities of the MT8676 Audio system. 
+ 
+ Abbreviation 
+Table 1-1. Abbreviation 
+Abbreviation Explanation 
+AFE Audio Front End 
+DAI Digital Audio Interface 
+DTS Device Tree Source 
+I2S Integrated Interchip Sound (I2S) is a digital audio transmission standard defined by Philips in 1986 and 
+revised in 1996. It is used for the transmission of digital audio data between devices. 
+PCM Pulse Code Modulation (PCM) is a method used to digitally represent analog signals. In PCM, the 
+amplitude of the analog signal is sampled at uniform intervals, and each sample is quantized to the 
+nearest value within a range of digital steps. This process converts the analog signal into a digital format 
+that can be easily transmitted and processed by digital systems. 
+TDM Time Division Multiplexing (TDM) is a method of transmitting and receiving multiple signals over a 
+common communication channel by dividing the time frame into several time slots. Each signal is 
+assigned a specific time slot during which it can transmit its data. This allows multiple signals to share 
+the same transmission medium while maintaining their individual data integrity. 
+ 
+1.2 Architecture/Process Overview 
+ Hardware 
+The overall hardware composition of the MT8676 Audio System is illustrated in Figure 1-1: 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0278.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8676 Yocto Audio 
+User Manual 
+Confidential B 
+ 
+Figure 1-1. Audio system 
+ 
+The audio hardware includes external hardware interfaces, AFE_Interconn, AFE_Tinyconn, and AFE_Memif, as well as the 
+backend Codec 6338. The external hardware interfaces are as follows: 
+ 
+• Master I2S output *5 
+• Master I2S input *4 
+• Master TDM output *1 
+• Master TDM input *1 
+• Slave PCM interface for internal modem *1 
+• Proprietary audio interface for MTK PMIC codec *1 
+• Slave I2S input interface with SRC for connsys FM *1 
+• PDM interface for DMIC *2 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0278.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Yocto Audio 
+User Manual 
+Confidential B 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0278.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8676 Yocto Audio 
+User Manual 
+Confidential B 
+ 
+ 
+Figure 1-2. AFE block diagram 
+ 
+The internal AFE hardware interfaces can be categorized into two types: 
+ 
+• Memory Interfaces:  
+This is known as AFE_memif, this part functions similarly to DMA. It is primarily responsible for transferring PCM data from 
+upper-layer applications to the specified downlink (DL) port for playback or capturing PCM data from the specified uplink 
+(UL) port and transmitting it to upper-layer applications. 
+ 
+• Connect Interfaces: 
+There are two types: AFE_interconn and AFE_tiny_conn. The main difference between them is the supported data bit 
+width. AFE_interconn supports up to 24-bit data, while AFE_tiny_conn can support up to 32-bit data. Both serve the same 
+purpose, which is to connect the DL or UL of Memif with backend hardware interfaces like I2S/TDM, creating an I/O path 
+for data transmission with external devices. For playback, this means sending DL data to the specified output port (e.g., 
+I2S/TDM out). Conversely, for capture, it means connecting the UL interface to the specified input port (e.g., I2S/TDM in) to 
+capture data from external devices. Additionally, HW SRC, gain control, and mix functions can be added to the I/O path. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0278.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 Yocto Audio 
+User Manual 
+Confidential B 
+ Software 
+The software architecture of the MT8676 Yocto Audio System is illustrated in Figure 1-3: 
+ 
+ 
+Figure 1-3. Yocto audio system 
+ 
+The ALSA Lib module is the native audio module for Linux. Detailed information about this module can be found online, so 
+it will not be elaborated upon here. This document primarily focuses on explaining the proprietary MTK Audio Driver. 
+ 
+ Audio Driver 
+Audio driver is based on the standard ALSA ASoC architecture: 
+ 
+• Machine: Refers to a specific machine or development board. It is evident that the Machine is almost non-reusable, as 
+the hardware implementation on each Machine can be different—different CPUs, different Codecs, and different audio 
+input and output devices. The Machine provides a carrier for the CPU, Codec, and input/output devices. The MT8676 
+reference board is one such Machine, and a customized development board is also a Machine. 
+• Platform: Generally, refers to a specific SoC platform, such as the MT8676. Audio-related components usually include 
+the clock, DMA, I2S, PCM, etc., within the SoC. Once the SoC is specified, we can assume it will have a corresponding 
+Platform, which is related only to the SoC and not to the Machine. The AFE mentioned above belongs to the Platform. 
+• Codec: Generally, refers to I2S/TDM interfaces, D/A, A/D, mixers, Power Amplifiers (PA), etc. It usually includes multiple 
+inputs (Mic, Line-in, I2S, PCM) and multiple outputs (headphones, speakers, earpiece, Line-out). The Codec is also a 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0278.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8676 Yocto Audio 
+User Manual 
+Confidential B 
+reusable component; the same Codec can be used by different Machines. The Codec corresponding to the MT8676 
+reference board is the PMIC 6338, and the external DSP used by customers is also considered as a Codec. 
+ 
+ 
+Figure 1-4. Audio driver architecture 
+ 
+Corresponding drivers for the above three components: 
+• Machine driver: Responsible for handling machine-specific controls and audio events (for example, turning on an 
+amplifier when playing audio). The Platform and Codec drivers cannot work independently; they must be combined by 
+the Machine driver to complete the audio processing of the entire device. 
+• Platform driver: Contains the configuration and control of the audio DMA and audio interfaces (I2S, PCM, etc.) for the 
+SoC platform. It must not include any code related to the board or machine. 
+• Codec driver: A key design principle in ASoC is that the Codec driver must be platform-independent. It includes some 
+audio controls, audio interfaces, definitions for DAMP (Dynamic Audio Power Management), and certain Codec IO 
+functions. To ensure hardware independence, any platform-specific and machine-specific code must be moved to the 
+Platform and Machine drivers. 
+The Audio Driver modules corresponding to the MT8676 platform are shown as Figure 1-5: 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0278.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8676 Yocto Audio 
+User Manual 
+Confidential B 
+ 
+Figure 1-5. Audio driver components 
+ 
+These components of the Audio Driver are initialized sequentially during the Kernel initialization process after the system 
+starts. Once the system startup is complete, you can view the corresponding device information in the adb shell console 
+interface: 
+ 
+Figure 1-6. Audio devices 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0278.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8676 Yocto Audio 
+User Manual 
+Confidential B 
+ 
+According to the DPCM architecture, the ALSA driver virtualizes memory interfaces as Front End (FE) devices and external 
+hardware interfaces as Back End (BE) devices. FE and BE are connected through connection interfaces to form an audio 
+path, which can be used for audio data transmission. Since both FE and BE are audio interfaces within the MT8675 SoC, the 
+ALSA Driver treats them uniformly as CPU DAI. The further backend PMIC or external DSP is considered the Codec DAI. 
+ 
+ 
+Figure 1-7. Audio CPU DAI 
+ 
+The ALSA driver constructs a series of Control/Mixer APIs to control the DAI and establish the audio path. The devices used 
+to control these APIs are known as Control devices. Similarly, the devices used to control specific FEs and read/write data 
+are known as PCM devices. 
+ 
+Figure 1-8 shows the Control device nodes and PCM device nodes for the MT8676 platform: 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0278.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8676 Yocto Audio 
+User Manual 
+Confidential B 
+ 
+Figure 1-8. DPCM devices 
+ 
+The correspondence between PCM nodes and AFE is illustrated in Figure 1-9: 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0278.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8676 Yocto Audio 
+User Manual 
+Confidential B 
+ 
+Figure 1-9. Playback &amp; capture devices 
+ 
+In playback scenarios, such as playing music, the application layer writes audio data to the Playback PCM node, which is 
+then transmitted to the backend speakers or amplifiers to produce sound. Conversely, in capture scenarios, such as 
+recording, the application layer reads audio data from the Capture PCM node, obtaining the audio data input from external 
+devices like microphones. 
+ 
+1.3 Configuration/Customization Guideline 
+ Kernel DTS 
+The configuration of the ALSA driver is primarily completed in the DTS (Device Tree Source) files, which include the 
+configuration of device nodes for drivers related to Audio, such as Machine, Platform, and Codec. These configurations 
+encompass register addresses, memory addresses, interrupt numbers, and other parameters. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0278.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+MT8676 Yocto Audio 
+User Manual 
+Confidential B 
+The DTS configuration files for the MT8676 are located at: 
+src/kernel/linux/v6.1_mt8676/co_device_module/arch/arm64/boot/dts/mediatek/. The main 
+configuration files are as follows: 
+mt6897.dts 
+auto8676p1_64.dts 
+ 
+The corresponding configurations for Machine, Platform, and Codec are shown as Figure 1-10: 
+ 
+ 
+Figure 1-10. MTK Audio DTS 
+ 
+When the Kernel initializes, the various components of the Audio Driver can obtain the necessary parameters from the DTS 
+configuration, such as register addresses, memory addresses, clock configurations, and GPIO settings. During the use of the 
+Audio Driver, these parameters are used to configure the audio hardware and establish the audio path. therefore, when 
+developing on the customer platform, it is essential to customize the corresponding DTS configuration according to the 
+actual hardware conditions. 
+ 
+ Audio Device Configuration 
+Before an Audio APP can perform read/write operations on a specific PCM device node, it needs to configure some 
+mixer/control settings to open the audio path or enable certain audio hardware interfaces. 
+For example, to play music on the MT8676 reference board, the following steps are used to establish the audio path 
+through the Playback_2 node, connecting DL2 → ADDA_DL → PMIC 6338 → Speaker: 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0278.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+MT8676 Yocto Audio 
+User Manual 
+Confidential B 
+ 
+Figure 1-11. Audio path for playing music 
+ 
+The kcontrol settings are as follows: 
+• Connects DL2 to PMIC 
+'ADDA_DL_CH1 DL2_CH1' 1 
+'ADDA_DL_CH2 DL2_CH2' 1 
+'ADDA_DL_CH3 DL2_CH1' 1 
+'ADDA_DL_CH4 DL2_CH2' 1 
+ 
+• Connects PMIC to Speaker: 
+'HPL Mux'  'Audio Playback' 
+'HPR Mux'  'Audio Playback' 
+ 
+1.4 Frequently Asked Questions/Troubleshooting 
+ How to Test Audio Driver? 
+When the Audio Driver is ready, you can use the built-in Yocto tools aplay, arecord, and amixer for manual testing. amixer is 
+used to connect the audio path, aplay is used for playing sound, and arecord is used for recording from the MIC. For 
+example, to play audio through Playback_2, the command line is as follows: 
+ 
+adb shell 
+amixer cset name='ADDA_DL_CH1 DL2_CH1' 1 
+amixer cset name='ADDA_DL_CH2 DL2_CH2' 1 
+amixer cset name='ADDA_DL_CH3 DL2_CH1' 1 
+amixer cset name='ADDA_DL_CH4 DL2_CH2' 1 
+amixer cset name='HPL Mux'  'Audio Playback' 
+amixer cset name='HPR Mux'  'Audio Playback' 
+aplay -Dhw:0,2 /tmp/test_music.wav &amp; 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0278.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 16 
+MT8676 Yocto Audio 
+User Manual 
+Confidential B 
+ How to Enable Audio Log? 
+When developing or troubleshooting bugs, you need to enable the Audio Driver log to pinpoint issues. 
+Enable the Audio Driver log: echo 7 &gt; /proc/sys/kernel/printk 
+After setting this, you can use adb shell logcat to view the output logs. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0278.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 17 
+MT8676 Yocto Audio 
+User Manual 
+Confidential B 
+Exhibit 1 Terms and Conditions 
+Your access to and use of this document and the information contained herein (collectively this “Document”) is subject to your (including the corporation 
+or other legal entity you represent, collectively “You”) acceptance of the terms and conditions set forth below (“T&amp;C”).  By using, accessing or 
+downloading this Document, You are accepting the T&amp;C and agree to be bound by the T&amp;C.  If You don’t agree to the T&amp;C, You may not use this 
+Document and shall immediately destroy any copy thereof. 
+ 
+This Document contains information that is confidential and proprietary to MediaTek Inc. and/or its affiliates (collectively “MediaTek”) or its licensors 
+and is provided solely for Your internal use with MediaTek’s chipset(s) described in this Document and shall not be used for any other purposes (including 
+but not limited to identifying or providing evidence to support any potential patent infringement claim against MediaTek or any of MediaTek’s suppliers 
+and/or direct or indirect customers).  Unauthorized use or disclosure of the information contained herein is prohibited.  You agree to indemnify 
+MediaTek for any loss or damages suffered by MediaTek for Your unauthorized use or disclosure of this Document, in whole or in part. 
+ 
+MediaTek and its licensors retain titles and all ownership rights in and to this Document and no license (express or implied, by estoppels or otherwise) to 
+any intellectual propriety rights is granted hereunder.  This Document is subject to change without further notification.  MediaTek does not assume any 
+responsibility arising out of or in connection with any use of, or reliance on, this Document, and specifically disclaims any and all liability, including, 
+without limitation, consequential or incidental damages. 
+ 
+THIS DOCUMENT AND ANY OTHER MATERIALS OR TECHNICAL SUPPORT PROVIDED BY MEDIATEK IN CONNECTION WITH THIS DOCUMENT, IF ANY, ARE 
+PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE.  MEDIATEK SPECIFICALLY DISCLAIMS 
+ALL WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, COMPLETENESS OR ACCURACY AND ALL 
+WARRANTIES ARISING OUT OF TRADE USAGE OR OUT OF A COURSE OF DEALING OR COURSE OF PERFORMANCE.  MEDIATEK SHALL NOT BE RESPONSIBLE 
+FOR ANY MEDIATEK DELIVERABLES MADE TO MEET YOUR SPECIFICATIONS OR TO CONFORM TO A PARTICULAR STANDARD OR OPEN FORUM. 
+ 
+Without limiting the generality of the foregoing, MediaTek makes no warranty, representation or guarantee regarding the suitability of its products for 
+any particular purpose, nor does MediaTek assume any liability arising out of the application or use of any product, circuit or software.  You agree that 
+You are solely responsible for the designing, validating and testing Your product incorporating MediaTek’s product and ensure such product meets 
+applicable standards and any safety, security or other requirements. 
+ 
+The above T&amp;C and all acts in connection with the T&amp;C or this Document shall be governed, construed and interpreted in accordance with the laws of 
+Taiwan, without giving effect to the principles of conflicts of law. 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

@@ -1,0 +1,9 @@
+stateDiagram-v2
+  [*] --> Unavailable
+  Unavailable --> Baseline: service up + GET
+  Baseline --> Fresh: valid sample
+  Fresh --> Stale: source age exceeded policy
+  Stale --> Fresh: newer generation
+  Fresh --> Disconnected: binder/service loss
+  Disconnected --> Baseline: new handle + re-subscribe
+  Baseline --> Fresh: readback validated

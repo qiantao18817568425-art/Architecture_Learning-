@@ -1,0 +1,38 @@
+%%{init: {"flowchart": {"nodeSpacing": 18, "rankSpacing": 8, "padding": 12}, "themeVariables": {"fontSize": "16px"}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph native["Native Services"]
+direction TB
+subgraph layout_row_1[" "]
+direction LR
+subgraph layout_row_2[" "]
+direction TB
+a73["Surface Flinger"]
+a76["Camera Service"]
+a79["Audio Policy"]
+a82["BT Service"]
+a73 ~~~ a76 ~~~ a79 ~~~ a82
+end
+subgraph layout_row_3[" "]
+direction TB
+a74["Input Flinger"]
+a77["Boot Animation"]
+a80["AndroidAuto Service"]
+a83["BroadCast RadioService"]
+a74 ~~~ a77 ~~~ a80 ~~~ a83
+end
+subgraph layout_row_4[" "]
+direction TB
+a75["MediaServer"]
+a78["Audio Flinger"]
+a81["CarPlay Service"]
+a84["MBOS Service"]
+a75 ~~~ a78 ~~~ a81 ~~~ a84
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent

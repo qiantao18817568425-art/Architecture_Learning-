@@ -1,0 +1,14 @@
+stateDiagram-v2
+  [*] --> Connected
+  Connected --> ProducerOwned: dequeue
+  ProducerOwned --> Queued: queue
+  Queued --> ConsumerOwned: acquire + fence ready
+  ConsumerOwned --> Released: compose + release
+  Released --> ProducerOwned: producer reuse
+  ProducerOwned --> Stalled: fence timeout / no free slot
+  Queued --> Stalled: consumer not acquiring
+  ConsumerOwned --> Stalled: consumer not releasing
+  Stalled --> Draining: stop producer + snapshot ownership
+  Draining --> Disconnected: cancel/release/disconnect
+  Disconnected --> Connected: recreate new Generation
+  Connected --> Verified: unique frame + state readback

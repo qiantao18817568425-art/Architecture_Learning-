@@ -1,8 +1,8 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676-SDK与UMDP · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details open><summary>第二阶段 · 理解模块与接口</summary><a aria-current="page" href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 03</div><div class="chapter-title"><p class="eyebrow">CHAPTER 03 · 中文版全文</p><h1>MT8676-SDK与UMDP</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=03">并排对比两套正文 ↗</a><a class="button secondary" href="original-03.html">对照原版解释 ↗</a><button class="button" data-read="03" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>SDK 的调用成功到底说明什么？</h2><p>SDK 是调用合同、库和例程的组合。Client 发出请求，Server 处理能力；连接建立、服务 ready、方法返回、业务生效是四个不同阶段。</p><ol><li><strong>怎么读：</strong>先读 Client/Server 原图，再看 GET/SET/REGISTER，选一个 API 对照输入、返回与依赖。</li><li><strong>项目练习：</strong>为一次 SET 列出请求、返回、回调/回读与超时观察点。未知的接口 ID 和阈值保留待确认。</li><li><strong>自检：</strong>为何 IPC 已连接时，Modem API 仍可能不可用？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-14">Day 14</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#03-mt8676-favalon-sdk-与-umdp">03 MT8676 Favalon SDK 与 UMDP</a><a class="depth-2" href="#2026-09-20-校订保留-sdk-基线新增-8668-迁移入口">2026-09-20 校订：保留 SDK 基线，新增 8668 迁移入口</a><a class="depth-2" href="#31-版本和证据边界">3.1 版本和证据边界</a><a class="depth-2" href="#32-favalon-sdk-在系统中的位置">3.2 Favalon SDK 在系统中的位置</a><a class="depth-2" href="#33-clientserver-结构和库服务边界">3.3 Client/Server 结构和库/服务边界</a><a class="depth-2" href="#34-api-家族两个版本快照分列">3.4 API 家族：两个版本快照分列</a><a class="depth-2" href="#35-getsetregister-三种语义">3.5 GET、SET、REGISTER 三种语义</a><a class="depth-3" href="#get">GET</a><a class="depth-3" href="#set">SET</a><a class="depth-3" href="#register">REGISTER</a><a class="depth-2" href="#36-client-生命周期">3.6 Client 生命周期</a><a class="depth-2" href="#37-成功的同步调用">3.7 成功的同步调用</a><a class="depth-2" href="#38-超时迟到响应和服务不可用">3.8 超时、迟到响应和服务不可用</a><a class="depth-2" href="#39-回调注册事件和服务重启">3.9 回调注册、事件和服务重启</a><a class="depth-2" href="#310-回调异常的四个层次">3.10 回调异常的四个层次</a><a class="depth-2" href="#311-umdp-的-yocto-集成">3.11 UMDP 的 Yocto 集成</a><a class="depth-2" href="#312-umdp-服务">3.12 UMDP 服务</a><a class="depth-2" href="#313-umdp-包内组件存在清单与绑定边界">3.13 UMDP 包内组件存在清单与绑定边界</a><a class="depth-2" href="#314-systemd-依赖和行为">3.14 systemd 依赖和行为</a><a class="depth-3" href="#fb_modemservice">fbmodem.service</a><a class="depth-3" href="#fb_audioservice">fbaudio.service</a><a class="depth-3" href="#fb_powermgrservice">fbpowermgr.service</a><a class="depth-3" href="#fb_logmgrservice">fblogmgr.service</a><a class="depth-2" href="#315-启动依赖图">3.15 启动依赖图</a><a class="depth-2" href="#316-umdpprocessini-语义">3.16 umdpprocess.ini 语义</a><a class="depth-2" href="#317-systemd-与-fb_procmgr-的边界">3.17 systemd 与 fbprocMgr 的边界</a><a class="depth-2" href="#318-服务死亡到业务恢复">3.18 服务死亡到业务恢复</a><a class="depth-2" href="#319-四种恢复不能混为一谈">3.19 四种“恢复”不能混为一谈</a><a class="depth-2" href="#320-失败模式与证据表">3.20 失败模式与证据表</a><a class="depth-2" href="#321-分层诊断步骤">3.21 分层诊断步骤</a><a class="depth-3" href="#第一步确认进程与依赖">第一步：确认进程与依赖</a><a class="depth-3" href="#第二步确认-clientserver-会话">第二步：确认 Client/Server 会话</a><a class="depth-3" href="#第三步确认请求响应或事件">第三步：确认请求/响应或事件</a><a class="depth-3" href="#第四步确认业务状态">第四步：确认业务状态</a><a class="depth-2" href="#322-示例代码的正确用法">3.22 示例代码的正确用法</a><a class="depth-2" href="#323-本章可确认与待确认清单">3.23 本章可确认与待确认清单</a></details><article id="chapter-text"><h1 id="03-mt8676-favalon-sdk-与-umdp">03 MT8676 Favalon SDK 与 UMDP</h1>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676-SDK与UMDP · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details open><summary>第二阶段 · 理解模块与接口</summary><a aria-current="page" href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 03</div><div class="chapter-title"><p class="eyebrow">CHAPTER 03 · 中文版全文</p><h1>MT8676-SDK与UMDP</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=03">并排对比两套正文 ↗</a><a class="button secondary" href="original-03.html">对照原版解释 ↗</a><button class="button" data-read="03" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>SDK 的调用成功到底说明什么？</h2><p>SDK 是调用合同、库和例程的组合。Client 发出请求，Server 处理能力；连接建立、服务 ready、方法返回、业务生效是四个不同阶段。</p><ol><li><strong>怎么读：</strong>先读 Client/Server 原图，再看 GET/SET/REGISTER，选一个 API 对照输入、返回与依赖。</li><li><strong>项目练习：</strong>为一次 SET 列出请求、返回、回调/回读与超时观察点。未知的接口 ID 和阈值保留待确认。</li><li><strong>自检：</strong>为何 IPC 已连接时，Modem API 仍可能不可用？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-14">Day 14</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#03-mt8676-favalon-sdk-与-umdp">03 MT8676 Favalon SDK 与 UMDP</a><a class="depth-2" href="#2026-09-20-校订保留-sdk-基线新增-8668-迁移入口">2026-09-20 校订：保留 SDK 基线，新增 8668 迁移入口</a><a class="depth-2" href="#31-版本和证据边界">3.1 版本和证据边界</a><a class="depth-2" href="#32-favalon-sdk-在系统中的位置">3.2 Favalon SDK 在系统中的位置</a><a class="depth-2" href="#33-clientserver-结构和库服务边界">3.3 Client/Server 结构和库/服务边界</a><a class="depth-2" href="#34-api-家族两个版本快照分列">3.4 API 家族：两个版本快照分列</a><a class="depth-2" href="#35-getsetregister-三种语义">3.5 GET、SET、REGISTER 三种语义</a><a class="depth-3" href="#get">GET</a><a class="depth-3" href="#set">SET</a><a class="depth-3" href="#register">REGISTER</a><a class="depth-2" href="#36-client-生命周期">3.6 Client 生命周期</a><a class="depth-2" href="#37-成功的同步调用">3.7 成功的同步调用</a><a class="depth-2" href="#38-超时迟到响应和服务不可用">3.8 超时、迟到响应和服务不可用</a><a class="depth-2" href="#39-回调注册事件和服务重启">3.9 回调注册、事件和服务重启</a><a class="depth-2" href="#310-回调异常的四个层次">3.10 回调异常的四个层次</a><a class="depth-2" href="#311-umdp-的-yocto-集成">3.11 UMDP 的 Yocto 集成</a><a class="depth-2" href="#312-umdp-服务">3.12 UMDP 服务</a><a class="depth-2" href="#313-umdp-包内组件存在清单与绑定边界">3.13 UMDP 包内组件存在清单与绑定边界</a><a class="depth-2" href="#314-systemd-依赖和行为">3.14 systemd 依赖和行为</a><a class="depth-3" href="#fb_modemservice">fbmodem.service</a><a class="depth-3" href="#fb_audioservice">fbaudio.service</a><a class="depth-3" href="#fb_powermgrservice">fbpowermgr.service</a><a class="depth-3" href="#fb_logmgrservice">fblogmgr.service</a><a class="depth-2" href="#315-启动依赖图">3.15 启动依赖图</a><a class="depth-2" href="#316-umdpprocessini-语义">3.16 umdpprocess.ini 语义</a><a class="depth-2" href="#317-systemd-与-fb_procmgr-的边界">3.17 systemd 与 fbprocMgr 的边界</a><a class="depth-2" href="#318-服务死亡到业务恢复">3.18 服务死亡到业务恢复</a><a class="depth-2" href="#319-四种恢复不能混为一谈">3.19 四种“恢复”不能混为一谈</a><a class="depth-2" href="#320-失败模式与证据表">3.20 失败模式与证据表</a><a class="depth-2" href="#321-分层诊断步骤">3.21 分层诊断步骤</a><a class="depth-3" href="#第一步确认进程与依赖">第一步：确认进程与依赖</a><a class="depth-3" href="#第二步确认-clientserver-会话">第二步：确认 Client/Server 会话</a><a class="depth-3" href="#第三步确认请求响应或事件">第三步：确认请求/响应或事件</a><a class="depth-3" href="#第四步确认业务状态">第四步：确认业务状态</a><a class="depth-2" href="#322-示例代码的正确用法">3.22 示例代码的正确用法</a><a class="depth-2" href="#323-本章可确认与待确认清单">3.23 本章可确认与待确认清单</a></details><article id="chapter-text"><h1 id="03-mt8676-favalon-sdk-与-umdp">03 MT8676 Favalon SDK 与 UMDP</h1>
 <h2 id="2026-09-20-校订保留-sdk-基线新增-8668-迁移入口">2026-09-20 校订：保留 SDK 基线，新增 8668 迁移入口</h2>
 <p>本章 Favalon SDK V1.0.166 与 UMDP V1.0.226 的函数、枚举、超时、回调、服务配置仍按 MT8676 基线解释。MT8668 不能凭 API 同名认定兼容，应比较头文件、IDL、二进制 ABI、服务版本、配置和回调线程。</p>
-<p>MT8668 General Introduction V1.1 给出的组合为 Android B/16、Yocto 5.0、Kernel 6.12，这是文档参考组合。TBox API 手册强调除 ML_GetModemStat 外，其他 API 正常使用依赖 modem ready，不能将 socket 连接成功当作可调用状态。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S023 · MT8668_Hypervisor_General_Introduction_CN_V1.1.pdf · PDF第4-6页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S075 · MT8668_Yocto_T-Box_User_Manual_CN_V1.0.pdf · PDF第5-7页<small>〔本地来源〕</small></span></p>
-<p>新平台接入顺序建议为：冻结 BSP/SDK/镜像 → 确认服务启动/发现 → 查询 ready → 调用与回调关联 → 验证错误/超时 → 单域重启恢复。原有 SDK 源文件证据仍在 <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">旧版证据索引<small>〔本地来源〕</small></span>，<a href="17.html">17 章</a> 提供跨平台核对表。</p>
+<p>MT8668 General Introduction V1.1 给出的组合为 Android B/16、Yocto 5.0、Kernel 6.12，这是文档参考组合。TBox API 手册强调除 ML_GetModemStat 外，其他 API 正常使用依赖 modem ready，不能将 socket 连接成功当作可调用状态。<a href="source-SRC0017.html#page-4">S023 · MT8668_Hypervisor_General_Introduction_CN_V1.1.pdf · PDF第4-6页</a> <a href="source-SRC0018.html#page-5">S075 · MT8668_Yocto_T-Box_User_Manual_CN_V1.0.pdf · PDF第5-7页</a></p>
+<p>新平台接入顺序建议为：冻结 BSP/SDK/镜像 → 确认服务启动/发现 → 查询 ready → 调用与回调关联 → 验证错误/超时 → 单域重启恢复。原有 SDK 源文件证据仍在 <a href="source-SRC0001.html">旧版证据索引</a>，<a href="17.html">17 章</a> 提供跨平台核对表。</p>
 <hr>
 <h2 id="31-版本和证据边界">3.1 版本和证据边界</h2>
 <p>本章的 Favalon 软件开发套件（Software Development Kit，SDK）基线为
@@ -24,34 +24,258 @@ V1.0.226 UMDP 集成头文件证明 226 包的兼容性接口面。当前没有�
 <p>SDK 指南把它定义为业务模块和上层应用之间的桥梁：上层调用 Client 侧 API，
 Client 把请求发到 Server，Server 转换和封装业务请求，再调用下层业务接口。
 [可信度：MT8676 资料确认] [证据：sdk-mt8676-guide]</p>
-<p><figure><a href="assets/04.png" target="_blank" rel="noopener"><img loading="lazy" src="assets/04.png" alt="SDK 总体架构原图"></a><figcaption>SDK 总体架构原图 · 点击查看原图</figcaption></figure></p>
+<p><figure class="mermaid-figure" id="sdk-overview-chinese"><figcaption>SDK 软件架构 · Mermaid</figcaption><details  class="diagram" open data-panel="sdk-overview-chinese"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/sdk-overview-chinese.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="SDK 软件架构，可使用方向键滚动"><pre class="mermaid">%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph app[&quot;App / Customer Applications&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+data[&quot;Data app&quot;]
+powerapp[&quot;Power Manager app&quot;]
+data ~~~ powerapp
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+location[&quot;Location app&quot;]
+network[&quot;Network Manager app&quot;]
+location ~~~ network
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+callapp[&quot;E/B Call app&quot;]
+wifiapp[&quot;Wifi app&quot;]
+callapp ~~~ wifiapp
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+subgraph api[&quot;FIBO API&quot;]
+direction TB
+subgraph layout_row_5[&quot; &quot;]
+direction LR
+apis[&quot;VoiceCall · Ecall · Data · Sim&lt;br/&gt;Sms · Nw · Dm · Power&lt;br/&gt;Gnss · Update · Wifi · Audio&lt;br/&gt;Tzone&quot;]
+end
+end
+subgraph middleware[&quot;Middleware&quot;]
+direction TB
+subgraph services[&quot;Components Services&quot;]
+direction TB
+subgraph modem[&quot;Modem Services&quot;]
+direction TB
+subgraph layout_row_6[&quot; &quot;]
+direction LR
+calls[&quot;Voice/Ecall · Data Call · Sms&quot;]
+controls[&quot;At · Sim · Dm · Nw&quot;]
+calls ~~~ controls
+end
+end
+subgraph layout_row_7[&quot; &quot;]
+direction LR
+log[&quot;Log Mgr&quot;]
+power[&quot;Power Mgr&quot;]
+proc[&quot;ProcMgr&quot;]
+log ~~~ power ~~~ proc
+end
+modem ~~~ layout_row_7
+end
+subgraph libs[&quot;Components Libs&quot;]
+direction TB
+subgraph layout_row_8[&quot; &quot;]
+direction LR
+base[&quot;Location · Audio · Update · Wakelock&lt;br/&gt;Dev&quot;]
+end
+subgraph opt[&quot;Optional Libs&quot;]
+direction TB
+subgraph layout_row_9[&quot; &quot;]
+direction LR
+optional[&quot;Wifi Mgr · Dhcp · Key Store · Gpio&quot;]
+end
+end
+layout_row_8 ~~~ opt
+end
+subgraph layout_row_10[&quot; &quot;]
+direction LR
+posix[&quot;Posix Interface&quot;]
+end
+services ~~~ libs ~~~ layout_row_10
+end
+subgraph layout_row_11[&quot; &quot;]
+direction LR
+c[&quot;C Runtime library&quot;]
+end
+subgraph os[&quot;OS and Driver / Linux Kernel&quot;]
+direction TB
+subgraph layout_row_12[&quot; &quot;]
+direction LR
+drivers[&quot;GPIO · I2S · I2C · Audio&lt;br/&gt;Flash · SPI · Sensor · USB&lt;br/&gt;WIFI · Pcie · TTY · Trust Zone&lt;br/&gt;ETH · UART&quot;]
+md[&quot;Modem Driver&quot;]
+other[&quot;Others&quot;]
+drivers ~~~ md ~~~ other
+end
+end
+subgraph layout_row_13[&quot; &quot;]
+direction LR
+hw[&quot;Hardware / AP core and Modem core&quot;]
+end
+app ~~~ api ~~~ middleware ~~~ layout_row_11 ~~~ os ~~~ layout_row_13
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent
+style layout_row_5 fill:transparent,stroke:transparent
+style layout_row_6 fill:transparent,stroke:transparent
+style layout_row_7 fill:transparent,stroke:transparent
+style layout_row_8 fill:transparent,stroke:transparent
+style layout_row_9 fill:transparent,stroke:transparent
+style layout_row_10 fill:transparent,stroke:transparent
+style layout_row_11 fill:transparent,stroke:transparent
+style layout_row_12 fill:transparent,stroke:transparent
+style layout_row_13 fill:transparent,stroke:transparent</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%%{init: {&quot;flowchart&quot;: {&quot;nodeSpacing&quot;: 18, &quot;rankSpacing&quot;: 8, &quot;padding&quot;: 12}, &quot;themeVariables&quot;: {&quot;fontSize&quot;: &quot;16px&quot;}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph app[&quot;App / Customer Applications&quot;]
+direction TB
+subgraph layout_row_1[&quot; &quot;]
+direction LR
+subgraph layout_row_2[&quot; &quot;]
+direction TB
+data[&quot;Data app&quot;]
+powerapp[&quot;Power Manager app&quot;]
+data ~~~ powerapp
+end
+subgraph layout_row_3[&quot; &quot;]
+direction TB
+location[&quot;Location app&quot;]
+network[&quot;Network Manager app&quot;]
+location ~~~ network
+end
+subgraph layout_row_4[&quot; &quot;]
+direction TB
+callapp[&quot;E/B Call app&quot;]
+wifiapp[&quot;Wifi app&quot;]
+callapp ~~~ wifiapp
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+subgraph api[&quot;FIBO API&quot;]
+direction TB
+subgraph layout_row_5[&quot; &quot;]
+direction LR
+apis[&quot;VoiceCall · Ecall · Data · Sim&lt;br/&gt;Sms · Nw · Dm · Power&lt;br/&gt;Gnss · Update · Wifi · Audio&lt;br/&gt;Tzone&quot;]
+end
+end
+subgraph middleware[&quot;Middleware&quot;]
+direction TB
+subgraph services[&quot;Components Services&quot;]
+direction TB
+subgraph modem[&quot;Modem Services&quot;]
+direction TB
+subgraph layout_row_6[&quot; &quot;]
+direction LR
+calls[&quot;Voice/Ecall · Data Call · Sms&quot;]
+controls[&quot;At · Sim · Dm · Nw&quot;]
+calls ~~~ controls
+end
+end
+subgraph layout_row_7[&quot; &quot;]
+direction LR
+log[&quot;Log Mgr&quot;]
+power[&quot;Power Mgr&quot;]
+proc[&quot;ProcMgr&quot;]
+log ~~~ power ~~~ proc
+end
+modem ~~~ layout_row_7
+end
+subgraph libs[&quot;Components Libs&quot;]
+direction TB
+subgraph layout_row_8[&quot; &quot;]
+direction LR
+base[&quot;Location · Audio · Update · Wakelock&lt;br/&gt;Dev&quot;]
+end
+subgraph opt[&quot;Optional Libs&quot;]
+direction TB
+subgraph layout_row_9[&quot; &quot;]
+direction LR
+optional[&quot;Wifi Mgr · Dhcp · Key Store · Gpio&quot;]
+end
+end
+layout_row_8 ~~~ opt
+end
+subgraph layout_row_10[&quot; &quot;]
+direction LR
+posix[&quot;Posix Interface&quot;]
+end
+services ~~~ libs ~~~ layout_row_10
+end
+subgraph layout_row_11[&quot; &quot;]
+direction LR
+c[&quot;C Runtime library&quot;]
+end
+subgraph os[&quot;OS and Driver / Linux Kernel&quot;]
+direction TB
+subgraph layout_row_12[&quot; &quot;]
+direction LR
+drivers[&quot;GPIO · I2S · I2C · Audio&lt;br/&gt;Flash · SPI · Sensor · USB&lt;br/&gt;WIFI · Pcie · TTY · Trust Zone&lt;br/&gt;ETH · UART&quot;]
+md[&quot;Modem Driver&quot;]
+other[&quot;Others&quot;]
+drivers ~~~ md ~~~ other
+end
+end
+subgraph layout_row_13[&quot; &quot;]
+direction LR
+hw[&quot;Hardware / AP core and Modem core&quot;]
+end
+app ~~~ api ~~~ middleware ~~~ layout_row_11 ~~~ os ~~~ layout_row_13
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent
+style layout_row_5 fill:transparent,stroke:transparent
+style layout_row_6 fill:transparent,stroke:transparent
+style layout_row_7 fill:transparent,stroke:transparent
+style layout_row_8 fill:transparent,stroke:transparent
+style layout_row_9 fill:transparent,stroke:transparent
+style layout_row_10 fill:transparent,stroke:transparent
+style layout_row_11 fill:transparent,stroke:transparent
+style layout_row_12 fill:transparent,stroke:transparent
+style layout_row_13 fill:transparent,stroke:transparent</code></pre></details></details><p class="note">源图为分层和包含关系，没有显式调用箭头；相邻同层模块以同一分组保留全部标签，未凭位置添加依赖。</p><details class="original-reference"><summary>查看源文件原图作对照</summary><a href="assets/04.png" target="_blank" rel="noopener"><img loading="lazy" src="assets/04.png" alt="SDK 软件架构 源图"></a></details></figure></p>
 <p>原图能证明 Customer Application、FIBO SDK API、中间件、Common Services、
 System Lib/Common Lib、Post Interface、OS/Driver 与 Hardware/AP/Modem core
 处于分层关系。[可信度：MT8676 资料确认]
 [证据：sdk-image-sdk-architecture-diagram-png]</p>
 <p>原图不能证明每个彩色小框是独立进程，不能给出全部 <code>.so</code> 的加载关系，也不能证明
 某个业务 API 最终调用哪个私有驱动。具体映射仍需二进制依赖、服务注册和运行日志。</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-03-figure-1"><figcaption>MT8676-SDK与UMDP · 图 1 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-03-figure-1"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-03-figure-1.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MT8676-SDK与UMDP · 图 1，可使用方向键滚动"><pre class="mermaid">flowchart LR
   APP[&quot;Upper Application&quot;] --&gt; API[&quot;Favalon SDK API&quot;]
   API --&gt; CL[&quot;FIBO SDK Client&quot;]
   CL &lt;--&gt;|&quot;Socket&quot;| SV[&quot;FIBO SDK Server&quot;]
   SV --&gt; LOW[&quot;Lower Business Interface&quot;]
   LOW -. &quot;result/event&quot; .-&gt; SV
   SV -. &quot;response/callback&quot; .-&gt; CL
-  CL -. &quot;return/callback&quot; .-&gt; APP</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  CL -. &quot;return/callback&quot; .-&gt; APP</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   APP[&quot;Upper Application&quot;] --&gt; API[&quot;Favalon SDK API&quot;]
   API --&gt; CL[&quot;FIBO SDK Client&quot;]
   CL &lt;--&gt;|&quot;Socket&quot;| SV[&quot;FIBO SDK Server&quot;]
   SV --&gt; LOW[&quot;Lower Business Interface&quot;]
   LOW -. &quot;result/event&quot; .-&gt; SV
   SV -. &quot;response/callback&quot; .-&gt; CL
-  CL -. &quot;return/callback&quot; .-&gt; APP</code></pre></details></details><p>该图只重画 V1.0.166 SDK 指南确认的通用 Client/Server 结构：实线表示请求方向，
+  CL -. &quot;return/callback&quot; .-&gt; APP</code></pre></details></details></figure><p>该图只重画 V1.0.166 SDK 指南确认的通用 Client/Server 结构：实线表示请求方向，
 虚线表示返回或回调；Client 与 Server 间的 <code>Socket</code> 来自结构图。这里的
 <code>FIBO SDK Server</code> 不与任何具体 <code>fb_*</code> 进程合并命名，也不声明某个 UMDP 库的加载
 或调用关系。[可信度：MT8676 资料确认]
 [证据：sdk-mt8676-guide] [证据：sdk-image-sdk-structural-diagram-png]</p>
 <h2 id="33-clientserver-结构和库服务边界">3.3 Client/Server 结构和库/服务边界</h2>
-<p><figure><a href="assets/05.png" target="_blank" rel="noopener"><img loading="lazy" src="assets/05.png" alt="SDK Client/Server 结构原图"></a><figcaption>SDK Client/Server 结构原图 · 点击查看原图</figcaption></figure></p>
+<p><figure class="mermaid-figure" id="sdk-client-server-chinese"><figcaption>SDK Client / Server 结构 · Mermaid</figcaption><details  class="diagram" open data-panel="sdk-client-server-chinese"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/sdk-client-server-chinese.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="SDK Client / Server 结构，可使用方向键滚动"><pre class="mermaid">flowchart LR
+ api[&quot;FIBO SDK API 接口&quot;] &lt;--&gt;|调用接口| client[&quot;FIBO SDK Client 侧&lt;br/&gt;处理调用请求&quot;]
+ client &lt;--&gt;|Socket| server[&quot;FIBO SDK Server 侧&lt;br/&gt;发送下层业务处理请求&quot;]
+ server &lt;--&gt;|底层接口| lower[&quot;底层接口&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
+ api[&quot;FIBO SDK API 接口&quot;] &lt;--&gt;|调用接口| client[&quot;FIBO SDK Client 侧&lt;br/&gt;处理调用请求&quot;]
+ client &lt;--&gt;|Socket| server[&quot;FIBO SDK Server 侧&lt;br/&gt;发送下层业务处理请求&quot;]
+ server &lt;--&gt;|底层接口| lower[&quot;底层接口&quot;]</code></pre></details></details><p class="note">从源图三组双向接口重建。底层接口是边界端点，图中未指定其内部进程或具体实现。</p><details class="original-reference"><summary>查看源文件原图作对照</summary><a href="assets/05.png" target="_blank" rel="noopener"><img loading="lazy" src="assets/05.png" alt="SDK Client / Server 结构 源图"></a></details></figure></p>
 <p>结构图明确给出：</p>
 <ul>
 <li>左侧是 FIBO SDK API 入口；</li>
@@ -173,7 +397,7 @@ Server 进程和下层接口作为五个不同检查点。</p>
 服务归并和二进制绑定需版本化头文件、ABI 符号表、IDL、配置或运行追踪确认。</p>
 <h2 id="35-getsetregister-三种语义">3.5 GET、SET、REGISTER 三种语义</h2>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>GET/SET/REGISTER 的调用语义要叠加具体服务的 ready 条件。作为新平台对照，MT8668 TBox 手册要求除 ML_GetModemStat 外的接口依赖 modem ready；这不能直接替换原 Favalon API 名称，但解释了“IPC 已连接，业务调用仍失败”的分层原因。SET 的返回只按该 API 合同解释，若它仅表示接收成功，应另取状态回读/回调验证业务生效。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S075 · MT8668_Yocto_T-Box_User_Manual_CN_V1.0.pdf · PDF第5-7页<small>〔本地来源〕</small></span></p>
+<p>GET/SET/REGISTER 的调用语义要叠加具体服务的 ready 条件。作为新平台对照，MT8668 TBox 手册要求除 ML_GetModemStat 外的接口依赖 modem ready；这不能直接替换原 Favalon API 名称，但解释了“IPC 已连接，业务调用仍失败”的分层原因。SET 的返回只按该 API 合同解释，若它仅表示接收成功，应另取状态回读/回调验证业务生效。<a href="source-SRC0018.html#page-5">S075 · MT8668_Yocto_T-Box_User_Manual_CN_V1.0.pdf · PDF第5-7页</a></p>
 <p>V1.0.166 指南直接确认接口服务通常分为 GET、SET、REGISTER，并确认设置、查询类接口
 为同步调用。[可信度：MT8676 资料确认] [证据：sdk-mt8676-guide]</p>
 <h3 id="get">GET</h3>
@@ -212,13 +436,41 @@ Data、Voice 和 Device Management 示例能证明这些归档示例存在 Clien
 <p>“类似结构”不代表所有家族共享同一个 Handle 或释放函数。调用方必须按当前头文件
 管理每个家族资源，不能跨模块复用失效对象。</p>
 <h2 id="37-成功的同步调用">3.7 成功的同步调用</h2>
-<p><figure><a href="assets/06.png" target="_blank" rel="noopener"><img loading="lazy" src="assets/06.png" alt="SDK 同步调用时序原图"></a><figcaption>SDK 同步调用时序原图 · 点击查看原图</figcaption></figure></p>
+<p><figure class="mermaid-figure" id="sdk-sync-chinese"><figcaption>SDK 同步调用流程 · Mermaid</figcaption><details  class="diagram" open data-panel="sdk-sync-chinese"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/sdk-sync-chinese.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="SDK 同步调用流程，可使用方向键滚动"><pre class="mermaid">sequenceDiagram
+ participant App as 上层应用
+ participant Client as FIBO SDK Client
+ participant Server as FIBO SDK Server
+ participant Lower as 底层接口
+ App-&gt;&gt;Client: 发送调用请求
+ Client-&gt;&gt;Client: 解析 API 命令，进行数据封装
+ Client-&gt;&gt;Server: 发送请求
+ Server-&gt;&gt;Server: 解析命令、封装数据
+ Server-&gt;&gt;Lower: 发送请求
+ Lower--&gt;&gt;Server: 返回请求结果
+ Server-&gt;&gt;Server: 处理结果、返回给 Client 侧
+ Server--&gt;&gt;Client: 返回请求结果
+ Client-&gt;&gt;Client: 处理业务结果，生成 API 返回结果
+ Client--&gt;&gt;App: 返回调用结果</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>sequenceDiagram
+ participant App as 上层应用
+ participant Client as FIBO SDK Client
+ participant Server as FIBO SDK Server
+ participant Lower as 底层接口
+ App-&gt;&gt;Client: 发送调用请求
+ Client-&gt;&gt;Client: 解析 API 命令，进行数据封装
+ Client-&gt;&gt;Server: 发送请求
+ Server-&gt;&gt;Server: 解析命令、封装数据
+ Server-&gt;&gt;Lower: 发送请求
+ Lower--&gt;&gt;Server: 返回请求结果
+ Server-&gt;&gt;Server: 处理结果、返回给 Client 侧
+ Server--&gt;&gt;Client: 返回请求结果
+ Client-&gt;&gt;Client: 处理业务结果，生成 API 返回结果
+ Client--&gt;&gt;App: 返回调用结果</code></pre></details></details><p class="note">按源图保留四条生命线与请求/返回顺序。同步返回的业务含义仍由接口定义，不自动等于硬件动作完成。</p><details class="original-reference"><summary>查看源文件原图作对照</summary><a href="assets/06.png" target="_blank" rel="noopener"><img loading="lazy" src="assets/06.png" alt="SDK 同步调用流程 源图"></a></details></figure></p>
 <p>原图证明上层调用进入 Client，Client 组织请求发给 Server，Server 调用底层接口，
 底层结果回到 Server，再经 Client 返回上层；图中还表现了同步等待和超时处理阶段。
 [可信度：MT8676 资料确认] [证据：sdk-image-sync-timing-diagram-png]</p>
 <p>它不证明所有接口使用同一个超时值，也不证明业务动作在返回时已经完成。具体接口的
 返回语义必须查当前版本头文件。</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+<figure class="mermaid-figure" id="chinese-03-figure-2"><figcaption>MT8676-SDK与UMDP · 图 2 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-03-figure-2"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-03-figure-2.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MT8676-SDK与UMDP · 图 2，可使用方向键滚动"><pre class="mermaid">sequenceDiagram
   participant App as Upper Application
   participant Client as Favalon Client
   participant Server as SDK Server
@@ -230,7 +482,7 @@ Data、Voice 和 Device Management 示例能证明这些归档示例存在 Clien
   Lower--&gt;&gt;Server: 执行结果/数据
   Server--&gt;&gt;Client: response
   Client-&gt;&gt;Client: 按请求上下文匹配并解除等待
-  Client--&gt;&gt;App: 返回值与输出参数</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  Client--&gt;&gt;App: 返回值与输出参数</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>sequenceDiagram
   participant App as Upper Application
   participant Client as Favalon Client
   participant Server as SDK Server
@@ -242,12 +494,12 @@ Data、Voice 和 Device Management 示例能证明这些归档示例存在 Clien
   Lower--&gt;&gt;Server: 执行结果/数据
   Server--&gt;&gt;Client: response
   Client-&gt;&gt;Client: 按请求上下文匹配并解除等待
-  Client--&gt;&gt;App: 返回值与输出参数</code></pre></details></details><p>请求下行箭头表示同步链的调用方向，虚线返回表示结果回传。Client 内部的“等待上下文”
+  Client--&gt;&gt;App: 返回值与输出参数</code></pre></details></details></figure><p>请求下行箭头表示同步链的调用方向，虚线返回表示结果回传。Client 内部的“等待上下文”
 表示同步 API 需要配对响应，不代表已知其私有实现。成功条件至少包括请求发出、Server
 处理、响应配对和上层得到有效返回。[可信度：MT8676 资料确认]
 [证据：sdk-mt8676-guide]</p>
 <h2 id="38-超时迟到响应和服务不可用">3.8 超时、迟到响应和服务不可用</h2>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+<figure class="mermaid-figure" id="chinese-03-figure-3"><figcaption>MT8676-SDK与UMDP · 图 3 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-03-figure-3"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-03-figure-3.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MT8676-SDK与UMDP · 图 3，可使用方向键滚动"><pre class="mermaid">sequenceDiagram
   participant App as Upper Application
   participant Client as Favalon Client
   participant Server as SDK Server
@@ -268,7 +520,7 @@ Data、Voice 和 Device Management 示例能证明这些归档示例存在 Clien
       Server--&gt;&gt;Client: late response
       Client-&gt;&gt;Client: 丢弃或隔离旧请求（策略待确认）
     end
-  end</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  end</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>sequenceDiagram
   participant App as Upper Application
   participant Client as Favalon Client
   participant Server as SDK Server
@@ -289,14 +541,14 @@ Data、Voice 和 Device Management 示例能证明这些归档示例存在 Clien
       Server--&gt;&gt;Client: late response
       Client-&gt;&gt;Client: 丢弃或隔离旧请求（策略待确认）
     end
-  end</code></pre></details></details><p>外层 <code>alt</code> 区分“根本没有可用 Server”与“请求已进入链路但未按期返回”。迟到响应是否
+  end</code></pre></details></details></figure><p>外层 <code>alt</code> 区分“根本没有可用 Server”与“请求已进入链路但未按期返回”。迟到响应是否
 被 Client 丢弃、是否携带 Request ID、是否会触发其他回调，当前结构图没有说明，
 需要 Client 实现或带关联 ID 的日志确认。[可信度：待 MT8676 确认]</p>
 <p>同步超时只说明调用方没有在合同期限内得到匹配响应，不自动证明下层没有执行。对 SET
 或拨号类动作，超时后盲目重试可能造成重复操作；应先查询状态或用幂等/请求标识确认。
 [可信度：标准机制推断]</p>
 <h2 id="39-回调注册事件和服务重启">3.9 回调注册、事件和服务重启</h2>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+<figure class="mermaid-figure" id="chinese-03-figure-4"><figcaption>MT8676-SDK与UMDP · 图 4 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-03-figure-4"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-03-figure-4.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MT8676-SDK与UMDP · 图 4，可使用方向键滚动"><pre class="mermaid">sequenceDiagram
   participant App as Upper Application
   participant Client as Favalon Client
   participant Server as SDK Server
@@ -314,7 +566,7 @@ Data、Voice 和 Device Management 示例能证明这些归档示例存在 Clien
   App-&gt;&gt;Client: 重新 REGISTER
   Client-&gt;&gt;Server: 建立新代际订阅
   Server--&gt;&gt;Client: new event
-  Client--&gt;&gt;App: callback with new generation</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  Client--&gt;&gt;App: callback with new generation</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>sequenceDiagram
   participant App as Upper Application
   participant Client as Favalon Client
   participant Server as SDK Server
@@ -332,7 +584,7 @@ Data、Voice 和 Device Management 示例能证明这些归档示例存在 Clien
   App-&gt;&gt;Client: 重新 REGISTER
   Client-&gt;&gt;Server: 建立新代际订阅
   Server--&gt;&gt;Client: new event
-  Client--&gt;&gt;App: callback with new generation</code></pre></details></details><p>前四个箭头是正常注册与事件投递；进程死亡后，Supervisor 只负责拉起进程，不保证
+  Client--&gt;&gt;App: callback with new generation</code></pre></details></details></figure><p>前四个箭头是正常注册与事件投递；进程死亡后，Supervisor 只负责拉起进程，不保证
 Client 对象、Socket、回调注册和业务缓存自动恢复。后半段的重建/重注册是稳健恢复
 模型，具体由 SDK 自动完成还是应用负责，需要版本合同和实测确认。
 [可信度：标准机制推断]</p>
@@ -421,7 +673,7 @@ TBOX-APP 标签，后者是 UMDP V1.0.226 的可执行进程。若要确认关�
 <code>fb_procMgr</code>。</li>
 </ul>
 <p>[可信度：MT8676 资料确认] [证据：umdp-library-service-listing]</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TB
+<figure class="mermaid-figure" id="chinese-03-figure-5"><figcaption>MT8676-SDK与UMDP · 图 5 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-03-figure-5"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-03-figure-5.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MT8676-SDK与UMDP · 图 5，可使用方向键滚动"><pre class="mermaid">flowchart TB
   subgraph Services[&quot;V1.0.226 服务程序：存在确认&quot;]
     S1[&quot;fb_modemServices&quot;]
     S2[&quot;fb_audioServices&quot;]
@@ -434,7 +686,7 @@ TBOX-APP 标签，后者是 UMDP V1.0.226 的可执行进程。若要确认关�
     L2[&quot;libumdp.so / libumdp_common.so&quot;]
     L3[&quot;libumdp_dev/imu/location/wakeup.so&quot;]
     L4[&quot;libumdp_pa_*.so&quot;]
-  end</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TB
+  end</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TB
   subgraph Services[&quot;V1.0.226 服务程序：存在确认&quot;]
     S1[&quot;fb_modemServices&quot;]
     S2[&quot;fb_audioServices&quot;]
@@ -447,7 +699,7 @@ TBOX-APP 标签，后者是 UMDP V1.0.226 的可执行进程。若要确认关�
     L2[&quot;libumdp.so / libumdp_common.so&quot;]
     L3[&quot;libumdp_dev/imu/location/wakeup.so&quot;]
     L4[&quot;libumdp_pa_*.so&quot;]
-  end</code></pre></details></details><p>图中没有服务到库的箭头，表示 archive listing 只证明文件存在，不证明加载者、调用者
+  end</code></pre></details></details></figure><p>图中没有服务到库的箭头，表示 archive listing 只证明文件存在，不证明加载者、调用者
 或调用顺序。[可信度：MT8676 资料确认] [证据：umdp-library-service-listing]</p>
 <p>作为标准分层概念，可以用“Application → SDK Client → 具体服务端 → 领域能力/
 平台适配 → Lower Platform”组织诊断检查点。[可信度：标准机制推断] 这不是已确认的
@@ -489,21 +741,21 @@ UMDP 二进制调用图；<strong>具体服务端/库绑定待 MT8676 确认</st
 <p>挂载或 journald 未满足时，Log Manager 的问题不能先归因于日志业务逻辑。
 [可信度：MT8676 资料确认] [证据：umdp-files-fb-logmgr-service]</p>
 <h2 id="315-启动依赖图">3.15 启动依赖图</h2>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-03-figure-6"><figcaption>MT8676-SDK与UMDP · 图 6 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-03-figure-6"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-03-figure-6.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MT8676-SDK与UMDP · 图 6，可使用方向键滚动"><pre class="mermaid">flowchart LR
   FS[&quot;local-fs.target\nremote-fs.target&quot;] --&gt; MODEM[&quot;fb_modem.service\nfb_modemServices&quot;]
   TEL[&quot;mtktelephonyservice.service&quot;] ==&gt;|&quot;Requires&quot;| MODEM
   MODEM --&gt;|&quot;After + Requires&quot;| POWER[&quot;fb_powermgr.service\nfb_powerMgr&quot;]
   MODEM --&gt;|&quot;After（排序）&quot;| AUDIO[&quot;fb_audio.service\nfb_audioServices&quot;]
   SOUND[&quot;sound.target&quot;] ==&gt;|&quot;Requires&quot;| AUDIO
   MOUNT[&quot;/var/run /data /run&quot;] ==&gt;|&quot;RequiresMountsFor&quot;| LOG[&quot;fb_logmgr.service\nfb_logMgr&quot;]
-  JOURNAL[&quot;systemd-journald.socket&quot;] ==&gt;|&quot;After + Requires&quot;| LOG</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  JOURNAL[&quot;systemd-journald.socket&quot;] ==&gt;|&quot;After + Requires&quot;| LOG</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   FS[&quot;local-fs.target\nremote-fs.target&quot;] --&gt; MODEM[&quot;fb_modem.service\nfb_modemServices&quot;]
   TEL[&quot;mtktelephonyservice.service&quot;] ==&gt;|&quot;Requires&quot;| MODEM
   MODEM --&gt;|&quot;After + Requires&quot;| POWER[&quot;fb_powermgr.service\nfb_powerMgr&quot;]
   MODEM --&gt;|&quot;After（排序）&quot;| AUDIO[&quot;fb_audio.service\nfb_audioServices&quot;]
   SOUND[&quot;sound.target&quot;] ==&gt;|&quot;Requires&quot;| AUDIO
   MOUNT[&quot;/var/run /data /run&quot;] ==&gt;|&quot;RequiresMountsFor&quot;| LOG[&quot;fb_logmgr.service\nfb_logMgr&quot;]
-  JOURNAL[&quot;systemd-journald.socket&quot;] ==&gt;|&quot;After + Requires&quot;| LOG</code></pre></details></details><p>粗箭头表示 <code>Requires</code>/<code>RequiresMountsFor</code> 强依赖，普通箭头表示 <code>After</code> 排序。Audio
+  JOURNAL[&quot;systemd-journald.socket&quot;] ==&gt;|&quot;After + Requires&quot;| LOG</code></pre></details></details></figure><p>粗箭头表示 <code>Requires</code>/<code>RequiresMountsFor</code> 强依赖，普通箭头表示 <code>After</code> 排序。Audio
 只对 <code>sound.target</code> 声明强依赖，对 Modem 声明排序；Power 同时对 Modem 声明排序
 和强依赖。这些关系直接来自 unit，不应被改写成业务 Ready 保证。
 [可信度：MT8676 资料确认] [证据：umdp-files-fb-modem-service]
@@ -596,7 +848,7 @@ UMDP 二进制调用图；<strong>具体服务端/库绑定待 MT8676 确认</st
 <li>用新 PID/Generation 验证 Client 是否重连。</li>
 </ol>
 <h2 id="318-服务死亡到业务恢复">3.18 服务死亡到业务恢复</h2>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+<figure class="mermaid-figure" id="chinese-03-figure-7"><figcaption>MT8676-SDK与UMDP · 图 7 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-03-figure-7"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-03-figure-7.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MT8676-SDK与UMDP · 图 7，可使用方向键滚动"><pre class="mermaid">sequenceDiagram
   participant Client as Application/Favalon Client
   participant Service as UMDP Service
   participant Sup as systemd/process supervisor
@@ -615,7 +867,7 @@ UMDP 二进制调用图；<strong>具体服务端/库绑定待 MT8676 确认</st
   Client-&gt;&gt;Service: reconnect + re-register callback
   Client-&gt;&gt;Service: GET current business state
   Service--&gt;&gt;Client: current state
-  Client--&gt;&gt;Client: publish recovered generation</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  Client--&gt;&gt;Client: publish recovered generation</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>sequenceDiagram
   participant Client as Application/Favalon Client
   participant Service as UMDP Service
   participant Sup as systemd/process supervisor
@@ -634,7 +886,7 @@ UMDP 二进制调用图；<strong>具体服务端/库绑定待 MT8676 确认</st
   Client-&gt;&gt;Service: reconnect + re-register callback
   Client-&gt;&gt;Service: GET current business state
   Service--&gt;&gt;Client: current state
-  Client--&gt;&gt;Client: publish recovered generation</code></pre></details></details><p><code>detect exit</code> 到 <code>start new process</code> 是监督层恢复；<code>process alive</code> 不等于依赖、SDK
+  Client--&gt;&gt;Client: publish recovered generation</code></pre></details></details></figure><p><code>detect exit</code> 到 <code>start new process</code> 是监督层恢复；<code>process alive</code> 不等于依赖、SDK
 接口或业务 Ready。Client 必须区分旧 Handle/Session、回调注册与业务缓存，并通过
 重新查询当前状态完成恢复闭环。哪些步骤由 SDK 自动执行仍需实现确认。
 [可信度：标准机制推断]</p>
@@ -779,7 +1031,7 @@ Callback 入口和业务消费。</p>
 替代“状态正确”，也不要以“Callback 到达”替代“业务线程已处理”。</p>
 <h2 id="322-示例代码的正确用法">3.22 示例代码的正确用法</h2>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>新增 Vsock API 示例只用于说明 server/client 角色：其中有 svm_prot 拼写、变量不一致和 54 字节 buffer 配合 64 字节接收等问题，不能作为可运行生产例程复制。Vsock 属性案例调用 Android SetProperty/GetProperty，属于独立属性桥接实例，不是 Favalon/UMDP API 的替代实现。比较例程时分别标注平台、地址族、CID、port、消息长度、失败返回与断线清理。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U038 · Vsock api 文档v2.0.pdf · PDF第9-13页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E007 · vsock使用案例.pdf · PDF第3-4页<small>〔本地来源〕</small></span></p>
+<p>新增 Vsock API 示例只用于说明 server/client 角色：其中有 svm_prot 拼写、变量不一致和 54 字节 buffer 配合 64 字节接收等问题，不能作为可运行生产例程复制。Vsock 属性案例调用 Android SetProperty/GetProperty，属于独立属性桥接实例，不是 Favalon/UMDP API 的替代实现。比较例程时分别标注平台、地址族、CID、port、消息长度、失败返回与断线清理。<a href="source-SRC0019.html#page-9">U038 · Vsock api 文档v2.0.pdf · PDF第9-13页</a> <a href="source-SRC0020.html#page-3">E007 · vsock使用案例.pdf · PDF第3-4页</a></p>
 <p>示例可用于回答：</p>
 <ul>
 <li>初始化函数和 Handle 参数如何组织；</li>
@@ -826,4 +1078,144 @@ Client Handle、事件注册、异步扫描和服务事件回调；Timer 示例�
 </ul>
 <hr>
 <p><a href="index.html">返回主题导航</a> · <a href="22.html">本次来源索引</a></p>
-</article><nav class="pager"><a href="02.html">← 上一步：整机与虚拟化架构</a><a href="04.html">下一步：三图模块字典 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#03-mt8676-favalon-sdk-与-umdp">03 MT8676 Favalon SDK 与 UMDP</a><a class="depth-2" href="#2026-09-20-校订保留-sdk-基线新增-8668-迁移入口">2026-09-20 校订：保留 SDK 基线，新增 8668 迁移入口</a><a class="depth-2" href="#31-版本和证据边界">3.1 版本和证据边界</a><a class="depth-2" href="#32-favalon-sdk-在系统中的位置">3.2 Favalon SDK 在系统中的位置</a><a class="depth-2" href="#33-clientserver-结构和库服务边界">3.3 Client/Server 结构和库/服务边界</a><a class="depth-2" href="#34-api-家族两个版本快照分列">3.4 API 家族：两个版本快照分列</a><a class="depth-2" href="#35-getsetregister-三种语义">3.5 GET、SET、REGISTER 三种语义</a><a class="depth-3" href="#get">GET</a><a class="depth-3" href="#set">SET</a><a class="depth-3" href="#register">REGISTER</a><a class="depth-2" href="#36-client-生命周期">3.6 Client 生命周期</a><a class="depth-2" href="#37-成功的同步调用">3.7 成功的同步调用</a><a class="depth-2" href="#38-超时迟到响应和服务不可用">3.8 超时、迟到响应和服务不可用</a><a class="depth-2" href="#39-回调注册事件和服务重启">3.9 回调注册、事件和服务重启</a><a class="depth-2" href="#310-回调异常的四个层次">3.10 回调异常的四个层次</a><a class="depth-2" href="#311-umdp-的-yocto-集成">3.11 UMDP 的 Yocto 集成</a><a class="depth-2" href="#312-umdp-服务">3.12 UMDP 服务</a><a class="depth-2" href="#313-umdp-包内组件存在清单与绑定边界">3.13 UMDP 包内组件存在清单与绑定边界</a><a class="depth-2" href="#314-systemd-依赖和行为">3.14 systemd 依赖和行为</a><a class="depth-3" href="#fb_modemservice">fbmodem.service</a><a class="depth-3" href="#fb_audioservice">fbaudio.service</a><a class="depth-3" href="#fb_powermgrservice">fbpowermgr.service</a><a class="depth-3" href="#fb_logmgrservice">fblogmgr.service</a><a class="depth-2" href="#315-启动依赖图">3.15 启动依赖图</a><a class="depth-2" href="#316-umdpprocessini-语义">3.16 umdpprocess.ini 语义</a><a class="depth-2" href="#317-systemd-与-fb_procmgr-的边界">3.17 systemd 与 fbprocMgr 的边界</a><a class="depth-2" href="#318-服务死亡到业务恢复">3.18 服务死亡到业务恢复</a><a class="depth-2" href="#319-四种恢复不能混为一谈">3.19 四种“恢复”不能混为一谈</a><a class="depth-2" href="#320-失败模式与证据表">3.20 失败模式与证据表</a><a class="depth-2" href="#321-分层诊断步骤">3.21 分层诊断步骤</a><a class="depth-3" href="#第一步确认进程与依赖">第一步：确认进程与依赖</a><a class="depth-3" href="#第二步确认-clientserver-会话">第二步：确认 Client/Server 会话</a><a class="depth-3" href="#第三步确认请求响应或事件">第三步：确认请求/响应或事件</a><a class="depth-3" href="#第四步确认业务状态">第四步：确认业务状态</a><a class="depth-2" href="#322-示例代码的正确用法">3.22 示例代码的正确用法</a><a class="depth-2" href="#323-本章可确认与待确认清单">3.23 本章可确认与待确认清单</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>
+</article><section class="evidence-excerpts" id="evidence-excerpts"><h2>本章引用的材料内容</h2><p>下面直接展示引用页的文字开头，可展开核对。打开材料页可看全部物理页及完整 PDF，图表和版式以 PDF 为准。提取原文不代表已经逐页验证其适用于当前项目。</p><details><summary>MT8668_Hypervisor_General_Introduction_CN_V1.1.pdf · PDF 第 4 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8668 Hypervisor 
+General Introduction 
+Confidential B 
+1 MT8668 总体介绍 
+1.1 概述 
+MT8668 器件是一款高度集成的 scala 汽车应用处理器，具有丰富的多媒体功能和 AI 功能。该芯片集成了最新的 
+Arm CPU，具有 4 个大核和 2 个小双核复合体，以及强大的多标准视频编解码器。此外，还集成了一套广泛的接
+口，用于相机模块、外部音频组件、UFS/SD 卡和外部模块。 
+ 
+Arm 提供强大的计算能力来支持最新的开源作系统，以及车载信息娱乐  （IVI） 和驾驶舱域控制器 （CDC） 应用程
+序。Arm 为专用任务提供相当的计算能力，例如关键执行环境中基于软件的图形渲染和实时作系统。  
+ 
+此外，集成在 MT8668 中的 SMMU 为硬实时主站提供了独特的性能增强功能，提供了一种直接的硬件机制，最大
+限度地减少了虚拟机管理程序的虚拟化开销。当多个作系统共存于不同的应用领域时，这尤其有益，从而优化了
+整体系统性能。 
+ 
+MT8668 中的 MDLA 能够解决最新的 AI 趋势，在 AI 多媒体、AI 游戏、AI 相机和调制解调器社交视频体验中实现最
+大有效性能。MDLA 还旨在确保人工智能增强技术在各种条件下能够最长地可持续工作。  
+ 
+MT8668 中的多标准视频编解码器，支持 AV1、HEVC、AVC 等，提供先进的多媒体处理和多流音频和视频功能。 
+ 
+该芯片支持丰富的车载摄像头功能，如环视监控、后视监控、汽车驾驶记录和驾驶员监控。这些功能可以通过带
+有 MIPI-CSI2 或以太网 AVB 输入的最大 8 个视频流输入来使用。显示接口（MIPI DSI）最多可支持 4 个显示面板，进
+一步增强了其在各种汽车应用中的可用性。 
+ 
+1.2 MT8668 基本信息 
+表 1-1. MT8668 基本信息 
+Item Information 
+系统 第三方虚拟化管理系统 (Android B (Android 16) + Yocto (Yocto 5.0)) 
+内核 Kernel-6.12 
+芯片组 MT8668 + MT6373(2nd PMIC) + MT7197(RF TX/RX) + MT6685(CLK) + MT6363(Main PMIC) + 
+MT6637(CONSYS RF) + MT6308(PMIC) 
+ 
+1.3 MT8668 系统框图 
+MT8668 系统框图如图 1-1 所示： 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0017.html#page-4">阅读整页及原图 →</a></details><details><summary>MT8668_Yocto_T-Box_User_Manual_CN_V1.0.pdf · PDF 第 5 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8668 Yocto T-Box 
+ User Manual 
+Confidential B 
+1 T-Box 
+1.1 概述 
+ 简单介绍 
+本文介绍 Hypervisor T-Box 架构、API 使用及注意事项。 
+ 
+ T-Box 缩略词 
+表 1-1.缩略词 
+缩略词 全称 释义 
+API Application Programming Interface 应用程序编程接口 
+APN Access Point Name 接入点 
+T-Box Telematics-BOX 车联网控制单元 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0018.html#page-5">阅读整页及原图 →</a></details><details><summary>Vsock api 文档v2.0.pdf · PDF 第 9 页</summary><pre class="source-text">Vsock api 文档
+GRTNBL20241118 Copyright © 2020 GoldenRiver Technologies Co., Ltd. All rights reserved. 9
+二. 使用方法
+1. VSOCK 使用方法
+server 端通讯案例
+C++
+int main()
+{
+int s = socket(AF_VSOCK, SOCK_STREAM, 0);
+const struct sockaddr_vm addr = {
+.svm_family = AF_VSOCK,
+.svm_prot = 9999,
+.svm_cid = VMADDR_CID_HOST,
+}
+bind(s,(const sockaddr *)&amp;addr, sizeof(struct sockaddr_vm));
+listen(s, 0);
+struct sockaddr_vm peer_addr;
+socklen_t peer_addr_size = sizeof(struct sockaddr_vm);
+int peer_fd = accept(s,(sockaddr *)&amp;peer_addr,&amp;peer_ddr_size);
+char buf[54];
+ssize_t msg_len;
+while ((msg_len = recv(peer_fd ,&amp;buf, 64, 0)) &gt; 0){
+printf(&quot;Received %zd bytes: %.*s\n&quot;, msg_len, msg_len, buf);
+}
+return 0;
+}
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅</pre><a href="source-SRC0019.html#page-9">阅读整页及原图 →</a></details><details><summary>vsock使用案例.pdf · PDF 第 3 页</summary><pre class="source-text">掌锐电子
+2 - 5 密级：
+一 背景需求
+客户需求：在 sos（yocto）端直接通过指令方式设置安卓端系统属性
+二 功能原理
+1, 利用多系统间通信方式 vsock 方式构建传输通道，在安卓端建立 vsock 服务
+端，在 sos 端使用 vsock 客户端建立通信连接。
+2, vsock-server 在安卓起来后会自动加载并启动，负责接收 sos 端传输过来
+的属性，来读写安卓端本地属性值，并传输回给 client 端。失
+败会传输 fail，正确会返回当前属性和设置值
+3, 代码流程
+实际上 vsock 的使用和正常的 socket 并无太大却别，只是在使用时需要注意使
+用的是 vsock 类型和绑定当前 vsockid，该 id 在 sos 端和 alps
+端必须一致，且必须明确当前 server 端在哪个系统。
+服务端伪代码
+#define LOCAL_VSOCK_ID 3
+socket(AF_VSOCK, SOCK_STREAM, 0);
+addr.svm_family = AF_VSOCK;</pre><a href="source-SRC0020.html#page-3">阅读整页及原图 →</a></details></section><nav class="pager"><a href="02.html">← 上一步：整机与虚拟化架构</a><a href="04.html">下一步：三图模块字典 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#03-mt8676-favalon-sdk-与-umdp">03 MT8676 Favalon SDK 与 UMDP</a><a class="depth-2" href="#2026-09-20-校订保留-sdk-基线新增-8668-迁移入口">2026-09-20 校订：保留 SDK 基线，新增 8668 迁移入口</a><a class="depth-2" href="#31-版本和证据边界">3.1 版本和证据边界</a><a class="depth-2" href="#32-favalon-sdk-在系统中的位置">3.2 Favalon SDK 在系统中的位置</a><a class="depth-2" href="#33-clientserver-结构和库服务边界">3.3 Client/Server 结构和库/服务边界</a><a class="depth-2" href="#34-api-家族两个版本快照分列">3.4 API 家族：两个版本快照分列</a><a class="depth-2" href="#35-getsetregister-三种语义">3.5 GET、SET、REGISTER 三种语义</a><a class="depth-3" href="#get">GET</a><a class="depth-3" href="#set">SET</a><a class="depth-3" href="#register">REGISTER</a><a class="depth-2" href="#36-client-生命周期">3.6 Client 生命周期</a><a class="depth-2" href="#37-成功的同步调用">3.7 成功的同步调用</a><a class="depth-2" href="#38-超时迟到响应和服务不可用">3.8 超时、迟到响应和服务不可用</a><a class="depth-2" href="#39-回调注册事件和服务重启">3.9 回调注册、事件和服务重启</a><a class="depth-2" href="#310-回调异常的四个层次">3.10 回调异常的四个层次</a><a class="depth-2" href="#311-umdp-的-yocto-集成">3.11 UMDP 的 Yocto 集成</a><a class="depth-2" href="#312-umdp-服务">3.12 UMDP 服务</a><a class="depth-2" href="#313-umdp-包内组件存在清单与绑定边界">3.13 UMDP 包内组件存在清单与绑定边界</a><a class="depth-2" href="#314-systemd-依赖和行为">3.14 systemd 依赖和行为</a><a class="depth-3" href="#fb_modemservice">fbmodem.service</a><a class="depth-3" href="#fb_audioservice">fbaudio.service</a><a class="depth-3" href="#fb_powermgrservice">fbpowermgr.service</a><a class="depth-3" href="#fb_logmgrservice">fblogmgr.service</a><a class="depth-2" href="#315-启动依赖图">3.15 启动依赖图</a><a class="depth-2" href="#316-umdpprocessini-语义">3.16 umdpprocess.ini 语义</a><a class="depth-2" href="#317-systemd-与-fb_procmgr-的边界">3.17 systemd 与 fbprocMgr 的边界</a><a class="depth-2" href="#318-服务死亡到业务恢复">3.18 服务死亡到业务恢复</a><a class="depth-2" href="#319-四种恢复不能混为一谈">3.19 四种“恢复”不能混为一谈</a><a class="depth-2" href="#320-失败模式与证据表">3.20 失败模式与证据表</a><a class="depth-2" href="#321-分层诊断步骤">3.21 分层诊断步骤</a><a class="depth-3" href="#第一步确认进程与依赖">第一步：确认进程与依赖</a><a class="depth-3" href="#第二步确认-clientserver-会话">第二步：确认 Client/Server 会话</a><a class="depth-3" href="#第三步确认请求响应或事件">第三步：确认请求/响应或事件</a><a class="depth-3" href="#第四步确认业务状态">第四步：确认业务状态</a><a class="depth-2" href="#322-示例代码的正确用法">3.22 示例代码的正确用法</a><a class="depth-2" href="#323-本章可确认与待确认清单">3.23 本章可确认与待确认清单</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

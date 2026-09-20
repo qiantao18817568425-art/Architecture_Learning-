@@ -1,0 +1,13 @@
+flowchart TD
+  A["RVC 倒车影像异常"] --> B{"触发与源状态有效?"}
+  B -- 否 --> B1["倒挡状态陈旧"]
+  B -- 是 --> C{"数据/Buffer/音频流推进?"}
+  C -- 否 --> C1["Camera/ISP source-no-frame"]
+  C -- 是 --> D{"策略、合成或路由正确?"}
+  D -- 否 --> D1["GStreamer pipeline stop"]
+  D -- 是 --> E{"物理输出与反馈闭环?"}
+  E -- 否 --> E1["显示层不可见或资源未释放"]
+  B1 --> R["新 Generation/Session 恢复"]
+  C1 --> R
+  D1 --> R
+  E1 --> R

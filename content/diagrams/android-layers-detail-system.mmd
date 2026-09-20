@@ -1,0 +1,36 @@
+%%{init: {"flowchart": {"nodeSpacing": 18, "rankSpacing": 8, "padding": 12}, "themeVariables": {"fontSize": "16px"}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph system["System"]
+direction TB
+subgraph layout_row_1[" "]
+direction LR
+subgraph layout_row_2[" "]
+direction TB
+a85["Update Engine"]
+a88["vold"]
+a91["lmkd"]
+a94["FCM Service"]
+a85 ~~~ a88 ~~~ a91 ~~~ a94
+end
+subgraph layout_row_3[" "]
+direction TB
+a86["AVM"]
+a89["Tbox Service"]
+a92["ADAS Service"]
+a86 ~~~ a89 ~~~ a92
+end
+subgraph layout_row_4[" "]
+direction TB
+a87["RVC"]
+a90["netd"]
+a93["MBLog"]
+a87 ~~~ a90 ~~~ a93
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent

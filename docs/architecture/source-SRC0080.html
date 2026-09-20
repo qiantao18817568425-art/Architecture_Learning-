@@ -1,0 +1,827 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>旧版证据核对.json · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>旧版证据核对.json</h1><p>SRC0080 · 全文 · 1 个阅读单元</p><p class="note">原材料可查阅；未逐页作项目结论验证。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>架构知识——中文版/evidence/旧版证据核对.json</p><p>SHA-256：<code>bb8fab1c1c5885c611749ce50dcc27aee6176d94afd3c874fcac2ef65e842ade</code></p><p>原文件大小：18,297 字节</p></details><div class="actions"><a class="button" href="materials/SRC0080.json" download>下载完整原文件</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><article id="source-text"><section class="source-page" id="page-1"><h2>全文 1</h2><pre class="source-text">[
+  {
+    &quot;id&quot;: &quot;sdk-readme&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-mt8676-guide&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-sdk-architecture-diagram-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-sdk-structural-diagram-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-sync-timing-diagram-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mt8676-abnormal-nw-seq-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-abnormal-data-sequence-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-abnormal-dm-sequence-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-abnormal-sim-seq-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-abnormal-sms-seq-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-abnormal-voice-sequence-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-answer-call-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-async-start-call-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-async-stop-call-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-data-call-flow-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-data-deinit-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-data-init-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-data-sequence-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-data-set-service-event-cb-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-datafilter-set-active-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-dialing-call1-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-dialing-call2-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-dm-deinitialization-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-dm-get-ap-version-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-dm-get-imei-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-dm-get-modem-version-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-dm-get-sdk-version-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-dm-get-sn-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-dm-initialization-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-dm-sequence-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-dm-set-get-ims-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-dm-set-operating-mode-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-dm-set-service-event-cb-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-end-call1-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-imu-sequence-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-imu-start-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-imu-stop-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-location-client-deinit-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-location-delete-aiding-data-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-location-get-location-source-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-location-nmea-rmc-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-location-sequence-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-location-set-epo-status-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-location-set-gps-frequency-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-location-set-location-source-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-location-set-nmea-ind-mask-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-location-start-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-location-stop-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-multi-channel-scenario-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-nw-abnormaldetection-2g3gregisterabnormal-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-nw-abnormaldetection-antennaabnormal-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-nw-abnormaldetection-cfunabnormal-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-nw-abnormaldetection-csdomainabnormal-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-nw-abnormaldetection-datacallabnormal-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-nw-abnormaldetection-datacallserviceabnormal-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-nw-abnormaldetection-frequentnetworkswitchabnormal-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-nw-abnormaldetection-networkregisterabnormal-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-nw-abnormaldetection-simcardabnormal-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-nw-centric-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-nw-deinitialization-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-nw-initialization-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-nw-register-reporting-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-nw-seq-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-nwset-getnetwork-config-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-nwset-network-configuration-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-query-signal-strength-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-set-apn-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sim-change-pin-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sim-dds-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sim-deinitialization-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sim-enable-disable-pin-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sim-get-function-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sim-initialization-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sim-seq-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sim-set-service-event-cb-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sim-unblock-pin-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sim-verify-pin-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-single-channel-scenario-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sms-deinitialization-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sms-delete-sms-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sms-get-max-store-size-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sms-get-msg-list-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sms-get-sms-center-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sms-initialization-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sms-read-sms-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sms-receiving-sms-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sms-register-reporting-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sms-send-sms-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sms-send-sms-async-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sms-send-sms-pdu-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sms-send-sms-pdu-async-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sms-sequence-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sms-set-service-event-cb-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sms-set-sms-center-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-sms-structure-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-urc-set-clear-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-voice-init-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-voice-scheme-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-voice-sequence-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-voice-set-service-event-cb-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-image-mtk8676-voice-uninit-png&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-at-test-at-test-c&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-at-test-makefile&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-audio-test-audio-test-c&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-audio-test-makefile&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-data-test-data-test-c&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-data-test-makefile&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-dm-test-dm-test-c&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-dm-test-makefile&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-gnss-test-gnss-test-c&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-gnss-test-makefile&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-imu-test-imu-test-c&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-imu-test-makefile&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-log-test-log-test-c&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-log-test-makefile&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-makefile&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-nw-test-makefile&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-nw-test-nw-test-c&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-power-test-makefile&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-power-test-power-test-c&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-sim-test-makefile&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-sim-test-sim-test-c&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-sms-test-makefile&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-sms-test-sms-test-c&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-timer-test-makefile&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-timer-test-timer-test-c&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-voice-test-makefile&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-voice-test-voice-test-c&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-wakelock-test-makefile&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-wakelock-test-wakelock-test-c&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-wakeup-test-makefile&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-wakeup-test-wakeup-test-c&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;sdk-example-root-makefile&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-readme-v1-0-226-txt&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-config-umdpprocess-ini&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-fibo-umdp-bb&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-config-sdk-version-cfg&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-logmanager-conf-logmanager-conf&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-config-umdploglevel-conf&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-fb-audio-service&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-fb-logmgr-service&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-fb-modem-service&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-fb-powermgr-service&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-include-fibo-sdk-fibo-at-h&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-include-fibo-sdk-fibo-audio-h&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-include-fibo-sdk-fibo-data-h&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-include-fibo-sdk-fibo-dm-h&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-include-fibo-sdk-fibo-error-h&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-include-fibo-sdk-fibo-imu-h&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-include-fibo-sdk-fibo-location-h&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-include-fibo-sdk-fibo-log-h&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-include-fibo-sdk-fibo-nw-h&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-include-fibo-sdk-fibo-oe-h&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-include-fibo-sdk-fibo-power-h&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-include-fibo-sdk-fibo-sim-h&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-include-fibo-sdk-fibo-sms-h&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-include-fibo-sdk-fibo-timer-h&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-include-fibo-sdk-fibo-type-h&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-include-fibo-sdk-fibo-voice-h&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-include-fibo-sdk-fibo-wakelock-h&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-files-umdp-include-fibo-sdk-fibo-wakeup-h&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;umdp-library-service-listing&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;original-diagram-01&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;original-diagram-02&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  },
+  {
+    &quot;id&quot;: &quot;original-diagram-03&quot;,
+    &quot;exists&quot;: true,
+    &quot;hash_matches&quot;: true
+  }
+]</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">全文 1</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

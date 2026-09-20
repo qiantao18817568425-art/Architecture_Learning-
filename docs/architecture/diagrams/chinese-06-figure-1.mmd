@@ -1,0 +1,14 @@
+sequenceDiagram
+  participant C as Caller/Launcher
+  participant A as AMS/ATMS
+  participant P as App process
+  participant L as Activity
+  participant W as WMS
+  participant V as ViewRootImpl
+  C->>A: launch request
+  A->>P: start or reuse + process attach
+  A->>L: Activity lifecycle transaction
+  L->>L: create Window/DecorView
+  L->>W: add window + token/layout
+  W-->>V: relayout, Surface and focus state
+  V-->>L: visible + focused + traversal

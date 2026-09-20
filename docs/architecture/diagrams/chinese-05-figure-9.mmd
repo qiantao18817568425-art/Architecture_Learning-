@@ -1,0 +1,15 @@
+flowchart TD
+  R["Routing Manager"] --> O{"Offer/Find match?"}
+  O -- no --> M["offer/find mismatch or version mismatch"]
+  O -- yes --> T{"transport/session?"}
+  T -- invalid --> C["TCP connected but application session invalid"]
+  T -- loss --> U["UDP loss"]
+  T -- ready --> S{"subscription alive?"}
+  S -- no --> L["event subscription loss"]
+  S -- yes --> E{"E2E accepts?"}
+  E -- no --> J["E2E rejection"]
+  E -- yes --> F{"fresh?"}
+  F -- no --> N["stale notification"]
+  F -- yes --> B["business consume"]
+  R -->|routing-manager death| X["restart + Offer/Find + resubscribe"]
+  X --> V["new generation + verify state"]

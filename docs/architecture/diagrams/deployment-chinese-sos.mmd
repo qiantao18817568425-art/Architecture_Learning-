@@ -1,0 +1,99 @@
+%%{init: {"flowchart": {"nodeSpacing": 18, "rankSpacing": 8, "padding": 12}, "themeVariables": {"fontSize": "16px"}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph sos["Host / SOS YOCTO"]
+direction TB
+subgraph sapps["Application"]
+direction TB
+subgraph layout_row_1[" "]
+direction LR
+subgraph layout_row_2[" "]
+direction TB
+avm["AVM"]
+rvc["RVC"]
+avm ~~~ rvc
+end
+subgraph layout_row_3[" "]
+direction TB
+cluster["Cluster"]
+adas["ADAS"]
+cluster ~~~ adas
+end
+subgraph layout_row_4[" "]
+direction TB
+dms["DMS"]
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+subgraph runtime["OS Runtime"]
+direction TB
+subgraph layout_row_5[" "]
+direction LR
+weston["Weston"]
+camera["Camera"]
+gst["Gstreamer"]
+weston ~~~ camera ~~~ gst
+end
+end
+subgraph infra["Infrastructure"]
+direction TB
+subgraph layout_row_6[" "]
+direction LR
+subgraph layout_row_7[" "]
+direction TB
+life["Lifecycle"]
+vehicle["VehicleIF"]
+life ~~~ vehicle
+end
+subgraph layout_row_8[" "]
+direction TB
+soa["SOA/IPC"]
+audio["AudioMgr"]
+soa ~~~ audio
+end
+subgraph layout_row_9[" "]
+direction TB
+cans["CanService"]
+log["LogMgr"]
+cans ~~~ log
+end
+layout_row_7 ~~~ layout_row_8 ~~~ layout_row_9
+end
+end
+subgraph drivers["Drivers"]
+direction TB
+subgraph layout_row_10[" "]
+direction LR
+subgraph layout_row_11[" "]
+direction TB
+isp["ISP"]
+eth["Ethernet"]
+isp ~~~ eth
+end
+subgraph layout_row_12[" "]
+direction TB
+display["Display"]
+end
+subgraph layout_row_13[" "]
+direction TB
+aud["Audio"]
+end
+layout_row_11 ~~~ layout_row_12 ~~~ layout_row_13
+end
+end
+sapps ~~~ runtime ~~~ infra ~~~ drivers
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent
+style layout_row_5 fill:transparent,stroke:transparent
+style layout_row_6 fill:transparent,stroke:transparent
+style layout_row_7 fill:transparent,stroke:transparent
+style layout_row_8 fill:transparent,stroke:transparent
+style layout_row_9 fill:transparent,stroke:transparent
+style layout_row_10 fill:transparent,stroke:transparent
+style layout_row_11 fill:transparent,stroke:transparent
+style layout_row_12 fill:transparent,stroke:transparent
+style layout_row_13 fill:transparent,stroke:transparent

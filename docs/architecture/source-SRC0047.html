@@ -1,0 +1,1040 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>P5B系列车规级模组产品规格书_v2.0_20260629.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>P5B系列车规级模组产品规格书_v2.0_20260629.pdf</h1><p>SRC0047 · 原来源 ID S076 · PDF物理页 · 33 个阅读单元</p><p class="note">有引用的指定页/文本核对；未宣称全文逐页审阅。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8668/PVT参考资料/P5B系列车规级模组产品规格书_v2.0_20260629.pdf</p><p>SHA-256：<code>d6b8534c01933235774797130370b94072100c95d297469265f03ea62e8d4f5f</code></p><p>原文件大小：1,338,279 字节</p></details><div class="actions"><a class="button" href="materials/SRC0047.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="P5B系列车规级模组产品规格书_v2.0_20260629.pdf 原 PDF" src="materials/SRC0047.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0047.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+专业车联网智能硬件方案提供商
+P 5 B 系 列 前 装 车 规 无 线 模 块 规 格 书
+版 本：V2.1
+发布日期：2026/6/29</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0047.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+修订记录
+序号 版本 时间 修订内容 修订人
+1 V1.0 2025/10/30 初拟 Caoyating
+2 V1.1 2025/12/18 PIN 定义更新 Caoyating
+3 V1.2 2026/1/16 GPU、DSP 参数更新 Caoyating
+4 V1.3 2026/4/17 更新 USB 接口数量、工作温度信息 Caoyating
+5 V2.0 2026/6/23 更新 PIN 描述、参数规格、网络频段、天线
+接口信息
+Caoyating
+6 V2.1 2026/6/29 注明 RX only 频段 Caoyating</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0047.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+1 / 33
+目录
+1. 产品综述 ................................................................................................................. 2
+2. 产品规格参数 ........................................................................................................ 3
+3. 突出亮点及特性 ....................................................................................................8
+4. 模块方框图 .............................................................................................................9
+5. 模块引脚定义 ........................................................................................................ 9
+6. 模块引脚分布图 ................................................................................................. 29
+7. 模块尺寸图 .......................................................................................................... 30
+8. 天线接口说明 ......................................................................................................31</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0047.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+2 / 33
+1. 产品综述
+P5B系 列 是 掌 锐 电 子 推 出 的 一 款 高 性 能 车 规 级 5G智 能 座 舱 核 心 板 。
+本 模 块 基 于 MediaTek MT8668平 台 ， 严 格 遵 循 AEC-Q104标 准 设 计 ， 集
+成 了 5G 、 GNSS、 Wi-Fi 6E与 蓝 牙 5.4等 多 种 无 线 通 信 功 能 和 DSP数 字 音
+频 处 理 器 。具 备 尺 寸 紧 凑 、功 耗 低 、性 能 优 越 等 特 点 ，基 于 Hypervisor
+3OS架 构 可 灵 活 实 现 多 屏 互 联 、仪 表 投 屏 、HUD、T-Box、AVM、DMS、
+OMS及 DVR等 丰 富 智 能 座 舱 应 用 ，全 面 满 足 汽 车 智 能 化 与 网 联 化 的 发 展
+需 求 ， 助 力 客 户 大 幅 缩 短 开 发 周 期 ， 有 效 降 低 研 发 成 本 。
+P5B系 列 有 多 个 型 号 ， 在 RF版 本 、 频 段 区 域 、 存 储 以 及 SOC规 格 均
+可 按 需 选 配 ， 帮 助 客 户 精 准 控 制 成 本 、 打 造 具 有 市 场 竞 争 力 的 车 载 终
+端 解 决 方 案 ， 以 应 对 不 同 场 景 的 严 苛 要 求 。
+本 模 块 采 用 贴 片 式 工 艺 ， 共 580个 BGA引 脚 。 搭 载 4nm低 功 耗 主 控
+SOC，采 用 64位 8核 处 理 器 ，ARM V9 CPU架 构 ，多 个 算 力 版 本 。ARM GPU
+MC2 Manhattan 3.0:118.5fps 高 性 能 图 形 图 像 处 理 能 力 以 及 10+ TOPS
+的 AI算 力 赋 能 各 类 智 能 应 用 。</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0047.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+3 / 33
+2. 产品规格参数
+产品特性 描述
+SoC MediaTek MT8668
+CPU
+8 核 ARM V9
+算力：120K\150K\180K DMIPS(规划中)
+GPU
+GPU MC2 Manhattan 3.0:118.5fps
+算力：630G FLOPS
+APU
+MediaTek Deep Learning Accelerator (MDLA)
+算力：6\12.5 TOPS
+SCP
+MediaTek MRV55*2
+Built-in 1.25 MB Tightly Coupled Memory (TC)
+DDR
+LPDDR5x ,32bit，Max 7500Mbps,最大支持 24GB
+8G（规划中）\12G\16G
+Flash
+UFS 3.1 2-lane ，数据速率最高达 23.296 Gbps.
+64GB（规划中）\128G\256G
+OS（Hypervisor） Yocto(SOS) + Yocto(UOS) + Android B(UOS)
+工作温度 – 40 度～＋85 度
+存储温度 – 40 度～＋95 度
+尺寸 59.5mm * 59.5mm *5.6mm
+工艺 BGA；Underfill(规划中)
+工作电压 DC 3.8V-4.2V Type：4.0V</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0047.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+4 / 33
+网
+络
+频
+段
+中国版
+不覆盖中国台湾/香港
+GSM： 900/1800MHz
+WCDMA： B1/B5/B8
+FDD-LTE： B1/B3/B5/B8
+TDD-LTE： B34/B38/B39/B40/B41
+NR： N1/N3/N5/N8/N28A/N41/N78/N79
+亚欧非版
+GSM： 900/1800MHz
+WCDMA： B1/B5/B8
+FDD-LTE： B1/B2/B3/B4/B5/B6/B7/B8/B20/B28
+TDD-LTE： B32/B38/B40/B41
+NR： N1/N3/N5/N7/N8/N28/N38/N40/N41/N77/N78/N79
+全球版
+GSM： 850/900/1800/1900MHz
+WCDMA： B1/B2/B4/B5/B6/B8/B19
+FDD-LTE：
+B1/B2/B3/B4/B5/B7/B8/B12/B13/B14/B17
+B18/B19/B20/B25/B26/B28/B32/B66/B75(RX only)/B76(RX
+only)
+TDD-LTE： B32(RX only)/B34/B38/B39/B40/B41/B42/B43
+FDD NRSA：
+N1/N2/N3/N5/N7/N8/N20/N25/N28/N66/N71/N75(RX
+only)/N76(RX only)
+TDD NRSA： N38/N40/N41/N77/N78/N79
+网络制式 5G NR Sub6 3CC R16，LTE CAT-18
+5G SA： 1.9 Gbps(DL)/450 Mbps(UL)
+5G NSA： 1.1 Gbps(DL)/175 Mbps(UL)</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0047.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+5 / 33
+网络速率 LTE FDD： 300 Mbps(DL)/75 Mbps(UL)
+LTE TDD： 260 Mbps(DL)/75 Mbps(UL)
+WCDMA 21 Mbps (DL)/11.5 Mbps(UL)
+Wi-Fi
+• Wi-Fi 6E 标准，兼容旧版 Wi-Fi 规范（Wi-Fi 5/4）
+• 双频段支持（2.4GHz 与 5~6GHz 频段），DBDC
+• 根据配套连接芯片性能，提供 2x2/1x1 双模/单模配置，
+带宽达 80MHz
+• 集成 2.4GHz 与 5GHz 功率放大器/低噪声放大器
+• 支持 Joint-Tas 2.0 协议
+• 天线分组技术
+• 安全协议：
+− WPA 个人/企业版
+− WPA2 个人/企业版
+− WPA3 个人/企业版
+− WPS2.0
+− WPI-SMS4
+− WAPI（硬件）
+Bluetooth
+支持 Bluetooth v5.4
+支持 BLE Audio
+GNSS
+• GPS L1CA + L5
+• BeiDou B1I + B2a
+• Glonass L1OF</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0047.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+6 / 33
+• Galileo E1 + E5a
+• QZSS L1CA + L1CB + L5
+• NavIC N1+N5
+IMU ICM-42607-P 等(可选)
+SIM 双 SIM 卡，支持热插拔
+TF 卡 支持 SD/SDIO 3.0，最大支持 2T
+LCM
+• 2*4-lane DSI，2.5Gbps/lane；最高支持 (3K*2 or FHD*4)
+• MiraVision™图像质量增强
+• 支持 D-PHY 4+4 通道 MIPI DSI 发射器
+• 嵌入式 LCD 伽马校正
+• 真 10bit 色彩
+• 8 层叠加图层，支持每像素 Alpha 通道和伽马表
+• 2 个覆盖层，应在告示牌上使用
+• 支持 GPU 解码器(AFBC)
+• 支持 DSC 压缩
+Camera
+• 4*4-lane CSI-D-PHY，4.5Gbps/lane
+• 多摄像头(8 个 YUV 传感器+1 个 DP2CSI)
+− SVM [2.1MP+ 2.1MP + 2.1MP + 2.1MP] @ 30 fps
+− RVM[2.1MP]@ 60 fps
+− DMS [2.1MP] @ 30 fps
+− OMS [2.1MP] @ 30 fps
+− DVR[2.1MP]@ 30 fps</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0047.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+7 / 33
+− DP2CSI[2.1MP] @ 30fps
+• 支持 YUV 422 8/10/12bit 及 RGB888 格式输入
+• MIPI CSI-2 高速摄像头串行接口;最多支持 4 条 D-DHY 数
+据通道
+Video decode
+AV1：
+▪ 主配置 4K2K@30 fps/100Mbps，8/10bits
+HEVC：
+▪ 主配置 4K2K@30 fps/100Mbps，8bits
+▪ 主 10 配置 4K2K@30 fps/100Mbps，10bits
+VP9：
+▪ 配置 0 4K2K@30 fps/100Mbps，8bits
+▪ 配置 2 4K2K@30 fps/100Mbps，10bits
+AVC：
+▪ 限制基线 4K2K@30 fps/100Mbps，8bits
+▪ 主/高配置 4K2K@30 fps/100Mbps，8bits
+▪ 渐进式高 10 配置 4K2K@30 fps/100Mbps，10bits
+HEIF：
+▪ 最大分辨率 16,383×16,383，8/10bits
+Video encode
+H.264：
+▪8 位高画质 3840×2160@30 fps，100 Mbps 传输速率
+HEVC ：
+▪10 位主画质 3840×2160@30 fps，100 Mbps 传输速率</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0047.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+8 / 33
+HEIF：
+▪支持最高分辨率与图像规格保持一致
+模
+组
+对
+外
+接
+口
+I2C x13
+SPI x6
+I2S(INPUT) x4
+I2S(OUTPUT) x2
+TDM(IN/OUTPUT) x1
+UART x4
+SIM x2
+SD Card x1
+PWM x6
+USB3.0 x1
+PCIE GEN3 x1
+GPIO xN
+3. 突出亮点及特性
+ 内置 T-box，集成符合法规要求的 eCall 功能，并搭载 eCall ECNR 算法
+ 通信能力支持 5G NR Sub6 3CC R16 与 4G LTE-Cat18，同时向下兼容 2G/3G 网络
+ 内置双核 DSP 数字音频处理器，提升音频处理性能
+ 采用 Hypervisor 系统架构，支持多系统并行运行（L+L+A）
+ 支持 4 路显示输出（IVI、Cluster、HUD），实现多屏异显功能
+ 具备 8 路摄像头同时接入能力，支持 AVM、DMS、OMS、DVR 及游戏投屏应用
+ 集成 LPDDR5x、UFS 3.1 多品牌、容量型号选配</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0047.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+9 / 33
+ 集成 WiFi6E、蓝牙 5.4 与 GNSS L1+L5 多频定位
+ 严格遵循 IATF 16949 质量体系标准
+ 产品开发过程符合 ASPICE 流程要求
+4. 模块方框图
+5. 模块引脚定义
+1)MT8668 中所有 SPI,I2C,UART,I2S,GPIO,EINT,TDM 口电压域都是 1.8V，请注意电压匹配
+2)SIM2（IO/RST/CLK）未使时可以做 GPIO（1.8V 电压域）使用。
+3)T 卡 data/cmd/clk/rst 接口默认为 SDIO 模式，不使用 TF 卡时可以当做 GPIO(1.8V 电压域)使用。
+MT8668
+芯片 PIN 模块 PIN 模块定义 描述&amp;备注
+1 D_GND
+AK2 2 CSI2B_L0N_T0B MIPI CSI2B 的 DATA1-N
+AK1 3 CSI2B_L0P_T0A MIPI CSI2B 的 DATA1-P
+4 D_GND</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0047.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+10 / 33
+AL3 5 CSI2A_L2P_T1B MIPI CSI2A 的 CLK-P
+AL4 6 CSI2A_L2N_T1C MIPI CSI2A 的 CLK-N
+AJ4 7 CSI2A_L0N_T0B MIPI CSI2A 的 DATA2-N
+AJ5 8 CSI2A_L0P_T0A MIPI CSI2A 的 DATA2-P
+9 D_GND
+10 D_GND
+11 D_GND
+12 D_GND
+MT6363_L
+12 13 VIO18_PMU_SIP 系统 IO 电平 1.8V 供电输出,300MA
+AK4 14 CSI2A_L1P_T0C MIPI CSI2A 的 DATA0-P
+AK5 15 CSI2A_L1N_T1A MIPI CSI2A 的 DATA0-N
+AL1 16 CSI2B_L1N_T1A MIPI CSI2B 的 DATA3-N
+AL2 17 CSI2B_L1P_T0C MIPI CSI2B 的 DATA3-P
+AR9 18 CAM_SDA9 CAM_SDA9,GPIO140;默认配置为 URXD2 可以复用成其它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+AT9 19 CAM_SCL9 CAM_SCL9,GPIO139;默认配置为 UTXD2 可以复用成其它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+V34 20 SCL1 I2C1 的 SCL, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+21 D_GND
+22 D_GND
+V33 23 SDA1 I2C1 的 SDA, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AM25 24 EINT13 GPIO13,EINT13; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+T2 25 ANT_SEL5 GPIO99,EINT99, 默 认 配 置 为 I2SIN6_DI2, 可 以 复 用 成 其 它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+26 D_GND
+27 D_GND
+AM2 28 CSI1A_L0P_T0A MIPI CSI1A 的 DATA2-P
+AM3 29 CSI1A_L0N_T0B MIPI CSI1A 的 DATA2-N
+AP11 30 SCL10 I2C10 的 SCL,默认配置为 UCTS2,可以复用成其它 Func,请参
+考 MT8668_GPIO_Application_Spec 表格
+AT8 31 CAM_SCL8 I2C8 的 SCL,I3C8 的 SCL, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AE2 32 CAM_CLK3
+默认配置是 CAM_CLK3,若要复用成 GPIO69 请注意修改软
+件 ; 此 IO 口 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AN25 33 EINT14 GPIO14,EINT14; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AN8 34 CAM_RST3 CAM_RST3;GPIO65,EINT65; 可 以复 用成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0047.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+11 / 33
+AT12 35 AP_GOOD GPIO17,EINT17,AP_GOOD; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AU8 36 CAM_SDA8 I2C8 的 SDA,I3C8 的 SDA, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AR11 37 SDA10 I2C10 的 SDA,默认配置为 URTS2,可以复用成其它 Func,请
+参考 MT8668_GPIO_Application_Spec 表格
+AM5 38 CSI1A_L1N_T1A MIPI CSI1A 的 DATA0-N
+AM4 39 CSI1A_L1P_T0C MIPI CSI1A 的 DATA0-P
+AN4 40 CSI1A_L2P_T1B MIPI CSI1A 的 CLK-P
+AN5 41 CSI1A_L2N_T1C MIPI CSI1A 的 CLK-N
+42 NC NC 脚，悬空
+43 NC NC 脚，悬空
+44 NC NC 脚，悬空
+AP8 45 CAM_RST2 GPIO64,EINT64; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+46 D_GND
+47 NC NC 脚，悬空
+48 D_GND
+AB7 49 SCP_SCL5 GPIO90,EINT90;默认配置为 I2SIN6_LRCK,可以复用成其它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+AP2 50 CSI1B_L0N_T0B MIPI CSI1B 的 DATA1-N
+AP1 51 CSI1B_L0P_T0A MIPI CSI1B 的 DATA1-P
+AP3 52 CSI1B_L1P_T0C MIPI CSI1B 的 DATA3-P
+AR2 53 CSI1B_L1N_T1A MIPI CSI1B 的 DATA3-N
+T5 54 ANT_SEL3 GPIO97,EINT97, 默 认 配 置 为 I2SIN6_DI, 可 以 复 用 成 其 它
+Func 请参考 MT8668_GPIO_Application_Spec 表格
+V2 55 SCP_SDA3 GPIO87,EINT87 默认配置为 I2SOUT6_DO;可以复用成其它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+AT22 56 I2S1_MCK GPIO74,EINT74 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+Y33 57 EINT5 GPIO5,EINT5;可以复用为 GPS_PPS,可以复用成其它 Func,
+请参考 MT8668_GPIO_Application_Spec 表格
+AR16 58 KPCOL0 KPCOL0,GPIO16,EINT16; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AU24 59 EINT7 GPIO7,EINT7; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+60 D_GND
+W3 61 SCP_SCL3 GPIO86,EINT86;默认配置为 I2SIN6_BCK,可以复用成其它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+62 D_GND
+63 D_GND
+AU4 64 CSI0A_L2P_T1B MIPI CSI0A 的 CLK-P</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0047.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+12 / 33
+AU5 65 CSI0A_L2N_T1C MIPI CSI0A 的 CLK-N
+AR26 66 BPI_D_BUS4 GPIO151;此 IO 口不能做中断功能,可以复用成其它 Func,请
+参考 MT8668_GPIO_Application_Spec 表格
+Y2 67 SCP_SDA4 GPIO89,EINT89;默认配置为 I2SOUT6_DO2,可以复用成其
+它 Func,请参考 MT8668_GPIO_Application_Spec 表格
+MT6363_
+G9 68 GPIO0_LGA_DAT_0 备用天线检测脚
+69 NC NC 脚，悬空
+AP13 70 PERI_EN2 GPIO115,EINT115; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+T4 71 ANT_SEL4 GPIO98,EINT98; 默 认 配 置 为 I2SIN6_DI1, 可 以 复 用 成 其 它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+AU7 72 CAM_CLK2
+默认配置是 CAM_CLK2,若要复用成 GPIO68 请注意修改软
+件 配 置 ， 此 IO 口 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AU25 73 BPI_D_BUS8 GPIO155;此 IO 口不能做中断功能;可以复用成其它 Func,请
+参考 MT8668_GPIO_Application_Spec 表格
+AU3 74 CSI0A_L1N_T1A MIPI CSI0A 的 DATA0-N
+AT3 75 CSI0A_L1P_T0C MIPI CSI0A 的 DATA0-P
+AR3 76 CSI0A_L0P_T0A MIPI CSI0A 的 DATA2-P
+AT2 77 CSI0A_L0N_T0B MIPI CSI0A 的 DATA2-N
+AN12 78 URXD0 MT8668 UART0_RX,用于与外设数据通讯，建议用于 debug
+AM12 79 UTXD0 MT8668 UART0_TX,用于与外设数据通讯，建议用于 debug
+Y3 80 SCP_SCL4 GPIO88,EINT88;默认配置为 I2SOUT6_DO1,可以复用成其
+它 Func,请参考 MT8668_GPIO_Application_Spec 表格
+AU26 81 BPI_D_BUS5 GPIO152;此 IO 口不能做中断功能,可以复用成其它 Func,请
+参考 MT8668_GPIO_Application_Spec 表格
+82 NC NC 脚，悬空
+83 NC NC 脚，悬空
+T32 84 JTRSTN_SEL1 JTRST,GPIO169,此 IO 口不能做中断功能;可以复用成其它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+U34 85 JTDI_SEL1 JTDI,GPIO173,此 IO 口不能做中断功能;可以复用成其它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+AR5 86 CSI0B_L0N_T0B MIPI CSI0B 的 DATA1-N
+AR4 87 CSI0B_L0P_T0A MIPI CSI0B 的 DATA1-P
+AP5 88 CSI0B_L1P_T0C MIPI CSI0B 的 DATA3-P
+AP6 89 CSI0B_L1N_T1A MIPI CSI0B 的 DATA3-N
+U33 90 JTMS_SEL1 JTMS,GPIO172,此 IO 口不能做中断功能;可以复用成其它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+T33 91 JTCK_SEL1 JTCK,GPIO171,此 IO 口不能做中断功能;可以复用成其它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+92 D_GND
+93 NC NC 脚，悬空</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0047.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+13 / 33
+94 NC NC 脚，悬空
+AT28 95 MIPI1_D_SCLK GPIO163;此 IO 口不能做中断,可以复用成其它 Func,请参考
+MT8668_GPIO_Application_Spec 表格
+AT24 96 EINT6 ACC 通 知 脚 ,GPIO6,EINT6, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+T34 97 JTDO_SEL1 JTDO,GPIO170,此 IO 口不能做中断功能;可以复用成其它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+98 D_GND
+99 D_GND
+AM23 100 EINT9 GPIO9,EINT9, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AR23 101 DISP_PWM GPIO61,EINT61, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+102 D_GND
+W34 103 EINT3 IDDIG,EINT3,GPIO3; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AR28 104 MIPI1_D_SDATA GPIO164; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AB8 105 SCP_SDA5 GPIO91,EINT91;默认配置为 I2SOUT6_DO3,可以复用成其
+它 Func,请参考 MT8668_GPIO_Application_Spec 表格
+AT29 106 MIPI0_D_SCLK GPIO161;此 IO 口不能做中断,可以复用成其它 Func,请参考
+MT8668_GPIO_Application_Spec 表格
+AU28 107 MIPI2_D_SCLK GPIO165;此 IO 口不能做中断,可以复用成其它 Func,请参考
+MT8668_GPIO_Application_Spec 表格
+AA7 108 I2SIN2_MCK GPIO79,EINT79; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+109 D_GND
+AM9 110 CAM_SDA7 I2C7 的 SDA, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+111 NC NC 脚，悬空
+112 D_GND
+AN9 113 CAM_SCL7 I2C7 的 SCL, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+114 D_GND
+V32 115 SDA0 I2C0 的 SDA, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AR25 116 BPI_D_BUS7 GPIO154; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AT30 117 MIPI0_D_SDATA GPIO162; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+118 D_GND
+U32 119 SCL0 I2C0 的 SCL, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0047.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+14 / 33
+120 D_GND
+121 NC NC 脚，悬空
+AU29 122 MIPI2_D_SDATA GPIO166; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AE5 123 NFC_CLK_REQ GPIO52,EINT52 可 复 用 成 DISP_PWM1, 可 以 复 用 成 其 它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+124 NC NC 脚，悬空
+125 D_GND
+126 D_GND
+127 NC NC 脚，悬空
+128 NC NC 脚，悬空
+129 D_GND
+130 D_GND
+131 D_GND
+132 D_GND
+133 D_GND
+134 ANT3 5G 天线 3
+135 D_GND
+136 D_GND
+137 D_GND
+138 D_GND
+139 ANT1 4G/5G 天线 1
+140 D_GND
+141 D_GND
+142 D_GND
+143 NC NC 脚，悬空
+AT21 144 I2SOUT1_DO I2SOUT1_DO,EINT73,GPIO73;可以复用成其它 Func,请参考
+MT8668_GPIO_Application_Spec 表格
+AU21 145 I2SIN1_DI I2S1_DI,EINT72,GPIO72; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+146 D_GND
+147 D_GND
+148 ECALL_BACKUP_AN
+T5 ECALL_ANT5 备用天线
+149 D_GND
+AU22 150 I2SIN1_LRCK I2SIN1_LRCK,EINT71,GPIO71;可以复用成其它 Func,请参考
+MT8668_GPIO_Application_Spec 表格
+AR21 151 I2SIN1_BCK I2SIN1_BCK,EINT70,GPIO70;可以复用成其它 Func,请参考
+MT8668_GPIO_Application_Spec 表格
+152 D_GND
+153 D_GND
+154 NC NC 脚，悬空</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0047.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+15 / 33
+155 NC NC 脚，悬空
+Y6 156 I2SOUT2_DO I2SOUT2_DO,EINT78,GPIO78;可以复用成其它 Func,请参考
+MT8668_GPIO_Application_Spec 表格
+Y8 157 I2SIN2_DI I2SIN2_DI,EINT77,GPIO77; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+158 D_GND
+159 D_GND
+160 ANT0 4G/5G 天线 0
+161 D_GND
+AA8 162 I2SIN2_LRCK I2SIN2_LRCK,EINT76,GPIO76;可以复用成其它 Func,请参考
+MT8668_GPIO_Application_Spec 表格
+Y7 163 I2SIN2_BCK I2SIN2_BCK,EINT75,GPIO75;可以复用成其它 Func,请参考
+MT8668_GPIO_Application_Spec 表格
+164 NC NC 脚，悬空
+165 NC NC 脚，悬空
+166 D_GND
+167 D_GND
+R33 168 SPI4_MI EINT35,GPIO35; 默 认 配 置 为 I2SIN0_DI, 可 以 复 用 成 其 它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+169 NC NC 脚，悬空
+170 D_GND
+171 D_GND
+172 NC NC 脚，悬空
+173 D_GND
+R30 174 SPI4_CSB EINT33,GPIO33;默认配置为 I2SIN0_LRCK,可以复用成其它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+R29 175 SPI4_CK EINT32,GPIO32;默认配置为 I2SIN0_BCK,可以复用成其它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+176 NC NC 脚，悬空
+177 NC NC 脚，悬空
+178 NC NC 脚，悬空
+179 NC NC 脚，悬空
+AT18 180 SDA6 I2C6 的 SDA, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AR18 181 SCL6 I2C6 的 SCL, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+182 D_GND
+183 D_GND
+184 ANT2 5G 天线 2
+185 D_GND
+186 D_GND
+187 D_GND</pre></section><section class="source-page" id="page-18"><h2>PDF物理页 18</h2><a href="materials/SRC0047.pdf#page=18" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+16 / 33
+AP27 188 BPI_D_BUS1 GPIO148; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+V6 189 GPS_L1_ELNA_EN EINT92,GPIO92 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+190 NC NC 脚，悬空
+MT6373_
+H14 191 AVDD30_PMU AUDIO CODEC 芯片 MT6338 的供电 3.0V，不用请悬空
+192 NC NC 脚，悬空
+193 NC NC 脚，悬空
+194 D_GND
+195 D_GND
+196 GYRO_SENTRY_INT GYRO_SENTRY_INT，IMU 中断脚通知底板，哨兵模式
+197 NC NC 脚，悬空
+198 NC NC 脚，悬空
+199 NC NC 脚，悬空
+200 NC NC 脚，悬空
+201 D_GND
+202 D_GND
+203 D_GND
+204 NC NC 脚，悬空
+205 NC NC 脚，悬空
+206 NC NC 脚，悬空
+207 NC NC 脚，悬空
+208 NC NC 脚，悬空
+209 NC NC 脚，悬空
+210 NC NC 脚，悬空
+211 NC NC 脚，悬空
+212 D_GND
+213 NC NC 脚，悬空
+214 NC NC 脚，悬空
+215 NC NC 脚，悬空
+216 NC NC 脚，悬空
+217 NC NC 脚，悬空
+218 NC NC 脚，悬空
+N29 219 SPI5_CSB GPIO29,EINT29,默认配置为 FMI2SIN_LRCK,可以复用成其
+它 Func,请参考 MT8668_GPIO_Application_Spec 表格
+220 D_GND
+221 D_GND
+222 NC NC 脚，悬空
+223 NC NC 脚，悬空
+224 D_GND
+AT26 225 NC NC 脚，悬空</pre></section><section class="source-page" id="page-19"><h2>PDF物理页 19</h2><a href="materials/SRC0047.pdf#page=19" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+17 / 33
+226 NC NC 脚，悬空
+AN19 227 SCL3 I2C3 的 SCL, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+228 NC NC 脚，悬空
+229 NC NC 脚，悬空
+230 D_GND
+231 D_GND
+232 NC NC 脚，悬空
+233 NC NC 脚，悬空
+AR15 234 MSDC1_DATA0 SD1 卡 DATA0,GPIO55,EINT55;可以复用成其它 Func,请参
+考 MT8668_GPIO_Application_Spec 表格
+AT16 235 MSDC1_DATA3 SD1 卡 DATA3,GPIO58,EINT58;可以复用成其它 Func,请参
+考 MT8668_GPIO_Application_Spec 表格
+AM19 236 SDA3 I2C3 的 SDA, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+MT6373_
+G12 237 VSIM2_PMU SIM 卡 2 供电输出, 1.86/2.9V 200MA
+AN14 238 SIM2_SIO GPIO179 SIM 卡 2 的数据口,不用 SIM2 时可以当做 GPIO
+口。
+AM14 239 SIM2_SRST GPIO178 SIM 卡 2 的复位,GPIO178,不用 SIM2 时可以当做
+GPIO 口。
+AU16 240 MSDC1_DATA2 SD1 卡 DATA2,GPIO57,EINT57;可以复用成其它 Func,请参
+考 MT8668_GPIO_Application_Spec 表格
+AT15 241 MSDC1_DATA1 SD1 卡 DATA1,GPIO56,EINT56;可以复用成其它 Func,请参
+考 MT8668_GPIO_Application_Spec 表格
+242 NC NC 脚，悬空
+243 NC NC 脚，悬空
+J31 244 USB_DM USB2.0 DM
+J30 245 USB_DP USB2.0 DP
+AP15 246 MSDC1_CMD SD1 卡 CMD,GPIO54,EINT54;可以复用成其它 Func,请参考
+MT8668_GPIO_Application_Spec 表格
+AU15 247 MSDC1_CLK SD1 卡 CLK,GPIO53,EINT53;可以复用成其它 Func,请参考
+MT8668_GPIO_Application_Spec 表格
+AN15 248 SIM2_SCLK GPIO177 SIM 卡 2 的时钟,不用 SIM2 时可以当做 GPIO 口。
+249 D_GND
+MT6373_F
+12 250 VSIM1_PMU SIM 卡 1 供电输出, 1.86/2.9V 200MA
+AM15 251 SIM1_SCLK GPIO174 SIM 卡 1 的时钟
+AN16 252 SIM1_SIO GPIO176 SIM 卡 1 的数据口
+253 NC NC 脚，悬空
+254 NC NC 脚，悬空
+255 NC NC 脚，悬空</pre></section><section class="source-page" id="page-20"><h2>PDF物理页 20</h2><a href="materials/SRC0047.pdf#page=20" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+18 / 33
+256 NC NC 脚，悬空
+257 D_GND
+AM16 258 SIM1_SRST GPIO175 SIM 卡 1 的复位
+259 D_GND
+L30 260 SSUSB_TXP_P1 USB3.0 SSUSB_TXP_P1;
+L31 261 SSUSB_TXN_P1 USB3.0 SSUSB_TXN_P1;
+K28 262 SSUSB_RXN_P1 USB3.0 SSUSB_RXN_P1;
+K29 263 SSUSB_RXP_P1 USB3.0 SSUSB_RXP_P1;
+264 D_GND
+265 D_GND
+AF30 266 DSI1_D0N_T1A MIPI DSI1 的 D0N
+AE30 267 DSI1_CK0N_T1C MIPI DSI1 的 CKN
+268 D_GND
+AE31 269 DSI1_CK0P_T1B MIPI DSI1 的 CKP
+AF31 270 DSI1_D0P_T0C MIPI DSI1 的 D0P
+AE34 271 DSI1_D1N_T2B MIPI DSI1 的 D1N
+AE33 272 DSI1_D1P_T2A MIPI DSI1 的 D1P
+AF33 273 DSI1_D2N_T0B MIPI DSI1 的 D2N
+AF32 274 DSI1_D2P_T0A MIPI DSI1 的 D2P
+275 D_GND
+AD32 276 DSI1_D3P_T2C MIPI DSI1 的 D3P
+AD33 277 DSI1_D3N_T3A MIPI DSI1 的 D3N
+AC32 278 DSI0_D2P_T0A MIPI DSI0 的 D2P
+AC33 279 DSI0_D2N_T0B MIPI DSI0 的 D2N
+AB32 280 DSI0_D3N_T3A MIPI DSI0 的 D3N
+AB33 281 DSI0_D3P_T2C MIPI DSI0 的 D3P
+AB34 282 DSI0_D1N_T2B MIPI DSI0 的 D1N
+AC34 283 DSI0_D1P_T2A MIPI DSI0 的 D1P
+AD8 284 SCP_SPI3_CSB SPI3_CSB，GPIO37,EINT37;可以复用成其它 Func,请参考
+MT8668_GPIO_Application_Spec 表格
+AD7 285 SCP_SPI3_CK SPI3_CK ， GPIO36,EINT36; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AC8 286 SCP_SPI3_MO SPI3_MO，GPIO38,EINT38;可以复用成其它 Func,请参考
+MT8668_GPIO_Application_Spec 表格
+AC7 287 SCP_SPI3_MI SPI3_MI ， GPIO39,EINT39; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+288 D_GND
+AC31 289 DSI0_D0P_T0C MIPI DSI0 的 D0P
+AC30 290 DSI0_D0N_T1A MIPI DSI0 的 D0N
+291 NC NC 脚，悬空
+292 NC NC 脚，悬空
+AB30 293 DSI0_CK0N_T1C MIPI DSI0 的 CKN</pre></section><section class="source-page" id="page-21"><h2>PDF物理页 21</h2><a href="materials/SRC0047.pdf#page=21" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+19 / 33
+AB31 294 DSI0_CK0P_T1B MIPI DSI0 的 CKP
+AT19 295 AUD_NLE_MOSI0 GPIO193,此 IO 口不能做中断功能,可以复用成其它 Func,请
+参考 MT8668_GPIO_Application_Spec 表格
+P34 296 SPI6_CSB SPI6_CSB;GPIO25,EINT25; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+P31 297 SPI6_MO SPI6_MO;GPIO26,EINT26; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+P32 298 SPI6_MI SPI6_MO;GPIO27,EINT27; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+P33 299 SPI6_CK SPI6_MO;GPIO24,EINT24; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+300 NC NC 脚，悬空
+301 NC NC 脚，悬空
+302 NC NC 脚，悬空
+303 NC NC 脚，悬空
+304 NC NC 脚，悬空
+305 NC NC 脚，悬空
+306 NC NC 脚，悬空
+307 NC NC 脚，悬空
+V7 308 GPS_L5_ELNA_EN GPIO93,可复用成 GPS_L5_ELNA_EN,此 IO 口不能做中断功
+能,请参考 MT8668_GPIO_Application_Spec 表格
+W2 309 SCP_SDA2 GPIO85,EINT85, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AP24 310 EINT11 GPIO11,EINT11 此 IO 口 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AM21 311 AUD_DAT_MISO2 GPIO197,此 IO 口不能做中断功能,可以复用成其它 Func,请
+参考 MT8668_GPIO_Application_Spec 表格
+AR12 312 SYSRSTB 系统复位,低有效
+AR20 313 AUD_SYNC_MOSI
+GPIO189,此 IO 口在核心板有 12K 电阻下拉，用于核心板的
+模式配置，尽量优先选择其他 IO 口替代，也不要做上下拉
+配置。
+314 NC NC 脚，悬空
+315 D_GND
+316 NC NC 脚，悬空
+317 NC NC 脚，悬空
+MT6363_
+N2/P2 318 VS1_PMIC AUDIO CODEC 芯片 MT6338 的供电，不用请悬空
+AT20 319 AUD_NLE_MOSI1 GPIO194,此 IO 口不能做中断功能,可以复用成其它 Func,请
+参考 MT8668_GPIO_Application_Spec 表格
+AM20 320 AUD_DAT_MISO1 GPIO196,此 IO 口不能做中断功能,可以复用成其它 Func,请
+参考 MT8668_GPIO_Application_Spec 表格
+AT26 321 BPI_D_BUS6 GPIO153, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格</pre></section><section class="source-page" id="page-22"><h2>PDF物理页 22</h2><a href="materials/SRC0047.pdf#page=22" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+20 / 33
+AM18 322 SCL5 I2C5 的 SCL, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+W5 323 SCP_SCL2 GPIO84, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+324 NC NC 脚，悬空
+AR19 325 AUD_DAT_MOSI0
+GPIO190,此 IO 口在核心板有 12K 电阻上拉，用于核心板的
+模式配置，尽量优先选择其他 IO 口替代，也不要做上下拉
+配置。
+326 NC NC 脚，悬空
+AU19 327 AUD_DAT_MISO0 GPIO195,AUDIO CODEC 芯片 MT6338 的 AUDIO IF 接口，
+不用请悬空
+AN20 328 AUD_DAT_MOSI1 GPIO191,此 IO 口在核心板有 12K 电阻上拉，用于核心板的
+模式配置，尽量优先选择其他 IO 口替代，也不要做上下拉
+配置。
+329 NC NC 脚，悬空
+AU20 330 AUD_CLK_MOSI GPIO188,AUDIO CODEC 芯片 MT6338 的 AUDIO IF 接口，
+AUD_CLK_MOSI，不用请悬空
+MT6685_B
+5 331 RTC32K_1V8_F AUDIO CODEC 芯片 MT6338 的 RTC_CLK 32KHz，不用请
+悬空
+332 NC NC 脚，悬空
+AN18 333 SDA5 I2C5 的 SDA, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AR22 334 DSI_TE GPIO59,EINT59, 可 复 用 成 DSI_TE, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+335 D_GND
+336 NC NC 脚，悬空
+AN24 337 EINT12 GPIO12,EINT12 ， 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AM17 338 SRCLKENA0 AUDIO CODEC 芯 片 MT6338 的 待 机 控 制 信 号 脚
+SRCLKENA0，不用请悬空
+339 D_GND
+340 D_GND
+N32 341 SPI7_MI SPI7_MI;GPIO23,EINT23; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AP14 342 PERI_EN3 GPIO116,EINT116; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AT23 343 LCM_RST GPIO60,EINT60 可 复 用 成 LCM_RST, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AT14 344 PERI_EN5 GPIO118,EINT118, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AU23 345 EINT8 GPIO8,EINT8 可 复 用 成 LCM_RST, 请 参 考
+MT8668_GPIO_Application_Spec 表格</pre></section><section class="source-page" id="page-23"><h2>PDF物理页 23</h2><a href="materials/SRC0047.pdf#page=23" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+21 / 33
+P30 346 SPI5_CK GPIO28,SCP_EINT28,默认配置为 FMI2S_BCK,可以复用成其
+它 Func,请参考 MT8668_GPIO_Application_Spec 表格
+AR13 347 PERI_EN4 GPIO117,EINT117 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+N33 348 SPI7_MO SPI7_MO;GPIO22,EINT22; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+M33 349 SPI7_CK SPI7_CK;GPIO20,EINT20; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+M32 350 SPI7_CSB SPI7_CSB;GPIO21,EINT21; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+Y32 351 EINT4 EINT4,GPIO4,建议 复用成 CTP0 的中 断,可以 复用成 其它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+Y34 352 SYS_OCP_UVLO_INT GPIO198,此 IO 口不能做中断功能,可以复用成其它 Func,请
+参考 MT8668_GPIO_Application_Spec 表格
+P29 353 SPI5_MI GPIO31,SCP_EINT31,默认配置为 FMI2S_DI 可以复用成其它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+AN21 354 AUD_DAT_MOSI2
+GPIO192;此 IO 口在核心板有 12K 电阻上拉，用于核心板的
+模式配置，尽量优先选择其他 IO 口替代，也不要做上下拉
+配置。
+AP16 355 EINT_CHG_IRQB
+GPIO0,EINT0;此 IO 口在核心板有 12K 电阻上拉，用于核心
+板的模式配置，尽量优先选择其他 IO 口替代，也不要做上
+下拉配置。
+W8 356 SCP_SDA1 GPIO83,EINT83,默认配置为 URXD3,可以复用成其它 Func
+请参考 MT8668_GPIO_Application_Spec 表格
+W7 357 SCP_SCL1 GPIO82,EINT82,默认配置为 UTXD3,可以复用成其它 Func,
+请参考 MT8668_GPIO_Application_Spec 表格
+U1 358 ANT_SEL2 GPIO96,此 IO 口复用成 PCIE_CLKREQN,可以复用成其它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+359 NC NC 脚，悬空
+U4 360 ANT_SEL1
+GPIO95,此 IO 口不能做中断功能,可以复用成 PCIE_WAKEN,
+可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+P28 361 SPI5_MO GPIO30,SCP EINT30,可复用 FMI2SIN_MCK,可以复用成其它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+W1 362 SCP_SDA0 SCP_SDA0; 不 能 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+Y1 363 SCP_SCL0 SCP_SCL0, 不 能 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AA3 364 SCP_SPI2_MO SPI2_MO;GPIO42,EINT42; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AA5 365 SCP_SPI2_MI SPI2_MI;GPIO43,EINT43; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格</pre></section><section class="source-page" id="page-24"><h2>PDF物理页 24</h2><a href="materials/SRC0047.pdf#page=24" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+22 / 33
+AA4 366 SCP_SPI2_CSB SPI2_CSB;GPIO41,EINT41; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AA1 367 SCP_SPI2_CK SPI2_CK;GPIO40,EINT41; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+368 NC NC 脚，悬空
+V3 369 ANT_SEL0 GPIO94,EINT94, 复 用 成 PCIE_PERSTN, 可 以 复 用 成 其 它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+T3 370 ANT_SEL6 GPIO100,EINT100,默认配置为 I2SIN6_DI3,可以复用成其它
+Func 请参考 MT8668_GPIO_Application_Spec 表格
+371 NC NC 脚，悬空
+AT25 372 BPI_D_BUS9 GPIO156,此 IO 口不能做中断功能;可以复用成其它 Func,请
+参考 MT8668_GPIO_Application_Spec 表格
+AN11 373 UTXD1 GPIO18,EINT18,复用成 UTXD1,可以复用成其它 Func,请参
+考 MT8668_GPIO_Application_Spec 表格
+AM11 374 URXD1 GPIO19,EINT19,可以复用成 URXD1,可以复用成其它 Func,
+请参考 MT8668_GPIO_Application_Spec 表格
+AM24 375 INT_SIM2 GPIO120,EINT120, 可 复 用 成 INT_SIM2, 可 以 复 用 成 其 它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+376 D_GND
+377 NC NC 脚，悬空
+AM26 378 EINT15 GPIO15,EINT15; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AE1 379 CAM_CLK1
+默认配置是 CAM_CLK1,若要复用成 GPIO67,EINT67 请注意
+修 改 软 件 配 置 ； 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+380 D_GND
+381 D_GND
+382 NC NC 脚，悬空
+AT7 383 CAM_CLK0
+默认配置是 CAM_CLK0,若要复用成 GPIO66,EINT66 请注意
+修 改 软 件 配 置 ； 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+384 D_GND
+385 NC NC 脚，悬空
+386 NC NC 脚，悬空
+387 NC NC 脚，悬空
+388 NC NC 脚，悬空
+389 NC NC 脚，悬空
+390 D_GND
+391 NC NC 脚，悬空
+392 NC NC 脚，悬空
+393 NC NC 脚，悬空
+394 NC NC 脚，悬空</pre></section><section class="source-page" id="page-25"><h2>PDF物理页 25</h2><a href="materials/SRC0047.pdf#page=25" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+23 / 33
+MT6685_E
+6 395 BBCK5 AUDIO CODEC 芯片 MT6338 的 26Mhz 时钟输入，MT6685
+的 26Mhz 时钟输出，不用请悬空
+396 D_GND
+397 D_GND
+398 NC NC 脚，悬空
+399 D_GND
+400 D_GND
+401 D_GND
+402 D_GND
+403 WBG_ANT1 WBG_ANT1
+404 D_GND
+AN13 405 PERI_EN0 GPIO113,EINT113, 可 以 复 用 成 PWM0, 可 以 复 用 成 其 它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+AM8 406 CAM_RST0 GPIO62,EINT62, 可 以 复 用 成 CAM_RST0, 可 以 复 用 成 其 它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+407 NC NC 脚，悬空
+N5 408 PCIE_LN0_TXP PCIE_LN0 的 TXP
+N4 409 PCIE_LN0_TXN PCIE_LN0 的 TXN
+410 D_GND
+411 D_GND
+412 WBG_ANT0 WBG_ANT0
+413 D_GND
+M7 414 PCIE_LN0_RXN PCIE_LN0 的 RXN
+M6 415 PCIE_LN0_RXP PCIE_LN0 的 RXP
+416 NC NC 脚，悬空
+417 NC NC 脚，悬空
+418 NC NC 脚，悬空
+AR10 419 SCL12 I2C12 的 SCL, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+M1 420 PCIE0_CKP PCIE 的 CKP
+M2 421 PCIE0_CKN PCIE 的 CKN
+422 D_GND
+423 D_GND
+424 GPS_ANT GPS 天线
+425 D_GND
+426 NC NC 脚，悬空
+427 NC NC 脚，悬空
+AU10 428 SDA12 I2C12 的 SDA, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AM13 429 PERI_EN1 GPIO114,EINT114; 可 以 复 用 成 PWM1, 可 以 复 用 成 其 它
+Func 请参考 MT8668_GPIO_Application_Spec 表格</pre></section><section class="source-page" id="page-26"><h2>PDF物理页 26</h2><a href="materials/SRC0047.pdf#page=26" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+24 / 33
+AR24 430 EINT10 GPIO10,EINT10 此 IO 口 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AN28 431 SPMI_P_SCL GPIO182,此 IO 口不能做中断功能,可以复用成其它 Func,请
+参考 MT8668_GPIO_Application_Spec 表格
+432 NC NC 脚，悬空
+433 NC NC 脚，悬空
+434 D_GND
+435 D_GND
+436 NC NC 脚，悬空
+437 NC NC 脚，悬空
+438 NC NC 脚，悬空
+439 NC NC 脚，悬空
+AN7 440 CAM_RST1 GPIO63,EINT63; 可 以 复 用 成 CAM_RST1, 可 以 复 用 成 其 它
+Func,请参考 MT8668_GPIO_Application_Spec 表格
+AU11 441 SCL11 I2C11 的 SCL, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AT11 442 SDA11 I2C11 的 SCL, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AT10 443 CAM_SCL4 I2C4 的 SCL, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+444 NC NC 脚，悬空
+445 NC NC 脚，悬空
+446 NC NC 脚，悬空
+447 NC NC 脚，悬空
+448 NC NC 脚，悬空
+449 NC NC 脚，悬空
+450 NC NC 脚，悬空
+451 NC NC 脚，悬空
+AP9 452 CAM_SDA4 I2C4 的 SDA,I3C4 的 SDA, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AM10 453 CAM_SDA2 I2C2 的 SDA, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AN10 454 CAM_SCL2 I2C2 的 SCL, 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+455 D_GND
+456 NC NC 脚，悬空
+457 NC NC 脚，悬空
+458 NC NC 脚，悬空
+459 NC NC 脚，悬空
+460 NC NC 脚，悬空
+461 NC NC 脚，悬空
+462 NC NC 脚，悬空</pre></section><section class="source-page" id="page-27"><h2>PDF物理页 27</h2><a href="materials/SRC0047.pdf#page=27" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+25 / 33
+463 NC NC 脚，悬空
+AP28 464 SPMI_P_SDA GPIO183,此 IO 口不能做中断功能,可以复用成其它 Func,请
+参考 MT8668_GPIO_Application_Spec 表格
+AB1 465 SCP_SPI1_CK SPI1_CK;GPIO44,EINT44; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AB2 466 SCP_SPI1_CSB SPI1_CSB;GPIO45,EINT45; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+467 NC NC 脚，悬空
+V4 468 CONN_HRST_B_2 GPIO101,EINT101 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+W32 469 EINT1 GPIO1,EINT1, 可 复 用 成 CTP0_RST, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+470 D_GND
+471 D_GND
+AG5 472 CSI3A_L1P_T0C MIPI CSI3A 的 DATA0-P
+AG3 473 CSI3A_L1N_T1A MIPI CSI3A 的 DATA0-N
+AC3 474 SCP_SPI0_MO SPI0_MO;GPIO50,EINT50; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AF7 475 NC NC 脚，悬空
+AC6 476 NC NC 脚，悬空
+AB3 477 SCP_SPI1_MO SPI1_MO;GPIO46,EINT46; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AB4 478 SCP_SPI1_MI SPI1_MI;GPIO47,EINT47; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+479 NC NC 脚，悬空
+480 NC NC 脚，悬空
+AD6 481 SCP_SPI0_CSB SPI0_CSB;GPIO49,EINT49; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AG1 482 CSI3A_L2N_T1C MIPI CSI3A 的 CLK-N
+AG2 483 CSI3A_L2P_T1B MIPI CSI3A 的 CLK-P
+AH3 484 CSI3B_L0P_T0A MIPI CSI3B 的 DATA1-P
+AH2 485 CSI3B_L0N_T0B MIPI CSI3B 的 DATA1-N
+AC5 486 SCP_SPI0_CK SPI0_CK;GPIO48,EINT48; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+487 NC NC 脚，悬空
+488 D_GND
+R32 489 SPI4_MO GPIO34,EINT34,可以复用成 I2SIN0_MCK 或其它 Func,请参
+考 MT8668_GPIO_Application_Spec 表格
+490 D_GND
+491 D_GND
+492 D_GND</pre></section><section class="source-page" id="page-28"><h2>PDF物理页 28</h2><a href="materials/SRC0047.pdf#page=28" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+26 / 33
+AC4 493 SCP_SPI0_MI SPI0_MI;GPIO51,EINT51; 可 以 复 用 成 其 它 Func, 请 参 考
+MT8668_GPIO_Application_Spec 表格
+AJ2 494 CSI3B_L1N_T1A MIPI CSI3B 的 DATA3-N
+AJ3 495 CSI3B_L1P_T0C MIPI CSI3B 的 DATA3-P
+AF3 496 CSI3A_L0P_T0A MIPI CSI3A 的 DATA2-P
+AF4 497 CSI3A_L0N_T0B MIPI CSI3A 的 DATA2-N
+AN23 498 INT_SIM1 INT_SIM1;GPIO119,EINT119;可以复用成其它 Func,请参考
+MT8668_GPIO_Application_Spec 表格
+499 D_GND
+MT6373_J
+14 500 VIBR_PMU LDO 电源输出,1.8/2.8/3.0/3.3V/200mA 可供外部负载使用
+501 D_GND
+MT6373_K
+14 502 VTP_PMU VTP 供电输出 1.8/2.8/3.0/3.3V/200mA
+MT6373_J
+12 503 VIO28_PMU VIO28_PMU ,1.8/2.8/3.0/3.3V/200mA SENSOR 供电
+MT6373_
+N14 504 VMCH_PMU T 卡供电 LDO 输出 2.9V/800mA
+MT6363_K
+7 505 VBUS VBUS 对应 MT8668 底板上的 VUSB_5V_IN,检测 USB 插入
+506 D_GND 电源地
+507 D_GND 电源地
+508 VBAT 系统 4.0V 供电输入
+509 VBAT 系统 4.0V 供电输入
+510 D_GND 电源地
+511 D_GND 电源地
+MT6363_L
+5 512 PWRKEY_SW POWERKEY ,系统开关机键,电平为 4.0V，默认高电平低有
+效
+513 D_GND 电源地
+514 D_GND 电源地
+515 D_GND 电源地
+516 VBAT 系统 4.0V 供电输入
+517 VBAT 系统 4.0V 供电输入
+518 VBAT 系统 4.0V 供电输入
+519 VBAT 系统 4.0V 供电输入
+520 VBAT 系统 4.0V 供电输入
+521 VBAT 系统 4.0V 供电输入
+522 D_GND 电源地
+523 D_GND 电源地
+524 VBAT 系统 4.0V 供电输入
+525 VBAT 系统 4.0V 供电输入
+526 D_GND 电源地</pre></section><section class="source-page" id="page-29"><h2>PDF物理页 29</h2><a href="materials/SRC0047.pdf#page=29" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+27 / 33
+527 D_GND 电源地
+528 D_GND 电源地
+G1 D_GND
+G10 D_GND
+G11 D_GND
+G12 D_GND
+G13 D_GND
+G14 D_GND
+G15 D_GND
+G16 D_GND
+G17 D_GND
+G18 D_GND
+G19 D_GND
+G2 D_GND
+G20 D_GND
+G21 D_GND
+G22 D_GND
+G23 D_GND
+G24 D_GND
+G25 D_GND
+G26 D_GND
+G27 D_GND
+G28 D_GND
+G29 D_GND
+G3 D_GND
+G30 D_GND
+G31 D_GND
+G32 D_GND
+G33 D_GND
+G34 D_GND
+G35 D_GND
+G36 D_GND
+G37 D_GND
+G38 D_GND
+G39 D_GND
+G4 D_GND
+G40 D_GND
+G41 D_GND
+G42 D_GND
+G43 D_GND
+G44 D_GND
+G45 D_GND</pre></section><section class="source-page" id="page-30"><h2>PDF物理页 30</h2><a href="materials/SRC0047.pdf#page=30" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+28 / 33
+G46 D_GND
+G47 D_GND
+G48 D_GND
+G49 D_GND
+G5 D_GND
+G50 D_GND
+G51 D_GND
+G52 D_GND
+G6 D_GND
+G7 D_GND
+G8 D_GND
+G9 D_GND</pre></section><section class="source-page" id="page-31"><h2>PDF物理页 31</h2><a href="materials/SRC0047.pdf#page=31" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+29 / 33
+6. 模块引脚分布图</pre></section><section class="source-page" id="page-32"><h2>PDF物理页 32</h2><a href="materials/SRC0047.pdf#page=32" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+30 / 33
+7. 模块尺寸图
+模 块 尺 寸 ：59.5mm * 59.5mm。下 图 中 心 28mm*27mm 区 域 底 板 PCB
+设 计 需 要 挖 空 ，如 要 PIN2PIN MT8678 平 台 需 要 按 P41 产 品 规 格 书 预 留
+设 计</pre></section><section class="source-page" id="page-33"><h2>PDF物理页 33</h2><a href="materials/SRC0047.pdf#page=33" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">掌锐机密，未经许可不得扩散
+31 / 33
+8. 天线接口说明
+天线接口 数量 说明
+ANT0 X 1 4G/5G 主集天线
+ANT1 X 1 4G/5G 分集天线
+ANT2 X 1 MIMO 3
+ANT3 X 1 MIMO 4
+ANT5 X 1 eCall 天线
+WB0&amp;WB1 X 2 WiFi&amp;BT 天线
+GNSS 天线 X 1</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a><a href="#page-18">PDF物理页 18</a><a href="#page-19">PDF物理页 19</a><a href="#page-20">PDF物理页 20</a><a href="#page-21">PDF物理页 21</a><a href="#page-22">PDF物理页 22</a><a href="#page-23">PDF物理页 23</a><a href="#page-24">PDF物理页 24</a><a href="#page-25">PDF物理页 25</a><a href="#page-26">PDF物理页 26</a><a href="#page-27">PDF物理页 27</a><a href="#page-28">PDF物理页 28</a><a href="#page-29">PDF物理页 29</a><a href="#page-30">PDF物理页 30</a><a href="#page-31">PDF物理页 31</a><a href="#page-32">PDF物理页 32</a><a href="#page-33">PDF物理页 33</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

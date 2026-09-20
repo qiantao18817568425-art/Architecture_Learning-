@@ -1,0 +1,362 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Hypervisor_Suspend_Resume_sample(1).pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Hypervisor_Suspend_Resume_sample(1).pdf</h1><p>SRC0064 · 原来源 ID U019 · PDF物理页 · 16 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>培训材料/PVT技术分享文档/MT8676_Hypervisor_Suspend_Resume_sample(1).pdf</p><p>SHA-256：<code>02961279599c269def44d2fc7768c283d01179defe4878fac5c6b7adfad8be35</code></p><p>原文件大小：2,076,233 字节</p></details><div class="actions"><a class="button" href="materials/SRC0064.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Hypervisor_Suspend_Resume_sample(1).pdf 原 PDF" src="materials/SRC0064.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0064.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 1 —
+PVT
+MT8676 Hypervisor Suspend &amp; Resume
+sample
+版本: v1
+出版日期: 2026/1/10
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0064.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 2 —
+版本记录
+版本 日期 作者 描述
+v1 2026/1/10 杨娟陶 正式版
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0064.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 3 —
+目录
+1. 参考案例主要架构介绍 ............................................................................................................... 4
+1.1 参考方案总架构介绍 ......................................................................................................... 4
+1.2 休眠流程介绍 ..................................................................................................................... 4
+1.3 唤醒流程介绍 ..................................................................................................................... 5
+1.3.1 唤醒场景示范 .......................................................................................................... 5
+1.3.2 读取唤醒源 .............................................................................................................. 5
+1.3.2.1 MCU 唤醒源..................................................................................................6
+1.3.2.2 SOC 唤醒源....................................................................................................6
+1.3.3 场景设计示范 ...................................................................................................8
+1.3.3.1 CAN 网络唤醒流程.......................................................................................7
+1.3.3.2 长连接唤醒流程..........................................................................................8
+1.3.3.3 Modem 唤醒流程.........................................................................................9
+1.3.3.4 modem 唤醒后的远控场景........................................................................11
+1.3.3.5 预约功能唤醒流程....................................................................................12
+2. MCU 扩展 ..................................................................................................................................... 14
+2.1 MCU/SOC 沟通 gpio 设定 .................................................................................................14
+2.2 使用场景介绍 ................................................................................................................... 14
+2.2.1 CAN 唤醒................................................................................................................14
+2.2.2 休眠......................................................................................................................14
+2.2.3 SOC 唤醒 MCU.......................................................................................................15
+2.3 MCU 保活机制..................................................................................................................15
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0064.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 4 —
+1. 参考案例主要架构介绍
+1.1 参考方案总架构介绍
+此为当前可扩展的一种架构介绍。主要是触发场景的完善和多系统电源管理总控(sleepmanager)的改变。
+1.2 休眠流程介绍
+1）、PowerMode 决策为休眠模式后，变更电源模式并通知，再拉高 SOC 休眠 gpio 通知 SOC 休眠。
+sleepmanager 收到虚拟的 powerkey 休眠后，触发 SOC 的休眠流程。
+2）、SOS 通过 mailbox 通知 android 开始休眠。
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0064.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 5 —
+3）、SleepManager 通知仪表各注册 APP 执行休眠流程。
+4）、SleepManager 通过虚拟机读取收到 Android 休眠完成消息。
+5）、SleepManager 通过 mailbox 通知触发 TBOX 的休眠。Sleepmanager(tbox)收到 powerkey 后，
+根据需求触发云端上报，上报完成后开始触发 TBOX 休眠流程。
+6）、SleepManager 通过虚拟机读取收到 TBOX 也休眠完成。
+7）、SOC ATF 拉低 SOC 状态 gpio 以通知 MCU 当前 SOC 状态为休眠。MCU 收到后开始自己的休眠流
+程。
+1.3 唤醒流程介绍
+1.3.1 唤醒场景示范
+1.3.2 读取唤醒源
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0064.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 6 —
+1.3.2.1 MCU 唤醒源
+1）、MCU 通过 GPIO 唤醒 SOC, 用 fdbus+spi 把唤醒源传给 soc 并写入/sys/power/wakeup_type 节
+点。
+2）、SOS 的 SleepManager 模块唤醒后，从/sys/power/wakeup_type 节点读出唤醒源。
+3）、Sleepmanager 模块根据具体的唤醒原因决策需要唤醒 TBOX 系统后，唤醒 TBOX 系统。
+4）、TBOX 系统的 Sleepmanager(tbox)模块向 SOS 系统的 SleepManager 模块问询当前唤醒源
+（CAN/IGN/ECALL/RTC），并执行对应的业务逻辑。
+1.3.2.2 SOC 唤醒源
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0064.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 7 —
+1）、SOC 上 RTC Modem 唤醒 SOS 系统，SOS 系统唤醒 MCU 系统。
+2）、SOS 系统唤醒后，将唤醒源写入/sys/power/wakeup_type 节点。
+3）、SleepManager 模块根据具体的唤醒原因决策需要唤醒 TBOX 系统后，唤醒 TBOX 系统。
+4）、TBOX 系统的 SleepManager(tbox)模块向 SOS 系统的 SleepManager 模块问询当前唤醒源
+（Modem/RTC），并执行对应的业务逻辑。
+5）、TBOX 系统的 XCALL 模块根据 modem 中的信息将子因（sms/call/data/modem fail）给到
+SleepManager(tbox)模块；SleepManager(tbox)模块通过 power hal 将子因转发给 SOS 系统的
+SleepManager 和 MCU 的 PowerMode 模块。
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0064.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 8 —
+1.3.3 场景设计示范
+1.3.3.1 CAN 网络唤醒流程(IGN 硬线唤醒也适用)
+1）、CAN 收发器收到 CAN 信号唤醒 MCU 系统
+2）、MCU 系统的 PowerMode 模块拉高 gpio，以通知 SOC 开始唤醒流程。
+3）、SOC 上的 MTK SPM 模组收到 gpio EINT，依次打开释放的资源，如通知 PMIC 离开
+Low Power Mode，打开 VCORE 和 26M，发送命令通知 DRAM 离开自刷新，最后给 cpu0 上电。
+4）、SOC 上的 ATF 模块在 cpu0 上电后，执行 cpu 的唤醒流程，再跳到 Suspend 前设定的地址，开始
+执行系统 Resume 流程，完成后拉 gpio，以通知 MCU 当前 SOC 的运行状态为唤醒。
+5）、系统 Resume 流程会唤醒虚拟机 vcpu 线程，跳到 Host OS Linux Kernel 执行 kernel 的 power 唤
+醒流程。
+6）、kernel power 模块经过 resume systemcore -&gt;恢复全局 cpu 中断 -&gt;拉起 nonboot cpus -&gt;唤醒
+dev(resume_noirq →resume_early→resume -&gt;complete) -&gt;取消冻结
+7）、kernel power 模块执行唤醒完成后返回 SleepManager 模块收到 kernel power 的调用里。
+8）、SleepManager 模块收到调用休眠返回后，判定唤醒成功且唤醒源为 mcu 且为 can 网络，唤醒中间
+件各业务服务。
+9）、SleepManager 模块继续唤醒应用层各注册的客户端。
+10）、SleepManager 模块通过写虚拟机节点唤醒 TBOX。
+10.1）、TBOX 系统的 kernel power 经过 resume systemcore -&gt;恢复全局 cpu 中断 -&gt;拉起 nonboot
+cpus -&gt;唤醒 dev(resume_noirq→resume_early →resume -&gt;complete)→取消冻结。然后返回 power
+hal 的调用函数。
+10.2）、TBOX 系统的 power hal 模块收到返回唤醒后同步反馈给 SleepManager(tbox)。
+10.3）、TBOX 系统的 power hal 模块同步开始唤醒消息给给 SleepManager。
+10.4）、SleepManager(tbox)收到唤醒后，判定唤醒成功且唤醒源为 can 网络，唤醒中间件各业务服务。
+11）、SleepManager 模块通过写虚拟机节点唤醒 android。
+11.1）、Android 系统的 kernel power 经过 resume systemcore -&gt;恢复全局 cpu 中断 -&gt;拉起 nonboot
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0064.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 9 —
+cpus -&gt;唤醒 dev(resume_noirq→resume_early →resume -&gt;complete)→取消冻结。然后返回 CPMS
+的休眠调用函数。
+11.2）、CPMS 模块同步开始唤醒消息给给 power hal, power hal 同步开始唤醒消息给给 sleepmanager。
+11.3）、CPMS 收到唤醒后，判定唤醒成功，通知各注册的 hal 进行唤醒。并同时恢复 bt wifi usb。
+11.4）、CPMS 唤醒各业务服务。
+1.3.3.2 长连接唤醒流程
+1）、SOC 上 PMIC 自带的 RTC 闹钟触发了 PMIC 离开 Low Power Mode，打开 VCORE 和 26M，发
+送命令通知 DRAM 离开自刷新，最后给 cpu0 上电。
+2）、SOC 上的 ATF 模块在 cpu0 上电后，执行 cpu 的唤醒流程，再跳到 Suspend 前设定的地址，开始
+执行系统 Resume 流程。完成后拉 gpio，以通知 MCU 当前 SOC 的运行状态为唤醒；拉 gpio 以通知
+MCU 唤醒。
+3）、系统 Resume 流程会唤醒虚拟机 vcpu 线程，跳到 Host OS Linux Kernel 执行 kernel 的 power
+唤醒流程。
+4）、kernel power 模块经过 resume systemcore -&gt;恢复全局 cpu 中断 -&gt;拉起 nonboot cpus -&gt;唤醒
+dev(resume_noirq -&gt;resume_early ）
+5）、mcu_mgr 模块在 resume_noirq 层被唤醒后判定当前是 SOC 自唤醒，ATF 中拉 gpio 让 MCU 唤醒，
+阻塞并等待 MCU 的唤醒结果
+6）、MCU 唤醒完成后拉 gpio 通知 SOC 自己唤醒完成。SOC 的 mcu_mgr 模块在收到 MCU 的唤醒结
+果后：成功则继续唤醒；
+7）、kernel power 模块检测到 resume_noirq 成功执行完成，则继续唤醒 dev(resume_early→resume
+-&gt;complete)→取消冻结，然后唤醒 SleepManager 调用的休眠函数。
+8）、SleepManager 模块收到调用休眠返回后，判定唤醒成功且唤醒源为 soc rtc。
+9）、SleepManager 模块通过写虚拟机节点唤醒 TBOX。
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0064.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 10 —
+10）、TBOX 系统的 kernel power 经过 resume systemcore -&gt;恢复全局 cpu 中断 -&gt;拉起 nonboot cpus
+-&gt;唤醒 dev(resume_noirq →resume_early→resume -&gt;complete)→取消冻结。然后返回 power hal
+的调用函数。
+11）、TBOX 系统的 power hal 模块收到返回唤醒后同步反馈给 SleepManager(tbox)。
+--------SleepManager(tbox)收到唤醒后，判定唤醒成功且唤醒源为 SOC RTC 和闹钟事件后，则唤醒中
+间件各业务服务，并通知 TSP 模块。
+--------TSP 模块收到闹钟事件通知后，向 TSP 平台上报。
+12）、TBOX 系统的 power hal 模块唤醒 SleepManager(tbox)后发送“开始唤醒消息”给 sleepmanager。
+1.3.3.3 modem 唤醒流程（适用短信、ECALL、数据唤醒）
+1）、SOC 上 Modem 接收到数据/短信/CALL 后通知 SPM。
+2）、SOC 上的 MTK SPM 模组收到 modem 通知，依次打开释放的资源，如通知 PMIC 离开 Low Power
+Mode，打开 VCORE 和 26M，发送命令通知 DRAM 离开自刷新，最后给 cpu0 上电。
+3）、SOC 上的 ATF 模块在 cpu0 上电后，执行 cpu 的唤醒流程，再跳到 Suspend 前设定的地址，开始
+执行系统 Resume 流程。完成后拉 gpio，以通知 MCU 当前 SOC 的运行状态为唤醒；拉 gpio 以通知
+MCU 唤醒。
+4）、系统 Resume 流程会唤醒虚拟机 vcpu 线程，跳到 Host OS Linux Kernel 执行 kernel 的 power 唤
+醒流程。
+5）、kernel power 模块经过 resume systemcore -&gt;恢复全局 cpu 中断 -&gt;拉起 nonboot cpus -&gt;唤醒
+dev(resume_noirq -&gt;resume_early ）
+6）、mcu_mgr 模块在 resume_noirq 层被唤醒后判定当前是 SOC 自唤醒，在 ATF 拉 gpio 让 MCU 唤
+醒，阻塞并等待 MCU 的唤醒结果
+7）、MCU 唤醒完成后拉 gpio 通知 SOC 自己唤醒完成。SOC 的 mcu_mgr 模块在收到 MCU 的唤醒结
+果后：成功则继续唤醒；
+8）、kernel power 模块检测到 resume_noirq 成功执行完成，则继续唤醒 dev(resume_early→resume
+-&gt;complete)→取消冻结，然后唤醒 SleepManager 调用的休眠函数。
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0064.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 11 —
+9）、SleepManager 模块收到调用休眠返回后，判定唤醒成功且唤醒源为 soc modem。
+10）、SleepManager 模块通过写虚拟机节点唤醒 TBOX。
+11）、TBOX 系统的 kernel power 经过 resume systemcore -&gt;恢复全局 cpu 中断 -&gt;拉起 nonboot cpus
+-&gt;唤醒 dev(resume_noirq →resume_early→resume -&gt;complete)→取消冻结。然后返回 power hal
+的调用函数。
+12）、TBOX 系统的 power hal 模块收到返回唤醒后同步反馈给 SleepManager(tbox)。
+------SleepManager(tbox)收到唤醒后，判定唤醒成功且唤醒源为 SOC modem 后，则唤醒中间件各业
+务服务，并通知 XCALL 模块进行 modem 读取和校验。
+------XCALL 模块读取 modem 中数据/SMS/CALL 进行校验，结果通知给 SleepManager(tbox)模块。
+------SleepManager(tbox)模块通知子唤醒原因给 power hal 模块。
+------power hal 模块通知子唤醒原因给 SOS 系统的 SleepManager 模块。
+------SleepManager 模块根据结果通知 MCU 系统 PowerMode 模块当前状态。如果校验失败，MCU
+系统 PowerMode 模块则发起休眠流程 STR；如果校验成功，则开启强制保活的倒计时
+MCU_KEEP_TBOX_TIMER_OUT。
+13）、TBOX 系统的 power hal 模块唤醒 SleepManager(tbox)后发送“开始唤醒消息”给 SleepManager。
+1.3.3.4 modem 唤醒后的远控场景（响应远控信号的部分适用于预
+约功能）
+1）、TBOX 系统上的 XCALL 读取 modem 中的数据/短信，进行校验和识别。
+2）、XCALL 模块识别到远控请求时，发送 can 信号，再通知 SleepManager(tbox)模块需要维持网络。
+3）、SleepManager(tbox)模块将维持网络的请求发送给 power hal 模块。
+4）、power hal 模块通过 fdbus(vsock)通知维持网络给 SOS 系统的 sleepmanager 模块。
+5）、sleepmanager 模块记录维持网络的 log，再将维持网络状态传递给 mcu_ipc_server 模块。
+6）、mcu_ipc_server 模块将维持网络请求通过 SPI 传递给 MCU 系统的 PowerMode 模块。
+7）、MCU 系统的 PowerMode 模块通过 CAN 网络持续强制发送网络管理报文给 CEM，并根据消息中
+携带的参数重置对应时间的倒计时 MCU_KEEP_TBOX_TIMER_OUT，倒计时结束则不再强制发送网络管
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0064.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 12 —
+理报文，届时根据实际情况进行决策电源模式等。（只要有此消息则重置倒计时
+MCU_KEEP_TBOX_TIMER_OUT）
+8）、MCU 系统的 PowerMode 模块收到 CEM 发来的远程模式信号，变更电源模式为远控模式，不打断
+强制网络管理报文的计时。
+9）、PowerMode 模块通过 SPI 通信通知 SOS 系统的 mcu_ipc_server 模块需要 can 唤醒。
+10）、SOS 系统的 mcu_ipc_server 模块收到消息后，透传通知组 sleepmanager 模块。
+11）、sleepmanager 模块收到需要 can 唤醒消息后，唤醒中间件各业务服务。
+12）、sleepmanager 模块继续唤醒应用层各注册的客户端。
+13）、sleepmanager 模块通知 can 唤醒给 TBOX 系统的 power hal 模块。
+14）、sleepmanager 模块通过写虚拟机节点唤醒 android。
+15）、Android 系统的 kernel power 经过 resume systemcore -&gt;恢复全局 cpu 中断 -&gt;拉起 nonboot
+cpus -&gt;唤醒 dev(resume_noirq→resume_early →resume -&gt;complete)→取消冻结。然后返回 power
+hal 的调用函数。
+16）、Android 系统的 power hal 模块收到返回唤醒后同步反馈给 CPMS。
+17）、CPMS 模块同步开始唤醒消息给 power hal 模块。
+17.1）、power hal 模块给 SOS 系统的 sleepmanager 模块。sleepmanager 模块收到后进行 log 记录。
+18）、CPMS 收到唤醒后，判定唤醒成功，通知各注册的 hal 进行唤醒。并同时恢复 bt wifi usb。
+19）、CPMS 再唤醒各业务服务。
+1.3.3.5 预约功能唤醒流程（适用自动闭锁、预约升级、智能闹钟、
+预约充电）
+1）、SOC 上 PMIC 自带的 RTC 闹钟触发了 PMIC 离开 Low Power Mode，打开 VCORE 和 26M，发
+送命令通知 DRAM 离开自刷新，最后给 cpu0 上电。
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0064.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 13 —
+2）、SOC 上的 ATF 模块在 cpu0 上电后，执行 cpu 的唤醒流程，再跳到 Suspend 前设定的地址，开始
+执行系统 Resume 流程。完成后拉 gpio，以通知 MCU 当前 SOC 的运行状态为唤醒。
+3）、系统 Resume 流程会唤醒虚拟机 vcpu 线程，跳到 Host OS Linux Kernel 执行 kernel 的 power
+唤醒流程。
+4）、kernel power 模块经过 resume systemcore -&gt;恢复全局 cpu 中断 -&gt;拉起 nonboot cpus -&gt;唤醒
+dev(resume_noirq -&gt;resume_early ）
+5）、mcu_mgr 模块在 resume_noirq 层被唤醒后判定当前是 SOC 自唤醒，atf 拉 gpio 让 MCU 唤醒，
+阻塞并等待 MCU 的唤醒结果
+6）、MCU 唤醒完成后拉 gpio 通知 SOC 自己唤醒完成。SOC 的 mcu_mgr 模块在收到 MCU 的唤醒结
+果后：成功则继续唤醒;
+7）、kernel power 模块检测到 resume_noirq 成功执行完成，则继续唤醒 dev(resume_early→resume
+-&gt;complete)→取消冻结，然后唤醒 sleepmanager 调用的休眠函数。
+8）、sleepmanager 模块收到调用休眠返回后，判定唤醒成功且唤醒源为 soc rtc。
+9）、sleepmanager 模块通过写虚拟机节点唤醒 TBOX。
+10）、TBOX 系统的 kernel power 经过 resume systemcore -&gt;恢复全局 cpu 中断 -&gt;拉起 nonboot cpus
+-&gt;唤醒 dev(resume_noirq →resume_early→resume -&gt;complete)→取消冻结。然后返回 power hal
+的调用函数。
+11）、TBOX 系统的 power hal 模块收到返回唤醒后同步反馈给 sleepmanager(tbox)。
+11.1）、sleepmanager(tbox)收到唤醒后，判定唤醒成功且唤醒源为 SOC rtc 和闹钟事件后，根据识别
+到的具体闹钟事件执行对应业务。通知 power hal 当前的子唤醒原因。
+11.1.1）、power hal 模块通知子唤醒原因给 SOS 系统的 sleepmanager 模块。
+11.1.2）、sleepmanager 模块根据子因通知 MCU 系统 PowerMode 模块当前状态。MCU 系统
+PowerMode 模块开启强制保活的倒计时。
+11.2）、sleepmanager(tbox)唤醒中间件各业务服务
+12）、TBOX 系统的 power hal 模块唤醒 sleepmanager(tbox)后发送“开始唤醒消息”给 sleepmanager。
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0064.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 14 —
+2. MCU 扩展
+2.1 MCU/SOC 沟通 gpio 设定
+2.2 使用场景介绍
+2.2.1 CAN 唤醒
+2.2.2 休眠
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0064.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 15 —
+2.2.3 SOC 唤醒 MCU
+2.3 MCU 保活机制
+在一些模式和状态下（如长连接等），按照 can 信号条件，是会触发 STR 的，但需求要求唤醒后需要保活
+60 秒，等待系统执行一些事情，所以设计了因这类唤醒，做 MCU 的保活
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0064.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 16 —
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件
+PVT内部文件</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

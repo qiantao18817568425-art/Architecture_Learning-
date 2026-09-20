@@ -1,0 +1,2181 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>AudioDSP_Development_Tutorial.docx · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>AudioDSP_Development_Tutorial.docx</h1><p>SRC0313 · 正文（不对应打印页码） · 1 个阅读单元</p><p class="note">原材料可查阅；未逐页作项目结论验证。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>DOC\AudioDSP_Development_Tutorial.docx</p><p>SHA-256：<code>205e6be3fb328bf7b5b7f78537895b102b14aa94d382e2ab796908c2665ff6cf</code></p><p>原文件大小：3,520,781 字节</p></details><div class="actions"><a class="button" href="materials/SRC0313.docx" download>下载完整原文件</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><p class="note">文字按文档结构提取，图片按包内顺序列出；布局、连线和图文对应关系以原文件为准。</p><article id="source-text"><section class="source-page" id="page-1"><h2>正文（不对应打印页码） 1</h2><pre class="source-text">
+
+
+
+
+
+
+
+
+Audio DSP Development Tutorial
+User Manual
+Customer Support
+
+
+
+N/A
+V1. 2 7
+20 2 6 - 0 5 - 11
+
+Doc No:
+Version:
+Release date:
+Classification:
+
+
+©  2016  -  2026 MediaTek Inc.
+This document contains information that is proprietary to MediaTek Inc.
+Unauthorized reproduction or disclosure of this information in whole or in part is strictly prohibited.
+
+Specifications are subject to change without notice.
+
+
+
+Keywords
+User Manual
+
+
+MediaTek Inc.
+Postal address
+No. 1, Dusing 1st Rd. , Hsinchu Science Park, Hsinchu City, Taiwan 30078
+MTK  support office address
+No. 1, Dusing 1st Rd. , Hsinchu Science Park, Hsinchu City, Taiwan 30078
+Internet
+http://www. mediatek.com/
+
+
+
+
+
+
+
+
+
+
+Document Revision History
+Revision
+Date
+Author
+Description
+V0. 8
+2018/08/31
+Doug Wang
+Initial Draft
+V0.9
+2019/01/08
+Doug Wang
+Danny Hung
+Add Debug and MCPS measurement method
+b) Add Audio Effect
+V1.0
+2019/11/04
+Doug Wang
+a) Refine description of hwcfg and config
+V1.1 0
+2020/01/22
+Doug Wang
+Add b0 file structure
+b) Add aurisys development flow
+V1.11
+2020/2/22
+Doug Wang
+Add enable UART method
+b)Add b0 structure description for debug sop
+V1.12
+2020/4/20
+Doug Wang
+Danny Hung
+Celine
+Add Integration Guideline Chapter
+Aurisys Porting Guideline
+Reserved Memory Configurations
+V1.13
+2021/01/06
+Danny
+Add guideline to add Aurisys scenario
+V 1.14
+2 022/09/06
+Y uying Lin
+a) A dd note for aurisys_config_hifi3.xml  
+b)  U pdate tool chain part:
+-  M odify DX-2 &amp; 22H param /hwcfg  file path
+-  A dd libhal description for on target building HiFiX
+V1.15
+2022/10/13
+R ui-yang Weng
+a)  How to allocate working buffer for library?
+- aurisys allocate buffer control flow - a urisys API usage
+V 1.16
+2 022/12/21
+R ui-yang Weng
+a)  How to allocate working buffer for library?   (aurisys interface after V1.8.0)
+V 1.1 7
+2 023/0 4 / 18
+Y uying Lin
+Jung-wei chen
+a )  Add note for re-building link scripts 
+b ) U pdate tool chain part:
+- M odify 23P param/hwcfg /libhal.a  file path
+V1.18
+2023/05/12
+Y uying Lin
+Chipeng chang
+a )   U pdate compiler part 1.2.5
+b) A dd  DX -3 param/hwcfg/libhal file path
+V1.19
+2023/08/11
+Da nny Hun g
+Add SCP Aurisys porting guide
+V1.20
+2 024/01/26
+Celine Liu
+a) Add file structure for RV55 platform
+b) Updat for m  description for 24M RV55 platform
+V1.21
+2024/05/17
+Jung-wei chen
+a)  Update DX-3 libhal.a for NNE
+b)  Add DX-4 param/hwcfg/libhal .a  file path
+V1.22
+2024/0 7 /1 6
+Ju ng-wei chen
+a)  Add  24P  param/hwcfg/libhal.a file path
+V 1.23
+2 024/11/05
+Jung-wei chen
+a) Add ADSP system DTS description
+V1.24
+202 5 / 02/2 7
+Rui-yang Weng
+a)  Up date Aurisys bypass lib process
+V 1.25
+2 025/05/16
+J ung-wei Chen
+a)  Add DX-5 configurations
+V1.26
+2025 / 09/05
+J ung-wei Chen
+a ) Update 3 rd -party library recommended build flags
+V1.27
+2026/05/11
+Jung-wei Chen
+a) Add 26M configurations
+V1.27
+2026/05/ 21
+Celine Liu
+a) Add  25Ms  configurations
+
+
+Table of Contents
+Document Revision History 3
+Table of Contents 4
+Lists of Tables 7
+Lists of Figures 8
+1 Getting Start 9
+1.1 File Structure 9
+1.1.1 A0 and B0 structure 9
+1.1.2 DSP Source Code 9
+1.1.3 APMCU 12
+1.2 Compile Cadence DSP/HiFi3 &amp; /HiFi5 13
+1.2.1 Configurations 13
+1.2.2 Default Image 14
+1.2.3 Tool Chain 14
+1.2.4 Tool Chain Version 21
+1.2.5 Compiler 21
+1.2.6 Build Command 21
+1.2.7 Suggested Library Build Flags 22
+1.2.8 3 rd  Party Libraries 22
+1.3 Compile MTK In-house DSP/RV55 – shared SCP software 23
+1.3.1 Configuration 23
+1.3.2 Default Image 24
+1.3.3 Tool Chain 24
+1.3.4 Build Command 24
+1.3.5 Suggested Library Build Flags 24
+1.3.6 3 rd  Party Libraries 25
+1.4 Compile MTK In-house DSP/RV55V &amp; /RV55 – Standalone ADSP software 25
+1.4.1 Configuration 25
+1.4.2 Default Image 26
+1.4.3 Tool Chain 26
+1.4.4 Build Command 26
+1.4.5 Suggested Library Build Flags 27
+1.4.6 3 rd  Party Libraies 27
+1.5 Download by Flashtool 27
+2 Software Architecture 29
+2.1 Free-RTOS 29
+2.1.1 Heap Size 29
+2.2 Audio Framework 30
+2.3 Aurisys 31
+2.3.1 Abstract 31
+2.3.2 Aurisys Aims 31
+2.3.3 Development Flow 32
+3 Software Development Guidance 33
+3.1 Scenario Based DVFS 33
+3.2 Audio Effects 35
+3.2.1 ACF Working Flow on DSP 35
+3.2.2 Audio Loudness Working Flow on DSP 40
+4 Debug SOP 43
+4.1 Issue Feedback to MTK 43
+4.2 Performance Issue 43
+4.3 Enable UART log 43
+5 Integration Guideline 44
+5.1 Get the Development Tools 44
+5.1.1 Apply for an Account 44
+5.1.2 Download the Released Software to the Device 45
+5.2 Integration 47
+5.2.1 Environment 47
+5.2.2 Feature Distribution 48
+5.3 Aurisys Porting Guide 49
+5.3.1 AP Side Parsing Library 49
+5.3.2 DSP/SCP Side Process Library 49
+5.3.3 Aurisys Config 51
+5.3.4 New Aurisys Scenario 53
+5.3.5 How to allocate working buffer for library? (aurisys interface before V1.8.0) 56
+5.3.6 How to allocate working buffer for library? (aurisys interface after V1.8.0) 60
+5.3.7 Bypass the Aurisys process by configuring the xml 63
+5.3.8 Aurisys Q&amp;A 65
+5.4 Memory Configurations 66
+5.4.1 Memory Profile 66
+5.4.2 Approach 66
+5.5 ADSP system DTS Properties 72
+5.5.1 ADSP system DTS property description 72
+
+
+Lists of Tables
+找不到圖表目錄。
+
+Lists of Figures
+Figure 1 1. HiFiX Tool Chain Path 12
+Figure 1 2. Example of  Makefile Non-support 17
+Figure 1 3. Example of  Makefile Non-support – Replace by User 17
+Figure 1 4. Example of  Makefile Support – Replace by Makefile 17
+Figure 2 1. Audio Framework 22
+Figure 2 2. Concept of Aurisys 23
+Figure 2 3. Aurisys Development Flow 23
+Figure 3 1. Scenario Based DVFS flow (P80 as example) 24
+Figure 3 2. MCPS Lookup Flow 24
+Figure 3 3. Register a callback function 25
+Figure 3 4. MCPS Look up Callback Function Example 26
+Figure 3 5. DRC Working at HIFI3 overview 32
+Figure 3 6.  DRC Working at HIFI3Flow 33
+Figure 5 1. Account Application Guilde Step 1 36
+Figure 5 2. Account Application Guilde Step 2 37
+Figure 5 3. Account Application Guilde Step 3 37
+Figure 5 4. MOL Example 37
+Figure 5 5. Modem Image Description in Scatter File 38
+Figure 5 6. Aurisys Control Flow 48
+Figure 5 7. Aurisys Control Flow 52
+
+
+
+
+Getting Start
+File Structure
+A0 and B0 structure
+    Currently, we have two file structures in DSP: A0 and B0. The file structure of P90/G90 is called A0 structure, and the structure of other projects is called B0 structure. We’ve reorganized the file structure of SCP and Audio DSP in B0 and created independent repo for SCP, Audio DSP, and common modules. After P90/G90, we’ll adopt B0 for all projects.
+Projects
+Structure
+P90/G90
+A0 structure
+Other projects
+B0 structure
+DSP Source Code
+A0 Structure
+Repo Structure
+Repo
+Release Policy
+Description
+vendor/mediatek/proprietary/tinysys/freertos/source
+Release
+DSP Source code
+vendor/mediatek/proprietary/tinysys/freertos/adsp_3rd_party_lib
+Remove
+DSP default images with 3rd party functionality (internal QC use)
+vendor/mediatek/proprietary/tinysys/freertos/adsp_lib
+Release
+DSP Default Image without 3rd party functionality (release to customers)
+vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI3/3rd_party
+Remove
+3rd party libraries
+(please license them from 3rd party lib and place them here)
+prebuilts/xcc/linux-x86/xtensa/RG-2017.6-linux
+Remove
+Cadence HiFi DSP toolchain (Please license it from Cadence and place it here)
+
+File Structure
+    The DSP source code is located at  alps/vendor/mediatek/proprietary/tinysys/freertos .
+Directory
+Sub Directory
+Files
+Description
+/
+-
+Android.mk
+Makefile and Project Config
+
+
+Makefile
+
+/build
+-
+clear_vars.mk
+Build script
+
+
+config_common.mk
+
+
+
+config_hifi3.mk
+
+
+
+definitions.mk
+
+
+
+env_hifi3.mk
+
+
+
+main.mk
+
+/drivers/HIFI3_A
+  -
+*
+Audio HW Driver code
+/drivers/common/
+/audio
+ 
+ 
+ *
+ 
+ 
+Audio Framework
+
+/dma/v03
+
+Common peripheral driver code with SCP
+
+/sem/v02
+
+
+
+/uart/v01
+
+
+
+/ipi/common
+
+IPI Driver
+/kernel/service/HIFI3
+  -
+*
+kernel service (wakelock, printf functions)
+/kernel/FreeRTOS/Source
+  -
+croutine.c
+FreeRTOS Source
+
+
+event_groups.c
+
+
+
+list.c
+
+
+
+queue.c
+
+
+
+tasks.c
+
+
+
+timers.c
+
+
+
+readme.txt
+
+/kernel/FreeRTOS/Source/include
+  -
+*
+FreeRTOS header
+/kernel/FreeRTOS/Source/portable
+/XCC
+*
+FreeRTOS, porting layer for HiFi3 DSP
+
+/MemMang
+
+
+/middleware/lib/audio
+/hifi3
+*
+Audio libraries and wrapper
+
+/common
+
+
+/project/HIFI3_A
+  -
+*
+Platform.mk of HiFi3 DSP
+/middleware/lib/
+/audio_utility
+*
+Audio framework utility funcitons and aurisys
+
+/aurisys
+
+
+B0 Structure
+We categorize the DSPs on the MTK platform into two types:  Cadence HiFi DSP  and  MTK in-house RV DSP . The MTK in-house  R V DSP can be further divided into two types based on whether the ADSP is in the same subsystem as the SCP, namely  SCP /ADSP  Co-subsys  and  Standalone ADSP .   Hence, t here are  four   different DSP  architectures   used in MTK platforms, please refer to the following table:
+
+Projects
+DSP  T ype
+DSP  Architecture
+DX-2, DX-3, DX-4
+Cadence  DSP/ HiFi 5
+Standalone ADSP Software
+5G-L/H/H+, 5G-A, 5G-B, 5G-C,
+Next D, Next A, Next A2, 22H, 23P ,   24P,
+DX-1 DX-1 Pro, DX-P
+Cadenc e  DSP /HiFi3
+Standalone ADSP Software
+2 4M ,  25Ms,  26M
+MTK in-house  DSP/RV55
+Shared SCP Software
+DX-5 , DX-6
+MTK in-house  DSP /RV55V
+Standalone ADSP Software
+
+Both HiFi3 and HiFi5 repo structures are listed as below:
+HiFi3 Repo Structure
+Repo
+Release Policy
+Description
+alps/vendor/mediatek/proprietary/tinysys/adsp/HIFI3
+Release
+DSP  HiFi3 s ource code
+alps/vendor/mediatek/proprietary/tinysys/adsp/common
+Release
+DSP HiFi series common source code
+alps/vendor/mediatek/proprietary/tinysys/adsp/adsp_imgs_3rd_party
+Remove
+DSP default images with 3rd party functionality (internal QC use)
+alps/vendor/mediatek/proprietary/tinysys/adsp/adsp_imgs/HIFI3
+Release
+DSP Default Image without 3rd party functionality (release to customers)
+alps/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI3/3rd_party
+Remove
+3rd party libraries
+(please license  them  from 3rd party lib and place  them  here)
+alps/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI3/lc3
+Remove
+lc3 licensed libraries
+(Please license it from mediatek and place them here)
+alps/prebuilts/xcc/linux-x86/xtensa
+Remove
+Cadence HiFi DSP toolchain (Please license it from Cadence and place it here)
+alps/prebuilts/clang/xtensa/linux-x86
+Remove
+Cadence HiFi DSP toolchain (Please license it from Cadence and place it here)
+alps/vendor/mediatek/proprietary/common
+Release
+Common code with  tinysys  SCP  
+alps/vendor/mediatek/proprietary/kernel
+Release
+FreeRTOS
+
+HiFi3 File Structure
+The file structure of DSP source code is the same with A0 structure. The only difference is that the DSP source code is located at   alps/vendor/mediatek/proprietary/tinysys/adsp/HIFI3.
+HiFi5 Repo Structure
+Repo
+Release Policy
+Description
+alps/vendor/mediatek/proprietary/tinysys/adsp/HIFI5_SP
+Release
+DSP HiFi5 source code
+alps/vendor/mediatek/proprietary/tinysys/adsp/common
+Release
+DSP HiFi series common source code
+alps/vendor/mediatek/proprietary/tinysys/adsp/adsp_imgs_3rd_party
+Remove
+DSP default images with 3rd party functionality (internal QC use)
+alps/vendor/mediatek/proprietary/tinysys/adsp/adsp_imgs/HIFI5
+Release
+DSP Default Image without 3rd party functionality (release to customers)
+alps/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI5/3rd_party
+Remove
+3rd party libraries
+(please license them from 3rd party lib and place them here)
+alps/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI5/lc3
+Remove
+lc3 licensed libraries
+(Please license it from mediatek and place them here)
+alps/prebuilts/xcc/linux-x86/xtensa
+Remove
+Cadence HiFi DSP toolchain (Please license it from Cadence and place it here)
+alps/prebuilts/clang/xtensa/linux-x86
+Remove
+Cadence HiFi DSP toolchain (Please license it from Cadence and place it here)
+alps/vendor/mediatek/proprietary/ tinysys/ common
+Release
+Common code with  tinysys  SCP
+alps/vendor/mediatek/proprietary/ tinysys/ kernel / FreeRTOS_v10.1.0
+Release
+FreeRTOS
+
+HiFi5 File Structure
+The file structure of DSP source code is the same with A0 structure. The only difference is that the DSP source code is located at   alps/vendor/mediatek/proprietary/tinysys/adsp/HIFI5_SP.
+RV55  SCP/ADSP Co-subsys  Repo Structure
+Repo
+Release Policy
+Description
+alps/vendor/mediatek/proprietary/tinysys/scp
+Release
+DSP RV55 source code
+alps/vendor/mediatek/proprietary/tinysys/ adsp/license/prebuilt/RV55 /3rd_party
+Remove
+3rd party libraries
+(please license them from 3rd party lib and place them here)
+alps/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/RV55/lc3
+Remove
+lc3 licensed libraries
+(Please license it from mediatek and place them here)
+alps/prebuilts/clang/md32rv/linux-x86
+Release
+RV DSP toolchain
+alps/vendor/mediatek/proprietary/tinysys/common
+Release
+Common code for both tinysys ADSP and tinysys SCP
+alps/vendor/mediatek/proprietary/tinysys/kernel/ [ FreeRTOS_v10.1.0.1 |FreeRTOS_v11.0.0]
+Release
+FreeRTOS
+
+RV55  Standalone ADSP  Repo Structure
+Repo
+Release Policy
+Description
+alps/vendor/mediatek/proprietary/tinysys/adsp/riscv
+Release
+DSP RV55 source code
+alps/vendor/mediatek/proprietary/tinysys/ adsp/license/prebuilt/RV55 /3rd_party
+Remove
+3rd party libraries
+(please license them from 3rd party lib and place them here)
+alps/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/RV55/lc3
+Remove
+lc3 licensed libraries
+(Please license it from mediatek and place them here)
+alps/prebuilts/clang/md32rv/linux-x86
+Release
+RV DSP toolchain
+alps/vendor/mediatek/proprietary/tinysys/common
+Release
+Common code for both tinysys ADSP and tinysys SCP
+alps/vendor/mediatek/proprietary/tinysys/kernel/FreeRTOS_v11.0.0
+Release
+FreeRTOS
+
+APMCU
+Directory
+Description
+kernel- x . xx \ drivers \ misc \ mediatek \ adsp
+Kernel Drivers for  standalone Audio DSP  
+kernel- x . xx \drivers\misc\mediatek\audio_ipi
+IPI means  I nter- P rocessor- I nterrupt,  and  it is used to do handshake with the DSP. The audio_ipi is designed with a message queue
+Kernel-x.xx\sound\soc\mediatek\audio_scp
+K ernel Drivers for  platforms shared SCP software.
+kernel-x.xx \sound\soc\mediatek\audio_dsp
+ALSA Kernerl Driver to read/write PCM data to Audio DSP
+Compile  Cadence  DSP /HiFi3 &amp; /HiFi5
+Configurations
+Feature
+Option
+Location
+Audio DSP (main switch of DSP)
+MTK_AUDIODSP_SUPPORT
+ProjectConfig.mk
+Offload Codec
+MTK_AUDIO_TUNNELING_SUPPORT
+ProjectConfig.mk
+Voice Call Speech Enhancement in Audio DSP
+MTK_AURISYS_PHONE_CALL_SUPPORT
+ProjectConfig.mk
+Offload VOIP/Record
+VIR_VOIP_RECORD_AUDIODSP_SUPPORT
+
+
+Build Server
+Cadence  recommended to use  Red Hat Enterprise  (officially supported platform), if you don’t have RHEL, you can use CentOS instead.
+While  they  do not officially support  U buntu, we are able to install Xtensa tools on  Ubuntu  Linux14.04  without issues.
+Makefile Locations:
+Android:  device\mediatekprojects
+Kernel:
+HifI3
+A0:  vendor\mediatek\proprietary\tinysys\freertos\source\project\HIFI3_(X)
+B0:   vendor\mediatek\proprietary\tinysys\adsp\HiFi3\project\HIFI3_(X)
+HifI5:   vendor\mediatek\proprietary\tinysys\adsp\HiFi5\project\HIFI5_SP_(X)
+Audio DSP (The main switch of Audio DSP)
+Configuration Check
+We have an inspection mechanism that the configurations of Android, Kernel, and DSP should be matched.
+AP Configuration:  MTK_AUDIODSP_SUPPORT
+Kernel Configuration:  CONFIG_MTK_AUDIODSP_SUPPORT
+DSP Configuration:  CFG_MTK_AUDIODSP_SUPPORT
+Voice Call Speech Enhanement
+Note
+An Inspection mechanism to check consistency of Android, Kernel, and DSP configurations
+The speech enhancement would be executed in the Modem side if we disable the option.
+AP Configuration:  MTK_AURISYS_PHONE_CALL_SUPPORT
+Kernel Configuration:  CONFIG_MTK_AURISYS_PHONE_CALL_SUPPORT
+DSP Configuration:  CFG_MTK_AURISYS_PHONE_CALL_SUPPORT
+VOIP/Recording
+Note
+DSP option is always on
+Use  VIR_VOIP_RECORD_AUDIODSP_SUPPORT  defined in the XML to enable/disable the DSP feature
+3 rd  party Library
+Note
+The 3rd party library should be released by the 3rd party. MTK will verify 3rd party library internally and remove them before release
+To enable the functionalities the 3 rd  party library, the user should add the 3 rd  party library to a specified folder and enable the related option. 
+DSP Configuration:  CFG_3RDPARTY_PROJECT
+Default Image
+Building ADSP image requires a license. To support developers and customers without ADSP toolchain use platform-based default ADSP image instead of build from source, we provide ADSP default images with all supported features enabled so that customers can still use DSP features. You can still disable the DSP path and use APMCU solution by disable APMCU configurations.
+The default image path are listed as below:
+HiFi3 (A0):  alps/vendor/mediatek/proprietary/tinysys/freertos/adsp_lib
+HiFi3 (B0):  alps/vendor/mediatek/proprietary/tinysys/adsp/adsp_imgs/HIFI3
+HiFi5 (B0):  alps/vendor/mediatek/proprietary/tinysys/adsp/adsp_imgs/HIFI5
+Tool Chain
+    P90, G90
+RG-2017.6
+The licensed tool chain path:  alps/prebuilts/xcc/linux-x86/xtensa/RG-2017.6-linux
+After licensing, please place the tool chain in the path above.
+
+Figure  1 1 .  HiFi X  Tool Chain Path
+RI-2018.0
+For RI-2018.0, please place your toolchain in the following path:
+A0:  alps/prebuilts/xcc/linux-x86/xtensa/RG-2017.6-linux/RI-2018.0-linux/XtensaTools
+B0:  alps/prebuilts/xcc/linux-x86/xtensa/RI-2018.0-linux/XtensaTools
+
+
+
+Hwcfg
+The hwcfg would be released with our codebase in Android P Version. In Android Q and later version, the hwcfg won’t be released with our codebase. It will be released by file exchange server / aurisys package, and please copy the hwcfg to the following path.
+Due to license issue, the folder  vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFIX/3rd_party  is removed when you receive the codebase. Please create the folder yourself.
+RG-2017.6-linux (P90, Android P)
+vendor/mediatek/proprietary/tinysys/freertos/source/project/HIFI3_A/mt6779/platform/hwcfg/RG-2017.6-linux/
+RI-2018.0-linux
+v1 (P90, Android Q and after; G90)
+/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI3/3rd_party/hwcfg/RI-2018.0-linux/
+v2 (5G L/H/H+/A/A+)
+/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI3/3rd_party/hwcfg/RI-2018.0-linux/
+RI-2019.1-linux
+v1 (5G B/Next-A)
+/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI3/3rd_party/hwcfg/RI-2019.1-linux/
+v2 (DX-1/Next-A2/DX-P)
+/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI3/3rd_party/hwcfg/RI-2019.1-linux-H/
+RI-2021.8-linux
+v1 HiFi5 (DX-2)
+/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI5/3rd_party/hwcfg/RI-2021.8-linux/  
+v1 HiFi3 (22H)
+/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI3/3rd_party/hwcfg/RI-2021.8-linux/
+v2 HiFi3 (23P)
+/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI3/3rd_party/hwcfg/RI-2021.8-linux-H/
+v2 HiFi3 (24P)
+/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI3/3rd_party/hwcfg/RI-2021.8-linux-H/
+RI-2023.11-linux
+v1 HiFi5 (DX-3 /DX-4 )
+NNE (HiFi5_NNE_2023_11_linux)
+/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI5/3rd_party/hwcfg/RI-2023.11-linux-E/  
+Non-NNE (HiFi5_MPU_lock_2023_11_linux)
+/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI 5 /3rd_party/hwcfg/RI-2023.11-linux-H/
+Config
+To build HiFiX on target, you need to add  mtxxxx-param  and update the  libhal.a  file. However, since Android T version, which DX-2, DX-3 , DX-4 ,  &amp; 22H are included, the above action is done in makefile. 
+Makefile not support (before Android T)
+There are parameter files in aurisys_exe, and the source path is listed below. Please copy the corresponding param file into the toolchain. For example, if you are using G90, please copy mt6785-params to  XtensaTools/config . If you are using DX-P, please copy mt6895-params to  XtensaTools/config . The detailed project mapping and file path is described in  CONFIG/Readme . 
+
+Makefile support (since Android T)
+To build DX-2, DX-3 , DX-4 , 22H and later projects, users don't need to copy  mtxxxx-param  and  libhal.a  file by themselves. The  mtxxxx-param  and  libhal.a  are released in  /vendor/mediatek/proprietary/tinysys/adsp/HIFIX/build/patch/mtxxxx , and makefile will help to copy these files to destination before building mtxxxx project. To confirm whether your codebase contains this change, you can check:
+Patch folder exists in this path:  
+/vendor/mediatek/proprietary/tinysys/adsp/HIFIX/build/patch/mtxxxx 
+Target  ADSP_TOOLCHAIN_UPDATE  exists in makefile:  
+/vendor/mediatek/proprietary/tinysys/adsp/HIFIX/build/Makefile  
+If your codebase doesn't contain this change, please consult with DRI.
+RG-2017.6-linux (P90, Android P)
+Source:  /CONFIG/HiFi3/Linux/RG-2017.6-linux/v1/RG-2017.6-linux
+Destination:  /prebuilts/xcc/linux-x86/xtensa/RG-2017.6-linux/XtensaTools/config/
+RI-2018.0-linux
+v1 (P90, Android Q and after; G90)
+Source:  /CONFIG/HiFi3/Linux/RI-2018.0-linux/v1/RI-2018.0-linux
+Destination:  /prebuilts/xcc/linux-x86/xtensa/RG-2017.6-linux/RI-2018.0-linux/XtensaTools/config
+v2 (5G L/H/H+/A/A+)
+Source:  /CONFIG/HiFi3/Linux/RI-2018.0-linux/v2/patch/
+Destination:  /prebuilts/xcc/linux-x86/xtensa/RI-2018.0-linux/XtensaTools/config/
+RI-2019.1-linux
+v1 (5G B/Next-A)
+Source:  /CONFIG/HiFi3/Linux/RI-2019.1-linux/v1/RI-2019.1-linux
+Destination:  /prebuilts/xcc/linux-x86/xtensa/RI-2019.1-linux/XtensaTools/config/  
+v2 (DX-1/Next-A2/DX-P)
+Source:  /CONFIG/HiFi3/Linux/RI-2019.1-linux/v2/patch/
+Destination:  /prebuilts/xcc/linux-x86/xtensa/RI-2019.1-linux/XtensaTools/config/
+RI-2021.8-linux
+v1 (DX-2)
+Source:  /CONFIG/HiFi5/Linux/RI-2021.8-linux/v1/patch/
+Destination:  /prebuilts/clang/xtensa/linux-x86/RI-2021.8-linux/XtensaTools/config/ 
+v1 (22H)
+Source:  /CONFIG/HiFi3/Linux/RI-2021.8-linux/v1/patch/
+Destination:  /prebuilts/clang/xtensa/linux-x86/RI-2021.8-linux/XtensaTools/config/ 
+v2 (23P)
+Source:  /CONFIG/HiFi3/Linux/RI-2021.8-linux/v2/patch/
+Destination:  /prebuilts/clang/xtensa/linux-x86/RI-2021.8-linux/XtensaTools/config/  
+v2 (24P)
+Source:  /CONFIG/HiFi3/Linux/RI-2021.8-linux/v2/patch/
+Destination:  /prebuilts/clang/xtensa/linux-x86/RI-2021.8-linux/XtensaTools/config/
+RI-2023.11-linux
+v1 (DX-3 /DX-4 )
+Source:  /CONFIG/HiFi5/Linux/RI-2023.11-linux/v1/patch/
+Destination:  /prebuilts/clang/xtensa/linux-x86/RI-2023.11-linux/XtensaTools/config/ 
+Libhal.a
+To support low power feature, hal library  libhal.a  needs to be replaced. As mentioned in  Config  part, before Android T version, users need to replace  libhal.a  by themselves. 
+Makefile not support (before Android T)
+The new  libhal.a  is released under  CONFIG\{HIFIX}\Linux\{Toolchain Version}-linux\{Sub Version}\patch . Please replace the corresponding  libhal.a  file under the destination path shown as below by the new one released in patch folder. 
+Makefile support (since Android T)
+Since Android T version, which DX-2, DX-3 , DX-4,  &amp; 22H are included, the above action is done in makefile. Users who want to build DX-2, DX-3,  DX-4,  22H and later projects don't need to update  mtxxxx-param  &amp;  libhal.a  by themselves. The libhal.a are released in  /vendor/mediatek/proprietary/tinysys/adsp/HIFIX/build/patch/mtxxxx , and makefile will help to copy file to destination before building HiFiX. To check whether your codebase version already includes this patch or not, you can refer to  Config  part first or consult with DRI.
+RG-2017.6-linux (P90, Android P)
+No need to update. The  libhal.a  in tool chain is already updated.
+RI-2018.0-linux
+v1 (P90, Android Q and after; G90)
+No need to update. The  libhal.a  in tool chain is already updated.
+v2 (5G L/H/H+/A/A+)
+Source:  /CONFIG/HiFi3/Linux/RI-2018.0-linux/v2/patch/libhal.a
+Destination:  /vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI3/3rd_party/hwcfg/RI-2018.0-linux/xtensa-elf/arch/lib/libhal.a
+RI-2019.1-linux
+v1 (5G B/Next-A)
+No need to update. The  libhal.a  in tool chain is already updated.
+v2 (DX-1/Next-A2/DX-P)
+Source:  /CONFIG/HiFi3/Linux/RI-2019.1-linux/v2/patch/libhal.a
+Destination:  /vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI3/3rd_party/hwcfg/RI-2019.1-linux-H/xtensa-elf/arch/lib/libhal.a
+RI-2021.8-linux
+v1 HiFi5 (DX-2)
+Source:  /vendor/mediatek/proprietary/tinysys/adsp/HIFI5_SP/build/patch/mt6985/ libhal.a
+Destination:  /vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI5/3rd_party/hwcfg/RI-2021.8-linux/xtensa-elf/arch/lib/libhal.a
+v1 HiFi3 (22H)
+Source: /vendor/mediatek/proprietary/tinysys/adsp/HIFI3/build/patch/mt6886/libhal.a
+Destination:  /vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI3/3rd_party/hwcfg/RI-2021.8-linux/xtensa-elf/arch/lib/libhal.a
+v2 HiFi3 (23P)
+Source:  /vendor/mediatek/proprietary/tinysys/adsp/HIFI3/build/patch/mt6897/libhal.a
+Destination:  /vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI3/3rd_party/hwcfg/RI-2021.8-linux-H/xtensa-elf/arch/lib/libhal.a
+v2 HiFi3 (24P)
+Source:  /vendor/mediatek/proprietary/tinysys/adsp/HIFI3/build/patch/mt6899/libhal.a
+Destination:  /vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI3/3rd_party/hwcfg/RI-2021.8-linux-H/xtensa-elf/arch/lib/libhal.a
+RI-2023.11-linux
+v1 HiFi5 (DX-3)
+NNE 
+Source:  /vendor/mediatek/proprietary/tinysys/adsp/HIFI5_SP/build/patch/mt6989 _b / libhal.a
+Destination:  /vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI5/3rd_party/hwcfg/RI-2023.11-linux-E/xtensa-elf/arch/lib/libhal.a
+NON-NNE 
+Source:  /vendor/mediatek/proprietary/tinysys/adsp/HIFI5_SP/build/patch/mt6989 _a / libhal.a
+Destination:  /vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI5/3rd_party/hwcfg/RI-2023.11-linux-H/xtensa-elf/arch/lib/libhal.a
+v1 HiFi5 (DX-4)
+The libhal.a for DX-3 and DX-4 are the same. If the destination path already has DX-3's libhal.a, there is no need to move DX-4's libhal.a.
+NNE 
+Source:  /vendor/mediatek/proprietary/tinysys/adsp/HIFI5_SP/build/patch/mt6991_b/ libhal.a
+Destination:  /vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI5/3rd_party/hwcfg/RI-2023.11-linux-E/xtensa-elf/arch/lib/libhal.a
+NON-NNE 
+Source:  /vendor/mediatek/proprietary/tinysys/adsp/HIFI5_SP/build/patch/mt6991_a/ libhal.a
+Destination:  /vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI5/3rd_party/hwcfg/RI-2023.11-linux-H/xtensa-elf/arch/lib/libhal.a
+
+
+
+Figure  1 2 . Example of  Makefile Non - support
+
+
+Figure  1 3 . Example of  Makefile Non-support  – Replace by User
+
+
+Figure  1 4 . Example of  Makefile Support  – Replace  by  Makefile
+Tool Chain Version
+Toolchain  Ver .
+Platform
+RG-2017.6
+P90  (AndroidP)
+RI-2018.0
+P90(Android Q~), G90 , 5G_L/H/H+, 5G_A/A+
+RI-2019.1
+5G_B/Next-A/DX-1/Next-A2/DX-P
+RI - 2021.8
+DX-2 / 22H /23P /24P
+RI - 2023.11
+D X- 3 /DX-4
+Compiler
+    The compiler version are listed by toolchain and shown as below:
+Toolchain Ver.
+Compiler
+RG-2017.6 / RI-2018.0 / RI-2019.1
+XCC
+RI - 2021.8 /RI.2023.11
+XT-CLANG
+
+The RI-2021.8 release does not include the legacy Xtensa C/C++ compiler (XCC). As Cadence previously announced, new versions of XCC won’t be released in the future, and Xtensa Software Tools will not include XCC. Cadence will develop new compiler features and support for new language standards exclusively on the XT-CLANG compiler. 
+For the optimization policy, XT-CLANG tends to apply function inlining more aggressively than XCC according to Cadence’s statement. Programs with many small, non-static functions may see a performance boost, but more aggressive inlining may also lead to an increase in code size.
+Build Command
+    The Android full build command will bypass building the HiFiX DSP. We can build the HiFiX DSP by the following commands:
+Android Full Build with HiFiX DSP
+BUILD_WITH_XTENSA=yes   mosesq make -j40 -k 2&gt;&amp;1 | tee b.log    (remove mosesq if you don’t support this command)
+output folder:  {out}/target/product/{project_name}/
+Bulid Tinysys (Both HiFiX and SCP) (A0 structure only)
+BUILD_WITH_XTENSA=yes   vendor/mediatek/proprietary/tinysys/freertos/source/tools/build_tinysys.sh -j24 2&gt;&amp;1 | tee adsp.log
+output folder:  {out}/target/product/{project_name}/
+Build ADSP only
+Path
+HiFi3 A0: $cd vendor/mediatek/proprietary/tinysys/freertos/source
+HiFi3 B0: $cd vendor/mediatek/proprietary/tinysys/adsp/HIFI3
+HiFi5: $cd vendor/mediatek/proprietary/tinysys/adsp/HIFI5_SP
+PROJECT={project_name} make clean;  BUILD_WITH_XTENSA=yes  PROJECT={project_name} make adsp -j24 2&gt;&amp;1 | tee adsp.log
+output folder: 
+HiFi3 A0:  vendor/mediatek/proprietary/ tinysys / freertos /source/ tinysys-scp_out /
+HiFi3 B0:  vendor/mediatek/proprietary/ tinysys / adsp /HIFI3/ tinysys_out
+HiFi5:  vendor/mediatek/proprietary/ tinysys / adsp /HIFI5_SP/ tinysys_out
+Suggested Library Build Flags
+-O3  -Wall  -mcoproc  -Werror  -mlongcalls  -LNO:simd  -ffunction-sections  -Wno-error=format -fdata-sections
+3 rd  Party Libraries
+
+Figure  1 3 .  3 rd  party  library  configurations
+    To enable 3 rd  party library functionalities, please set CFG_3RDPARTY_PROJECT as “yes”, and add a 3 rd  party library to a specified path. Otherwise, it will use a dummy library (just bypass the sound processing). Besides, It will also use dummy lib if the specified path doesn’t exist even if the option is enabled.
+    There is no limitation on the folder path. You can decide the path by yourself and just modify the specified path on the Makefile:
+INCLUDES, C_FILES, and LIBFLAGS
+Folder existence check command:  ifeq ($(shell test -e $(LICENSE_PREBUILD_DIR) &amp;&amp; echo -n yes),yes)
+    Or you can just follow our folder structure, create a folder as the following: (this repo will be removed before release to customer, which is used to place 3rd party libraries.) 
+/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI3/3rd_party/aurisys
+/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI5/3rd_party/aurisys
+    The CFG_3RDPARTY_PROJECT is only set as yes in MTK's Internal test. The default released dsp image will be compiled without setting CFG_3RDPARTY_PROJECT. This is because MTK doesn't have the rights to release 3rd party library to customers directly. You don't need to follow MTK's rule. You can  just set CFG_3RDPARTY_PROJECT as no and modify the platform.mk to assign the library path directly. However, we suggest to follow the same folder structure so that you don't need to modify platform.mk everytime when there's a new patch release which contains the platform.mk.
+Compile  MTK In-house  DSP /RV55  –  share d  SCP  software
+Config uration
+F or  platforms   shared  SCP software , there is no standalone ADSP subsystem ;  the option MTK_AUDIODSP_SUPPORT is  configured  to  n o. But configure adsp_type to RV55 in kernel DTS and  CFG_SCP_AUDIO_FW_SUPPORT in tinysys SCP to indicate that  audio offload is supported on  the  SCP subsystem .
+Feature
+Option
+Location
+Audio DSP merged in SCP sub sys
+CFG_SCP_AUDIO_FW_SUPPORT
+platform.mk in SCP
+Offload Codec
+MTK_AUDIO_TUNNELING_SUPPORT
+ProjectConfig.mk
+Voice Call Speech Enhancement in Audio DSP
+MTK_AURISYS_PHONE_CALL_SUPPORT
+ProjectConfig.mk
+Offload VOIP/Record
+VIR_VOIP_RECORD_AUDIODSP_SUPPORT
+
+
+Build Server
+Cadence  recommended to use  Red Hat Enterprise  (officially supported platform), if you don’t have RHEL, you can use CentOS instead.
+While  they  do not officially support  U buntu, we are able to install Xtensa tools on  Ubuntu  Linux14.04  without issues.
+Makefile Locations:
+Android:  device\mediatekprojects
+Kernel: N/A
+RV55:   vendor\mediatek\proprietary\tinysys\scp
+Audio DSP 
+AP Configuration:  MTK_TINYSYS_SCP_SUPPORT
+Kernel Configuration:  CONFIG_   MTK_TINYSYS_SCP_SUPPORT
+DSP Configuration:  CFG_SCP_AUDIO_FW_SUPPORT
+Note:
+DSP configuration is the main switch of Audio DSP on  platforms  shared SCP software.
+Voice Call Speech Enhanement
+Note
+An Inspection mechanism to check consistency of Android, Kernel, and DSP configurations
+The speech enhancement would be executed in the Modem side if we disable the option.
+AP Configuration:  MTK_AURISYS_PHONE_CALL_SUPPORT
+Kernel Configuration:  CONFIG_MTK_AURISYS_PHONE_CALL_SUPPORT
+DSP Configuration:  CFG_MTK_AURISYS_PHONE_CALL_SUPPORT
+VOIP/Recording
+Note
+DSP option is always on
+Use  VIR_VOIP_RECORD_AUDIODSP_SUPPORT  defined in the XML to enable/disable the DSP feature
+3 rd  party Library
+Note
+The 3rd party library should be released by the 3rd party. MTK will verify 3rd party library internally and remove them before release
+Compare to  Cadence  HiFi series, n o  DSP configuration  is needed  for  MTK In-house  RV DSP platform  t o enable the functionalities the 3 rd  party library. 
+Default Image
+Compare to Cadence HiFi series, no additional license is required to build DSP images on MTK In-house RV DSP platform. DSP source code is built along with alps project build.
+Tool Chai n
+MDSP PDK version v1.10.0 and later for  platforms  shared SCP software . Please contact MTK MDSP team to get the suitable version of PDK for the product line.
+Build Command
+The Android full build and SCP partial build are both available to build  MTK In-house  RV DSP image from source code.   For SCP partial build, you can use the following commands,
+Build SCP only
+Path
+$cd vendor/mediatek/ proprietary/tinysys /scp
+PROJECT= {project_name}   TARGET_BOARD_PLATFORM= {platform }  BUILD_TYPE=debug make -j 36 2&gt;&amp;1 | tee  scp .log
+Output folder :
+vendor/mediatek/proprietary/tinysys/scp/tinysys_out
+Suggested Library Build Flags
+-O3  -Wall  -mcoproc  -Werror  -mlongcalls  -LNO:simd  -ffunction-sections  -Wno-error=format -fdata-sections   -funwind-tables
+-funwind-tables  tells the compiler to generate .eh_frame which is used in runtime backtrace. It starts to  be supported from CodeLine version 300.
+Please note that if the build flag does not include the  -funwind-tables  flag, it will not be possible to resolve the backtrace within the library at runtime. However, if only the  -g  flag is added, although the backtrace cannot be resolved at runtime, it can still be analyzed in lldb.
+3 rd  Party Libraries
+There is no limitation on the folder path. You can decide the path by yourself and just modify the specified path on the Makefile:
+INCLUDES, C_FILES, and LIBFLAGS
+Folder existence check command:  ifeq ($(shell test -e $(LICENSE_PREBUILD_DIR) &amp;&amp; echo -n yes),yes)
+    Or you can just follow our folder structure, create a folder as the following: (this repo will be removed before release to customer, which is used to place 3rd party libraries.) 
+/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/RV55/3rd_party/aurisys
+C ompile  MTK In-house  DSP /RV55V &amp; /RV55  – Standalone ADSP  software
+C onfiguration
+F or platforms  using   MTK In-house  RV  DSP ( standalone ADSP ) ,  features and options are the same as the platforms using Cadence Hifi DSP.
+Feature
+Option
+Location
+Audio DSP (main switch of DSP)
+MTK_AUDIODSP_SUPPORT
+ProjectConfig.mk
+Offload Codec
+MTK_AUDIO_TUNNELING_SUPPORT
+ProjectConfig.mk
+Voice Call Speech Enhancement in Audio DSP
+MTK_AURISYS_PHONE_CALL_SUPPORT
+ProjectConfig.mk
+Offload VOIP/Record
+VIR_VOIP_RECORD_AUDIODSP_SUPPORT
+
+
+Build Server
+The Ubuntu 16.04 is recommended for MTK In-house RV SDK tools. Other environment requirements please refer to the document  Mediatek DSP – MRV Platform SDK User Manual.pdf   from DMS release.
+Makefile Locations:
+Android:  device\mediatekprojects
+Kernel:
+RV55:   vendor\mediatek\proprietary\tinysys\adsp\riscv
+Audio DSP (The main switch of Audio DSP)
+Configuration Check
+We have an inspection mechanism that the configurations of Android, Kernel, and DSP should be matched.
+AP Configuration:  MTK_AUDIODSP_SUPPORT
+Kernel Configuration:  CONFIG_MTK_AUDIODSP_SUPPORT
+DSP Configuration:  CFG_MTK_AUDIODSP_SUPPORT
+Voice Call Speech Enhanement
+Note
+An Inspection mechanism to check consistency of Android, Kernel, and DSP configurations
+The speech enhancement would be executed in the Modem side if we disable the option.
+AP Configuration:  MTK_AURISYS_PHONE_CALL_SUPPORT
+Kernel Configuration:  CONFIG_MTK_AURISYS_PHONE_CALL_SUPPORT
+DSP Configuration:  CFG_MTK_AURISYS_PHONE_CALL_SUPPORT
+VOIP/Recording
+Note
+DSP option is always on
+Use  VIR_VOIP_RECORD_AUDIODSP_SUPPORT  defined in the XML to enable/disable the DSP feature
+3 rd  party Library
+Note
+The 3rd party library should be released by the 3rd party. MTK will verify 3rd party library internally and remove them before release
+Compare to Cadence HiFi series, no DSP configuration is needed for MTK In-house RV DSP platform to enable the functionalities the 3 rd  party library . 
+Default Image
+Compare to Cadence HiFi series, no additional license is required to build DSP images on MTK In-house RV DSP platform. DSP source code is built along with alps project build.
+Tool Chain
+Please contact MTK MDSP team to get the suitable version of PDK for the product line.
+B uild Command
+The Android full build and ADSP partial build are both available to build MTK In-house RV DSP image from source code. For ADSP partial build, you can use the following commands,
+Build ADSP only
+Path
+$cd vendor/mediatek/proprietary/tinysys/adsp/riscv
+PROJECT={project_name} TARGET_BOARD_PLATFORM={platform} BUILD_TYPE=debug make -j 36 2&gt;&amp;1 | tee adsp.log
+Output folder:  
+vendor/mediatek/proprietary/tinysys/adsp/riscv/tinysys_out
+S uggested Library Build Flags
+Please refer to  Mediatek DSP – MRV Platform SDK User Manual.pdf  from DMS release. 
+3 rd  Party  Libraries
+There is no limitation on the folder path. You can decide the path by yourself and just modify the specified path on the Makefile:
+INCLUDES, C_FILES, and LIBFLAGS
+Folder existence check command:  ifeq ($(shell test -e $(LICENSE_PREBUILD_DIR) &amp;&amp; echo -n yes),yes)
+    Or you can just follow our folder structure, create a folder as  follows : (this repo will be removed before release to customer, which is used to place 3rd party libraries.) 
+/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/RV55/3rd_party/aurisys
+Download by Flashtool
+    The DSP image can be downloaded to the MTK devices  using Flashtool, as shown in  the following figure.   For  the Cadence HiFi series platform and the MTK In-house RV DSP (standalone ADSP), please select the partition  name  audio_dsp.img. For platform s  share d  SCP  software ,  for example, 24M , please select scp.img .
+     In addition to replacing the adsp image, the preloader image also needs to be replaced with the DIS_SBOOT version, such as preloader_$PROJECT_DIS_SBOOT.bin. If there are two preloader images, preloader_a and preloader_b, on the  F lashtool, please replace both with the DIS_SBOOT version of the image.  
+
+Figure  1 4 .  Flashtool to update Audio DSP Image
+
+Figure  1 5  Flashtool to Update Preloader Image
+Software Architecture
+Free-RTOS
+The current FreeRTOS version  for all   projects  is shown in the below table . Generally, the user of Audio DSP doesn’t need to modify the code of the RTOS.
+Projects
+FreeRTOS version
+5G-L/H/H+, 5G-A, 5G-B, 5G-C,
+Next D, Next A, Next A2, 22H, 23P, 24P,
+DX-1, DX-1 Pro, DX-P, DX-2, DX-3, DX-4
+10.1.0
+24M
+10.1.0.1
+DX-5 ,  25Ms,  26M
+11.0.0
+
+Heap Size
+    The heap size of  Cadence HiFi  DSP  and  MTK In-house  RV  DSP ( standalone ADSP )   is defined in:
+A0 structure:
+\vendor\mediatek\proprietary\tinysys\freertos\source\project\HIFIx_A\mtxxxx\platform\platform.mk
+###################################################################
+# Heap size config
+###################################################################
+# default heap size
+CFLAGS += -DconfigTOTAL_HEAP_SIZE='( ( size_t ) ( 2 * 1024 * 1024 ) )'
+
+\vendor\mediatek\proprietary\tinysys\freertos\source\project\HIFIx_A\mtxxxx\platform\inc\FreeRTOSConfig.h
+/* Minimal heap size to make sure examples can run on memory limited
+   configs. Adjust this to suit your system. */
+#ifndef configTOTAL_HEAP_SIZE
+#define configTOTAL_HEAP_SIZE           ( ( size_t ) (256 * 1024) )
+#endif
+
+
+
+B 0 structure  for Cadence HiFi DSP :
+\vendor\mediatek\proprietary\tinysys\adsp\HIFI3\project\mtxxxx\HIFI 3 _ x  \platform\platform.mk \vendor\mediatek\proprietary\tinysys\adsp\HIFI5_SP\project\mtxxxx\HIFI5_x \platform\platform.mk
+###################################################################
+# Heap size config
+###################################################################
+# default heap size
+CFLAGS += -DconfigTOTAL_HEAP_SIZE='( ( size_t ) ( 2 * 1024 * 1024 ) )'
+
+
+
+\vendor\mediatek\proprietary\tinysys\ adsp\HIFI3 \project\mtxxxx \HIFI3_x  \platform\inc\FreeRTOSConfig.h \vendor\mediatek\proprietary\tinysys\adsp\HIFI5_SP\project \mtxxxx \HIFI5_x   \platform\inc\FreeRTOSConfig.h
+/* Minimal heap size to make sure examples can run on memory limited
+   configs. Adjust this to suit your system. */
+#ifndef configTOTAL_HEAP_SIZE
+#define configTOTAL_HEAP_SIZE           ( ( size_t ) (256 * 1024) )
+#endif
+
+
+
+B 0 structure for  MTK In-house  RV  s tandalone ADSP
+\vendor\mediatek\proprietary\tinysys\adsp\riscv\project\mtxxxx\RV55_X \platform\platform.mk
+###################################################################
+# Heap size config
+###################################################################
+# default heap size
+CFLAGS += -DconfigTOTAL_HEAP_SIZE='( ( size_t ) (  4.5  * 1024 * 1024 ) )'
+
+
+
+\ vendor\mediatek\proprietary\tinysys\adsp\ riscv \project \mtxxxx \ RV5 5_x   \platform\inc\FreeRTOSConfig.h
+/* Minimal heap size to make sure examples can run on memory limited
+   configs. Adjust this to suit your system. */
+#ifndef configTOTAL_HEAP_SIZE
+#define configTOTAL_HEAP_SIZE           ( ( size_t ) (256 * 1024) )
+#endif
+
+
+
+The heap size of SCP is defined in:
+\vendor\mediatek\proprietary\tinysys\scp\project\RV55_A\mtxxxx\platform\platform.mk
+ifeq ($(CFG_MTK_AURISYS_PHONE_CALL_SUPPORT),yes)
+$(eval TOTAL_HEAP_SIZE=$(shell echo $$(($(TOTAL_HEAP_SIZE) +  (2 * 1024) ))))
+endif
+
+
+    You can modify the heapsize if needed. If the heap size is defined both in platform.mk and FreeRTOSConfig.h, the value of platform.mk will be adopted.
+Audio Framework
+    As the following figure depicts, the data path of each scenario is already defined, and the required task will be created. What the user need to do is to add or replace your audio/voice effect upon the created tasks. For example, the user can add more supported offload codec in the offload task, and add audio effect (please refer  to the  Aurisys Introduction.pptx )in the primary task, etc. Please contact Mediatek if you need to create a new scenario or an application with different data flow.
+
+
+Figure  2 1 .  Audio Framework
+Aurisys
+Abstract
+The requirement for sound quality enhancements that add listening pleasure has been increasing. To enrich the listening experience of using mobile devices, there is an increasing number of sound processing solutions provided by vendors.
+Aurisys is introduced to facilitate the sound processing solution development and use of MTK platforms. Aurisys is a framework constructed upon Android Audio Framework. It includes standardized interfaces for sound processing and tuning, integrated DSP sound subsystem, and software debug interface.
+Aurisys Aims
+  As the following figure depicts, our target  is to make the replacement/integration of vendor IPs as convenient as possible. We defined a standardized interface to which is platform-independent, so that the software can be re-used. By following the user interface standards we create a more consistent experience for the developers. Please refer to the following document to get more detailed information:  Aurisys_Introduction, Aurisys_Tuning_Guide,  and Lib_Verifier_User_Guide .
+
+Figure  2 2 .  Concept of Aurisys
+
+Development Flow
+
+Figure  2 3 .  Aurisys Development Flow
+Software Development Guidance
+Scenario Based DVFS
+We don’t have an automatic DVFS mechanism to detect current DSP loading and adjust the DSP clock rate automatically. What we do is to register a clock rate requirement table for a specified application. When the application starts, a provided API would be called to notify the system. Then the system will adjust the clock rate, according to the sum of clock rate requirement for active applications.
+    The clock rate requirement change would happen when an application is active, the sampling rate is changed, or the device is changed. The clock registered API should be called when these events happen.
+
+Figure  3 1 .  Scenario Based DVFS flow (P80 as example)
+A clock rate requirement callback function should be implemented. This function is used to look up the MCPS under a specified parameter. For customization, what we need to do is to modify the MCPS table. Note that we can register several libraries to one application. For example, a playback application can have SRC, DC removal, shifter, and playback effects. Once a playback application is activated, the clock rate requirements of all libraries registered in this application would be counted.
+Figure  3 2 .  MCPS Lookup Flow
+The following are the related files: 
+Path  (HIFI3/HIFI5)
+File
+Description
+drivers/HIFIX_A/[project]/feature_manager/inc/
+feature_manager.h
+Feature ID and SWIP ID definition
+drivers/HIFIX_A/[project]/feature_manager/src
+feature_manager.c
+Feature management; feature enable/disable API; update total MCPS information API
+drivers/HIFIX_A/[project]/dvfs/inc
+dvfs_config_parser.h
+Declare MCPS lookup callback function and dvfs_swip_config_t
+
+dvfs_swip_table.h
+MCPS lookup callback function required definitions
+
+dvfs.h, dvfs_common.h
+DVFS driver required definitions
+drivers/HIFIX_A/[project]/dvfs/src
+dvfs_config_parser.c
+MCPS lookup callback function implementation
+
+dvfs.c, dvfs_common.c
+DVFS driver
+    If you want to create a new library by yourself, you need to register a callback function first as the following example. Note that the look up callback function should be registered by each library. Then we can use this API  dvfs_add_swip(Feature_ID, SWIP_ID, adsp_dvfs_swip_config)  to link the library (SWIP ID) and the application (Feature ID). It is allowed to link multiple libraries to an application.
+
+Figure  3 3 .  Register a callback function
+    Then the second step is to implement a look up callback function as follows:
+
+Figure  3 4 .  MCPS Look up Callback Function Example
+
+Audio Effects
+ACF Working Flow on DSP
+Audio Compensation Filter (ACF) is used for compensating the audio quality according to physical case. ACF is applied on audio stream during audio playback.  For ACF on HIFI3, ACF related configurations and control flow are controlled by AP side (e.g. IIR coefficient, ACF switch and Loudness switch), and process is on HIFI3 side .
+Android
+File Name
+Path
+Related Customizaiton
+aurisys_config_hifi3.xml
+aurisys_config_rv.xml
+a urisys_config_adsp.xml
+\vendor\mediatek\proprietary\external\aurisys
+(phone path :) system\vendor\etc\
+Depicts the library’s capability and using scenario.
+PlaybackACF_AudioParam.xml
+\device\mediatek\common\audio_param\
+(phone path :) system\vendor\etc\audio_param
+High-pass IIR coefficient
+Band-pass IIR coefficient
+Low-pass IIR coefficient
+audio_custom_exp.h
+\vendor\mediatek\proprietary\custom\(%porj)\hal\audioflinger\audio
+Turn on/off ACF (ENABLE_AUDIO_COMPENSATI ON_FILTER)
+MtkAudioLoudc.c
+\vendor\mediatek\proprietary\external\aurisys\libaudio
+loud\
+(phone path :) system\vendor\lib\libaudioloudc.so
+ACF/DRC/HCF  aurisys parsing library wrapper  implementation
+MtkAudioLoudc.h
+\vendor\mediatek\proprietary\external\aurisys\libaudioloud \
+ACF/DRC/HCF  aurisys parsing library wrapper header file
+AudioCompFltCustParamc.c
+\vendor\mediatek\proprietary\external\AudioCompensationFilter\
+Interact with AudioParamParser ,getting parameters from XML 
+AudioCompFltCustParamc.h
+\vendor\mediatek\proprietary\external\AudioCompensationFilter\
+C code implementation header file for param related function.
+AudioCompensationFilterc.h
+\vendor\mediatek\proprietary\external\AudioCompensationFilter\3
+C code implementation header file, define audio compensation type and mode.
+arsi_besloudness.c
+\vendor\mediatek\proprietary\tinysys\freertos\source\middleware\lib\aurisys\lib\common\libbesloudness
+ACF/DRC/HCF  aurisys prosessing library wrapper  implementation
+arsi_besloudness.h
+\vendor\mediatek\proprietary\tinysys\freertos\source\middleware\lib\aurisys\lib\common\libbesloudness
+ACF/DRC/HCF  aurisys prosessing library wrapper header file
+libbesloudness.a
+\vendor\mediatek\proprietary\tinysys\freertos\source\middleware\lib\audio\hifi3\libbesloudness
+ACF/DRC/HCF library on HIFI3
+We separate ACF working folw for two parts: paring part on AP side, and processing part on DSP side. The
+post process will be triggered and done through the ARSI standard interface. Belows are the changes in our design. 
+In  aurisys_config_ adsp .xml   in  vendor\mediatek\proprietary\external\aurisys
+Add BesSound libarary description on DSP
+In  vendor\mediatek\proprietary\external\aurisys\libaudioloud   add below files for parameter parsing
+MtkAudioLoudc.c
+MtkAudioLoudc.h
+In  vendor\mediatek\proprietary\external\AudioCompensationFilter  b add
+AudioCompFltCustParamc.c
+AudioCompFltCustParamc.h
+In vendor\mediatek\proprietary\tinysys\freertos\source\middleware\lib\aurisys\lib\common\ libbesloudness add below files for processing
+arsi_besloudness.c
+arsi_besloudness.h
+In  audio hal, vendor\mediatek\proprietary\hardware\audio, we use
+  #define MTK_AUDIODSP_SUPPORT  and  MTK_AURISYS_FRAMEWORK_SUPPORT   to identify the new process method. 
+The compile option is set in  device\mediatek\{project}\ProjectConfig.mk      
+At the bootup stage, the ARSI framework init ialize  and reads  the content of  aurisys_config_ adsp .xml , establishing the framework function links and libraries’ function links. When first running ACF, the AudioParamParser reads back the paramenters in  PlaybackACF_AudioParam.xml  and stores in the structure.  The processing starts from AudioDspStreamManager, which send playback data to DSP for processing. Through the aurisys framework, we use the generic interface  aurisys_process_dl_only  on DSP  as the process entry.
+1. Record current scenario, output configs and library lists 2. The input buffer for library processing 3. The output buffer after library processing  aurisys_process_dl_only ( mAurisysLibManager, mAudioPoolBufDlIn,  mAudioPoolBufDlOut );
+1. Record current scenario, output configs and library lists
+2. The input buffer for library processing
+3. The output buffer after library processing
+
+ aurisys_process_dl_only (
+mAurisysLibManager, mAudioPoolBufDlIn,  mAudioPoolBufDlOut );
+
+
+
+
+    The working  flow is depicted as below, there are five functional blocks.  Application UI, Framework, Audio HAL, Device and External hal. The Aurisys Framewok is implemented in Audio Hal and related ARSI general API and  aurisys_config.xml  are defined in external block.
+( 3 ) ( 5 ) ( 4 ) ( 2 ) ( 2 ) (1)
+( 3 )
+( 5 )
+( 4 )
+( 2 )
+( 2 )
+(1)
+The aurisys framework is initialized by AudioALSAHardware when audioserver start.
+During  the initialization stage, the aurisys controller parse  aurisys_config_ adsp .xml , establishing the function callback between library and framework, and dlopen audiofmtconvlibraries (bit converter, samplerate converter.) and pass the library configuration to DSP .
+For ACF library, we  parse the  ACF_param.xml  and store  the parameters into the structure. These  parameters set the processing frequency and generate corresponding filtercoefficients. 
+When normal or fast playback starts, we create AudioDspStreamManager to handle the mixed playback stream, and create libmanager and libhandler to handle the processing flow under this scenario. As we can retrieve the stream and hardware info, we store these information and provide to the aurisys framework. Library could use those info to parse libaray parameter.
+After parsing library parameter, aurisys framework will pass the parameter form AP to DSP.
+The post-processing is done by calling   aurisys_process_dl_only()   . The framework handles the data transformation and operates with libraries through ARSI generic interface. If the playback setting is not compatible to the library setting, the Aurisys Framework  will trigger samplerate converter or bit converter to do the transformation. This ensure the process can be done without library modification.
+There are two key points for the libray  porting on DSP .
+One is to depicts the library configuration in  aurisys_config_ adsp .xml .
+Anothor one is to implement the wrapper between ARSI interface and library functions.
+    In  aurisys_config_ adsp .xml , we first indicate the using scenario and list the library component used. We depict the library’s attribute, such as file path, library supported samplerate, processing format, frame size,  data buffer type (uplink or downlink), channel number, and debug level….etc. These attributes are compared to the input pcm data and indicate the library setting  during processing. The user can change the library setting by simply modify the xml file. This enlarge the flexibility and reduce the coding effort.
+
+
+To implement the wrapper between library and ARSI interface, we comparing and mapping their functionality as the table shows. 
+
+mapping the interface between ARSI and Effect
+Dynamic turn on/off library log using adb command
+Besides setting xml, user can runtime key in adb debug command to enable/disable library processing log in mobile log.
+ON
+adb shell &quot;AudioSetParam AURISYS_SET_PARAM, DSP,PLAYBACK ,MTKBESSOUND,ENABLE_LOG, 1 =SET&quot;
+OFF
+adb shell &quot;AudioSetParam AURISYS_SET_PARAM, DSP,PLAYBACK ,MTKBESSOUND,ENABLE_LOG, 0 =SET&quot;
+
+
+Audio Loudness  Working Flow on DSP
+Loudness (DRC)  is  an audio post-processing technique to improve the loudness of audio signal and ringtone playback by using dynamic range control and frequency component manipulation 
+
+Android
+File Name
+Path
+Related Customizaiton
+PlaybackDRC_AudioParam.xml
+\ device\mediatek\common\audio_param \
+DRC related coefficient  for audio and ringtone
+
+
+
+
+ProjectConfig.mk
+
+
+
+
+device\ mediatekprojects \(%proj)\
+Is the platform support  Loudness  MTK_BESLOUDNESS_SUPPORT
+
+
+Is the platform support  Loudness  processing on HAL layer
+MTK_BESLOUDNESS_ RUN_WITH_HAL
+( Trun on need to  combine  with MTK_AURISYS_FRAMEWORK_SUPPORT=yes)
+DRC in HAL path
+MtkAudioLoudc.c
+\vendor\mediatek\proprietary\external\aurisys\libaudioloud \
+(phone path :) system\vendor\lib\libaudioloudc.so
+ACF/DRC/HCF  aurisys wrapper  implementation  for library parameter parsing
+MtkAudioLoudc.h
+\vendor\mediatek\proprietary\external\aurisys\libaudioloud \
+ACF/DRC/HCF  aurisys wrapper header file
+Android.mk
+\vendor\mediatek\proprietary\external\aurisys\libaudioloud \
+Check ProjectConfig MTK_BESLOUDNESS_SUPPORT&amp;MTK_BESLOUDNESS_RUN_WITH_H AL.
+Turn on DRC apply into HAL  layer
+DRC in HIFI3 path
+arsi_besloudness.c
+\vendor\mediatek\proprietary\tinysys\freertos\source\middleware\lib\aurisys\lib\common\libbesloudness
+ACF/DRC/HCF  aurisys prosessing library wrapper  implementation
+arsi_besloudness.h
+\vendor\mediatek\proprietary\tinysys\freertos\source\middleware\lib\aurisys\lib\common\libbesloudness
+ACF/DRC/HCF  aurisys prosessing library wrapper header file
+libbesloudness.a
+\vendor\mediatek\proprietary\tinysys\freertos\source\middleware\lib\audio\hifi3\libbesloudness
+ACF/DRC/HCF library on HIFI3
+Generally, the  Loudness (DRC)  parameters are stored in  XML .
+In the case, when the first time of  Loudness (DRC)  processing, the  Loudness (DRC)  parameters will be applied as the default  Loudness (DRC)  parameter listed in  PlaybackDRC_AudioParam.xml .
+Then users can modify some parameters in Audio Tool if needed.
+If  config  MTK_BESLOUDNESS_SUPPORT  = yes   and  MTK_BESLOUDNESS_ RUN_WITH_HAL = yes  and  MTK_AUDIODSP_SUPPORT = yes
+The  HAL  working flow of Loudness (DRC) will be show as the figure below:
+
+Figure  3 5 . DRC Working  at  DSP  overview
+Config DRC enable
+Config DRC enable
+Figure  3 6 .  DRC Working  at  DSP  Flow
+Debug SOP
+Issue Feedback to MTK
+     For  Cadence  HiFi series  and MTK In-house RV  ( standalone ADSP )  series ,  p lease refer to  DOC\ADSP_Debugging_Guideline.docx  for detail.
+For  platforms  share d  SCP  software , please find   document  MTxxxx_SCP_Development_Guide.docx   from DMS release.
+Performance Issue
+    If  a  performance issue happens (underflow, timeout, etc,.). Please  refer to  DOC\ADSP_Profiling_Guideline.docx  for  details .
+Enable UART log
+Port
+23P /24P : please use  UART3
+Other platforms: please use  UART2
+Configurations
+CFG_UART_SUPPORT = yes
+For Cadence HiFi DSP
+project\mt6xxx\HIFIx_A\platform\platform.mk       ##DSP A
+project\mt6xxx\HIFIx_B\platform\platform.mk       ##DSP B
+For MTK In-house RV DSP (Standalone ADSP)
+project\mt6xxx\RV55_A\platform\platform.mk       ##DSP A
+project\mt6xxx\RV55_B\platform\platform.mk       ##DSP B
+Adb command
+adb shell &quot;echo uart_en 1 &gt; sys/kernel/debug/audiodsp0&quot;          ##DSP A
+adb shell &quot;echo uart_en 1 &gt; sys/kernel/debug/audiodsp1&quot;         ##DSP B
+Integration Guideline
+Get the Development Tools
+Apply for an Account
+    Please make sure you’ve sign the NDA first.
+https://online.mediatek.com/_layouts/15/mol/accountprofile/account_only_for_user.aspx
+
+Figure  5 1 .  Account Application Guilde Step 1
+
+Figure  5 2 .  Account Application Guilde  Step  2
+
+Figure  5 3 .  Account Application Guilde Step 3
+    Note that what you need is FEX (so that we can send the software release by e-mail to your account), and MOL (so that you can download the required tools on the website). Please also  indicate that you need the authority  of WCX SP Tool in the application form.
+Download the Released Software to the Device
+    Then you’re allowed to search and download tools from MOL website:  https://online.mediatek.com/
+    To downloadthe software to the device, please download flashtool in the website. You can also find the latest aurisys here.
+
+Figure  5 4 .  MOL Example
+
+Scatter File
+    You can find the  MT XXXX _Android_scatter  in  out_[project]/target/product/[project]  folder. If you didn’t get the modem image in the software release, you need to remove the following Modem description of the scatter file:
+
+Figure  5 5 . Modem Image Description in  Scatter File
+     If it doesn’t work, please try to modify the description as follows:
+File_name: NONE
+Is_download: false
+Download Whole Software Load
+     Please refer to  Download by Flashtool . Please select “format all + download” in the first use of the device.
+Download Step
+Load the scatter file
+Press the download button
+Plugin USB cable to the device (w/o battery, then the flash tool will start the download process. 
+Another way is plugin the USB cable to the device first, and then press download button; finally, reboot the device.
+Update DSP Only
+    After the full software is downloaded to the device, then you can update dsp binary when needed. Please just select and update audio_dsp, and then select download only. 
+   To download audio dsp only, you need to disable verify boot   and re-compile the android load.
+Disable Verify boot
+vendor/mediatek/proprietary/bootable/bootloader/preloader/custom/[project_name]/[project_name].mk
+MTK_SEC_USBDL=ATTR_SUSBDL_DISABLE
+MTK_SEC_BOOT=ATTR_SBOOT_DISABLE
+Integration
+Environment
+Toolchain
+The toolchain for  MTK In-house RV DSP platforms  (both SCP / ADSP Co-subsys and Standalone ADSP) is built in the alps project , so t here is no need to create a path to place the toolchain.
+MTK won’t release toolchain  for Cadence HiFi DSP platforms , so the toolchain folder will be removed before we release the codebase, please create the folder and license the toolchain from Cadence .
+Please create a folder in the following path: 
+/prebuilts/xcc/linux-x86/xtensa/[version]-linux/XtensaTools 
+/prebuilts/clang/xtensa/linux-x86/[version]-linux/XtensaTools 
+For example, If the toolchain version is RI-2019.1, please create a folder in the following path:  /prebuilts/xcc/linux-x86/xtensa/RI-2019.1-linux/XtensaTools
+Then please copy the licensed toolchain into this created folder.
+Hwcfg
+The hwcfg for  MTK In-house RV DSP platforms  (both SCP / ADSP Co-subsys and Standalone ADSP) is built in the alps project, so there is no need to create a path to place the hwcfg.
+Please refer to  Aurisys_exe_Vx.xxxx.xx\CONFIG\Readme  to check which version of hwcfg you should use
+For example, if you use 5G_B, then create a folder in the following path: 
+/vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/HIFI3/3rd_party/hwcfg/RI-2019.1-linux/
+Then you can find xtensa-elf, misc, and config folder in RI-2019.1-linux.rar (from Aurisys_exe_Vx.xxxx.xx\CONFIG\HiFi3\Linux\RI-2019.1-linux\v1), please copy them to the folder you just created.
+
+Param
+The param file for  MTK In-house RV DSP platforms  (both SCP / ADSP Co-subsys and Standalone ADSP) is built in the alps project, so there is no need to copy a param file.
+If you use 5G_B, from   Aurisys_exe_Vx.xxxx.xx\CONFIG\Readme , you should use RI-2019.1-linux. You can find mt6853.params in v1\RI-2019.1-linux.rar
+Copy the mt6853.params to the following path:  (create the folder if it doesn’t exit)
+/prebuilts/xcc/linux-x86/xtensa/RI-2019.1-linux/XtensaTools/config/
+
+DSP Library
+The vendor library would also be removed before we release the codebase
+The library path is not limited, as long as you add the specified path  in  the makefile.
+The library path in MTK codebase is (please create it if it doesn’t exist)  vendor/mediate/proprietary/tinysys/adsp/license/prebuilt/HIFIX/3rd_party/aurisys  (for Cadence HiFi DSP) vendor/mediate/proprietary/tinysys/adsp/license/prebuilt/RV55/3rd_party/aurisys (for MTK In-house RV DSP)
+Please create your lib folder in above path
+
+Then modify the makefile so that we can link to your lib; the makefile path s are shown below.  M akefile path for MTK In-house RV DSP (SCP/ADSP Co-subsys) platforms please refer to  MTxxxx_SCP_Development_Guide.docx :
+HIFI3 A0: /tinysys/freertos/source/project/HIFI3_A/mtxxxx/platform/platform.mk
+HIFI3 B0: /tinysys/adsp/HIFI3/project/mtxxxx/[HIFI3_X]/platform/platform.mk
+HIFI5 B0: /tinysys/adsp/HIFI5_SP/project/mtxxxx/[HIFI5_X]/platform/platform.mk
+riscv:  /tinysys/adsp/riscv/project/mtxxxx/[ RV55 _X]/platform/platform.mk
+Note that $(THIRDPARTY_LIB_DIR) indicates to tinysys/adsp/license/prebuilt/HIFIX/3rd_party
+The macro is not applicable to MTK In-house RV DSP platforms.
+Feature Distribution
+    If there is dual core, the feature distributions are pre-defined as follows:
+    DSP Core
+Feature
+Core  A
+DL (Codec/ Audio Effect/ SmartPA/ VOIP DL)
+Core  B
+UL (VOIP UL/ Phone Call/ Record/ Ear Return)
+Aurisys Porting Guide
+A tipical aurisys library on ADSP has following three parts:
+AP  side  parser library
+DSP/SCP side process library
+Aurisys config
+AP Side Parsing Library
+Use  foobar  as example, need add or modify below files for AP side parsing library
+
+Path
+File
+Description
+vendor/mediatek/proprietary/external/aurisys/ libfoobar
+aurisys_foo_bar_parsing_lib.c
+Aurisys AP parser library
+
+aurisys_foo_bar_lib _private_type.h
+
+
+Android.mk
+Make file for libfoobar.so
+device/mediatek/vendor/common
+device.mk
+For product packages
+In  vendor/mediatek/proprietary/external/aurisys/ libfoobar
+Put library parsing code (for example  aurisys_foo_bar_parsing_lib.c  and  aurisys_ foo_bar_lib _private_type.h ) in this folder  
+In  device/mediatek/vendor/common
+Add below line to add to package share library to vendor image (for example  libfoobar ).
+PRODUCT_PACKAGES   += libfoobar
+DSP/SCP Side Process Library
+Path
+File
+Description
+vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/ ( HIFI 3  or HIFI5  or RV55 )  /3rd_party/aurisys/ libfoobar
+aurisys_foo_bar_processing_lib.c
+Aurisys DSP process lib
+
+aurisys_foo_bar_lib _private_type.h
+
+vendor/mediatek/proprietary/tinysys/private/middleware/aurisys/ libfoobar
+
+Aurisys SCP process lib
+
+foo_bar_lib.a
+
+vendor/mediatek/proprietary/tinysys/freertos/source/middleware/lib/aurisys/interface
+arsi_library_entry_points.h
+For A0 structure static library link
+vendor/mediatek/proprietary/tinysys/common/drivers/audio/aurisys/interface
+
+For B0 structure  and SCP  static library link
+vendor/mediatek/proprietary/tinysys/freertos/source/project/HIFI3_A/$platform/platform
+platform.mk
+For A0 structure adsp makefile
+vendor/mediatek/proprietary/tinysys/adsp/(HIFI3 or HIFI5_SP)   /project/$platform/HIFI3_A/platform
+
+For B0 structure adsp core A makefile
+vendor/mediatek/proprietary/tinysys/adsp/(HIFI3 or HIFI5_SP)   /project/$platform/HIFI3_B/platform
+v endor/mediatek/proprietary/tinysys/adsp/riscv/project/$platform/RV55_A/platform
+v endor/mediatek/proprietary/tinysys/adsp/riscv/project/$platform/RV55_B/platform
+
+For B0 structure adsp core B makefile
+vendor/mediatek/proprietary/tinysys/scp/project/RV55_A/$platform/platform
+
+For SCP makefile
+vendor/mediatek/proprietary/tinysys/scp/project/RV55_A/$platform/$project/inc
+cache_ld.h
+SCP lib DRAM registration (SCP only)
+For  ADSP  in  vendor/mediatek/proprietary/tinysys/adsp/license/prebuilt/(HIFI3 or HIFI5  or RV55 )/3rd_party/aurisys/
+And for  SCP  in vendor/mediatek/proprietary/tinysys/private/middleware/aurisys/
+Put library processing code and static library here
+In
+vendor/mediatek/proprietary/tinysys/freertos/source/middleware/lib/aurisys/interface
+vendor/mediatek/ proprietary/tinysys/common/drivers/audio/aurisys/interface
+Add below code in  arsi_library_entry_points.h
+void foobar_arsi_assign_lib_fp(AurisysLibInterface *lib); //for declaration
+In  AURISYS_LINK_LIB_NAME_TO_API  add:
+} else if (!strcmp(name, &quot;foo_bar&quot;)) {\
+foobar_arsi_assign_lib_fp(api); \
+} /
+For  Cadence HiFi DSP  and  MTK In-house RV DSP (Standalone ADSP)  In  platform.mk , add
+INCLUDES += $(THIRDPARTY_LIB_DIR)/aurisys/ libfoobar /
+C_FILES += $(THIRDPARTY_LIB_DIR)/aurisys/ l ibfoobar / aurisys_foo_bar_processing_lib.c
+LIBFLAGS += -Wl,-L$(THIRDPARTY_LIB_DIR)/aurisys/ libfoobar  -l foobar
+
+And for   MTK In-house RV DSP (SCP/ADSP Co-subsys)  in  platform.mk , add
+INCLUDES += $(PRIVATE_DIR)/middleware/aurisys/ libfoobar /
+C_FILES += $(PRIVATE_DIR)/middleware/aurisys/ l ibfoobar / aurisys_foo_bar_processing_lib.c
+LIBFLAGS += -L$(PRIVATE_DIR)/middleware/aurisys/ libfoobar  -l foobar
+( MTK In-house RV DSP (SCP/ADSP Co-subsys) only ) For SCP in cache_ld.h, add
+#define  CACHE_FOOENH_TEXT  \
+         ?*/../private/middleware/aurisys/libfooobar/libfoobar_processing.a :*.o$(ENH_TEXT_SECTIONS)
+#define CACHE_FOOENH_DATA \
+         ?*/../private/middleware/aurisys/libfooobar/libfoobar_processing.a :*.o$(ENH_DATA_SECTIONS)
+Aurisys Config
+Before Android W:
+Path
+File
+Description
+device/mediateksample/ $project
+aurisys_config_hifi3.xml
+Aurisys config xml  for  ADSP
+device/mediatekprojects/ $project
+
+
+device/mediatek/ $platform
+aurisys_config_rv.xml
+Aurisys config xml for  SCP
+vendor/mediatek/proprietary/external/aurisys
+
+
+After Android W (start from DX5 platform):
+Path
+File
+Description
+device/mediateksample/ $project
+aurisys_config_adsp.xml
+Aurisys config xml for  ADSP/SCP
+device/mediatekprojects/ $project
+
+
+device/mediatek/ $platform
+
+
+vendor/mediatek/proprietary/external/aurisys
+
+
+Aurisys  config hierarchy: 
+device/mediatekprojects/ $project  &gt; device/mediateksample/ $project  &gt; device/mediatek/ $platform  &gt; vendor/mediatek/proprietary/external/aurisys
+If any higher hierarchy folder contain aurisys   config  x ml  files , vendor image will use  it  as final config file.
+In aurisys _config_adsp .xml
+Choose wanted scenario to put your library:
+enum {     /* playback */     AURISYS_SCENARIO_DSP_PRIMARY            = 0,   /* for primary output */     AURISYS_SCENARIO_DSP_OFFLOAD            = 1,   /* for mp3/aac... offload output */     AURISYS_SCENARIO_DSP_DEEP_BUF           = 2, /* for deep output */     AURISYS_SCENARIO_DSP_FAST               = 3, /* for fast output (need 5ms process) */     AURISYS_SCENARIO_DSP_PLAYBACK           = 4, /* last module before hardware if no samrtPA */     /* record */     AURISYS_SCENARIO_DSP_RECORD             = 5,  /* for record (normal record/camcorder …) */     AURISYS_SCENARIO_DSP_RECORD_FAST        = 6,  /* for fast record (need 5 or 10ms process) */     /* call &amp; voip */     AURISYS_SCENARIO_DSP_PHONE_CALL         = 7,  /* for phone call */     AURISYS_SCENARIO_DSP_VOIP               = 8,  /* for VoIP call */     AURISYS_SCENARIO_DSP_CALL_FINAL         = 9,  /* for phone call speaker smartPA process */     AURISYS_SCENARIO_DSP_PLAYBACK_SMARTPA   = 10,  /* for smartPA process */     AURISYS_SCENARIO_DSP_MUSIC              = 11,  /* for deep + primary + offload mix stream */     AURISYS_SCENARIO_DSP_KTV                  = 12,  /* for in-ear monitor */     AURISYS_SCENARIO_DSP_HDR_RECORD   = 13,  /* for HDR record */      AURISYS_SCENARIO_DSP_GAMING           = 14, /* for gam e  mode */     /* control */     AURISYS_SCENARIO_DSP_SIZE,     AURISYS_SCENARIO_DSP_ALL,     AURISYS_SCENARIO_DSP_INVALID = 0xFFFFFFFF };
+enum {
+    /* playback */
+    AURISYS_SCENARIO_DSP_PRIMARY            = 0,   /* for primary output */
+    AURISYS_SCENARIO_DSP_OFFLOAD            = 1,   /* for mp3/aac... offload output */
+    AURISYS_SCENARIO_DSP_DEEP_BUF           = 2, /* for deep output */
+    AURISYS_SCENARIO_DSP_FAST               = 3, /* for fast output (need 5ms process) */
+    AURISYS_SCENARIO_DSP_PLAYBACK           = 4, /* last module before hardware if no samrtPA */
+    /* record */
+    AURISYS_SCENARIO_DSP_RECORD             = 5,  /* for record (normal record/camcorder …) */
+    AURISYS_SCENARIO_DSP_RECORD_FAST        = 6,  /* for fast record (need 5 or 10ms process) */
+    /* call &amp; voip */
+    AURISYS_SCENARIO_DSP_PHONE_CALL         = 7,  /* for phone call */
+    AURISYS_SCENARIO_DSP_VOIP               = 8,  /* for VoIP call */
+    AURISYS_SCENARIO_DSP_CALL_FINAL         = 9,  /* for phone call speaker smartPA process */
+    AURISYS_SCENARIO_DSP_PLAYBACK_SMARTPA   = 10,  /* for smartPA process */
+    AURISYS_SCENARIO_DSP_MUSIC              = 11,  /* for deep + primary + offload mix stream */
+    AURISYS_SCENARIO_DSP_KTV                  = 12,  /* for in-ear monitor */
+    AURISYS_SCENARIO_DSP_HDR_RECORD   = 13,  /* for HDR record */
+     AURISYS_SCENARIO_DSP_GAMING           = 14, /* for gam e  mode */
+    /* control */
+    AURISYS_SCENARIO_DSP_SIZE,
+    AURISYS_SCENARIO_DSP_ALL,
+    AURISYS_SCENARIO_DSP_INVALID = 0xFFFFFFFF
+};
+For example, if want add library for AURISYS_SCENARIO_RECORD, need to add below cofnig in  aurisys_config_ adsp .xml
+In  &lt;aurisys_scenarios&gt; :
+library name in aurisys_scenarios must be same as  lib_name  in  hal_librarys , digital_gain_lib_name must be one of the lib_name in that aurisys scenario. Lib define in  digital_gain_lib_name  means lib  can apply digital gain from aurisys   arsi_set_dl_digital_gain  / arsi_set_u l_digital_gain  APIs &lt;aurisys_scenario aurisys_scenario=&quot;AURISYS_SCENARIO_DSP_RECORD&quot;&gt; &lt;uplink_library_name_list digital_gain_lib_name=&quot; foo_bar &quot;&gt; &lt;library name=&quot; foo_bar &quot;/&gt; &lt;/uplink_library_name_list&gt; &lt;/aurisys_scenario&gt;
+library name in aurisys_scenarios must be same as  lib_name  in  hal_librarys , digital_gain_lib_name must be one of the lib_name in that aurisys scenario. Lib define in  digital_gain_lib_name  means lib  can apply digital gain from aurisys   arsi_set_dl_digital_gain  / arsi_set_u l_digital_gain  APIs
+&lt;aurisys_scenario aurisys_scenario=&quot;AURISYS_SCENARIO_DSP_RECORD&quot;&gt;
+&lt;uplink_library_name_list digital_gain_lib_name=&quot; foo_bar &quot;&gt;
+&lt;library name=&quot; foo_bar &quot;/&gt;
+&lt;/uplink_library_name_list&gt;
+&lt;/aurisys_scenario&gt;
+
+
+In  &lt;hal_librarys&gt; :
+Enable library log Lib rary   s upported samle  rate  and format Define library name/ share library path/ parameter file path / adb_cmd_key here, library name must be the same with lib name defined in  aurisys_demo_lib_private_type.h Lib supported in/out ul process channels Only set frame_size_ms when b_interleve = “0” Else set frame_size_ms = “0”         &lt;library name=&quot;   foo_bar  &quot;                  lib_path=&quot; /vendor/lib/lib foobar .so &quot;                  lib64_path=&quot; /vendor/lib64/lib foobar .so   &quot;                  param_path=&quot; /vendor/etc/lib foobar _param.bin &quot;                  lib_dump_path=&quot;AUTO&quot;                  adb_cmd_key=&quot; LIB_CMD_KEY &quot;&gt;             &lt;components&gt;                 &lt;!-- for aurisys_scene record streamin normal --&gt;                 &lt;component aurisys_scenario=&quot;AURISYS_SCENARIO_DSP_RECORD&quot;                            sample_rate=&quot;48000&quot;                              audio_format=&quot;AUDIO_FORMAT_PCM_16_BIT,AUDIO_FORMAT_PCM_32_BIT&quot;                            frame_size_ms=&quot;20&quot;                            b_interleave=&quot;0&quot;                            enable_log=&quot;0&quot;                            enable_raw_dump=&quot;0&quot;                            enable_lib_dump=&quot;0&quot;                            enhancement_mode=&quot;0&quot;&gt;                     &lt;uplink_process&gt;                         &lt;buf_in  data_buf_type=&quot;DATA_BUF_UPLINK_IN&quot;                                  num_channels=&quot;1,2&quot;/&gt;                         &lt;buf_out data_buf_type=&quot;DATA_BUF_UPLINK_OUT&quot;                                  num_channels=&quot;1,2&quot;/&gt;                     &lt;/uplink_process&gt;                 &lt;/component&gt;             &lt;/components&gt;         &lt;/library&gt;
+Enable library log
+Lib rary   s upported samle  rate  and format
+Define library name/ share library path/ parameter file path / adb_cmd_key here, library name must be the same with lib name defined in  aurisys_demo_lib_private_type.h
+Lib supported in/out ul process channels
+Only set frame_size_ms when b_interleve = “0”
+Else set frame_size_ms = “0”
+        &lt;library name=&quot;   foo_bar  &quot;
+                 lib_path=&quot; /vendor/lib/lib foobar .so &quot;
+                 lib64_path=&quot; /vendor/lib64/lib foobar .so   &quot;
+                 param_path=&quot; /vendor/etc/lib foobar _param.bin &quot;
+                 lib_dump_path=&quot;AUTO&quot;
+                 adb_cmd_key=&quot; LIB_CMD_KEY &quot;&gt;
+            &lt;components&gt;
+                &lt;!-- for aurisys_scene record streamin normal --&gt;
+                &lt;component aurisys_scenario=&quot;AURISYS_SCENARIO_DSP_RECORD&quot;
+                           sample_rate=&quot;48000&quot;  
+                           audio_format=&quot;AUDIO_FORMAT_PCM_16_BIT,AUDIO_FORMAT_PCM_32_BIT&quot;
+                           frame_size_ms=&quot;20&quot;
+                           b_interleave=&quot;0&quot;
+                           enable_log=&quot;0&quot;
+                           enable_raw_dump=&quot;0&quot;
+                           enable_lib_dump=&quot;0&quot;
+                           enhancement_mode=&quot;0&quot;&gt;
+                    &lt;uplink_process&gt;
+                        &lt;buf_in  data_buf_type=&quot;DATA_BUF_UPLINK_IN&quot;
+                                 num_channels=&quot;1,2&quot;/&gt;
+                        &lt;buf_out data_buf_type=&quot;DATA_BUF_UPLINK_OUT&quot;
+                                 num_channels=&quot;1,2&quot;/&gt;
+                    &lt;/uplink_process&gt;
+                &lt;/component&gt;
+            &lt;/components&gt;
+        &lt;/library&gt;
+Note:  The maximum number of library that can be set in aurisys_config_ adsp .xml is 8 . The limit could be change by revising macro  MAX_TOTAL_LIB_NUM  in both following files. /vendor/mediatek/proprietary/hardware/audio/common/aurisys/framework/aurisys_config.h /vendor/mediatek/proprietary/tinysys/common/drivers/audio/aurisys/framework/aurisys_config.h
+New Aurisys Scenario
+Predefined aurisys scenario may not fit your requirement (for example: gaming), below are the guidelnes to add a new aurisys scenario in ADSP. We use  AURISYS_SCENARIO_DSP_GAMING  as example.
+Path
+File
+Description
+vendor/mediatek/proprietary/hardware/audio/common/aurisys/framework
+aurisys_scenario_dsp.h
+Add AP side new scenario enum
+vendor/mediatek/proprietary/tinysys/common /drivers/audio/aurisys/framework/
+
+Add DSP B0 side new scenario enum
+vendor/mediatek/proprietary/tinysys/freertos/source/middleware/lib/aurisys/framework/
+
+Add DSP B0 side new scenario enum
+vendor/mediatek/proprietary/hardware/audio/common/aurisys/utility
+aurisys_utility.c
+Add string and map scenario to task scene
+vendor/mediatek/proprietary/external/aurisys
+aurisys_config_hifi3.xml
+aurisys_config_rv.xml
+a urisys_config_adsp.xml
+Add new scenario to configuration xml file
+In   vendor/mediatek/proprietary/hardware/audio/common/aurisys/framework/ aurisys_scenario_dsp.h ,  vendor/mediatek/proprietary/tinysys/common/drivers/audio/aurisys/framework/ aurisys_scenario_dsp.h , and  vendor/mediatek/proprietary/tinysys/freertos/source/middleware/lib/aurisys/framework/  aurisys_scenario_dsp.h   , 
+add new scenario. enum { …     AURISYS_SCENARIO_DSP_PLAYBACK_SMARTPA   = 10,  /* for smartPA process */     AURISYS_SCENARIO_DSP_MUSIC              = 11,  /* for deep + primary + offload mix stream */     AURISYS_SCENARIO_DSP_KTV                = 12,  /* for in-ear monitor */      AURISYS_SCENARIO_DSP_GAMING             = 13, /* for gaming */     /* control */     AURISYS_SCENARIO_DSP_SIZE,     AURISYS_SCENARIO_DSP_ALL,     AURISYS_SCENARIO_DSP_INVALID = 0xFFFFFFFF };
+enum {
+…
+    AURISYS_SCENARIO_DSP_PLAYBACK_SMARTPA   = 10,  /* for smartPA process */
+    AURISYS_SCENARIO_DSP_MUSIC              = 11,  /* for deep + primary + offload mix stream */
+    AURISYS_SCENARIO_DSP_KTV                = 12,  /* for in-ear monitor */
+     AURISYS_SCENARIO_DSP_GAMING             = 13, /* for gaming */
+    /* control */
+    AURISYS_SCENARIO_DSP_SIZE,
+    AURISYS_SCENARIO_DSP_ALL,
+    AURISYS_SCENARIO_DSP_INVALID = 0xFFFFFFFF
+};
+
+AP side and DSP side’s aurisys_scenario_dsp.h  must sync , or will cause  ADSP crash  or  Aurisys abnormal .
+In  vendor/mediatek/proprietary/hardware/audio/common/aurisys/utility/aurisys_utility.c , add new string for new enum and mapping to task.  static const string_to_enum_pair_t  g_s2e_aurisys_scenario_dsp [] = { …      STRING_TO_ENUM(&quot;AURISYS_SCENARIO_DSP_PLAYBACK_SMARTPA&quot;, AURISYS_SCENARIO_DSP_PLAYBACK_SMARTPA),      STRING_TO_ENUM(&quot;AURISYS_SCENARIO_DSP_MUSIC&quot;, AURISYS_SCENARIO_DSP_MUSIC),      STRING_TO_ENUM(&quot;AURISYS_SCENARIO_DSP_KTV&quot;, AURISYS_SCENARIO_DSP_KTV),      STRING_TO_ENUM(&quot;AURISYS_SCENARIO_DSP_GAMING&quot;, AURISYS_SCENARIO_DSP_GAMING),      STRING_TO_ENUM(&quot;AURISYS_SCENARIO_DSP_ALL&quot;, AURISYS_SCENARIO_DSP_ALL) }; uint8_t  map_aurisys_scenario_to_task_scene ( …     if (core_type == AURISYS_CORE_HAL) { …     } else if (core_type == AURISYS_CORE_HIFI3) { …         case AURISYS_SCENARIO_DSP_VOIP:         case AURISYS_SCENARIO_DSP_GAMING: /* map to voip task for gaming */              task_scene =  TASK_SCENE_VOIP ;             break; …     } … }
+static const string_to_enum_pair_t  g_s2e_aurisys_scenario_dsp [] = {
+…
+     STRING_TO_ENUM(&quot;AURISYS_SCENARIO_DSP_PLAYBACK_SMARTPA&quot;, AURISYS_SCENARIO_DSP_PLAYBACK_SMARTPA),      STRING_TO_ENUM(&quot;AURISYS_SCENARIO_DSP_MUSIC&quot;, AURISYS_SCENARIO_DSP_MUSIC),      STRING_TO_ENUM(&quot;AURISYS_SCENARIO_DSP_KTV&quot;, AURISYS_SCENARIO_DSP_KTV),      STRING_TO_ENUM(&quot;AURISYS_SCENARIO_DSP_GAMING&quot;, AURISYS_SCENARIO_DSP_GAMING),      STRING_TO_ENUM(&quot;AURISYS_SCENARIO_DSP_ALL&quot;, AURISYS_SCENARIO_DSP_ALL) };
+uint8_t  map_aurisys_scenario_to_task_scene ( …     if (core_type == AURISYS_CORE_HAL) { …     } else if (core_type == AURISYS_CORE_HIFI3) { …         case AURISYS_SCENARIO_DSP_VOIP:         case AURISYS_SCENARIO_DSP_GAMING: /* map to voip task for gaming */              task_scene =  TASK_SCENE_VOIP ;             break; …     } … }
+In  vendor/mediatek/proprietary/external/aurisys/aurisys _config_ adsp .xml , add lib to scenario. Below example is for both UL and DL process, if only need UL or DL process, can remove redundant down/uplink_library_name_list.      &lt;aurisys_scenarios&gt; …         &lt;!-- for aurisys_scene ktv for headphone feedback process --&gt;         &lt;aurisys_scenario aurisys_scenario=&quot;AURISYS_SCENARIO_DSP_KTV&quot;&gt;             &lt;downlink_library_name_list digital_gain_lib_name=&quot;&quot;&gt;                 &lt;library name=&quot;aurisys_demo&quot;/&gt;             &lt;/downlink_library_name_list&gt;         &lt;/aurisys_scenario&gt;          &lt;!-- for aurisys_scene  gaming  for gaming process --&gt;         &lt;aurisys_scenario aurisys_scenario=&quot;AURISYS_SCENARIO_DSP_GAMING&quot;&gt;             &lt;downlink_library_name_list digital_gain_lib_name=&quot;&quot;&gt;                 &lt;library name=&quot;aurisys_demo&quot;/&gt;   &lt;!-- add your lib here --&gt;             &lt;/downlink_library_name_list&gt;             &lt;uplink_library_name_list digital_gain_lib_name=&quot;&quot; &gt;                 &lt;library name=&quot;aurisys_demo&quot;/&gt;   &lt;!-- add your lib here --&gt;             &lt;/uplink_library_name_list&gt;         &lt;/aurisys_scenario&gt;     &lt;/aurisys_scenarios&gt; …
+     &lt;aurisys_scenarios&gt; …         &lt;!-- for aurisys_scene ktv for headphone feedback process --&gt;         &lt;aurisys_scenario aurisys_scenario=&quot;AURISYS_SCENARIO_DSP_KTV&quot;&gt;             &lt;downlink_library_name_list digital_gain_lib_name=&quot;&quot;&gt;                 &lt;library name=&quot;aurisys_demo&quot;/&gt;             &lt;/downlink_library_name_list&gt;         &lt;/aurisys_scenario&gt;          &lt;!-- for aurisys_scene  gaming  for gaming process --&gt;         &lt;aurisys_scenario aurisys_scenario=&quot;AURISYS_SCENARIO_DSP_GAMING&quot;&gt;             &lt;downlink_library_name_list digital_gain_lib_name=&quot;&quot;&gt;                 &lt;library name=&quot;aurisys_demo&quot;/&gt;   &lt;!-- add your lib here --&gt;             &lt;/downlink_library_name_list&gt;             &lt;uplink_library_name_list digital_gain_lib_name=&quot;&quot; &gt;                 &lt;library name=&quot;aurisys_demo&quot;/&gt;   &lt;!-- add your lib here --&gt;             &lt;/uplink_library_name_list&gt;         &lt;/aurisys_scenario&gt;     &lt;/aurisys_scenarios&gt; …
+To  use  this new scenario in ADSP, need also modify audio HAL by below steps. We also use  AURISYS_SCENARIO_DSP_GAMING  as example.
+Path
+File
+Description
+vendor/mediatek/proprietary/hardware/audio/common/V3/aud_drv
+AudioALSAPlaybackHandlerDsp.cpp
+DL / UL aurisys user
+
+AudioALSACaptureDataProviderDsp.cpp
+
+In  AudioALSAPlaybackHandlerDsp.cpp , add  AURISYS_SCENARIO_DSP_GAMING  for corresponded  DL  scenario. (If only need UL process, need skip this step) status_t  AudioALSAPlaybackHandlerDsp::open () { …     } else if (mStreamAttributeSource-&gt;mAudioOutputFlags &amp; AUDIO_OUTPUT_FLAG_VOIP_RX) {         mTaskScene = TASK_SCENE_VOIP; #ifdef MTK_AURISYS_FRAMEWORK_SUPPORT         if ( is_gaming_sc e nario ) {   // need implement judgement for gaming scenario             aurisys_scenario = AURISYS_SCENARIO_DSP_GAMING;  // assuming gaming run on voip         } else {             aurisys_scenario = AURISYS_SCENARIO_DSP_VOIP;         }         arsi_process_type = ARSI_PROCESS_TYPE_DL_ONLY; //ARSI_PROCESS_TYPE_UL_AND_DL; #endif …
+status_t  AudioALSAPlaybackHandlerDsp::open () { …     } else if (mStreamAttributeSource-&gt;mAudioOutputFlags &amp; AUDIO_OUTPUT_FLAG_VOIP_RX) {         mTaskScene = TASK_SCENE_VOIP; #ifdef MTK_AURISYS_FRAMEWORK_SUPPORT         if ( is_gaming_sc e nario ) {   // need implement judgement for gaming scenario             aurisys_scenario = AURISYS_SCENARIO_DSP_GAMING;  // assuming gaming run on voip         } else {             aurisys_scenario = AURISYS_SCENARIO_DSP_VOIP;         }         arsi_process_type = ARSI_PROCESS_TYPE_DL_ONLY; //ARSI_PROCESS_TYPE_UL_AND_DL; #endif …
+
+In  AudioALSACaptureDataProviderDsp.cpp , add  AURISYS_SCENARIO_DSP_GAMING  for  corresponded  UL  scenario.  (If only need DL process, need skip this step) status_t  AudioALSACaptureDataProviderDsp::open () { …          if (mStreamAttributeSource.mVoIPEnable || (mStreamAttributeSource.input_source == AUDIO_SOURCE_CUSTOMIZATION2)) {              //streamAttributeEchoRef = &amp;mStreamAttributeSource;             memcpy(&amp;mstreamAttributeEchoRef, &amp;mStreamAttributeTargetDSP, sizeof(struct stream_attribute_t));             mstreamAttributeEchoRef.num_channels = mDsphwRefConfig.channels;             mstreamAttributeEchoRef.audio_format = AUDIO_FORMAT_PCM_8_24_BIT;             mstreamAttributeEchoRef.audio_channel_mask = AUDIO_CHANNEL_IN_STEREO;             mstreamAttributeEchoRef.sample_rate = mDsphwRefConfig.rate;             streamAttributeEchoRef = &amp;mstreamAttributeEchoRef;             if ( is_gaming_scenario ) {   // need implement judgement for gaming scenario                  aurisys_scenario = AURISYS_SCENARIO_DSP_GAMING;  // assuming gaming run on voip             } else {                 aurisys_scenario = AURISYS_SCENARIO_DSP_VOIP;             }             arsi_process_type = ARSI_PROCESS_TYPE_UL_ONLY; //ARSI_PROCESS_TYPE_UL_AND_DL; …
+status_t  AudioALSACaptureDataProviderDsp::open () { …          if (mStreamAttributeSource.mVoIPEnable || (mStreamAttributeSource.input_source == AUDIO_SOURCE_CUSTOMIZATION2)) {              //streamAttributeEchoRef = &amp;mStreamAttributeSource;             memcpy(&amp;mstreamAttributeEchoRef, &amp;mStreamAttributeTargetDSP, sizeof(struct stream_attribute_t));             mstreamAttributeEchoRef.num_channels = mDsphwRefConfig.channels;             mstreamAttributeEchoRef.audio_format = AUDIO_FORMAT_PCM_8_24_BIT;             mstreamAttributeEchoRef.audio_channel_mask = AUDIO_CHANNEL_IN_STEREO;             mstreamAttributeEchoRef.sample_rate = mDsphwRefConfig.rate;             streamAttributeEchoRef = &amp;mstreamAttributeEchoRef;             if ( is_gaming_scenario ) {   // need implement judgement for gaming scenario                  aurisys_scenario = AURISYS_SCENARIO_DSP_GAMING;  // assuming gaming run on voip             } else {                 aurisys_scenario = AURISYS_SCENARIO_DSP_VOIP;             }             arsi_process_type = ARSI_PROCESS_TYPE_UL_ONLY; //ARSI_PROCESS_TYPE_UL_AND_DL;
+…
+
+To verify your scenario is added and correctly used, you can check below log in ADSP log files.
+[D]CreateAurisysLibManager(), manager config: aurisys_scenario  13 , core_type 1,  arsi_process_type 1 , frame_size_ms 20, num_channels_ul 2, num_channels_dl 2, audio_format 4, sample_rate 48000   //process type 0 is for UL, 1 is for DL [D][AURI][HDL] aurisys_arsi_create_handler(), lib_name  lib_gaming _name , memory_size  xxx  //should show your lib_name  in  AURISYS_SCENARIO_DSP_GAMING  defined in aurisys_config _adsp .xml
+[D]CreateAurisysLibManager(), manager config: aurisys_scenario  13 , core_type 1,  arsi_process_type 1 , frame_size_ms 20, num_channels_ul 2, num_channels_dl 2, audio_format 4, sample_rate 48000   //process type 0 is for UL, 1 is for DL
+[D][AURI][HDL] aurisys_arsi_create_handler(), lib_name  lib_gaming _name , memory_size  xxx  //should show your lib_name  in  AURISYS_SCENARIO_DSP_GAMING  defined in aurisys_config _adsp .xml
+How to allocate working buffer for library? (aurisys interface before V1.8.0)
+The library can allocate a working buffer through ARSI-PROC APIs, which the library must implement its implementation. Aurisys supports DRAM only and DRAM+SLB mode to allocate a working buffer. For the aurisys interface version after V1.8.0, please refer to chapter 5.3.5.
+Allocate working buffer for DSP side library
+Allocate working buffer for DSP side library
+
+Figure  5 6 .  Aurisys  Control Flow
+Use DRAM as working buffer
+arsi_query_working_buffer() : This API function queries the size of the working buffer needed by the library. The desired working buffer size can be specified by assigning a value to  p_working_buf_size   (bytes). Aurisys framework will allocate memory on  DRAM  according to the chosen size.
+/**  * =========================================================================  *  @brief Query the size of the working buffer  *  *  @param  input       p_arsi_task_config the task configure  *  @param  input     p_arsi_lib_config the lib configure  *  @param  output  p_working_buf_size the working buffer size  *  @param  input     debug_log_fp debug print function pointer  *  *  @return status_t  * =========================================================================  */ status_t  (* arsi_query_working_buf_size )  ( const arsi_task_config_t *p_arsi_task_config, const arsi_lib_config_t      *p_arsi_lib_config, uint32_t                             *p_working_buf_size , const debug_log_fp_t      debug_log_fp)
+/**  * =========================================================================  *  @brief Query the size of the working buffer  *  *  @param  input       p_arsi_task_config the task configure  *  @param  input     p_arsi_lib_config the lib configure  *  @param  output  p_working_buf_size the working buffer size  *  @param  input     debug_log_fp debug print function pointer  *  *  @return status_t  * =========================================================================  */ status_t  (* arsi_query_working_buf_size )  ( const arsi_task_config_t *p_arsi_task_config, const arsi_lib_config_t      *p_arsi_lib_config, uint32_t                             *p_working_buf_size , const debug_log_fp_t      debug_log_fp)
+When the aurisys framework calls  arsi_create_handler()   API, the working buffer requested by the library will be passed to the library as an input parameter, namely  p_working_buf .
+/**  * =========================================================================  *  @brief Create handler and initialize it  *  *  @param  input       p_arsi_task_config the task configure  *  @param  input       p_arsi_lib_config the lib configure  *  @param  input       p_param_buf the enhancement parameters and lib related configure settings  *  @param  input       p_working_buf the allocated buffer and the size is from arsi_create_handler()   *  @param  output  pp_handler the handler of speech enhancement    *  @param  input       debug_log_fp debug print function pointer   *  *  @return status_t  * =========================================================================   */   status_t  (* arsi_create_handler )  (                   const arsi_task_config_t *p_arsi_task_config,                    const arsi_lib_config_t      *p_arsi_lib_config,                    const data_buf_t                *p_param_buf,                    data_buf_t                         *p_working_buf ,                    void                                       **pp_handler,                    const debug_log_fp_t      debug_log_fp);
+/**  * =========================================================================  *  @brief Create handler and initialize it  *  *  @param  input       p_arsi_task_config the task configure  *  @param  input       p_arsi_lib_config the lib configure  *  @param  input       p_param_buf the enhancement parameters and lib related configure settings  *  @param  input       p_working_buf the allocated buffer and the size is from arsi_create_handler()   *  @param  output  pp_handler the handler of speech enhancement    *  @param  input       debug_log_fp debug print function pointer   *  *  @return status_t  * =========================================================================   */   status_t  (* arsi_create_handler )  (                   const arsi_task_config_t *p_arsi_task_config,                    const arsi_lib_config_t      *p_arsi_lib_config,                    const data_buf_t                *p_param_buf,                    data_buf_t                         *p_working_buf ,                    void                                       **pp_handler,                    const debug_log_fp_t      debug_log_fp);
+Use SLB and DRAM as working buffer
+To use System Level Buffer (SLB) as a library working buffer, one must finish the following setup:
+CFG_SLB_SUPPORT = yes  (SLB must be supported on the platform, please consult MTK if not sure)
+The library needs to implement  arsi_is_support_slb()  API, which is meant to query whether the library wants to use slb as a working buffer, and return  true  through this API.
+When the setting is done correctly, aurisys will allocate a working buffer through API with the suffix  _with_slb . The library can then assign the preferred size of working buffer on SLB and DRAM.
+
+arsi_is_support_slb() :  T he library must return  true  with this API  to use SLB memory as a working buffer .
+/**  * =========================================================================  *  @brief Query lib slb support, return ture if lib support slb.  *         This is a OpenDSP only api.  *  *  @return bool  * =========================================================================  */ bool  (* arsi_is_support_slb )  (void)
+/**  * =========================================================================  *  @brief Query lib slb support, return ture if lib support slb.  *         This is a OpenDSP only api.  *  *  @return bool  * =========================================================================  */ bool  (* arsi_is_support_slb )  (void)
+arsi_query_working_buf_size_with_slb() : Through this API, the library can get the SLB address ( p_arsi_slb_buf-&gt;p_buffer ) and available size ( p_arsi_slb_buf-&gt;memory_size ). Also, the library needs to decide the working buffer size to place on DRAM by assigning a value to  p_working_buf_size .
+/**  * =========================================================================  *  @brief Query the size of the working buffer with slb support.  *         This is a OpenDSP only api.  *  *  @param  input       p_arsi_task_config the task configure  *  @param  output  p_arsi_lib_config the lib configure  *  @param  input       p_arsi_slb_buf the slb buffer  *  @param  output  p_working_buf_size the working buffer size  *  @param  input       debug_log_fp debug print function pointer  *  *  @return status_t  * =========================================================================  */ status_t (* arsi_query_working_buf_size_with_slb )( const arsi_task_config_t *p_arsi_task_config, const arsi_lib_config_t      *p_arsi_lib_config, data_buf_t                          *p_arsi_slb_buf , uint32_t                               *p_working_buf_size , const debug_log_fp_t     debug_log_fp);
+/**  * =========================================================================  *  @brief Query the size of the working buffer with slb support.  *         This is a OpenDSP only api.  *  *  @param  input       p_arsi_task_config the task configure  *  @param  output  p_arsi_lib_config the lib configure  *  @param  input       p_arsi_slb_buf the slb buffer  *  @param  output  p_working_buf_size the working buffer size  *  @param  input       debug_log_fp debug print function pointer  *  *  @return status_t  * =========================================================================  */ status_t (* arsi_query_working_buf_size_with_slb )( const arsi_task_config_t *p_arsi_task_config, const arsi_lib_config_t      *p_arsi_lib_config, data_buf_t                          *p_arsi_slb_buf , uint32_t                               *p_working_buf_size , const debug_log_fp_t     debug_log_fp);
+When the library chooses to use SLB, aurisys will create a handler with  arsi_create_handler_with_slb () . The API input parameters contain  p_working_buf  and  p_arsi_slb_buf , which consist of the working buffer allocated on DRAM and SLB, respectively.
+/**  * =========================================================================  *  @brief Create handler with slb and initialize it. This is a OpenDSP only api.  *  *  @param  input     p_arsi_task_config the task configure  *  @param  input     p_arsi_lib_config the lib configure  *  @param  input     p_param_buf the enhancement parameters and lib related configure settings  *  @param  input     p_working_buf the allocated buffer and the size is from arsi_create_handler()  *  @param  input     p_arsi_slb_buf the slb buffer  *  @param  output  pp_handler the handler of speech enhancement  *  @param  input     debug_log_fp debug print function pointer  *  *  @return status_t  * =========================================================================  */ status_t  (* arsi_create_handler_with_slb )  ( const arsi_task_config_t *p_arsi_task_config, const arsi_lib_config_t      *p_arsi_lib_config, const data_buf_t                *p_param_buf, data_buf_t                           *p_working_buf , data_buf_t                           *p_arsi_slb_buf , void                                       **pp_handler, const debug_log_fp_t      debug_log_fp);
+/**  * =========================================================================  *  @brief Create handler with slb and initialize it. This is a OpenDSP only api.  *  *  @param  input     p_arsi_task_config the task configure  *  @param  input     p_arsi_lib_config the lib configure  *  @param  input     p_param_buf the enhancement parameters and lib related configure settings  *  @param  input     p_working_buf the allocated buffer and the size is from arsi_create_handler()  *  @param  input     p_arsi_slb_buf the slb buffer  *  @param  output  pp_handler the handler of speech enhancement  *  @param  input     debug_log_fp debug print function pointer  *  *  @return status_t  * =========================================================================  */ status_t  (* arsi_create_handler_with_slb )  ( const arsi_task_config_t *p_arsi_task_config, const arsi_lib_config_t      *p_arsi_lib_config, const data_buf_t                *p_param_buf, data_buf_t                           *p_working_buf , data_buf_t                           *p_arsi_slb_buf , void                                       **pp_handler, const debug_log_fp_t      debug_log_fp);
+The demo API implementation in this chapter can be found in  /API/V1.x.x/libaurisysdemo/aurisys_demo_processing_lib.c
+How to allocate working buffer for library? (aurisys interface after V1.8.0)
+On aurisys V1.8.0, MTK proposes a new working flow for the library to query the working buffer. In this version, we add support to L2SRAM, a lower latency memory relative to DRAM. For the aurisys interface version before V1.8.0, please refer to  chapter 5.3.5 .
+Use SLB/L2SRAM/DRAM as working buffer
+The library can allocate a working buffer through ARSI-PROC APIs, which the library must implement its implementation. Aurisys supports an integrated interface with which the library can appoint desired working buffer sizes on SLB, L2SRAM, and DRAM.
+Provide buffers as library request  (support  SLB/L2SRAM/DRAM   on DSP side) Query  SLB/L2SRAM/DRAM  size on DSP side
+Provide buffers as library request 
+(support  SLB/L2SRAM/DRAM   on DSP side)
+
+Query  SLB/L2SRAM/DRAM  size
+on DSP side
+
+Figure  5 7 .  Aurisys Control Flow
+The following legacy API functions are removed because MTK integrates them into  arsi_query_working_buf_size()   and  arsi_create_handler() .
+arsi_is_support_slb()
+arsi_query_working_buf_size_with_slb()
+arsi_create_handler_with_slb()
+
+arsi_query_working_buffer() : This API function queries the size of the working buffer on SLB/L2SRAM/DRAM needed by the library. The expected working buffer size can be specified by designating values to the  p_work_buf_size  array (in bytes), in which the element represents to corresponding memory. When choosing  the working buffers’ size, the library must check the  p_avail_memory_size  array, which provides the available size of each memory at the point.
+The library  must not  return a size larger than provided available size, and the default value of SLB/L2SRAM size is 0 if the library does not determine the preferred size. Aurisys framework will then allocate memory according to the chosen size.
+/**  * =========================================================================     *  @brief Query the size of the working buffer   *   *  @param[in]  p_arsi_task_config the task configure  *  @param[in]  p_arsi_lib_config the lib configure  *  @param[out] p_work_buf should specify preferred working buffer size with this structure  *                           support SLB/L2SRAM/DRAM on DSP side!  *  @param[in]  p_avail_memory_size available size for working buffer on each memory  *  @param[in]  debug_log_fp debug print function pointer  *  *  @return status_t  * =========================================================================  */ status_t (* arsi_query_working_buf_size )( const arsi_task_config_t *p_arsi_task_config, const arsi_lib_config_t      *p_arsi_lib_config, uint32_t                               *p_work_buf_size , const uint32_t                    *p_avail_memory_size , const debug_log_fp_t         debug_log_fp);
+/**  * =========================================================================     *  @brief Query the size of the working buffer   *   *  @param[in]  p_arsi_task_config the task configure  *  @param[in]  p_arsi_lib_config the lib configure  *  @param[out] p_work_buf should specify preferred working buffer size with this structure  *                           support SLB/L2SRAM/DRAM on DSP side!  *  @param[in]  p_avail_memory_size available size for working buffer on each memory  *  @param[in]  debug_log_fp debug print function pointer  *  *  @return status_t  * =========================================================================  */ status_t (* arsi_query_working_buf_size )( const arsi_task_config_t *p_arsi_task_config, const arsi_lib_config_t      *p_arsi_lib_config, uint32_t                               *p_work_buf_size , const uint32_t                    *p_avail_memory_size , const debug_log_fp_t         debug_log_fp);
+When the aurisys framework calls  arsi_create_handler()   API, the working buffers requested by the library will pass to the library as an input parameter, namely  p_work_buf , which is an array containing the working buffer of each memory.
+/**  * =========================================================================  *  @brief Create handler and initialize it  *  *  @param[in]  p_arsi_task_config the task configure  *  @param[in]  p_arsi_lib_config the lib configure  *  @param[in]  p_param_buf the enhancement parameters and lib related configure settings  *  @param[out] p_work_buf the allocated buffer and the size is from arsi_query_working_buf_size()  *                         support SLB/L2SRAM/DRAM on DSP side!  *  @param[out] pp_handler the handler of speech enhancement  *  @param[in]  debug_log_fp debug print function pointer  *  *  @return status_t  * =========================================================================  */ status_t (* arsi_create_handler )( const arsi_task_config_t *p_arsi_task_config, const arsi_lib_config_t      *p_arsi_lib_config, const data_buf_t                *p_param_buf, data_buf_t                           *p_work_buf , void                                       **pp_handler, const debug_log_fp_t         debug_log_fp);
+/**  * =========================================================================  *  @brief Create handler and initialize it  *  *  @param[in]  p_arsi_task_config the task configure  *  @param[in]  p_arsi_lib_config the lib configure  *  @param[in]  p_param_buf the enhancement parameters and lib related configure settings  *  @param[out] p_work_buf the allocated buffer and the size is from arsi_query_working_buf_size()  *                         support SLB/L2SRAM/DRAM on DSP side!  *  @param[out] pp_handler the handler of speech enhancement  *  @param[in]  debug_log_fp debug print function pointer  *  *  @return status_t  * =========================================================================  */ status_t (* arsi_create_handler )( const arsi_task_config_t *p_arsi_task_config, const arsi_lib_config_t      *p_arsi_lib_config, const data_buf_t                *p_param_buf, data_buf_t                           *p_work_buf , void                                       **pp_handler, const debug_log_fp_t         debug_log_fp);
+The demo API implementation in this chapter can be found in  /API/V1.x.x/libaurisysdemo/aurisys_demo_processing_lib.c
+
+  Bypass the Aurisys process by configuring the xml
+Purpose
+In the past, when library processing was unnecessary in specific scenarios, we used the “aurisys_demo” library, which simlpy copied the input data to output. However, this still incurred additional MCPS due to the Aurisys framework’s overhead.
+Starting with the DX5 platform in Android W, we introduced a new mechanism to bypass the aurisys process on ADSP. This allows us to completely avoid library processing through the Aurisys framwork, thereby optimizing  ADSP MCPS usage.
+
+How does bypass aurisys mechanism works?
+When an ADSP task uses Aurisys and no library processing is needed, you can bypass the Aurisys process by configuring the aurisys_config_adsp.xml file as follows:
+Method 1. Configure the library name to ”none”
+For example, to bypass the library processing of the primary task, set the library name to “none”.
+&lt;aurisys_scenario aurisys_scenario=&quot;AURISYS_SCENARIO_DSP_PRIMARY&quot;&gt; &lt;downlink_library_name_list digital_gain_lib_name=&quot;&quot;&gt; &lt;library name=&quot; none &quot;/&gt; &lt;/downlink_library_name_list&gt; &lt;/aurisys_scenario&gt;
+&lt;aurisys_scenario aurisys_scenario=&quot;AURISYS_SCENARIO_DSP_PRIMARY&quot;&gt;
+&lt;downlink_library_name_list digital_gain_lib_name=&quot;&quot;&gt;
+&lt;library name=&quot; none &quot;/&gt;
+&lt;/downlink_library_name_list&gt;
+&lt;/aurisys_scenario&gt;
+
+
+
+Method 2. Remove the specific scenario that is desired to bypass  
+For example, to bypass the library processing in the aud_playback task, remove AURISYS_SCNEARIO_DSP_PLAYBACK from the aurisys_scenario section. Any scenario not defined in the aurisys_scneario section will be bypassed by default.
+&lt;aurisys_scenario aurisys_scenario=&quot; AURISYS_SCENARIO_DSP_PLAYBACK_SMARTPA &quot;&gt; &lt;downlink_library_name_list digital_gain_lib_name=&quot;&quot;&gt; &lt;library name=&quot; aurisys_demo &quot;/&gt; &lt;/downlink_library_name_list&gt; &lt;/aurisys_scenario&gt;
+&lt;aurisys_scenario aurisys_scenario=&quot; AURISYS_SCENARIO_DSP_PLAYBACK_SMARTPA &quot;&gt;
+&lt;downlink_library_name_list digital_gain_lib_name=&quot;&quot;&gt;
+&lt;library name=&quot; aurisys_demo &quot;/&gt;
+&lt;/downlink_library_name_list&gt;
+&lt;/aurisys_scenario&gt;
+
+
+
+
+We recommend using Method 1 . Setting the library name to “none” clearly indicates that library processing is not needed, which is helpful when debugging.
+Please note that the bypass mechanism is only support on ADSP, not on AP . In other words, you can only configure the bypass aurisys process in the aurisys_config_adsp.xml file, not in the aurisys_config.xml file.
+How to check whether a specific scenario is bypassed?
+In this section, we will compare two scenarios: playback_smartpa and deep_buf, which are bypassed and not bypassed, respectively. By analyzing the HAL and ADSP logs, we could highlight the differences between both scenarios.
+HAL log:
+PLAYBACK_SMARTPA (with bypass)
+If the scenario is bypassed , the key word “bypass aurisys” can be found in the log.
+10-23 10:38:06.157961   942  1381 D AudioDspStreamManager:  CreateAurisysLibManager(), scene: 10, bypass aurisys
+10-23 10:38:06.157961   942  1381 D AudioDspStreamManager:  CreateAurisysLibManager(), scene: 10, bypass aurisys
+
+
+
+
+DEEP_BUF (without bypass)
+For normal Aurisys process, you can find that “CreateAurisysLibManager() ” is processed.
+10-23 10:37:36.464070   942  1381 D  AudioDspStreamManager: CreateAurisysLibManager(), custom_info = SetAudioCustomScene=;, voip = 0, scene = 2 10-23 10:37:36.464125   942  1381 D aurisys_utility: lib, working fs: 48000, fmt: 0x3, frame = 0, b_interleave = 1, num_ul_ref_buf_array = 0, num_dl_ref_buf_array = 0 10-23 10:37:36.464149   942  1381 D aurisys_utility: dl in[type:2], ch: 2, ch_mask: 0x3, buf fs: 48000, buf content fs: 48000, fmt: 0x3; dl out[type:3], ch: 2, ch_mask: 0x3, buf fs: 48000, buf content fs: 48000, fmt: 0x3
+10-23 10:37:36.464070   942  1381 D  AudioDspStreamManager: CreateAurisysLibManager(), custom_info = SetAudioCustomScene=;, voip = 0, scene = 2 10-23 10:37:36.464125   942  1381 D aurisys_utility: lib, working fs: 48000, fmt: 0x3, frame = 0, b_interleave = 1, num_ul_ref_buf_array = 0, num_dl_ref_buf_array = 0 10-23 10:37:36.464149   942  1381 D aurisys_utility: dl in[type:2], ch: 2, ch_mask: 0x3, buf fs: 48000, buf content fs: 48000, fmt: 0x3; dl out[type:3], ch: 2, ch_mask: 0x3, buf fs: 48000, buf content fs: 48000, fmt: 0x3
+
+
+ADSP log:
+PLAYBACK_SMARTPA (with bypass)
+If the scenario is bypassed, you will not found any “CreateAurisysLibManager()” related logs.
+
+DEEP_BUF (without bypass)
+For normal Aurisys process, you can find the key word “CreateAurisysLibManager()” in the logs.
+[133.511]&lt;A-8&gt;[D] CreateAurisysLibManager(), manager config: aurisys_scenario 2 , core_type 1, arsi_process_type 1, frame_size_ms 20, num_channels_ul 2, num_channels_dl 2, audio_format 3, sample_rate 48000 [133.511]&lt;A-8&gt;[D][AURI] input dev: 0x80000004 0x0, fmt = 0x3, fs: 48000, max fs: 48000, ch: 2, max ch: 3, ch maks: 0x3, hw_info_mask: 0x0; output dev: 0x2 0x0, fmt = 0x3, fs: 48000, max fs: 48000, ch: 2, max ch: 4, ch maks: 0x3, hw_info_mask: 0xc [133.511]&lt;A-8&gt;[D][AURI] task_scene: 8, audio_mode: 0, stream_type: 3 output_flags: 0x8, input_source: 0, input_flags: 0x8; enhancement_feature_mask: 0x0 [133.511]&lt;A-8&gt;[D][AURI][CTRL] create_aurisys_lib_manager(+), aurisys_scenario 2, heap(3940480/5033164)
+[133.511]&lt;A-8&gt;[D] CreateAurisysLibManager(), manager config: aurisys_scenario 2 , core_type 1, arsi_process_type 1, frame_size_ms 20, num_channels_ul 2, num_channels_dl 2, audio_format 3, sample_rate 48000 [133.511]&lt;A-8&gt;[D][AURI] input dev: 0x80000004 0x0, fmt = 0x3, fs: 48000, max fs: 48000, ch: 2, max ch: 3, ch maks: 0x3, hw_info_mask: 0x0; output dev: 0x2 0x0, fmt = 0x3, fs: 48000, max fs: 48000, ch: 2, max ch: 4, ch maks: 0x3, hw_info_mask: 0xc [133.511]&lt;A-8&gt;[D][AURI] task_scene: 8, audio_mode: 0, stream_type: 3 output_flags: 0x8, input_source: 0, input_flags: 0x8; enhancement_feature_mask: 0x0 [133.511]&lt;A-8&gt;[D][AURI][CTRL] create_aurisys_lib_manager(+), aurisys_scenario 2, heap(3940480/5033164)
+
+
+Benefit profile of the bypass mechanism
+We compared the MCPS uasage of the deep_pl task during 48k WAV playback between using “aurisys_demo” and bypassing the Aurisys process in the AURISYS_DSP_PLAYBACK_SMARTPA scenario. Normally, 48k WAV playback costs 70 MCPS for the deep_pl task. Bypassing  PLAYBACK_SMATPA  reduces this to 50 MCPS, saving  approximately 20 MCPS.
+Additionally, the bypass mechanism reduces heap memory usage. Normal 48k WAV playback uses 1.66MB of memory, while bypassing PLAYBACK_SMATPA uses 1.55MB. This results in a saving of 0.11MB of heap memory.
+
+Aurisys Q&amp;A
+Q ： What APIs must be implemented?
+A ： Please find demo code in this development package  aurisys_demo_parsing_lib.c  and  aurisys_demo_processing_lib.c , for APIs must be implemented, we labled in code with comment   “[TODO][MUST]” . Parser library must implement  “[TODO][MUST]”  APIs in  aurisys_demo_parsing_lib.c  and likewise  process library must implement “[TODO][MUST]” APIs in  aurisys_demo_parsing_lib.c . There are API labeled with  “[TODO][MUST] 3rd party must implement on both parsing and processing lib” , pleae implement these APIs in  both  parser and process library.
+
+Q ： How to get driver information like: audio_mode, input/output flags, input_source, input/output device?
+A ： You can get those information form  arsi_task_config_t
+
+Q ： How to know library process sample reate, format and in/out channel numbers?
+A ： For now, library process sample reate, format and in/out channel numbers are choosed by Aurisys framework automatically to fit closest to device. Sample rate and format can be found in  arsi_lib_config_t , and in/out channel numbers can be found in  p_ul(dl)_buf_in(out)-&gt; num_channels .
+
+Q ： How DSP side process library can get parameter parsed form AP side parser library?
+A ： Aurisys framework will automatically pass the parameter buffer get form  p_param_buf  through  arsi_parsing_param_file_by_custom_info  API to DSP, and DSP side parser library can get parsed parameter from  arsi_create_handler.
+
+Q ： What is the deference between  sample_rate_buffer/sample_rate_content  in  audio_buf_t  and  sample_rate  in  arsi_lib_config_t ?
+A ： For now, it’s the same.
+
+Q ： What is  lib dump  and how to implement it?
+A ： lib dump is 3 rd  party proprietary dump. Through lib dump, 3 rd  party can dump there parameter/ lib in/out buffer/etc. 3 rd  party also should implement a parser to parse lib dump. To implement lib dump, please follow below instructions:
+Implement API  arsi_query_max_debug_dump_buf_size ,  and return max debug dump size in one process
+In  arsi_process_ul_buf/arsi_process_dl_buf   fill debug dump in  p_debug_dump_buf
+
+Memory Configurations
+Memory size configured in DSP is mainly reserved for full-feature support. Refer to  Feature Distribution  in dual-core project, memory can also be optimized according to the feature configured. For example, if there is no uplink feature configured in DSP, the size of program and heap in  c ore  B can shrink greatly for only system usage.
+Memory Profile
+To profiling the memory usage, you can find the tool  memory-layout-parser-release  on  MOL website , and get the memory layout on device. Audio DSP has two parts of reserved memory, 1) ADSP image with working memory, 2) share memory between APMCU and ADSP, which can be found from type as below,  
+Detail
+Type
+Usage
+Name
+Start Address
+End Address
+Size (KB)
+adsp
+image
+mblock-25-mediatek,reserve-memory-adsp
+0x7a000000
+0x7adfffff
+14336
+adsp
+share memory
+reserve-memory-adsp_share
+0x0
+0x0
+9728
+adsp-total
+
+ 
+ 
+ 
+24064
+Approa ch
+Memory configured approach is described for  Cadence HiFi DSP   and MTK-In-house RV (Standalone ADSP)  series, for  platforms shared SCP software , for example,  24M ,  please find SCP development document  MT xxxx _SCP_Development_Guide.docx
+Cadence HiFi DSP  Image
+Heap Size
+Path:  alps/vendor/mediatek/proprietary/tinysys/adsp/[HIFI3 or HIFI5]/project/[platform]/[core]/platform/
+File:  platform.mk
+Example:
+
+System RAM Size
+Since ADSP build the image with static linking, all the memory layout should be pre-defined in file in advance, and keep consistent with the description in kernel dts for memory allocation.
+Please be cautious to make the memory layout consistent if the modification is needed.
+Path: alps/kernel-x.x/arch/arm64/boot/dts/mediatek
+File:  [project].dts
+Format: system of each core = 64-bit base address, 64-bit size
+Example: k6873v1_64.dts
+ 
+Path:  alps/vendor/mediatek/proprietary/tinysys/adsp/[HIFI3 or HIFI5]/project/[platform]/[core]/platform/
+File:  platform.mk
+Base address of each core: CFG_HIFI3_SRAM_ADDRESS
+Size of each core:  CFG_HIFI3_SRAM_SIZE  
+Example: 
+
+Path:  alps/vendor/mediatek/proprietary/tinysys/adsp/[HIFI3 or HIFI5]/project/[platform]/[core]/platform/[lnk-hifi3 or lnk-hifi5]/[Toolchain-Version ] -linux
+File:  memmap.xmm
+Format:
+ &lt;32-bit base address&gt;:sysram: sram: &lt;32-bit size&gt;
+  sram_0: C : &lt;32-bit base address&gt; - &lt;32-bit end address&gt;: ……
+Example:
+ 
+Generate new link script
+If ADSP sysram size increased, the link scripts must be modified. Either generate by linux script or directly edit link script is acceptable.
+By linux script
+Excute  adsp_genldscript.sh  under  adsp/HIFIX  path to generate link script with modified memory layout. Output file will be generated in  ./ldscripts
+Preparation:
+P atch perl into toolchain (directly provided by Cadence, excluded from MTK codebase due to license issue)​ 
+xcc compiler: prebuilts/xcc/linux-x86/xtensa/RI-20XX.X-linux/XtensaTools/Tools/bin/*
+clang compiler: prebuilts/clang/xtensa/linux-x86/RI-20XX.X-linux/XtensaTools/Tools/bin/*
+Modify memory layout file (memmap.xmm) under lnk-hifiX folder.
+Example:
+$ cd vendor/mediatek/proprietary/tinysys/adsp/HIFI3
+$  ./tool/adsp_genldscripts.sh PLATFORM=mt6873 TOOLCHAIN=RI-2018.0
+Output :
+New linker scripts generated in project/mt6873/HIFI3_A/platform/lnk-hifi3/RI-2018.0-linux/ldscripts
+New linker scripts generated in project/mt6873/HIFI3_B/platform/lnk-hifi3/RI-2018.0-linux/ldscripts
+Directly edit link script
+Files Under  project/ [$platform] /HIFI X _ [$core] /platform/lnk-hifi X / [$toolchain_version] /ldscripts/  need to be updates: 
+elf32xtensa.x  &amp;  elf32xtensa.xbn  &amp;  elf32xtensa.xn
+sram0_seg
+_memmap_mem_sram_start  
+if core A enlarge size, the start address of core B will be affected
+_memmap_mem_sram_end   
+_memmap_seg_sram0_star t
+if core A enlarge size, the start address of core B will be affected
+_memmap_seg_sram0_max   
+_heap_sentry
+Example: enlarge core A sysram size from 9M to 10M &amp; core B from 9M to 12M
+project/mt6985/HIFI5_A/platform/lnk-hifi5/RI-2021.8-linux/ldscripts/
+elf32xtensa.x  &amp;  elf32xtensa.xbn  &amp;  elf32xtensa.xn
+
+project/mt6985/HIFI5_B/platform/lnk-hifi5/RI-2021.8-linux/ldscripts/
+elf32xtensa.x  &amp;  elf32xtensa.xbn  &amp;  elf32xtensa.xn
+
+MTK In-house RV DSP (SCP/ADSP Co-subsys)  imge
+DRAM Config
+Path :  vendor/mediate/proprietary/bootable/bootloader/lk2/platform/mediatek/common/scp/RV/scp_plat_priv.h
+#if defined(MTK_MINIMUM_SCP_DRAM_SIZE) #define SCP_DRAM_IMG_SIZE               0x080000    // 0.5MB dram image #elif defined(PHONE_CALL_ON_SCP) #define SCP_DRAM_IMG_SIZE                0x300000     // 3.0MB dram image -&gt; please modify this value #else #define SCP_DRAM_IMG_SIZE               0x100000    // 1.0MB dram image #endif
+#if defined(MTK_MINIMUM_SCP_DRAM_SIZE)
+#define SCP_DRAM_IMG_SIZE               0x080000    // 0.5MB dram image
+#elif defined(PHONE_CALL_ON_SCP)
+#define SCP_DRAM_IMG_SIZE                0x300000     // 3.0MB dram image -&gt; please modify this value
+#else
+#define SCP_DRAM_IMG_SIZE               0x100000    // 1.0MB dram image
+#endif
+Path:  vendor/mediatek/proprietary/tinysys/scp/project/RV55_A/$platform/platform/platform.mk
+CFG_L1C_DRAM_SIZE :=  0x300000  -&gt; need to sync with upper value
+CFG_L1C_DRAM_SIZE :=  0x300000  -&gt; need to sync with upper value
+For more SCP image/dram releated detail, please refer to  MTxxxx_SCP_Development_Guide .
+
+
+M TK In-house RV DSP (Standalone ADSP) Image
+Heap Size
+Path:  alps/vendor/mediatek/proprietary/tinysys/adsp/ riscv /project/[platform]/[core]/platform/
+File:  platform.mk
+Example:
+
+System RAM Size
+Since ADSP build the image with static linking, all the memory layout should be pre-defined in file in advance, and keep consistent with the description in kernel dts for memory allocation.
+Please be cautious to make the memory layout consistent if the modification is needed.
+Please note that the starting address of core1's system RAM needs to be connected to the end of core0's system RAM, which means  core1 system RAM address = core0 system RAM address + core0 system RAM size .
+Path: alps/kernel-x.x/arch/arm64/boot/dts/mediatek
+File:  [project].dts
+Format: system of each core = 64-bit base address, 64-bit size
+Example: k 6993 v1_64.dts
+ 
+Path:  alps/vendor/mediatek/proprietary/tinysys/adsp/ riscv /project/[platform]/[core]/platform/
+File:  platform.mk
+Base address of each core: CFG_ ADSP_X _ D RAM_ADDRESS
+Size of each core:  CFG_ ADSP_X _ D RAM_SIZE  
+Example: 
+ 
+Path:  alps/vendor/mediatek/proprietary/tinysys/adsp/ riscv /project/[platform]/[core]/platform/ link.ld
+File:  link.ld
+Format:
+   dram  :  ORIGIN   =  &lt;32-bit base address&gt;  , LENGTH =  &lt;32-bit  size &gt;
+   _memmap_mem_dram_start =  &lt;32-bit base address&gt;;
+Example:
+ 
+Shared memory
+Shared memory is mainly used for communication between APMCU and ADSP. For system usage, the memory size is configured and we do not recommend to modify it. For audio feature usage, the total size of audio would be calculated during initial stage according to the feature configuration in dts. You only need to configure the feature via enable element, instead of the size in array.
+Path:  alps/kernel-x.x/arch/arm64/boot/dts/mediatek
+File:  [project].dts
+Format:  feature = &lt;  $enable  $dl_mem $ul_mem $ref_mem  $size  &gt;
+Example: k6873v1_64.dts
+/* feature :  $enable  $dl_mem $ul_mem $ref_mem  $size  */
+&amp; snd_audio_dsp  {
+mtk_dsp_voip = &lt; 0x1f  0x1 0xffffffff 0xffffffff  0x30000 &gt;;
+mtk_dsp_primary = &lt; 0x1f  0x0 0xffffffff 0xffffffff  0x30000 &gt;;
+mtk_dsp_offload = &lt; 0x0  0x6 0xffffffff 0xffffffff  0x400000 &gt;;
+mtk_dsp_deep = &lt; 0x5  0x3 0xffffffff 0xffffffff  0x30000 &gt;;
+mtk_dsp_playback = &lt; 0x1  0x4 0x10 0x14  0x30000 &gt;;
+mtk_dsp_music = &lt; 0x1  0xffffffff 0xffffffff 0xffffffff  0x0 &gt;;
+mtk_dsp_capture1 = &lt; 0x0  0xffffffff 0xd 0x13  0x20000 &gt;;
+mtk_dsp_a2dp = &lt; 0x0  0xffffffff 0xffffffff 0xffffffff  0x40000 &gt;;
+mtk_dsp_dataprovider = &lt; 0x0  0xffffffff 0xf 0xffffffff  0x30000 &gt;;
+mtk_dsp_call_final = &lt; 0x1  0x4 0x10 0x14  0x18000 &gt;;
+mtk_dsp_fast = &lt; 0x5  0x2 0xffffffff 0xffffffff  0x5000 &gt;;
+mtk_dsp_ktv = &lt; 0x0  0x8 0x12 0xffffffff  0x10000 &gt;;
+mtk_dsp_ver = &lt;0x1&gt;;
+swdsp_smartpa_process_enable = &lt;0x1&gt;;
+mtk_dsp_mem_afe = &lt;0x1 0x40000&gt;; /* always enable */
+};
+
+
+ADSP system DTS Properties
+The ADSP system DTS is mainly defined in the platform’s DTS file. If you want to make modifications, you can directly edit mtXXXX.dts. However, if you only want to modify the ADSP DTS definition for a specific project on a particular platform, you can edit the project’s DTS file, such as kXXXXv1_64.dts. Any modifications or additions made in this file will only take effect for the kXXXXv1_64 project and will not affect other projects.
+Before Kernel 6.1
+Platform’s DTS file path: alps/kernel-x.x/arch/arm64/boot/dts/mediatek/ mtXXXX.dts
+Project’s DTS file path: alps/kernel-x.x/arch/arm64/boot/dts/mediatek/ [project].dts
+Kernel 6.1 and later versions
+Platform’s DTS file path: alps/kernel/kernel_device_modules-x.x/arch/arm64/boot/dts/mediatek/ mtXXXX.dts
+Project’s DTS file path: alps/kernel/kernel_device_modules-x.x/arch/arm64/boot/dts/mediatek/ [project].dts
+ADSP system DTS property description
+
+Property
+Modifiable
+Support kernrel version
+Description
+adspsys
+reg
+X
+Supported by all kernel versions
+This property defines registers that would be used in the ADSP kernel driver.
+
+reg-names
+X
+Supported by all  kernel versions
+Names of registers.
+
+interrupts
+X
+Supported by all kernel versions
+This property defines the interrupts that APMCU can receive from ADSP.
+
+interrupt-names
+X
+Supported by all kernel versions
+Names of interrupts.
+
+hrt-ctrl-bits
+X
+From Kernel 6.1
+This property defines the required value for ADSP to become a HRT master.
+
+power-domains
+X
+Supported by all kernel versions
+This property defines the power domains required to enable ADSP.
+
+clocks
+X
+Supported by all kernel versions
+This property defines the required clock sourcse for ADSP.
+
+clock-names
+X
+Supported by all kernel versions
+Names of clocks.
+
+slp-prot-ctrl
+X
+From Kernel 6.1
+This property indicates whether the ADSP kernel driver needs to control ADSP sleep protect.
+A value of “1” indicates that it is required, while “0” indicates that it is not required.
+
+interconnects
+X
+From Kernel 6.1
+This property is used to register ADSP as an HRT master to the dvfsrc kernel driver.
+
+interconnect-names
+X
+From Kernel 6.1
+Names of intersections.
+
+system-l2sram
+X
+From Kernel 6.1
+This property indicates whether ADSP uses a portion of L2SRAM for system purposes.
+
+core-num
+X
+Supported by all kernel versions
+This property indicates the number of cores in ADSP.
+
+adsp-rsv-ipidma-a
+O
+Supported by all kernel versions
+This property defines the IPI DMA buffer size used by ADSP core 0.  It is recommended to increase this property value only , decreasing it may lead to issues in high load scenarios.
+
+adsp-rsv-ipidma-b
+O
+Supported by all kernel versions, but is  only used on dual-core ADSP
+This property defines the IPI DMA buffer size used by ADSP core 0.  It is recommended to increase this property value only , decreasing it may lead to issues in high load scenarios.
+
+adsp-rsv-logger-a
+X
+Supported by all kernel versions
+This property defines the ADSP core 0 logger buffer size.
+
+adsp-rsv-logger-b
+X
+Supported by all kernel versions, but is  only used  on dual-core ADSP
+This property defines the ADSP core 1 logger buffer size.
+
+adsp-rsv-c2c
+X
+Only supported in Kernel with dual cores ADSP
+This property defines the ADSP C2C DRAM buffer size.
+
+adsp-rsv-dbg-dump-a
+X
+Supported by all kernel versions
+This property shows the ADSP core 0 debug buffer size.
+
+adsp-rsv-dbg-dump-b
+X
+Supported by all kernel versions, but is  only used on dual-core ADSP
+This property shows the ADSP core 1 debug buffer size.
+
+adsp-rsv-core-dump-a
+X
+Supported by all kernel versions
+This property shows the ADSP core 0 core dump size.
+
+adsp-rsv-core-dump-b
+X
+Supported by all kernel versions, but is  only used on dual-core ADSP
+This property shows the ADSP core 1 core dump size.
+
+adsp-rsv-pcie
+X
+From Kernel 5.15
+Not in use
+
+adsp-rsv-l2sram
+X
+From Kernel 6.1
+This property shows the size of the ADSP L2SRAM control buffer.
+
+adsp-rsv-xhci
+X
+From Kernel 6.1
+This property shows the buffer size shared between ADSP and USB.
+
+adsp-rsv-audio
+X
+Supported by all kernel versions
+This property shows the buffer size shared between ADSP and Audio.
+
+adsp-slc-enable
+O
+From Kernel 6.12
+T his property controls   whether the adsp should use  SLC . SLC is similar to cache on DRAM and allows the  ADSP  to fetch DRAM data faster. When the value is 1, the  ADSP  will use SLC.  
+adsp_core0
+reg
+X
+Supported by all kernel versions
+This property lists the sizes of ITCM, DTCM, and L2SRAM (system usage) for ADSP core 0.
+
+system
+O
+Supported by all kernel versions
+This property shows the system RAM address and size used by the ADSP core 0. Only the size can be modified, and the method for modifying the size can be found in  DSP Image
+
+interrupts
+X
+Supported by all kernel versions
+This property defines the interrupts that APMCU can receive from ADSP core 0.
+
+mboxes
+X
+Supported by all  kernel versions
+This property lists the mailboxes used by ADSP  core 0. There are two sets in total. The first set of mailboxes is used for messages sent from APMCU to ADSP core 0, while the second set is used for messages sent in the opposite direction.
+
+feature-control
+X
+Supported by all kernel versions
+This property lists the features supported by ADSP core 0. It is 64 bits in length, with each bit representing a feature. A bit value of 1 indicates that ADSP core 0 will activate when that feature is in operation, while a value of 0 means it will enter suspend mode. It is not recommended to modify this property as it may unnecessarily activate ADSP core 0, increasing power consumption.
+adsp_core1
+reg
+X
+Supported by all kernel versions
+This property lists the sizes of ITCM, DTCM, and L2SRAM (system usage) for ADSP core 1.
+
+system
+O
+Supported by all kernel versions
+This property shows the system RAM address and size used by the ADSP core 1. Only the size can be modified, and the method for modifying the size can be found in  DSP Image
+
+interrupts
+X
+Supported by all kernel versions
+This property defines the interrupts that APMCU can receive from ADSP core 1.
+
+mboxes
+X
+Supported by all kernel versions
+This property lists the mailboxes used by ADSP core 1. There are two sets in total. The first set of mailboxes is used for messages sent from APMCU to ADSP core 1, while the second set is used for messages sent in the opposite direction.
+
+feature-control
+X
+Supported by all kernel versions
+This property lists the features supported by ADSP core 1. It is 64 bits in length, with each bit representing a feature. A bit value of 1 indicates that ADSP core 1 will activate when that feature is in operation, while a value of 0 means it will enter suspend mode. It is not recommended to modify this property as it may unnecessarily activate ADSP core 1, increasing power consumption.
+adsp_slp_prot
+power-domains
+X
+From Kernel 6.1
+This property defines the power domain that needs to control ADSP slpprot.
+audio_dsp_hrt_bw
+adsp-qos-scene-phone
+X
+From Kernel 6.1
+This property specifies the bandwidth that needs to be communicated to the dvfsrc kernel  driver for the phone call scenario, with a default value of 500 Mbps.
+
+</pre></section></article><section><h2>材料中的原图</h2><figure><a href="materials/SRC0313-image3.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image3.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 1"></a><figcaption>原图 1 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image9.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image9.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 2"></a><figcaption>原图 2 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image10.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image10.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 3"></a><figcaption>原图 3 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image11.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image11.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 4"></a><figcaption>原图 4 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image12.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image12.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 5"></a><figcaption>原图 5 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image13.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image13.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 6"></a><figcaption>原图 6 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image14.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image14.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 7"></a><figcaption>原图 7 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image32.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image32.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 8"></a><figcaption>原图 8 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image15.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image15.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 9"></a><figcaption>原图 9 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image16.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image16.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 10"></a><figcaption>原图 10 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image30.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image30.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 11"></a><figcaption>原图 11 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image1.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image1.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 12"></a><figcaption>原图 12 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image28.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image28.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 13"></a><figcaption>原图 13 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image2.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image2.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 14"></a><figcaption>原图 14 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image31.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image31.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 15"></a><figcaption>原图 15 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image4.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image4.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 16"></a><figcaption>原图 16 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image5.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image5.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 17"></a><figcaption>原图 17 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image6.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image6.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 18"></a><figcaption>原图 18 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image7.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image7.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 19"></a><figcaption>原图 19 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image8.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image8.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 20"></a><figcaption>原图 20 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image33.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image33.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 21"></a><figcaption>原图 21 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image34.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image34.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 22"></a><figcaption>原图 22 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image35.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image35.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 23"></a><figcaption>原图 23 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image36.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image36.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 24"></a><figcaption>原图 24 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image37.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image37.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 25"></a><figcaption>原图 25 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image38.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image38.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 26"></a><figcaption>原图 26 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image39.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image39.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 27"></a><figcaption>原图 27 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image20.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image20.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 28"></a><figcaption>原图 28 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image18.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image18.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 29"></a><figcaption>原图 29 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image21.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image21.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 30"></a><figcaption>原图 30 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image22.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image22.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 31"></a><figcaption>原图 31 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image29.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image29.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 32"></a><figcaption>原图 32 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image17.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image17.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 33"></a><figcaption>原图 33 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image19.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image19.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 34"></a><figcaption>原图 34 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image23.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image23.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 35"></a><figcaption>原图 35 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image24.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image24.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 36"></a><figcaption>原图 36 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image25.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image25.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 37"></a><figcaption>原图 37 · 点击放大</figcaption></figure><figure><a href="materials/SRC0313-image26.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0313-image26.png" alt="AudioDSP_Development_Tutorial.docx 内嵌原图 38"></a><figcaption>原图 38 · 点击放大</figcaption></figure></section></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">正文（不对应打印页码） 1</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

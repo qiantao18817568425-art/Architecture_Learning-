@@ -1,0 +1,11 @@
+sequenceDiagram
+  participant T as Tester / DoIP Master
+  participant R as DoIP Routing
+  participant U as UDS Service
+  participant D as Diagnostic Storage / ECU
+  T->>R: connect and routing activation
+  R->>U: diagnostic request + correlation
+  U->>D: execute DTC operation
+  D-->>U: operation result
+  U-->>R: positive or negative response
+  R-->>T: correlated response

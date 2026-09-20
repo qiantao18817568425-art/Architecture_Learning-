@@ -1,0 +1,13 @@
+flowchart TD
+  A["BroadcastRadio异常"] --> B{"触发与源状态有效?"}
+  B -- 否 --> B1["天线/调谐器异常"]
+  B -- 是 --> C{"数据/Buffer/音频流推进?"}
+  C -- 否 --> C1["Radio HAL 回调缺失"]
+  C -- 是 --> D{"策略、合成或路由正确?"}
+  D -- 否 --> D1["频点/区域配置不匹配"]
+  D -- 是 --> E{"物理输出与反馈闭环?"}
+  E -- 否 --> E1["Audio route 静音或物理输出失败"]
+  B1 --> R["新 Generation/Session 恢复"]
+  C1 --> R
+  D1 --> R
+  E1 --> R

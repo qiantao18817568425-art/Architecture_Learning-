@@ -1,0 +1,597 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8668_GNSS_Specification_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8668_GNSS_Specification_V1.0.pdf</h1><p>SRC0097 · 原来源 ID S017 · PDF物理页 · 16 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8668/MTK参考资料/MTK参考资料/Android/MT8668_GNSS_Specification_V1.0.pdf</p><p>SHA-256：<code>63729693d95a1e713a15ae15da64c5067671f96a94aa360dd1503b57698476d1</code></p><p>原文件大小：492,518 字节</p></details><div class="actions"><a class="button" href="materials/SRC0097.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8668_GNSS_Specification_V1.0.pdf 原 PDF" src="materials/SRC0097.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0097.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version:  1.0 
+Release date:  2026-01-28
+MT8668 GNSS Sepcification 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0097.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.   
+MT8668 GNSS 
+Specification 
+Confidential B 
+2 
+Version History 
+Version Date Description 
+1.0 2026-01-28 Official release 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0097.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.   
+MT8668 GNSS 
+Specification 
+Confidential B 
+3 
+Table of Contents 
+Version History ·································································································································································· 2 
+Table of Contents ······························································································································································· 3 
+List of Tables ······································································································································································ 4 
+1 Introduction······························································································································································· 5 
+ Purpose ···································································································································································· 5 
+ Scope ········································································································································································ 5 
+2 Abbreviations ···························································································································································· 6 
+3 Function ···································································································································································· 7 
+ RF Chip ····································································································································································· 7 
+ Positioning Method ·················································································································································· 7 
+ Constellation ···························································································································································· 7 
+ Satellite Signal ·························································································································································· 7 
+ Satellite-Based Augmentation System (SBAS) ·········································································································· 8 
+ One Pulse-Per-Second (1PPS) ··································································································································· 8 
+ Active Interference Cancellation (AIC) ····················································································································· 8 
+ Coordinate System ··················································································································································· 8 
+ Anti-jamming ···························································································································································· 8 
+ A-GNSS ····································································································································································· 8 
+ eCall 9 
+ Oscillator ·································································································································································· 9 
+4 Performance ···························································································································································· 10 
+ Noise Figure ··························································································································································· 10 
+ Max Tracking Channel ············································································································································ 10 
+ Time To First Fix (TTFF) ··········································································································································· 10 
+ 1PPS Accuracy ························································································································································ 10 
+ Positioning Accuracy ·············································································································································· 11 
+ Velocity Accuracy ··················································································································································· 11 
+ Sensitivity ······························································································································································· 12 
+ Temperature ··························································································································································· 12 
+ Operation Limits ····················································································································································· 12 
+ UTC Format ···························································································································································· 12 
+ Update Rate ··························································································································································· 12 
+ NMEA GGA Sentence Latency ································································································································ 13 
+ ADR EDT ································································································································································· 13 
+5 Message Output ······················································································································································ 14 
+ Message Output ····················································································································································· 14 
+6 Contact ···································································································································································· 15 
+Exhibit 1 Terms and Conditions ········································································································································ 16 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0097.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.   
+ 4 
+MT8668  GNSS 
+Specification 
+Confidential B 
+List of Tables 
+Table 2-1. Abbreviations ····························································································································································· 6 
+Table 3-1. Supported positioning method·································································································································· 7 
+Table 3-2. Supported configured GNSS constellation ················································································································· 7 
+Table 3-3. Supported satellite signal baseband frequency ········································································································· 7 
+Table 3-4. Supported SBAS ························································································································································· 8 
+Table 3-5. Supported A-GNSS functions ····································································································································· 8 
+Table 4-1. TTFF specification ···················································································································································· 10 
+Table 4-2. Positioning accuracy ················································································································································ 11 
+Table 4-3. Velocity accuracy ····················································································································································· 11 
+Table 4-4. Sensitivity ································································································································································ 12 
+Table 4-5. Temperature ···························································································································································· 12 
+Table 4-6. Operation limits ······················································································································································· 12 
+Table 4-7. Update rate ······························································································································································ 12 
+Table 5-1. Message output ······················································································································································· 14 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0097.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.   
+ 5 
+MT8668  GNSS 
+Specification 
+Confidential B 
+1 Introduction 
+ Purpose 
+The specifications of MediaTek automotive GNSS module, MT8668, are provided in this document. 
+ 
+ Scope 
+The supported functions, performance, and message output of MediaTek automotive GNSS module, MT8668, are detailed 
+in this document. 
+ 
+Chapter 1 Presents the purpose and scope of the document. 
+Chapter 2 Lists the abbreviations. 
+Chapter 3 Introduces the supported functions. 
+Chapter 4 Introduces the performance. 
+Chapter 5 Introduces the message output. 
+Chapter 6 Lists the related documents. 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0097.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.   
+ 6 
+MT8668  GNSS 
+Specification 
+Confidential B 
+2 Abbreviations 
+Table 2-1. Abbreviations 
+Abbreviation Explanation 
+ADR Automotive Dead Reckoning 
+A-GNSS Assisted Global Navigation Satellite System 
+AIC Active Interference Cancellation 
+CATARC China Automotive Technology and Research Center 
+C/N0 Carrier-to-Noise Density Ratio 
+EDT Error of Distance Travelled 
+EGNOS  European Geostationary Navigation Overlay Service 
+EPO Extended Prediction Orbit 
+GAGAN  GPS Aided GEO Augmented Navigation 
+MSAS  Multi-functional Satellite Augmentation System 
+NLP Network Location Provider 
+NTP Network Time Protocol 
+PPS Pulse-Per-Second 
+RTK Real-time Kinematic Positioning 
+SDCM  System for Differential Corrections and Monitoring 
+SPP Single Point Positioning 
+SUPL Secure User Plane Location 
+Ta Ambient Temperature 
+TCXO Temperature Compensated Crystal Oscillator 
+TTFF Time To First Fix 
+UTC Coordinated Universal Time 
+WAAS  Wide Area Augmentation System 
+WGS84 World Geodetic System 1984 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0097.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.   
+ 7 
+MT8668  GNSS 
+Specification 
+Confidential B 
+3 Function 
+ RF Chip 
+MT8668 supports with the RF chip of MT6637. 
+ 
+ Positioning Method 
+Table 3-1. Supported positioning method 
+Function Positioning Method 
+Supported positioning method SPP (Single Point Positioning) 
+ADR (Automotive Dead Reckoning) (1) 
+(1) Depends on software version. 
+ 
+ Constellation 
+Table 3-2. Supported configured GNSS constellation 
+Function GNSS Constellation 
+Supported configured GNSS constellations BeiDou-Only (1) 
+GPS + GLONASS + Galileo + BeiDou + NavIC 
+(1) Conforms to latest CATARC specifications and test scenarios. 
+ 
+ Satellite Signal 
+Table 3-3. Supported satellite signal baseband frequency 
+Signal Baseband Frequency 
+GPS L1C/A 1575.420 MHz 
+L5 1176.450 MHz 
+Galileo E1 1575.420 MHz 
+E5a 1176.450 MHz 
+GLONASS L1OF 1598.0625 to 1609.3125 MHz 
+BeiDou B1I 1561.098 MHz 
+B2a 1176.450 MHz 
+QZSS 
+L1C/A 1575.420 MHz 
+L1S 1575.420 MHz 
+L5 1176.450 MHz 
+NavIC/IRNSS L5 1176.450 MHz 
+ 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0097.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.   
+ 8 
+MT8668  GNSS 
+Specification 
+Confidential B 
+ Satellite-Based Augmentation System (SBAS) 
+Table 3-4. Supported SBAS 
+Function SBAS 
+Supported SBAS 
+WAAS (USA) 
+SDCM (Russia) 
+EGNOS (Europe) 
+MSAS (Japan) 
+GAGAN (India) 
+ 
+ One Pulse-Per-Second (1PPS) 
+MT8668 supports the function of one pulse-per-second (1PPS) output rate. 
+ 
+ Active Interference Cancellation (AIC) 
+MT8668 supports the function of AIC. 
+ 
+ Coordinate System 
+MT8668 supports the coordinate system of WGS84. 
+ 
+ Anti-jamming 
+MT8668 supports the function of jamming detection and filtering. 
+ 
+Note: 
+• Only supports CW tone detection and filtering. 
+ 
+ A-GNSS 
+Table 3-5. Supported A-GNSS functions 
+Function A-GNSS Function 
+Supported A-GNSS functions 
+A-GNSS (GPS, BDS, GLO, GAL) (1) 
+EPO 
+E911 
+SUPL 2.0 
+(1) Supported constellations depend on service provider . 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0097.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.   
+ 9 
+MT8668  GNSS 
+Specification 
+Confidential B 
+ eCall 
+MT8668 supports EU eCall GNSS part and ERA-GLONASS(GOST) GNSS part. 
+ 
+ Oscillator 
+MT8668 supports with the oscillator of TCXO. 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0097.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.   
+ 10 
+MT8668  GNSS 
+Specification 
+Confidential B 
+4 Performance 
+ Noise Figure 
+MT8668 supports performance in this datasheet with noise figure ≤ 2.5 dB. 
+ 
+ Max Tracking Channel 
+MT8668 supports concurrent maximum tracking channel of L1/L5: 90/60. 
+ 
+ Time To First Fix (TTFF) 
+Table 4-1. TTFF specification 
+GNSS Constellation Start Type (1) TTFF 
+GPS + GLONASS + Galileo + BeiDou + NavIC 
+Cold start Mean &lt; 26 s 
+Max &lt; 40 s 
+Warm start Mean &lt; 26 s 
+Max &lt; 38 s 
+Hot start Mean &lt; 1 s 
+Max &lt; 3 s 
+Aided with EPO (2) Cold start Mean &lt; 15 s 
+Warm start Mean &lt; 5 s 
+Aided with A-GNSS (3) 
+Cold start Mean &lt; 5 s 
+Warm start Mean &lt; 3 s 
+Hot start Mean &lt; 1 s 
+BeiDou-Only(4) 
+Cold start Mean &lt; 30 s 
+Max &lt; 40 s 
+Warm start Mean &lt; 26 s 
+Max &lt; 38 s 
+Hot start Mean &lt; 1 s 
+Max &lt; 3 s 
+(1) Satellite signals at -130dBm, HDOP ≤ 1.5, PDOP ≤ 2.5, tested at 25°C. 
+(2) With correct system time or NTP. 
+(3) Supported constellations depend on service provider . 
+(4) BDS B1I, B1C, B2a ≥ 6SVs. 
+ 
+ 1PPS Accuracy 
+MT8668 supports 1PPS with accuracy &lt; 80 ns (95% at 25°C) or &lt; 250ns (95% at -40°C ~ 85°C). 
+ 
+Note: 
+• Tested with PPS calibration and full set of DCB calibration 
+• Satellite signals ≥ -140dBm.  
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0097.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.   
+ 11 
+MT8668  GNSS 
+Specification 
+Confidential B 
+ Positioning Accuracy 
+Table 4-2. Positioning accuracy 
+GNSS Constellation Positioning Accuracy (1) 
+GPS + GLONASS + Galileo + BeiDou + NavIC(2) SPP Horizontal &lt; 2 m (CEP95) 
+Vertical &lt; 4 m (CEP95) 
+BeiDou-Only(3) SPP Horizontal &lt; 2 m (CEP95) 
+Vertical &lt; 4 m (CEP95) 
+(1) Static test scenario with GNSS simulator: Static test for 1 hour under opensky environment (no obstruction above 5° elevation 
+angle), with HDOP ≤ 1.5, PDOP ≤ 2.5, and all satellite signals at -130dBm.  
+(2) Constellations with at least GPS L1C/A, BDS B1I, B2a, GAL E1, and GLO L1OF. Number of visible satellites with at least 6SV for each 
+constellation. 
+(3) BDS B1I, B2a ≥ 6SVs. 
+ Velocity Accuracy 
+Table 4-3. Velocity accuracy 
+GNSS Constellation Velocity Accuracy 
+GPS + GLONASS + Galileo + BeiDou + NavIC(3) SPP (1) &lt; 0.5 m/s (CEP95) 
+SPP under constant speed (2) &lt; 0.27 m/s (CEP95) 
+BeiDou-Only(4) SPP (1) &lt; 0.5 m/s (CEP95) 
+SPP under constant speed (2) &lt; 0.27 m/s (CEP95) 
+(1) Dynamic test scenario with GNSS simulator: 
+Dynamic test for 1 hour under opensky environment, with HDOP ≤ 1.5, PDOP ≤ 2.5, and all satellite signals at -130dBm.  
+Trajectory settings as follows: 
+1. Start moving north at 30 km/h; 
+2. Accelerate from 30 km/h to 150 km/h within 85 meters; 
+3. Maintain 150 km/h for 730 meters, then decelerate to 30 km/h within 85 meters; 
+4. Make a 90-degree clockwise turn with a 20-meter radius at 30 km/h; 
+5. Accelerate to 150 km/h within 85 meters; 
+6. Maintain 150 km/h for 1230 meters, then decelerate to 30 km/h within 85 meters; 
+7. Make another 90-degree clockwise turn with a 20-meter radius at 30 km/h; 
+Repeat steps 2 to 7 to complete a rectangular (rounded corners) path and continue the same trajectory until the end of the 
+scenario. 
+(2) Constant speed test scenario with GNSS simulator: 
+Under opensky environment (no obstruction above 5° elevation angle), with HDOP &lt; 1.2, and all satellite signals at -130dBm.  
+Vehicle speed configuration: 
+1. 0 ~ 1st minute: Speed = 0 km/h. 
+2. 1st ~ 3rd minute: Accelerates from 0 km/h to 40 km/h, 80 km/h, and 120 km/h respectively with fixed acceleration. 
+3. 3rd ~ 60th minute: Maintain horizontal speed at 40 km/h, 80 km/h and 120 km/h respectively. 
+The statistical result is calculated after the receiver speed reaches 40km/h, 80km/h, 120km/h with at least 10 minutes of constant 
+speed data. 
+(3) Constellations with at least GPS L1C/A, BDS B1I, B1C, B2a, GAL E1, and GLO L1OF. Number of visible satellites with at least 6SV for 
+each constellation. 
+(4) BDS B1I, B2a ≥ 6SVs. 
+  
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0097.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.   
+ 12 
+MT8668  GNSS 
+Specification 
+Confidential B 
+ Sensitivity 
+Table 4-4. Sensitivity 
+GNSS Constellation Sensitivity 
+GPS + GLONASS + Galileo + BeiDou  + NavIC Acquisition 
+Cold start -148 dBm 
+Warm start -151 dBm 
+Hot start -163 dBm 
+Tracking -165 dBm 
+BeiDou-Only Acquisition 
+Cold start -142dBm 
+Warm start -146dBm 
+Hot start -161dBm 
+Tracking -161dBm 
+ 
+ Temperature 
+Table 4-5. Temperature 
+Status Temperature 
+Working temperature -40°C to 85°C (Ta) 
+ 
+ Operation Limits 
+Table 4-6. Operation limits 
+Parameter Operation Limit 
+Dynamic &lt; 4 g 
+Altitude &lt; 18270 m 
+Velocity &lt; 515 m/s 
+ 
+ UTC Format 
+MT8668 supports UTC format as hhmmss.mmm. 
+ 
+ Update Rate 
+Table 4-7. Update rate 
+GNSS Constellation Update Rate 
+GPS + GLONASS + Galileo + BeiDou + NavIC 
+PVT 1/2/5/10 Hz 
+RAW 1/2/5/10 Hz 
+ADR (1)  1/2/5/10 Hz 
+(1) The update rate of ADR must be equal to the update rate of PVT. 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0097.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.   
+ 13 
+MT8668  GNSS 
+Specification 
+Confidential B 
+ NMEA GGA Sentence Latency 
+MT8668 supports NMEA GGA sentence latency of 95% &lt; 80 ms. 
+ 
+Note: 
+• This feature supports GNSS only (without ADR). 
+ 
+ ADR EDT 
+MT8668 supports ADR v4.1 with EDT &lt; 1%. 
+ 
+Note: 
+• CEP68 with 1000 to 3000 meters of distance travelled. 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0097.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.   
+ 14 
+MT8668  GNSS 
+Specification 
+Confidential B 
+5 Message Output 
+ Message Output 
+Table 5-1. Message output 
+Category Message 
+NMEA 0183(1) 
+GGA 
+GSA 
+GSV 
+RMC 
+VTG 
+RTCM v3.2(2) 
+Raw measurement data (3) 
+Pseudorange 
+Carrier (4) 
+C/N0 
+Doppler (5) 
+Ephemeris Ephemeris 
+Leap second (By request) 
+(1) MT8668 support NMEA 0183 v4.10. 
+(2) Partial support, please refer to the RTMC document[2] for details. 
+(3) Android raw measurement format. 
+(4) Unit: meter. 
+(5) Unit: m/s. 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0097.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.   
+ 15 
+MT8668  GNSS 
+Specification 
+Confidential B 
+6 Contact 
+MediaTek Inc. (Headquarters) 
+No.1, Dusing 1st Rd., 
+Hsinchu Science Park, 
+Hsinchu City 300,  
+Taiwan 
+Tel: +886-3-567-0766 
+https://www.mediatek.tw/ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0097.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.   
+ 16 
+MT8678  GNSS 
+Specification 
+Confidential B 
+Exhibit 1 Terms and Conditions 
+Your access to and use of this document and the information contained herein (collectively this “Document”) is subject to your (including the corporation 
+or other legal entity you represent, collectively “You”) acceptance of the terms and conditions set forth below (“T&amp;C”).  By using, accessing or 
+downloading this Document, You are accepting the T&amp;C and agree to be bound by the T&amp;C.  If You don’t agree to the T&amp;C, You may not use this 
+Document and shall immediately destroy any copy thereof. 
+ 
+This Document contains information that is confidential and proprietary to MediaTek Inc. and/or its affiliates (collectively “MediaTek”) or its licensors 
+and is provided solely for Your internal use with MediaTek’s chipset(s) described in this Document and shall not be used for any other purposes (including 
+but not limited to identifying or providing evidence to support any potential patent infringement claim against MediaTek or any of MediaTek’s suppliers 
+and/or direct or indirect customers).  Unauthorized use or disclosure of the information contained herein is prohibited.  You agree to indemnify 
+MediaTek for any loss or damages suffered by MediaTek for Your unauthorized use or disclosure of this Document, in whole or in part. 
+ 
+MediaTek and its licensors retain titles and all ownership rights in and to this Document and no license (express or implied, by estoppels or otherwise) to 
+any intellectual propriety rights is granted hereunder.  This Document is subject to change without further notification.  MediaTek does not assume any 
+responsibility arising out of or in connection with any use of, or reliance on, this Document, and specifically disclaims any and all liability, including, 
+without limitation, consequential or incidental damages. 
+ 
+THIS DOCUMENT AND ANY OTHER MATERIALS OR TECHNICAL SUPPORT PROVIDED BY MEDIATEK IN CONNECTION WITH THIS DOCUMENT, IF ANY, ARE 
+PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE.  MEDIATEK SPECIFICALLY DISCLAIMS 
+ALL WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, COMPLETENESS OR ACCURACY AND ALL 
+WARRANTIES ARISING OUT OF TRADE USAGE OR OUT OF A COURSE OF DEALING OR COURSE OF PERFORMANCE.  MEDIATEK SHALL NOT BE RESPONSIBLE 
+FOR ANY MEDIATEK DELIVERABLES MADE TO MEET YOUR SPECIFICATIONS OR TO CONFORM TO A PARTICULAR STANDARD OR OPEN FORUM. 
+ 
+Without limiting the generality of the foregoing, MediaTek makes no warranty, representation or guarantee regarding the suitability of its products for 
+any particular purpose, nor does MediaTek assume any liability arising out of the application or use of any product, circuit or software.  You agree that 
+You are solely responsible for the designing, validating and testing Your product incorporating MediaTek’s product and ensure such product meets 
+applicable standards and any safety, security or other requirements. 
+ 
+The above T&amp;C and all acts in connection with the T&amp;C or this Document shall be governed, construed and interpreted in accordance with the laws of 
+Taiwan, without giving effect to the principles of conflicts of law. 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

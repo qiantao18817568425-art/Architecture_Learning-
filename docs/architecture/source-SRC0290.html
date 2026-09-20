@@ -1,0 +1,503 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Yocto_OTA_User_Manual_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Yocto_OTA_User_Manual_V1.0.pdf</h1><p>SRC0290 · 原来源 ID S227 · PDF物理页 · 13 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MT8676软件资料/User Manual/Yocto/English Version/MT8676_Yocto_OTA_User_Manual_V1.0.pdf</p><p>SHA-256：<code>15941d5cdc16d0019d9d620f878422f7206776525cceaebd0e9f3174014d7d3e</code></p><p>原文件大小：719,259 字节</p></details><div class="actions"><a class="button" href="materials/SRC0290.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Yocto_OTA_User_Manual_V1.0.pdf 原 PDF" src="materials/SRC0290.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0290.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version:  1.0 
+Release date:  2024-09-19 
+MT8676 Yocto OTA User Manual 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0290.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8676 Yocto OTA 
+User Manual 
+Confidential B 
+Version History 
+Version Date Author Description 
+1.0 2024-09-19 Yiru Feng Official release 
+ 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0290.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8676 Yocto OTA 
+User Manual 
+Confidential B 
+Table of Contents 
+Version History ·································································································································································· 2 
+Table of Contents ······························································································································································· 3 
+List of Figures ····································································································································································· 3 
+List of Tables ······································································································································································ 3 
+1 OTA ············································································································································································ 4 
+1.1 Overview ·································································································································································· 4 
+1.1.1 Brief Introduction ·········································································································································· 4 
+1.1.2 Purpose ························································································································································· 4 
+1.1.3 Who Should Read This Document················································································································· 4 
+1.1.4 How to Use This Manual ······························································································································· 4 
+1.2 OTA Update Definitions ············································································································································ 5 
+1.3 OTA Abbreviation ····················································································································································· 5 
+1.4 Enable A/B System Updates Service ························································································································· 5 
+1.5 Architecture Overview ············································································································································· 5 
+1.5.1 AB System Updates Process ·························································································································· 6 
+1.5.1.1 How to Use Yocto Full/Delta OTA ···································································································· 7 
+1.5.2 A/B System Partition Layout ························································································································· 8 
+1.5.3 Build otapackage Architecture (Temporary Solution) ··················································································· 9 
+1.5.3.1 Build Yocto targetfiles.zip ················································································································ 9 
+1.5.3.2 Build Full otapackage.zip··············································································································· 10 
+1.5.3.3 Build Delta otapackage.zip ············································································································ 10 
+1.5.4 Change Verification Key for otapackage.zip ································································································ 11 
+1.5.5 LK2 Boot Control Flow ································································································································· 12 
+Exhibit 1 Terms and Conditions ········································································································································ 13 
+ 
+List of Figures 
+Figure 1-1. Yocto OTA update architecture ································································································································ 6 
+Figure 1-2. Yocto AB partition layout ········································································································································· 8 
+Figure 1-3. Yocto build otapackage architecture ························································································································ 9 
+Figure 1-4. Yocto LK2 boot flow ··············································································································································· 12 
+ 
+List of Tables 
+Table 1-1. Chapter overview ······················································································································································ 4 
+Table 1-2. Abbreviations ····························································································································································· 5 
+ 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0290.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8676 Yocto OTA 
+User Manual 
+Confidential B 
+1 OTA 
+1.1 Overview 
+1.1.1 Brief Introduction 
+The introduction to Yocto A/B system update is as follows: 
+ 
+• The system update method is A/B update, where the device runs two completely parallel systems, active_slot and 
+non-active_slot. 
+• On the disk, always keep a bootable system so that the device will not become bricked. 
+• During the LK2 phase, the active_slot is confirmed and the corresponding partition data is loaded based on the AB 
+flag set in the misc partition. 
+• The OTA upgrade runs in the background in normal mode, without user awareness. 
+ 
+1.1.2 Purpose 
+A guide to AB system updates is provided to users in this document. 
+The document primarily discusses the methods for generating OTA packages and testing on the Yocto platform; it also 
+covers the utilization of the AB flag in the boot process. 
+ 
+1.1.3 Who Should Read This Document 
+This document is mainly aimed at the following groups: 
+• Engineers with knowledge of OTA A/B system updates (seamless updates) 
+ 
+1.1.4 How to Use This Manual 
+The distribution of information within this document is explained in this section, along with the provision of tips and 
+examples to facilitate locating and comprehending information within this document. 
+Table 1-1 outlines the chapters in this document. 
+Table 1-1. Chapter overview 
+No. Chapter Contents 
+1.1 Introduction Described the scope and layout of this document 
+1.2 OTA Update Definitions Definition of OTA upgrade 
+1.3 Abbreviations OTA abbreviation 
+1.4 Enable the A/B System 
+Updates Service 
+Open the required service for AB system upgrade on the MediaTek 
+platform. 
+1.5.1 A/B System Update Process Introduction to the architecture and upgrade methods of the AB system 
+1.5.2 A/B System Partition Layout Introduction to A/B partitioning 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0290.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8676 Yocto OTA 
+User Manual 
+Confidential B 
+No. Chapter Contents 
+1.5.3 Build otapackage Architecture Introduce how to create OTA full upgrade package and differential 
+upgrade package 
+1.5.4 Change Verification Key for 
+otapackage.zip 
+Introduce the upgrade package signing key and its customization 
+1.5.5 LK2 Boot Control Flow Introduction to bootctl parameters in Yocto LK2 phase 
+ 
+1.2 OTA Update Definitions 
+The professional terminology of OTA is defined as follows: 
+ 
+Full Update: A full update refers to the complete update of the partition data to be upgraded on the device, with the 
+update package containing complete image information for each partition. 
+Delta Update: A delta update, also known as incremental update, refers to updating the differential part of the device’s 
+partition data to the corresponding partition data of the target version. The upgrade package only contains the differential 
+parts of two versions, which can greatly reduce the size of the upgrade package. 
+ 
+Note: Only install the corresponding incremental update package on old or source devices used when compiling 
+differential packages. 
+ 
+1.3 OTA Abbreviation 
+Table 1-2. Abbreviations 
+Abbreviations Explanation 
+Bootctl Boot control, A/B slot identification structure, stored in the misc partition 
+LK2 Little Kernel 2, Yocto boot stage 
+OTA Over-The-Air, divided into full updates and delta updates. 
+ 
+1.4 Enable A/B System Updates Service 
+Please add the following module to the corresponding project.bb file: 
+• recipes-auto/images/mtk-core-image-auto8676.bb:  
+–   update-engine-sideload-u \  
+–   update-verifier-u \ 
+ 
+update-engine-sideload-u: OTA upgrade module, perform partition read and write operations 
+update-verifier-u: After successful OTA reboot, modify the new slot flag 
+ 
+1.5 Architecture Overview 
+This section first briefly describes the various modules of the system and their relationships: 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0290.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Yocto OTA 
+User Manual 
+Confidential B 
+1. A/B system update process 
+2. A/B system partition layout 
+3. Build otapackage architecture 
+4. Change the verification key for otapackage.zip 
+5. LK2 boot control flow 
+ 
+1.5.1 AB System Updates Process 
+ 
+Figure 1-1. Yocto OTA update architecture 
+ 
+Figure 1-1 depicts the overall architecture of Yocto OTA update, from which the following information can be obtained: 
+1. Yocto OTA updates can be divided into two steps: get otapackage and trigger process. 
+MediaTek only provides OTA capabilities. otapackage is stored in the local environment and uses update script 
+triggering the process.  
+Customers can store otapackage in remote server or storage devices and implement triggering methods like APP 
+themselves. 
+ 
+2. Taking local update as an example, the general flow of OTA update is as follows: 
+– Store the update package in the local PC environment. 
+– Executing the OTA update script calls update_engine sideload to trigger the update. 
+– Verify the integrity and accuracy of the update package (refer to Section 1.5.4 for key verification details) 
+– Update the update data in the update package to the corresponding partitions respectively. 
+– Validate the data that has been updated in the partition to ensure data accuracy. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0290.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8676 Yocto OTA 
+User Manual 
+Confidential B 
+– Update the system boot control parameters, i.e. Bootctl information, to ensure that the system loads new slot 
+partition data at the next boot. 
+– Switch boot region to ensure that the system loads new preloader partition data at the next startup. 
+– Reboot the device. 
+ 
+1.5.1.1 How to Use Yocto Full/Delta OTA 
+Test Environment Setup 
+1. The PC has a Python 3 environment. 
+2. Flash the base load in the DUT. 
+3. Get OTA package. 
+ 
+Test Step 
+1. Device connected to Yocto ADB environment 
+2. Execute the update script: python3 hypervisor_update.py --file otapackage_delta.zip &gt; update.txt 
+2&gt;&amp;1 
+Note: 
+▪ hypervisor_update.py: Update script 
+▪ otapackage_delta.zip: OTA package, unlimited package name 
+▪ &gt; update.txt 2&gt;&amp;1: Store the upgrade log in update.txt in the current directory 
+ 
+Expected result 
+1. Update should be completed, and update.txt prints the following log: [INFO:update_attempter_android.cc(600)] 
+Update successfully applied, waiting to reboot. 
+2. The first restart after the upgrade should successfully enter the home screen. 
+3. Check whether the setting version has been updated. 
+Note: If the test upgrade fails, please provide the update log and UART log in CR. 
+ 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0290.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 Yocto OTA 
+User Manual 
+Confidential B 
+1.5.2 A/B System Partition Layout 
+ 
+Figure 1-2. Yocto AB partition layout 
+ 
+Yocto AB partition layout is as shown in Figure 1-2, and AB partition configuration can be done in the partition table: 
+meta/meta-mediatek-mt8676/recipes-bsp/ptgen/files/auto8676p1_64/partition_table_emmc_ab.csv 
+ 
+To reduce the update of AB partition, the target partition must first be modified to a single partition, and the entry in the 
+partition table corresponding to “OTA_Update” should be changed to “N”. 
+ 
+ 
+For the update of AB partitions, it is necessary to simultaneously create two new partitions, partition_a and partition_b, 
+and set the corresponding “OTA_Update” field in the partition table to “Y”. The size of AB partitions must remain 
+consistent. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0290.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8676 Yocto OTA 
+User Manual 
+Confidential B 
+1.5.3 Build otapackage Architecture (Temporary Solution) 
+ 
+Figure 1-3. Yocto build otapackage architecture 
+ 
+Figure 1-3 describes the architecture of the Yocto OTA compilation update package, from which the following information 
+can be obtained: 
+ 
+1. Compiling the Yocto update package temporarily needs to be done using Android’s compilation environment 
+2. Yocto Only compiles the update package roughly following the flow below: 
+– Compile Yocto targetfiles.zip 
+– Using the Yocto targetfiles.zip, compile and generate full update packages and differential update packages in the 
+Android compilation environment. 
+ 
+1.5.3.1 Build Yocto targetfiles.zip 
+The Yocto targetfiles.zip needs manual replacement of all AB images of the new version to /default_target/IMAGE 
+and /RADIO, then rezip to generate yocto_target.zip. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0290.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8676 Yocto OTA 
+User Manual 
+Confidential B 
+ 
+ 
+Execute the command “zip -r yocto_target.zip .” in the current /default_target/ directory. 
+ 
+1.5.3.2 Build Full otapackage.zip 
+After obtaining yocto_target.zip, the full update package for Yocto can be compiled in the Android build environment. 
+ 
+Compilation instructions: 
+./out_sys/host/linux-x86/bin/ota_from_target_files -v --block -p out_sys/host/linux-x86 -k 
+build/make/target/product/security/testkey --skip_postinstall yocto_target.zip.zip 
+otapackage_full.zip 
+ 
+Note: 
+• ota_from_target_files: Update package compilation script 
+• build/make/target/product/security/testkey: The key path for signing the update package. MediaTek defaults to 
+using the testkey provided by Google, but your company can specify a different key path using the -k parameter . 
+To change the verification key, please refer to Section 1.5.4. 
+• yocto_target.zip: Yocto target files.zip 
+• otapackage_full.zip: The final Yocto full update package, the package name can be freely specified. 
+• Please make sure to compile the update package in the Android build environment and ensure that “source &amp; lunch” is executed 
+before compiling the entire package. 
+ 
+1.5.3.3 Build Delta otapackage.zip 
+Prerequisite: 
+To compile a differential package, it is necessary to prepare two copies of yocto_target.zip in advance. One is the base 
+version (source version) of yocto_target.zip, named as source_yocto_target.zip here; the other is the target version of 
+yocto_target.zip, named as target_yocto_target.zip here. 
+ 
+Note: Please ensure that the base version load burned on the platform and the base version target_files.zip are compiled from the same 
+build. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0290.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8676 Yocto OTA 
+User Manual 
+Confidential B 
+ 
+Compilation instruction: 
+./out_sys/host/linux-x86/bin/ota_from_target_files -v --block -p out_sys/host/linux-x86 -k 
+build/make/target/product/security/testkey --skip_postinstall -i 
+source_yocto_target_files.zip target_yocto_target_files.zip otapackage_delta.zip 
+ 
+Note: 
+• ota_from_target_files: Update package compilation script 
+• build/make/target/product/security/testkey: The key path for signing the update package. MediaTek defaults to 
+using the testkey provided by Google. Your company can specify a different key path by using the -k parameter . 
+To change the signature key, please refer to Section 1.5.4. 
+• source_yocto_target.zip: yocto_target.zip for the source version  
+• target_yocto_target.zip: yocto_target.zip for the target version 
+• otapackage_delta.zip: The final Yocto differential update package, the package name can be freely specified 
+• Please make sure to compile the update package in the Android build environment and ensure that “source &amp; lunch” is executed 
+before compiling the entire package. 
+ 
+1.5.4 Change Verification Key for otapackage.zip 
+OTA update will use two keys: xxx.pk8 and xxx.x509.pem. 
+ 
+1. The key in xxx.pk8 format is used for signing the update package during packaging. 
+2. The key in xxx.x509.pem format is used to verify the update package during the OTA update process. 
+ 
+Please refer to the following two steps to modify the signature key of the update package: 
+1. Replace the compilation instructions in 1.5.3.2 for compiling the full package and in 1.5.3.3 for compiling the 
+differential package after changing the -k parameter to use the paths of xxx.pk8 and xxx.x509.pem files. 
+2. Replace the actual xxx.x509.pem file used inside otacerts.zip located at meta/meta-MediaTek/recipes-
+support/update-engine-sideload-u/files/ota. 
+ 
+After the key is replaced, it is necessary to confirm that the following two files are consistent before the update verification 
+can be passed. 
+• /META-INF/com/android/otacert file for otapackage.zip file 
+• /system/etc/security/otacerts.zip file on the device 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0290.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8676 Yocto OTA 
+User Manual 
+Confidential B 
+1.5.5 LK2 Boot Control Flow 
+ 
+Figure 1-4. Yocto LK2 boot flow 
+ 
+1. Upon completion of the OTA update, a restart is initiated, leading to the startup of Yocto OS and entering the Yocto 
+LK2 phase. 
+2. Check if Yocto has been successfully booted in the current slot by verifying if the value of “Yocto successful boot” in 
+the boot control is 1. 
+3. If a value of 1 is assigned to “Yocto successful boot”, it indicates that the current slot is “bootable”, no action should 
+be taken, and the machine will proceed with booting. In case “Yocto successful boot” holds a value of 0, indicating 
+that the current slot has not booted successfully previously, then verify if the restart count for the current slot 
+exceeds 0 by examining tries_remaining within boot control. 
+4. If the value of tries_remaining is above 0, decrement it by 1 and proceed with the boot process; otherwise, indicating 
+that the current slot is “not bootable”, mark it as invalid by setting both its priority and &quot;Yocto successful boot” to 0. 
+5. Next, the current availability of slots is checked to determine if there are any with a priority other than 0. If none are 
+found, an error message is generated by the system. If available, the priority of the rollback slot is set to 15 and Yocto 
+is triggered to restart for completing the rollback. 
+6. When Yocto successfully boots, set the value of “Yocto successful boot” for the current slot to 1. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0290.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8676 Yocto OTA 
+User Manual 
+Confidential B 
+Exhibit 1 Terms and Conditions 
+Your access to and use of this document and the information contained herein (collectively this “Document”) is subject to your (including the corporation 
+or other legal entity you represent, collectively “You”) acceptance of the terms and conditions set forth below (“T&amp;C”).  By using, accessing or 
+downloading this Document, You are accepting the T&amp;C and agree to be bound by the T&amp;C.  If You don’t agree to the T&amp;C, You may not use this 
+Document and shall immediately destroy any copy thereof. 
+ 
+This Document contains information that is confidential and proprietary to MediaTek Inc. and/or its affiliates (collectively “MediaTek”) or its licensors 
+and is provided solely for Your internal use with MediaTek’s chipset(s) described in this Document and shall not be used for any other purposes (including 
+but not limited to identifying or providing evidence to support any potential patent infringement claim against MediaTek or any of MediaTek’s suppliers 
+and/or direct or indirect customers).  Unauthorized use or disclosure of the information contained herein is prohibited.  You agree to indemnify 
+MediaTek for any loss or damages suffered by MediaTek for Your unauthorized use or disclosure of this Document, in whole or in part. 
+ 
+MediaTek and its licensors retain titles and all ownership rights in and to this Document and no license (express or implied, by estoppels or otherwise) to 
+any intellectual propriety rights is granted hereunder.  This Document is subject to change without further notification.  MediaTek does not assume any 
+responsibility arising out of or in connection with any use of, or reliance on, this Document, and specifically disclaims any and all liability, including, 
+without limitation, consequential or incidental damages. 
+ 
+THIS DOCUMENT AND ANY OTHER MATERIALS OR TECHNICAL SUPPORT PROVIDED BY MEDIATEK IN CONNECTION WITH THIS DOCUMENT, IF ANY, ARE 
+PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE.  MEDIATEK SPECIFICALLY DISCLAIMS 
+ALL WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, COMPLETENESS OR ACCURACY AND ALL 
+WARRANTIES ARISING OUT OF TRADE USAGE OR OUT OF A COURSE OF DEALING OR COURSE OF PERFORMANCE.  MEDIATEK SHALL NOT BE RESPONSIBLE 
+FOR ANY MEDIATEK DELIVERABLES MADE TO MEET YOUR SPECIFICATIONS OR TO CONFORM TO A PARTICULAR STANDARD OR OPEN FORUM. 
+ 
+Without limiting the generality of the foregoing, MediaTek makes no warranty, representation or guarantee regarding the suitability of its products for 
+any particular purpose, nor does MediaTek assume any liability arising out of the application or use of any product, circuit or software.  You agree that 
+You are solely responsible for the designing, validating and testing Your product incorporating MediaTek’s product and ensure such product meets 
+applicable standards and any safety, security or other requirements. 
+ 
+The above T&amp;C and all acts in connection with the T&amp;C or this Document shall be governed, construed and interpreted in accordance with the laws of 
+Taiwan, without giving effect to the principles of conflicts of law. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

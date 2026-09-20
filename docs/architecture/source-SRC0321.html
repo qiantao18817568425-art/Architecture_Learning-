@@ -1,0 +1,1665 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx</h1><p>SRC0321 · 正文（不对应打印页码） · 1 个阅读单元</p><p class="note">原材料可查阅；未逐页作项目结论验证。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>DOC\X30\CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx</p><p>SHA-256：<code>5bb980f423aa801a6b53353d9bae8df48508ddf7e9a7b7572a685966782c8037</code></p><p>原文件大小：2,353,417 字节</p></details><div class="actions"><a class="button" href="materials/SRC0321.docx" download>下载完整原文件</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><p class="note">文字按文档结构提取，图片按包内顺序列出；布局、连线和图文对应关系以原文件为准。</p><article id="source-text"><section class="source-page" id="page-1"><h2>正文（不对应打印页码） 1</h2><pre class="source-text">
+
+
+
+
+
+
+
+
+Aurisys  Development Tutorial
+User Manual
+Customer  Support
+MT6799
+
+
+
+C S 6 79 9 - XXX - UMD - V1. 0 EN
+V1. 0
+2016-0 8 - 2 9
+Internal
+Doc No:
+Version:
+Release date:
+Classification:
+
+
+©  2016   MediaTek  Inc.
+This document contains information that is proprietary to  MediaTek  Inc.
+Unauthorized reproduction or disclosure of this information in whole or in part is strictly prohibited.
+
+Specifications are subject to change without notice.
+
+
+
+Keywords
+User Manual
+
+
+MediaTek  Inc.
+Postal address
+No. 1,  Dusing  1st Rd . ,   Hsinchu  Science Park,  Hsinchu  City, Taiwan 30078
+MTK  support office  address
+No. 1,  Dusing  1st Rd . ,  Hsinchu Science Park, Hsinchu City, Taiwan 30078
+Internet
+http://www. mediatek.com/
+
+
+
+
+
+
+
+
+
+
+Document  Revision History
+Revision
+Date
+Author
+Description
+V0.8
+2015/12/31
+Doug Wang
+First Release
+V 0.9
+2016/1/21
+Doug Wang
+Add code release  partand  modify  dsp  build command
+V0.9a
+2016/3/28
+Doug Wang
+Add Software patch table
+V 1.0
+2016/08/09
+Doug Wang
+Add Library integration guidance in Application Processor; Record &amp; VOIP Applications; XML Descriptor
+V 1. 1
+2017/03/15
+HY
+Add offload playback file  sturcture
+
+
+
+
+
+
+
+
+
+
+Table of Contents
+Document Revision History 3
+Table of Contents 4
+Lists of Tables 7
+Lists of Figures 8
+1 Overview 9
+1.1 Abstract 9
+1.2 Aurisys Aims 9
+1.3 Aurisys Structure 10
+1.4 DSP Capability 11
+1.4.1 DSP Basics 11
+1.4.2 Defalut DSP Feature Packages 12
+1.4.3 DSP TCM 12
+2 Getting Start with Aurisys 14
+2.1 Comments 14
+2.2 File Structure 14
+2.2.1 DSP 14
+2.2.2 Application Processor 15
+2.3 Step by Step Integration Guide 15
+2.3.1 Integrate Software IP in DSP 15
+2.3.2 Integrate Software IP in Application Processor 18
+3 Software Development Guidance 21
+3.1 Software Interface Overview 21
+3.2 Sound Processing Task Integration Guidance 21
+3.2.1 ARSI-PROC 21
+3.2.2 ARSI-PROC Functions 21
+3.2.3 Example 23
+3.3 Parameter Tuning Guidance 24
+3.3.1 ARSI-PAR Usage 24
+3.3.2 Communication based on Android Debug Bridge(adb) 25
+3.3.3 ARSI-PAR Functions 26
+3.3.4 Example 27
+4 XML Descriptor for Aurisys 29
+4.1.1 Example 29
+4.1.2 Elements 31
+4.1.3 Deployment 34
+5 Debugging 36
+5.1 Logging 36
+5.1.1 Inside Software IP 36
+6 Applications 37
+6.1 Aurisys Features in MT6799 37
+6.2 Voice Call 37
+6.2.1 Data Path 37
+6.2.2 Basic Information 39
+6.2.3 Limitations 40
+6.2.4 Configurations 40
+6.2.5 Software Frameworks 41
+6.3 Playback 42
+6.3.1 Data Path 42
+6.3.2 Scenarios 43
+6.3.3 AP playback with post-processing 43
+6.3.4 Configurations 44
+6.3.5 DSP  offload playback 46
+6.3.6 File Str u cture 47
+6.3.7 Behavior 48
+6.3.8 Functional Blocks 49
+6.4 Sound Trigger 50
+6.5 SmartPA 50
+6.6 Record &amp; VOIP 50
+6.6.1 Data Path 50
+6.6.2 Configurations 51
+6.6.3 Application Processor Only 51
+6.6.4 Class Diagram 51
+6.6.5 Device Information 52
+7 Appendix: Platform and Development Environments 54
+7.1 Scenario Based DVFS 54
+7.1.1 Implementation 54
+7.2 Dynamic Objects Loading 56
+7.3 DSP Binary (Build Command and Download) 57
+7.3.1 Configuration 57
+7.3.2 Build Command 57
+7.3.3 Built Binary 57
+7.4 Code Release 58
+7.5 Aurisys Framework Class Diagram 59
+7.6 Software Patch Note 59
+7.7 FAQ 60
+
+
+Lists of Tables
+Table 3 1. Adb command table 25
+Table 3 2.Command argument table 25
+
+
+Lists of Figures
+Figure 1 1. Concept of Aurisys 9
+Figure 1 2. Aurisys Structure 10
+Figure 1 3. MT6799 DSP Overview 12
+Figure 1 4. MT6799 DSP TCM Size Configurations 13
+Figure 3 1. Parameter Path 24
+Figure 4 1. Relationship between Scene Handler, Scenario Descriptor, and Library Descriptor 34
+Figure 6 1. Aurisys Default Features in MT6799 36
+Figure 6 2. Hand-Held Mode Voice Call Data Path 37
+Figure 6 3. Hand-Free Mode Voice Call Data Path 38
+Figure 6 4. Software Frameworks of Voice Call 40
+Figure 6 5. Offload Audio Playback 41
+Figure 6 6. Functional Blocks of Offload Playback 43
+Figure 6 7. Record &amp; VOIP 44
+Figure 6 8. Aurisys Class Diagram for Record &amp; VOIP 45
+Figure 7 1. MT6799 DSP Dynamic Voltage Table 48
+Figure 7 2. MT6799 DSP Dynamic Loading Concept 50
+Figure 7 3. Update DSP Binary by Flashtool 52
+Figure 7 4. Aurisys Framework Class Diagram 53
+
+
+
+
+Overview
+Abstract
+   The requirement for sound quality enhancements that add listening pleasure has been increasing. To enrich the listening experience of using mobile devices, there  is  an increasing number of sound processing solutions provided by vendors.  
+   Aurisys  is introduced to facilitate the sound processing solution development and use of MTK platforms.  Aurisys  is a framework constructed upon Android Audio Framework. It includes standardized interfaces for sound processing and tuning, integrated DSP sound subsystem, and software debug interface.  This concept of  Aurisys   will be  briefly described in this document.
+Aurisys  Aims
+     As the following figure depicts, our  target  is  to make the replacement/integration of vendor IPs  as convenient as possible . We defined a standardized interface to which is platform-independent, so that the software can be re-used.  By following the user interface standards we crea te a more consistent experience  for the developers.  
+
+Figure  1 1 .   Concept of  Aurisys
+
+Aurisys  Structure
+ 
+Figure  1 2 .   Aurisys  Structure
+  As depicted in above figure, the  Aurisys  structure contains Scene Handler, Library Manager,  integrated DSP  framework, Modem/Audio HW subsystems, and  standardized  software interfaces:
+Aurisys  Scene Handler (ARSH)
+The  Aurisys   Scene Handler  is created as the middleware between the audio system and the sound processing IPs.   It  is  created scene by scene. For example, the  Aurisys  Playback Handler is served for playback effects in the scene of  playback .  It provides interfaces to call the corresponding IPs  and manages the IPs.
+Aurisys   Library Manager  (ARLM)
+The  Aurisys  Library Manager maintains the  library  information of  each  Aurisys   Scene Handler. It contains the list and status of sound IPs.
+Aurisys  Software Interface ( ARSI )
+ARSI is the a bbreviation  of  Aurisys  Software Interface. It  is provided for interfacing with sound enhancing tasks . To process sounds, a unified interface which is portable between MTK  platforms  is provided. The interface to parse and transmit parameters between PC tool, APMCU, and DSP is also included.  The interface is designed for ease of use while being general enough so that new algorithms can be easily added to the existing frameworks. The difference between ARSI and ARSH is that ARSI provides interface between ARSH and sound IPs; while ARSH provides interface for Android Audio HAL to request for processing sounds. 
+Modem
+The modem means the modem IC. The MTK internal chipset contains a DSP to process voice enhancement and voice codec. In  Aurisys  structure, we disable the voice enhancement, but reserve codec in modem IC so that we can just add algorithms in the integrated open DSP in the Application side.
+Audio HW
+It refers to the interface between processors and HW devices to transfer sound data. The devices  include speakers , microphones, earphones, BT devices, USB devices,  etc. 
+DSP Capability
+DSP Basics
+The basic information about DSP is summarized as follows:
+Integrated open DSP support.  The  embedded processor is  ARM Cortex™-M4  processor  
+Dual CortexM4 DSPs, one is for sensor hub, and the other is for audio
+Floating-Point-Unit supported
+The internal SRAM of DSP is 768 KB
+Share with sensor hub DSP. The memory allocation should be  terminated  in compile time. For example, it we allocate 256KB for CM4_A, and 512KB for CM4_B. CM4_B can ’ t use the 256KB of CM4. The allocation can ’ t be changed run-time.
+T he memory are divided into 128KB per unit
+CM4_A is sensor hub DSP and CM4_B is audio DSP
+Maximum clock rate reaches 416 MHz
+No cache support
+Programmable DMA (burst of 4 by 16-bit) for DSP supported to transfer data to/from external memory
+Not suggest to access external memory by the processor directly, it may cause unexpected problems. Please use DMA for large quantity of data transfer and just use IPI (inter-processor-interrupt) for  the  transfers  of small data volumes.
+The DSP can access audio registers, internal memory of audio hardware, and voice data from the modem side during a voice call.
+We ’ ve provided an API to trigger DMA, please use polling mode, not to use interrupt mode in MT6799
+FreeRTOS  has been adopted as the supported operating
+Communicate with Application processor by IPI (inter-processor-interrupt);  There  are 48 bytes data can be transferred by share memory by one IPI.
+Dynamic loading of code is not supported
+Clock rate can be switched between 82/165/330/416 MHz according to requirements of applications 
+Notice that the Free-RTOS exists in both Sensor and Audio DSPs
+
+Figure  1 3 .   MT6799 DSP Overview
+Defalut  DSP Feature Packages
+  We don ’ t support cache in the DSP, so the features support in DSP may be limited due to lack of  TCM( tightly coupled memory ) of DSP. To reuse the TCM, we support dynamic loading of code. It adds the ability to  exclusively    support  features. For example, the sound trigger wouldn ’ t be enabled during a phone call. So we can download speech enhancement to DSP TCM during a call, and download sound trigger when the call ends. However, due to the downloading spends more than  100ms,  we don ’ t suggest to support two features in one scene and dynamic download each feature frequently.
+  We support mp3 decoder, sound trigger, and speech enhancement during a phone call by default. The sum of these features already exceeds the DSP TCM size. So we treat speech enhancement as one dynamic object, and mp3+sound trigger as another dynamic object (because sound trigger can be supported during mp3 playback). We download the speech enhancement object to DSP when a phone call happens and download the mp3+sound trigger object when the call ends. Customers can also replace the mp3 decoder, sound trigger library, and the speech enhancement with their own SWIPs.
+     DSP TCM
+   There's 768KB SRAM shared by the DSPs.   However, the memory can't be dynamic ally  allocate d  to the DSP in the run time .  It must be decided in the  sytem  boot up time.  The following table  shows    that   the memory are divided into 128KB per unit.  Besides,  due to the HW limitation, the maximum is 640 KB and the minimum is 128KB for each DSP.   Without sensor hub and deduct the usage of  RTOS ( around 50KB) , we have only around 590KB for audio.
+
+Figure  1 4 .   MT6799 DSP TCM Size Configurations
+
+Getting Start with  Aurisys
+Comments
+  We  annotate  our code with  Doxygen  style comments  which  are used to provide documentation in-line .  Before each function , we  put a comment block giving at  least :
+@brief:  a brief description
+@ param :  descri be all of the parameters to  the  function
+@return: return value
+After the return information, there is a  detailed description of the function (optional).
+Example: 
+/**
+******************************************************************************
+ *  @brief Query the size of the working buffer
+ *
+ *  @ param   p_arsi_task_config  the task configure
+  *  @ param   p_working_buf_size  the working buffer size.
+ *
+ *  @return  lib_status_t
+******************************************************************************
+ */
+  T h is  function is used to get the working buffer size  for a Software IP.  p_arsi_task_config  contains a particular  configuration for the algorithm;  p_working_buf_size  updated by the Software IP indicates the required memory size under the specified configuration. The return information indicates if there is any unexpected error occurs.
+File Structure
+DSP
+   The root folder of DSP is located at  vendor/ mediatek /proprietary/ tinysys / freertos /source .
+Path
+File
+D escription
+project/CM4_ B / mt6799 /platform
+platform.mk
+Project configurations (common)
+project/CM4_ B /mt679 9 /[project]
+ProjectConfig.mk
+Project configurations (specific project)
+
+CompilerOption.mk
+Project specific compile options
+middleware/lib/ aurisys / interface
+  arsi_api. h
+Aurisys  Software Interface
+
+arsi_api_version.h
+
+
+arsi_call_type.h
+
+
+arsi_library_entry_points.h
+
+
+arsi_type.h
+
+
+audio_task.h
+
+
+wrapped_audio.h
+
+
+wrapped_errors.h
+
+drivers/common/audio/task/ 
+audio_task_interface.h
+Define audio task structure and status 
+
+call/   audio_do_call.c
+
+
+Aurisys  phone call common driver
+
+call/   audio_shared_tcm.c
+
+
+call/   audio_shared_tcm. h
+
+
+call/   audio_speech_msg_id.h
+
+
+call/   audio_task_phone_call.h
+
+drivers/common/audio/hardware
+audio_irq.h
+H eader file of  audio_irq.c
+
+audio_hw.h
+H eader file of   Audio hw operating function s
+drivers/common/audio/framework
+audio_task_factory.c
+Audio task service
+
+audio_messenger_ipi.c
+I nterrupt handler to handle message from AP
+
+audio.c
+Audio init/de-init entry functions
+drivers/CM4_B/mt6799/audio/ tasks
+call  /   audio_task_phone_call.c
+Audio  phonecall  platform driver
+drivers/CM4_B/mt6799/audio/ hardware
+audio_irq .c
+Register  irq  handler and request  irq
+
+audio_hw.c
+Audio hw operating functions
+
+audio_hw_reg.h
+Define platform related audio hw register
+Application Processor
+Path
+File
+description
+d evice / mediatek /[project]
+ProjectConfig.mk
+Project configurations of AP
+/device/ mediatek / [project] / aurisys_param
+*.dat
+Parameter file
+/vendor/ mediatek /proprietary/external/ aurisys
+*.so, *.xml
+Parser library and Processing library (if in Application processor); XML Descriptor file
+Vendor / mediatek / proprietary / hardware / audio / common / aurisys
+aurisys_config_parser.c /  aurisys_controller.c /  aurisys_lib_handler.c /
+aurisys_lib_manager.c
+Aurisys  services
+/v endor / mediatek / proprietary / hardware / audio / common / V3 / aud_drv
+AudioA LSA XXXHandler.cpp
+Scene Handler 
+Step by Step Integration Guide
+  Before looking deep into  Aurisys ,  we provide step-by-step guidance on how to  integrate your program into  Aurisys . It can be  separated  into two conditions: 1) Add or replace a SWIP in DSP; 2) Add or replace a SWIP in Application processor. We ’ ll take the integration of a voice call SWIP as an example of adding a SWIP in DSP. Note that the addition or replacement of a SWIP is based on an existing driver-ready scene of  Aurisys . 
+Integrate Software IP in DSP
+Integration of a Voice Call SWIP (as example)
+  Configurations
+DSP Configurations 
+Common Configurations
+The platform  Makefile  path:  / project / CM4_ B /[project]/ platform /platform.mk
+The  CFG_AUDIO_SUPPORT  is a compile option for audio  framework,  it will be enabled if there is at least one audio application is enabled.
+Project Specific Configurations
+The file  “ / project / CM4_ B /[ project]/[project]/ ProjectConfig.mk ”  is used to enable or disable a feature for a specified project.  CFG_MTK_AURISYS_PHONE_CALL_SUPPORT  should be set as  “ yes ”  to enable voice call application in DSP. Besides,  CompilerOption.mk  is used for adding project specific compile options.
+Heapsize  Adjustment
+The data memory can be managed by  malloc  functions. However, we need to define  a   appropriate  heap size first. The default heap size for all projects is defined in the following file  / project / CM4_ B /[ project]/ platform /   platform.mk . Then find the follow definition 
+ifeq  ($(CFG_MTK_AURISYS_PHONE_CALL_SUPPORT),yes)
+CFLAGS += - DconfigTOTAL_HEAP_SIZE ='( (  size_t  ) ( 275 * 1024 ) )'
+else  ifeq  ($(CFG_MTK_AUDIO_TUNNELING_SUPPORT),yes)
+CFLAGS += - DconfigTOTAL_HEAP_SIZE ='( (  size_t  ) ( 165 * 1024 ) )'
+else  ifeq  ($(CFG_MTK_SPEAKER_PROTECTION_SUPPORT),yes)
+CFLAGS += - DconfigTOTAL_HEAP_SIZE ='( (  size_t  ) ( 165 * 1024 ) )'
+else
+# default heap size
+CFLAGS += - DconfigTOTAL_HEAP_SIZE ='( (  size_t  ) ( 60 * 1024 ) )'
+endif
+We can also override the definition for a specific project in CompilerOption.mk mentioned above. Use the following definition to override the default heap size:  CFLAGS += - DconfigTOTAL_HEAP_SIZE =' ( (   size_t  ) ( 180 * 1024 ) )' .
+AP Configurations
+Projet  Configurations
+The file  “ d evice / mediatek /[ project]/ ProjectConfig.mk ”  is used to enable or disable a feature for a specified project of application processor. Set MTK_AURISYS_PHONE_CALL_SUPPORT as  “ yes ” . Notice that there is an automatic compile dependency check between  “ PROJECT_CONFIG ”  of AP and  “ CFG_PROJECT_CONFIG ”  of DSP. They should be the same value.
+Clock rate  requirement  
+We don’t have automatic DVFS to detect current DSP loading and adjust the voltage automatically .  What we do is to register a frequency requirement  table for   a  specified application. When the application starts, a provided API should be called to notify the system. Besides, it also needs to call another API to notify the system when it is stopped. The system will adjust the voltage according  to the sum of clock rate requirement for active  applications . The value of clock rate requirement should be  estimated  precisely and then modify the corresponding  valuethe  following file: 
+kernel- 4 . 4 / drivers/misc/ mediatek / scp / v02 / scp_feature_table.c .  Note that the  feature  ID: OPEN_DSP_FEATURE_ID is for voice call of  Aurisys .
+static  scp_feature_table_t   feature_table [] = {
+    {
+……
+……
+    {
+        .feature    = OPEN_DSP_FEATURE_ID,
+        .freq            =  356 ,
+       .core          = SCP_B_ID ,
+        .enable     = 0,
+    },
+…….
+…….
+};
+Software IP Development 
+Delveop  with ARSI
+Follow ARSI and implement the functions defined in  arsi_api. h . The detailed description of ARSI is in the next chapter.
+DSP Binary
+Build Command
+Notice that the Android build environment is required. The build  commands is  listed as follows:
+$ . build/envsetup.sh
+$ lunch full_&lt;PROJECT&gt;-eng
+$  mosesq  make -j24      (full Android Build)
+$  mosesq  make  tinysys-scp  -j24    (build DSP only)
+$ vendor/mediatek/proprietary/tinysys/freertos/source/tools/build_tinysys.sh clean   ( clean )
+vendor/mediatek/proprietary/tinysys/freertos/source/tools/build_tinysys. sh     (clean build DSP)
+Built DSP Binary Location
+The built DSP binary is located in the following path:
+o ut / target / product / [project] / tinysys-scp.bin
+If build CM4_A or CM4_B individually, you can find the binary in the path:
+out\target\product \[ project]\obj\TINYSYS_OBJ\tinysys-scp_intermediates\freertos\source\CM4_B\
+Push DSP Image to the Device
+MTK  Flashtool  can be used to download a full load or update DSP  binary  only.  There is also an open source tool  “ Fastboot ”  can be used to update DSP binary only. The command is:
+$  adb  reboot  bootloader     (put the device in  fastboot  mode)
+$  flashboot.exe scp1 tinysys-scp.bin   (update scp1 from local tinysys-scp.bin)
+$  flashboot.exe scp2 tinysys-scp.bin  
+Parameter Management
+Parameter File
+The parameters of different modes are gathered into a file. To get the maximum flexibility of use, the format of the parameter file is defined by the 3 rd  Parties  themselves . The file should be placed in the following path:  /vendor/ mediatek /proprietary/external/ aurisys / .  Then the parameter files are parsed by the 3 rd  Party parameter parsing library to get required parameters
+Parser Library
+Development
+Follow ARSI and implement the functions defined in  arsi_api. h  to develop the parser library.  Notice that both 32-bit library and 64-bit library are required. The built *.so would be placed in  vendor/ mediatek /proprietary/external/ aurisys / lib_speech_enh
+Tool Development
+The connection between the PC tool and the mobile device is through USB and the communication is based on  adb  commands.   We ’ ve defined a series of  adb  commands. The software IP providers can design their own PC tools which can communicate with the mobile devices without  making changes to the legacy code  of the MTK platforms. The detail information can be found in the next chapter.
+Brief Summary
+1. Configurations
+a) Enable  Aurisys  phone call supporting configurations in both Application processor and DSP.
+b) Adjust  heapsize  of DSP
+b) Estimate clock rate requirement and modify the value …… ………… . .reference to [ 7.1 ]
+2. Software IP Development
+a) Implement the functions in ARSI …… ………… . .reference to [ 3.2 ]
+b) Build DSP binary only or build full load (include application processor)   … reference to  [  7.3 ]
+c) Update DSP binary by  Fastboot  or  Flashtool , or update full  Anroid  load by  Flashtool … reference to  [  7.3 ]
+3. Parameter Management …… ………… . .reference to [ 3.3.3 ]
+a ) Define own parameter file format
+b) Implement Parameter Parser Library
+4. Tool Development …… ………… . . reference to  [ 3.3.2 ]
+a) Develop a PC tool. The communication between the  device  is based on  adb  commands
+Integrate Software IP in Application Processor
+Integration of a Record SWIP (as example)
+Configurations
+AP  Configurations 
+As mentioned above,   t he file  “ d evice / mediatek /[ project]/ ProjectConfig.mk ”  is used to enable or disable a feature for a specified project of application processor.  To enable  Auisys  framework in the  application  processor, please set  MTK_AURISYS_FRAMEWORK_SUPPORT   as  “ yes ” .  If this configuration is set as “no”,   we still support MTK  proprietary library in the original framework. However, it doesn ’ t support the XML descriptor mentioned later or support  aurisys  interface. It will be hard to replace the proprietary library with vendor ’ s library.
+Processing and Parser Library
+Please refer to the parser library part of integrating software IP in DSP mentioned above. The only difference is that the processing library also exists in the application processor and you can merge processing and parser capabilities in the same library.
+Besides, even the integration  is  complete,   you may still need to do some experiments. By using the  adb  command  “ adb  push xxx.lib /system/lib ” ,  It  is allowed to replace the library without re-compiling the image.
+XML Description File
+File Path:   /vendor/ mediatek /proprietary/external/ aurisys / aurisys_config .xml
+The  Aurisys  XML Descriptor is a simple XML-file that specifies the library version number, attribute, parameter path, and optionally other information.  It contains the library descriptor and  scenario  descriptor. The library descriptor is used to describe the library name, path, attributes. The scenario  descriptor  is used to specify which libraries would be applied in that scenario. The detailed description of XML  descriptor  is shown in the  “ XML Descriptor for  Aurisys ”  chapter.
+Besides, i t is worth to be mentioned  that you can also replace the XML descriptor by  a   adb  command during development stage. The command is  “ adb  push aurisys_config.xml /system/etc ”
+Aurisys  Framework Modifications
+Assign a Scenario to the Scene Handler
+As mentioned above, a scenario  descriptor  in XML is used to describe which libraries will be applied in that scenario. Moreover, a scene handler  is created as the middleware between the audio system and the sound processing IPs.  For example, t he record handler is served for a record scene . We need to assign a scenario to the record scene handler that the specified scenario will be applied during recording. To specify a scenario to the record scene handler, please find the following file:  “ vendor/ mediatek /proprietary/hardware/audio/common/V3/ aud_drv /  AudioALSACaptureDataClientNormal .cpp ” . Then modify the scenario in the constructor:
+AudioALSACaptureDataClientNormal:: AudioALSACaptureDataClientNormal( …… )
+{
+    char *scenario = &quot; xxx_record_scenario &quot;;    //the scenario name
+}
+Link library
+All libraries should be linked first. It is required to let the system be aware of which libraries would be linked. Here used dynamic linking for separating the dependency between  framewok  and libraries.   The library should implement the declared    function pointer assignment interface in the following file: “external/ aurisys /interface/ a rsi_libary_entry_points.h ”
+void  dynamic_link_arsi_assign_lib_fp ( AurisysLibInterface  *lib);
+To l ink the library by calling the unique fun ction defined. Please  depict your implemented library path in  /vendor/ mediatek /proprietary/external/ aurisys /aurisys_config.xml
+The framework will dynamically open library and link the  arsi   library  callback function during initialization stage. The function implementation in  library  look s like below   example  :  
+void  dynamic_link_arsi_assign_lib_fp ( AurisysLibInterface  *lib)
+{
+    lib-&gt; arsi_get_lib_version  =  audioloud_arsi_get_lib_version ;
+    lib-&gt; arsi_query_working_buf_size  =  audioloud_arsi_query_working_buf_size ;
+    lib-&gt; arsi_create_handler  =  audioloud_arsi_create_handler ;
+    …
+}
+
+Set a Keyword for Set/Get Parameters
+As mentioned, we’ve defined a series of  adb  commands for tuning and updating parameters. It needs to be aware of which libraries should be called to update the parameters. Thus, we need to define the keyword  first,  we define the keyword in xml file,  libray   config  part. The  xml  field “ adb_cmd_key  = XXX” indicates the using keyword for the library
+Brief Summary
+1. Configurations
+a) Enable  MTK_AURISYS_FRAMEWORK_SUPPORT  configurations in  the project configuration file .
+2. Software IP Development  and Parameter Management
+a) Implement the functions in ARSI …… ………… . .reference to [ 3.2 ]
+b ) Define own parameter file format   …… ………… . .reference to [ 3.3.3 ]
+c ) Implement Parameter Parser Library
+         d )  Place the library in  vendor/ mediatek /proprietary/external/ aurisys   and modify  the related  M akefile
+3 .  XML Descriptor …… ………… . . reference to [ 4 ]
+a )  Add a library descriptor about the specified library
+b )  Add a scenario descriptor to apply the library in that scenario
+4.  Aurisys  Framework Modifications …… ………… . . reference to [ 2.3.2.1 ]
+a )  Assign a scenario defined in the XML descriptor to the specified scene handler
+5 . Tool Development …… ………… . . reference to  [ 3.3.2 ]
+a) Develop a PC tool. The communication between the  device  is based on  adb  commands
+Software  Development  Guidance
+Software Interface Overview
+  ARSI consists of the following components: ARSI-PROC and ARSI-PPAR. ARSI-PROC  defines generic interfaces for processing sounds which is portable to MTK platforms, regardless of DSP or MCU.  ARSI-PAR defines  API for parsing parameters. It provides programming interface to parse and transmit parameters between PC tool, APMCU, and DSP. Tuning and applying parameters by scen e s can also be achieved.
+Sound Processing Task Integration Guidance
+ARSI-PROC
+  It  defines generic interface s  for processing sounds which is portable to MTK platforms, regardless of DSP or MCU.   The  interfaces include: Updating parameters and device information; Querying IP information (such as memory usage);  Changing  mode; Processing sounds. The interfaces are consistent among different processors. The software could be portable to reduce the design effort significantly. They are also consistent among different activities so that they can be widely used in many applications, such as playing, recording, voice call, and sound enhancing.
+ARSI-PROC Functions
+Functions
+Description  
+arsi_query_working_buf_size
+Query the size of the working buffer
+arsi_create_handler
+Create handler and initialize it
+arsi_process_ul_buf
+Processing microphone/uplink data
+arsi_process_dl_buf
+Processing playback/downlink data
+arsi_destroy_handler
+D einitialize  handler and destroy it (no need to free the working buffer)
+arsi_reset_handler
+R eset handler to init state
+arsi_update_device
+Update task device info
+arsi_update_param
+Update speech enhancement parameters
+arsi_set_ul_digital_gain
+S et uplink digital gain
+arsi_set_dl_digital_gain
+S et downlink digital gain
+arsi_set_ul_mute
+M ute/ unmute  uplink
+arsi_set_dl_mute
+M ute/ unmute  downlink
+arsi_set_ul_enhance
+E nable/disable uplink enhancement function
+arsi_set_dl_enhance
+E nable/disable downlink enhancement function
+arsi_set_debug_log_fp
+S et debug log print callback function
+  We ’ ll introduce ARSI-PROC functions here and provide examples. Notice that we won ’ t provide detailed descriptions of all ARSI-PROC functions. Please refer to the interface document generated by  doxygen .
+arsi_process_ul_buf
+   Processing microphone/  voice  uplink data
+Prototype:
+lib_status_t   arsi_process_ul_ buf ( audio_buf_t    * p_ul_buf_in ,     audio_buf_t      * p_ul_buf_out ,     audio_buf_t      * p_aec_buf_in ,   const uint32_t   delay_ms , void * p_handler , void   * arg );
+Parameters:
+Parameters
+Description  
+* p_ul_buf_in
+microphone/uplink data to be processed   buffer arrangement: chunks of audio destined for different channels =&gt; mic1(1 frame  sz ) + ... +  micN  (1 frame  sz )
+* p_ul_buf_out
+the processed microphone/uplink data
+* p_aec_buf_in
+the AEC reference data
+delay_ms
+delay time(ms) for AEC
+* p_handler
+handler of speech enhancement
+* arg
+reserved field  (can be used for extension)
+Return value:
+lib_status_t , the status of library
+arsi_process_dl_buf
+Processing playback/ voice  downlink data
+Prototype:
+lib_status_t   arsi_process_dl_ buf ( audio_buf_t   * p_dl_buf_in ,   audio_buf_t   * p_dl_buf_out ,    void  * p_handler , void   * arg );
+Parameters:
+Parameters
+Description  
+* p_dl_buf_in
+the playback/downlink data to be Processed
+* p_dl_buf_out
+the processed playback/downlink data
+* p_handler
+handler of speech enhancement
+* arg
+reserved field  (can be used for extension)
+Return value:
+lib_status_t , the status of library
+Example
+I nit ()
+{
+……
+    arsi_create_handler (&amp; arsi_task_config , NULL/*&amp; param_buf */, &amp; working_buf ,
+                        &amp; arsi_handler );
+     arsi_set_debug_log_fp ( myprint ,  arsi_handler );
+
+     arsi_set_ul_digital_gain (0, 0,  arsi_handler );
+     arsi_set_dl_digital_gain (0, 0,  arsi_handler );
+     arsi_set_ul_mute (0,  arsi_handler ); // no  bool .... 0: false, 1: true
+     arsi_set_dl_mute (0,  arsi_handler ); // no  bool .... 0: false, 1: true
+     arsi_set_ul_enhance (1,  arsi_handler ); // no  bool .... 0: false, 1: true
+     arsi_set_dl_enhance (1,  arsi_handler ); // no  bool .... 0: false, 1: true
+……
+}
+
+P rocess()
+{
+……
+    const uint32_t  aec_delay_ms  = 40;
+    if ( modem_data_handshake  == MODEM_UL_DATA) {
+       arsi_process_ul_buf (   &amp; ul_buf_in ,    &amp; ul_buf_out ,    &amp; aec_buf_in ,     aec_delay_ms ,    
+                                              arsi_handler ,    (void *)&amp; extra_call_arg );
+   }
+    else if ( modem_data_handshake  == MODEM_DL_DATA) {
+       arsi_process_dl_buf (   &amp; dl_buf_in ,    &amp; dl_buf_out ,     arsi_handler ,    (void *)&amp; extra_call_arg );
+   }
+……
+}
+Parameter Tuning Guidance
+
+Figure  3 1 .   Parameter Path
+ARSI-PAR Usage
+  For  a software  IP, the parameters may be variant in different scenes or situations.  To ease of reference ,   The  parameters are gathered into a file. To get the maximum flexibility of use, the format of the parameter file is defined by the 3 rd  Parties  themselves . The ARSI-PAR is designed  for parsing parameters  for specified scenes. It  provides  the  interface to transfer parameter file to the 3 rd  party library.
+   Tool Development /  Connection
+The connection between the PC tool and the mobile device is through USB and the communication is based on  adb  commands. We define a series of  adb  commands which include transmitting the whole parameter file to the device, receiving whole parameter file from the device, transmitting specific data to the device, and receiving specific data from the device. The software IP providers can design their own PC tools which can communicate with the mobile devices without  making changes to the legacy code  of the MTK platforms.
+
+Parsing
+To get the maximum flexibility of use, the format of the parameter file is also defined by the 3 rd  Parties  themselves . We only provide the interface to transfer parameter file to the 3 rd  Party Library. Thus, the 3 rd  Parties need to implement the parameter parsing library. 
+
+Tuning/ Extraction
+During  parameters  tuning, the PC tool updates the parameter file to the mobile device and then the parameter files are parsed by the 3 rd  Party parameter parsing library to get required parameters. The parameters will then be transferred to the 3 rd  Party processing library for processing sounds.  Besides, when the mode changes (for example, the output device changes from headphone to speaker), we need to extract the parameters of the specified mode and the parsing library will be called.
+Communication based on  Android Debug  Bridge ( adb )
+Table  3 1 .   Adb  command table
+Command
+Comments
+adb  shell &quot; AudioSetParam   AURISYS_SET_P ARAM,$target,$scene,$lib,$cmd  $mode = SET ”
+Used to update parameter file and apply parameters to the library
+adb  shell  “ AudioSetParam   AURISYS_GET_PARAM,$target,$scene,$lib,$cmd ”
+Used to query current parameter setting. Query the value of a specified address and query the whole parameter file are allowed.
+
+Table  3 2 . Command argument table
+Argument
+Example
+Comments
+$target
+DSP, HAL
+The processing API maybe either in AP or in DSP
+$scene
+PHONE_CALL, PLAYBACK, RECORD
+Specify a scene, the information will be used as an argument of the parser function
+$lib
+library name
+The library should be specified since there  maybe  several libraries added to the  Aurisys
+$mode
+Enhancement  mode
+Enhancement mode. IP provider can provide different  enhancement  for user to select what they want. The mode should be an integer. Only used in APPLY_PARAM command
+$ cmd  
+( for  URISYS_SET_PARAM )
+PARAM_FILE, param_path
+set  parameter file path
+
+APPLY_PARAM
+apply  new  param  during playback/phone call/...
+
+ADDR_VALUE, addr,value
+set “ value”  at the  “ addr ”  in library
+
+KEY_VALUE, key,value
+set &quot; value &quot; of the &quot; key &quot; in library ,  “ key ”  can be defined by the library itself
+$ cmd  
+( for  URISYS_ G ET_PARAM )
+PARAM_FILE
+return  param_path
+
+ADDR_VALUE, addr
+return the value at the address  “ addr ”  in library
+
+KEY _VALUE, key
+return the value at the  “ key ”  in library
+  The examples are listed as follows:
+adb  shell &quot; AudioSetParam   AURISYS_SET_PARAM,DSP, RECORD , M yLib ,PARAM_FILE ,/ data / d .dat =SET&quot;
+set  param eter file  path: /data/ d .dat  and establish the connection between  MyLib  and the parameter file
+adb  shell &quot; AudioSetParam  AURISYS_SET_PARAM,DSP,PHONE_CALL, MyLib ,APPLY_PARAM ,2 =SET&quot;
+apply  new param eters   for record scene, the enhancement mode is 2
+adb  shell &quot; AudioSetParam  AURISYS_SET_PARAM,DSP, RECORD , MyLib ,ADDR_VALUE,0x1234,0x5678=SET&quot;   set value 0x5678  at the address 0x1234 in  MyLib
+adb  shell &quot; AudioSetParam   AURISYS_SET_PARAM,DSP, RECORD , MyLib ,KEY_VALUE, MyKey , M y V a ue l =SET&quot;
+set  value &quot; MyValue &quot;  to  the key &quot; MyK ey &quot; in  MyL i b
+adb  shell &quot; AudioSetParam   AURISYS_GET_PARAM,DSP,PHONE_CALL, MyLib ,PARAM_FILE &quot;
+return   param_path  of  MyLib
+adb  shell &quot; AudioSetParam  AURISYS_GET_PARAM,DSP,PHONE_CALL, MyLi ,ADDR_VALUE,0x1234&quot;
+return  the value at the address 0x1234 in  My lib
+adb   shell &quot; AudioSetParam   AURISYS_GET_PARAM,DSP,PHONE_CALL, MyLib ,KEY_VALUE, MyK ey &quot;
+return   the value of the key &quot; M y Key &quot; in  My lib
+ARSI-PAR Functions
+   Functions
+Description  
+arsi_query_param_buf_size
+Query the buffer size to keep speech enhancement parameters(single mode), Implemented in HAL only
+arsi_parsing_param_file
+Parsing  param  file to get parameters into  p_param_buf (single mode), Implemented in HAL only
+arsi_set_addr_value
+Set value at a specified address
+arsi_get_addr_value
+Get value from the specified address
+arsi_set_key_value_pair
+set  key_value  string to library
+arsi_get_key_value_pair
+get  key_value  string from library
+arsi_get_lib_version
+G et the library version 
+  We ’ ll introduce ARSI-PAR functions here and provide examples. Notice that we won ’ t provide detailed descriptions of all ARSI-PAR functions. Please refer to the interface document generated by  doxygen .
+arsi_query_param_buf_size
+  Query the buffer size to keep speech enhancement  parameters( single mode), Implemented in HAL  only
+Prototype:
+lib_status_t   arsi_query_param_buf_ size (   const  arsi_task_config_t   * p_arsi_task_config ,   const  string_buf_t         * platform_name ,   const  string_buf_t   * param_file_path ,   const  int   enhancement_mode ,   uint32_t   * p_param_buf_size );
+Parameters:
+Parameters
+Description  
+* p_arsi_task_config
+the task configure
+* platform_name
+the platform name by &quot; adb  shell  getprop   ro.product.model &quot;
+* param_file_path
+the speech enhancement  param  file ( fullset )
+enhancement_mode
+the speech enhancement mode by  apk
+* p_param_buf_size
+H ow much memory size  required  to keep the enhancement   parameters for the specific device/mode
+Return value:
+lib_status_t , the status of library
+arsi_parsing_param_file
+   Parsing  param  file to get parameters into  p_param_ buf ( single mode) ,  Implemented in HAL  only
+Prototype:
+   lib_status_t   arsi_parsing_param_ file (   const  arsi_task_config_t   * p_arsi_task_config ,   const  string_buf_t   * platform_name ,    const  string_buf_t   * param_file_path ,    const  int   enhancement_mode ,     data_buf_t   * p_param_buf );
+Parameters:
+Parameters
+Description  
+* p_arsi_task_config
+the task configure
+* platform_name
+the platform name by &quot; adb  shell  getprop   ro.product.model &quot;
+* param_file_path
+the speech enhancement  param  file ( fullset )
+enhancement_mode
+the speech enhancement mode by  apk
+*   p_param_buf
+the buffer pointer   of  the parameters for the specific device/mode
+Return value:
+lib_status_t , the status of library
+Example
+void *handle =  dlopen ( lname , RTLD_NOW);
+……
+     arsi_query_param_buf_size_t   fvsoft_arsi_query_param_buf_size  =
+        ( arsi_query_param_buf_size_t ) dlsym (handle, &quot; arsi_query_param_buf_size &quot;);
+……
+     arsi_parsing_param_file_t   fvsoft_arsi_parsing_param_file  =
+        ( arsi_parsing_param_file_t ) dlsym (handle, &quot; arsi_parsing_param_file &quot;);
+……
+     fvsoft_arsi_query_param_buf_size (&amp; mArsiTaskConfig , &amp; platform_name , &amp; file_path ,
+                                                                     0, &amp; param_buf_size );
+
+     memset ( param_buf.p_buffer , 0,  param_buf.memory_size );
+     fvsoft_arsi_parsing_param_file (&amp; mArsiTaskConfig , &amp; platform_name , &amp; file_path , 
+                                                              0,   &amp; param_buf );
+    ……
+    /* set speech  param  to SCP */
+     pIPI -&gt; sendIpiMsg (TASK_SCENE_PHONE_CALL,
+                     AUDIO_IPI_DMA, AUDIO_IPI_MSG_NEED_ACK,
+                     IPI_MSG_A2D_SPH_PARAM,  param_buf.data_size , 0, (char *) param_buf.p_buffer );
+
+     dlclose (handle);
+XML Descriptor for  Aurisys
+Example
+  The  Aurisys  XML Descriptor is a simple XML-file that specifies the library version number, attribute, parameter path, and optionally other information. We provide an example, in the following demonstrates how to describe a library and a scenario. The attributes of the MTK IIR filter library and the MTK record library are packaged in the library descriptor by &lt; aurisyslibdescriptor &gt; tag. Then we can use &lt; aurisysscenario &gt; tag to describe which library (can be multiple  libraries )  will be  applied in this scenario.
+&lt;?xml   version=&quot;1.0&quot; encoding= &quot;UTF-8&quot;  ?&gt;
+&lt; aurisys_config &gt;
+    &lt;!--
+     * =========================================================================
+     *   table of uplink/downlink library mapping for each scenario
+     * =========================================================================
+    --&gt;
+     &lt; aurisys_scenarios &gt;
+         &lt;!-- for  aurisys_scene  playback normal --&gt;
+         &lt; aurisys_scenario   aurisys_scenario = &quot;AURISYS_SCENARIO_PLAYBACK_NORMAL &quot; &gt;
+             &lt; downlink_library_name_list   digital_gain_lib_name = &quot; &quot; &gt;
+                 &lt;library   name =&quot; mtk_bessound &quot; /&gt;
+             &lt;/ downlink_library_name_list &gt;
+        &lt;/ aurisys_scenario &gt;
+         &lt;!-- for  aurisys_scene  low latency record --&gt;
+         &lt; aurisys_scenario   aurisys_scenario = &quot;AURISYS_SCENARIO_RECORD_LOW_LATENCY &quot; &gt;
+             &lt; uplink_library_name_list   digital_gain_lib_name = &quot; mtk_speech_enh &quot; &gt;
+                 &lt;library  name= &quot; mtk_speech_enh &quot; /&gt;
+            &lt;/ uplink_library_name_list &gt;
+        &lt;/ aurisys_scenario &gt;
+     &lt;!--
+     * =========================================================================
+     *   HAL  Librarys
+     * =========================================================================
+    --&gt;
+     &lt; hal_librarys &gt;
+         &lt;!--
+         * =====================================================================
+         *    MediaTek   Bessound
+         * =====================================================================
+        --&gt;
+         &lt;library  name=&quot; mtk_bessound &quot;
+                  lib_path =&quot;/vendor/lib/ libaudioloudc.so &quot;
+                 lib64_path=&quot;/vendor/lib64/ libaudioloudc.so &quot;
+                  param_path =&quot;&quot;
+                  lib_dump_path =&quot;AUTO&quot;
+                  adb_cmd_key =&quot;MTKBESSOUND&quot;&gt;
+             &lt;components&gt;
+                 &lt;!-- for  aurisys_scene  playback normal --&gt;
+                 &lt;component   aurisys_scenario = &quot;AURISYS_SCENARIO_PLAYBACK_NORMAL&quot;
+                           sample_rate = &quot;8000,11025,12000,16000,22050,24000,32000,44100,48000,96000,192000&quot;
+                            audio_format = &quot;AUDIO_FORMAT_PCM_32_BIT&quot;
+                            frame_size_ms = &quot;0&quot;
+                            b_interleave = &quot;1&quot;
+                            enable_log = &quot;0&quot;
+                            enable_raw_dump = &quot;0&quot;
+                            enable_lib_dump = &quot;0&quot;
+                            enhancement_mode = &quot;0&quot; &gt;
+                     &lt; downlink_process &gt;
+                         &lt; buf_in    data_buf_type =&quot;DATA_BUF_DOWNLINK_IN&quot;
+                                  num_channels = &quot;2&quot; /&gt;
+                         &lt; buf_out   data_buf_type =&quot;DATA_BUF_DOWNLINK_OUT&quot;
+                                  num_channels = &quot;2&quot; /&gt;
+                     &lt;/ downlink_process &gt;
+                &lt;/component&gt;
+            &lt;/components&gt;
+        &lt;/library&gt;
+         &lt;!--
+         * =====================================================================
+         *    MediaTek  IIR
+         * =====================================================================
+        --&gt;
+         &lt;library   name= &quot; mtk_iir &quot;
+                  lib_path = &quot;/vendor/lib/lib_iir.so&quot;
+                 lib64_path = &quot;/vendor/lib64/lib_iir.so&quot;
+                  param_path = &quot;&quot;
+                  lib_dump_path = &quot;AUTO&quot;
+                  adb_cmd_key = &quot;MTKIIR&quot; &gt;
+             &lt;components&gt;
+                 &lt;!-- for  aurisys_scene  low latency record --&gt;
+                 &lt;component   aurisys_scenario =&quot;AURISYS_SCENARIO_RECORD_LOW_LATENCY&quot;
+                            sample_rate = &quot;16000,32000,48000,96000,192000&quot;
+                            audio_format = &quot;AUDIO_FORMAT_PCM_16_BIT&quot;
+                            frame_size_ms = &quot;1&quot;
+                            b_interleave = &quot;0&quot;
+                            enable_log = &quot;0&quot;
+                            enable_raw_dump = &quot;0&quot;
+                            enable_lib_dump = &quot;0&quot;
+                            enhancement_mode = &quot;0&quot; &gt;
+                     &lt; uplink_process &gt;
+                         &lt; buf_in    data_buf_type =&quot;DATA_BUF_UPLINK_IN&quot;
+                                  num_channels = &quot;2&quot; /&gt;
+                         &lt; buf_out   data_buf_type =&quot;DATA_BUF_UPLINK_OUT&quot;
+                                  num_channels = &quot;2&quot; /&gt;
+                    &lt;/ uplink_process &gt;
+                &lt;/component&gt;
+                 &lt;!-- for  aurisys_scene  record w/o AEC --&gt;
+                 &lt;component   aurisys_scenario = &quot;AURISYS_SCENARIO_RECORD_WITHOUT_AEC&quot;
+                            sample_rate = &quot;16000,32000,48000,96000,192000&quot;
+                            audio_format = &quot;AUDIO_FORMAT_PCM_16_BIT&quot;
+                            frame_size_ms = &quot;20&quot;
+                            b_interleave = &quot;0&quot;
+                            enable_log = &quot;0&quot;
+                            enable_raw_dump = &quot;0&quot;
+                            enable_lib_dump = &quot;0&quot;
+                            enhancement_mode = &quot;0&quot; &gt;
+                     &lt; uplink_process &gt;
+                         &lt; buf_in    data_buf_type =&quot;DATA_BUF_UPLINK_IN&quot;
+                                  num_channels = &quot;2&quot; /&gt;
+                         &lt; buf_out   data_buf_type =&quot;DATA_BUF_UPLINK_OUT&quot;
+                                  num_channels = &quot;2&quot; /&gt;
+                     &lt;/ uplink_process &gt;
+                &lt;/component&gt;
+                &lt;!-- for  other  aurisys_scene s  --&gt;
+                 ……………………………………………………………………… .
+                 ……………………………………………………………………… .
+                 ……………………………………………………………………… .
+             &lt;/components&gt;
+        &lt;/library&gt;
+    &lt;/ hal_librarys &gt;
+&lt;/ aurisys_config &gt;
+Elements
+Version Control
+  The  &lt; versioncontrol &gt;  tag is used to  describes  the  Aurisys  XML format version.
+         &lt; versioncontrol   value= &quot; 1.01 &quot; &gt;
+L ibrary Descriptor
+L ibrary Information
+HAL Library
+The  &lt;HAL library&gt;  tag is used to specify th e  description of libraries executed in application processor.  C urrently, we only support XML descriptor of librarie s in the application processor.
+    &lt; hal_librarys &gt;
+Library Name
+The library descriptor is used to describe the information of a library, such as library version, library path, and processing approaches. You can create a library  descriptor  by a  &lt; aurisyslibdescriptor &gt; tag with an  appropriate  name which represents the library.
+        &lt; aurisyslibdescriptor   name= &quot; library _iir &quot; &gt;
+Library Path
+Specify the library path.
+         lib_path = &quot;/vendor/lib/ libaudioloudc.so &quot;    
+         lib64_path = &quot;/vendor/lib64/ libaudioloudc.so &quot;
+Parameter Path
+Specify the library parameter file path. The usage of library parameter has been demonstrated in the  chatper   “ Software Development Guidance ”
+         param_path = &quot;/vendor/etc/ aurisys_param /Speech_AudioParam.xml&quot;
+Key Parameter
+When we want to modify the parameters (ex. by a tuning tool), the audio system needs a specified key to recognize which library should be applied. The key can be any string value that is unique.
+         adb_cmd_key = &quot;MTKBESSOUND&quot;&gt;
+Dump Path
+The  lib_dump_path  is used to specify the dump path of the library. If you don ’ t want to assign a specific path, just set it as  “ AUTO ”  and the dump will be placed in  sdcard / mtklog / audio_dump
+         lib_dump_path = &quot;AUTO&quot;
+Attribute of Each Scene
+
+Library Applied Scene
+Specify the library can be applied in which scenario.   The attribute of the library in different scenes may be different. So we should define the attributes to be applied in each scene. The  &lt;component&gt;  tag is used to specify a scene.
+Range of values: 
+AURISYS_SCENARIO_PLAYBACK_NORMAL,
+AURISYS_SCENARIO_PLAYBACK_LOW_LATENCY,
+AURISYS_SCENARIO_RECORD_LOW_LATENCY,  
+AURISYS_SCENARIO_RECORD_WITHOUT_AEC,  
+AURISYS_SCENARIO_RECORD_WITH_AEC,     
+AURISYS_SCENARIO_VOIP,                
+AURISYS_SCENARIO_VOIP_WITHOUT_AEC,  
+AURISYS_SCENARIO_PHONE_CALL,
+         &lt;component   aurisys_scenario = &quot;AURISYS_SCENARIO_PLAYBACK_NORMAL&quot;   &lt;/component&gt;
+Frame Period
+The supported frame period of the library.  For example, 5|20 means the library support both 5ms and 20ms.  
+Range of values:  an integer value
+         frame_size_ms = &quot;20&quot;
+If filled     frame_size_ms =  “ 0 ” , means we do not specify the  frame   buf   size , thus the   framework will use  MAX_LIB_BUF_SIZE  (128K) as the buffer size to pass the data to library, the library should handle the process data quantity itself.
+Processing Approach
+The l ib rary  can be interleave and  framebase , frame base need to assign  AurisysLibKeyFrameMs
+
+Range of values:   0, 1
+         b_interleave = &quot; 0 &quot;
+Format
+To specify the supported format
+Range of values:  
+AUDIO_FORMAT_PCM_16_BIT ,  AUDIO_FORMAT_PCM_8_BIT , 
+AUDIO_FORMAT_PCM_32_BIT ,  AUDIO_FORMAT_PCM_8_24_BIT
+         audio_format = &quot;AUDIO_FORMAT_PCM_32_BIT&quot;
+sample_rate
+To specify the supported sampling rate
+         sample_rate = &quot; 8000 , 11025 , 12000 , 16000 , 22050 , 24000 , 32000 , 44100 , 48000 , 96000 , 192000 &quot;
+Enhancement M ode
+The default value of enhancement mode is  “ 0 ” . If the library has different enhancement mode, it can be sued to specify which enhancement mode would be applied in the scenario.
+         enhancement_mode =&quot; 0 &quot;
+Debug
+To specify the  debugging information.   “ enable_log ”  is used to control the debug logging of the library;  “ enable_raw_dump ”  is used  to enable the dump of  an  input/output buffer of the library;  “ enable_lib_dump ”  is used to enable the dump generated by the library itself  (if  it  has).
+                            enable_log =&quot; 0 &quot;
+                            enable_raw_dump =&quot; 0 &quot;
+                            enable_lib_dump =&quot; 0 &quot;
+Optional Sections
+Uplink Process
+T he  &lt; uplink_process &gt;  tag is used to create the attribute  describution  of uplink process. You don ’ t need to describe the uplink process attribute if the library won ’ t be applied in uplink process in the scenario.
+ The  &lt; buf_in &gt;  tag is used to specify the input buffer type and channel number to the library in the scenario.
+The  &lt; buf_out &gt;  tag is used to specify the output buffer type and channel number from the library in the scenario.  
+Range of  buffer type  values:
+  DATA_BUF_UPLINK_I N,  DATA_BUF_UPLINK_OU T,  DATA_BUF_DOWNLINK_I N,
+DATA_BUF_DOWNLINK_OU T,  DATA_BUF_ECHO_REF ,  DATA_BUF_IV_BUFFER ,  DATA_BUF_CALL_INFO
+                     &lt; uplink_process &gt;
+                         &lt; buf_in    data_buf_type = &quot;DATA_BUF_UPLINK_IN&quot;
+                                  num_channels = &quot; 2 &quot; /&gt;
+                         &lt; buf_out   data_buf_type = &quot;DATA_BUF_UPLINK_OUT&quot;
+                                  num_channels = &quot; 2 &quot; /&gt;
+                     &lt;/ uplink_process &gt;
+Downlink Process
+As the &lt; uplink_process , the  &lt; downlink_process &gt;  tag is used to create the attribute  describution  of downlink process.  You don ’ t need to describe the downlink process attribute if the library won ’ t be applied  in  downlink  process  in the scenario.  
+                     &lt; downlink_process &gt;
+                         &lt; buf_in    data_buf_type = &quot;DATA_BUF_DOWNLINK_IN&quot;
+                                  num_channels = &quot; 2 &quot; /&gt;
+                         &lt; buf_out   data_buf_type = &quot;DATA_BUF_DOWNLINK_OUT&quot;
+                                  num_channels = &quot; 2 &quot; /&gt;
+                     &lt;/ downlink_process &gt;
+Scen ario  Descriptor
+  The scenario  descriptor  is used to specify which library would be applied in the scenario. 
+The  tags  &lt; aurisysscenario &gt; ,  &lt; / aurisysscenario &gt;  is  used to define the start and end of the scenario descriptor section. The following example shows that an  MTK  inhouse  VOIP scenario is created. 
+The  &lt; uplink_library_name_list &gt;  is u sed to specify the library in the uplink process, and the  &lt; downlink_libary_name_list &gt;  is used to specify the  library  in the downlink process.
+The tag  &lt;library name&gt;  is used to specify the processing library.  Both the downlink and uplink library are set as  mtk_speech_enh  library. It also allows  to assign  multiple libraries to the downlink/uplink path.  For example,    &lt;library   name= &quot; mtk_speech_enh _A &quot; /&gt;   &lt;library   name= &quot; mtk_speech_enh _B &quot; /&gt; .
+Since the library to do data processing and the library to handle the gain settings may be different. The tag  &lt; digital_gain_lib_name &gt;  can be used to specify the library to handle the gain settings. The data processing library and gain setting library can be the same one.
+          &lt; aurisys_scenario   aurisys_scenario = &quot;AURISYS_SCENARIO_VOIP&quot; &gt;
+             &lt; uplink_library_name_list   digital_gain_lib_name = &quot; mtk_speech_enh &quot; &gt;
+                 &lt;library name = &quot; mtk_speech_enh &quot;/&gt;
+             &lt;/ uplink_library_name_list &gt;
+             &lt; downlink_library_name_list   digital_gain_lib_name = &quot; mtk_speech_enh &quot; &gt;
+                 &lt;library   name= &quot; mtk_speech_enh &quot; /&gt;
+             &lt;/ downlink_library_name_list &gt;
+         &lt;/ aurisys_scenario &gt;
+Deployment
+
+Figure  4 1 .   Relationship between Scene Handler, Scenario Descriptor, and Library Descriptor
+   Library Descriptor   is  used to describe the information of a library. Every applied library should be described by a library descriptor. 
+  Scenario Descriptor  is used  to define which libraries would be applied in the specified scenario. Multiple libraries can be applied in one scenario. Besides, as the diagram above, a library can be applied in different scenarios. 
+  Scene Handler , as mentioned above,   is created as the middleware between the audio system and the sound processing IPs . The record handler is served for a record scene and we can assign a scenario to the record handler. If we assign the  scenario  A to the record handler, the library A and library B will be applied in the  record scene. We can also assign scenario B or scenario C to the recording scene. However, the assignment is  achieved  in the program of scene handler, not in the XML descriptor.
+
+Debugging
+Logging
+  Programmers are used to debug by logging the execution of the program. However, it is not convenient for a binary release IP. During developing an IP, the programmer writes logging codes to check the correctness of the program. However, the logging code may be removed when it ’ s time to release. Moreover, the programmer may want to refine the program due to issues or improvement works. He needs to insert the logging code and recompile the code. This brings lots of work for the developer, especially when the program is binary released.
+  Thus, we provide an API for the developer to check the  correctness  of  their program by logging. The API is consistent and can be used in different systems. The provided API would call the  function  pointer passed in the  initializ ation. The called function is responsible for logging the required statements by calling the system-specific logging API. It can also be disabled easily by bypassing the requirements. It ’ s helpful for the developer which doesn ’ t need to remove and insert logging code anymore.
+Inside Software IP
+  The following blocks are the statement of the information about the provided logging API:
+API
+/**
+******************************************************************************
+ *  @brief set debug log print callback function
+ *
+ *  @ param   debug_log  log print function pointer
+ *
+ *  @ param   p_handler  the handler of speech enhancement
+ *
+ *  @return  lib_status_t
+******************************************************************************
+ */
+lib_status_t   arsi_set_debug_log_fp (const  debug_log_fp_t   debug_log ,
+                                   void * p_handler );
+Prototype
+typedef  void (* debug_log_fp_t )(const char *message, ...);
+Data Structure
+typedef   struct   arsi_task_config_t  {
+     …
+     debug_log_fp_t   debug_log ;
+     …
+}  arsi_task_config_t ;
+
+Applications
+Aurisys  Features in  MT6799
+  The following features are supported in MT6799  Aurisys . Note that the word  “ supported ”  means it would be driver-ready. Other features can also be implemented by utility functions, such as Proximity.
+
+Aurisys  Features in  MT6799
+
+Application Processor
+DSP
+Record Enhancement
+Yes
+-
+Voice Call Enhancement
+-
+Yes
+Sound Trigger
+-
+Yes
+VOIP
+Yes
+-
+Speaker Protection
+Yes
+-
+MP3 Decoder
+Yes
+Yes
+Playback Effect
+Yes
+-
+Figure  6 1 .   Aurisys  Default Features in MT6799
+Voice Call
+Data Path
+   Hand-Held Mode
+( 6 ) ( 5 ) ( 1 ) ( 4 ) ( 3 ) ( 2 )
+( 6 )
+( 5 )
+( 1 )
+( 4 )
+( 3 )
+( 2 )
+Figure  6 2 .   Hand-Held Mode Voice Call Data Path
+Downlink data. The data from the far-end is received in Modem IC and decoded. After decoding the codec, the Modem IC notifies the Open DSP to move the voice data to the internal memory of Open DSP. Then the vendor ’ s DL enhancement solution will be applied and the processed data would be moved back to Modem IC.  
+The Modem IC  write  DL data to Audio HW.
+The voice uplink data are also received from the Modem IC.
+The Open DSP moves the data to its internal memory. After applying the vendor ’ s UL enhancement solution, the data will be transferred to Modem IC. The Modem IC will then encode the data and send to far end.
+The background sound is transferred to Modem IC and mixed with voice data before output to the audio hardware
+The voice data during a voice call can be saved. The DL/UL data can be saved  separately .
+
+Hand-Free Mode
+Programmers are used to debug by logging the execution of the program. However, it is not convenient for 
+( 3 ) ( 2 ) ( 1 )
+( 3 )
+( 2 )
+( 1 )
+Figure  6 3 .   Hand-Free Mode Voice Call Data Path
+If there is no  smartPA , the DL data is written to the Audio  HW  and  output to speaker Amp directly. If there is a  smartPA , the output data will be routed to the application processor first
+The  smartPA  algorithm will be applied. Notice that we only support  smartPA  algorithm by default in  MT6799 .
+Finally, the data will be written to the Audio HW and then output to the speaker Amp.
+Basic Information
+We support NB/WB. No matter NB or WB, the  data will be up-sampled to 16k sampling rate for the vendor ’ s IP. We ’ ll notify the vendor ’ s IP whether it ’ s WB or not.
+20ms per frame and DL/UL  separated . Modem side interrupts open DSP  every  20ms  to notify open DSP to receive voice UL data. For voice DL data, the interrupt period is also 20ms, and there is a shift between UL data.
+
+
+To avoid increasing round trip delay, UL enhancement should be processed no more than 1 0 ms and DL enhancement should be processed no more than 3ms. If the library can ’ t meet the requirement, we need to delay 1 frame to process the data.  T here would be 20ms increment in the round trip delay (because of 20ms per frame) .
+
+
+
+
+Available MCPS
+Latency
+DL Enhancement
+62
+No delay
+UL Enhancement
+208
+No delay
+DL+UL Enhancement
+416
+20ms delay  increment
+
+The group delay (processing buffer delay) of the library is suggested to not more than 40ms.
+3   mic  supported in  MT6799
+
+Limitations
+  The timing is critical for voice call, so the voice call enhancements should be run at  416   MHz.  It will keep the voltage at  0.84 V in  MT6799 . Compared with MTK  proprietary  voice call enhancement solution which is executed in the Modem IC, the power consumption of executing voice call enhancement executed in the Open DSP will be higher. However, the proportion of power increase would be small in the view of total power consumption of whole chip and daily of use.
+Configurations
+   AP  --  MTK_AURISYS_PHONE_CALL_SUPPORT
+   DSP  --  CFG_  MTK_AURISYS_PHONE_CALL_SUPPORT
+  Notice that there is a compile dependency check. The configurations of AP and DSP should be the same or there will be a build error occurs.
+Software Frameworks
+( 3 ) ( 6 ) ( 5 ) ( 4 ) ( 2 ) ( 1 )
+( 3 )
+( 6 )
+( 5 )
+( 4 )
+( 2 )
+( 1 )
+Figure  6 4 .  Software Frameworks of Voice Call
+UL  ……… ……………………………… .. … …………………………………………………… . … (1)
+The diagram shows the path how UL data received from the hardware input and sends to the Modem IC
+DL ……… ……………………………………………………………………………………… .. …… ( 2 )
+The path from the Modem IC to the audio hardware output
+Data between Modem IC and CortexM4 (Open DSP)  ……… …………… .. ( 3 )
+The voice data exchange between the Modem IC and CM4 is by the BUS. The DMA of CM4 can help to reduce the period of data exchange
+Source code structure
+Audio --  / source / drivers / CM4_ B / mt679 9 / audio
+Aurisys  Interface --  / source / middleware / lib / aurisys
+IPI --  / source / drivers / CM4_ b / mt679 9 / ipi /
+Task Voice   ……… ……………………………… .. … ………………………………………… … ( 4 )
+The initial function is placed in  audio.c  to initialize the IPI message handler and create the Voice Task
+The Voice Task main  function s are placed in  audio_task_phone_call.c
+IPI   ……… ……………………………… .. … …………………………………………………… .. … ( 5 )
+Inter Processor Interrupt.  The communication between the application processor and the DSP is through the IPI message. Each task has its unique IPI ID and should have implemented an IPI handler.
+The IPI ID is defined in  scp_ipi.h
+The IPI message handler and related information can be found in  audio _messenger_ipi.c ,  audio_speech_msg_id.h
+Notice that the IPI message handler is in ISR level. Thus, we can ’ t execute enhancement directly in the IPI message handler. It is just used to signal the task Voice.
+(6) Process APIs ……… ……………………………… .. … ……………………………… … ( 6 )
+The software interface defined in  arsi_api.h . The process APIs implemented by the vendor will be executed in the Task Voice.
+Playback
+Data Path
+
+Figure  5 4 .   Audio Playback  with  Aurisys  data path
+O ffload stream. The audio  bitstream  will be decoded to DSP and the decoded PCM data will be output to the audio hardware directly. 
+The normal playback stream. The audio is decoded in the application processor, and the post-processing effects applied through  Aurisys  Framework.
+Fast track, audio playback with lower latency.
+The decoder implemented in DSP. Currently, we only support MP3 decoder in  MT799 .
+The multiple streams can be mixed in the hardware directly. However, the sampling rate should be the same, so the sampling rate converter would be executed first if needed.
+Scenarios
+Currently, we have implemented  Aurisys  playback scenarios on  the  AP  side and the DSP side.
+On AP side, we implement the post-processing effect Audio compensation Filter (ACF/HCF) applied through  Aurisys  Framework.  The user can compose the libraries under different playback scenarios by simply setting different xml configurations.
+On DSP side as offload audio case, we put the mp3 decoder on DSP and write down a large amount of  bitstream  data into Dram to achieve lower power consuming.  With the  centrol  control of  aurisys  task manager.   The  communications  between AP driver and DSP task becomes safer and easier.
+We will introduce the data and control path under  this  two scenarios.
+AP playback with post-processing
+The  working  flow  is depicted as below, there are five functional blocks.   Application UI, Framework, Audio HAL, Device and External  hal .  The  Aurisys   Framewok  is implemented in Audio Hal and related ARSI general API and aurisys_ config.xml  are  defined in external block.
+   ( 5 )    ( 4 )    ( 3 ) ( 2 ) ( 2 ) (1)
+   ( 5 )
+   ( 4 )
+   ( 3 )
+( 2 )
+( 2 )
+(1)
+Figure  5 5 .   Functional Blocks  of  Normal  Playback with ACF library
+The  aurisys  framework  is   initialized   by  AudioALSAHardware  when  audioserver  start.
+During  the   initialization  stage,  the  aurisys  controller   parse  aurisys_config.xml , establishing the function callback between library and framework, and  dlopen   AudioComponentEngine   libraries (bit converter,  samplerate  converter.)
+For ACF library,  we  parse  the ACF_param.xml and store  the parameters into the structure. These parameters set the processing frequency and  generate  corresponding   filter  coefficients . 
+When normal playback start, we create  libmanager  and  libhandler  to handle the processing  flow  under  this scenario.  As we can  retrieve  the  stream and hardware  info, we store these information and provide to  the framework.
+If the playback  setting  is  not compatible to the library setting, the  Aurisys  Framework  will trigger  samplerate  converter or bit converter to do the transformation.  This ensure  the process can be done without library modification.
+The post-processing is done by  calling   aurisys _process_dl_only ()  . The framework handles the data transformation  and operates with libraries   through ARSI generic  interface
+The  applicarion   can  be enabled through  setparameter  function.
+Configurations
+   AP project  config  --  MTK_AURISYS_FRAMEWORK_SUPPOR T
+Aurisys  related  files
+vendor\ mediatek \proprietary\hardware\audio\common\ aurisys  
+Framework (framework related core files) 
+Utility  ( src / bitconvert / ringbuf /formatter,  adb   cmd ,  pcmdump …utility functions)
+vendor\ mediatek \proprietary\external\ aurisys  
+aurisys_config.xml  (defines all exist scenarios with corresponding libraries )
+Interface  ( aurisys  common interface for custom library to reference)
+Libraries (the existed libraries with  aurisys  interface ex:  libfvaudio ,  lib_iir …)
+ACF related  files
+vendor\ mediatek \proprietary\external\ aurisys \ libaudioloud  
+ACF  with  Aurisys  wrapper implementation
+vendor\ mediatek \proprietary\external\ AudioCompensationFilter  
+ C version file for xml parsing
+device\ mediatek \common\ audio_param \
+PlaybackACF_AudioParam.xml  parameters  for Audio  Tunning  Tool to adjust
+\vendor\mediatek\proprietary\custom\(%porj)\hal\audioflinger\audio
+For customer Turn on/off ACF ( ENABLE_AUDIO_COMPENSATION_FILTER )
+\vendor\ mediatek \proprietary\external\ bessound_HD
+
+There are two key points for the  libray   porting .  
+One is to  depicts  the library configuration in aurisys_config.xml. 
+Anothor  one is to implement the wrapper between ARSI interface and library functions.
+In aurisys_config.xml, we first indicate the using scenario and list the library component used.
+We depict the library ’ s attribute, such as file path, library supported  samplerate , processing format, frame size,  data buffer type (uplink or downlink), channel number, and debug level … .etc. These attributes are compared to the input  pcm  data and indicate the library  setting  during  processing. The user can change the library setting by simply modify the xml file.  This enlarge  the flexibility and reduce the coding effort.
+
+
+Figure  5 6 . aurisys_config.   xml  depicts the library configurations
+To implement the wrapper between library and ARSI interface, we comparing and mapping their functionality as the table shows. ARSI interface supports various library control settings which depict in section  3.2.2 . 
+
+Figure  5 7 . mapping the interface between ARSI and Effect
+Comparing to the original post- processing  path , the  Aurisys  path will not new the instance for every pre-defined scenario at the first loading stage. Instead, it checks the current device info by task  config  and create corresponding library instance. The calling interfaces changed in  PlaybackHandlerNormal  and uses the  aurisys_process_dl_ only ( ) as  the unified entry for every post-processing  libray . 
+This means the users do not need to do extra judge or control coding when adding a new library .Once you have done the aurisys_config.xml description and implemented the wrapper. The library components can be  sequential ly processed.
+                   Figure  5 8 . comparing the processing path 
+DSP   offload   playback
+   AP  project  config  --  MTK_AUDIO_TUNNELING_SUPPORT
+   AP kernel  config   --  CFG_ MTK_AUDIO_TUNNELING_SUPPORT
+   DSP  --  CFG_MTK_AUDIO_TUNNELING_SUPPORT
+  audio_policy_configuration.xml   –  
+&lt; mixPort  name=&quot; compress_offload &quot; role=&quot;source&quot; flags=&quot;AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD|AUDIO_OUTPUT_FLAG_NON_BLOCKING&quot;&gt;
+&lt;profile name=&quot;&quot; format=&quot;AUDIO_FORMAT_MP3&quot;
+    samplingRates =&quot;8000,11025,16000,22050,32000,44100,48000&quot;
+    channelMasks =&quot;AUDIO_CHANNEL_OUT_STEREO&quot;/&gt;
+ &lt; / mixPort &gt;
+&lt;route type=&quot;mix&quot; sink=&quot;Wired Headset&quot;
+                       sources=&quot;primary  output,fast,FM  Tuner  In,compress_offload &quot;/&gt;
+&lt;route type=&quot;mix&quot; sink=&quot;Wired Headphones&quot;
+                       sources=&quot;primary  output,fast,FM  Tuner  In,compress_offload &quot;/&gt;
+&lt;route type=&quot;mix&quot; sink=&quot;Analog Dock Headset&quot;
+                       sources=&quot;primary  output,compress_offload &quot;/&gt;
+                &lt;route type=&quot;mix&quot; sink=&quot;Digital Dock Headset&quot;
+                       sources=&quot;primary  output,compress_offload &quot;/&gt;
+   audio_policy.conf   (below android N version) --
+compress_offload  {        
+         sampling_rates  8000|11025|16000|22050|32000|44100|48000 
+         channel_masks  AUDIO_CHANNEL_OUT_STEREO        
+         formats  AUDIO_FORMAT_MP3       
+         devices  AUDIO_DEVICE_OUT_WIRED_HEADSET|AUDIO_DEVICE_OUT_WIRED_HEADPHONE|AUDIO_DEVICE_OUT_ANLG_DOCK_HEADSET|AUDIO_DEVICE_OUT_DGTL_DOCK_HEADSET 
+         flags  AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD|AUDIO_OUTPUT_FLAG_NON_BLOCKING 
+      }
+File Structure
+Path
+File
+D escription
+Framework layer
+frameworks\ av \include\media
+AudioParameter.h
+D eclare  parameter keys   for  O ffload 
+frameworks\ av \media\ libmedia
+AudioParameter.cpp
+W e can ’ t attach effect on offload  stream ,  handle effect enable flow.
+
+AudioTrack.cpp
+
+
+AudioTrackShared.cpp
+
+frameworks\ av \include\private\media
+AudioTrackShared.h
+
+frameworks\ av \services\ audioflinger
+Threads.cpp
+
+
+Threads.h
+
+
+Track.cpp
+
+frameworks\ av \services\ audiopolicy \ managerdefault
+AudioPolicyManager.cpp
+
+frameworks\ av \media\ libmediaplayerservice \ nuplayer
+NuPlayerRenderer.cpp
+O ffload retry mechanism
+
+NuPlayer.cpp
+
+Kernel &amp; Hal
+Kernel-4.4\sound\soc\ mediatek \ common_int
+mtk-auddrv-offloadcommon.h
+O ffload kernel code
+
+mt_soc_offload_common.c
+
+kernel-4.4\drivers\misc\ mediatek \ audio_ipi \common\framework
+audio_ipi_driver.c
+T he communication driver between AP and SCP.
+
+audio_messenger_ipi.c
+
+
+audio_ipi_queue.c
+
+
+audio_task_manager.c
+
+
+audio_ipi_message.c
+
+kernel-4.4\drivers\misc\ mediatek \ scp \v02
+scp_ipi.c
+
+vendor\ mediatek \proprietary\hardware\audio\common\V3\ aud_drv
+AudioALSAPlaybackHandlerOffload.cpp
+O ffload driver main program
+
+AudioALSAHardware.cpp
+
+vendor\ mediatek \proprietary\hardware\au dio\common\V3\include
+AudioALSAPlaybackHandlerOffload.h
+
+vendor\ mediatek \proprietary\hardware\audio\mt6799\ aud_drv
+AudioALSAStreamOut.cpp 
+
+vendor\ mediatek \proprietary\hardware\audio\mt6799\ aud_drv
+AudioALSAStreamManager.cpp
+W here create  AudioALSAPlaybackHandlerOffload  class
+DSP
+project/CM4_B/mt6799/platform
+platform.mk
+Project configurations (common)
+project/CM4_B/mt6799/[project]
+ProjectConfig.mk
+Project configurations (specific project)
+
+CompilerOption.mk
+Project specific compile options
+middleware/lib/ aurisys / interface
+  arsi_api. h
+Aurisys  Software Interface
+
+arsi_api_version.h
+
+
+arsi_call_type.h
+
+
+arsi_library_entry_points.h
+
+
+arsi_type.h
+
+
+audio_task.h
+
+
+wrapped_audio.h
+
+
+wrapped_errors.h
+
+middleware/lib/
+audio_utility /
+A udio utility API
+
+m3offload /
+M p3 library
+
+Blisrc /
+SRC library
+drivers/common/audio/task/ 
+audio_task_interface.h
+Define audio task structure and status 
+
+mp3 / audio_task_offload_mp3.c  
+
+
+MP3   DSP main program
+
+mp3 / audio_task_offload_mp3_params.h
+
+
+mp3 / audio_task_offload_mp3.h
+
+drivers/common/audio/hardware
+audio_irq.h
+H eader file of  audio_irq.c
+
+audio_hw.h
+H eader file of  Audio hw operating functions
+drivers/common/audio/framework
+audio_task_factory.c
+Audio task service
+
+audio_messenger_ipi.c
+I nterrupt handler to handle message from AP
+
+audio.c
+Audio init/de-init entry functions
+drivers/CM4_B/mt6799/audio/ tasks
+mp3 /   audio_dma_mp3.c
+Audio  mp3  dma  platform driver
+drivers/CM4_B/mt6799/audio/ hardware
+audio_irq .c
+Register  irq  handler and request  irq
+
+audio_hw.c
+Audio hw operating functions
+
+audio_hw_reg.h
+Define platform related audio hw register
+Behavior
+  In  MT6799 , We didn ’ t implement  offloadable  playback effects on DSP by default. If the playback effect is enabled, the playback will be switched to a normal stream playback. Users can implement the playback effect in DSP by themselves currently. The default package with playback effect supported in DSP will be released later.
+
+
+Functional Blocks
+
+
+ 
+Figure  5 9 .  Functional Blocks of Offload Playback
+The communications between the application processor and DSP is by the IPI driver.
+The parsed MP3  bistream  is reserved in DRAM. The application processor can enter sleep mode if there is sufficient MP3  bistream  stored in DRAM.
+DSP will move the MP3  bitstream  to its internal memory by DMA
+The mp3  bistream  will be decoded by the decoder
+The decoder is executed in the Task MP3
+The output PCM data will be transferred to the audio hardware by DMA
+We need to monitor the data amount of mp3  bistream  buffer
+Once the amount of mp3  bitstream  is not enough for decoding, we ’ ll interrupt the application processor by IPI message to fill the  bitstream  buffer
+
+Sound Trigger
+   To be released later
+SmartPA
+   To be released later
+Record &amp; VOIP
+  Currently, we only support recording enhancement in the application processor. This is because the power savings in DSP won ’ t  be   significant  unless the encoder and storage driver are also implemented in DSP. However, we don ’ t have enough memory to support encoder. Besides, the computing power is not sufficient for recording features.
+  As the recording case, we only support VOIP in the application processor.  T he power savings in DSP won ’ t be significant since the codec is still implemented in application processor and DDR can ’ t be turned off during VOIP. The computing power and memory are not sufficient for us to implement all audio scenes to the DSP.
+Data Path  
+( 4 ) ( 5 ) ( 1 ) ( 2 ) ( 3 )
+( 4 )
+( 5 )
+( 1 )
+( 2 )
+( 3 )
+Figure  6 7 .   Record &amp; VOIP
+The  record( uplink) stream which contains sound data from microphones.
+We also support direct input without any processing.
+Before processing the uplink data with the recording or VOIP UL library. We provide an IIR filter ahead to do DC removal and reduce possible hardware defects. It can be bypassed by XML  config  if you don ’ t need it.
+The downlink stream which is processed with a playback or VOIP DL library.
+The DL output data will be looped back as the downlink reference stream and provided to the record or VOIP UL library.
+Configurations
+   MTK_AURISYS_FRAMEWORK_SUPPORT
+  This project configuration should be set as  “ yes ”  if you want to support recording and VOIP effect in  Aurisys  framework. If this configuration is set as  “ no ” , we still support MTK inside record and VOIP effect. However, we don ’ t support the  XML  descriptor  mentioned above. If you want to replace the MTK library with vendor ’ s library, it ’ s suggested to set this configuration as  “ yes ” . We can also support MTK library in  Aurisys  framework in the future and set this option as true by default.
+Application Processor Only
+   Due to the lack of DSP resources (computing power and internal memory size).  The recording and VOIP libraries are only allowed to be processed in the application processor.
+Class Diagram
+  The class diagram of  Aurisys  record and VOIP framework is depicted as follows. It provides a reference to the actual code. 
+
+Figure  6 8 .   Aurisys  Class Diagram for Record &amp; VOIP
+Device Information
+  It may be confused with the relationship between the input/output device and arguments sent to the library. We provide a comparison table in the following as a reference to implement library.
+VOIP
+   task_scene  = TASK_SCENE_VOIP
+   Device
+  Device Detail  
+Arguments  
+Handset
+w/ dual- mic  NR
+input_device_info  = AUDIO_DEVICE_IN_BUILTIN_MIC
+output_device_info  = AUDIO_DEVICE_OUT_EARPIECE
+VIR_VOIP_NORMAL_DMNR_SUPPORT enabled
+
+w/o dual- mic  NR
+input_device_info  = AUDIO_DEVICE_IN_BUILTIN_MIC
+output_device_info  = AUDIO_DEVICE_OUT_EARPIECE
+VIR_VOIP_NORMAL_DMNR_SUPPORT disabled
+Headset
+3 pole headset
+input_device_info.devices  = AUDIO_DEVICE_IN_BUILTIN_MIC
+output_device_info.devices  = AUDIO_DEVICE_OUT_WIRED_HEADPHONE
+
+4 pole headset
+input_device_info.devices  = AUDIO_DEVICE_IN_WIRED_HEADSET
+output_device_info.devices  = AUDIO_DEVICE_OUT_WIRED_HEADSET
+input_device_info.num_channels  = 1
+
+5 pole headset
+input_device_info.devices  = AUDIO_DEVICE_IN_WIRED_HEADSET
+output_device_info.devices  = AUDIO_DEVICE_OUT_WIRED_HEADSET
+input_device_info.num_channels  = 2
+5_POLE_HS_SUPPORT enabled
+MTK_HEADSET_ACTIVE_NOISE_CANCELLATION_SUPPORT disabled 
+
+5 pole + ANC
+input_device_info.devices  = AUDIO_DEVICE_IN_WIRED_HEADSET
+output_device_info.devices  = AUDIO_DEVICE_OUT_WIRED_HEADSET
+input_device_info.num_channels  = 2
+MTK_HEADSET_ACTIVE_NOISE_CANCELLATION_SUPPORT enabled 
+Hand-Free
+w/ NR
+output_device_info  = AUDIO_DEVICE_OUT_SPEAKER
+VIR_VOIP_HANDSFREE_DMNR_SUPPORT enabled 
+
+w/o NR
+output_device_info  = AUDIO_DEVICE_OUT_SPEAKER
+VIR_VOIP_HANDSFREE_DMNR_SUPPORT disabled 
+BT earphone
+BT earphone
+input_device_info  = AUDIO_DEVICE_IN_BLUETOOTH_SCO_HEADSET 
+
+Record
+   task_scene  = TASK_SCENE_RECORD 
+  The information of input device used in recording is the same with what used in VOIP. However, the library may need to be aware of which  application  is processed and apply different effect according to the application. The following table lists the arguments provided to the library in each  application . 
+  Application  
+Input Source  
+  Notes 
+Sound Recording
+input_source  = AUDIO_SOURCE_MIC
+Modes:  Normal  /  Lecture  /  Meeting  
+  ( Reserve2 = 0 ,  1 ,  2  respectively )
+Camera Recording
+input_source  = AUDIO_SOURCE_MIC
+ Modes:  Normal  /  Meeting  
+  ( Reserve2 =  3, 4  respectively )
+Customization1
+input_source  = AUDIO_SOURCE_MIC_AEC
+   MagiASR  need AEC   (VR + AEC)
+Voice Recognition &amp; CTS
+input_source  = AUDIO_SOURCE_VOICE_RECOGNITION
+
+Voice Unlock
+input_source  = AUDIO_SOURCE_VOICE_UNLOCK
+  
+Customization2
+input_source  = AUDIO_SOURCE_VOICE_RECOGNITION_AEC
+   Normal record + AEC
+Fast Record
+A ccording current application
+   frame_size_ms  = 5  ms
+
+Appendix:  Platform and Development Environment s
+Scenario Based DVFS
+Ultra  Low  Power Mode 82   MHz Ultra Low Power Always-on features 0.568V Normal Mode Turbo Mode 330  MHz 416  MHz Normal applications High Sampling Rate applications High Complexity algorithm 0.74  V 0.84  V Low Power Mode 165  MHz Low Power Features 0.69V
+Ultra  Low  Power Mode
+82   MHz
+Ultra Low Power
+
+Always-on features
+0.568V
+Normal Mode
+Turbo Mode
+330  MHz
+416  MHz
+Normal applications
+High Sampling Rate applications
+
+High Complexity algorithm
+0.74  V
+0.84  V
+Low Power Mode
+165  MHz
+
+Low Power Features
+0.69V
+Figure  7 1 .   MT6799  DSP Dynamic Voltage Table
+   We have three DSP clock rate  in  MT6799 , if your application can be run at  82 MHz, there is  a  large power savings for the whole system .  We don’t have automatic DVFS to detect current DSP loading and adjust the voltage automatically .  What we do is to register a frequency requirement  table for   a  specified application. When the application starts, a provided API should be called to notify the system. Besides, it also needs to call another API to notify the system when it is stopped. The system will adjust the voltage according  to the sum of clock rate requirement for active  applications.  
+  Since the enable and  disable  of a function is triggered from the application processor, the  judgement  of what clock rate is more suitable for current scenario is done by the application processor.
+Implementation
+R egistration
+kernel- 4 . 4 / drivers/misc/ mediatek / scp / [project] /   scp_feature_define.h
+kernel- 4 . 4 / drivers/misc/mediatek/scp / [project] / scp_feature_table.c
+typedef   enum  {
+    VOW_FEATURE_ID= 0,
+    OPEN_DSP_FEATURE_ID,
+    SENS_FEATURE_ID,
+    MP3_FEATURE_ID,
+    FLP_FEATURE_ID,
+    RTOS_FEATURE_ID,
+    NUM_FEATURE_ID,
+}  feature_id_t ;
+
+static  scp_feature_table_t   feature_table [] = {
+    {
+        .feature    = VOW_FEATURE_ID,
+        .freq            =  75 ,
+         .core           = SCP_B_ID,
+        .enable     = 0,
+    },
+    {
+        .feature    = OPEN_DSP_FEATURE_ID,
+        .freq            =  356 ,
+         .core           = SCP_B_ID,
+        .enable     = 0,
+    },
+    {
+        .feature    = SENS_FEATURE_ID,
+        .freq            = 84,
+         .core           = SCP_ A _ID,
+        .enable     = 0,
+    },
+…….
+…….
+};
+
+First, the feature ID should be added to the feature id table. Then the clock rate requirement of the specified application should also be provided.
+
+Function Prototype
+void  register_feature ( feature_id_t  id);
+void  deregister_feature ( feature_id_t  id);
+When an application is enabled to run, it must call  resiger_feature  function first to notify the system. The clock rate of the application will be added to the current total clock rate requirement. The system will then adjust the frequency of CPU. When the application is disabled, the  deregister_feature  should be called so that the system won ’ t consume unnecessary power.
+Dynamic Objects Loading
+
+Figure  7 2 .   MT6799 DSP Dynamic Loading Concept
+  We support 3 audio features (MP3 decoder, voice wake up, and phone call speech enhancement) by default in MT6799. However, the total size required by the features has exceeded the memory size of the DSP. So we apply a dynamic download mechanism. The dynamic download is possible only when the features happen in different scenes. It is not allowed to do dynamic download frequently since the downloading requires more than 100ms. The MP3 decoder and voice wake up are grouped into a  DO( dynamic objects) due to they are allowed to be executed simultaneously in the defined behavior. Besides, the total memory size of MP3 and VOW is allowed to be downloaded at the same time. In  implementation , the speech enhancement is downloaded when a phone call happens. The MP3 decoder and voice wake up are downloaded when the call ends.
+  Since  the define  and  arrangement  of DOs is complicated. We suggest calling for ACS ’ s help if there is requirement of dynamic object loading.
+
+DSP Binary (Build Command and Download)
+Configuration
+   There is an automatic compile dependency check between  “ PROJECT_CONFIG ”  of AP and  “ CFG_PROJECT_CONFIG ”  of DSP. They should be the same value. If there is a global configuration named  “ FOO ” , and there is a  dsp  configuration named  “ CFG_FOO ” , only the following three conditions are allowed.
+tinysys_config.h  entry
+Global ProjectConfig.mk
+#define CFG_FOO
+FOO = yes
+/* CFG_FOO is not set */
+FOO = no
+#define CFG_FOO VAL
+FOO = VAL
+Build Command
+Environment  Initialzation
+$ . build/envsetup.s h ………………………………… required only once
+$ lunch full_&lt;PROJECT&gt;-eng ……………………… re-run this command to switch to other projects.
+Full Android Build
+$  mosesq  make -j24
+Module Build for DSP
+$  mosesq  make  tinysys-scp  -j24
+Fast Module Build for DSP
+$ vendor/mediatek/proprietary/tinysys/freertos/source/tools/build_ts.sh    
+Built Binary
+Built DSP Binary Location
+out\target\product\ [project] \obj\TINYSYS_OBJ\tinysys-scp_int ermediates\freertos\source\CM4_ B \tinysys-scp-CM4_ B .bin
+Check the  modified  time of the binary if you  wanna  make sure the binary is updated
+Update DSP binary  by  Fastboot
+$  adb  reboot  bootloader   …………………..  Put the device in  fastboot  mode
+$  flashboot.exe scp1 tinysys-scp.bin   ……………… ..Update scp1 from local tinysys-scp.bin
+$  flashboot.exe scp2 tinysys-scp.bin   …… … … … …   Update  scp 2  from local tinysys-scp.bin
+Update DSP binary by MTK  Flashtool
+Flashtool  can be used to download Android full load or update DSP binaries only. The following figure shows how to update DSP binaries only. 
+
+
+Figure  7 3 .   Update DSP Binary by  Flashtool
+Code Release
+Get Full Codebase
+1. C ontact PM and sign an agreement
+2. Get a FEX account (contact with the PM)
+3. Request the code release
+Special Modem Image Request
+In MT6797, if you want to use the vendor ’ s voice call speech enhancement, we need to disable the MTK ’ s speech enhancement in the Modem Image. Since the modem image is binary released.  The customers need to request a modem image with the compile option:  “OPEN_DSP_SPEECH_SUPPORT”  first.  In MT6799, the modem image can support both 3 rd  party ’ s speech enhancement in the open  dsp  and MTK ’ s speech  enhancement  in modem side without changing the modem image.
+Aurisys  Framework Class Diagram
+
+Figure  7 4 .   Aurisys  Framework Class Diagram
+Software Patch Note
+  The following table lists the issues and possible impacts. Please make sure you ’ ve applied the following patches.
+Feature
+ID
+D escription
+
+
+
+
+
+
+
+
+
+
+FAQ
+SCP
+A bbreviation  of System Control Processor. It is because there is some system control tasks are run in this DSP.
+TinySys  
+Our DSP system and peripherals.
+</pre></section></article><section><h2>材料中的原图</h2><figure><a href="materials/SRC0321-image14.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image14.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 1"></a><figcaption>原图 1 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image17.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image17.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 2"></a><figcaption>原图 2 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image15.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image15.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 3"></a><figcaption>原图 3 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image18.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image18.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 4"></a><figcaption>原图 4 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image16.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image16.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 5"></a><figcaption>原图 5 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image21.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image21.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 6"></a><figcaption>原图 6 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image20.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image20.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 7"></a><figcaption>原图 7 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image22.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image22.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 8"></a><figcaption>原图 8 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image23.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image23.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 9"></a><figcaption>原图 9 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image24.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image24.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 10"></a><figcaption>原图 10 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image19.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image19.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 11"></a><figcaption>原图 11 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image4.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image4.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 12"></a><figcaption>原图 12 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image12.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image12.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 13"></a><figcaption>原图 13 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image13.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image13.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 14"></a><figcaption>原图 14 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image3.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image3.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 15"></a><figcaption>原图 15 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image2.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image2.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 16"></a><figcaption>原图 16 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image1.gif" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image1.gif" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 17"></a><figcaption>原图 17 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image5.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image5.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 18"></a><figcaption>原图 18 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image7.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image7.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 19"></a><figcaption>原图 19 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image11.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image11.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 20"></a><figcaption>原图 20 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image10.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image10.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 21"></a><figcaption>原图 21 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image6.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image6.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 22"></a><figcaption>原图 22 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image9.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image9.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 23"></a><figcaption>原图 23 · 点击放大</figcaption></figure><figure><a href="materials/SRC0321-image8.png" target="_blank" rel="noopener"><img loading="lazy" src="materials/SRC0321-image8.png" alt="CS6799-XXX-UMD-V1.0EN_Aurisys_Development_Tutorial.docx 内嵌原图 24"></a><figcaption>原图 24 · 点击放大</figcaption></figure></section></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">正文（不对应打印页码） 1</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

@@ -1,0 +1,975 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>软件开发培训-音视频解码常见问题及分析.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>软件开发培训-音视频解码常见问题及分析.pdf</h1><p>SRC0023 · 原来源 ID U047 · PDF物理页 · 13 个阅读单元</p><p class="note">有引用的指定页/文本核对；未宣称全文逐页审阅。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>培训材料/PVT技术分享文档/软件开发培训-音视频解码常见问题及分析.pdf</p><p>SHA-256：<code>c31539cad8dd6a236d4ba79ec38313309d74cde4b059e1ecad2030b04cca6963</code></p><p>原文件大小：881,712 字节</p></details><div class="actions"><a class="button" href="materials/SRC0023.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="软件开发培训-音视频解码常见问题及分析.pdf 原 PDF" src="materials/SRC0023.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0023.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">音视频解码常见问题及分析
+掌锐电子</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0023.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">一、
+3OS
+软件架构</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0023.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">二、
+8676 
+硬编解码性能
+表格标注最大支持能力，多路情况
+通过表格大体计算获得，计算时，若
+3
+个
+OS
+都在工作，场景都要考虑到。合并计算
+超过性能最大值，可能播放失败或卡顿等</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0023.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">三，音视频播放方式
+关于视频或音频播放，一般有两种方式
+1
+、使用
+MediaPlayer
+（比如本地音频视频播放器）
+当使用
+Android
+原生的
+MediaPlayer
+，会使用
+NuPlayer
+去进行文件的提
+取，音频和视频的时间对齐，音频和视频解码后输入的向下传递等操作
+2
+、直接调用
+mediacodec
+处理音频和视频
+（比如爱奇艺，
+carplay
+等）
+当使用
+mediacodec
+时，音频和视频都有
+app
+去处理。
+mediacodec
+只负
+责传入接收音视频原始数据，获取解码后的数据。其他操作由
+app
+进行。</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0023.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">四、常见解码情况分析
+使用
+MediaPlayer
+或
+Mediacodec
+判断开始和结束时间点
+在遇到问题时，需要对
+Android
+的
+mainlog
+进行分析
+若使用
+Mediaplayer
+时
+会有
+NuPlayer
+和
+GenericSource
+的
+log
+信息
+开始播放会看到这些信息，用于确定视频或音频开始
+D 
+NuPlayerDriver
+: 
+NuPlayerDriver
+(0xb400007247873780) created, 
+clientPid
+(7167)
+D 
+NuPlayer
+: 
+onSetVideoSurface
+(0xb40000724919f800, no video decoder)
+D 
+GenericSource
+: 
+FileSource
+remote
+I 
+GenericSource
+: start
+NuPlayer
+结束播放时
+1266 15877 D 
+NuPlayerDriver
+: 
+notifySeekComplete
+(0xb400007247873780)
+1266 1911 D 
+NuPlayerDriver
+: reset(0xb400007247873780) at state 5
+1266 15877 D 
+NuPlayerDriver
+: 
+notifyResetComplete
+(0xb400007247873780
+1266 1911 D 
+NuPlayerDriver
+: reset(0xb400007247873780) at state 0
+对于
+mediacodec
+log
+开始播放会有下面信息，用于确认开始播放时间
+D 
+MediaCodec
+: 
+CreateByType
+: mime video/
+avc
+, encoder 0 
+pid
+7167
+D 
+MediaCodec
+: [0xb40000723ba74000] 
+init
+: 
+CCodec
+0xb4000072490250c0, 
+CCodecBufferChannel
+0xb40000723b9b6800
+D 
+MediaCodec
+: [0xb40000723ba74000] 
+setState
+: 1
+D 
+MediaCodec
+: 
+CreateByType
+: mime audio/mp4a
+-
+latm, encoder 0 
+pid
+7167
+D 
+MediaCodec
+: [0xb400007247910000] 
+init
+: 
+CCodec
+0xb40000724780d000, 
+CCodecBufferChannel
+0xb4000072478eac00
+可以看到
+mediacodec
+音频一个线程，视频一个线程
+通过查看
+MediaCodec
+的
+setState
+状态来判断进度，状态
+6
+是正常播放中</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0023.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">五、使用硬编解码分析
+对于
+8676
+或
+78
+，若是使用的视频硬解码，可能使用硬编解码场景和出现异常时更多。
+硬编码用于录制视频文件，录制为
+H264
+或
+H265
+硬解码用于使用
+AVC/HEVC
+等常见视频流的场景，比如本地播放时大多
+mp4
+文件，
+carplay
+等投屏工
+具，爱奇艺等播放软件
+比如可以用这个确定播放和停止，也可以看到解码编码当时的数量
+D C2MtkComponentStore: 
+onNumberOfVideoInstancesChanged
+: Decoder 1, Encoder 1
+D C2MtkComponentStore: 
+onNumberOfVideoInstancesChanged
+: Decoder 0, Encoder 1
+可以搜索
+onNumberOfVideoInstancesChanged
+若是视频解码看到
+c2.mtk.XXX
+表示走的
+mtk
+的硬解码，若是音频或
+c2.android
+则是走的软解码
+遇到问题，首先看
+mediaserver
+的进程，搜
+mediacodec
+，或
+nuplayer
+等
+看到是硬解的话，搜索硬解码进程，可以搜
+c2mtk
+，进程号是硬解码的进程，全搜，对应开始或结束
+或问题时间点去查看异常定位问题。
+D 
+PipelineWatcher
+: [0xb4000072478eb0a8] 
+pipelineFull
+: too many frames in pipeline (6)
+这个一般不是异常，正常播放视频几乎都有这些信息，这个只能说明
+mediacodec
+处理
+dequeueOutputbuffer
+在等待处理数据</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0023.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">六、硬编解码分析中打开
+log
+和
+dump
+操作
+当硬解播放视频或怀疑硬解码导致时，可以打开硬解码更多
+log
+adb
+root
+adb
+shell &quot;
+setprop
+vendor.mtk.c2.enable.comp.log 1&quot;
+adb
+shell &quot;
+setprop
+vendor.mtk.c2.enable.vdec.log 3&quot;
+adb
+shell &quot;
+setprop
+vendor.mtk.c2.enable.vcodec.log 4&quot;
+adb
+后不能重启，重启上述命令会失效。
+adb
+输入后，不断电继续抓取测试即可
+,
+输入命令后重新播放才能生效。
+adb
+shell &quot;
+setprop
+vendor.mtk.c2.vdec.dump.input 1&quot;
+上面这条设
+1
+是
+c2mtk
+会
+dump
+硬解码的数据流，
+avc
+或
+hevc
+，保存到
+/data/vendor/
+vcodec
+下
+input
+命名的
+bs
+文件中
+可以
+pull
+出来，使用较新版的
+potplayer
+播放查看，设
+0
+关闭
+dump
+或重启机器不再
+dump
+还可以
+dump 
+硬解码后的数据
+adb
+shell &quot;
+setprop
+vendor.mtk.c2.vdec.dump.output 1&quot; 
+，
+保存到
+/data/vendor/
+vcodec
+下
+output
+命名的文件中，此文件非
+mtk
+无权打开访问，需要给
+mtk
+查看，
+mtk
+说是
+mtk
+私有的加密数据，设
+0
+关闭解码后
+dump
+硬编码命令
+encoder
+adb
+root
+adb
+shell 
+setprop
+vendor.mtk.c2.enable.venc.log 3
+adb
+shell 
+setprop
+vendor.mtk.c2.enable.comp.log 3
+开启后，可以看周期
+input
+和
+output 
+，搜索这个
+NotifyOutputBufferReady
+//
+视频帧解码后
+output
+解码完成时间戳信息
+process: input    //  
+视频帧每一帧
+input
+时间戳信息</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0023.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">七、常见
+log
+及分析
+遇到问题，首先看
+mediaserver
+的进程，搜
+mediacodec
+，或
+nuplayer
+等
+看到是硬解的话，搜索硬解码进程，可以搜
+c2mtk
+，进程号是硬解码的进程，全搜，对应开始或结束或问题时间点去
+查看异常定位问题。
+D 
+PipelineWatcher
+: [0xb4000072478eb0a8] 
+pipelineFull
+: too many frames in pipeline (6)
+这个一般不是异常，正常播放视频几乎都有这些信息，这个只能说明
+mediacodec
+处理
+dequeueOutputbuffer
+在等待处理数据
+视频出现卡顿，一般有两种可能，一种是分辨率过高，解码吃力。在
+8676
+和
+8678
+上比较少。
+硬解码的能力能到
+4K 60fps
+，软解可能只有
+1080P 30
+或
+60fps
+还有更常见的可能，是解码后数据不能及时送出去，音频和视频下行通道堵塞，都会引起卡顿。
+常见的
+log
+能看到
+wait fence
+“
+wait fence
+” 
+是
+vdec
+hal
+在等待
+framebuffer
+上的
+fence
+信息（
+vdec
+和
+display
+之间的
+sync
+机制），
+所以这种
+time out
+通常是
+display
+或者
+PQ 
+处理不及时，导致
+framebuffer 
+循环卡主的
+播放卡顿，
+音频下行链路卡住可能也会打印。
+Mtk
+说少量打印一般问题不大，频繁打印就需要考虑显示有卡顿
+若怀疑送显有卡顿，尝试输入下面的
+cmd
+再验证下是否能复制到问题：
+adb
+shell service call 
+SurfaceFlinger
+1008 i32 1  //
+关闭
+PQ
+复现问题时的
+log 
+和时间点
+记录正常界面与异常界面的时间点。
+导出
+MTKLOG, 
+与前面
+dump
+出的数据一并提供用于分析。
+an error 
+ged
+handle 
+这个不是异常，几乎每次播放都有
+如果使用了硬解码，可能
+mainlog
+里看不到异常。可以简单的确定
+kernel log
+里有没有异常，搜索
+vdec|utc
+，在
+sos
+中搜
+kernel
+和
+vcp
+log
+utc
+时间可能没有和
+mainlog
+一致，那就
+kernel utc+8 = 
+mainlog
+时间
+看看
+vdec
+相关有没有在对应时间点有没有
+fail
+或
+error
+提示，来确定是底层故障。
+还有一个
+vcplog
+也可以搜索，也是搜
+vdec
+，
+vcplog
+里没有
+utc
+打印，时间需要跟
+kernel
+去对齐</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0023.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">八、常见
+log
+及分析
+遇到常见问题
+log
+：
+NuPlayerRenderer
+: 
+onNewAudioMediaTime
+updateAnchor
+: 
+mediaTimeUs
+30304000 delta[262212]us, 
+pendingDuration
+1280000 us
+这段日志信息反映了
+NuPlayerRenderer
+在音频同步过程中更新锚点时间
+(
+updateAnchor
+)
+的关键参数，具体分析如下：
+参数含义解析：
+mediaTimeUs
+30304000
+：表示当前音频媒体时间戳（单位微秒），即音频流播放到的位置。
+delta[262212]us
+：指当前媒体时间与前一锚点时间的差值，用于计算时间偏差。
+pendingDuration
+1280000us
+：待处理的音频数据缓存时长（
+1.28
+秒），反映缓冲区数据积压情况。
+我理解是，当解码后音频向下通路出现堵塞，会出现
+pendingDuration
+积累增加的情况
+当视频解码出来不及时时，也会出现这个，相当于音频在等待视频做时间同步
+遇到常见问题
+log
+：
+NuPlayerRenderer
+: we're late dropping one 
+timeUs
+31583 
+ms
+after 13 frames
+该日志表明
+NuPlayerRenderer
+在视频渲染过程中出现严重延迟，导致连续丢弃
+13
+帧后仍存在
+31.583
+秒的同步滞后，
+属于严重性能异常。以下是关键分析与解决方案：
+同步机制崩溃
+视频帧时间戳（
+timeUs
+31583ms
+）与系统时钟偏差超过阈值，触发强制丢帧策略
+1
+。
+连续
+13
+帧未能及时渲染，说明同步补偿机制已失效，可能因音频主时钟异常或解码阻塞引发
+2
+。
+硬件
+/
+驱动瓶颈
+高延迟常见于
+GPU
+渲染管线阻塞（如
+SurfaceFlinger
+的
+dequeueBuffer
+超时
+100ms
+以上）</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0023.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">九、常见
+log
+及分析
+76/78
+CCodecBuffers
+: [c2.mtk.avc.encoder#507:Output[N]] 
+pushToStash
+: 
+pushToStash
+--
+pending size = 83
+BufferPoolAccessor2.0: bufferpool2 0xb40000743840d828 : 170(84999660 size) total buffers 
+-
+170(84999660 size) 
+used buffers 
+-
+26257/26427 (recycle/
+alloc
+) 
+-
+383/26413 (fetch/transfer)
+若遇到
+c2hal media 
+内容占用高的情况，比如上面信息
+log
+重点看
+total buffers
+和
+used buffers
+是不是比较大，或一直在增长
+多个客户都遇到过，最后查到原因是
+PC
+投屏软件导致，投屏会使用
+soc
+的编码功能，投屏有时候不能正常退出，退出时没有关闭编码，导致编码一直在生
+成，而没有消费者取走导致。
+投屏不是正常使用场景，投屏软件都是第三方的，，要注意这一点
+只能规避
+在使用
+mediaplayer
+进行播放时，客户经常会遇到在
+app
+里收到
+-
+19 
+-
+38
+等
+mediaplayerNative
+的消息
+很多时候在初始化配置
+surface
+或后台恢复时，
+surface
+配置或一些时序逻辑不对导致。
+最好的办法是，看看
+mtk
+原生的
+gallery
+的实现逻辑</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0023.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">十、卡顿或黑屏等显示问题
+dump
+遇到播放黑屏或卡顿显示问题的话，很多时候跟
+surface
+或
+hwc
+或
+PQ
+相关
+需要看下面的信息定位，很多时候显示问题
+log
+很难看到异常，需要保存现场
+dump
+实验测试验证。
+下次再复现需要保持现场输入下面命令测试或
+dump
+数据
+1, PQ bypass
+看看问题能不能复现。
+指令如下：
+adb
+root
+adb
+shell 
+dumpsys
+vendor.mediatek.hardware.pq_aidl.IPictureQuality_AIDL
+/default 
+--
+set_pq_persist_property
+&quot;
+persist.vendor.sys.pq.disp.color.bypass
+&quot; 1
+adb
+shell 
+dumpsys
+vendor.mediatek.hardware.pq_aidl.IPictureQuality_AIDL
+/default 
+--
+set_pq_persist_property
+&quot;
+persist.vendor.sys.pq.disp.ccorr.bypass
+&quot; 1
+adb
+shell 
+dumpsys
+vendor.mediatek.hardware.pq_aidl.IPictureQuality_AIDL
+/default 
+--
+set_pq_persist_property
+&quot;
+persist.vendor.sys.pq.disp.gamma.bypass
+&quot; 1
+adb
+shell 
+dumpsys
+vendor.mediatek.hardware.pq_aidl.IPictureQuality_AIDL
+/default 
+--
+set_pq_persist_property
+&quot;
+persist.vendor.sys.pq.disp.dither.bypass
+&quot; 1
+adb
+shell 
+dumpsys
+vendor.mediatek.hardware.pq_aidl.IPictureQuality_AIDL
+/default 
+--
+set_pq_persist_property
+&quot;
+persist.vendor.sys.pq.disp.aal.bypass
+&quot; 1
+adb
+shell 
+dumpsys
+vendor.mediatek.hardware.pq_aidl.IPictureQuality_AIDL
+/default 
+--
+set_pq_persist_property
+&quot;persist.vendor.sys.pq.disp.c3d.bypass&quot; 1
+adb
+shell 
+dumpsys
+vendor.mediatek.hardware.pq_aidl.IPictureQuality_AIDL
+/default 
+--
+set_pq_persist_property
+&quot;
+persist.vendor.sys.pq.disp.tdshp.bypass
+&quot; 1
+如果问题依就存在的话，
+帮着使用附件中的脚本抓取些数据，
+操作如下：
+a, 
+执行下面的脚本。
+adb
+root
+adb
+shell &quot;echo 
+mobile:on
+&gt; /proc/
+mtkfb
+&quot;
+adb
+sehll
+&quot;echo 
+detail:on
+&gt; /proc/
+mtkfb
+&quot;
+adb
+shell 
+setenforce
+0 &amp;&amp;
+adb
+shell 
+setprop
+persist.vendor.debug.hwc.log V&amp;&amp; 
+adb
+shell 
+setprop
+vendor.debug.hwc.skip_log
+0
+b, 
+分别在复现后问题的界面中在
+PC
+机中执行脚本。
+hwc_dump.zip()
+暂时无法在飞书文档外展示此内容
+先运行：
+0_setup.bat 
+再运行：
+1_dump.bat 
+然后，
+再将
+DUMP
+出来的数据目录
+SF_dump
+打包给我们用于分析。
+同时在对应界面中
+dumpsys
+SurfaceFlinger
+用于分析。
+操作
+如下：
+adb
+shell 
+dumpsys
+SurfaceFlinger
+&gt; sf_ok.txt
+或
+sf_ng.txt</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0023.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">十一、
+gst
+-
+launch
+-
+1.0
+播放测试
+常见使用
+yocto
+gst
+播放视频
+gst
+-
+play.c
+（
+1
+）
+adb
+push
+xxx
+/data/
+push
+一个
+video
+文件到平台，比如
+xxx.mp4 push
+到
+data 
+目录
+(2)
+source /data/
+wayland_env_file
+(3)
+gst
+-
+launch
+-
+1.0 
+playbin
+flags=0x42 video
+-
+sink=&quot;v4l2convert output
+-
+io
+-
+mode=
+dmabuf
+-
+import capture
+-
+io
+-
+mode=
+dmabuf
+disable
+-
+passthrough=true propose
+-
+allocation=3 
+name=
+mtkmdp
+! video/x
+-
+raw,format
+=
+BGRA,width
+=640,height=360,pixel
+-
+aspect
+-
+ratio=1/1 ! 
+waylandsink
+&quot; audio
+-
+sink=&quot;
+audioconvert
+! 
+audioresample
+! audio/x
+-
+raw,rate
+=48000,format=S16LE ! 
+alsasink
+device=hw:0,6&quot; 
+uri
+=file:///data/xxx
+amixer
+cset
+name='ADDA_DL_CH1 DL6_CH1' 1
+amixer
+cset
+name='ADDA_DL_CH2 DL6_CH2' 1
+amixer
+cset
+name='ADDA_DL_CH3 DL6_CH1' 1
+amixer
+cset
+name='ADDA_DL_CH4 DL6_CH2' 1
+amixer
+cset
+name='HPL Mux' 
+'Audio Playback'
+amixer
+cset
+name='HPR Mux' 
+'Audio Playback'
+amixer
+cset
+name='
+Ext_Speaker_Amp
+Switch' 1
+/data/gst
+-
+play
+-
+1.0 
+--
+flags=0x42 
+--
+videosink
+=&quot;v4l2convert output
+-
+io
+-
+mode=
+dmabuf
+-
+import capture
+-
+io
+-
+mode=
+dmabuf
+disable
+-
+passthrough=true propose
+-
+allocation=3 
+name=
+mtkmdp
+! video/x
+-
+raw,format
+=
+BGRA,width
+=640,height=360,pixel
+-
+aspect
+-
+ratio=1/1 ! 
+waylandsink
+&quot; 
+--
+audiosink
+=&quot;
+audioconvert
+! 
+audioresample
+! audio/x
+-
+raw,rate
+=48000,format=S16LE ! 
+alsasink
+device=hw:0,6&quot; /data/xxx.mp4 
+试下
+还是不行的话，拿掉
+--
+audiosink
+=&quot;
+audioconvert
+! 
+audioresample
+! audio/x
+-
+raw,rate
+=48000,format=S16LE ! 
+alsasink
+device=hw:0,6&quot;
+看下
+source /data/
+wayland_env_file
+layer
+-
+add
+-
+surfaces 
+-
+l 1 
+-
+s 1000 
+-
+d DP
+-
+2 &amp;
+export GST_DEBUG=6 GST_DEBUG_COLOR_MODE=off GST_DEBUG_FILE=/
+tmp
+/gst.log 
+gst
+-
+launch
+-
+1.0 
+playbin
+flags=0x42 video
+-
+sink=&quot;v4l2convert output
+-
+io
+-
+mode=
+dmabuf
+-
+import capture
+-
+io
+-
+mode=
+dmabuf
+disable
+-
+passthrough=true propose
+-
+allocation=3 
+name=
+mtkmdp
+! video/x
+-
+raw,format
+=
+BGRA,width
+=1920,height=720,pixel
+-
+aspect
+-
+ratio=1/1 ! 
+waylandsink
+&quot; 
+uri
+=file:///data/input.mp4</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0023.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">www.pvetec.com
+Thank You</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

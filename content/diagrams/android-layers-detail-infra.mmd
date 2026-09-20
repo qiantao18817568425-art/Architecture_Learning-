@@ -1,0 +1,33 @@
+%%{init: {"flowchart": {"nodeSpacing": 18, "rankSpacing": 8, "padding": 12}, "themeVariables": {"fontSize": "16px"}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph infra["Infra"]
+direction TB
+subgraph layout_row_1[" "]
+direction LR
+subgraph layout_row_2[" "]
+direction TB
+a97["FDBUS"]
+a100["MB_ipc"]
+a103["vsomeip"]
+a97 ~~~ a100 ~~~ a103
+end
+subgraph layout_row_3[" "]
+direction TB
+a98["canservice"]
+a101["protobuf"]
+a98 ~~~ a101
+end
+subgraph layout_row_4[" "]
+direction TB
+a99["boost"]
+a102["Update_server"]
+a99 ~~~ a102
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent

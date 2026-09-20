@@ -1,0 +1,4 @@
+%% Log storage abnormal recovery
+flowchart TB
+  T["mount late/read-only/full or journal backlog"] --> E["first write/flush/persist failure"] --> Q["log/storage queue"]
+  Q --> U["missing/saturated evidence"] --> O["mount + write result + journal rate"] --> C["bound queue/rotate safely"] --> R["restore writable target"] --> V["write/read persistence probe"]

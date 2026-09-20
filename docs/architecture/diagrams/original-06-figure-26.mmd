@@ -1,0 +1,15 @@
+flowchart TD
+  A[request fails/stale] --> B{network selected and validated?}
+  B -- no --> B1[capability/default/binding]
+  B -- yes --> C{DNS/route/policy valid?}
+  C -- no --> C1[name/route/firewall]
+  C -- yes --> D{socket handshake/session alive?}
+  D -- no --> D1[link/peer/session]
+  D -- yes --> E{response consumed and fresh?}
+  E -- no --> E1[queue/callback/business state]
+  B1 --> R[retire old Network/session]
+  C1 --> R
+  D1 --> R
+  E1 --> R
+  R --> S[reselect + reconnect + resubscribe]
+  S --> T[authoritative query + business readback]

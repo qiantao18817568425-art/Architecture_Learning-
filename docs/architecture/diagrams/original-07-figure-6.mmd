@@ -1,0 +1,5 @@
+%% Camera abnormal recovery
+flowchart TB
+  T["source loss / queue backpressure / stale timestamp"] --> E["first missing frame or dequeue"]
+  E --> F["ISP/V4L2/service/pad direct failure"] --> U["no preview / frozen frame"] --> O["sequence + timestamp + queue + bus + fence"]
+  O --> C["stop; flush; stream-off; release DMA/surface"] --> R["restart new Generation"] --> V["fresh frame reaches display"]

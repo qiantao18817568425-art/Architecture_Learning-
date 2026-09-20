@@ -1,0 +1,16 @@
+flowchart TD
+  A[owner lifecycle ends] --> B{new work stopped?}
+  B -- no --> B1[callback/task recreates references]
+  B -- yes --> C{outstanding buffer/fence drained?}
+  C -- no --> C1[queue backlog or consumer ownership]
+  C -- yes --> D{consumer and Layer detached?}
+  D -- no --> D1[native object/Layer survives wrapper]
+  D -- yes --> E{all callbacks/Binder refs gone?}
+  E -- no --> E1[remote death/stale callback/reference cycle]
+  B1 --> F[snapshot creator-holder-consumer-releaser]
+  C1 --> F
+  D1 --> F
+  E1 --> F
+  F --> G[quiesce old Generation]
+  G --> H[release in reverse dependency order]
+  H --> I[repeat stable workload and verify convergence]

@@ -1,0 +1,19 @@
+flowchart TD
+  A[launch/input request] --> B{process and lifecycle valid?}
+  B -- no --> B1[process death, stale token or lifecycle stall]
+  B -- yes --> C{window visible and focus correct?}
+  C -- no --> C1[focus mismatch / hidden window / wrong display]
+  C -- yes --> D{InputChannel alive and writable?}
+  D -- no --> D1[channel death or queue/backpressure]
+  D -- yes --> E{consumer dispatch timely?}
+  E -- no --> E1[blocked consumer or main-thread stall]
+  E -- yes --> F{event accepted?}
+  F -- no --> F1[permission/injection rejection]
+  B1 --> R[retire old token and Generation]
+  C1 --> R
+  D1 --> R
+  E1 --> R
+  F1 --> R
+  R --> S[recreate process/window/channel]
+  S --> T[restore visible + focus]
+  T --> U[inject real user action and readback verify]

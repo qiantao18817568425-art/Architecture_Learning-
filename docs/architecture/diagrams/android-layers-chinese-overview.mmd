@@ -1,0 +1,28 @@
+%%{init: {"flowchart": {"nodeSpacing": 18, "rankSpacing": 8, "padding": 12}, "themeVariables": {"fontSize": "16px"}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+application["Application · 应用层<br/>27 个模块 · 含 Voice Recognition / Iflytek"]
+framework["Framework · 框架层<br/>JAVA Services · JAVA Services / Media · Car Services<br/>Native Services · System"]
+subgraph support_a[" "]
+direction LR
+runtime["Android Runtime<br/>ART · Core Libraries"]
+infra["Infra<br/>FDBUS · MB_ipc · vsomeip 等"]
+runtime ~~~ infra
+end
+subgraph support_b[" "]
+direction LR
+libs["Libraries（源图：Librays）<br/>Bionic · SQLite · 图形 / 媒体库等"]
+external["External<br/>文件系统 / 网络工具等"]
+libs ~~~ external
+end
+hal["HAL · 硬件抽象层<br/>24 个模块 · 含 VehicleHAL、MBOS HAL"]
+kernel["Kernel · 内核层<br/>20 个模块 · 原图包含 BootLoader"]
+application ~~~ framework ~~~ support_a ~~~ support_b ~~~ hal ~~~ kernel
+style support_a fill:transparent,stroke:transparent
+style support_b fill:transparent,stroke:transparent
+classDef app fill:#e3f2eb,stroke:#4d8a70,color:#183b32
+classDef frameworkStyle fill:#e7eefb,stroke:#5b7da9,color:#183352
+classDef base fill:#f2eee4,stroke:#a09068,color:#493d22
+class application app
+class framework frameworkStyle
+class runtime,infra,libs,external,hal,kernel base

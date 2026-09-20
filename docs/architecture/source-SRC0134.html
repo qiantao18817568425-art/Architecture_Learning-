@@ -1,0 +1,1321 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8668_Yocto_Panel_User_Manual_CN_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8668_Yocto_Panel_User_Manual_CN_V1.0.pdf</h1><p>SRC0134 · 原来源 ID S065 · PDF物理页 · 38 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8668/MTK参考资料/MTK参考资料/Yocto/MT8668_Yocto_Panel_User_Manual_CN_V1.0.pdf</p><p>SHA-256：<code>1ae2434832d69efbd637ea20754b949cca43639dec360f71222adbeea7b7c7c5</code></p><p>原文件大小：1,879,554 字节</p></details><div class="actions"><a class="button" href="materials/SRC0134.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8668_Yocto_Panel_User_Manual_CN_V1.0.pdf 原 PDF" src="materials/SRC0134.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0134.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version:  1.0 
+Release date:  2026-01-28 
+MT8668 Yocto Panel User Manual 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0134.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+版本记录 
+版本 日期 作者 
+1.0 2026-01-28 涂红云 
+ 
+  
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0134.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+目录 
+版本记录···················································································································································································· 2 
+目录 3 
+1 概述 ··················································································································································································· 5 
+2 点屏前置条件 ··································································································································································· 6 
+2.1 从屏厂或者串行器厂商获取如下信息 ·················································································································· 6 
+2.2 原理图 review ·························································································································································· 6 
+3 新增屏驱 ··········································································································································································· 7 
+3.1 Device 的修改 ·························································································································································· 7 
+3.2 LK2 的修改 ······························································································································································· 7 
+3.3 Kernel 的修改 ·························································································································································· 7 
+4 重要事项 ··········································································································································································· 9 
+5 LK drivers ········································································································································································· 10 
+5.1 增加 LK2 屏驱 ························································································································································ 10 
+5.2 编写驱动 ································································································································································ 10 
+6 Kernel DRM drivers ·························································································································································· 17 
+6.1 增加 kernel 驱动 ···················································································································································· 17 
+6.2 编写驱动 ································································································································································ 17 
+7 精确的 FPS 设置 ····························································································································································· 21 
+8 Debug sop ········································································································································································ 22 
+8.1 Lk 阶段 debug ························································································································································ 22 
+8.2 Kernel 阶段 debug ················································································································································· 24 
+8.3 Resume 阶段 debug ··············································································································································· 24 
+8.4 花屏 debug ···························································································································································· 24 
+8.5 含有 bridge 屏的 debug ········································································································································ 26 
+9 Dump reg ········································································································································································· 27 
+9.1 LK 阶段 ··································································································································································· 27 
+9.2 Kernel Dump reg ···················································································································································· 27 
+9.3 adb 命令 dump reg ················································································································································ 28 
+9.4 Test Pattern 命令 ··················································································································································· 28 
+9.5 分析 reg ································································································································································· 29 
+10 使用 MTK 通用 serdes driver ·········································································································································· 31 
+10.1 驱动中命令格式说明 ············································································································································ 31 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0134.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+10.2 DSI Ser 设定示例 ···················································································································································· 32 
+10.3 DSI Des-Panel 设定示例 ········································································································································· 33 
+10.4 DSI Superframe 设定示例 ······································································································································ 33 
+10.5 DSI Dual Link 设定示例 ·········································································································································· 35 
+10.6 Des Panel 兼容设定示例········································································································································ 37 
+10.7 使用注意 ································································································································································ 37 
+附件一 附加条款 ····································································································································································· 38 
+ 
+  
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0134.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+1 概述 
+本文主要介绍 panel 驱动移植 SOP 以及相应的 debug 技巧 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0134.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+2 点屏前置条件 
+2.1 从屏厂或者串行器厂商获取如下信息 
+• 屏厂要在治具上使用外部输入信号点亮屏 
+• 点屏前确定“屏的上下电时序、几个 DSI port、几个 serdes、cmd/vdo mode、Cphy/dphy、Lane number 等信息” 
+• Init/deinit cmd（一定要是第一点提到的 cmd，即“治具上使用外部输入信号点亮屏”） 
+• 屏的 timing 信息，如 Width/height/vfp/vbp/vsa/hfp/hbp/hsa/fps/mipi clock 等等 
+• serdes test pattern（可选，点不亮时要求提供） 
+• Dsc 参数，几个 slice（如果要开 dsc，请先根据参考初步判断一下 MTK IC 是否能支持） 
+• 其他功能如何实现（backlight/fps change/cabc…） 
+• 如果接串行器，串行器要如何设置等等 
+2.2 原理图 review 
+• 屏的电源如何控制 
+– 用我司 regulator 请找 PMIC owner 要如何控制（LK、kernel 配置都要） 
+– 用 3rd IC 请找 3rd 要 
+• GPIO 如何配置 
+– 拿到 GPIO 功能表，Dws 先配置好 
+• 背光如何配置 
+– Bring up 时可以直接控制 GPIO 拉高实现 
+  
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0134.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+3 新增屏驱 
+3.1 Device 的修改 
+1. 在 ko_order_table 中加入 ko 名称，注意按驱动加载顺序写 
+2. 在 projectconfig.mk 中修改符合屏分辨率的 bootlogo 设定 
+3.2 LK2 的修改 
+注意：如果没有 LK，可以忽略此步骤 
+1. 添加新的驱动文件 
+ 
+ 
+2. 在$(project).mk 中加入此驱动支持 
+ 
+ 
+3. lcm list 中加入此驱动 
+ 
+ 
+4. lcmd_drv.h 中加入此驱动 
+ 
+ 
+3.3 Kernel 的修改 
+注意：如果是 kernel-6.6 一样的修改，只是路径不一样 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0134.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+1. 添加新的驱动 
+ 
+ 
+2. 在 Kconfig 中加入新的驱动描述 
+ 
+ 
+3. 在 BUILD.bazel 中加入新的驱动 
+ 
+ 
+4. 在 kernel config 中加入驱动 
+ 
+ 
+5. 在 kleaf 中加入驱动 
+ 
+ 
+6. 在 dts 中加入驱动描述并在$(project).dts 中 include（或者修改已存在的设定） 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0134.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+4 重要事项 
+• 为了防止从 LK 转 kernel 画面抖动，kernel 启动后 dsi/mipi_tx/panel 的设置都是用 LK 的参数，suspend/resume
+之后才是全部采用 kernel 的配置。如果发现 suspend/resume 之后有参数跟上电启动不同，请检查这三部分的
+设置区别 
+• Kernel 启动时会获取一些参数给 display 使用，在 kernel panel driver 没有 ready 的情况下系统不能正常工作是
+正常现象 
+• 后面页面中写的 must set 的参数是必须要写的，其他部分根据需要填写 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0134.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+5 LK drivers 
+• LK2 路径:/vendor/mediatek/proprietary/bootable/bootloader/lk2/ 
+ 
+ 
+5.1 增加 LK2 屏驱 
+参考第 3 章新增 LK 屏驱文件和修改 
+5.2 编写驱动 
+1. 编写 lcm_drv 结构体(must set) 
+以&lt;tv101wum_n16_wuxga_dsi_video_boe_rtq6752.c&gt; 为例: 
+ 
+ 
+2. 填充 LCM 参数(must set) 
+按照实际参数参考其他屏驱填写 
+– Lcm 宽和高(must set) 
+ 
+ 
+– Lcm 参数 (dsi 设置, must set)  
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0134.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+ 
+ 
+– Lcm 参数(vdo timing, must set) 
+ 
+ 
+– esd 配置(optional，使用 bridge 必须关掉) 
+ 
+ 
+– pll config (PLL_CLOCK 和 data_rate 至少要设置 1 个，参考下面公式计算)  
+ 
+ 
+ 
+– 展频配置 (optional，使用 bridge 必须关掉)  
+ 
+ 
+– mipi clock 配置(optional)  
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0134.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+ 
+ 
+– cphy/dphy 配置(by case，cphy 设置为 1，dphy 设置为 0)  
+ 
+ 
+– dual port 设置 (by case) 
+ 
+ 
+– Dsc 配置(by case)  
+▪ 如果要用 DSC，必须设置 dsc_enable=1，并设定 DSC 参数 
+▪ 是否需要支持 DSC 取决于屏，且 DSC 参数需要屏厂提供 
+▪ MediaTek 特有参数 dsc_cfg:  
+o 8bpc to 8bpp 设置为 0x22，  
+o 10bpc to 8bpp 设置为 0x828 
+▪ 其他参数一一对应到屏厂提供参数 
+▪ dsc 设定例子 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0134.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+ 
+ 
+▪ 厂商提供的 pps 参数例子 1 
+ 
+ 
+▪ 厂商提供的 pps 参数例子 2 
+ 
+ 
+– GPIO 配置(参考 GPIO SOP)   
+3. 编写 LCM init power 函数(must set) 
+按照 HW 设计实际情况编写 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0134.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+ 
+ 
+4. 编写 LCM init 函数(must set) 
+按照屏的时序编写: 
+ 
+ 
+5. 编写 LCM suspend/resume 函数(optional) 
+ 
+ 
+6. 编写 LCM compare 函数(如果是多屏兼容才需要) 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0134.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+ 
+ 
+7. 编写背光函数(使用 lcm pwm 才需要) 
+ 
+ 
+8.  填充初始化参数(must set) 
+ 
+ 
+9. 参考其他驱动编写其余重要部分(must set) 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0134.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 16 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0134.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 17 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+6 Kernel DRM drivers 
+ 
+• 文件路径: /kernel/ kernel_device_modules-6.12/drivers/gpu/drm/mediatek/Mediatek_v2 
+ 
+ 
+ 
+6.1 增加 kernel 驱动 
+参考第 3.3 章新增修改 kernel 驱动 
+6.2 编写驱动 
+1. 填充 kernel 驱动结构体(must set) 
+– DRM 原始结构体  
+ 
+ 
+2. 编写 MTK 扩展结构体(must set) 
+Pixel clock 
+Frame Width 
+HFP 
+HSA 
+HBP 
+Frame Height 
+VFP 
+VSA 
+VBP 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-18"><h2>PDF物理页 18</h2><a href="materials/SRC0134.pdf#page=18" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 18 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+ 
+ 
+– Superframe 模式下，pll_clk/crop_width/crop_height/physcial_width/physical_height 必须设置，其他情况下
+pll_clk 必须设置. 
+– Pll_clk: mipi clock 
+– Crop width/crop height: super frame 模式下单个屏的宽高. 
+– Physical_width/physical_height: super frame 模式下，physical_width 为两个屏宽相加，physical_height 为两个
+屏中高比较大的值. 
+3. 填充 Drm 架构驱动函数(must set)： 
+– DRM 原始架构函数 
+ 
+ 
+4. 编写 probe 函数(Must set)  
+ 
+ 
+5. 编写 remove 函数(Must set)  
+Panel power disable 
+Panel suspend sequence 
+Panel power on and perform set up 
+Enable Panel 
+Panel mode configuration  
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-19"><h2>PDF物理页 19</h2><a href="materials/SRC0134.pdf#page=19" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 19 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+ 
+ 
+6. 编写 prepare 函数(Must set)  
+ 
+ 
+7. 编写 init 函数(Must set)  
+ 
+ 
+8. 编写 enable 函数(Must set)  
+ 
+ 
+9. 编写 disable 函数(Must set)  
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-20"><h2>PDF物理页 20</h2><a href="materials/SRC0134.pdf#page=20" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 20 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+ 
+ 
+10. 编写 unprepare 函数(Must set)  
+ 
+ 
+11. 编写 get_modes 函数(must set)  
+ 
+12. 编写 MTK 扩展函数 reset (optional) 
+13. 编写 MTK 扩展函数 set_backlight_cmdq function(by case) 
+14. 编写 MTK 扩展函数 ext_param_set function(by case) 
+15. 编写 MTK 扩展函数 ata_check function(optional) 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-21"><h2>PDF物理页 21</h2><a href="materials/SRC0134.pdf#page=21" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 21 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+7 精确的 FPS 设置 
+• 手写笔应用中，需要 FPS 非常精准（120+-0.01）通过 data_rate_khz 来实现 
+• 首先通过表格(找 PM 要)计算出近似值（ideal bit freq）填到 data_rate，再通过 data_rate_khz 进行微调 
+• 注意即使设置了 data_rate_khz，data_rate/pll_clk 也需要设置（不管是 LK 还是 kernel 都是） 
+• Data_rate_khz 需要微调后实测 FPS，目前不能通过理论计算 
+• vdo_keep_hs_perline 对应下面表格 video mode keep hs mode，此项对 vdo mode fps 影响比较大 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-22"><h2>PDF物理页 22</h2><a href="materials/SRC0134.pdf#page=22" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 22 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+8 Debug sop 
+8.1 LK 阶段 debug 
+LK 屏不亮 
+• 背光是否亮？ 
+– 是，继续下面步骤 
+– 否，检测背光控制方式是否正确（LK 也会采用 dts 里面的设置） 
+▪ 也可采用直接拉高 GPIO 的方式先避开 
+▪ 如果使用背光 IC，询问对应 vendor 要如何控制 disp_pwm mode 
+▪ 背光控制模式是否正确 
+o Disp_pwm 模式 
+ 
+ 
+o I2c 模式 
+ 
+ 
+o Lcm pwm mode 
+ 
+ 
+• 屏所需要的电压是否有正常供上？ 
+– 是，继续下面步骤 
+– 否，用示波器量各路电压，看哪一路不正常，询问 PMIC owner 要如何控制 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-23"><h2>PDF物理页 23</h2><a href="materials/SRC0134.pdf#page=23" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 23 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+▪ 上电时序是否符合屏的要求 
+▪ 用示波器量信号 
+• Init cmd 是否有发成功？（判断标志，读屏的 0x0A 为非 0 值，需屏支持） 
+– 是，继续下面步骤 
+– 否 
+▪ 发送 cmd 是用 generic？还是 dcs？还是混用？默认 cmd&lt;0xb0 用 dcs，cmd&gt;=0xb0 用 generic 
+▪ 找屏厂要屏的 BIST pattern 命令，看 BIST 是否能正常出来 
+▪ Bist 能亮说明屏的供电没问题 
+▪ Bist 也不亮 
+o 是否有 lane swap？量 D0P/N 是否有波形出来 
+o init cmd 是否给错，用逻辑分析仪抓发送 init cmd 的数据给屏厂检查  
+o 如果使用 bridge，检测 bridge 的状态寄存器提供信息给 bridge 厂商分析 
+• Mipi 信号是否正常(做 mipi cts 测试，需要所有项都 pass)  
+– 有 vdo 数据的 Dphy 波形 
+ 
+ 
+– 没有 vdo 数据的 Dphy 波形 
+ 
+ 
+– Cphy 波形 
+ 
+ 
+• 是否有放 logo 文件？若无 logo 文件，屏上只会显示一行小字，需仔细观察 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-24"><h2>PDF物理页 24</h2><a href="materials/SRC0134.pdf#page=24" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 24 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+8.2 Kernel 阶段 debug 
+进 kernel 后屏不亮： 
+• 量屏的各路电压是否有掉？ 
+– 进 kernel 后 regulator 在没人 enable 会自动关掉，屏驱中需要获取资源并 enable 它 
+• 背光是否有亮？ 
+– AAL 可能会导致背光关闭，关闭 AAL 看看是否有问题 
+– 调整背光的函数是否能跑到，如不能需要加 log debug 
+• Kernel 屏驱是否有正常加载？ 
+– 观察 log，看驱动加载是否正常。Kernel 运行过程中需要一些参数 
+• 是否有使能 esd，esd 也会导致黑屏 
+• 是否有多种 mode 切换？Bring up 阶段先点一个 mode 
+8.3 Resume 阶段 debug 
+Resume 后屏不亮： 
+• 量屏的各路电压是否有正常起来 
+• 检查屏的 power on code 是否有异常 
+• 背光是否有亮？ 
+– 控制背光 code 是否有异常 
+• Kernel 屏驱是否有正常加载？ 
+– 观察 log，看驱动加载是否正常。 
+• 对比跟 LK 的驱动，看两边设置是否一样 
+8.4 花屏 debug 
+是否有开 DSC  
+• 是，检测 DSC 设置 
+– 打 DSC test pattern 是否能显示正常 
+echo reg_write 0x14015078 0x400000FF &gt; /proc/clkdbg ; cat /proc/clkdbg 
+0x14015xxx 是 dsc base reg，根据 SOC 不同而不同，请询问 MediaTek 工程师正确的值 
+0x078 是 dsc test pattern reg 地址，根据 SOC 不同而不同，请询问 MediaTek 工程师正确的值 
+▪ 能，找 display owner 寻求帮助 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-25"><h2>PDF物理页 25</h2><a href="materials/SRC0134.pdf#page=25" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 25 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+▪ 不能，是否存在正常显示时刻，有正常时刻。dump dsc reg 对比是否有设置不一样 
+▪ Dump 命令： 
+adb shell “echo mobile:on &gt; /d/mtkfb“;adb shell ”echo diagnose&gt;/d/mtkfb &amp;&amp; cat 
+/d/mtkfb” &gt;  mtkfb.txt 
+搜索 DSC 部分 
+▪ 典型 dsc 花屏图片: 
+ 
+ 
+▪ 类似花屏是 AFBC 导致，使用如下命令关闭 AFBC 看看： 
+adb shell setprop debug.mediatek.disp_decompress 0 
+adb shell stop 
+adb shell start 
+▪ 典型 AFBC 花屏图片: 
+ 
+ 
+– 打 DSI test pattern 是否能正常显示 
+命令（参考 dump reg）： 
+echo reg_write 0x14017178 0x31 &gt; /proc/clkdbg ; cat /proc/clkdbg 
+0x1401xxxx 是 dsi reg 地址，根据 SOC 不同而不同，请询问 MediaTek 工程师 
+0x178 是 dsi test pattern 地址，根据 SOC 不同而不同，请询问 MediaTek 工程师 
+▪ 能正常显示，找 display owner 寻求帮助 
+▪ 不能，log 中是否存在 dsi underrun 字样 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-26"><h2>PDF物理页 26</h2><a href="materials/SRC0134.pdf#page=26" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 26 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+– 是否有显示正常的情况 
+▪ 是，dump 正常和不正常时的 DSI/MIPITX/DSC reg 值，看设置是否有不一样 
+▪ Dump 命令： 
+adb shell “echo mobile:on &gt; /d/mtkfb“;adb shell ”echo diagnose&gt;/d/mtkfb &amp;&amp; cat /d/mtkfb” &gt;  mtkfb.txt  
+▪ Dump 命令：参考 dump reg 这一块，用 adb cmd 的方法读取也可以 
+– 是否经过某种操作后才出现(比如切换 fps) 
+▪ 对比切换前后 reg 是否一样 
+▪ 例:切换 fps 后花屏 
+o 询问屏厂切换 fps 是否存在限制，是否要发送 cmd 等 
+o Fps 切换时 mmclk 改变先后顺序是否正确（mmclk 变高要先设 mmclk 后切 fps，mmclk 变低要先切
+fps 后设置 mmclk，mmclk 计算方法参考 mtk_dsi_set_mmclk_by_datarate 函数，切换逻辑参考
+mtk_crtc_disp_mode_switch_begin 函数） 
+8.5 含有 bridge 屏的 debug 
+• 查看 bridge 状态寄存器，可以得知当前 bridge 工作状态 
+• 从 bridge vendor 获取帮助 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-27"><h2>PDF物理页 27</h2><a href="materials/SRC0134.pdf#page=27" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 27 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+9 Dump reg 
+9.1 LK 阶段 
+• 在 Ddp_dsi.c/ddp_dsi_trigger() 最后调用 DSI_DumpRegister() 
+ 
+ 
+• 在 Ddp_dsc.c/dsc_config() 最后调用 dsc_dump() 
+ 
+ 
+• LK display log 默认没开，需要在 ddp_log.h 中打开 
+ 
+ 
+9.2 Kernel Dump reg  
+• 如何打开寄存器 adb debug 接口 
+– 路径：kernel-xx/drivers/clk/mediatek/clkdbg.c/common_cmds[] 
+– 函数：clkdbg_reg_read()和 clkdbg_reg_write() 
+– 方法：如果 clkdbg_reg_read() and clkdbg_reg_write()被#if defined( CONFIG_MTK_ENG_BUILD) 包起来了，请
+把#if defined( CONFIG_MTK_ENG_BUILD)  mask 掉，同时把定义 clkdbg_reg_read() and clkdbg_reg_write()地方
+的#if defined(CONFIG_MTK_ENG_BUILD) 也 mask 掉，然后就可以用 adb command 改寄存器了 
+ 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-28"><h2>PDF物理页 28</h2><a href="materials/SRC0134.pdf#page=28" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 28 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+9.3 adb 命令 dump reg 
+• 寄存器读写命令 
+– 读： 
+echo reg_read addr&gt; /proc/clkdbg ; cat /proc/clkdbg 
+– 按长度读： 
+echo reg_read_len addr length&gt; /proc/clkdbg ; cat /proc/clkdbg 
+– 写： 
+echo reg_write addr value&gt; /proc/clkdbg ; cat /proc/clkdbg 
+– 举例： 
+echo reg_read 0x1400D178 &gt; /proc/clkdbg ; cat /proc/clkdbg 
+echo reg_write 0x1400D178 0x31 &gt; /proc/clkdbg ; cat /proc/clkdbg 
+echo reg_read_len 0x1400D000 0x00001000 &gt; /proc/clkdbg ; cat /proc/clkdbg 
+注意： 
+▪ 通常 MediaTek supporter 会说请把 xxx 的 yyy 写 zzz，其中 xxx 代表某个模块，通过前面 debug sop 章节（130 页）
+获取该模块的基地址，yyy 代表偏移量，zzz 代表 value 
+▪ 该语句最终需要执行的命令是： 
+echo reg_write xxx 基地址+yyy zzz&gt; /proc/clkdbg ; cat /proc/clkdbg 
+▪ 例如调整 mipi 的驱动能力，supporter 会说把 mipi_tx 的 0x10 bit6-9 写 0111，执行的命令是： 
+echo reg_read 0x11f60010 &gt; /proc/clkdbg;cat /proc/clkdbg  
+▪ mipi_tx 基地址 0x11f60000，先读 mipi tx 的 0x10，假如读到是 0, 将 0 的 bit6-9 或上 0111 得到 0x1c0 
+▪ 最终命令： 
+echo reg_write 0x11f60010 0x1c0&gt; /proc/clkdbg ; cat /proc/clkdbg 
+ 
+9.4 Test Pattern 命令 
+• 使用 adb: 
+echo reg_write “DSI/DSC_base_reg+offset_addr” value&gt; /proc/clkdbg ; cat /proc/clkdbg 
+– DSI/DSC 基地址参考前面的说明 
+– Offset： 
+▪ Dsi:0x178 or 0x17c  
+▪ Dsc:0x78 or 0x6c，向 MediaTek 工程师确认 
+– Value： 
+▪ Dsi: 0xc41 
+▪ Dsc: 0x400000FF(blue), 向 MediaTek 工程师确认 
+• 在 code 中加入: 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-29"><h2>PDF物理页 29</h2><a href="materials/SRC0134.pdf#page=29" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 29 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+– DSI: 在 Ddp_dsi_trigger 函数最后调用 DSI_OUTREG32(NULL, DSI_REG_BASE[0]+offset, value);  
+– DSC: 在 dsc_config 函数最后调用 DISP_REG_SET(handle, base+offset, value); 
+– Offset/value 参考 adb 命令 
+9.5 分析 reg 
+• 如下 reg 说明，仅供参考，具体 reg 内容请参考 coda. 
+• DSI 向 8: 
+ 
+ 
+• MIPI TX 
+ 
+ 
+• DSC  
+ 
+ 
+Bit0=1 表示 dsi 正在运行 
+ DSI 状态 
+VSA VBP VFP VACT 
+HSA_WC/ HBP_WC HFP_HS_VB_PS_WC/HFP_WC/ 
+BLLP_WC 
+注意: HSA_WC=HAS*3-10， HBP/HFP 也是 
+读状态 
+Timing 控制 
+DSI PHY Timing  
+读状态 reg 
+ Phy 电压设定 
+Pll control 1/2/3/4 
+Pll control 0 
+Lane swap 设置 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-30"><h2>PDF物理页 30</h2><a href="materials/SRC0134.pdf#page=30" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 30 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+DSC 控制寄存器 
+ DSC 状态 
+ DSC 宽 
+DSC 高 
+DSC PPS0-19 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-31"><h2>PDF物理页 31</h2><a href="materials/SRC0134.pdf#page=31" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 31 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+10 使用 MediaTek 通用 serdes Driver 
+MediaTek 提供了一个 max96789+max96752 的通用驱动，可参考其写自己的驱动: 
+1. KO table 中加入 birdge-serdes.ko （如果不存在时） 
+2. LK 的 project.mk 中设置MTK_LCM_LIST_SUPPORT=&quot;serdes_dsi_vdo&quot; 
+3. kleaf 中加入 birdge-serdes.ko （如果不存在时） 
+4. defconfig 中加入 CONFIG_DRM_BRIDGE_SERDES=m(如果不存在时) 
+5. 如果需要使用 hotplug 功能，需要在 defconfig 中设置 CONFIG_ENABLE_SERDES_HOTPLUG=y 
+6. 如果 hotplug 功能要使用中断方式，需要在 code 中将 ENABLE_HOTPLUG_INT 定义为 1（同时要修改 dws 将
+对于 GPIO 设置为 EINT 功能） 
+7. dts 中加入如第 10.2， 10.3， 0， 10.5 和 10.6 章的设定 
+8. 其他设定均在 driver 中 hard code 写死，如有不满足需求可以剥离出来写到 dts 
+9. 该驱动同时支持 dsi 和 dp/edp。 
+10. LK 中固定为 dsi0 对应的设定，如果要改为其他接口，需要改 code。 
+11. edp 的 init cmd 使用 work 队列去发送，会缩短发送时间但发送时序无法保证。如果不使用 work，设置
+ENABLE_INIT_WORK 为 0。 
+12. 该驱动支持 des hotplug。如果不要支持 hotplug，设置CONFIG_ENABLE_SERDES_HOTPLUG 为 n。 
+13. 如果没有 status command，不能支持 hotplug 和 mbrain 功能 
+ 
+10.1 驱动中命令格式说明 
+写命令格式 1  &lt;i2c addr&gt;   &lt;reg width&gt;  &lt;reg addr&gt;  &lt;data&gt;  &lt;delay ms&gt; 
+写命令格式 2 &lt;i2c addr&gt;  &lt;reg width&gt;  &lt;cmd len&gt;    &lt;data&gt; 
+读命令格式 &lt;i2c addr&gt;  &lt;reg width&gt;  &lt;reg addr&gt;   &lt;mask&gt;  &lt;except data&gt; 
+i2c addr  要操作设备的 i2c client 地址 
+reg width 
+i2c 设备的 reg 地址长度，只支持 16/8/0 三种 
+16   表示 reg 地址是 2 个 byte 
+8     表示 reg 地址是 1 个 byte 
+0     表示不指定 reg 地址，后面全是数据 
+reg addr 要读写的 reg 的地址 
+data 要写到 reg 的数据 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-32"><h2>PDF物理页 32</h2><a href="materials/SRC0134.pdf#page=32" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 32 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+delay ms 发送完该命令后 delay 多少毫秒 
+cmd len reg 地址长度为 0 时，后面有多少 byte 的数据 
+mask 读出的数据跟这个数据做与操作 
+except data 读出的数据与 mask 做完与操作后预期的数据 
+ 
+10.2 DSI Ser 设定示例 
+&amp;i2c1 { 
+    status = &quot;okay&quot;; 
+    max96789: max96789@40 { 
+        compatible = &quot;maxiam,max96789,dsi0&quot;;     # compatible,如果是其他chip 注意修改driver，注
+意红字表示该driver 对应哪个接口 
+        status = &quot;disabled&quot;; 
+        reg = &lt;0x40&gt;; 
+        reset-gpios = &lt;&amp;pio 37 0&gt;; 
+        //power-en-gpios = &lt;&amp;pio 38 0&gt;,&lt;&amp;pio 39 0&gt;; # ser 电源开关，按实际情况填写（code 中只支持
+gpio 模式，多个GPIO 按上电顺序填写，没有不写） 
+        //interrupt-parent = &lt;&amp;pio&gt;;              # 使用中断来做hotplug，如启用需在driver 中
+#define ENABLE_HOTPLUG_INT 1 
+        //interrupts = &lt;187 IRQ_TYPE_EDGE_RISING&gt;; 
+        pinctrl-names = &quot;default&quot;; 
+        config = &lt;&amp;config_compatible&gt;;            # 配置此node 使用哪个des panel 设置 
+        port { 
+            max96789_in: endpoint { 
+                remote-endpoint = &lt;&amp;dsi_out&gt;;     # 标准的bridge node 写法 
+            }; 
+        }; 
+    }; 
+    max96789_v0: max96789-v0@4a {                 # 虚拟ser driver，superframe or dual link
+时使用 
+        compatible = &quot;maxiam,max96789,virtual&quot;; 
+        status = &quot;disabled&quot;; 
+        reg = &lt;0x4a&gt;; 
+        master = &lt;&amp;max96789&gt;;                      # virtual ser driver 必须设置，该设定对应到哪
+个实体设备 
+        port { 
+            max96789_v0_in: endpoint { 
+                remote-endpoint = &lt;&amp;dsiv0_out&gt;; 
+            }; 
+        }; 
+    }; 
+}； 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-33"><h2>PDF物理页 33</h2><a href="materials/SRC0134.pdf#page=33" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 33 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+10.3 DSI Des-Panel 设定示例 
+    huayang_1080: config1 {                    # single panel config node 
+        pre-init-cmd = &lt;                       # ser 初始化命令，在bridge preenable 中执行 
+            0x40 0x10 0x0001 0x08 0x00 
+            0x40 0x10 0x0203 0x00 0x00 
+            .............. 
+        &gt;; 
+        post-init-cmd = &lt;&gt;;                    # post ser 初始化命令，在bridge pre_eanble 中执行 
+        deinit-cmd = &lt;                         # ser disabled 命令，在bridge disabled 中执行 
+            0x40 0x10 0x0010 0x80 0x20 
+        &gt;; 
+        linka-init-cmd = &lt;                     # des linkA 初始化命令，在bridge enable 中执行 
+            0x4c 0x10 0x06ff 0x11 0x0 
+            0x4c 0x10 0x01ce 0x4e 0x0 
+            0x4c 0x10 0x020c 0x03 0x0 
+            0x4c 0x10 0x020d 0xaa 0x0 
+            0x4c 0x10 0x020e 0x4a 0x0 
+            0x1a 0x00 0x0b 0x83 0x50 0x00 0x01 0x00 0x00 0x00 0x00 0x00 0x00 0xd4 
+        &gt;; 
+        ser-status = &lt;                       # 检测ser 状态，是读i2c 命令，注意只支持如下3 条命令并
+且要按顺序填写 
+            0x40 0x10 0x00d 0x80 0x80        # 串行器是否能detect 到 
+            0x40 0x10 0x102 0x80 0x80        # 96789 检查PCLK 是否detect 到 
+            0x40 0x10 0x55d 0x70 0x70        # 96789 检查HS/VS/DE 是否detect 到 
+        &gt;; 
+        linka-status = &lt;                     # 检测linka 状态，注意只支持如下两条命令并且要按顺序 
+            0x40 0x10 0x01f 0x08 0x08        # 96789 检查linka 是否有接入 
+            0x4c 0x10 0x6ff 0x11 0x11        # 96789 检查linka 是否有被初始化，通过往一个用不到且能
+读写的reg 里写任意值再读出来判断它是否被初始化 
+        &gt;; 
+        panel-timing-a {                     # panel timing 信息 
+            width = &lt;1920&gt;; 
+            height = &lt;1080&gt;; 
+            hfp = &lt;40&gt;; 
+            hsa = &lt;42&gt;; 
+            hbp = &lt;78&gt;; 
+            vfp = &lt;24&gt;; 
+            vsa = &lt;3&gt;; 
+            vbp = &lt;9&gt;; 
+            fps = &lt;60&gt;; 
+            width-mm = &lt;129&gt;; 
+            height-mm = &lt;64&gt;; 
+        }; 
+    }; 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-34"><h2>PDF物理页 34</h2><a href="materials/SRC0134.pdf#page=34" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 34 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+10.4 DSI Superframe 设定示例 
+huayang_dsi_superframe: config2 {            # des panel 的node 
+       superframe = &lt;1&gt;;                     # 是否为superframe 模式，是写1，否写0 
+       pre-init-cmd = &lt;                      # ser 初始化命令，在bridge pre_enable 中执行 
+            0x40 0x10 0x0002 0x73 0x00  
+            0x40 0x10 0x0053 0x10 0x00  
+            ....... 
+      &gt;; 
+      i2c-remap-cmd = &lt;                      # i2c reg 映射设定，在bridge pre_enable 中执行，
+plug in 后会重发 
+            0x40 0x10 0x0010 0x21 0x64 
+            0x4c 0x10 0x0000 0x90 0x00  
+            ......... 
+      &gt;; 
+      post-init-cmd = &lt;&gt;;                    # ser 初始化命令，在bridge pre_enable 中执行 
+      linka-init-cmd = &lt;                     # linka 初始化命令，在bridge enable 中执行 
+           0x48 0x10 0x01ce 0x4c 0x00 
+           ........................................... 
+           0x1b 0x00 0x0b 0x83 0x50 0x00 0x01 0x00 0x00 0x00 0x00 0x00 0x00 0xd4 
+     &gt;; 
+     linkb-init-cmd = &lt;                     # linkb 初始化命令，在bridge enable 中执行 
+          0x4a 0x10 0x01ce 0x4c 0x00 
+          ....... 
+     &gt;; 
+     linka-deinit-cmd = &lt;                   # linkA deinit 命令，在bridge disable 中执行 
+            0x1b 0x00 0x0b 0x83 0x00 0x00 0x02 0x00 0x00 0x00 0x00 0x00 0x00 0x85 
+     &gt;; 
+     linkb-deinit-cmd = &lt;                   # linkB deinit 命令，在bridge disable 中执行 
+            0x1c 0x00 0x0b 0x83 0x00 0x00 0x02 0x00 0x00 0x00 0x00 0x00 0x00 0x85 
+     &gt;; 
+     deinit-cmd = &lt;&gt;;                       # ser deinit 命令，在bridge disable 中执行，只有
+linka/b 都disable 了才会执行 
+     ser-status = &lt;                         # 检测ser 状态，是读i2c 命令，注意只支持如下3 条命令并
+且要按顺序填写 
+            0x40 0x10 0x00d 0x80 0x80       # 串行器是否能detect 到 
+            0x40 0x10 0x102 0x80 0x80       # 96789 检查PCLK 是否detect 到 
+            0x40 0x10 0x55d 0x70 0x70       # 96789 检查HS/VS/DE 是否detect 到 
+     &gt;; 
+     linka-status = &lt;                       # 检测linka 状态，注意只支持如下两条命令并且要按顺序 
+            0x40 0x10 0x01f 0x08 0x08       # 96789 检查linka 是否有接入 
+            0x48 0x10 0x6ff 0x11 0x11       # 96789 检查linka 是否有被初始化，通过往一个用不到且能
+读写的reg 里写任意值再读出来判断它是否被初始化 
+     &gt;; 
+     linkb-status = &lt;                       # 检测linkb 状态，注意只支持如下两条命令并且要按顺序 
+            0x40 0x10 0x01f 0x10 0x10       # 96789 检查linkb 是否有接入 
+            0x4a 0x10 0x6ff 0x11 0x11       # 96789 检查linkb 是否有被初始化，通过往一个用不到且能
+读写的reg 里写任意值再读出来判断它是否被初始化 
+     &gt;; 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-35"><h2>PDF物理页 35</h2><a href="materials/SRC0134.pdf#page=35" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 35 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+     panel-timing-a {                       # panel A timing，必须设置 
+            width = &lt;1920&gt;; 
+            height = &lt;1080&gt;; 
+            hfp = &lt;40&gt;; 
+            hsa = &lt;41&gt;; 
+            hbp = &lt;79&gt;; 
+            vfp = &lt;24&gt;; 
+            vsa = &lt;3&gt;; 
+            vbp = &lt;9&gt;; 
+            fps = &lt;60&gt;; 
+            width-mm = &lt;129&gt;; 
+            height-mm = &lt;64&gt;; 
+    }; 
+    panel-timing-b {                         # panel B timing，superframe 和dual link 模式下必
+须设置 
+            width = &lt;1920&gt;; 
+            height = &lt;1080&gt;; 
+            hfp = &lt;40&gt;; 
+            hsa = &lt;41&gt;; 
+            hbp = &lt;79&gt;; 
+            vfp = &lt;24&gt;; 
+            vsa = &lt;3&gt;; 
+            vbp = &lt;9&gt;; 
+            fps = &lt;60&gt;; 
+            width-mm = &lt;129&gt;; 
+            height-mm = &lt;64&gt;; 
+     }; 
+}; 
+ 
+10.5 DSI Dual Link 设定示例 
+&amp;i2c1 { 
+    status = &quot;okay&quot;; 
+    max96789: max96789@40 { 
+        compatible = &quot;maxiam,max96789,dsi0&quot;;      # dsi0 对应的设定不变 
+        status = &quot;disabled&quot;; 
+        reg = &lt;0x40&gt;; 
+        reset-gpios = &lt;&amp;pio 37 0&gt;; 
+        pinctrl-names = &quot;default&quot;; 
+        config = &lt;&amp;huayang_1080&gt;;                 # 配置此时使用哪个des panel 设置，该panel 设定
+需要设置dual-link=1 
+        port { 
+            max96789_in: endpoint { 
+                remote-endpoint = &lt;&amp;dsi_out&gt;;     # 标准的bridge node 写法 
+            }; 
+        }; 
+    }; 
+    max96789_v0: max96789-v0@4a {                 # dual link 时虚拟的driver 
+        compatible = &quot;maxiam,max96789,virtual&quot;; 
+        status = &quot;disabled&quot;; 
+        reg = &lt;0x4a&gt;; 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-36"><h2>PDF物理页 36</h2><a href="materials/SRC0134.pdf#page=36" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 36 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+        master = &lt;&amp;max96789&gt;;                     # 必须设置，该设定对应到哪个实体设备 
+        port { 
+            max96789_v0_in: endpoint { 
+                remote-endpoint = &lt;&amp;dsi1_out&gt;;    # 与dsi1 建立连接 
+            }; 
+        }; 
+    }; 
+};  
+&amp;dsi1 { 
+    status = &quot;disabled&quot;; 
+    #address-cells = &lt;1&gt;; 
+    #size-cells = &lt;0&gt;; 
+    ports { 
+        port { 
+            dsi1_out: endpoint { 
+                remote-endpoint = &lt;&amp;max96789_v0_in&gt;;# 与max96789_v0 建立连接 
+            }; 
+        }; 
+    }; 
+}; 
+huayang_1080: config1 {                            # 对应serdes panel 设定 
+      dual-link = &lt;1&gt;;                             # 设置dual-link mode 
+      pre-init-cmd = &lt;                             # 这里的设定按实际要求来 
+            0x40 0x10 0x0001 0x08 0x00 
+            0x40 0x10 0x0203 0x00 0x00 
+            ................ 
+     &gt;; 
+     panel-timing-a {                              # panel A timing，必须设置 
+            width = &lt;1920&gt;; 
+            height = &lt;1080&gt;; 
+            hfp = &lt;40&gt;; 
+            hsa = &lt;41&gt;; 
+            hbp = &lt;79&gt;; 
+            vfp = &lt;24&gt;; 
+            vsa = &lt;3&gt;; 
+            vbp = &lt;9&gt;; 
+            fps = &lt;60&gt;; 
+            width-mm = &lt;129&gt;; 
+            height-mm = &lt;64&gt;; 
+    }; 
+    panel-timing-b {                               # panel B timing，dual link 模式下必须设置 
+            width = &lt;1920&gt;; 
+            height = &lt;1080&gt;; 
+            hfp = &lt;40&gt;; 
+            hsa = &lt;41&gt;; 
+            hbp = &lt;79&gt;; 
+            vfp = &lt;24&gt;; 
+            vsa = &lt;3&gt;; 
+            vbp = &lt;9&gt;; 
+            fps = &lt;60&gt;; 
+            width-mm = &lt;129&gt;; 
+            height-mm = &lt;64&gt;; 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-37"><h2>PDF物理页 37</h2><a href="materials/SRC0134.pdf#page=37" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 37 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+     }; 
+}; 
+ 
+10.6 Des Panel 兼容设定示例 
+max96789: max96789@40 { 
+        compatible = &quot;maxiam,max96789,dsi0&quot;;     # ser 的设定 
+        status = &quot;disabled&quot;; 
+        reg = &lt;0x40&gt;; 
+        reset-gpios = &lt;&amp;pio 37 0&gt;; 
+        pinctrl-names = &quot;default&quot;; 
+        config = &lt;&amp;config_compatible&gt;;           # 使用des panel 兼容设定 
+        ............... 
+}; 
+&amp;max96789 { 
+    config_compatible: compatible-node { 
+        comp-cmd = &lt;                             # 识别兼容设定前发送的命令，格式同前面提到的写命令 
+            0x1a 0x00 0x0b 0x83 0x50 0x00 0x01 0x00 0x00 0x00 0x00 0x00 0x00 0xd4 
+        &gt;; 
+        comp-type =                              # 读取兼容屏的设定 
+            &lt;0x1a 0x08 0x08 0xf0 0x10 &amp;config_bt&gt;, # 格式同前面提到的读命令，最后一个元素为匹配到后
+对应的屏设定handle 
+            &lt;0x1a 0x08 0x08 0xff 0xff &amp;huayang_1080&gt;; # 如有其他兼容设定，按这个格式加在后面。如果
+都匹配不到，取最后一行的设定 
+    }; 
+} 
+ 
+10.7 使用注意 
+• 以上各种 cmd 都是可选的，可以不设置或者写空 
+• 当 status 命令为空时，不会启动 hotplug 线程 
+• 只有单屏时，必须设置 panel-timing-a 
+• i2c-remap-cmd 会在 hotplug 的时候重新发送，需要在 hotplug 后重新发送的命令放在这里 
+• 命令发送顺序为：pre-init-cmd  → i2c-remap-cmd → post-init-cmd → linka-init-cmd → linkb-
+init-cmd →  linka-deinit-cmd → linkb-deinit-cmd → deinit-cmd 
+• 使用虚拟 driver 时，需要将 virtual_dsiX(for dsi, edp/dp is virtual_edp..) 
+display_volX_exdmaX,max96789_vX 这几个同时 enable，或者同时 disabled 
+ 
+ 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-38"><h2>PDF物理页 38</h2><a href="materials/SRC0134.pdf#page=38" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 38 
+MT8668 Yocto Panel  
+ 
+ User Manual 
+Confidential B 
+附件一 附加条款 
+您(或您所代表的公司或其他法律主体，以下合称「您」)是否得取得、下载与使用本文件及其相关信息皆应以您接
+受本附加条款为先决要件。您对于本文件之使用、取得或下载即表示您已接受本附加条款并同意受本附加条款之
+拘束。若您不同意受本附加条款之拘束，您将不得使用、取得或下载本文件并应立即删除或毁弃所有本文件之副
+本。 
+ 
+本文件含有联发科技股份有限公司及其关联公司（以下合称「联发科技」）或其授权人之机密信息及专有信息，
+仅供您为本文件所描述之联发科技芯片组作内部使用而不得用于其他任何目的（包括但不限于确认或提供支持任
+何对联发科技、其供货商及/或其直接或间接客户所提潜在专利侵权主张的证据）。禁止未经授权使用或揭露本文
+件及其中所含信息。您同意赔偿联发科技因您未经授权使用或揭露本文件及其中所含信息之一部或全部导致联发
+科技所受之任何损失或损害。 
+ 
+联发科技及其授权人保有本文件的所有权及组成所有权之各项权利且未针对任何知识产权授权（无论明示或默
+示、透过禁反言原则或其他方式）。联发科技得随时变更本文件内容而无须另行通知。联发科技无须承担与使用
+或信赖本文件相关或因使用或信赖本文件致生之任何责任，包括但不限于间接损害或附带损害赔偿责任。  
+ 
+本文件及联发科技所提供关于本文件之任何其他材料、信息或技术支持，均以现况交付为准，联发科技不负任何
+明示、默示、法定或其他形式之担保责任，特别是适销性、不侵权、针对特定用途之适用性、完整性或正确性之
+担保责任或任何由贸易惯例或交易、履行过程所生之担保责任。对于联发科技为符合您所提规格或遵循特定标准
+或标准组织的要求所作之交付物，联发科技亦不应承担任何责任。 
+ 
+于未对前述条款造成限制之情形下，联发科技不对其产品任何特定用途之适用性承担任何保证或担保责任，亦不
+承担任何因产品、电路或软件之应用或使用致生之赔偿责任。您同意您应单独承担关于整合您的产品与联发科技
+产品所涉及之设计、验证与测试之所有责任，并应确保前述整合产品符合相关标准及任何安全性要求或其他要
+件。 
+ 
+本附加条款及所有与本附加条款或本文件相关之行为应以台湾法律管辖、解释与阐明，不适用冲突法原则。  
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a><a href="#page-18">PDF物理页 18</a><a href="#page-19">PDF物理页 19</a><a href="#page-20">PDF物理页 20</a><a href="#page-21">PDF物理页 21</a><a href="#page-22">PDF物理页 22</a><a href="#page-23">PDF物理页 23</a><a href="#page-24">PDF物理页 24</a><a href="#page-25">PDF物理页 25</a><a href="#page-26">PDF物理页 26</a><a href="#page-27">PDF物理页 27</a><a href="#page-28">PDF物理页 28</a><a href="#page-29">PDF物理页 29</a><a href="#page-30">PDF物理页 30</a><a href="#page-31">PDF物理页 31</a><a href="#page-32">PDF物理页 32</a><a href="#page-33">PDF物理页 33</a><a href="#page-34">PDF物理页 34</a><a href="#page-35">PDF物理页 35</a><a href="#page-36">PDF物理页 36</a><a href="#page-37">PDF物理页 37</a><a href="#page-38">PDF物理页 38</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

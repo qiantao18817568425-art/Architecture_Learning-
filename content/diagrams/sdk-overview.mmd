@@ -1,0 +1,110 @@
+%%{init: {"flowchart": {"nodeSpacing": 18, "rankSpacing": 8, "padding": 12}, "themeVariables": {"fontSize": "16px"}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph app["App / Customer Applications"]
+direction TB
+subgraph layout_row_1[" "]
+direction LR
+subgraph layout_row_2[" "]
+direction TB
+data["Data app"]
+powerapp["Power Manager app"]
+data ~~~ powerapp
+end
+subgraph layout_row_3[" "]
+direction TB
+location["Location app"]
+network["Network Manager app"]
+location ~~~ network
+end
+subgraph layout_row_4[" "]
+direction TB
+callapp["E/B Call app"]
+wifiapp["Wifi app"]
+callapp ~~~ wifiapp
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+subgraph api["FIBO API"]
+direction TB
+subgraph layout_row_5[" "]
+direction LR
+apis["VoiceCall · Ecall · Data · Sim<br/>Sms · Nw · Dm · Power<br/>Gnss · Update · Wifi · Audio<br/>Tzone"]
+end
+end
+subgraph middleware["Middleware"]
+direction TB
+subgraph services["Components Services"]
+direction TB
+subgraph modem["Modem Services"]
+direction TB
+subgraph layout_row_6[" "]
+direction LR
+calls["Voice/Ecall · Data Call · Sms"]
+controls["At · Sim · Dm · Nw"]
+calls ~~~ controls
+end
+end
+subgraph layout_row_7[" "]
+direction LR
+log["Log Mgr"]
+power["Power Mgr"]
+proc["ProcMgr"]
+log ~~~ power ~~~ proc
+end
+modem ~~~ layout_row_7
+end
+subgraph libs["Components Libs"]
+direction TB
+subgraph layout_row_8[" "]
+direction LR
+base["Location · Audio · Update · Wakelock<br/>Dev"]
+end
+subgraph opt["Optional Libs"]
+direction TB
+subgraph layout_row_9[" "]
+direction LR
+optional["Wifi Mgr · Dhcp · Key Store · Gpio"]
+end
+end
+layout_row_8 ~~~ opt
+end
+subgraph layout_row_10[" "]
+direction LR
+posix["Posix Interface"]
+end
+services ~~~ libs ~~~ layout_row_10
+end
+subgraph layout_row_11[" "]
+direction LR
+c["C Runtime library"]
+end
+subgraph os["OS and Driver / Linux Kernel"]
+direction TB
+subgraph layout_row_12[" "]
+direction LR
+drivers["GPIO · I2S · I2C · Audio<br/>Flash · SPI · Sensor · USB<br/>WIFI · Pcie · TTY · Trust Zone<br/>ETH · UART"]
+md["Modem Driver"]
+other["Others"]
+drivers ~~~ md ~~~ other
+end
+end
+subgraph layout_row_13[" "]
+direction LR
+hw["Hardware / AP core and Modem core"]
+end
+app ~~~ api ~~~ middleware ~~~ layout_row_11 ~~~ os ~~~ layout_row_13
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent
+style layout_row_5 fill:transparent,stroke:transparent
+style layout_row_6 fill:transparent,stroke:transparent
+style layout_row_7 fill:transparent,stroke:transparent
+style layout_row_8 fill:transparent,stroke:transparent
+style layout_row_9 fill:transparent,stroke:transparent
+style layout_row_10 fill:transparent,stroke:transparent
+style layout_row_11 fill:transparent,stroke:transparent
+style layout_row_12 fill:transparent,stroke:transparent
+style layout_row_13 fill:transparent,stroke:transparent

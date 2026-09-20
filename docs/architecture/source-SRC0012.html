@@ -1,0 +1,532 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8668_Hypervisor_Multi_Display_Proxy-Wayland_User_Manual_CN_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8668_Hypervisor_Multi_Display_Proxy-Wayland_User_Manual_CN_V1.0.pdf</h1><p>SRC0012 · 原来源 ID S028 · PDF物理页 · 16 个阅读单元</p><p class="note">有引用的指定页/文本核对；未宣称全文逐页审阅。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8668/MTK参考资料/MTK参考资料/Android/MT8668_Hypervisor_Multi_Display_Proxy-Wayland_User_Manual_CN_V1.0.pdf</p><p>SHA-256：<code>f389ba21d747d1079729e4f34cb52681e43e2206dddeedd96361ef85c603bffc</code></p><p>原文件大小：989,860 字节</p></details><div class="actions"><a class="button" href="materials/SRC0012.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8668_Hypervisor_Multi_Display_Proxy-Wayland_User_Manual_CN_V1.0.pdf 原 PDF" src="materials/SRC0012.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0012.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+版本:  1.0 
+出版日期:  2026-01-28
+MT8668 Hypervisor Multi Display Proxy-
+Wayland User Manual 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0012.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8668 Hypervisor Multi Display Proxy-Wayland 
+ User Manual 
+Confidential B 
+版本记录 
+版本 日期 作者 描述 
+1.0 2026-01-28 Mengxu Li 正式版 
+ 
+  
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0012.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8668 Hypervisor Multi Display Proxy-Wayland 
+ User Manual 
+Confidential B 
+目录 
+版本记录 ··········································································································································································· 2 
+目录 ··················································································································································································· 3 
+图片目录 ··········································································································································································· 3 
+表格目录 ··········································································································································································· 4 
+1 Proxy-Wayland ·························································································································································· 5 
+1.1 概述·········································································································································································· 5 
+ Proxy-Wayland 的实现需求 ························································································································· 5 
+ Proxy-Wayland 的实现原理 ························································································································· 5 
+ Proxy-Wayland 的代码结构分布 ·················································································································· 5 
+1.2 缩略词 ······································································································································································ 6 
+1.3 架构/进程概述 ························································································································································ 7 
+ Hypervisor Proxy-Wayland 系统框架 ··········································································································· 7 
+ Proxy-Wayland 模块结构分布······················································································································ 7 
+1.4 测试与分析 ······························································································································································ 8 
+ Proxy-Wayland 功能性测试与分析 ·············································································································· 8 
+ Proxy-Wayland 稳定性测试与分析 ·············································································································· 9 
+ 
+附件一 附加条款 ····························································································································································· 16 
+ 
+ 
+图片目录 
+图 1-1. Hypervisor Proxy-Wayland 系统框架 .................................................................................................................................................... 7 
+图 1-2. Proxy-Wayland 模块结构分布.................................................................................................................................................................... 8 
+图 1-3. Proxy-Wayland two-path display fps ................................................................................................................................................... 10 
+图 1-4. Weston reboot latency ................................................................................................................................................................................ 11 
+图 1-5. Proxy service reboot SIGTERM latency ............................................................................................................................................... 12 
+图 1-6. Proxy service reboot SIGINT latency .................................................................................................................................................... 13 
+图 1-7. Android reboot latency .............................................................................................................................................................................. 14 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0012.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8668 Hypervisor Multi Display Proxy-Wayland 
+ User Manual 
+Confidential B 
+表格目录 
+表 1-1. 缩略词 ................................................................................................................................................................................................................... 6 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0012.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8668 Hypervisor Multi Display Proxy-Wayland 
+ User Manual 
+Confidential B 
+1 Proxy-Wayland 
+1.1 概述 
+本章节主要介绍 MT8668 Hypervisor Proxy-Wayland 的实现需求、实现原理及代码结构分布。 
+ Proxy-Wayland 的实现需求 
+当前，车载多媒体娱乐系统正迅猛发展，其背后的多域显示系统管理极为复杂。例如，中控屏、副驾屏、后枕
+屏、仪表盘等各个领域均需各自的显示屏。基于单一芯片，多屏的显示来自于不同的 OS，充分发挥不同 OS 的优
+势，如 Android 多媒体处理的高效性；Linux 的及时性和安全性。 
+然而，要实现单一芯片的多域功能，就不可避免涉及到虚拟技术。目前，车载行业较为流行的多域是 Linux + 
+Android， 其中一路 Linux 是 Host，其它路是 Guest。Proxy-Wayland 正是基于这种跨域需求，实现从 Android guest 
+将图形 buffer 送到 Linux host， 透过 Wayland 进行显示，实现跨域显示的功能。 
+ Proxy-Wayland 的实现原理 
+• Proxy-Wayland 的通信框架以 RPC binder 为基础。 
+• RPC binder 以 Vsock 为基础实现跨域。 
+• Android 端 HWC 通过 Proxy-Wayland binder client 接口将 frame 透过基于 Vsock 的 RPC binder 实现跨域。 
+• Linux 端 Proxy-Wayland binder service 接收到 frame 后，调用 wayland-client API 实现显示功能。 
+ 
+ Proxy-Wayland 的代码结构分布 
+• Android 
+– Code path: vendor/mediatek/proprietary/external/MultiVirtualDisplay 
+▪ Android-client 
+o Proxy-Wayland HWC 接口类 
+o Proxy-Wayland display client 管理类 
+o Proxy-Wayland display client 类 
+▪ libvirtual-display 
+o Binder Bp &amp; Bn 类 
+▪ libdmabufhelper 
+o DMA buffer 传递的参数转换接口类 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0012.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8668 Hypervisor Multi Display Proxy-Wayland 
+ User Manual 
+Confidential B 
+• Linux 
+– Code path: src/multimedia/multi-virtual-display 
+▪ yocto-service/virtual-display-service 
+o Binder service main 函数 
+▪ yocto-service/libvirtual-display-service 
+o Binder service 实现类 
+o Display client 管理类 
+o Display client 实现类 
+▪ libvirtual-display 
+o Binder Bp &amp; Bn 类 
+▪ libdmabufhelper 
+o DMA buffer 传递的参数转换接口类 
+– BB file path 
+▪ meta/meta-mediatek-mt8668/recipes-multimedia/hyper-virtual-display-service 
+▪ meta/meta-mediatek-mt8668/recipes-multimedia/hyper-libvirtual-display-service 
+▪ meta/meta-mediatek-mt8668/recipes-multimedia/hyper-libvirtual-display 
+▪ meta/meta-mediatek-mt8668/recipes-multimedia/hyper-libdmabufhelper 
+ 
+1.2 缩略词 
+表 1-1. 缩略词 
+缩略词 全称 释义 
+API Application Programming Interface 应用程序编程接口 
+HWC Hardware Composer 
+硬件合成器，是 Android 系统中的一个组件，负责将应
+用程序界面与图形硬件进行交互，加速图形渲染和显示 
+RPC Remote Procedure Call 远程过程调用 
+CMDQ Command Queue 命令队列 
+DSI Display Serial Interface 显示串行接口 
+eDP Embedded DisplayPort 嵌入式显示端口 
+UI User Interface 用户界面 
+IPO Instant Power On 快速开机 
+OS Operating System 操作系统 
+ 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0012.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8668 Hypervisor Multi Display Proxy-Wayland 
+ User Manual 
+Confidential B 
+1.3 架构/进程概述 
+ Hypervisor Proxy-Wayland 系统框架 
+Hypervisor Proxy-Wayland 系统框架如图 1-1 所示： 
+ 
+图 1-1. Hypervisor Proxy-Wayland 系统框架 
+ 
+ Proxy-Wayland 模块结构分布  
+Proxy-Wayland 模块结构分布如图 1-2 所示： 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0012.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8668 Hypervisor Multi Display Proxy-Wayland 
+ User Manual 
+Confidential B 
+ 
+图 1-2. Proxy-Wayland 模块结构分布 
+ 
+1.4 测试与分析 
+ Proxy-Wayland 功能性测试与分析 
+1.4.1.1 Proxy-Wayland Path 开机显示正常 
+• 测试 
+– 8668 Hyper Load + MT8668 Board 
+– 除了连接 DSI-0 屏，至少需要连接 DSI-1 屏 和 DSI-2 屏 
+– 要求：开机后，待 Android 显示在 HOME UI，DSI-1 屏和 DSI-2 屏正常显示 Android 内容 
+ 
+• 常见问题分析 
+– 当出现无法显示的异常时，抓取 Yocto 端的 journal log，或设置 service file：lib/system/system/multi-
+virtual-display.service，在 StandardOutput 和 StandardError 行末分别加上 “+console”， 并将 log 
+level 设置为 6，保存并重启 Yocto device。通过 UART log 分析，有没有进行 Wayland client 的 connect 以及
+有没有 send frame 过来。 
+▪ 若有 connect，但无 send frame，但 log 中出现 DROP FRAME, 需要检查 log 中监测到的 display name 和 
+location 与 service file 中设置的 display 序数对应的 display 是否一致，若不一致，检查原因。 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0012.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8668 Hypervisor Multi Display Proxy-Wayland 
+ User Manual 
+Confidential B 
+▪ 若有 send frame 但无显示，需要进一步检查 log 的报错点，按需与 proxy-wayland owner 一起检查问题
+发生的原因。 
+▪ 若没有 connect，需要先抓 Android 端的 logcat，检查 proxy client 有没有明显报错；若没有 proxy client 
+相关 log，即没有发现 send frame，需要请 SF &amp; HWC owner 检查相关原因。 
+▪ Yocto 端的 log 关键字 “PROXY_LOG”，Android 端的 log 关键字 “VirtualDisplay” 
+– 当出现一直卡着不刷图的异常时（除静态 UI 外），首先要确定不刷图的原因，是 Android 端没有送图卡
+顿，还是 Yocto 端主动 drop frame 导致。可以通过 Yocto 端的 log 来确认，可以与 Proxy-Wayland owner 一
+起作第一手分析。 
+▪ 若是 Android 端没有送图导致的卡住，可以抓 logcat log 与 HWC &amp; SF owner 一起分析。 
+▪ 若是 proxy service 主动 drop frame，可以同步抓 weston-debug log 与 weston owner 一起分析。 
+ 
+1.4.1.2 Proxy-Wayland 热插拔测试与分析 
+• 测试 
+– MT8668 Hyper Load + MT8668 Board 
+– 除了连接 DSI-0 屏，至少需要连接 DSI-1 屏 和 DSI-2 屏 
+– 要求：拔出 DSI-1 或 DSI-2，对应屏的 Android 画面立即消失；插上 DSI-1 或 DSI-2，对应屏的 Android 画面
+恢复显示  
+ 
+• 常见问题分析 
+– 当拔出 DSI-1 或 DSI-2 时，对应屏显示的 Android 画面没有消失，显示在其它屏，抓取对应的 journal 或
+console log，与 Proxy-Wayland owner 一起分析。 
+– 当重新插上 DSI-1 或 DSI-2 时，对应屏显示的 Android 画面没有恢复显示，抓取对应的 journal 或 console 
+log， 与 Proxy-Wayland owner 一起分析。 
+ 
+ Proxy-Wayland 稳定性测试与分析 
+1.4.2.1 帧率性能测试分析 
+• 测试数据打印准备 
+– 进入到 Yocto shell 修改 service file， vi lib/systemd/system/multi-virtual-display.service 
+– 在 “StandardOutput” 和 “StandardError” 行末 均加上 “+console”，修改完保存，然后重启 Yocto 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0012.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8668 Hypervisor Multi Display Proxy-Wayland 
+ User Manual 
+Confidential B 
+– 测试中 UART log 中会出现 “D: x,  C:  y,  render frame, fps: xxx”，即 display x 的 client y render 
+1000 frame 的帧率是 xxx 
+ 
+• 测试方式（以三屏为例） 
+– DSI-0 的中控显示 Android home UI 
+– DSI-1 或 DSI-2 开启 deskClock – Timer 
+– DSI-2 或 DSI-1 使用 gallery 播放 FHD@60 video 
+ 
+• 测试结果（以三屏为例） 
+图 1-3 是 FHD@60 video 播放完，两路 Proxy-Wayland display，帧率数据的统计图： 
+ 
+ 
+图 1-3. Proxy-Wayland two-path display fps 
+ 
+• 帧率问题分析 
+– 在检查多屏帧率中，要先理清影响帧率的因素有哪些，基于测试场景确定哪些是主要影响因素  
+– 根据模块区分，影响因素有：GPU、Weston、Vsock 等。GPU 主要是表现在多屏多 user 使用 GPU 叠图导致
+的帧率下降；Weston 主要是表现在多屏中 Vsync 的处理带来的帧率下降；Vsock 主要表现在多 user 使用下
+导致的 Vsock 交互效率下降 
+– 通过设计对比实验确定主要影响因素，主要是减少模块使用者个数，看帧率是否得到改善 
+– 确定主要因素后，抓 trace 分析请 module owner 分析影响帧率的原因 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0012.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8668 Hypervisor Multi Display Proxy-Wayland 
+ User Manual 
+Confidential B 
+1.4.2.2 Weston Reboot 测试与分析 
+• 测试指令 
+– adb -s YOCTO shell “systemctl restart weston” 
+ 
+• 测试要求 
+– Weston restart 后， proxy-wayland path android 可以恢复正常显示，帧率稳定后不受影响 
+– Weston restart 压测，无相关 DB 生成 
+ 
+• Latency 测试 
+– Latency 计算范围 
+▪ 起始时间：weston reboot，proxy server 的消息 loop 线程 wl_display_read_events failed 
+▪ 终止时间：Proxy-Wayland client reconnect 成功后，送去 wl_suface_commit 的第一帧 
+– Latency 计算方法 
+▪ 在起始和终止两个点分别打印 date，且输出在 journal 或 console log 
+▪ 统计 10 次的差值，并计算最大值、最小值和均值 
+– Latency 统计数据如图 1-4： 
+ 
+图 1-4. Weston reboot latency 
+ 
+• 测试问题可能性分析 
+– Weston reboot 后，Proxy-Wayland path Android 无法显示，按 1.4.1.1 章节说到的无法正常显示问题处理 
+– Weston reboot 后，帧率稳定后较之 reboot 前出现明显的下降。按帧率问题分析处理 
+– Weston reboot 压测，生成相关 DB，先解析 DB，结合 log，分析 DB 的原因，确定问题发生点，建议找
+Proxy-Wayland owner 一起分析。 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0012.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8668 Hypervisor Multi Display Proxy-Wayland 
+ User Manual 
+Confidential B 
+1.4.2.3 Proxy-Wayland Service Reboot 测试与分析 
+• 测试指令 
+– adb -s YOCTO shell “kill -9 $(pgrep virtual_display)” 
+ 
+• 测试要求 
+– virtual_display_service reboot 后，proxy-wayland path android 可以恢复正常显示，帧率稳定后不受影响 
+– virtual_display_service reboot 压测，无相关 DB 生成 
+ 
+• Latency 测试 
+– Latency 计算范围 
+▪ 起始时间：程序 signal handler 收到 sigkill 信号 
+▪ 终止时间：送去 wl_display_commit 的第一帧 
+– Latency 计算方式 
+▪ 在起始和终止两个点分别打印 date，输出在 journal 或 console log 
+▪ 统计 10 次的差值，计算最大值、最小值和均值 
+– Latency 统计数据，由于 SIGKILL(9) 无法捕捉，故采用 SIGTERM(15) 和 SIGINT(2) 两种方式统计 
+▪ SIGTERM(15) 如图 1-5： 
+ 
+图 1-5. Proxy service reboot SIGTERM latency 
+ 
+▪ SIGINI(2) 如图 1-6： 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0012.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8668 Hypervisor Multi Display Proxy-Wayland 
+ User Manual 
+Confidential B 
+ 
+图 1-6. Proxy service reboot SIGINT latency 
+ 
+• 测试问题可能性分析 
+– 无法恢复正常显示，按无法正常显示问题分析 
+– 帧率稳定后与 reboot 前有明显下降，按帧率问题处理 
+– 压测有相关 DB 生成，与 Proxy-Wayland owner 一起分析问题发生点 
+ 
+1.4.2.4 Android Reboot 测试与分析 
+• 测试指令 
+– adb -s 0123456789ABCDEF shell “reboot” 
+ 
+• 测试要求 
+– Android reboot 后，proxy-wayland path android 可以恢复正常显示 
+– Android reboot 压测，无相关 DB 生成 
+ 
+• Latency 测试 
+– Latency 计算范围 
+▪ 起始时间：由于 Android reboot， proxy service binderDied 被调用  
+▪ 终止时间：送去 wl_surface_commit 的第一帧 
+– Latency 计算方式 
+▪ 在起始和终止两个点分别打印 date，输出在 journal 或 console log 
+▪ 统计 10 次的差值，计算最大值、最小值和均值 
+– Latency 统计数据，下面是一份在 userdebug load 统计的数据，仅当参考： 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0012.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+MT8668 Hypervisor Multi Display Proxy-Wayland 
+ User Manual 
+Confidential B 
+ 
+图 1-7. Android reboot latency 
+ 
+• 测试问题可能性分析 
+– Android reboot 后，无法恢复正常显示，按无法显示问题处理 
+– Android reboot 压测，有 DB 生成，与 Proxy-Wayland owner 一起第一手分析 
+ 
+1.4.2.5 Android IPO 指令测试与分析 
+• 测试指令 
+– adb -s 0123456789ABCDEF shell service call power 67 
+– adb -s 0123456789ABCDEF shell service call power 68 i32 1 
+ 
+• 测试要求 
+– 执行第一句指令，proxy-wayland path android 画面消失；执行第二句指令，proxy-wayland path android 画面
+恢复正常显示。 
+– Android IPO 指令压测，无相关 DB 生成 
+ 
+• 测试问题可能性分析 
+– 执行第一句测试指令，proxy android 画面无法退出，抓取 logcat log 检查有没有执行 proxy client 
+disconnect；若有执行，结合 proxy server log 分析 disconnect flow 是否正常执行 
+– 执行第二句测试指令，proxy android 画面无法显示，按无法显示异常问题处理 
+– Android IPO 压测出现异常且有 DB 生成，与 Proxy-Wayland owner 一起作第一手分析 
+ 
+1.4.2.6 Android 灭屏与亮屏测试与分析 
+• 测试指令 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0012.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+MT8668 Hypervisor Multi Display Proxy-Wayland 
+ User Manual 
+Confidential B 
+– adb -s 0123456789ABCDEF shell input keyevent 26, 执行两次 
+ 
+• 测试要求 
+– 执行灭屏时，proxy android 画面消失；执行亮屏时，proxy android 画面恢复正常显示 
+– 灭屏与亮屏的压测，行为正常，且无 DB 生成 
+ 
+• 测试问题可能性分析 
+– 若执行灭屏时，proxy android 画面无法消失，抓取 logcat log 检查有没有执行 proxy client 的 disconnect，若
+有执行，结合 proxy server log 分析 disconnect flow 是否正常执行 
+– 若执行亮屏时，proxy android 画面无法恢复显示，按无法显示异常问题处理 
+– 灭屏与亮屏压测出现异常且有 DB 生成，与 Proxy-Wayland owner 一起分析 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0012.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 16 
+MT8668 Hypervisor Multi Display Proxy-Wayland 
+ User Manual 
+Confidential B 
+附件一 附加条款 
+您(或您所代表的公司或其他法律主体，以下合称「您」)是否得取得、下载与使用本文件及其相关信息皆应以您接受本附加条款为先决要件。
+您对于本文件之使用、取得或下载即表示您已接受本附加条款并同意受本附加条款之拘束。若您不同意受本附加条款之拘束，您将不得使用、
+取得或下载本文件并应立即删除或毁弃所有本文件之副本。 
+ 
+本文件含有联发科技股份有限公司及其关联公司（以下合称「联发科技」）或其授权人之机密信息及专有信息，仅供您为本文件所描述之联发
+科技芯片组作内部使用而不得用于其他任何目的（包括但不限于确认或提供支持任何对联发科技、其供货商及/或其直接或间接客户所提潜在
+专利侵权主张的证据）。禁止未经授权使用或揭露本文件及其中所含信息。您同意赔偿联发科技因您未经授权使用或揭露本文件及其中所含信
+息之一部或全部导致联发科技所受之任何损失或损害。 
+ 
+联发科技及其授权人保有本文件的所有权及组成所有权之各项权利且未针对任何知识产权授权（无论明示或默示、透过禁反言原则或其他方
+式）。联发科技得随时变更本文件内容而无须另行通知。联发科技无须承担与使用或信赖本文件相关或因使用或信赖本文件致生之任何责任，
+包括但不限于间接损害或附带损害赔偿责任。 
+ 
+本文件及联发科技所提供关于本文件之任何其他材料、信息或技术支持，均以现况交付为准，联发科技不负任何明示、默示、法定或其他形式
+之担保责任，特别是适销性、不侵权、针对特定用途之适用性、完整性或正确性之担保责任或任何由贸易惯例或交易、履行过程所生之担保责
+任。对于联发科技为符合您所提规格或遵循特定标准或标准组织的要求所作之交付物，联发科技亦不应承担任何责任。 
+ 
+于未对前述条款造成限制之情形下，联发科技不对其产品任何特定用途之适用性承担任何保证或担保责任，亦不承担任何因产品、电路或软件
+之应用或使用致生之赔偿责任。您同意您应单独承担关于整合您的产品与联发科技产品所涉及之设计、验证与测试之所有责任，并应确保前述
+整合产品符合相关标准及任何安全性要求或其他要件。 
+ 
+本附加条款及所有与本附加条款或本文件相关之行为应以台湾法律管辖、解释与阐明，不适用冲突法原则。 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

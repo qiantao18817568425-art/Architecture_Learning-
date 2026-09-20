@@ -1,0 +1,715 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8668_Android_Sensor_lssue_Debug_SOP_CN_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8668_Android_Sensor_lssue_Debug_SOP_CN_V1.0.pdf</h1><p>SRC0091 · 原来源 ID S011 · PDF物理页 · 27 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8668/MTK参考资料/MTK参考资料/Android/MT8668_Android_Sensor_lssue_Debug_SOP_CN_V1.0.pdf</p><p>SHA-256：<code>4ed1bbbfed20ebd00446d90337389d7060dd1f48a1713a066cacbc7007e43419</code></p><p>原文件大小：2,066,934 字节</p></details><div class="actions"><a class="button" href="materials/SRC0091.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8668_Android_Sensor_lssue_Debug_SOP_CN_V1.0.pdf 原 PDF" src="materials/SRC0091.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0091.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+版本：  1.0 
+出版日期：  2026-01-28 
+MT8668 Android Sensor Issue 
+Debug SOP 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0091.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+版本记录 
+版本 日期 作者 描述 
+1.0 2026-01-28 李英豪 正式版 
+ 
+  
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0091.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+目录 
+版本记录 ··········································································································································································· 2 
+目录 ··················································································································································································· 3 
+表格目录 ··········································································································································································· 4 
+1 概述 ··········································································································································································· 5 
+1.1 目的·········································································································································································· 5 
+1.2 架构·········································································································································································· 5 
+2 缩略词 ······································································································································································· 7 
+2.1 缩略词 ······································································································································································ 7 
+3 VTS 测试失败 ···························································································································································· 8 
+4 APK 无法获取 Sensor 数据 ······································································································································· 9 
+4.1 SCP 层 Sensor 异常 Debug ······································································································································ 9 
+4.1.1 检查 SCP 是否正常启动 ······························································································································ 9 
+4.1.2 检查 Sensor Device 是否初始化成功 ·········································································································· 9 
+4.1.3 DVFS 导致 Sensor 异常 ······························································································································ 10 
+4.2 Kernel 层 Sensor 异常 Debug ································································································································ 11 
+4.2.1 Dump Sensor List ········································································································································ 11 
+4.2.2 Kernel 端异常排查 ····································································································································· 12 
+4.2.3 系统 Suspend 之后，Resume 时出现 I2C Error ························································································ 13 
+4.3 HAL 层 Sensor 异常排查 ······································································································································· 14 
+4.3.1 HAL 层文件检查 ········································································································································· 14 
+4.3.2 Sensor HAL 上报数据频率异常 ················································································································· 14 
+5 Sensor 校准失败 ····················································································································································· 15 
+6 Sensor Debug Tools 介绍 ········································································································································· 16 
+6.1 Sensor Debug APK ·················································································································································· 16 
+6.2 测试工具 high_freq_sensor_tool ·························································································································· 18 
+6.2.1 基于 high_freq_sensor_tool 测试 Sensor 是否正常 ················································································· 18 
+6.3 基于 high_freq_sensor_tool 做 Sensor 校准 ········································································································ 19 
+6.3.1 ACC 校准方法 ············································································································································· 19 
+6.3.2 GYRO 校准方法 (与 ACC 相同) ·················································································································· 21 
+6.3.3 PS 校准方法 ··············································································································································· 21 
+7 如何抓取 Sensor Log ··············································································································································· 22 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0091.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+8 案例分析 ································································································································································· 26 
+8.1 ALPS08300249 平板 8 字校准后，地磁数据与机械指南针对比相差大于 5 ···················································· 26 
+附件一 附加条款 ····························································································································································· 27 
+ 
+表格目录 
+表 2-1. 缩略词 ··········································································································································································· 7 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0091.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+1 概述 
+1.1 目的 
+本文档主要介绍 MT8668 Sensorhub 相关问题的调试方法，包括 SCP，Kernel 和 Sensor HAL 三部分在出现问题时的
+debug 手段，以及在 Sensor 校准时的相关注意事项。 
+由于 Sensor 涉及到 HAL 层，Kernel 层以及 SCP 层，当 APK 获取 Sensor 数据失败时，通常需要从以上三个方向查找
+原因。 
+结合以往的 debug 经验：SCP 层出错的概率高于 HAL 层，HAL 层出错的概率高于 Kernel 层。 
+ 
+1.2 架构 
+Sensor 架构如下图所示，从 APP 到 HAL 层，再到 Linux Kernel 层的 HF_Manager, AP 层的 sensorhub 和 SCP 层的
+sensorhub 进行通信和 share memory，SCP 层的 sensorhub 控制实际的 sensor driver。 
+ 
+ 
+ 
+Sensor 虚拟化框架如下图所示，从 UOS 的 APP 到 HAL 层，再到前端 virtio_sensor.c。然后到 SOS 侧的后端
+virtio_sensor.cc，再到 hf_manager driver，后端的逻辑和上图一致。 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0091.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0091.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+2 缩略词 
+2.1 缩略词 
+表 2-1. 缩略词 
+缩略词 解释 
+MSBPD MediaTek Sensor Boost Path Driver; a driver that runs in Linux using MSBP API 
+MSBPKI MediaTek Sensor Boost Path Kernel space Interface; support API for kernel space 
+MSHBP MediaTek Sensor Hbu Broadcast Path; the architecture implemented in Sensor Hub we 
+execute applications or drivers 
+MSHBPA MediaTek Sensor Hbu Broadcast Path; an application or driver that runs within MSHBP 
+using MSHBP API 
+MUSA MediaTek Universal Sensor Architecture; the common concept including MSBP and MSHBP 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0091.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+3 VTS 测试失败 
+ 
+ 
+如果您的问题是 VTS 测试失败，请参考以上述流程图先自行检查，如果确实无法解决，请寻求 MTK 协助，并且附
+上您 VTS 测试结果，以便我们协助分析。 
+           导出 VTS 测试 log 
+选择 host_log 
+ 
+                      找出报错的 Senor 类型 
+ 
+参考 APK 无法获取 Sensor 数据的解法 
+确认当前 project 是否支持该 Sensor 
+不支持 
+取消 VTS 对该 Sensor 的测试 
+在 ProjectConfig.mk 中将该 Sensor 配
+置为 no 
+例如：
+ 
+支持 
+寻求 MTK 协助 
+仍然无解 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0091.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+4 APK 无法获取 Sensor 数据 
+4.1 SCP 层 Sensor 异常 Debug 
+4.1.1 检查 SCP 是否正常启动 
+Sensor 在 probe 阶段会通过 IPI 与 SCP 通信，如果 SCP 启动异常会有如下 log： 
+ 
+使用cat /sys/class/misc/scp/scp_A_get_last_log 
+如果 SCP 启动正常，能看到完整的 SCP log 
+部分截图如下： 
+ 
+ 
+4.1.2 检查 Sensor Device 是否初始化成功 
+1. 由于 SPI/I2C 通信引起的 Sensor 初始化失败 
+查看cat /sys/class/misc/scp/scp_A_get_last_log  
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0091.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+例如： 
+ 
+ 
+如果 log 中有出现 SPI/I2C error，首先请确认: 
+device 是否有挂载，I2C/SPI channel 以及 GPIO mode 配置是否正确 
+ 
+I2C error 请参考：I2C Customer Support SOP  
+SPI error 请参考：SPI Customer Support SOP 
+ 
+2. 由于 IPI 通信导致的 error 
+如果 AP 或者 SCP log 中出现 IPI timeout 字样 
+检查 AP 和 SCP 端 IPI_SENSOR 注册的 ID 是否一致 
+ 
+AP: drivers/misc/mediatek/scp/include/scp.h 
+         
+ 
+SCP: vendor/mediatek/proprietary/tinysys/scp/drivers/project/ipi_legacy_wrap.h 
+         
+4.1.3 DVFS 导致 Sensor 异常 
+1. DVFS 导致 Sensor 休眠 
+现象： 
+从 log 看，Sensor 初始化正常 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0091.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+Sensor 获取数据失败且 SCP 无 log 印出 
+ 
+2. DVFS 降低 CPU 工作频率 
+现象： 
+Sensor 通信正常，但获取数据速度比较慢（约十几秒获取一包数据）  
+ 
+针对上述两种现象的解法: 
+先临时 Disable DVFS 功能后测试，如果以上问题仍然存在，请寻求 MTK 帮助 
+ 
+Disable DVFS 方法： 
+AP: drivers/misc/mediatek/scp/include/scp_feature_define.h 
+ 
+设置 SCP_DVFS_INIT_ENABLE     (0) 
+ 
+ 
+SCP: vendor/mediatek/proprietary/tinysys/scp/project/platform/platform.mk 
+设置CFG_VCORE_DVFS_SUPPORT = no 
+ 
+ 
+注：SCP 和 AP enable/disable DVFS 需要保持同步 
+ 
+4.2 Kernel 层 Sensor 异常 Debug 
+4.2.1 Dump Sensor List 
+首先需要看一下 Sensor List，来确认是否是 AP 侧 Kernel 中出现的异常： 
+理论上，如果 SCP 端 Sensor 工作正常，Dump Sensor List 是可以看到当前有哪些 Sensor 的： 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0091.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+ 
+ 
+例如，在如上 SCP log 中，光感 ltr308 工作异常，ACC 工作正常，那我们在 AP 端 Dump Sensor List 是可以看到 ACC 
+Sensor 的。 
+ 
+ 
+如果 SCP 端 Sensor 工作正常，在 AP 端 Dump Sensor List 却没有看到该 Sensor，那 AP 端 Sensor Flow 可能会有异
+常。 
+4.2.2 Kernel 端异常排查 
+Kernel 端 Sensor Flow 一般不会改动，出错的概率比较低，一般 Kernel 端出错，大多数都是由于配置错误引起，主
+要有两个方面： 
+ 
+1. 检查 Config 文件中 Sensor 架构是否正确 
+目前常用的架构有 1.0 和 2.0，需要和 device 目录下 ProjectConfig.mk 保持一致 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0091.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+ 
+ 
+2. 检查 Config 文件中 Sensor 配置是否与料搭配 
+例如，光感的料有 ltr308/ltr559/ltr578 等多种： 
+ 
+ 
+务必要根据 Sensor 的选料配置好 Config 文件： 
+ 
+ 
+4.2.3 系统 Suspend 之后，Resume 时出现 I2C Error 
+部分供应商的 vendor driver 加入了 suspend/resume 接口。在 suspend 时会 disable driver 以达到省电目的。 
+ 
+但该逻辑和上层代码有一定冲突，resume 时由于上层的 polling 定时器未关，可能会造成在器件驱动的 resume 执
+行到之前就触发了 polling data 从而引起异常。 
+解决方法是将 suspend/resume 的接口移动到上层代码中，避免出现不同步的问题。 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0091.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+4.3 HAL 层 Sensor 异常排查 
+4.3.1 HAL 层文件检查 
+Sensor HAL 的正常工作依赖于平台里的以下文件： 
+• HIDL Interface: 
+/system/lib64/android.hardware.sensors@1.0.so 
+/system/lib64/android.hardware.sensors@2.0.so 
+/system/lib64/android.hardware.sensors@2.1.so 
+ 
+• Multi-HAL 
+/vendor/bin/hw/android.hardware.sensors@2.0-serivce-mediatek 
+/vendor/etc/init/android.hardware.sensors@2.0-serivce-mediatek.rc 
+/vendor/lib64/android.hardware.sensors@2.X-subhal-mediatek.so 
+ 
+• HAL 
+/vendor/lib64/hw/sensors.$(TARGET_BOARD_PLATFORM).so 
+/vendor/etc/init/hw/init_sensor_2_0.rc 
+ 
+• Hfmanager 
+/vendor/lib64/libhfmanager.so 
+ 
+如果 AP 端 Dump Sensor List 正常，可以排查以上文件是否存在来确认 HAL 层是否出现异常。如果发现有文件缺
+失，请查看 ProjectConfig.mk 中 MTK_SENSOR_SUPPORT 是否打开，若确认打开却仍然缺少文件，请寻求 MTK 协
+助。 
+4.3.2 Sensor HAL 上报数据频率异常 
+首先检查 SCP log，查看 transceiver 是否打出正确的 delay 和 latency 
+ 
+ 
+如果能打出正确的 delay 和 latency，请检查对应 Sensor Driver 中的 odr 值，有些 Sensor 的频率是根据上层下来的
+取样间隔与自身支持的 odr 结合判断频率的。 
+ 
+如果 delay 和 latency 不正常，请寻求 MTK 协助。 
+ 
+如果是多 OS 系统，请在 Host OS 上使用工具测试，如果在 Host OS 上测试正常，但是在 Guest OS 上不正常，说明
+是虚拟化问题，请寻找 MTK 协助。如果在 Host OS 上也不正常，则按照前面的方法排查。 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0091.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+5 Sensor 校准失败 
+Sensor 在执行校准的时候，如果最后的返回值不是 0，则表示校准失败 
+注：校准方法请参考本文 6.1 节。 
+ 
+ 
+ 
+校准失败主要都是因为精度不足或者零漂过大引起。 
+ 
+常用的解法有以下两种： 
+1. 咨询 vendor，调整 Sensor 采集的精度 
+2. 增大 Sensor 校准的阈值 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0091.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 16 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+6 Sensor Debug Tools 介绍 
+6.1 Sensor Debug APK 
+环境需求：Android 平台 
+安装方法：adb install GameCube_v3.1.apk 
+ 
+ 
+安装成功后，可以在屏幕看到如下图标： 
+ 
+debug 方法： 
+1. 打开通过 adb 安装好的 APK，界面如下： 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0091.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 17 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+ 
+ 
+2. 以 ACC 和 ALPS 为例 
+测试 ACC：选择 Accelerometer –&gt; Bouncing Ball 移动板子，蓝色的球会跳动 
+ 
+测试 ALS/PS：选择 ALS/PS –&gt; Curve Chart   左上角会有光感的数值，遮挡光感数值会变小 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-18"><h2>PDF物理页 18</h2><a href="materials/SRC0091.pdf#page=18" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 18 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+ 
+6.2 测试工具 high_freq_sensor_tool 
+环境需求：Android 平台/Yocto 平台 
+6.2.1 基于 high_freq_sensor_tool 测试 Sensor 是否正常 
+1. 如果平台没有自带 high_freq_sensor_tool，需要通过 adb 将 high_freq_sensor_tool push 到平台 
+ 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-19"><h2>PDF物理页 19</h2><a href="materials/SRC0091.pdf#page=19" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 19 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+ 
+2. high_freq_sensor_tool 的使用方法 
+指令： 
+./high_freq_sensor_tool -c   para1, para2,  para3, para4 
+ 
+para1→sensorType  
+1: acc                2: mag                3: orientation      4: gyro 
+5: light              6: baro                7: temperature    8: proximity 
+9: gravity          10: linear_accelerate  
+ 
+para2→action 
+0: disable…1: enable…2: flush…3: cali…4: config_cali…5: selftest… 6: rawdata 
+ 
+para3→delay  
+采样周期频率（ns）， 
+比如填 80000000  对应的 rate= 12800 = 1024000000000/80000000 即 12.8hz 
+ 
+para4→latency  
+一般填 0. 
+例如： 
+ 
+ 
+6.3 基于 high_freq_sensor_tool 做 Sensor 校准 
+6.3.1 ACC 校准方法 
+1. 在 window 终端，使用 high_freq_sensor_tool enable acc （para2 = 1） 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-20"><h2>PDF物理页 20</h2><a href="materials/SRC0091.pdf#page=20" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 20 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+ 
+ 
+2. 在 Windows 再打开一个终端，使用 high_freq_sensor_tool 校准 （para2 = 3） 
+ 
+ 
+3. 检查校准结果 
+校准成功后，校准结果会保存在 JSON 文件： 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-21"><h2>PDF物理页 21</h2><a href="materials/SRC0091.pdf#page=21" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 21 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+6.3.2 GYRO 校准方法 (与 ACC 相同) 
+6.3.3 PS 校准方法 
+1. 在 window 终端，使用 high_freq_sensor_tool 直接校准 （para2 = 3） 
+ 
+ 
+2. type “y” 计算最大值与最小值 
+ 
+ 
+ 
+ 
+ 
+3. 检查校准结果 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-22"><h2>PDF物理页 22</h2><a href="materials/SRC0091.pdf#page=22" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 22 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+7 如何抓取 Sensor Log 
+如何导出 Sensor 相关的 log 
+1. 在屏幕打开 DebugLoggerUI 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-23"><h2>PDF物理页 23</h2><a href="materials/SRC0091.pdf#page=23" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 23 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+ 
+打开后界面如下： 
+ 
+ 
+2. 点击启动按钮 
+启动后，软件会将缓冲区的 log 保存到 txt 文件（包括开机启动的 log） 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-24"><h2>PDF物理页 24</h2><a href="materials/SRC0091.pdf#page=24" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 24 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+ 
+ 
+3. log 的导出 
+为了确保存错足够的 log，建议保存 40s 以上的 log，再点击停止按钮 
+导出 log 的指令： 
+adb pull /data/debuglogger 
+ 
+4. 关键 log 信息： 
+查看 SCP 的启动 log，检查各个 Sensor 是否有成功 probe 起来： 
+ 
+如图中 smi230driver 的启动 log. 
+ 
+设置采样频率，上报频率等： 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-25"><h2>PDF物理页 25</h2><a href="materials/SRC0091.pdf#page=25" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 25 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+如图中，为 enable 加速度计，采样间隔为 20000000ns，上报间隔为 0. 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-26"><h2>PDF物理页 26</h2><a href="materials/SRC0091.pdf#page=26" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 26 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+8 案例分析 
+8.1 ALPS08300249 平板 8 字校准后，地磁数据与机械指南针对比相差大于 5 
+本体客户反馈部分机器磁感即使经过校准，指南针也会有 90 度的方向偏差。 
+90 度方向偏差首先要考虑改动 SCP 配置的 direction。在驱动中会读取 direction 并将实际的数据进行 remap. 
+若无特殊情况，贴在 PCB（对于屏幕方向）正面的器件其方向应当为 0 1 2 3 其中的一个，贴在背面的应为 4 5 6 7
+其中的一个。可以查看源码确认 direction 对 remap 的影响。 
+本题实际上属于例外情况。客户产品特殊，同一份 load 支持了多种 PCB，因此 bring up 时就联合 vendor 开发了客
+制化特性，在 Kernel 侧读取 board ID，并下发特殊指令重置底层的 direction。 
+由于 OEM 换人，升级 Kernel 版本时客户方信息不同步导致了这个问题。 
+在正常排查未发现问题时，需要考虑是否存在客制化因素。  
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-27"><h2>PDF物理页 27</h2><a href="materials/SRC0091.pdf#page=27" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 27 
+Confidential B 
+MT8668 Android Sensor Issue 
+Debug SOP 
+附件一 附加条款 
+您(或您所代表的公司或其他法律主体，以下合称「您」)是否得取得、下载与使用本文件及其相关信息皆应以您接受本附加条款为先决要件。
+您对于本文件之使用、取得或下载即表示您已接受本附加条款并同意受本附加条款之拘束。若您不同意受本附加条款之拘束，您将不得使用、
+取得或下载本文件并应立即删除或毁弃所有本文件之副本。 
+ 
+本文件含有联发科技股份有限公司及其关联公司（以下合称「联发科技」）或其授权人之机密信息及专有信息，仅供您为本文件所描述之联发
+科技芯片组作内部使用而不得用于其他任何目的（包括但不限于确认或提供支持任何对联发科技、其供货商及/或其直接或间接客户所提潜在
+专利侵权主张的证据）。禁止未经授权使用或揭露本文件及其中所含信息。您同意赔偿联发科技因您未经授权使用或揭露本文件及其中所含信
+息之一部或全部导致联发科技所受之任何损失或损害。 
+ 
+联发科技及其授权人保有本文件的所有权及组成所有权之各项权利且未针对任何知识产权授权（无论明示或默示、透过禁反言原则或其他方
+式）。联发科技得随时变更本文件内容而无须另行通知。联发科技无须承担与使用或信赖本文件相关或因使用或信赖本文件致生之任何责任，
+包括但不限于间接损害或附带损害赔偿责任。 
+ 
+本文件及联发科技所提供关于本文件之任何其他材料、信息或技术支持，均以现况交付为准，联发科技不负任何明示、默示、法定或其他形式
+之担保责任，特别是适销性、不侵权、针对特定用途之适用性、完整性或正确性之担保责任或任何由贸易惯例或交易、履行过程所生之担保责
+任。对于联发科技为符合您所提规格或遵循特定标准或标准组织的要求所作之交付物，联发科技亦不应承担任何责任。 
+ 
+于未对前述条款造成限制之情形下，联发科技不对其产品任何特定用途之适用性承担任何保证或担保责任，亦不承担任何因产品、电路或软件
+之应用或使用致生之赔偿责任。您同意您应单独承担关于整合您的产品与联发科技产品所涉及之设计、验证与测试之所有责任，并应确保前述
+整合产品符合相关标准及任何安全性要求或其他要件。 
+ 
+本附加条款及所有与本附加条款或本文件相关之行为应以台湾法律管辖、解释与阐明，不适用冲突法原则。 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a><a href="#page-18">PDF物理页 18</a><a href="#page-19">PDF物理页 19</a><a href="#page-20">PDF物理页 20</a><a href="#page-21">PDF物理页 21</a><a href="#page-22">PDF物理页 22</a><a href="#page-23">PDF物理页 23</a><a href="#page-24">PDF物理页 24</a><a href="#page-25">PDF物理页 25</a><a href="#page-26">PDF物理页 26</a><a href="#page-27">PDF物理页 27</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

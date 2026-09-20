@@ -1,0 +1,328 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>P39.A03.H5核心板设计指南20251023.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>P39.A03.H5核心板设计指南20251023.pdf</h1><p>SRC0343 · PDF物理页 · 23 个阅读单元</p><p class="note">原材料可查阅；未逐页作项目结论验证。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>P39.A03.H5核心板设计指南20251023.pdf</p><p>SHA-256：<code>f5eea9add6e06af829c8f59a623ea9f667473577f36e38a6160abf0e6f2c287e</code></p><p>原文件大小：1,943,003 字节</p></details><div class="actions"><a class="button" href="materials/SRC0343.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="P39.A03.H5核心板设计指南20251023.pdf 原 PDF" src="materials/SRC0343.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0343.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">P39.A03.H5 核心板设计指南
+一，概述
+P39 核心板是一款全面兼容 2G&amp;3G&amp;4G&amp;5G（移动、联通、电信）网
+络，LGA 封装 580PIN，模块大小 59.5*59.5*5.4mm，智能座舱功能接
+口丰富、可靠性高、工作模式灵活的无线通信产品。
+二，产品示意图
+三，产品功能与技术参数
+2.1 平 台： MT8676
+2.2 主 频： 8 核 2.9GHz
+2.3 内 存 ： 标 配 LP5X 12G+UFS3.1 128GB 最 大 24GB LP5X
+(分离式 IC，可灵活选择配置)</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0343.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">2.4 网络支持：国际版(可选配)
+GSM(2G) : ■B2 ■B3 ■B5 ■B8
+WCDMA : ■B1 ■B2 ■B4 ■B5 ■B6 ■B8 ■B19
+EVDO : ■BC0
+FDD LTE(4G): ■B1■B2■B3■B4■B5■B7■B8■B12■B12■
+B13■B14■B17■B18■B19■B20■B25■B26■B28■B66■B71
+TDD LTE(4G): ■B34 ■B38 ■B39 ■B40 ■B41
+FDD NRSA: ■N1■N2 ■N3■N5■ N7 ■N8■N20 ■N25■N28
+■N66■N71■N75■N76
+TDD NRSA: ■N38■N40■N41■N77■N78■N79
+2.5 GNSS： 支持 L1&amp;L5。GPS(QZSS)/Glonass/Beidou/Galileo
+2.6 蓝牙： BT 5.3
+2.7 WIFI： WiFi 6E，支持 2.4G/5G/6GHz 频段，支持 DBDC，支 持
+802.11a/b/g/n/ac/ax 技 术 ， 兼 容
+802.11 d/e/h/i/j/k/r/v 技术
+2.8 SIM 卡: 双 SIM 卡
+2.9 T 卡 : 支持容量可达 2TB, 支持热插拔
+2.10 UART 口：支持 4 路，UART0 用做 DEBUG，其它口用于外设计通讯。
+2.11 I2C 口 ：可支持 16 路 I2C,其中可配置 6 路 I3C 和 2 路 SCP I3C。
+2.12 SPI 口 ：可支持 6 路 SPI 口。
+2.13 USB3.1/2.0： 1 路 USB2.0 接口，支持 device/host；
+1 路 USB3.1 接口，支持 device/host；
+2.14 支持 6 路 CSI: MIPI 摄像头接口
+2.15 支持 2 路 DSI: MIPI 屏接口
+2.16 支持 1 路 DP: DP1.4 屏接口
+2.17 音频接口：支持 5 路 I2S ,4 路 I2S(IN+OUT),1 路 I2S(IN);
+支持 1 路 TDM (IN+OUT)，8+8CH;</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0343.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">四，产品接口定义
+参考产品接口定义表！
+五，接口设计指南
+5.1 SIM 卡设计
+核心板上未添加 SIM 滤波电路，底板设计时需添加 TVS 电路和滤波电
+容，注意 TVS 的选型选择结电容值小的，非插拔类型 SIM 卡可不贴
+TVS,整个信号电路上电容《=45PF (CLK,DATA 和 RST)，建议预留滤电容，
+选结电容 15pF 的 ESD。
+当客户使用 E-sim 卡时，注意底板做 SIM 卡座的兼容设计，方便 CTA
+入网测试及白卡调试。
+当客户使用 SIM 卡座时，如果需要 SIM 卡支持热插拔功能，必须选择
+INT_SIM1/GPIO59_INT_SIM2 中断资源，核心板的第 498PIN/375PIN。
+详见：MT8676_GPIO_Application_Spec 表格。
+原理设计和布局走线时注意以下几点：
+1，SIM Power, Reserve 1uF capacitor on the power rails of SIM with
+shunt connection and this capacitor should be placed close to SIM
+connector.
+2，SIO/SCLK/SRST no need reserve Pull up resistor to VSIM.
+3，SIM CLK needs well ground shielding, SIMIO and SIMCLK must be
+not parallel with power trace that is closed layer or same layer</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0343.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">5.2 T 卡设计
+MT8676 支持 SD2.0 和 SD3.0, 支持热插拔，核心板上 T 卡电路未加保
+护电路，在底板设计时请加滤波和 TVS 电路，CLK 预留串位和并位以
+防止 EMC 问题，ESD 器件靠近 T 卡座摆放。
+原理设计和布局走线时注意以下几点：
+1，power for SD 2.0 sd card: the 200mA is necessary. 1uF cap for the power is necessary.
+2，power for SD 3.0 SDR50 and DDR50 card: the 400mA is necessary. 2.2uF cap for the power is
+necessary.
+3，power for SD 3.0 SDR104 card: the 800mA is necessary. 4.7uF cap for the power is necessary.
+4，Reverse damping resistor position to fine tune the SD card AC timing
+5，Signals needs well ground shielding
+6, |Clock – Data/CMD| ≦ 7620 um
+7, VMCH_PMU Trace width (W)≧ 200 um, Cap Value≧ 0.1 uF
+5.3 USB 电路</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0343.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MT8676 支持 USB2.0 和 USB3.0,都可做 Device 或 Host 模式。核心板
+上未增加滤波和 TVS 保护电路，建议客户在设计底板电路,USB 线路上
+VUBS 可加滤波电容与防浪涌器件，DP/DM 留 TVS 管防 ESD 损坏，注
+意 TVS 的选型选择结电容值小的（0.5pF)。
+MT8676 USB2.0 的 Device 和 Host 模式切换是通过
+USB_IDDIG(GPIO5_IDDIG)脚来实现。USB_IDDIG 默认高电平，此时为
+Device 模式，当检测到 USB_ID 为低时，切换为 Host 模式。MT8676
+自身只能同时存在一同模式。
+DM/DP 以及 VUSB(5V)请增加测试点，方便模块端调试。
+下载时时序如下，如果用充电 IC，注意充电 IC 的 USB 通道要在 SOC
+端 USB 握手协议前完成：
+4V
+VSYS: 0V
+5V
+VBUS: 0V
+蓝--黄(非固定值，可同时)
+Soc hand shake 持续时间 1S
+SOC hand shake 时间：
+（黄-绿）soc 启动到开始 hand shake 时间 0.5S
+充电 IC D+D-通道完成：
+充电 IC 的初始化，即 D+D-通道完成要在 soc hand shake 启动之前完成
+原理设计和布局走线时注意以下几点：
+1，Differential 90-ohm characteristic impedance of USB DP/DM
+differential pair must be implemented. USB DP/DM differential pair shall
+be routed surround with ground plane.
+2，The USB DP/DM length mismatch must not exceed 50 mil。
+3，Connector DP/DM pin and Test point should dig 2 Layer. The Via</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0343.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Should not exceed 6 via.
+4，Both SSUSB_TXP and SSUSB_TXN should be connected to 0.1uF AC
+coupling capacitor before USB 3.0 connector
+5，Differential 90-ohm characteristic impedance of SSUSB TX+/TX- and
+RX+/RX- differential pair must be implemented. SSUSB TX+/TX- and
+RX+/RX- differential pair shall be routed surround with ground plane.
+6，| SSUSB_TXN- SSUSB_TXP| &lt;= 5mil; | SSUSB_RXN- SSUSB_RXP | &lt;=
+5mil
+7，为保证眼图质量，走线满足 MTK 平台要求。
+模块上长度: USB2.0=1695mil
+模块上长度: USB3.1=1812mil
+PCB Layout
+Recommendation Item
+Switch FPC
+Case1 NO NO 2.2mil≦Trace width; TA1 should ≦8000mil
+Case2 YES NO 2.2mil≦Trace width; TB1+TB2≦ 5000 mil, Switch Ron≦ 5ohm,
+Switch Cload≦5pF
+Case3 NO YES 2.2mil≦; TC1+TC3 ≦ 4000 mil, TC2 ≦ 4000mil</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0343.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Case4 YES YES 2.2mil≦Trace width, TD1+TD2+TD4 ≦ 2000 mil, TD3 ≦
+4000mil, Switch Ron≦5ohm, Switch Cload≦5pF
+5.4 I2C/I3C 电路
+I2C/I3C 的电压域为 1.8V，设计时注意 device 的电压匹配。MT8676 核
+心板有 16 个 I2C(含 I3C)接口供客户使用，I2C 最大速率 3.4MHz，I3C
+最大速率 12.5MHz。模块上的 I2C/I3C 总线没有加上拉电阻，为增加
+I2C/I3C 驱动能力和串接电阻端接，可在底板上增加上拉电阻。建议
+如下，可根据 I2C 波形实际测试情况进行调整：
+1， R. 4.7KΩ for standard mode and fast mode ; 2.2KΩ for fast mode</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0343.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">plus and high speed mode.
+2，Signals need well ground shielding
+5.5 MIPI CSI 接口
+MT8676 支持 6 路 CSI 输入，都支持 4Lane D-PHY，最大能支持到
+6.5Gbps/Lane，核心板最大可支持 19 个 CAMERA。
+原理设计和布局走线时注意以下几点：
+1，MIPI D-PHY CSI 4.5GbpsMIPI D-PHY CSI 4.5Gbps＜DR≤6.5Gbps 时，
+建议 MIPI 总长 ≤ 4inch;
+模块上长度：CSI0=1750mil
+模块上长度：CSI1=1390mil
+模块上长度：CSI2=1700mil
+模块上长度：CSI3=900mil
+模块上长度：CSI4=1095mil
+模块上长度：CSI5=1180mil
+2，The differential signal (P/N skew) difference in length of CSI differential
+signal controlled within 6 mil.
+3，The pair-to-pair trace difference in length of MIPI CSI differential pairs
+controlled within 100mil. 3xW for inner layer, &gt; 4xW for top/bottom layer,
+or ground isolation between MIPl pairs.</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0343.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">4，Differential impedance 100ohm (or single-end impedance 50ohm)。
+5 ， MIPI CSI differential pair needs well ground shielding and try to
+minimize via number in PCB design
+5.6 UART 口
+MT8676 支持 4 路 UART 口：其中 UART0 用于模块的 DEBUG 用，不用
+于外接设备，UART1—UART3 可外接设备,UART 口的工作电压域都是
+1.8V，使用时请注意电压匹配情况。设计时注意接口静电的保护，TVS
+的选型选择结电容值小的（0.5pF） 。Layout 时需要注意包地。
+5.7 SPI 口
+MT8676 核心板有引出 6 路 SPI 口（只能做主模式）给底板外部设部
+使用，AP_SPI 口最大速度可到 52M bit/s，SCP_SPI 口（只有 SPI7）
+最大速度可到 43M bit/s，设计时注意接口的静电防护，TVS 的选型</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0343.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">选择结电容值小的(0.5pF)。注：当不用此功能时可复用为 GPIO 口。
+6 路 SPI 的电压域都是 1.8V，使用时注意电压匹配。
+Layout 注意事项：
+-All traces of SPI bus should be well-shielded by nearby ground traces in
+the same layer, surrounded by ground traces in n-1 and n+1 layers, and
+close to each others.
+-All traces of SPI bus should be far away from noise sources such as buck
+switching node, etc.
+-The max. length of SPl bus between the SoC and devices should be
+shorter than 6 inches. (Consider 6inches =&gt; 1 ns).
+- The length gap of signal traces (CK, CS, MOSI, MISO) should be less than
+2 mm (max. length to min.length).
+-The trace gaps between the SoC to device A and SoC to device B should
+be within 2 inches. lf the gap is over 2 inches, reserve resistors in SPI bus.
+(For one SPI to multiple devices)</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0343.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">5.8 I2S 和 TDM 接口
+MT8676 模块支持 4 路 I2S IN+OUT 和 I2S IN，所有的 I2S 接口电压域都
+为 1.8V，电路设计时注意电压匹配。MT8676 支持 1 路
+TDMIN+OUT(8+8ch)，多单声道及双声道合并通过 TDM 输入输出。
+注：MT8676 的只有 1 路 I2S 支持从模式，4 路 I2S 和 TDM 都只支持
+主模式。Layout 时需要注意包地。
+5.9 MIPI DSI 接口
+MT8676 核心板支持 2 路 MIPI DSI，每路 4Lane，每 Lane（D-PHY） 最
+大速率 2.5Gbps，1 路 DSI 最大可支持 10Gbps 传输速率。 通过外部
+的 FPGA 进行转换，支持多屏显示。
+原理设计和布局走线时注意以下几点：</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0343.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">1，EMI filter / Common mode Choke for MIPI IF cap loading need to
+under 2pF。
+建议 MIPI DSI Total length &lt; 6inch.
+模块上长度：DSI0=1550mil
+模块上长度：DSI1=1790mil
+3，The characteristic impedance of MIPI DSI differential pair must be
+implemented in 100-ohm/differential.
+4，MIPI DSI differential pair needs well ground shielding and try to
+minimize via number in PCB design.
+5，MIPI DSI differential pair if could not GND Shielding，Pair-to-Pair data
+spacing need reserve 3W trace width ； Clock pair needs well GND
+shielding.
+6，The pair-to-pair trace difference in length of MIPI DSI differential
+pairs in the main board must be controlled within 100mil.
+7，The differential signal (P/N) difference in length of DSI differential
+signal in the main board must be controlled within 25 mil.
+5.10 DP 接口
+MT8676 核心板支持 1 路 DP1.4 2lane, 能拓展到 4lane(shared</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0343.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">with USB3.1)，每 lane 最大速率 8.1Gbps，最大可以支持 8K 分辩率屏
+原理设计和布局走线注意点跟 USB3.1 的要求一样，请参考 USB3.1 的
+设计要求。另外 DP 总长度 Total length &lt; 4inch，模块上长度：
+DP=1812mil，差分阻抗要求 90-ohm。
+Layout notice：
+-Place the DC blocking capacitors for DP main link close to DP pin out
+orDP connector/DP&amp;USB mux.
+-Place the DC blocking capacitors for DP AUXP/DP AUXN close to DP
+pinout or DP connector/DP&amp;USB mux.
+-Place DP&amp;USB mux near the USB Type-C connecter. Follow
+vendor'slayout rules.
+-Diferential 90-ohm characteristic impedance of differential pair must
+beimplemented. The differential pair should be surrounded by the
+ground plane.
+SSUB TXP P1/SUSB TXN P1/SSUSB TXP P2SSUSB TXN P2/SSUSB RXP P1/SSUSB
+RXNP1/SUB RXP P2/SSUSB RXN P2,DP AUXP/DP AUXN
+-The total length of DP main link from DP host to DP connector/bridge lC
+should be shorter than 4,000 mil.
+SSUB TXP P1/SSUSB TXN P1SSUSB TXP P2/SSUSB TXN P2/SSUSB RXP P1/SSUSB
+RXNP1/SSUSB RXP P2/SSUSB RXN P2DP AUXP/DP AUXN
+-Keep the length tolerance 5 mil for intra-pair, and 30 mil for inter-pairs.
+SSUSB TXP P1/SSUSB TXN P1/SSUSB TXP P2/SSUSB TXN P2/SSUSB RXP P1/SSUSB
+RXNP1/SSUSB RXP P2/SSUSB RXN P2
+-Keep the DP AUXP/DP AUXN length tolerance 20 mil for intra-pair.</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0343.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">-To maintain a continuous impedance, it is recommended
+reservingkeep-out areas for via pairs when PCB traces change layers. It is
+suggested using less than 2 vias per layer change.
+SSUSB TXP P1/SSUSB TXN P1SSUSB TXP P2SSUSB TXN P2SSUSB RXP P1/SSUSB
+RXNP1/SSUSB RXP P2/SSUSB RXN P2,DP AUXP/DP AUXN
+To ensure continuous impedance, it is recommended reserving
+keep-outareas on at least the first inner layer of the meta beneath serial
+components.
+SSUB TXP P1/SSUSB _TXN P1/SSUSB TXP P2/SSUSB TXN P2/SSUSB RXP P1SSUSB
+RXNP1SSUSB RXP P2/SSUSB RXN P2,DP AUXP/DP AUXN
+Avoid test points and stubs.
+5.11 PCIE 接口
+MT8676 核心板支持 1 路 PCIE Gen3，1lane，使用时注意差分对串接
+100nf/220nf 电容，通过 MIC/PHY 芯片可以转换成车载以太网
+1000Base-T1 接口。
+PCIE_PERSTN(pin369)/PCIE_WAKE(pin360)/CLKREQN(pin358)口电压是
+1.8V，若连接到 3.3V 的设备上，注意要添加电平转换电路。
+PCIE 原理设计和布局走线时注意以下几点：</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0343.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">1，串接的电容建议靠近 TX 端摆放,差分时钟需要 50 欧姆下拉的匹
+配 电阻；
+2，差分阻抗控制在 85-ohm；
+3，差分对内(P/N)走线间距建议小于 5mil，差分对走线符合 3W 规则，
+均需要包地打孔，差分对间(lane-lane)的线长差距建议小于 10mil，整
+体的总线长度 Total length 控制在 5inch 以内(含底板/FPC)；
+模块上长度：PCIE0=1165mil
+PCle Port0 layout for Short Reach Setting (Default SW Setting):
+-Total trace = PCB trace. Follow the rules listed below.
+-Differential pairs are wel-shielded by GND and GND via (adjacent and
+up/down layers).
+-Route the differential pair straight and symmetrically on the same layer.
+The RC total loss should be better than -8 dB@8 GHz for PCle Gen4
+(including main board and connector).
+-The bal-to-ball total loss should be better than -13 dB@8 GHz for
+PCleGen4 (RC chip to EP chip).
+Note: The total length depends on the insertion loss of PCB material.
+</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0343.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">5.12，开机键(PWRKEY)与复位键(RST)
+MT8676 核心板开机键和复位键通过连接底板实现。
+开机有两种方式：1，PWRKEY 为系统开机键，底板无需接上拉，低
+有效，保持 3S 时间。2，模块的第 505 PIN（VUSB_5V_IN）为持续高
+电平 5V。需要底板开机时序如下：
+VBAT
+POWER_KEY
+拉低 3-5S，建议 3S
+SYSRSTB 为系统复位键(第 312PIN)，低有效(要求时间大于 512ms)。
+当 MCU 检测到模块死机，复位 SOC 系统。
+KPCOL0(GPIO32,第 58PIN)在设计时注意,为加快开机速度，请加 4.7K
+上拉到 vio18_pmu。同时预留 MCU 控制或拨动开关，当此脚为 0 时，</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0343.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">模块进入强制下载模式。
+AP GOOD 为 SOC 状态检测脚，当 BOOTROM 正常跳转到 pre-loader
+或下载代理执行（即软件可以接管），BOOTROM 在跳转之前使
+AP_GOOD 为高，证明 AP 状态 OK，SOC 状态正常。
+AP GOOD is defined as &quot;when BOOTROM can normally iump
+intopre-loader or download the agent execution (i.e., software can
+takeover), BOOTROM makes AP GOOD high before jumping.
+5.13 无线接口
+MT8676 核心板包含了 5G 天线，GPS 天线，BT/WIFI Ipex 的底部焊盘
+接口，天线接口都靠近板边，方便客户出线连接及调试。客户的底板
+在 FARK 座子处需要预留 TVS 管的位置，ESD 器件的结电容 Cj 要求
+小于 0.3PF。
+5G，GPS 天线，BT/WIFI 天线布局时注意远离干扰源，如电源，高速
+信号，晶体等，阻抗要求均为 50-ohm。</pre></section><section class="source-page" id="page-18"><h2>PDF物理页 18</h2><a href="materials/SRC0343.pdf#page=18" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">各个天线口建议底板预留天线检测电路，避免做天线相关应用时 有
+天线失效的情况.
+5.14 其它注意事项
+1，MT8676 中所有 SPI，I2C，UART，I2S，GPIO，EINT，TDM 口电压
+域都是 1.8v，请注意电压匹配。
+2，模块的 USB 要工作时（包括下载，ADB 调试，校准），底板要给
+模块的第 505 PIN（VBUS）供电 5V。</pre></section><section class="source-page" id="page-19"><h2>PDF物理页 19</h2><a href="materials/SRC0343.pdf#page=19" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">3，模块工作要求电压（3.4--4.6V），推荐用 4V，由底板提供，务必
+选用重载和轻载效率都高（90—93%），电流大于 10A 的 BUCK。底
+板留 TVS 器件和稳压管,做好 ESD/EOS 等防护。
+4，模块板上自带 G-SENSOR，当底板要求 G-SENSOR 功能时，Interrupt
+pin of MEMS sensor must be assign to EINT[0:12] 。SENSOR 推荐型号：
+BMI323/ICM-42607/SMI230，供电 VDD=2.8V，IOVDD=1.8V，如果用 I2C
+通讯口的 SENSOR，建议使用 SCP_I2C0/3 这两路的其中一路，以提
+高 设备休眠状态下响应速度。
+5，下载情况说明：
+1），单独模块下载掌锐公司有专用的下载和校准夹具
+2），模块贴在底板上需要下载时：VBAT=4V, VUSB_5V_IN=5V，同时，
+USB_ID 为高，DP/DM 需连上，客户可针对自已底板设计夹具。
+3），整机下载时，USB_ID 脚做开关控制高或（或手动控制，或通过
+MCU 控制），同时建议 KPCOL0(GPIO32，第 58PIN)预留开关（或手动
+控制，或通过 MCU 控制，当此为脚为 0 时，模块进入强制下载模式)。
+如果是通过 MCU 控制方式，客户可通过特定的组合键方向通知 MCU
+要进行相应的下载控制（比如同时按两个方控键大于某个时间）。
+4）为避免后续我们烧录客户软件时出现不同的 STR 休眠唤醒 脚，
+导致工装治具无法烧录或失效，影响生产效率，我们同步兼容了 各
+个 STR/休眠唤醒脚，请大家只在下面几个 GPIO 口选择做为 SOC 的</pre></section><section class="source-page" id="page-20"><h2>PDF物理页 20</h2><a href="materials/SRC0343.pdf#page=20" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">休眠唤醒脚，通常是指 SOC 被唤醒的 PIN 脚，如 MCU 通知 SOC
+唤醒 脚等，默认状态也建议如下：
+96 PIN EINT6_ACC 低有效唤醒
+73 PIN GPIO98 高有效唤醒
+83 PIN GPIO94 高有效唤醒
+100 PIN GPIO65 高有效唤醒
+82 PIN GPI0111 高有效唤醒
+67 PIN GPIO97 低有效唤醒
+6，J-TAG ----MT8676 平台的 J-TAG 调试时默认 SCP_VREQ_VAO 为 L，
+为 AP JTAG；也预留了 12K 电阻（R1306）接到高电平，同时会用到如
+下接口资源。客户有调试需求的需要在底板上增加测试点。
+JTMS----GPIO211----核心板 90 PIN
+JTCK-----GPIO210----核心板 91PIN</pre></section><section class="source-page" id="page-21"><h2>PDF物理页 21</h2><a href="materials/SRC0343.pdf#page=21" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">JTDI------GPIO212----核心板 85PIN
+JTDO-----GPIO213----核心板 97 PIN
+JTRSTN—GPIO209---核心板 84PIN
+7，专用口及 Boot trapping 口使用说明：
+外接 AUDIO CODEC 的专用脚为 191，318，319，324，325，327，
+328，329，330，331，337，338 PIN，若没用到 AUDIO CODEC 芯片时，
+专用脚建议都悬空 NC，特别是 PIN328 和 PIN329，在核心板内部是有
+Boot trapping 配置的，非必要尽量优先选择其他 IO 口替代，也不要
+做上下拉配置。
+</pre></section><section class="source-page" id="page-22"><h2>PDF物理页 22</h2><a href="materials/SRC0343.pdf#page=22" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">345 PIN 脚 EINT10_CTP1 为 ramdump/full dump 专用功能口，系统
+变砖 后 debug。建议连接测试点或按键，低有效，建议默认上拉。
+若一直 被拉低会一直进入 aee 模式，系统会一直重启。
+PIN219 在核心板内部是有 Boot trapping 配置的，除了做 I2S 功能，
+非 必要尽量优先选择其他 IO 口替代，也不要做上下拉配置。
+8，P39 核心板整体功耗大热量高，最大能达 20~25W 左右（取决于
+loading），所以在底板设计时请充分考虑使用风冷或水冷等散热快的
+方式，避免热保护影响性能，寿命或损坏芯片，必要时可安排热仿真
+等，详细功耗信息请参考《P39 平台 IC 热仿真数据》表格。</pre></section><section class="source-page" id="page-23"><h2>PDF物理页 23</h2><a href="materials/SRC0343.pdf#page=23" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">六，模块尺寸图：
+59.5*59.5*5.4MM
+七，修改说明：
+初版发布</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a><a href="#page-18">PDF物理页 18</a><a href="#page-19">PDF物理页 19</a><a href="#page-20">PDF物理页 20</a><a href="#page-21">PDF物理页 21</a><a href="#page-22">PDF物理页 22</a><a href="#page-23">PDF物理页 23</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

@@ -1,0 +1,9 @@
+flowchart TB
+  A[create producer/consumer] --> B[connect + create Layer]
+  B --> C[dequeue/queue/acquire/release loops]
+  C --> D[stop new work]
+  D --> E[drain or cancel outstanding buffers]
+  E --> F[disconnect producer/consumer]
+  F --> G[remove Layer + apply transaction]
+  G --> H[close/release wrappers and callbacks]
+  H --> I[verify create count − release count returns to baseline]

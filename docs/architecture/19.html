@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>Camera跨域架构与DDR资源预算 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details open><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a aria-current="page" href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 19</div><div class="chapter-title"><p class="eyebrow">CHAPTER 19 · 中文版全文</p><h1>Camera跨域架构与DDR资源预算</h1><div class="actions"><button class="button" data-read="19" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>Camera 带宽预算为什么要写清假设？</h2><p>像素量、像素格式、帧率决定单次搬运的名义字节率；实际 DDR 流量还受读写次数、缩放、拷贝和并发影响。单链计算不是整机可用带宽承诺。</p><ol><li><strong>怎么读：</strong>先看跨域角色，再看双路合成帧与四方向拆分，最后对照 DDR 算式、PQDIP 分配冲突和标定。</li><li><strong>项目练习：</strong>用宽×高×字节每像素×帧率复算一条流，再增加一次读和一次写，标明 MB/s 的十进制口径。</li><li><strong>自检：</strong>为什么 3+3 与 2+4 的资料冲突必须保留而不能任选其一？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-21">Day 21</a> <a href="../index.html#day-28">Day 28</a> <a href="../index.html#day-29">Day 29</a> <a href="../index.html#day-30">Day 30</a> <a href="../index.html#day-31">Day 31</a> <a href="../index.html#day-32">Day 32</a> <a href="../index.html#day-33">Day 33</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#19-camera-跨域架构与-ddr-资源预算">19 Camera 跨域架构与 DDR 资源预算</a><a class="depth-2" href="#191-三个视图不能合并成一条未经验证的箭头">19.1 三个视图不能合并成一条未经验证的箭头</a><a class="depth-2" href="#192-mt8668-已有原始手册支持的跨域链">19.2 MT8668 已有原始手册支持的跨域链</a><a class="depth-2" href="#193-本项目-composite-输入基线">19.3 本项目 Composite 输入基线</a><a class="depth-2" href="#194-五种资源量的计算口径">19.4 五种资源量的计算口径</a><a class="depth-2" href="#195-可复核数值">19.5 可复核数值</a><a class="depth-2" href="#196-ddr-场景拆账">19.6 DDR 场景拆账</a><a class="depth-2" href="#197-本次发现并纠正的实例分配冲突">19.7 本次发现并纠正的实例分配冲突</a><a class="depth-2" href="#198-诊断入口与验收">19.8 诊断入口与验收</a><a class="depth-2" href="#199-最新-day-33标定有效性与恢复">19.9 最新 Day 33：标定有效性与恢复</a></details><article id="chapter-text"><h1 id="19-camera-跨域架构与-ddr-资源预算">19 Camera 跨域架构与 DDR 资源预算</h1>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>Camera跨域架构与DDR资源预算 · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details open><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a aria-current="page" href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 19</div><div class="chapter-title"><p class="eyebrow">CHAPTER 19 · 中文版全文</p><h1>Camera跨域架构与DDR资源预算</h1><div class="actions"><button class="button" data-read="19" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>Camera 带宽预算为什么要写清假设？</h2><p>像素量、像素格式、帧率决定单次搬运的名义字节率；实际 DDR 流量还受读写次数、缩放、拷贝和并发影响。单链计算不是整机可用带宽承诺。</p><ol><li><strong>怎么读：</strong>先看跨域角色，再看双路合成帧与四方向拆分，最后对照 DDR 算式、PQDIP 分配冲突和标定。</li><li><strong>项目练习：</strong>用宽×高×字节每像素×帧率复算一条流，再增加一次读和一次写，标明 MB/s 的十进制口径。</li><li><strong>自检：</strong>为什么 3+3 与 2+4 的资料冲突必须保留而不能任选其一？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-21">Day 21</a> <a href="../index.html#day-28">Day 28</a> <a href="../index.html#day-29">Day 29</a> <a href="../index.html#day-30">Day 30</a> <a href="../index.html#day-31">Day 31</a> <a href="../index.html#day-32">Day 32</a> <a href="../index.html#day-33">Day 33</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#19-camera-跨域架构与-ddr-资源预算">19 Camera 跨域架构与 DDR 资源预算</a><a class="depth-2" href="#191-三个视图不能合并成一条未经验证的箭头">19.1 三个视图不能合并成一条未经验证的箭头</a><a class="depth-2" href="#192-mt8668-已有原始手册支持的跨域链">19.2 MT8668 已有原始手册支持的跨域链</a><a class="depth-2" href="#193-本项目-composite-输入基线">19.3 本项目 Composite 输入基线</a><a class="depth-2" href="#194-五种资源量的计算口径">19.4 五种资源量的计算口径</a><a class="depth-2" href="#195-可复核数值">19.5 可复核数值</a><a class="depth-2" href="#196-ddr-场景拆账">19.6 DDR 场景拆账</a><a class="depth-2" href="#197-本次发现并纠正的实例分配冲突">19.7 本次发现并纠正的实例分配冲突</a><a class="depth-2" href="#198-诊断入口与验收">19.8 诊断入口与验收</a><a class="depth-2" href="#199-最新-day-33标定有效性与恢复">19.9 最新 Day 33：标定有效性与恢复</a></details><article id="chapter-text"><h1 id="19-camera-跨域架构与-ddr-资源预算">19 Camera 跨域架构与 DDR 资源预算</h1>
 <blockquote>
 <p>平台机制分别引用 MT8676/MT8668 原始手册；3840×1536 是本地 Camera 项目总结的输入基线，不能推广成芯片固定规格。计算采用十进制 MB/GB，明确区分理论负载与实测结果。</p>
 </blockquote>
@@ -14,23 +14,23 @@
 <tbody><tr>
 <td>物理采集</td>
 <td>Camera、SerDes、CSI 接在哪，VC/DT/lane 如何分配</td>
-<td>本地物理拓扑图及项目总结 <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S290 · camera-physical-topology-confirmed.jpg<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md<small>〔本地来源〕</small></span></td>
+<td>本地物理拓扑图及项目总结 <a href="source-SRC0049.html">S290 · camera-physical-topology-confirmed.jpg</a> <a href="source-SRC0004.html">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md</a></td>
 </tr>
 <tr>
 <td>软件与跨域</td>
 <td>谁拥有硬件，Request/Result 由谁传，谁管理会话</td>
-<td>MT8668 Camera 手册 <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页<small>〔本地来源〕</small></span>，MT8676 <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S145 · MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF第4-8页<small>〔本地来源〕</small></span></td>
+<td>MT8668 Camera 手册 <a href="source-SRC0002.html#page-6">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页</a>，MT8676 <a href="source-SRC0006.html#page-4">S145 · MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF第4-8页</a></td>
 </tr>
 <tr>
 <td>资源与呈现</td>
 <td>P1/P2/MML 读写多少，buffer 谁持有，哪一帧到屏</td>
-<td>项目预算 <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md<small>〔本地来源〕</small></span>、Display/Proxy-Wayland <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S021 · MT8668_Hypervisor_Display_User_Manual_CN_V1.0.pdf · PDF第5-7页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S028 · MT8668_Hypervisor_Multi_Display_Proxy-Wayland_User_Manual_CN_V1.0.pdf · PDF第5-7页<small>〔本地来源〕</small></span>；站点 Day 29/32 方法</td>
+<td>项目预算 <a href="source-SRC0004.html">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md</a>、Display/Proxy-Wayland <a href="source-SRC0011.html#page-5">S021 · MT8668_Hypervisor_Display_User_Manual_CN_V1.0.pdf · PDF第5-7页</a> <a href="source-SRC0012.html#page-5">S028 · MT8668_Hypervisor_Multi_Display_Proxy-Wayland_User_Manual_CN_V1.0.pdf · PDF第5-7页</a>；站点 Day 29/32 方法</td>
 </tr>
 </tbody></table>
 <p>本地两份 Camera 总结是项目二次资料。其“最终/已确认”措辞不替代原理图签核、会议信息和板端测量。本版沿用其中明确的场景参数，同时保留假设和内部冲突。</p>
 <h2 id="192-mt8668-已有原始手册支持的跨域链">19.2 MT8668 已有原始手册支持的跨域链</h2>
-<p>Android 的 APK→Java Framework→cameraserver→camerahalserver，其中 Guest camerahalserver 经 RpcBinder + VSOCK 将 Request 交给 Yocto Host。Host 管理 Camera HW、Driver 和软件控制，填写图像 buffer 后返回 Result。Host LocalService 服务 Yocto 本地 Gst/FastRvc，RpcService 服务 Android 远端；CameraTurboEngine 组织管线。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页<small>〔本地来源〕</small></span></p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<p>Android 的 APK→Java Framework→cameraserver→camerahalserver，其中 Guest camerahalserver 经 RpcBinder + VSOCK 将 Request 交给 Yocto Host。Host 管理 Camera HW、Driver 和软件控制，填写图像 buffer 后返回 Result。Host LocalService 服务 Yocto 本地 Gst/FastRvc，RpcService 服务 Android 远端；CameraTurboEngine 组织管线。<a href="source-SRC0002.html#page-6">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页</a></p>
+<figure class="mermaid-figure" id="chinese-19-figure-1"><figcaption>Camera跨域架构与DDR资源预算 · 图 1 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-19-figure-1"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-19-figure-1.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Camera跨域架构与DDR资源预算 · 图 1，可使用方向键滚动"><pre class="mermaid">flowchart TB
   A[&quot;Android App / cameraserver&quot;] --&gt; G[&quot;Guest camerahalserver&quot;]
   G &lt;--&gt;|&quot;Request / Result：RpcBinder + VSOCK&quot;| H[&quot;Yocto Host camerahalserver&quot;]
   Y[&quot;Yocto Gst / FastRvc&quot;] &lt;--&gt;|&quot;Local Binder&quot;| H
@@ -38,7 +38,7 @@
   T --&gt; D[&quot;Camera Driver / P1 / P2&quot;]
   C[&quot;Sensor / SerDes / CSI&quot;] --&gt; D
   D --&gt; B[&quot;图像 Buffer&quot;]
-  B --&gt; O[&quot;AVM / DVR / 显示或编码消费者&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  B --&gt; O[&quot;AVM / DVR / 显示或编码消费者&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TB
   A[&quot;Android App / cameraserver&quot;] --&gt; G[&quot;Guest camerahalserver&quot;]
   G &lt;--&gt;|&quot;Request / Result：RpcBinder + VSOCK&quot;| H[&quot;Yocto Host camerahalserver&quot;]
   Y[&quot;Yocto Gst / FastRvc&quot;] &lt;--&gt;|&quot;Local Binder&quot;| H
@@ -46,10 +46,10 @@
   T --&gt; D[&quot;Camera Driver / P1 / P2&quot;]
   C[&quot;Sensor / SerDes / CSI&quot;] --&gt; D
   D --&gt; B[&quot;图像 Buffer&quot;]
-  B --&gt; O[&quot;AVM / DVR / 显示或编码消费者&quot;]</code></pre></details></details><p>这是职责摘要，不把控制调用视为像素经过 CPU 的逐级搬运。RPC 可达、Result 返回、buffer 写完、fence 可消费和物理屏可见是不同完成点。“共享 buffer / 零拷贝”是需要配置与生命周期证据支持的资源方案；仅凭跨域机制名称不能断言整条链零拷贝。</p>
-<p>MT8676 V1.1 已明确 Host/Guest 各有 camerahalserver，Host 先启动，底层 MW/sensor/driver 在 Yocto。不要把这条依赖关系误写成 MT8676 所有子系统都必须串行启动；也不要把 MT8668 的 RpcBinder 实现反向认定为全部 8676 分支实现。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S145 · MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF第8页<small>〔本地来源〕</small></span></p>
+  B --&gt; O[&quot;AVM / DVR / 显示或编码消费者&quot;]</code></pre></details></details></figure><p>这是职责摘要，不把控制调用视为像素经过 CPU 的逐级搬运。RPC 可达、Result 返回、buffer 写完、fence 可消费和物理屏可见是不同完成点。“共享 buffer / 零拷贝”是需要配置与生命周期证据支持的资源方案；仅凭跨域机制名称不能断言整条链零拷贝。</p>
+<p>MT8676 V1.1 已明确 Host/Guest 各有 camerahalserver，Host 先启动，底层 MW/sensor/driver 在 Yocto。不要把这条依赖关系误写成 MT8676 所有子系统都必须串行启动；也不要把 MT8668 的 RpcBinder 实现反向认定为全部 8676 分支实现。<a href="source-SRC0006.html#page-8">S145 · MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF第8页</a></p>
 <h2 id="193-本项目-composite-输入基线">19.3 本项目 Composite 输入基线</h2>
-<p>本地项目材料描述：四方向相机→域控 MAX96712→两颗 MAX96717，分别形成前+右、后+左 GMSL2 组合流，下游 MAX96712/CSI 接收。每个方向 1920×1536，每个横向组合帧 3840×1536。图纸中的域控本地旁路和下游接收域名称应以原理图为准。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S290 · camera-physical-topology-confirmed.jpg<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S297 · MT8668最终Camera架构与DDR解读.md<small>〔本地来源〕</small></span></p>
+<p>本地项目材料描述：四方向相机→域控 MAX96712→两颗 MAX96717，分别形成前+右、后+左 GMSL2 组合流，下游 MAX96712/CSI 接收。每个方向 1920×1536，每个横向组合帧 3840×1536。图纸中的域控本地旁路和下游接收域名称应以原理图为准。<a href="source-SRC0049.html">S290 · camera-physical-topology-confirmed.jpg</a> <a href="source-SRC0004.html">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md</a> <a href="source-SRC0005.html">S297 · MT8668最终Camera架构与DDR解读.md</a></p>
 <p>逻辑 ROI 在“无额外边界像素，名称顺序等于内存顺序”的假设下为：</p>
 <table>
 <thead>
@@ -112,7 +112,7 @@
 <td>不由“相机路数”单独决定</td>
 </tr>
 </tbody></table>
-<p>UYVY/YUYV packed YUV422 的本次场景按 2 byte/pixel，无 padding。实际计算优先使用驱动/HAL 返回的 <code>sizeimage</code>；多 plane 格式应累加各 plane 的实际大小。以下计算已用独立算式复核。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md<small>〔本地来源〕</small></span></p>
+<p>UYVY/YUYV packed YUV422 的本次场景按 2 byte/pixel，无 padding。实际计算优先使用驱动/HAL 返回的 <code>sizeimage</code>；多 plane 格式应累加各 plane 的实际大小。以下计算已用独立算式复核。<a href="source-SRC0004.html">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md</a></p>
 <h2 id="195-可复核数值">19.5 可复核数值</h2>
 <p>设单方向一次 DDR 读或写为 S，两路 Composite 一次读或写为 P=4S。</p>
 <table>
@@ -198,8 +198,8 @@
 <p>共享输出相对 7 物理输出减少 3S 写流量，25 fps 为 442.368 MB/s。<strong>共享 buffer 不代表消费者的读取也消失</strong>。若 P2 为不同输出重复读取输入，需增加实际读放大；若发生格式转换、CPU memcpy、编码参考帧访问、AVM 拼接、GPU 合成、扫描输出或缓存回写，也要追加对应流量。</p>
 <p>这些值是所列路径的理想 payload 预算，不是整机 DDR 上限，也不是已经确认的 DDR 实测下界。Composite 是否先落 DDR、各硬件是否读一次、输出物理 buffer 是否去重，均会改变模型。</p>
 <h2 id="197-本次发现并纠正的实例分配冲突">19.7 本次发现并纠正的实例分配冲突</h2>
-<p>一份 Camera 总结图把 PQDIP0 画成右视 AVM/DVR 两路，PQDIP1 画成后/左 AVM/DVR 四路；同组正文和另一份计算采用每实例三路。按同样分辨率和 25 fps，四路实例需 294.912 Mpixel/s，已经超过“250”假设；这与 3+3 的 221.184 结论不同。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S297 · MT8668最终Camera架构与DDR解读.md<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md<small>〔本地来源〕</small></span></p>
-<p>因此本版不把任一图当作已冻结调度。建议在评审中提交：<code>stream→HW instance→输入buffer→ROI→输出buffer→fps→消费者</code> 的真实配置表。MML 也不能因为 Display 文档写有两套硬件，就推导 Camera 可独占两套：必须核对与显示的共享和仲裁。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S021 · MT8668_Hypervisor_Display_User_Manual_CN_V1.0.pdf · PDF第6-7页<small>〔本地来源〕</small></span></p>
+<p>一份 Camera 总结图把 PQDIP0 画成右视 AVM/DVR 两路，PQDIP1 画成后/左 AVM/DVR 四路；同组正文和另一份计算采用每实例三路。按同样分辨率和 25 fps，四路实例需 294.912 Mpixel/s，已经超过“250”假设；这与 3+3 的 221.184 结论不同。<a href="source-SRC0005.html">S297 · MT8668最终Camera架构与DDR解读.md</a> <a href="source-SRC0004.html">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md</a></p>
+<p>因此本版不把任一图当作已冻结调度。建议在评审中提交：<code>stream→HW instance→输入buffer→ROI→输出buffer→fps→消费者</code> 的真实配置表。MML 也不能因为 Display 文档写有两套硬件，就推导 Camera 可独占两套：必须核对与显示的共享和仲裁。<a href="source-SRC0011.html#page-6">S021 · MT8668_Hypervisor_Display_User_Manual_CN_V1.0.pdf · PDF第6-7页</a></p>
 <h2 id="198-诊断入口与验收">19.8 诊断入口与验收</h2>
 <table>
 <thead>
@@ -236,4 +236,274 @@
 <h2 id="199-最新-day-33标定有效性与恢复">19.9 最新 Day 33：标定有效性与恢复</h2>
 <p>最新 [Day 33](http[本地资料库路径] 把标定配置作为与图像采集并行的解释维度：相机内参/畸变、车体外参、四路投影/拼接与光度一致性分别有质量证据。帧已到达和物理可见不保证几何正确，低重投影误差也不单独证明实车距离准确。</p>
 <p>保持现有 Camera/PQDIP/MML 架构不变，评审时补一张配置绑定表：相机身份、安装位置、算法/映射版本、标定文件哈希、当前激活集合、兼容性检查与恢复代际。维修更换、OTA、文件损坏、单摄断开恢复后，分别验证当前集合有效、画面新鲜/正确、降级提示与几何质量。CalGen/manifest 是教学示例，本地资料尚未确认对应量产字段、阈值或独立服务。</p>
-</article><nav class="pager"><a href="13.html">← 上一步：通信模块业务流程</a><a href="17.html">下一步：MT8676与MT8668平台差异及迁移边界 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#19-camera-跨域架构与-ddr-资源预算">19 Camera 跨域架构与 DDR 资源预算</a><a class="depth-2" href="#191-三个视图不能合并成一条未经验证的箭头">19.1 三个视图不能合并成一条未经验证的箭头</a><a class="depth-2" href="#192-mt8668-已有原始手册支持的跨域链">19.2 MT8668 已有原始手册支持的跨域链</a><a class="depth-2" href="#193-本项目-composite-输入基线">19.3 本项目 Composite 输入基线</a><a class="depth-2" href="#194-五种资源量的计算口径">19.4 五种资源量的计算口径</a><a class="depth-2" href="#195-可复核数值">19.5 可复核数值</a><a class="depth-2" href="#196-ddr-场景拆账">19.6 DDR 场景拆账</a><a class="depth-2" href="#197-本次发现并纠正的实例分配冲突">19.7 本次发现并纠正的实例分配冲突</a><a class="depth-2" href="#198-诊断入口与验收">19.8 诊断入口与验收</a><a class="depth-2" href="#199-最新-day-33标定有效性与恢复">19.9 最新 Day 33：标定有效性与恢复</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>
+</article><section class="evidence-excerpts" id="evidence-excerpts"><h2>本章引用的材料内容</h2><p>下面直接展示引用页的文字开头，可展开核对。打开材料页可看全部物理页及完整 PDF，图表和版式以 PDF 为准。提取原文不代表已经逐页验证其适用于当前项目。</p><details><summary>MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF 第 6 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+Confidential B 
+MT8668 Hypervisor Camera  
+User Manual 
+1.2 架构 
+ 
+图 1-1. Camera 虚拟化架构 
+ 
+目前， MT8668 使用 Yocto + Andriod 的双系统组合，Yocto OS 作为 Host，Android OS 作为 Guest。 
+相应地，Yocto 端 Camera 作为 Host， 所有 Camera 相关的硬件，以及对应的 driver 和 SW 逻辑控制都放在 Yocto
+端；Android 端 Camera 作为 Guest，从 Yocto 端获取相关的图像数据。两者之间是基于 RpcBinder + Vsock 的方式来
+实现跨域通信，Android 端 Camera 跨域将 Request 发送给 Yocto 端，Yocto 端接收到 Request 后，经过处理后，将
+图像数据填充到 buffer 中，并将相关 Result 再跨域回传给 Android 端。 
+1.2.1 Android 端 Camera  
+Android 端 Camera 架构如图 1-1 左边所示。从上往下的层次分布依次是 APK、Java Framework、Cameraserver、
+Camerahalserver。除 Camerahalserver 外，其余 Layer 的实现与单 Android OS 无差别。 
+Camerahalserver 又大致分为 3 层： 
+ 
+1. AIDL Adaptor Layer 
+主要负责与 Cameraserver 进行 binder 交互 
+2. Android Adaptor Layer 
+主要负责处理与 Android 强相关的逻辑控制 
+3. Camera Feature Layer 
+底层 Camera 对外提供的功能接口 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0002.html#page-6">阅读整页及原图 →</a></details><details><summary>MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF 第 4 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8676 Hypervisor Camera 
+User Manual 
+Confidential B 
+1 Hypervisor Camera 
+1.1 概述 
+ 
+图 1-1.架构概述 
+Camera Turbo 主要分为三个部分： 
+• 入口层（Entry）：是进入 MW 的入口。不同的操作系统可以通过调用入口层的代码通过适配层适配  MW。 
+• 定制层（Custom）：通过这一层，客户可以执行定制操作。 
+• 接口层（IF）：由入口层使用的接口层。在这里生成相机会话和原生相机的逻辑。接口层主要实现请求和配
+置相关操作的流程框架。 
+• 核心层（Core）：是 MW 的核心层。它主要与驱动程序通信，发送请求并获取结果，最后通过接口层回调到  
+APP。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0006.html#page-4">阅读整页及原图 →</a></details><details><summary>MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF 第 8 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 Hypervisor Camera 
+User Manual 
+Confidential B 
+1.3 Camera Virtualization  
+ 架构 
+ 
+图 1-5. Camera Virtualization 架构 
+ 
+Hypervisor 系统 guest (Android) + host (Yocto) 同时在跑，对 guest 和 host 系统的操作也是单独进行。Android 端有一
+个 guest camerahalserver 进程，Yocto 端有一个 host camerahalserver 进程。APP 在 Android 端，camera 底层在 Yocto
+端 (mw/sensor/driver)，Android 端的 camerahalserver 以 guest 角色从 Yocto 端 camerahalserver 拿图。Yocto 端的
+camerahalserver 要先跑起来，Android 的 camera APP 才能打开。当需要重启 camerahalserver 时，也是 Yocto 先重
+启，然后再杀掉 Android 的 camerahalserver。 
+ 
+1.4 Debug Share  
+ Log 
+camerahalserver:  [3457][TINY_NATIVECAMERAMANAGER] open cam::0 + 
+camerahalserver:  [3457][RpcCamera] [RpcCamera] Cam::0, userId 0, logEn 0, ctor 
+camerahalserver:  [3995][TINY_NATIVECAMERA] [operator()] Power On Sensor Success 
+camerahalserver:  [3457][RpcCamera] [configure] Cam::0, userId 0 + 
+camerahalserver:  [3457][TINY_CAMERA] [configure] cam[0] user[0] configure + 
+camerahalserver:  [3457][TINY_IMAGEPROC] [addMultiCallback] [captureProc] add 
+callback:0x7f6002b350 for user:0 
+camerahalserver:  [4061][TINY_NATIVECAMERA] [0][operator()] [user::0]current pipeline 
+active ... 
+camerahalserver:  [4061][TINY_PIPELINE] ppl::0, active, root 0x7f60021fd0 + 
+camerahalserver:  [3457][TinyMW/TinyPolicy] [TinyMW/TinyPolicy::initialize] + 
+camerahalserver:  [3457][TinyMW/TinyPolicy] [TinyMW/TinyPolicy::initialize] - 
+camerahalserver:  [3457][TINY_PIPELINE] ppl::0, init + 
+Camera Feature Layer
+ CameraProvider
+ Camera
+CameraTurboEngine
+Camera Driver
+Camera HW
+Binder Interface
+ RpcCameraProvider
+ RpcCamera
+Camerahalserver
+Binder 
+Driver
+Gstreamer Framework
+mtkcamsrc
+Camera Feature Layer
+ CameraProvider
+ Camera
+Android Adaptor Layer
+Camera HIDL Interface
+Camerahalserver
+Camera Native Framework
+Camera Java Framework
+Camera APP
+VSOCK
+ VSOCK
+Cameraserver
+Android Yocto
+Userspace
+Kernel Android Request/Result
+Yocto Request/Result
+Merged Request/Result
+mtkmdp
+ h264enc
+ mp4mux
+ filesink
+h264parse
+mtkmdp
+ Dms algo
+ waylandsink
+APP
+MediaTek Confidential
+ 
+……本页余下内容见完整材料页。</pre><a href="source-SRC0006.html#page-8">阅读整页及原图 →</a></details><details><summary>MT8668_Hypervisor_Display_User_Manual_CN_V1.0.pdf · PDF 第 5 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8668 Hypervisor Display 
+User Manual 
+Confidential B 
+1 硬件架构 
+ 名词解释 
+缩略词 全称及释义 
+CMDQ Command Queue (the Software Driver of GCE) 命令队列（GCE 的软件驱动程序） 
+Disp Display 显示 
+DSC Display Stream Compression 显示流压缩 
+DSI Display Serial Interface 显示串行接口 
+GCE the Hardware of General Command Engine 通用命令引擎的硬件 
+MM Multimedia 多媒体 
+MML Hardware of Multimedia Layer 多媒体层的硬件 
+OVL 
+Overlay, means the Hardware includes the ReadDMA and blender 叠加，指包含读取 DMA 和混合器的硬
+件 
+PQ Picture Quality (enhancement) 图像质量（增强） 
+Resize Scaler-Up or Scaler-Down 缩放放大或缩小 
+TTC Telltale Check 标识检查 
+WDMA Hardware of Write Direct Memory Access 可写内存的硬件 
+WROT Hardware of Write to DRAM and Rotate 可将画面旋转并写入内存的硬件 
+ 
+ 硬件架构总览 
+MT8668 的 Display 硬件架构可分为两大部分——MML_SubSystem 和 Display_SubSystem，后文中将简称为 MML 和
+DISP。 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0011.html#page-5">阅读整页及原图 →</a></details><details><summary>MT8668_Hypervisor_Display_User_Manual_CN_V1.0.pdf · PDF 第 6 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8668 Hypervisor Display 
+User Manual 
+Confidential B 
+ 显示子系统的硬件架构 
+MediaTek Proprietary and Confidential. © 2022 MediaTek Inc. All rights reserved.
+MML SubSystem
+Display SubSystem
+Layer7
+Layer6
+Layer5
+Layer4
+Layer3
+Layer2
+Layer1
+Layer0
+Layer8
+Layer9
+Disp-PQ-0
+Disp-PQ-1
+TTC0
+TTC1
+TTC2
+TTC3
+DSI0
+DSI1
+WDMA
+MML-
+RDMA0
+MML
+PQ-Resize0
+MML-
+WROT0DRAM Buffer DRAM Buffer
+DRAM Buffer
+DRAM Buffer
+DRAM Buffer
+DRAM Buffer
+DRAM Buffer
+DRAM Buffer
+DRAM Buffer
+DRAM Buffer DRAM Buffer
+Serializer
+Serializer
+MML-
+RDMA1
+MML
+Resize1
+MML-
+WDMA0DRAM Buffer DRAM Buffer
+Layer0 and Layer1 should be output to the same DSI.
+Layer2 and Layer3 should be output to the same DSI.
+Layer4 and Layer5 should be output to the same DSI.
+Layer6 and Layer7 should be output to the same DSI.
+ 
+图 1-1. Display pipeline 架构 
+ 
+MML_SubSystem，即 Multimedia Layer Sub System，共有 2 套独立的 MML 硬件可用，每套硬件中均包含 MML-
+RDMA（Read Direct Memory Access），MML-PQ（Picture Quality enhancement），MML-Resize（Scaler-Up or Scaler-
+Down）和 MML-WROT（Rotate &amp;&amp;Write to dram）。 
+Display SubSystem 共有 10 个硬件图层可被使用（其中 2 个硬件图层是专用于显示“需要进行功能安全检测的图
+层”，例如 Telltale），可以将多个硬件图层组合在一起进行 Alpha-Blending 并且显示到同一个屏。它还有 2 套
+Display-PQ 以及 2 个 DSC（Display Stream Compression）。最后，MT8668 支持同时从 2 个 DSI（Display Serial 
+Interface）输出画面。 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0011.html#page-6">阅读整页及原图 →</a></details><details><summary>MT8668_Hypervisor_Multi_Display_Proxy-Wayland_User_Manual_CN_V1.0.pdf · PDF 第 5 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8668 Hypervisor Multi Display Proxy-Wayland 
+ User Manual 
+Confidential B 
+1 Proxy-Wayland 
+1.1 概述 
+本章节主要介绍 MT8668 Hypervisor Proxy-Wayland 的实现需求、实现原理及代码结构分布。 
+ Proxy-Wayland 的实现需求 
+当前，车载多媒体娱乐系统正迅猛发展，其背后的多域显示系统管理极为复杂。例如，中控屏、副驾屏、后枕
+屏、仪表盘等各个领域均需各自的显示屏。基于单一芯片，多屏的显示来自于不同的 OS，充分发挥不同 OS 的优
+势，如 Android 多媒体处理的高效性；Linux 的及时性和安全性。 
+然而，要实现单一芯片的多域功能，就不可避免涉及到虚拟技术。目前，车载行业较为流行的多域是 Linux + 
+Android， 其中一路 Linux 是 Host，其它路是 Guest。Proxy-Wayland 正是基于这种跨域需求，实现从 Android guest 
+将图形 buffer 送到 Linux host， 透过 Wayland 进行显示，实现跨域显示的功能。 
+ Proxy-Wayland 的实现原理 
+• Proxy-Wayland 的通信框架以 RPC binder 为基础。 
+• RPC binder 以 Vsock 为基础实现跨域。 
+• Android 端 HWC 通过 Proxy-Wayland binder client 接口将 frame 透过基于 Vsock 的 RPC binder 实现跨域。 
+• Linux 端 Proxy-Wayland binder service 接收到 frame 后，调用 wayland-client API 实现显示功能。 
+ 
+ Proxy-Wayland 的代码结构分布 
+• Android 
+– Code path: vendor/mediatek/proprietary/external/MultiVirtualDisplay 
+▪ Android-client 
+o Proxy-Wayland HWC 接口类 
+o Proxy-Wayland display client 管理类 
+o Proxy-Wayland display client 类 
+▪ libvirtual-display 
+o Binder Bp &amp; Bn 类 
+▪ libdmabufhelper 
+o DMA buffer 传递的参数转换接口类 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0012.html#page-5">阅读整页及原图 →</a></details></section><nav class="pager"><a href="13.html">← 上一步：通信模块业务流程</a><a href="17.html">下一步：MT8676与MT8668平台差异及迁移边界 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#19-camera-跨域架构与-ddr-资源预算">19 Camera 跨域架构与 DDR 资源预算</a><a class="depth-2" href="#191-三个视图不能合并成一条未经验证的箭头">19.1 三个视图不能合并成一条未经验证的箭头</a><a class="depth-2" href="#192-mt8668-已有原始手册支持的跨域链">19.2 MT8668 已有原始手册支持的跨域链</a><a class="depth-2" href="#193-本项目-composite-输入基线">19.3 本项目 Composite 输入基线</a><a class="depth-2" href="#194-五种资源量的计算口径">19.4 五种资源量的计算口径</a><a class="depth-2" href="#195-可复核数值">19.5 可复核数值</a><a class="depth-2" href="#196-ddr-场景拆账">19.6 DDR 场景拆账</a><a class="depth-2" href="#197-本次发现并纠正的实例分配冲突">19.7 本次发现并纠正的实例分配冲突</a><a class="depth-2" href="#198-诊断入口与验收">19.8 诊断入口与验收</a><a class="depth-2" href="#199-最新-day-33标定有效性与恢复">19.9 最新 Day 33：标定有效性与恢复</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

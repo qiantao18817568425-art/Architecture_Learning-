@@ -1,0 +1,493 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8668_Android_FBE_Debug_SOP_CN_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8668_Android_FBE_Debug_SOP_CN_V1.0.pdf</h1><p>SRC0086 · 原来源 ID S006 · PDF物理页 · 18 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8668/MTK参考资料/MTK参考资料/Android/MT8668_Android_FBE_Debug_SOP_CN_V1.0.pdf</p><p>SHA-256：<code>bfd28e7774c576b6c9780c11eae628e4154e09f1f930d279587937c11fc2bcb8</code></p><p>原文件大小：1,388,502 字节</p></details><div class="actions"><a class="button" href="materials/SRC0086.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8668_Android_FBE_Debug_SOP_CN_V1.0.pdf 原 PDF" src="materials/SRC0086.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0086.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+版本:  1.0 
+出版日期:  2025-12-15 
+MT8668 Android FBE Debug SOP 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0086.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+          MT8668 Android FBE  
+Debug SOP 
+Confidential B 
+版本记录 
+版本 日期 作者 描述 
+1.0 2025-12-15 晏晓阳 正式版 
+ 
+  
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0086.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+          MT8668 Android FBE  
+Debug SOP 
+Confidential B 
+目录 
+版本记录 ··········································································································································································· 2 
+目录 ··················································································································································································· 3 
+1 与 FBE 相关的开机流程 ············································································································································ 4 
+ Init 流程 ··································································································································································· 4 
+ early-fs ·························································································································································· 5 
+ late-fs ···························································································································································· 5 
+ post-fs-data ················································································································································· 10 
+2 检查 FBE 相关的设定 ·············································································································································· 12 
+ 检查配置文件 ························································································································································ 12 
+ ProjectConfig.mk ········································································································································· 12 
+ fstab ···························································································································································· 12 
+ 验证 FBE 是否有开启 ············································································································································ 12 
+ 查看 property ············································································································································· 12 
+ 查看 CE 文件是否为密文 ·························································································································· 13 
+3 FBE 相关的问题 ······················································································································································ 14 
+ 如何确认是做加密还是解密 ································································································································ 14 
+ 如何关闭 FBE 功能 ················································································································································ 14 
+ USB 全量升级，恢复出厂设置，第二次开机启动后 FBE Key 异常 ·································································· 14 
+ 执行 metadata 加密时候，fs_mgr 卸载 data 分区失败 ····················································································· 15 
+ 执行 metadata 加密时候，异常断电，data 分区加密未完成 ·········································································· 15 
+ 执行 metadata 加密过程中，metadata key 被破坏 ···························································································· 15 
+ 后续开机解密流程，如果异常如何恢复， 怎样确认是加密问题还是解密问题，或是分区被破坏  ············ 16 
+4 其他网上资料 ························································································································································· 17 
+附件一 附加条款 ····························································································································································· 18 
+ 
+图片目录 
+图 1-1. 开机 init 流程图 ···························································································································································· 4 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0086.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+          MT8668 Android FBE  
+Debug SOP 
+Confidential B 
+1 与 FBE 相关的开机流程 
+Android FBE 是 Android 系统的原生功能。FBE 的加解密过程在设备开机的 init 阶段进行。因此，要了解 FBE 相关的
+流程，首先需要熟悉开机时 init 的流程。 
+ 
+ Init 流程 
+根据开机流程 ，init 阶段会解析 init.rc 中的 action。图 1-1 是开机 init 进程的流程图。  
+ 
+图 1-1. 开机 init 流程图 
+ 
+对于 FBE ，需要关注的开机阶段主要有如下几个： 
+1. early-fs 
+start vold 
+2. late-fs 
+early-hal (keymaster) 
+mount_all –late 
+  
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0086.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+          MT8668 Android FBE  
+Debug SOP 
+Confidential B 
+3. post-fs-data 
+installkey /data 
+init_user0 
+ 
+ early-fs 
+vold 会在on early-fs 阶段启动，后续 FBE 加解密的动作都将由 vold 发起。 
+ 
+ late-fs 
+1． 在on late-fs 阶段，主要关注两个动作： 
+early-hal (keymaster)：这个动作会启动 keymaster，为后续加解密做准备。 
+mount –late：这个动作主要用于挂载 userdata 分区，FBE 加解密正是针对 userdata 分区进行的。 
+ 
+2． mount userdata ：首先尝试挂载userdata 分区，并调用 prepare_fs_for_mount 进行准备。 
+ 
+  
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0086.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+          MT8668 Android FBE  
+Debug SOP 
+Confidential B 
+3． 上面 mount userdata 的结果有两种情况： 
+首次开机（刷机或执行 factory reset 之后）：在这种情况下，挂载操作返回成功，表示分区没有加密，首次尝
+试挂载时就成功了（mret=true）。此时需要判断是否需要加密，因为在首次开机时分区未加密，挂载成功
+后需要先卸载分区，然后进入加密流程。 
+非首次开机：经过首次开机后，data 分区处于加密的状态。此时检查文件系统会返回错误，出现 invalid magic 
+的错误。这是正常现象，并不是文件系统损坏的标志。 
+ 
+ 
+卸载分区后，会进入 vdc encryptFstab 流程。需要注意的是，无论是对分区进行加密还是解密，最终调用的 API
+都是相同的。 
+“crypts”  encryptFstab   ：对分区做加密 
+“crypts”  mountFstab  ：对分区做解密 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0086.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+          MT8668 Android FBE  
+Debug SOP 
+Confidential B 
+ 
+ 
+上述流程中，对 userdata 进行加密和解密最终都会进入以下流程： 
+ 
+ 
+从上述流程进入以下步骤时，如前所述，加密和解密最终都会调用 fscrypt_mount_metadata_encrypted 函数。
+区别在于第三个参数，该参数用于指示是否需要加密。 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0086.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+          MT8668 Android FBE  
+Debug SOP 
+Confidential B 
+ 
+ 
+4． 从上述位置进入vold 的system/vold/MetadataCrypt.cpp 中的fscrypt_mount_metadata_encrypted 函
+数。在这个流程中，主要有三个步骤： 
+Step 1 和 Step 2：根据是否需要加密来决定设备是加密 key 还是解密 key。 
+Step 3：创建用于加解密的设备。 
+ 
+ 
+创建完加解密设备后，调用 mount_via_fs_mgr 并带入crypto_blkdev。 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0086.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+          MT8668 Android FBE  
+Debug SOP 
+Confidential B 
+ 
+ 
+这个流程会进入 FS 的挂载过程。
+ 
+ 
+5. 最后，流程回到fs_mgr 中的fs_mgr_do_mount。此时，如果blk_device 需要解密，系统会先进行解密，确
+保读取到的magic 是正确的，然后进入第二步的__mount。 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0086.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+          MT8668 Android FBE  
+Debug SOP 
+Confidential B 
+ 
+ 
+ post-fs-data 
+在 data 分区挂载成功后，系统会进入 post-fs-data 阶段。在init.rc 中，会执行 installkey /data 的操作，
+这个操作会调用do_installkey 函数，并进入VDC enablefilecrypto 的流程。 
+ 
+ 
+最终，这个流程会进入 vold 中的fbeEnable()函数。 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0086.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+          MT8668 Android FBE  
+Debug SOP 
+Confidential B 
+ 
+ 
+一路执行后，流程会进入 vold 中的相关 API。
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0086.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+          MT8668 Android FBE  
+Debug SOP 
+Confidential B 
+2 检查 FBE 相关的设定 
+ 检查配置文件 
+与 FBE 相关的配置文件有 ProjectConfig.mk 和fstab，只有配置正确，FBE 才会正常开启。 
+ 
+ ProjectConfig.mk 
+查看 /device/mediateksample/yourproject/ProjectConfig.mk，如下 3 个配置需要是 no/no/yes。 
+ MTK_ENCRYPTION_DEFAULT_OFF = no 
+ MTK_ENCRYPTION_FDE_TO_FBE = no 
+ MTK_ENCRYPTION_TYPE_FILE = yes 
+ 
+ fstab 
+查看代码中vendor/mediatek/proprietary/hardware/fstab/mtxxxx，或者在平台上敲命令 
+cat /vendor/etc/fstab.mtXXXX (XXXX 为平台代号)。 
+4. /dev/block/by-name/userdata /data f2fs     
+noatime,nosuid,nodev,discard,noflush_merge,fsync_mode=nobarrier,reserve_root=134217,resgid=1
+065,inlinecrypt 
+wait,check,formattable,quota,latemount,resize,reservedsize=128m,checkpoint=fs,fileencryption
+=aes-256-xts:aes-256-
+cts:v2+inlinecrypt_optimized,keydirectory=/metadata/vold/metadata_encryption,fsverity   
+需要确认 data 分区有如上红色部分的配置参数。 
+ 
+ 验证 FBE 是否有开启 
+验证平台上的 FBE 是否有开启，可以通过查看 property，以及查看数据是否有加密。 
+ 
+ 查看 property 
+输入如下命令查看是否有这些 property。 
+5. getprop | grep crypt 
+ 
+如下情况表示 FBE 已开启。 
+6. [ro.crypto.metadata.enabled]: [true] 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0086.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+          MT8668 Android FBE  
+Debug SOP 
+Confidential B 
+7. [ro.crypto.state]: [encrypted] 
+8. [ro.crypto.type]: [file] 
+9. [ro.crypto.uses_fs_ioc_add_encryption_key]: [true] 
+10. [ro.crypto.volume.filenames_mode]: [aes-256-cts] 
+ 
+如下情况表示 FBE 未开启。 
+11. [ro.crypto.state]: [unsupported] 
+12. [ro.crypto.volume.filenames_mode]: [aes-256-cts] 
+ 
+ 查看 CE 文件是否为密文 
+1. 查看当前是哪个 user。 
+13. am get-current-user 
+14. 10 
+2. 设置锁屏密码之后重启。 
+3. 重启进到开机密码的界面，不要输入密码。 
+4. 通过 shell 命令访问该 user 的 CE 数据。 
+ls /data/user/10/ （此处以 user 10 示例） 
+5. 如果 FBE 正常开启，则在未解锁的状态下，看到的都是密文，说明已加密，如下图：  
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0086.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+          MT8668 Android FBE  
+Debug SOP 
+Confidential B 
+3 FBE 相关的问题 
+ 如何确认是做加密还是解密 
+在开机 log 中搜索关键字 encryptFstab 和mountFstab。  
+ encryptFstab 加密，刷机或恢复出厂设置之后，首次开机时进行 
+ mountFstab 解密，非首次开机都会进入解密流程 
+ 
+ 如何关闭 FBE 功能 
+修改/device/mediateksample/yourproject/ProjectConfig.mk，如下 3 个配置都改为 no。 
+MTK_ENCRYPTION_DEFAULT_OFF = no 
+MTK_ENCRYPTION_FDE_TO_FBE = no 
+MTK_ENCRYPTION_TYPE_FILE = no 
+需要注意的是，关闭 FBE 仅用于 debug，理清是否由 FBE 带来的问题。 
+ 
+ USB 全量升级，恢复出厂设置，第二次开机启动后 FBE Key 异常 
+1. 在恢复出厂设置后，设备相当于第一次开机。在这个过程中，Android 系统不会立即进行解密，而是首先进行
+加密操作。加密完成后，才会进行解密操作。如果在恢复出厂设置后的第一次开机时，发现 userdata 无法挂
+载，首先需要考虑在恢复出厂设置的过程中，userdata 是否受到了损坏。 
+2. 在恢复出厂设置后的第二次开机时，系统会尝试使用在第一次开机时生成的 metadata key 来解密 userdata 分
+区。如果在挂载时出现 invalid magic 错误，系统会进入 metadata 解密流程。 
+如果解密失败或出现异常，可能的原因包括： 
+– Metadata Key 不存在或异常：如果 metadata key 在第一次开机时没有正确生成或存储，解密过程将无法进
+行。 
+– Keymaster 出错：Keymaster 负责管理加密密钥，如果它出现故障或无法正常工作，解密过程可能会失败。  
+– 文件系统损坏：如果在上次关机时 userdata 分区正在写入数据，而系统突然断电，可能导致文件系统损坏，
+从而影响挂载和解密过程。 
+3. 在 metadata 解密成功后，userdata 分区可以成功挂载。接下来，在 FBE 启用阶段，系统会检测到 FBE 已开
+启，并执行 installkey 操作。在这个过程中，系统会将 FBE Class Key 和 Keymaster Key 以 KeyBlob 的形式存储到
+userdata 分区。当系统非首次启动时，会从 userdata 分区提取 FBE Class Key 和 Keymaster Key 对应的
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0086.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+          MT8668 Android FBE  
+Debug SOP 
+Confidential B 
+KeyBlob，并通过 TEEOS 的 Keymaster TA 进行解密。通常，FBE key 的问题较少出现，主要与 Keymaster 和 TEE
+相关。如果出现问题，可能需要检查 Keymaster 的状态和 TEE 的配置，以确保密钥管理和解密过程的正常进
+行。 
+ 
+ 执行 metadata 加密时候，fs_mgr 卸载 data 分区失败 
+ Metadata 加密过程：通常在设备烧录后的第一次开机或恢复出厂设置后的第一次开机时执行。在 mount_all 
+--late 阶段，系统会尝试挂载 data 分区并成功。如果检测到 FBE metadata 加密已开启，系统会先执行卸载
+流程。在卸载 data 分区时，如果失败，需要根据 unmount failed 的返回值进行调试。一般情况下，卸载失败
+是因为有进程正在使用 userdata 分区。然而，根据谷歌的原生流程，此时 Android 组件尚未启动，因此需要
+检查是否有客制化的进程在访问 data 分区。 
+ 处理挂载失败：如果由于上述异常导致 userdata 分区挂载失败，谷歌的原生流程通常会在 init_user0 阶段失
+败，并进入恢复模式（recovery mode）。用户可以在恢复模式中执行恢复出厂设置（factory reset）来解决问
+题。这一机制帮助用户在遇到系统无法正常启动时，通过恢复出厂设置来重新配置系统。  
+ 
+ 执行 metadata 加密时候，异常断电，data 分区加密未完成 
+如果在加密过程中系统断电，导致 data 分区未完成加密，这类问题可能会导致 userdata 分区无法挂载。谷歌的原
+生流程通常会有一些机制来处理这种情况。 
+在这种情况下，系统可能会在 init_user0 阶段失败，并进入恢复模式（recovery mode）。用户可以在恢复模式中执
+行恢复出厂设置（factory reset）来解决问题。 
+谷歌可能会针对这类问题发布补丁（Google patch），以改善系统在异常情况下的处理能力。建议查看谷歌的更新
+日志或相关文档，以了解是否有针对这种情况的补丁或解决方案。  
+ 
+ 执行 metadata 加密过程中，metadata key 被破坏 
+整个 metadata 的加密过程是由谷歌的原生流程处理的。如果 metadata key 被破坏，通常需要检查用户操作或文件
+系统方面是否存在异常，例如异常断电或异常写入行为。由于 metadata 是一个读写（RW）分区，key 的破坏通常
+与文件系统的异常操作相关联。 
+如果由于这些异常导致 userdata 分区挂载失败，谷歌的原生流程通常会在 init_user0 阶段失败，并进入恢复模式
+（recovery mode）。在这种情况下，用户可以通过恢复模式执行恢复出厂 设置（factory reset）来解决问题。 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0086.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 16 
+          MT8668 Android FBE  
+Debug SOP 
+Confidential B 
+ 后续开机解密流程，如果异常如何恢复， 怎样确认是加密问题还是解
+密问题，或是分区被破坏 
+分区损坏是导致挂载失败的常见问题之一。解密失败通常与 Keymaster 的错误有关。为了诊断这些问题，可以在
+开机日志中查找与 keystore 或keymaster 相关的关键字，查看是否有相关的错误日志。 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0086.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 17 
+          MT8668 Android FBE  
+Debug SOP 
+Confidential B 
+4 其他网上资料 
+因为 FBE 是 Android 原生的功能，网上有很多资料，以下是一些推荐的总结资料：  
+1. https://source.android.com/docs/security/features/encryption/file-based?hl=zh-cn 
+2. https://blog.csdn.net/cs_tech/article/details/127579028 
+3. https://blog.csdn.net/feelabclihu/article/details/131016357 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-18"><h2>PDF物理页 18</h2><a href="materials/SRC0086.pdf#page=18" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 18 
+          MT8668 Android FBE  
+Debug SOP 
+Confidential B 
+附件一 附加条款 
+您(或您所代表的公司或其他法律主体，以下合称「您」)是否得取得、下载与使用本文件及其相关信息皆应以您接受本附加条款为先决要件。
+您对于本文件之使用、取得或下载即表示您已接受本附加条款并同意受本附加条款之拘束。若您不同意受本附加条款之拘束，您将不得使用、
+取得或下载本文件并应立即删除或毁弃所有本文件之副本。 
+ 
+本文件含有联发科技股份有限公司及其关联公司（以下合称「联发科技」）或其授权人之机密信息及专有信息，仅供您为本文件所描述之联发
+科技芯片组作内部使用而不得用于其他任何目的（包括但不限于确认或提供支持任何对联发科技、其供货商及/或其直接或间接客户所提潜在
+专利侵权主张的证据）。禁止未经授权使用或揭露本文件及其中所含信息。您同意赔偿联发科技因您未经授权使用或揭露本文件及其中所含信
+息之一部或全部导致联发科技所受之任何损失或损害。 
+ 
+联发科技及其授权人保有本文件的所有权及组成所有权之各项权利且未针对任何知识产权授权（无论明示或默示、透过禁反言原则或其他方
+式）。联发科技得随时变更本文件内容而无须另行通知。联发科技无须承担与使用或信赖本文件相关或因使用或信赖本文件致生之任何责任，
+包括但不限于间接损害或附带损害赔偿责任。 
+ 
+本文件及联发科技所提供关于本文件之任何其他材料、信息或技术支持，均以现况交付为准，联发科技不负任何明示、默示、法定或其他形式
+之担保责任，特别是适销性、不侵权、针对特定用途之适用性、完整性或正确性之担保责任或任何由贸易惯例或交易、履行过程所生之担保责
+任。对于联发科技为符合您所提规格或遵循特定标准或标准组织的要求所作之交付物，联发科技亦不应承担任何责任。 
+ 
+于未对前述条款造成限制之情形下，联发科技不对其产品任何特定用途之适用性承担任何保证或担保责任，亦不承担任何因产品、电路或软件
+之应用或使用致生之赔偿责任。您同意您应单独承担关于整合您的产品与联发科技产品所涉及之设计、验证与测试之所有责任，并应确保前述
+整合产品符合相关标准及任何安全性要求或其他要件。 
+ 
+本附加条款及所有与本附加条款或本文件相关之行为应以台湾法律管辖、解释与阐明，不适用冲突法原则。 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a><a href="#page-18">PDF物理页 18</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

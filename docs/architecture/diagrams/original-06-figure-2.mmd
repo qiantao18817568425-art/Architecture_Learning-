@@ -1,0 +1,15 @@
+sequenceDiagram
+  participant D as input device/driver
+  participant E as EventHub
+  participant R as InputReader
+  participant I as InputDispatcher
+  participant C as focused Window/InputChannel
+  participant V as ViewRootImpl
+  participant U as View dispatch
+  D->>E: raw input event
+  E->>R: read event batch
+  R->>I: normalized event
+  I->>C: dispatch to focused target
+  C->>V: receive on app channel
+  V->>U: deliver to hierarchy
+  U-->>I: finish acknowledgement

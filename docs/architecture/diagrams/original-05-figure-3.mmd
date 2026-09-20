@@ -1,0 +1,13 @@
+sequenceDiagram
+  participant A as App
+  participant P as Binder Proxy
+  participant D as Binder driver
+  participant S as Service Stub
+  participant Q as server thread pool
+  participant B as Business
+  A->>P: synchronous / oneway
+  P->>D: transaction
+  D->>S: dispatch
+  S->>Q: execute
+  Q->>B: update/read
+  B-->>A: reply or callback

@@ -1,0 +1,282 @@
+%%{init: {"flowchart": {"nodeSpacing": 18, "rankSpacing": 8, "padding": 12}, "themeVariables": {"fontSize": "16px"}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph MCU["MCU 域"]
+direction TB
+subgraph swcs["SWCs"]
+direction TB
+subgraph layout_row_1[" "]
+direction LR
+subgraph layout_row_2[" "]
+direction TB
+m1["仪表应用"]
+m4["警示灯控制"]
+m7["功能安全"]
+m1 ~~~ m4 ~~~ m7
+end
+subgraph layout_row_3[" "]
+direction TB
+m2["行车电脑"]
+m5["ADAS应用"]
+m8["功能诊断"]
+m2 ~~~ m5 ~~~ m8
+end
+subgraph layout_row_4[" "]
+direction TB
+m3["电源管理"]
+m6["DSP控制"]
+m3 ~~~ m6
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+subgraph rte["RTE"]
+direction TB
+subgraph layout_row_5[" "]
+direction LR
+e2e["E2E"]
+end
+end
+subgraph layout_row_6[" "]
+direction LR
+mos["OS"]
+bsw["BSW"]
+mos ~~~ bsw
+end
+subgraph mcal["MCAL"]
+direction TB
+subgraph layout_row_7[" "]
+direction LR
+can["CAN"]
+spi["SPI"]
+can ~~~ spi
+end
+end
+subgraph layout_row_8[" "]
+direction LR
+fbl["FBL"]
+mhw["MCU 硬件"]
+fbl ~~~ mhw
+end
+swcs ~~~ rte ~~~ layout_row_6 ~~~ mcal ~~~ layout_row_8
+end
+subgraph soc["SoC 部署视图"]
+direction TB
+subgraph domains["图示软件域"]
+direction TB
+subgraph tbox["Guest / UOS Tbox"]
+direction TB
+subgraph layout_row_9[" "]
+direction LR
+subgraph layout_row_10[" "]
+direction TB
+t["Application / Tbox"]
+conn["Virtual conninfra"]
+t ~~~ conn
+end
+subgraph layout_row_11[" "]
+direction TB
+gps["GPS"]
+clk["Virtual CLK"]
+gps ~~~ clk
+end
+subgraph layout_row_12[" "]
+direction TB
+tel["Telephony Service"]
+ccci["Kernel & Drivers / ccci Driver"]
+tel ~~~ ccci
+end
+layout_row_10 ~~~ layout_row_11 ~~~ layout_row_12
+end
+end
+subgraph sos["Host / SOS YOCTO"]
+direction TB
+subgraph sapps["Application"]
+direction TB
+subgraph layout_row_13[" "]
+direction LR
+subgraph layout_row_14[" "]
+direction TB
+avm["AVM"]
+rvc["RVC"]
+avm ~~~ rvc
+end
+subgraph layout_row_15[" "]
+direction TB
+cluster["Cluster"]
+adas["ADAS"]
+cluster ~~~ adas
+end
+subgraph layout_row_16[" "]
+direction TB
+dms["DMS"]
+end
+layout_row_14 ~~~ layout_row_15 ~~~ layout_row_16
+end
+end
+subgraph runtime["OS Runtime"]
+direction TB
+subgraph layout_row_17[" "]
+direction LR
+weston["Weston"]
+camera["Camera"]
+gst["Gstreamer"]
+weston ~~~ camera ~~~ gst
+end
+end
+subgraph infra["Infrastructure"]
+direction TB
+subgraph layout_row_18[" "]
+direction LR
+subgraph layout_row_19[" "]
+direction TB
+life["Lifecycle"]
+vehicle["VehicleIF"]
+life ~~~ vehicle
+end
+subgraph layout_row_20[" "]
+direction TB
+soa["SOA/IPC"]
+audio["AudioMgr"]
+soa ~~~ audio
+end
+subgraph layout_row_21[" "]
+direction TB
+cans["CanService"]
+log["LogMgr"]
+cans ~~~ log
+end
+layout_row_19 ~~~ layout_row_20 ~~~ layout_row_21
+end
+end
+subgraph drivers["Drivers"]
+direction TB
+subgraph layout_row_22[" "]
+direction LR
+subgraph layout_row_23[" "]
+direction TB
+isp["ISP"]
+eth["Ethernet"]
+isp ~~~ eth
+end
+subgraph layout_row_24[" "]
+direction TB
+display["Display"]
+end
+subgraph layout_row_25[" "]
+direction TB
+aud["Audio"]
+end
+layout_row_23 ~~~ layout_row_24 ~~~ layout_row_25
+end
+end
+sapps ~~~ runtime ~~~ infra ~~~ drivers
+end
+subgraph android["Guest / UOS Android"]
+direction TB
+subgraph aapp["Application"]
+direction TB
+subgraph layout_row_26[" "]
+direction LR
+subgraph layout_row_27[" "]
+direction TB
+a1["车载应用"]
+a4["地图导航"]
+a1 ~~~ a4
+end
+subgraph layout_row_28[" "]
+direction TB
+a2["生态应用"]
+a5["语音识别"]
+a2 ~~~ a5
+end
+subgraph layout_row_29[" "]
+direction TB
+a3["行车记录仪"]
+a6["远程监控"]
+a3 ~~~ a6
+end
+layout_row_27 ~~~ layout_row_28 ~~~ layout_row_29
+end
+end
+subgraph layout_row_30[" "]
+direction LR
+subgraph layout_row_31[" "]
+direction TB
+aosp["AOSP"]
+art["Runtime"]
+adrivers["Kernel & Drivers / Ethernet"]
+aosp ~~~ art ~~~ adrivers
+end
+subgraph layout_row_32[" "]
+direction TB
+cars["CarService"]
+hal["HAL"]
+cars ~~~ hal
+end
+subgraph layout_row_33[" "]
+direction TB
+mbos["MBOS"]
+ainfra["Infrastructure"]
+mbos ~~~ ainfra
+end
+layout_row_31 ~~~ layout_row_32 ~~~ layout_row_33
+end
+aapp ~~~ layout_row_30
+end
+subgraph nebula["Nebula os"]
+direction TB
+subgraph layout_row_34[" "]
+direction LR
+uvm["UOS VM process"]
+svm["SOS VM process"]
+micro["Micro Kernel"]
+uvm ~~~ svm ~~~ micro
+end
+end
+tbox ~~~ sos ~~~ android ~~~ nebula
+end
+subgraph layout_row_35[" "]
+direction LR
+hv["Hypervisor"]
+hw["SOC 硬件"]
+hv ~~~ hw
+end
+domains ~~~ layout_row_35
+end
+MCU ~~~ soc
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent
+style layout_row_5 fill:transparent,stroke:transparent
+style layout_row_6 fill:transparent,stroke:transparent
+style layout_row_7 fill:transparent,stroke:transparent
+style layout_row_8 fill:transparent,stroke:transparent
+style layout_row_9 fill:transparent,stroke:transparent
+style layout_row_10 fill:transparent,stroke:transparent
+style layout_row_11 fill:transparent,stroke:transparent
+style layout_row_12 fill:transparent,stroke:transparent
+style layout_row_13 fill:transparent,stroke:transparent
+style layout_row_14 fill:transparent,stroke:transparent
+style layout_row_15 fill:transparent,stroke:transparent
+style layout_row_16 fill:transparent,stroke:transparent
+style layout_row_17 fill:transparent,stroke:transparent
+style layout_row_18 fill:transparent,stroke:transparent
+style layout_row_19 fill:transparent,stroke:transparent
+style layout_row_20 fill:transparent,stroke:transparent
+style layout_row_21 fill:transparent,stroke:transparent
+style layout_row_22 fill:transparent,stroke:transparent
+style layout_row_23 fill:transparent,stroke:transparent
+style layout_row_24 fill:transparent,stroke:transparent
+style layout_row_25 fill:transparent,stroke:transparent
+style layout_row_26 fill:transparent,stroke:transparent
+style layout_row_27 fill:transparent,stroke:transparent
+style layout_row_28 fill:transparent,stroke:transparent
+style layout_row_29 fill:transparent,stroke:transparent
+style layout_row_30 fill:transparent,stroke:transparent
+style layout_row_31 fill:transparent,stroke:transparent
+style layout_row_32 fill:transparent,stroke:transparent
+style layout_row_33 fill:transparent,stroke:transparent
+style layout_row_34 fill:transparent,stroke:transparent
+style layout_row_35 fill:transparent,stroke:transparent

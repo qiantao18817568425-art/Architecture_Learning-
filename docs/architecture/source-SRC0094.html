@@ -1,0 +1,705 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8668_Android_Wifi_User_Manual_CN_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8668_Android_Wifi_User_Manual_CN_V1.0.pdf</h1><p>SRC0094 · 原来源 ID S014 · PDF物理页 · 16 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8668/MTK参考资料/MTK参考资料/Android/MT8668_Android_Wifi_User_Manual_CN_V1.0.pdf</p><p>SHA-256：<code>be1aff227afa79140c50d66b18cbb5f20b0a483c18c2c9345a0f4ee90f7b33cc</code></p><p>原文件大小：739,893 字节</p></details><div class="actions"><a class="button" href="materials/SRC0094.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8668_Android_Wifi_User_Manual_CN_V1.0.pdf 原 PDF" src="materials/SRC0094.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0094.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version:  1.0 
+Release date:  2026-01-28 
+MT8668 Android WiFi User Manual 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0094.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8668 Android WiFi 
+User Manual  
+Confidential B 
+版本记录 
+版本 日期 作者 描述 
+1.0 2026-01-28 胡雯萱 正式版本 
+ 
+  
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0094.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8668 Android WiFi 
+User Manual  
+Confidential B 
+目录 
+版本记录 ··········································································································································································· 2 
+目录 ··················································································································································································· 3 
+图片目录 ··········································································································································································· 3 
+表格目录 ··········································································································································································· 3 
+1 WiFi ··········································································································································································· 4 
+1.1 概述·········································································································································································· 4 
+1.1.1 简单介绍 ······················································································································································ 4 
+1.1.2 名词解释 ······················································································································································ 4 
+1.2 架构/流程概述 ························································································································································ 6 
+1.3 配置/客制化指南 ···················································································································································· 6 
+1.4 常见问题/故障排除 ················································································································································ 9 
+1.4.1 WiFi 认证 ······················································································································································ 9 
+1.4.2 WiFi 调试需要的日志 ································································································································ 10 
+1.4.3 扫描 ···························································································································································· 11 
+1.4.4 STA Connect 终端设备连接 ······················································································································· 12 
+1.4.5 网络吞吐量 ················································································································································ 13 
+1.4.6 WiFi 引起的 MT6637 芯片重置 ················································································································· 14 
+附件一 附加条款 ····························································································································································· 16 
+ 
+ 
+图片目录 
+图 1-1. WiFi 架构 ······································································································································································· 6 
+ 
+表格目录 
+表 1-1. 名词解释········································································································································································ 4 
+表 1-2. MTK WiFi 模块 ······························································································································································· 5 
+表 1-3. Coredump 的生成路径 ················································································································································ 14 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0094.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8668 Android WiFi 
+User Manual  
+Confidential B 
+1 WiFi 
+1.1 概述 
+1.1.1 简单介绍 
+本章节介绍 MT8668 WiFi 模块的架构及 WiFi 常见问题的调试方法。MT8668 搭配的 WiFi 芯片是 MT6637。 
+ 
+1.1.2 名词解释 
+表 1-1. 名词解释 
+缩写 全称及解释 
+STA 
+Station，工作站，指配备无线网络接口的计算设备，如笔记本、带 WiFi 功能的手
+机、平板等 
+AP Access Point, 接入点，具备无线至有线桥接功能的设备，如无线路由器 
+P2P Peer-to-Peer 直连 
+BSS Basic Service Set，一个由单个无线接入点（AP）所控制的无线网络覆盖区域 
+BSSID 接入点(AP)的 MAC 地址 
+SSID 服务集标识，局域网的名字 
+ESS 
+Extended Service Set，采用相同 SSID 的多个 BSS 形成的更大规模的虚拟 BSS，通过
+SSID 来唯一标识 
+802.11 series phy 层 802.11b/g/n, 802.11ac, 802.11ax… 
+2.4G/5G/6G WiFi 信号工作频段 
+Discovery 阶段 Passive Scanning 被动扫描 (侦听 Beacon), Active Scanning (Probe request/Probe 
+Response) 
+Authentication 阶段 Authentication request 认证请求, Authentication response 认证回复 
+Associate 阶段 Association request 关联请求, Association response 关联回复 
+ 
+ 
+ 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0094.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8668 Android WiFi 
+User Manual  
+Confidential B 
+表 1-2. MTK WiFi 模块 
+模块名 描述 
+Glue layer (Linux/Android) 
+(OS Adaptation) 
+提供 OS 调用的接口 
+IOCTL, spin lock, ISR, Main thread, download RAM code and patch 
+通用 CFG80211 AIS 
+HIF/HAL HW 适配层 
+FW own/Driver own, TX data, TX command, RX interrupt 
+AIS 
+(AdHoc/Infrastructure/Search) 
+管理网络配置和搜索 
+Infra. STA connection  
+CFG80211 AIS 
+P2P 
+P2P connection 
+CFG80211 P2P 
+P2P Find Phase 
+• P2P Scan. (All Channel) 
+• P2P Search. (Social Channel) 
+ 
+Remain on Channel 
+Management Frame TX 
+• Off channel TX 
+• Non off channel TX. Multiple Interface 
+• Interface add/del/change 
+AAA (AP(Hotspot) Auth/Assoc) AP’s authentication and association AP 认证和关联 
+SAA (Station Auth/Assoc) STA’s authentication and association STA 认证和关联 
+MQM (Queue Management) QoS, Multiple queue control  
+RLM (Radio Link Management) Bandwidth, preamble, slot time, OBSS, protection mode 
+SCN (Scan) Queuing of scanning request 
+SEC (Security) Encryption, key management 加密，密钥管理 
+TXM TX path, CMD queue 
+RXM RX path, Re-order buffer, RX AMPDU establishment 
+CNM  
+Concurrent Network Management 并发网络管理  
+Handle channel privilege message 处理信道特权消息 
+  
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0094.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8668 Android WiFi 
+User Manual  
+Confidential B 
+1.2 架构/流程概述 
+MT6637 WiFi 架构整体如图 1-1 所示： 
+ 
+ 
+图 1-1. WiFi 架构 
+ 
+1.3 配置/客制化指南 
+1. NVRAM 客制化 
+WiFi 客制化部分一般会动到 NVRAM 文件中的配置，NVRAM 文件在设备中的位置: 
+/data/nvram/APCFG/APRDEB/WIFI 
+在代码中的位置/alps/vendor/mediatek/proprietart/custom/$project/cgen/CFG_WIFI_Default.h. 
+对应栏位含义有标注，对应参数修改请使用 meta 工具进行。 
+ 
+2. wifi.cfg 客制化 
+客户可以使用 wifi.cfg 配置 WiFi 功能。公版默认没有加 wifi.cfg，如需客制化配置 WiFi 功能，请自建一个 wifi.cfg，
+加到设备/vendor/firmware/中。 
+驱动部分可配置的功能，默认值请查看 wlanInitFeatureOption()中的设置，可以通过 wifi.cfg 修改默认值。 
+wifi.cfg 还可以修改固件中的功能默认值，具体根据功能需要，由 WiFi RD 提供修改参数。 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0094.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8668 Android WiFi 
+User Manual  
+Confidential B 
+ 
+3. Channel list 客制化 
+常与所支持的国家码一起配置（NVRAM 中配置国家码）。客制化文件路径：
+/alps/vendor/mediatek/kernel_modules/connectivity/wlan/core/gen4m/mgmt/rlm_domain.c 
+ 
+下面举例说明客制化的四种情况： 
+情况1：从COUNTRY_CODE_US移除144信道 
+a. 从COUNTRY_CODE_US 找到g_u2CountryGroup26 
+static const uint16_t g_u2CountryGroup26[] = { 
+ COUNTRY_CODE_AS, COUNTRY_CODE_US 
+}; 
+ 
+b. 在 arSupportedRegDomains 中找到 g_ u2CountryGroup26支持的Channel list 
+ { 
+  (uint16_t *) g_u2CountryGroup26, sizeof(g_u2CountryGroup26) / 2, 
+  { 
+   {81, BAND_2G4, CHNL_SPAN_5, 1, 11, FALSE} 
+   , /* CH_SET_2G4_1_11 */ 
+   {115, BAND_5G, CHNL_SPAN_20, 36, 4, FALSE} 
+   , /* CH_SET_UNII_LOW_36_48 */ 
+   {118, BAND_5G, CHNL_SPAN_20, 52, 4, TRUE} 
+   , /* CH_SET_UNII_MID_52_64 */ 
+   {121, BAND_5G, CHNL_SPAN_20, 100, 12, TRUE} 
+   , /* CH_SET_UNII_WW_100_144 */ 
+   {125, BAND_5G, CHNL_SPAN_20, 149, 8, FALSE} 
+    /* CH_SET_UNII_UPPER_149_177 */ 
+  } 
+ } 
+ 
+c. 将操作类别121修改至下列样式： 
+121,BAND_5G,CHNL_SPAN_20,100,11,TRUE 
+ 
+情况 2：需单独修改一个国家的 channel list，且不影响到其他国家 
+a. 定义新的分组 
+static const uint16_t g_u2CountryGroup27[] = { 
+ COUNTRY_CODE_US 
+}; 
+ 
+b. 从原始组g_ u2CountryGroup26 中移除COUNTRY_CODE_US 
+c. 定义新组支持的 channel list 
+{ 
+  (uint16_t *) g_u2CountryGroup27, sizeof(g_u2CountryGroup27) / 2, 
+  { 
+   {81, BAND_2G4, CHNL_SPAN_5, 1, 11, FALSE} 
+   , /* CH_SET_2G4_1_11 */ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0094.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8668 Android WiFi 
+User Manual  
+Confidential B 
+   {115, BAND_5G, CHNL_SPAN_20, 36, 4, FALSE} 
+   , /* CH_SET_UNII_LOW_36_48 */ 
+   {118, BAND_5G, CHNL_SPAN_20, 52, 4, TRUE} 
+   , /* CH_SET_UNII_MID_52_64 */ 
+   {121, BAND_5G, CHNL_SPAN_20, 100, 12, TRUE} 
+   , /* CH_SET_UNII_WW_100_144 */ 
+   {125, BAND_5G, CHNL_SPAN_20, 149, 8, FALSE} 
+    /* CH_SET_UNII_UPPER_149_177 */ 
+  } 
+} 
+ 
+情况 3：移除一个 US channel list，如 52-64 
+a. 从国家组中找到COUNTRY_CODE_US 
+static const uint16_t g_u2CountryGroup26[] = { 
+ COUNTRY_CODE_AS, COUNTRY_CODE_US 
+}; 
+ 
+b. 在 arSupportedRegDomains 中查找 g_u2CountryGroup26 支持的 channel list 
+{ 
+  (uint16_t *) g_u2CountryGroup26, sizeof(g_u2CountryGroup26) / 2, 
+  { 
+   {81, BAND_2G4, CHNL_SPAN_5, 1, 11, FALSE} 
+   , /* CH_SET_2G4_1_11 */ 
+   {115, BAND_5G, CHNL_SPAN_20, 36, 4, FALSE} 
+   , /* CH_SET_UNII_LOW_36_48 */ 
+   {118, BAND_5G, CHNL_SPAN_20, 52, 4, TRUE} 
+   , /* CH_SET_UNII_MID_52_64 */ 
+   {121, BAND_5G, CHNL_SPAN_20, 100, 12, TRUE} 
+   , /* CH_SET_UNII_WW_100_144 */ 
+   {125, BAND_5G, CHNL_SPAN_20, 149, 8, FALSE} 
+    /* CH_SET_UNII_UPPER_149_177 */ 
+  } 
+ } 
+ 
+c. 将操作类别 118 修改为下列样式 
+118,BAND_NULL,0,0,0,TRUE 
+ 
+情况 4：设置被动信道 
+• 如果客户没有特殊设置，那么信道 52-64 和 100-140 将默认被设置为被动信道 
+• 如果客户需要特别设置，请参考如下设置 
+a. 定义 g_u2CountryGroup1_passive，并包含COUNTRY_CODE_US  
+static const uint16_t g_u2CountryGroup0_Passive[] = { 
+ COUNTRY_CODE_US 
+}; 
+ 
+b. 添加被动信道列表至arSupportedRegDomains_Passive里的g_u2CountryGroup0_Passive  
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0094.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8668 Android WiFi 
+User Manual  
+Confidential B 
+{ 
+  (uint16_t *) g_u2CountryGroup0_Passive, 
+  sizeof(g_u2CountryGroup0_Passive) / 2, 
+  { 
+   {81, BAND_2G4, CHNL_SPAN_5, 1, 0, FALSE} 
+   ,   /* CH_SET_2G4_1_14_NA */ 
+   {82, BAND_2G4, CHNL_SPAN_5, 14, 1, TRUE } 
+   , 
+   {115, BAND_5G, CHNL_SPAN_20, 36, 0, FALSE} 
+   ,   /* CH_SET_UNII_LOW_NA */ 
+   {118, BAND_5G, CHNL_SPAN_20, 52, 0, FALSE } 
+   ,   /* CH_SET_UNII_MID_52_64 */ 
+   {121, BAND_5G, CHNL_SPAN_20, 100, 0, FALSE } 
+   ,   /* CH_SET_UNII_WW_100_140 */ 
+   {125, BAND_5G, CHNL_SPAN_20, 149, 0, FALSE} 
+      /* 
+               } 
+} 
+ 
+参数介绍： 
+CHAL_SPAN_5： 信道跨度 
+14：起始信道 
+1：信数量 
+红色字体的代码指的是从信道 14 开始的一个信道作为被动信道，其他行的意思是将信道数量设为 0，即无被动
+信道。 
+ 
+1.4 常见问题/故障排除 
+下面列出的是客户可以提前做一些初步分析以及需要客户注意的情况。其他问题，请按照要求，一次性抓齐日
+志，提供给联发科技分析。 
+1.4.1 WiFi 认证 
+WiFi 认证是 WiFi 联盟为其会员推出的一项认证计划，旨在验证特定 WiFi 产品是否符合规范要求，并能够与其他
+WiFi 设备进行互操作。 
+是否要做 WiFi 认证由客户决定，通常大型制造商销售到全球的设备会进行认证。 
+整个认证过程可以分为如下阶段： 
+ 
+1. 准备阶段：准备产品样机和相关文档。 
+2. 申请阶段：向 WiFi 联盟提交认证申请并支付相应费用。 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0094.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8668 Android WiFi 
+User Manual  
+Confidential B 
+3. 时程确认：与实验室确认测试时程。 
+4. 测试阶段：产品将接受 WiFi 认证测试，包括性能、互操作性和安全性等方面的测试。  
+5. 测试报告：收到测试报告，查看测试结果。 
+6. 认证颁发：如果产品通过了所有测试，将获得 WiFi 认证，并可使用 WiFi 认证标识。 
+7. 认证维护：定期更新认证，确保产品持续符合标准。 
+ 
+其中需要联发科技协助的阶段如下： 
+• 申请阶段：客户向联盟提交认证申请时需要注册产品信息，这个阶段可能会需要 联发科技协助确认产品的能力
+集以便决定需要做哪些测试项。 
+• 排程阶段： 客户向实验室确认测试时程。联发科技需要在 LAB 正式开始前准备完毕测试的工具，另外还需要确
+认客户的时程足够满足测试和调试周期。 
+• 测试阶段：实验室对产品进行测试。这个阶段联发科技可能会需要协助调试测试问题。 
+1.4.2 WiFi 调试需要的日志 
+WiFi 日志（包含 framework、wpa_supplicant、driver、FW）开启方法以及确认是否成功开启的方法。 
+1. wpa_supplicant 日志 
+adb shell &quot;wpa_cli -i wlan0 -g@android:wpa_wlan0 IFNAME=wlan0 LOG_LEVEL DEBUG&quot; 
+ 
+2. Framework 日志 
+Settings
+ About
+ Build click 6 times, then you will see &quot;you are now a developer！&quot; on the 
+screen Settings
+ Develop options
+ Enable Wi-Fi verbose Logging 
+ 
+3. FW 日志、WiFi 驱动日志以及 tcpdump 
+联发科技公版提供 debugloggerUI，FW 日志存储 consyslog， WiFi 驱动日志 存储在 mobilelog，tcpdump 存储在 netlog。 
+搜集完成后，可以通过 pull 命令将数据从 /data/debuglogger 目录中提取出来。 
+ 
+4. 固件日志级别设置 (UI:DebugloggerUI--&gt;Log Level--&gt;WiFi Firmware Log Level)，命令方式： 
+Extreme: 
+adb shell “iwpriv wlan0 driver ‘set_chip EvtDrvnLogCatLvl 0xFFFFFFFF’” 
+ 
+More: 
+adb shell “iwpriv wlan0 driver ‘set_chip EvtDrvnLogCatLvl 0xFFFFFF0F’” 
+ 
+Default: 
+adb shell “iwpriv wlan0 driver ‘set_chip EvtDrvnLogCatLvl 0xFFFFFF03’” 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0094.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8668 Android WiFi 
+User Manual  
+Confidential B 
+5. WiFi 驱动日志级别设置 (UI:DebugloggerUI--&gt;Log Level--&gt;WiFi Driver Log Level):: 
+Extreme: 
+adb shell “echo ”0xff:0x7f” &gt; /proc/net/wlan/dbgLevel” 
+ 
+More: 
+adb shell “echo ”0xff:0x3f” &gt; /proc/net/wlan/dbgLevel” 
+ 
+Default: 
+adb shell “echo ”0xff:0x2f” &gt; /proc/net/wlan/dbgLevel” 
+ 
+6. Sniffer log 
+Sniffer log 是 WiFi 分析很重要的一种手段。用于监测 WiFi 各种帧在空口中的表现。譬如连线断连、吞吐、延时等问
+题，都需要借助 sniffer log 来分析。 
+在项目开始后，客户需要准备一台已安装抓包驱动和抓包工具 的个人电脑，用于捕获 sniffer log 的无线网卡。在 
+提供日志时，建议尽量同时提供 sniffer log，以避免在日志问题上来回沟通. 
+1.4.3 扫描 
+1.4.3.1 扫描关键日志 
+内核中的扫描状态机开始运行： 
+scnFsmSteps: (SCN STATE) [SCAN]TRANSITION: [IDLE] -&gt; [SCANNING] 
+ 
+内核日志中记录了扫描状态机的停止？ 
+scnFsmSteps: (SCN STATE) [SCAN]TRANSITION: [SCANNING] -&gt; [IDLE] 
+ 
+计算停止和启动的时间差，看是否正常 
+内核日志中记录了 scan done 事件 
+aisFsmRunEventScanDone: (AIS INFO) ScanDone 1, status(0) native req(1) 
+ 
+上层日志中记录了 scan done 的事件，并将此信息传递给 supplicant 
+wpa_supplicant: wlan0: Event SCAN_RESULTS (3) received 
+ 
+1.4.3.2 未扫描到 AP 
+上层日志中确认了由框架端（framework）下发的扫描命令 
+WifiHW  : enter --&gt;wifi_send_command cmd=IFNAME=wlan0 SCAN TYPE=ONLY 
+ 
+如果没有收到，建议检查框架部分以确定问题所在。如果收到，转到下一步 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0094.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8668 Android WiFi 
+User Manual  
+Confidential B 
+内核日志中记录了扫描状态机成功启动，并向固件下发命令  
+scnFsmSteps: (SCN STATE) [SCAN]TRANSITION: [IDLE] -&gt; [SCANNING] 
+ 
+内核日志中记录了扫描命令已经成功地传递给了固件 
+kalEnqueueCommand:(INIT TRACE) EN-Q CMD TYPE[x] ID[0x03]  
+ 
+内核日志中记录了接收到固件发送的 scan done 事件 
+aisFsmRunEventScanDone 
+ 
+内核日志中确认已经扫描到了接入点（Access Point） 
+(SCN INFO) [SCN:600:D2K] Total:12/24 
+ 
+主要确认当前日志，看是否扫描到接入点。 
+ 
+注：如需联发科技协助，请提供 consyslog， mobileLog， netlog 以及 sniffer log。抓取 sniffer log 的个人电脑需先与
+设备同步时间，同时需提供双方 IP 地址及 MAC 地址。如果存在与 BT 2.4G 共存的情况，请同时提供 picus log (需标
+注清楚问题时间点). 
+ 
+1.4.4 STA Connect 终端设备连接 
+1. 检查 connect policy，过滤条件为: mtk_cfg80211_connect 
+mtk_cfg80211_connect:(REQ INFO) [wlan] mtk_cfg80211_connect 00000000e0a61a62 61 
+auth_type=0 flags=0x40 wlanoidSetConnect:(INIT INFO) ucBssIndex 0, ssid test_ap, bssid 
+00:00:00:00:00:00, bssid_hint ce:84:f6:15:4f:4d, conn policy 4, disc reason 4, freqInMHZ 
+5805 
+ 
+2. 检查 AIS（Adaptive Internet Systems）状态流程是否正常，过滤条件为(AIS STATE) 
+aisFsmSteps:(AIS STATE) [AIS0][0] TRANSITION: [IDLE] -&gt; [IDLE] 
+aisFsmSteps:(AIS INFO) eReqType=1 
+aisFsmSteps:(AIS STATE) [AIS0][0] TRANSITION: [IDLE] -&gt; [SEARCH] 
+aisFsmSteps:(AIS STATE) [AIS0][0] TRANSITION: [SEARCH] -&gt; [REQ_CHANNEL_JOIN] 
+aisFsmSteps:(AIS STATE) [AIS0][0] TRANSITION: [REQ_CHANNEL_JOIN] -&gt; [JOIN] 
+aisFsmSteps:(AIS STATE) [AIS0][0] TRANSITION: [JOIN] -&gt; [NORMAL_TR] 
+ 
+3. 检查 SAA（Service Advertisement Agent）状态流程是否正常，过滤条件为 (SAA STATE) 
+saaFsmSteps:(SAA STATE) [SAA]TRANSITION: [AA_IDLE] -&gt; [SAA_SEND_AUTH1] 
+saaFsmSteps:(SAA STATE) [SAA]TRANSITION: [SAA_SEND_AUTH1] -&gt; [SAA_WAIT_AUTH2] 
+saaFsmSteps:(SAA STATE) [SAA]TRANSITION: [SAA_WAIT_AUTH2] -&gt; [SAA_SEND_ASSOC1] 
+saaFsmSteps:(SAA STATE) [SAA]TRANSITION: [SAA_SEND_ASSOC1] -&gt; [SAA_WAIT_ASSOC2] 
+saaFsmSteps:(SAA STATE) [SAA]TRANSITION: [SAA_WAIT_ASSOC2] -&gt; [AA_IDLE] 
+ 
+4. 检查是否已经连接上选定的接入点， 过滤条件为：netif_carrier_on 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0094.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8668 Android WiFi 
+User Manual  
+Confidential B 
+ 
+5. 检查 AIS 状态是否切到正常的 TR， 过滤条件为， (AIS STATE) 
+aisFsmSteps: (AIS STATE) [AIS0] TRANSITION: [JOIN] -&gt; [NORMAL_TR] 
+ 
+6. 确认 EAP 行为，过滤条件为 EAPOL 
+statsParsePktInfo:(RX INFO) &lt;RX&gt; EAPOL: key, M1, KeyInfo 0x008a, SSN:0 
+statsParsePktInfo:(TX INFO) &lt;TX&gt; EAPOL: key, M2, KeyInfo 0x010a SeqNo: 2 
+statsParsePktInfo:(RX INFO) &lt;RX&gt; EAPOL: key, M3, KeyInfo 0x13ca, SSN:1 
+statsParsePktInfo:(TX INFO) &lt;TX&gt; EAPOL: key, M4, KeyInfo 0x030a SeqNo: 3 
+ 
+7. 确认 DHCP 行为，过滤条件为 DHCP 
+通过分析内核日志中的相关信息，可以确定 DHCP 过程中的成功与否 
+确定 DHCP IPID 及 MsgType &lt;TX/RX&gt;都成对  
+传输的状态都显示为 0 (表示成功) 
+注：如需联发科技协助，请提供 consyslog， mobileLog， netlog，以及 sniffer log。抓取 sniffer log 的个人电脑需先
+与设备同步时间，同时需提供双方 IP 地址及 MAC 地址。如果存在与 BT 2.4G 共存的情况，请同时提供 picus log (需
+标注清楚问题时间点). 
+ 
+1.4.5 网络吞吐量 
+• 网络吞吐量受多种因素影响，包括人为操作、环境、协议限制、硬件、软件等。收集的条件越多，解决问题的
+时间越短。 
+• 为避免环境因素和测试工具不对齐带来的影响，请在屏蔽室进行吞吐量测试。建议使用  Linux 环境的 iperf 工具
+进行测试。 
+• 在同等环境下先测试同级别设备，观察差异，替换接入点（AP）以验证现象。 
+• 确保进行 CTIA 模式测试，避免在线扫描、省电模式等带来的干扰。 
+• 吞吐量测试原则上应为纯 WiFi 测试，请务必关闭蓝牙（BT）。 
+• 如果存在蓝牙共存情况，需明确场景，并提供 picus log。 
+ 
+注：如需联发科技协助，请提供 consyslog， mobileLog， netlog，以及 sniffer log。抓取 sniffer log 的个人电脑需先
+与设备同步时间，同时需提供双方 IP 地址及 MAC 地址。如果存在与 BT 2.4G 共存的情况，务必说明并请同时提供
+picus 日志 (需标注清楚问题时间点). 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0094.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+MT8668 Android WiFi 
+User Manual  
+Confidential B 
+1.4.6 WiFi 引起的 MT6637 芯片重置 
+当 WiFi 驱动程序或 WiFi 固件出现异常且无法恢复时，会触发芯片重置。在芯片重置之前，会有 coredump 机制，
+用于转储异常现场的一些状态。 
+在这种情况下，coredump 文件和 consyslog 是非常重要的分析工具，请务必提供。 
+Coredump 的原理是： 
+1. 驱动程序端通过 netlink 将数据传输到本地 
+2. 通过本地 mmap 读取 EMI（外部内存接口）中的数据 
+   
+ 
+表 1-3. Coredump 的生成路径 
+ 
+BT Wi-Fi 
+Assert_type combo_bt combo_wifi 
+Dump 存放目录 
+(可在 native 端客制化) 
+/data/vendor/connsyslog/bt /data/vendor/connsyslog/wifi 
+Dump file list 
+combo_t32.cmm 
+SYS_WCN_ISSUE_INFO 
+SYS_WCN_EMI_DUMP 
+SYS_WCN_MCIF_EMI_DUM 
+SYS_WCN__ILM_DUMP 
+SYS_WCN__DLM_DUMP 
+SYS_WCN_SRAM_DUMP 
+combo_t32.cmm 
+SYS_WCN_ISSUE_INFO 
+SYS_WCN_EMI_DUMP 
+SYS_WCN_MCIF_EMI_DUM 
+SYS_WCN__ROM_DUMP 
+SYS_WCN__ILM_DUMP 
+SYS_WCN_MDLM_DUMP 
+SYS_WCN_WDLM_DUMP 
+SYS_WCN_SRAM_DUMP 
+ 
+在抓取问题之前，需检查 coredump 文件生成机制是否打开： 
+1. 检查 coredump 模式是否设置为 1 或 2： 
+getprop persist.vendor.connsys.coredump.mode 
+ 
+2. 如果为 0，可以将其设为 1 或 2 后重启 
+setprop  persist.vendor.connsys.coredump.mode 2 
+ 
+WFsys 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0094.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+MT8668 Android WiFi 
+User Manual  
+Confidential B 
+3. 重启后，检查 coredump 模式是否设置为指定值，以及 wifi_dump 是否在运行： 
+auto8668p1_64_bsp:/ # getprop | grep coredump 
+getprop | grep coredump 
+[persist.vendor.connsys.coredump.mode]: [2] 
+ 
+auto8668p1_64_bsp:/ # ps -A |grep wifi_dump 
+ps -A |grep wifi_dump 
+system        1121     1   10788624   5268 poll_schedule_timeout 0 S wifi_dump 
+ 
+4. 如果 wifi_dump 在运行，请打开 WiFi 并手动触发一次芯片重置，查看是否生成 coredump 文件： 
+auto8668p1_64_bsp:/ # echo 0xDB9DB9 &gt; /proc/driver/conninfra_dbg 
+auto8668p1_64_bsp:/ # echo 0x1 &gt; /proc/driver/conninfra_dbg 
+ 
+查看是否有生成 coredump 文件： 
+auto8668p1_64_bsp:/ # ls data/vendor/connsyslog/wifi 
+ls data/vendor/connsyslog/wifi 
+combo_t32_20240602073036.CI_M  combo_t32_20240602073036._ROM 
+combo_t32_20240602073036.MDLM  combo_t32_20240602073036.cmm 
+combo_t32_20240602073036.SRAM  combo_t32_20240602073036.emi 
+combo_t32_20240602073036.WDLM  combo_t32_20240602073036_issue_info.xml 
+combo_t32_20240602073036._ILM  combo_t32_20240602073036_mcif.emi 
+ 
+5. 如果可以顺利生成 coredump 文件，则可以开始抓取问题日志了。 
+抓到问题后，除了 debuglogger，请同步提供 coredump 文件，如 AEE 有生成 db 文件，也请同步提供。 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0094.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 16 
+MT8668 Android WiFi 
+User Manual  
+Confidential B 
+附件一 附加条款 
+您(或您所代表的公司或其他法律主体，以下合称「您」)是否得取得、下载与使用本文件及其相关信息皆应以您接受本附加条款为先决要件。
+您对于本文件之使用、取得或下载即表示您已接受本附加条款并同意受本附加条款之拘束。若您不同意受本附加条款之拘束，您将不得使用、
+取得或下载本文件并应立即删除或毁弃所有本文件之副本。 
+ 
+本文件含有联发科技股份有限公司及其关联公司（以下合称「联发科技」）或其授权人之机密信息及专有信息，仅供您为本文件所描述之联发
+科技芯片组作内部使用而不得用于其他任何目的（包括但不限于确认或提供支持任何对联发科技、其供货商及/或其直接或间接客户所提潜在
+专利侵权主张的证据）。禁止未经授权使用或揭露本文件及其中所含信息。您同意赔偿联发科技因您未经授权使用或揭露本文件及其中所含信
+息之一部或全部导致联发科技所受之任何损失或损害。 
+ 
+联发科技及其授权人保有本文件的所有权及组成所有权之各项权利且未针对任何知识产权授权（无论明示或默示、透过禁反言原则或其他方
+式）。联发科技得随时变更本文件内容而无须另行通知。联发科技无须承担与使用或信赖本文件相关或因使用或信赖本文件致生之任何责任，
+包括但不限于间接损害或附带损害赔偿责任。 
+ 
+本文件及联发科技所提供关于本文件之任何其他材料、信息或技术支持，均以现况交付为准，联发科技不负任何明示、默示、法定或其他形式
+之担保责任，特别是适销性、不侵权、针对特定用途之适用性、完整性或正确性之担保责任或任何由贸易惯例或交易、履行过程所生之担保责
+任。对于联发科技为符合您所提规格或遵循特定标准或标准组织的要求所作之交付物，联发科技亦不应承担任何责任。 
+ 
+于未对前述条款造成限制之情形下，联发科技不对其产品任何特定用途之适用性承担任何保证或担保责任，亦不承担任何因产品、电路或软件
+之应用或使用致生之赔偿责任。您同意您应单独承担关于整合您的产品与联发科技产品所涉及之设计、验证与测试之所有责任，并应确保前述
+整合产品符合相关标准及任何安全性要求或其他要件。 
+ 
+本附加条款及所有与本附加条款或本文件相关之行为应以台湾法律管辖、解释与阐明，不适用冲突法原则。 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

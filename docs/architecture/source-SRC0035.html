@@ -1,0 +1,439 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Hypervisor_Suspend_Resume_Common_Flow.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Hypervisor_Suspend_Resume_Common_Flow.pdf</h1><p>SRC0035 · 原来源 ID S265 · PDF物理页 · 16 个阅读单元</p><p class="note">有引用的指定页/文本核对；未宣称全文逐页审阅。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/PVT技术分享文档/MT8676_Hypervisor_Suspend_Resume_Common_Flow.pdf</p><p>SHA-256：<code>b3ab2e67d52d5192a4a1a2abea73e1419f5813b2465eb1a93404268c9e469b65</code></p><p>原文件大小：1,504,785 字节</p></details><div class="actions"><a class="button" href="materials/SRC0035.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Hypervisor_Suspend_Resume_Common_Flow.pdf 原 PDF" src="materials/SRC0035.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0035.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 1 —
+PVT
+MT8676 Hypervisor Suspend &amp; Resume
+Common Flow
+版本: v1
+出版日期: 2026/1/7
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0035.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 2 —
+版本记录
+版本 日期 作者 描述
+v1 2026/1/7 杨娟陶 正式版
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0035.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 3 —
+目录
+1.1 概述 .................................................................................................................................................. 4
+1.2 架构/流程概要 ................................................................................................................................5
+1.2.1 Hypervisor Suspend 流程 ................................................................................................. 5
+1.2.2 Hypervisor Resume 流程 .................................................................................................. 6
+1.3 唤醒源介绍 ......................................................................................................................................8
+1.4 STR 问题分析 ............................................................................................................................... 9
+1.4.1 STR 触发方式 .......................................................................................................................... 9
+1.4.2 STR 常用 debug 命令 ......................................................................................................10
+1.4.3 关键 log 查找 ....................................................................................................................... 11
+1.4.4 关键 log 介绍 ....................................................................................................................... 11
+1.4.5 典型问题分析 ..................................................................................................................... 13
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0035.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 4 —
+1.1 概述
+本章节主要介绍 MT8676 Hypervisor Suspend/Resume 流程。
+在 MT8676 平台上，Suspend 即 Suspend to RAM，此状态使所有的设备进入低功耗状态，仅保留
+RAM 自刷新。
+Suspend Power State：
+• Tasks “freezed”
+• 外部设备/内部部分模块关电或者进入低功耗模式
+• System PLL/clock close
+• ARM off
+• DRAM 自刷新
+• PMIC 进入低功耗模式
+• VCORE off
+• SPM run
+• 等待硬件唤醒事件
+在 MT8676 Hypervisor（L+L+A）系统上， Host OS SoS 与 Guest OS Tbox 系统都是 Yocto， Guest
+OS IVI 系统是 Android。系统级 Suspend 由 Host OS 发起，触发 Guest OS 运行 Suspend Flow，
+Guest OS 都完成 Suspend Flow 之后，Host OS 可以进入 Suspend，Host OS Suspend 完成之后整
+个系统才能进入省电的深度休眠模式。
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0035.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 5 —
+1.2 架构/流程概要
+1.2.1 Hypervisor Suspend 流程
+Hypervisor Suspend 框架图如下（以 EINT 触发系统进出休眠为例）：
+主要的流程说明:
+1. 平台进出休眠主要由 MCU 发起，MCU 通过 GPIO35 (MCU2AP) 的状态控制 SoC 进出休眠，GPIO35
+被拉低后，会触发中断，该中断会被 Hypervisor 分发给 SoS 系统处理,SoS Kernel 收到中断后,将 Key Event
+上报。
+2. 在 SoS UserSpace 中，有一段控制逻辑 SleepManager，用于管理 Guest OS 的电
+源状态，这层逻辑主要是 SoC 通过 Input Sub System 获取 Key Event 来触发的。
+3. 当检测到休眠事件后 SoS UserSpace 写 powerkey 到/sys/guest_os/android/pm_state，向 android
+发起休眠请求。
+4. SoS 的 Kernel Driver 通过 Mailbox 的方式将 Suspend 请求通知到 Android 的 power client。
+5. 在 power client 中，上报虚拟 Power Key (Keyevent=87)，触发 Guest OS 端完整的休眠流程。
+6. Guest OS IVI 由于 Vehicle HAL 没有现成的接口对接 power client，所以这里增加 Input sub system
+支持，等待 Kernel 端送来的虚拟 Power Key,VHAL 收到后会通知 Car Power Management Service 启
+动休眠流程。
+7. Power Management Service 依然监听 Power Key Event(Keyevent=116)，这里没有执行 PMS
+Flow。
+8. 触发关闭显示相关硬件。
+9. CPMS 在没有唤醒锁检查的情况下触发 Suspend Flow，触发 Android Kernel Suspend。Kernel
+Suspend Flow 与原生系统中的流程相同。根据执行顺序，它依次调用设备注册
+Prepare/Suspend/Suspend_late 回调函数，在休眠阶段为每个 Device driver 完成必要的准备工作。
+10. 各 Device 休眠后，送 s2idle SMC 指令到 ATF 去关闭 CPU core，指令会被 Hypervisor 拦截，
+并挂起对应的 vCPU 线程。Android 的休眠完成，Hypervisor 会记录的 Android 状态将从 running
+改为 suspend，方便 Host OS 通过节点查询。
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0035.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 6 —
+11. Host OS 端触发 Guest OS 端休眠后会阻塞并等待，直到从节点/sys/guest_os/android/pm_state
+获取到 android 为 Suspend 的状态。
+12. 当检测到安卓休眠事件后 SoS UserSpace 写 powerkey 到/sys/guest_os/tbox/pm_state，向 tbox
+发起休眠请求并监听 tbox 状态。
+13. 待 Guest OS 都 Suspend 后，Host OS 端上报 key code 116 触发关闭显示相关，然后再检查
+Wakelock 状态，如无锁，则触发 Host OS Kernel Suspend Flow (echo mem &gt; /sys/power/state)。
+14. 执行 Host OS Kernel Suspend，完成 Device Suspend 后，送 s2idle SMC 指令到 ATF 去关闭
+CPU core，指令会被 Hypervisor 拦截，并挂起对应的 vCPU 线程，然后虚拟机做好 backup，
+Hypervisor 将 s2idle 指令再发送给 ATF，将物理 CPU 真正关闭。
+15. 在 ATF 中，CPU0 执行 WFI 指令前，先将 GPIO128 (AP2MCU)拉低，通知 MCU，SoC 端已经
+完成 Host OS 和 Guest OS 的 Suspend Flow。
+16. 待 Arm 相关的硬件被关闭后，SPM (System Power Manage，用于电源管理的 MCU) 将接管整个
+系统的资源，控制 DRAM 进入自刷新模式，关闭 26M 和 VCORE，通知 PMIC 进入 Low Power Mode。
+至此，整个休眠流程完成，系统处于低功耗状态，等待唤醒事件发生。
+1.2.2 Hypervisor Resume 流程
+Resume Flow 与 Suspend 相反，可以参考下图:
+主要流程：
+1. MCU 收到唤醒事件后，拉高 GPIO35 (MCU2AP)，SPM 收到 EINT 后，依次打开释放的资源，如通
+知 PMIC 离开 Low Power Mode，打开 VCORE 和 26M，发送命令通知 DRAM 离开自刷新。
+2. 给 CPU0 上电，执行 CPU Resume 流程，再跳到 Suspend 前设定的地址，开始执行系统 Resume
+流程。
+3. 拉高 GPIO128，将 SoC 已经醒来的消息发送给 MCU。(可根据需求调整通知 MCU 的时间点，如等
+Android Resume 完成再拉高 GPIO128)。
+4. Hypervisor 中 vCPUx 线程恢复后，跳到 Host OS Linux Kernel，再执行 Native Kernel Resume
+Flow，将唤醒事件通过 Key Event 上报。
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0035.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 7 —
+5. SoS 的 SleepManager 通过 Input Subsystem 上报的事件判断后，将决定再次休眠或者继续唤醒
+Flow，像 MCU 拉高 GPIO35 这种就会继续唤醒 Flow。
+6. 如果是可以唤醒整个系统的 Key Event，则上报 keyevent 116 去 resume Weston, 并 hold
+wakelock，防止再次休眠。
+7. 写节点/sys/guest_os/android/resume，触发安卓唤醒。
+8. Hypervisor 收到后，恢复 vCPU0 线程。
+9. Enable Non-Boot CPUs，恢复 vCPU1~7 线程，开始 IVI Kernel Resume Flow。
+10. IVI 基于 CPMS 架构，无需判断 keyevent，默认所有事件都可以触发整个系统 Resume。
+11. 在 Host OS 端，可以通过节点/sys/guest_os/android/pm_state，使用 Mailbox 机制查询
+Android 状态，如果 Guest OS 端 kernel Resume 完成则更新状态为 Running。
+12. Android 端， Car Power Management Service 收到唤醒事件后，Disable System Suspend，防
+止误触发休眠。
+13. 通知打开显示相关模块。
+14. sos 监听到安卓唤醒结束后, sos 写节点/sys/guest_os/tbox/resume 唤醒 Tbox 端， 由
+SleepManager 主动 hold wakelock。
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0035.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 8 —
+1.3 唤醒源介绍
+目前 MT8676 支持的唤醒源列表如下：
+您可以按照以下方式禁用列表中可以禁用的唤醒源。但是，请注意，只有在“Can it be Disabled”列中
+标注为可禁用（Y）的唤醒源才能被禁用：
+使用系统提供的调试命令可以快速禁用特定的唤醒源：
+1. 使用如下命令读取当前系统唤醒源设定：
+cat /proc/mtk_lpm/power/suspend_ctrl | grep -i wake_src
+2. 在上表中的“Control Bit”栏位中找到您想要禁用唤醒源所对应的的 control bit 位，然后将读出的
+wake_src 的对应 bit 写 0，最后用下述命令将修改后的 wake_src 写进系统（不需要禁用的唤醒源的
+control bit 位不进行修改）：
+echo wake_src 0x******** &gt; /proc/mtk_lpm/power/suspend_ctrl
+3. 如果想要再启用某个唤醒源，就将对应的 control bit 再写 1 即可。
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0035.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 9 —
+1.4 STR 问题分析
+1.4.1 STR 触发方式
+整机休眠: echo stress &gt; /sys/kernel/powerkey/stress
+休眠安卓: echo powerkey &gt; /sys/guest_os/android/pm_state
+休眠 tbox: echo powerkey &gt; /sys/guest_os/tbox/pm_state
+rtc 唤醒, 30 是指 30s: echo +30 &gt; /sys/class/rtc/rtc0/wakealarm
+单独唤醒安卓: echo 0 &gt; /sys/guest_os/android/resume
+持锁唤醒 tbox：echo 1 1 &gt; /sys/guest_os/tbox/resume
+不持锁唤醒 tbox：echo 1 2 &gt; /sys/guest_os/tbox/resume
+看安卓状态: cat /sys/guest_os/android/pm_state
+看 tbox 状态: cat /sys/guest_os/tbox/pm_state
+客制化(acc)
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0035.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 10 —
+1.4.2 STR 常用 debug 命令
+//休眠时仍然尝试打印日志, 会增加功耗, 仅 debug 用
+echo 0 &gt; /sys/module/printk/parameters/console_suspend
+//打印更多 log 信息
+echo 7 &gt; /proc/sys/kernel/printk
+//打开 kernel log
+echo 1 &gt; /proc/mtprintk
+//查看 block by|wake up by, 26M_off_pct 是 0 的时候才有 blocked by 打印, 不是 0，说明最终 26M 有
+被关, 需要时间
+sos 下这两个命令, 看下 config 是不是开的
+zcat /proc/config.gz | grep CONFIG_PM_DEBUG
+zcat /proc/config.gz | grep CONFIG_PM_SLEEP_DEBUG
+然后 sos 端下
+echo 1 &gt; /sys/power/pm_debug_messages
+//如果软件已经进入 low power mode, 但是功耗未达标, 需要接着确定硬件, 休眠前 dump gpio 状态
+echo gpio_dump 1 &gt; /proc/mtk_lpm/suspend/suspend_state
+//查看 kernel 中有哪些模块持锁
+cat /sys/kernel/debug/wakeup_sources
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0035.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 11 —
+//打开 atf log
+1.4.3 关键 log 查找
+拿到文件后, 先和报案人确认问题时间点, 然后在 sos kernel log 贴下面一大串开始搜索
+suspended for|pm: suspend| suspend wake up by |suspend enter|PM: Pending Wakeup
+Sources|Wakeup Source|Restarting tasks|Freezing user space processes|Syncing
+filesystem|complete after|aborted after|failed after|Resume caused by |is
+pending|eint_mask|wakeuped by|Resume cause|pm_state|wake up by|read tc time|set al time|sh:
+1.4.4 关键 log 介绍
+kernel log:
+//开始休眠安卓
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0035.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 12 —
+sh: pm_state_store:powerkey
+//开始休眠 tbox
+sh: tbox_pm_state_store:powerkey
+//检测 log, vm0(安卓), vm1(tbox)
+host get vm0 pm_state 1
+pm_state 状态如下:
+//关闭 usb
+sh: mtu3 16721000.usb2: ssusb_set_mode none
+//进入休眠时间
+sleepmanager: [name:spm&amp;] PM: suspend entry 2025-09-17 15:36:54.497349 UTC;android time
+2025-09-17 15:36:54.497349
+//kernel 休眠结束
+swapper/3: [name:spm&amp;][lpm_suspend_s2idle_prompt:124] - suspend enter
+//唤醒后会打印出唤醒源, 如果 debug_flag 后两位不是 ff, 代表休眠前有子系统起来工作, 26M_off_pct
+代表 26M 休下去的占比, 如果是 0 说明没有深休
+swapper/3: [name:spm&amp;][SPM] suspend wake up by R12_EINT_EVENT_B, timer_out = 19316402,
+r13 = 0x1200, debug_flag = 0x1003f3ff 0x207e071, r12 = 0x40, r12_ext = 0x40, raw_sta = 0x40
+0x0 0x0, idle_sta = 0x0, req_sta = 0x100000 0x0 0x0 0x0 | 0x0 0x380000 0x0 0x78 | 0x0 0x0
+0x1fcd800 0x0 | 0x0 0x0 0x0 0x0 | 0x40, spm_src_req = 0x8f20000, cg_check_sta =0x0, isr = 0x0,
+sw_rsv = 0x0 0x0 0x0 0x80000000 | 0x126bd57 0xffffffff 0x0, raw_ext_sta = 0x84cb255, wake_misc
+= 0x180030, sw_flag = 0x8a0014 0x50000, b_sw_flag = 0x8a0014 0x50000, clk_settle = 0x60fe,
+wlk_cntcv_l = 0x94699ab0, wlk_cntcv_h = 0x2, 26M_off_pct = 99, vcore_off_pct = 99
+//确定休眠时间 (要确定约等于退出时间-开始时间, 不然就是假休眠)
+swapper/3: [name:spm&amp;][SPM] suspended for 589.489 seconds
+//退出休眠时间
+sleepmanager: [name:spm&amp;] PM: suspend exit 2025-09-17 15:46:45.161016 UTC;android time
+2025-09-17 15:46:45.161016
+//rtc 相关
+read tc time //读出当前时间
+set al time //设置 rtc 时间
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0035.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 13 —
+1.4.5 典型问题分析
+1.4.5.1 休眠问题
+A) Userspace freeze 失败
+log 表现为:
+1.确认这俩 config 有开
+zcat /proc/config.gz | grep CONFIG_PM_DEBUG
+zcat /proc/config.gz | grep CONFIG_PM_SLEEP_DEBUG
+2. 输入下面 command
+echo 1 &gt; /sys/power/pm_debug_messages
+3. 重新复现
+4.哪个 task 拒绝 freeze, 就可以打印出来
+B) 检查有 wakeup source
+[20250926_09:05:41796][377.752848]nbl_vm_srv[2971]: [vmid:1][ 341.521844][T00000001648]
+sleepmanager: Abort: Pending Wakeup Sources: ttyCMIPC1
+C) 休眠被异常唤醒
+suspend wake up by R12_CCIF0_EVENT_B
+正常唤醒也会打出这句 log, 要结合场景看属不属于异常唤醒源, R12_CCIF0_EVENT_B 属于 modem。
+1.4.5.2 可以休眠但是电流不达标
+A) 有 clock calltrace 打印
+休眠时候会关 pll, 没关的会打出 suspend warning calltrace, suspend 会开始 retry, retry 三次后还没关,
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0035.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 14 —
+则直接进入休眠。
+B) 无法进入 low power mode
+若是直接打印出阻挡的模块, 直接找对应模块
+[ 3147.743642][T10300000000] swapper/3: [name:spm&amp;amp;][SPM] suspend wake up by
+R12_CCIF0_EVENT_B, timer_out = 5142432, r13 = 0x1b4c, debug_flag = 0x10030000 0x1, r12 =
+0x100, r12_ext = 0x100, raw_sta = 0x100 0x0 0x0, idle_sta = 0x0, req_sta = 0x1000f8 0x10000
+0x2002 0x2002 | 0x2002 0x380000 0x0 0x78 | 0x0 0x0 0xf5fcd800 0x7 | 0x5f800000 0x7c 0x3800
+0x0 | 0x40, spm_src_req = 0x18f20000, cg_check_sta =0x0, isr = 0x0, sw_rsv = 0x0 0x0 0x0
+0x80000000 | 0x0 0xffffffff 0x0, raw_ext_sta = 0x848b155, wake_misc = 0x180030, sw_flag =
+0x8a0014 0x50000, b_sw_flag = 0x8a0014 0x50000, clk_settle = 0x60fe, wlk_cntcv_l = 0x6d47dbc,
+wlk_cntcv_h = 0xa, 26M_off_pct = 0, vcore_off_pct = 0
+[ 3147.743642][T10300000000] swapper/3: [name:spm&amp;amp;][SPM] suspend warning:(OneShot)
+System LPM is blocked by md
+[ 3147.743642][T10300000000] swapper/3: [name:spm&amp;amp;][SPM] HWCG sta :[0] 0x0 0x0 0x0
+|[1] 0x0 0x0 0x0 |[2] 0x0 0x0 0x0 |[3] 0x0 0x0 0x0 |[4] 0x0 0x0 0x0 |[5] 0x0 0x0 0x0 .
+[ 3147.743642][T10300000000] swapper/3: [name:spm&amp;amp;][SPM] PERI_CG sta :[0] 0x8 |[1] 0x8
+|[2] 0x8 |[3] 0x8 |[4] 0x8 |[5] 0x8 .
+[ 3147.743642][T10300000000] swapper/3: [name:spm&amp;amp;][SPM] suspended for 156.934
+seconds
+[ 3147.743642][T10300000000] swapper/3: [name:spm&amp;amp;][lpm_suspend_s2idle_reflect:148] -
+resume
+若是没有打印出模块, 需要给出下面 spm 信息先定位是哪个模块然后再抓对应 owner
+[ 147.324928][T10200000000] swapper/2: [name:spm&amp;][SPM] suspend wake up by
+R12_EINT_EVENT_B, timer_out = 10154156, r13 = 0x1200, debug_flag = 0x10030000 0x1, r12 =
+0x40, r12_ext = 0x40, raw_sta = 0x40 0x0 0x0, idle_sta = 0x0, req_sta = 0x100000 0x0 0x0 0x0 |
+0x0 0x380000 0x0 0x78 | 0x0 0x0 0x1fcd800 0x0 | 0x5f800000 0x0 0x0 0x0 | 0x40, spm_src_req =
+0x18f20000, cg_check_sta =0x0, isr = 0x0, sw_rsv = 0x0 0x0 0x0 0x80000000 | 0x0 0xffffffff 0x0,
+raw_ext_sta = 0x84cb155, wake_misc = 0x180030, sw_flag = 0x8a0014 0x50000, b_sw_flag =
+0x8a0014 0x50000, clk_settle = 0x60fe, wlk_cntcv_l = 0x68679ee3, wlk_cntcv_h = 0x1,
+26M_off_pct = 0, vcore_off_pct = 0
+[ 147.324928][T10200000000] swapper/2: [name:spm&amp;][SPM] suspend warning:(OneShot)
+System LPM is blocked by
+[ 147.324928][T10200000000] swapper/2: [name:spm&amp;][SPM] HWCG sta :[0] 0x0 0x0 0x0 |[1]
+0x0 0x0 0x0 |[2] 0x0 0x0 0x0 |[3] 0x0 0x0 0x0 |[4] 0x0 0x0 0x0 |[5] 0x0 0x0 0x0 .
+[ 147.324928][T10200000000] swapper/2: [name:spm&amp;][SPM] PERI_CG sta :[0] 0x8 |[1] 0x8 |[2]
+0x8 |[3] 0x8 |[4] 0x8 |[5] 0x8 .
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0035.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 15 —
+C) 软件没有发现异常但是电流仍不达标
+若出现下面字样, 说明软件休完了
+swapper/3: [name:spm&amp;][SPM] suspend wake up by R12_EINT_EVENT_B, timer_out = 19316402,
+r13 = 0x1200, debug_flag = 0x1003f3ff 0x207e071, r12 = 0x40, r12_ext = 0x40, raw_sta = 0x40
+0x0 0x0, idle_sta = 0x0, req_sta = 0x100000 0x0 0x0 0x0 | 0x0 0x380000 0x0 0x78 | 0x0 0x0
+0x1fcd800 0x0 | 0x0 0x0 0x0 0x0 | 0x40, spm_src_req = 0x8f20000, cg_check_sta =0x0, isr = 0x0,
+sw_rsv = 0x0 0x0 0x0 0x80000000 | 0x126bd57 0xffffffff 0x0, raw_ext_sta = 0x84cb255, wake_misc
+= 0x180030, sw_flag = 0x8a0014 0x50000, b_sw_flag = 0x8a0014 0x50000, clk_settle = 0x60fe,
+wlk_cntcv_l = 0x94699ab0, wlk_cntcv_h = 0x2, 26M_off_pct = 99,
+若此时量测电流还是不达标, dump gpio 看 gpio 是否都有拉低
+echo gpio_dump 1 &gt; /proc/mtk_lpm/suspend/suspend_state
+1.4.6 唤醒问题
+A) 点了唤醒没反应
+下面命令用来看唤醒的 gpio 是否能被 SOS 识别
+cat /proc/mtk_gpio/soc.pinctrl
+B) rtc 定时未唤醒
+1. 确定 rtc 是否有设置成功
+行 2377: &lt;5&gt;[ 6859.793976][T10400057489] kworker/4:0: mt6685-rtc mt6685-rtc: set al time =
+2025/09/22 10:25:07 (1)
+行 2386: &lt;6&gt;[ 6859.840387][T10400057489] kworker/4:0: [mtk_rtc_set_alarm] from
+vms
+行 2389: &lt;6&gt;[ 6859.855519][T10400057489] kworker/4:0: mt6685-rtc mt6685-rtc:
+[HWID 0x8530, MCLK 0x1, prot key 0x3] SEC write 7, latest 0
+行 2392: &lt;6&gt;[ 6859.893871][T10400057489] kworker/4:0: mt6685-rtc mt6685-rtc:
+[HWID 0x8530, MCLK 0x1, prot key 0x3] MIN write 25, latest 0
+行 2393: &lt;6&gt;[ 6859.899981][T10400057489] kworker/4:0: mt6685-rtc mt6685-rtc:
+[HWID 0x8530, MCLK 0x1, prot key 0x3] HOUR write 10, latest 0
+行 2395: &lt;6&gt;[ 6859.914231][T10400057489] kworker/4:0: mt6685-rtc mt6685-rtc:
+[HWID 0x8530, MCLK 0x1, prot key 0x3] DOM write 22, latest 1
+行 2396: &lt;6&gt;[ 6859.920126][T10400057489] kworker/4:0: mt6685-rtc mt6685-rtc:
+[HWID 0x8530, MCLK 0x1, prot key 0x3] MTH write 9, latest 1
+行 2399: &lt;6&gt;[ 6859.930806][T10400057489] kworker/4:0: mt6685-rtc mt6685-rtc:
+[HWID 0x8530, MCLK 0x1, prot key 0x3] YEAR write 57, latest 2
+行 2402: &lt;6&gt;[ 6859.936343][T10400057489] kworker/4:0: mt6685-rtc mt6685-rtc: check rtc set
+alarm
+2. 确认 rtc 设定和休眠时间
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0035.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">— 16 —
+先确认 rtc 是在哪段下的, 最好要三端 mobilelog
+set al time 看 rtc 设置时间
+看开始休眠时间
+这个问题就是 rtc 设定的时候早于休眠时间导致没有唤醒, 属于正常情况
+C)唤醒时间过长问题
+yocto sos 唤醒
+[ 2933.682725][ T0] [name:spm&amp;][lpm_suspend_s2idle_reflect:148] - resume
+[ 2935.177698][T171341] Tbox Resume vmid:1, param:1, flag:0
+这中间有大量下面报错占时间
+***[TI3104]aic3x_write_register-ERR: i2c error 2==-6
+tbox 唤醒
+[ 2935.177698][T171341] Tbox Resume vmid:1, param:1, flag:0
+[ 2935.512013][T171362] android resume vmid:0
+android 唤醒
+[ 2870.155517][T30442] [tfa_time_sync_resume]time_to_sync:0x29c42999b0c
+[ 2870.214497][T30442] notify_android: resume
+[ 2870.945873][T30442] PM: suspend exit
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

@@ -1,0 +1,434 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Hypervisor_UART_User_Manual_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Hypervisor_UART_User_Manual_V1.0.pdf</h1><p>SRC0227 · 原来源 ID S162 · PDF物理页 · 13 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MT8676软件资料/User Manual/Hypervisor/Chinese Version/MT8676_Hypervisor_UART_User_Manual_V1.0.pdf</p><p>SHA-256：<code>34c55692de982f925c405fdb7a4c181377ab366a914c00b0f83dc09bfd00cde5</code></p><p>原文件大小：700,045 字节</p></details><div class="actions"><a class="button" href="materials/SRC0227.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Hypervisor_UART_User_Manual_V1.0.pdf 原 PDF" src="materials/SRC0227.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0227.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+版本:  1.0 
+出版日期:  2024-11-20
+MT8676 Hypervisor UART User Manual 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0227.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8676 Hypervisor UART 
+ User Manual 
+Confidential B 
+版本记录 
+版本 日期 作者 描述 
+1.0 2024-11-20 陈李亮 正式版 
+ 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0227.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8676 Hypervisor UART 
+ User Manual 
+Confidential B 
+目录 
+版本记录 ··········································································································································································· 2 
+目录 ··················································································································································································· 3 
+图片目录 ··········································································································································································· 3 
+表格目录 ··········································································································································································· 4 
+1 Hypervisor UART························································································································································ 5 
+1.1 概述·········································································································································································· 5 
+ 简单介绍 ······················································································································································ 5 
+ 名词解释 ······················································································································································ 5 
+1.2 UART 虚拟化方式 ···················································································································································· 6 
+ 虚拟化说明 ·················································································································································· 6 
+ UART 虚拟化握手流程 ································································································································· 6 
+ UART 虚拟化特征 ········································································································································· 7 
+ 测试与调试 ·················································································································································· 8 
+1.3 Passthrough 直通方式 ············································································································································· 8 
+ 直通说明 ······················································································································································ 8 
+ 具体实作 ······················································································································································ 9 
+ 测试和调试 ················································································································································ 11 
+ 常见问题及故障排除································································································································· 12 
+ 寻求联发科技帮助 ···································································································································· 12 
+附件一 附加条款 ····························································································································································· 13 
+ 
+ 
+图片目录 
+图 1-1. UART 虚拟化布局图 ······················································································································································ 5 
+图 1-2. 握手流程图···································································································································································· 6 
+图 1-3. SOS 部分改动 ································································································································································ 9 
+图 1-4. UOS-DTS 部分改动 ······················································································································································ 10 
+图 1-5. UOS-KO 部分改动 ························································································································································ 10 
+图 1-6. Hypervisor 部分改动 ··················································································································································· 11 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0227.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8676 Hypervisor UART 
+ User Manual 
+Confidential B 
+表格目录 
+表 1-1. 名词解释········································································································································································ 5 
+表 1-2. 代码路径········································································································································································ 6 
+表 1-3. UART 驱动代码路径 ······················································································································································ 8 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0227.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8676 Hypervisor UART 
+ User Manual 
+Confidential B 
+1 Hypervisor UART 
+1.1 概述 
+ 简单介绍 
+本章节主要介绍 MT8676 Hypervisor UART 的软件以及功能，虚拟化总体布局如图 1-1 所示。
+ 
+图 1-1. UART 虚拟化布局图 
+ 名词解释 
+表 1-1. 名词解释 
+缩写 解释 
+DMA 直接内存访问 
+GUEST 前端系统 
+HOST 后端系统 
+TTYS(x) 直通绑定的 UART 节点 
+UART 通用异步收发器 
+VPORT(x)P(x) 前端生成的 UART 虚拟节点 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0227.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Hypervisor UART 
+ User Manual 
+Confidential B 
+1.2 UART 虚拟化方式 
+ 虚拟化说明 
+对于多 OS 系统来说，由于多个外部 devices 需要用到 UART 进行通信，但受平台 UART 数量限制的影响无法实施，
+因此考虑对 UART 模块进行虚拟化使得不同 devices 可以在不同 OS 系统中使用 UART 模块，具体代码路径参考表 
+1-1。 
+ 
+表 1-2. 代码路径 
+前端路径 后端路径 
+kernel/drivers/char/virtio_console.c kernel/modules/mt8676/virt/grt/vhost_uart/uart.c 
+ 
+  UART 虚拟化握手流程 
+ 
+图 1-2. 握手流程图 
+ 
+对于多 OS 系统虚拟化而言，最关键的是建立前后端的通信连接。如 图 1-2 所示，总共可分为四部分： 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0227.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8676 Hypervisor UART 
+ User Manual 
+Confidential B 
+1. 前端（Guest）发送 VIRTIO_CONSOLE_DEVICES_READY 事件信号给后端（Host），代表着前端（Guest）devices 
+已准备好。 
+2. 后端（Host）收到信号后会往前端（Guest）发送 VHOST_CONSOLE_PORT_ADD 事件信号给前端（Guest），代
+表后端（Host）收到请求连接的信号需要前端添加相应的 PORT 节点。 
+3. 当前端（Guest）收到信号后会往后端（Host）发送 VIRTIO_CONSOLE_PORT_READY 事件信号，并且此刻会在前
+端（Guest）生成虚拟化节点 VPORT(x)P(x)，x 是随机生成的号码。 
+4. 当后端（Host）收到信号后会在后端（Host）将生成的节点添加至列表中，此刻代表整体握手流程结束。  
+ 
+  UART 虚拟化特征 
+1. 前端事件信号： 
+a) VIRTIO_CONSOLE_DEVICE_READY 
+设备准备 
+ 
+b) VIRTIO_CONSOLE_PORT_ADD 
+节点添加 
+ 
+c) VIRTIO_CONSOLE_PORT_REMOVE 
+移除节点 
+ 
+d) VIRTIO_CONSOLE_PORT_READY 
+节点准备 
+ 
+e) VIRTIO_CONSOLE_PORT_OPEN 
+开启节点 
+ 
+2. 后端事件信号： 
+a) VHOST_CONSOLE_DEVICE_READY 
+设备准备 
+ 
+b) VHOST_CONSOLE_PORT_ADD 
+节点添加 
+ 
+c) VHOST_CONSOLE_PORT_REMOVE 
+移除节点 
+ 
+d) VHOST_CONSOLE_PORT_READY 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0227.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 Hypervisor UART 
+ User Manual 
+Confidential B 
+节点准备 
+ 
+e) VHOST_CONSOLE_PORT_OPEN 
+开启节点 
+ 
+f) VHOST_CONSOLE_PORT_READ 
+读取节点 
+ 
+ 测试与调试 
+1. 查看前端是否生成了 UART 虚拟节点 
+find . -name vport* 
+ 
+2. UART 获取数据，可以使用以下命令接收 UART 数据并通过 console 打印出来 
+cat /dev/vport* 
+ 
+3. UART 发送数据，可以使用以下命令让 UART 发送字符串 “123” 
+echo 123 &gt; /dev/vport* 
+ 
+1.3 Passthrough 直通方式 
+ 直通说明 
+对于多 OS 而言，每个 OS 下都存在一套 MTK UART 驱动代码，如表 1-3 所示。 
+UART 的 virt 方式目前支持读/写/开/关四种操作，需要通过 Passthrough 直通的方式来进行修改波特率/开启软控流/
+开启硬控流的操作，也就是在对应的 OS 下开启 UART 驱动代码。 
+ 
+表 1-3. UART 驱动代码路径 
+系统 UART 路径 APDMA 路径 
+Android kernel/kernel_device_modules-
+6.1/tty/serial/8250/8250_mtk.c 
+kernel/kernel_device_modules-
+6.1/dma/mediatek/mtk-uart-apdma.c 
+Yocto src/kernel/linux/v6.1_mt8676/co_device_modul
+e/drivers/tty/serial/8250/8250_mtk.c 
+src/kernel/linux/v6.1_mt8676/co_device_module/driv
+ers/dma/mediatek/mtk-uart-apdma.c 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0227.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8676 Hypervisor UART 
+ User Manual 
+Confidential B 
+ 具体实作 
+本次以 L+A+L 系统中的 SOS (Yocto) 的 UART2 Passthrough 到 UOS (Android) 端举例说明。 
+1.3.2.1 SOS (Yocto)部分改动 
+SOS (Yocto) 部分改动较小，只需要确保 auto8676p1_64_hyp_sos.dts 文件中的 UART2 节点属性 status 从 “okay” 改为 
+“disabled” 即可，如图 1-3 所示。 
+ 
+ 
+图 1-3. SOS 部分改动 
+1.3.2.2 UOS (Android)部分改动 
+UOS (Android) 改动有两处： 
+1. dts 修改 
+UOS (Android) 系统需修改 auto8676p1_64_bsp_vm.dts 文件，将 UART2 节点进行开启，并且将 UART2 对应的 pin 
+脚切为 UART 模式，使得平台开机后 pin 脚会自动切到 UART 模式上。具体改动如图 1-4 所示。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0227.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8676 Hypervisor UART 
+ User Manual 
+Confidential B 
+ 
+图 1-4. UOS-DTS 部分改动 
+ 
+2. ko_table 修改 
+由于在 UOS (Android) 端并未添加 UART 相关 ko 文件，因此还需要在 ko_order_table 文件中添加，如图 1-5 所示。 
+          
+图 1-5. UOS-KO 部分改动 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0227.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8676 Hypervisor UART 
+ User Manual 
+Confidential B 
+1.3.2.3 Hypervisor 部分改动 
+由于 Hypervisor 部分将中断号全部开启在 SOS (Yocto) 端，需要把 UOS (Android) 端所使用到的中断号开启，因此需
+要在 uos_alps_pv8676.lua 文件中将 UART2 的中断号开在 UOS 端，如图 1-6 所示。
+ 
+图 1-6. Hypervisor 部分改动 
+ 
+1. UART2 的中断号在 MT6897.dts 文件中可以查询为 252，而写到 LUA 文件中需要增加 32，因此 UART2 的中断号
+在 uos_alps_pv8676.lua 文件中为 284。 
+2. 当 UART2 开启 DMA 模式时，DMA 拥有 DMA TX/DMA RX 两个通道，因此 UART2 的 DMA 查表可以查询为
+223，224，通过增加 32 可得到在 lua 文件中为 255，256。  
+ 
+ 测试和调试 
+在对应开启 UART 驱动的 OS 下执行如下操作进行测试： 
+1. 设置波特率 921600，8 位数据位，1 位停止位，无奇偶校验，如 UART2 
+stty -F /dev/ttyS2 ispeed 921600 ospeed 921600 cs8 
+ 
+2. 获取当前 UART 波特率以及数据位配置信息 
+stty -F /dev/ttyS2 -a 
+ 
+3. UART 获取数据，可以使用以下命令接收 UART2 数据并通过 console 打印出来 
+cat /dev/ttyS2 
+ 
+4. UART 发送数据，可以使用以下命令让 UART2 发送字符串”123” 
+echo 123 &gt; /dev/ttyS2 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0227.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8676 Hypervisor UART 
+ User Manual 
+Confidential B 
+ 常见问题及故障排除 
+1.3.4.1 改完后 Android 起不来 
+1. 请检查平台中（非 codebase）uos_alps_pv8676.lua 文件是否包含了 UART 中断号，具体可在 shell 中敲击命令： 
+vi /vendor/etc/hyper_android/uos_alps_xx.lua 
+请务必保证平台中的 lua 文件包含 UART 所需的中断号。 
+ 
+2. 如开机 log 中出现类似于如下 log 
+init: [name:main&amp;]8250_mtk: Unknown symbol UARTHUB_md_adsp_fifo_ctrl (err -2) 
+请检查 ko_order_table 文件是否正确修改到，并且 3 个 ko 是否有如图 1-5 方式正确添加。 
+1.3.4.2 改完后测试 UART 未成功 
+1. 请检查修改的 UOS/SOS 对应的 dts 是否正确，前文是以 L+A+L 系统为例，如是 L+A 系统则 dts 文件不一样，请
+确认是否正确修改 dts 文件。 
+2. 请检查 dts 配置是否正确，请使用 Linux 命令检查 UART 引脚 mode 是否切换至 UART 模式  
+Kernel 里查看 PIN 的状态，可输入以下命令进行查询: 
+# cat /proc/mtk_gpio/soc.pinctrl 
+# cd /proc/mtk_gpio/ 
+# cat soc.pinctrl 
+ 
+e.g., 
+# cat /proc/mtk_gpio/soc.pinctrl 
+PIN: [MODE] [DIR] [DOUT] [DIN] [PULL_EN] [PULL_SEL] [IES] [SMT] [DRIVE] ( [R1] [R0] ) 
+0: 0 0 0 0 1 0 1 0 0 
+1: 0 0 0 0 1 0 1 0 0 
+2: 0 1 1 1 1 0 1 0 0 
+3: 6 0 0 0 1 0 1 0 0 
+ 
+ 寻求联发科技帮助 
+若经过前文的排查仍无法解决您的问题，向联发科技寻求帮助时请提供相关日志 /DTS/cat mt_gpio 等信息。 
+ 
+ 
+  
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0227.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8676 Hypervisor UART 
+ User Manual 
+Confidential B 
+附件一 附加条款 
+您(或您所代表的公司或其他法律主体，以下合称「您」)是否得取得、下载与使用本文件及其相关信息皆应以您接受本附加条款为先决要件。
+您对于本文件之使用、取得或下载即表示您已接受本附加条款并同意受本附加条款之拘束。若您不同意受本附加条款之拘束，您将不得使用、
+取得或下载本文件并应立即删除或毁弃所有本文件之副本。 
+ 
+本文件含有联发科技股份有限公司及其关联公司（以下合称「联发科技」）或其授权人之机密信息及专有信息，仅供您为本文件所描述之联发
+科技芯片组作内部使用而不得用于其他任何目的（包括但不限于确认或提供支持任何对联发科技、其供货商及/或其直接或间接客户所提潜在
+专利侵权主张的证据）。禁止未经授权使用或揭露本文件及其中所含信息。您同意赔偿联发科技因您未经授权使用或揭露本文件及其中所含信
+息之一部或全部导致联发科技所受之任何损失或损害。 
+ 
+联发科技及其授权人保有本文件的所有权及组成所有权之各项权利且未针对任何知识产权授权（无论明示或默示、透过禁反言原则或其他方
+式）。联发科技得随时变更本文件内容而无须另行通知。联发科技无须承担与使用或信赖本文件相关或因使用或信赖本文件致生之任何责任，
+包括但不限于间接损害或附带损害赔偿责任。 
+ 
+本文件及联发科技所提供关于本文件之任何其他材料、信息或技术支持，均以现况交付为准，联发科技不负任何明示、默示、法定或其他形式
+之担保责任，特别是适销性、不侵权、针对特定用途之适用性、完整性或正确性之担保责任或任何由贸易惯例或交易、履行过程所生之担保责
+任。对于联发科技为符合您所提规格或遵循特定标准或标准组织的要求所作之交付物，联发科技亦不应承担任何责任。 
+ 
+于未对前述条款造成限制之情形下，联发科技不对其产品任何特定用途之适用性承担任何保证或担保责任，亦不承担任何因产品、电路或软件
+之应用或使用致生之赔偿责任。您同意您应单独承担关于整合您的产品与联发科技产品所涉及之设计、验证与测试之所有责任，并应确保前述
+整合产品符合相关标准及任何安全性要求或其他要件。 
+ 
+本附加条款及所有与本附加条款或本文件相关之行为应以台湾法律管辖、解释与阐明，不适用冲突法原则。 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

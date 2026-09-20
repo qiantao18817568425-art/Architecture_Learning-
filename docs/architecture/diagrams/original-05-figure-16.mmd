@@ -1,0 +1,18 @@
+sequenceDiagram
+  participant F as frontend
+  participant A as Avail ring
+  participant H as Host backend
+  participant U as Used ring
+  participant C as callback
+  F->>F: fill Descriptor/buffer
+  F->>F: release barrier: publish visibility
+  F->>A: publish Avail
+  F->>H: Kick/doorbell
+  H->>A: acquire barrier: consume Avail
+  H->>H: take buffer ownership
+  H->>H: process
+  H->>U: release barrier: publish Used
+  H-->>F: virtual IRQ
+  F->>U: acquire barrier: consume Used
+  F->>F: read completion + reclaim ownership
+  F-->>C: callback

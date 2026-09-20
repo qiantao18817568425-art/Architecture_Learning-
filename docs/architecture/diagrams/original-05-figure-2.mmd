@@ -1,0 +1,9 @@
+stateDiagram-v2
+  [*] --> Link
+  Link --> Session: discover/connect
+  Session --> Fresh: sequence advances
+  Fresh --> Callback: consumer entry
+  Callback --> Correct: readback verified
+  Correct --> Link: reset
+  Session --> Link: session death
+  Callback --> Fresh: state reject

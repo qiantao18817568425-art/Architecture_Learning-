@@ -1,0 +1,26 @@
+flowchart TD
+  F["frontend ready"] --> B{"backend ready?"}
+  B -- no --> M["frontend/backend readiness mismatch"]
+  B -- yes --> D{"Descriptor?"}
+  D -- leak --> L["descriptor leak"]
+  D -- queue full --> Q["queue full"]
+  D -- yes --> K{"Kick observed?"}
+  K -- no --> X["missing kick"]
+  K -- yes --> P{"Avail payload visible/consistent?"}
+  P -- no --> MV["missing barrier/cache visibility"]
+  P -- yes --> U{"Used ring advances?"}
+  U -- no --> S["backend stall"]
+  U -- yes --> W{"Used completion visible/current?"}
+  W -- no --> MV
+  W -- yes --> I{"virtual IRQ/callback?"}
+  I -- no --> XIRQ["missing IRQ"]
+  I -- yes --> O["reclaim + consume"]
+  M --> R["coordinated reset"]
+  L --> R
+  Q --> R
+  X --> R
+  XIRQ --> R
+  MV --> R
+  S --> R
+  R --> G["new shared-memory generation"]
+  G --> V["controlled I/O + visibility/ownership/readback verify"]

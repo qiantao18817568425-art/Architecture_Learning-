@@ -1,0 +1,20 @@
+sequenceDiagram
+  participant Client as Application/Favalon Client
+  participant Service as UMDP Service
+  participant Sup as systemd/process supervisor
+  participant Dep as Lower Dependency
+  Client->>Service: request/register
+  Service->>Dep: lower operation
+  Service-xService: crash/exit
+  Client-->>Client: timeout/disconnect/service event
+  Sup->>Sup: detect exit + apply restart policy
+  Sup->>Dep: check dependency/order
+  Sup->>Service: start new process
+  Service-->>Sup: process alive
+  Service->>Dep: reconnect/reinitialize
+  Service-->>Client: service available/readiness evidence
+  Client->>Client: discard old Handle/Session if invalid
+  Client->>Service: reconnect + re-register callback
+  Client->>Service: GET current business state
+  Service-->>Client: current state
+  Client-->>Client: publish recovered generation

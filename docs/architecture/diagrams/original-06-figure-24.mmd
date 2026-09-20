@@ -1,0 +1,12 @@
+flowchart TD
+  A[unexpected awake/power drain] --> B{active owner still has work?}
+  B -- yes --> B1[long operation or downstream stall]
+  B -- no --> C{acquire/release balanced?}
+  C -- no --> C1[missing release/reference]
+  C -- yes --> D{different owner/tag active?}
+  D -- yes --> D1[misattributed WakeLock]
+  B1 --> R[cancel/complete downstream work]
+  C1 --> R
+  D1 --> R
+  R --> S[release old token + prevent stale callback reacquire]
+  S --> T[screen-off/suspend and business readback]

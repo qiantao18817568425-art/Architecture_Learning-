@@ -1,8 +1,8 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>整机与虚拟化架构 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details open><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a aria-current="page" href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 02</div><div class="chapter-title"><p class="eyebrow">CHAPTER 02 · 中文版全文</p><h1>整机与虚拟化架构</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=02">并排对比两套正文 ↗</a><a class="button secondary" href="original-02.html">对照原版解释 ↗</a><button class="button" data-read="02" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>多套 OS 如何共用一颗 SoC？</h2><p>Host/Guest 是虚拟化角色。设备的物理控制器、驱动、虚拟前后端和业务调用方可能属于不同域。Guest 能调用 Camera，不等于 Camera 控制器归 Guest 独占。</p><ol><li><strong>怎么读：</strong>先读整机角色，再看设备归属和中断，最后看显示、相机、音频和时钟的具体分工。</li><li><strong>项目练习：</strong>画一张文字表：Camera 请求在哪个域发起，硬件在哪个域控制，buffer 由谁生产，Android 从哪里取得结果。</li><li><strong>自检：</strong>虚拟机内线程可运行，是否意味着它已经拿到物理 CPU？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-1">Day 1</a> <a href="../index.html#day-2">Day 2</a> <a href="../index.html#day-3">Day 3</a> <a href="../index.html#day-4">Day 4</a> <a href="../index.html#day-6">Day 6</a> <a href="../index.html#day-11">Day 11</a> <a href="../index.html#day-19">Day 19</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#02-整机与虚拟化架构">02 整机与虚拟化架构</a><a class="depth-2" href="#2026-09-20-校订以资源拥有者核对多-os-架构">2026-09-20 校订：以资源拥有者核对多 OS 架构</a><a class="depth-2" href="#21-两颗计算实体独立-mcu-与-soc">2.1 两颗计算实体：独立 MCU 与 SoC</a><a class="depth-2" href="#22-安全时延和故障隔离边界">2.2 安全、时延和故障隔离边界</a><a class="depth-2" href="#23-hypervisorhost-与-guest">2.3 Hypervisor、Host 与 Guest</a><a class="depth-2" href="#24-启动所有权只描述阶段不猜私有顺序">2.4 启动所有权：只描述阶段，不猜私有顺序</a><a class="depth-2" href="#25-物理设备独占设备共享设备和虚拟设备">2.5 物理设备、独占设备、共享设备和虚拟设备</a><a class="depth-2" href="#26-标准虚拟-io-路径">2.6 标准虚拟 I/O 路径</a><a class="depth-2" href="#27-virtqueue共享内存和-buffer-所有权">2.7 virtqueue、共享内存和 Buffer 所有权</a><a class="depth-2" href="#28-虚拟中断dma-与-iommu">2.8 虚拟中断、DMA 与 IOMMU</a><a class="depth-2" href="#29-设备实例">2.9 设备实例</a><a class="depth-3" href="#display">Display</a><a class="depth-3" href="#cameraisp">Camera/ISP</a><a class="depth-3" href="#audio">Audio</a><a class="depth-3" href="#ethernet">Ethernet</a><a class="depth-3" href="#cccimodem">CCCI/Modem</a><a class="depth-3" href="#canspi">CAN/SPI</a><a class="depth-2" href="#210-tbox-guest-的虚拟能力">2.10 TBox Guest 的虚拟能力</a><a class="depth-2" href="#211-hostguest-启动与依赖">2.11 Host/Guest 启动与依赖</a><a class="depth-2" href="#212-资源归属表">2.12 资源归属表</a><a class="depth-2" href="#213-故障边界与观测点">2.13 故障边界与观测点</a><a class="depth-2" href="#214-当前图能确认与不能确认的边界">2.14 当前图能确认与不能确认的边界</a></details><article id="chapter-text"><h1 id="02-整机与虚拟化架构">02 整机与虚拟化架构</h1>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>整机与虚拟化架构 · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details open><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a aria-current="page" href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 02</div><div class="chapter-title"><p class="eyebrow">CHAPTER 02 · 中文版全文</p><h1>整机与虚拟化架构</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=02">并排对比两套正文 ↗</a><a class="button secondary" href="original-02.html">对照原版解释 ↗</a><button class="button" data-read="02" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>多套 OS 如何共用一颗 SoC？</h2><p>Host/Guest 是虚拟化角色。设备的物理控制器、驱动、虚拟前后端和业务调用方可能属于不同域。Guest 能调用 Camera，不等于 Camera 控制器归 Guest 独占。</p><ol><li><strong>怎么读：</strong>先读整机角色，再看设备归属和中断，最后看显示、相机、音频和时钟的具体分工。</li><li><strong>项目练习：</strong>画一张文字表：Camera 请求在哪个域发起，硬件在哪个域控制，buffer 由谁生产，Android 从哪里取得结果。</li><li><strong>自检：</strong>虚拟机内线程可运行，是否意味着它已经拿到物理 CPU？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-1">Day 1</a> <a href="../index.html#day-2">Day 2</a> <a href="../index.html#day-3">Day 3</a> <a href="../index.html#day-4">Day 4</a> <a href="../index.html#day-6">Day 6</a> <a href="../index.html#day-11">Day 11</a> <a href="../index.html#day-19">Day 19</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#02-整机与虚拟化架构">02 整机与虚拟化架构</a><a class="depth-2" href="#2026-09-20-校订以资源拥有者核对多-os-架构">2026-09-20 校订：以资源拥有者核对多 OS 架构</a><a class="depth-2" href="#21-两颗计算实体独立-mcu-与-soc">2.1 两颗计算实体：独立 MCU 与 SoC</a><a class="depth-2" href="#22-安全时延和故障隔离边界">2.2 安全、时延和故障隔离边界</a><a class="depth-2" href="#23-hypervisorhost-与-guest">2.3 Hypervisor、Host 与 Guest</a><a class="depth-2" href="#24-启动所有权只描述阶段不猜私有顺序">2.4 启动所有权：只描述阶段，不猜私有顺序</a><a class="depth-2" href="#25-物理设备独占设备共享设备和虚拟设备">2.5 物理设备、独占设备、共享设备和虚拟设备</a><a class="depth-2" href="#26-标准虚拟-io-路径">2.6 标准虚拟 I/O 路径</a><a class="depth-2" href="#27-virtqueue共享内存和-buffer-所有权">2.7 virtqueue、共享内存和 Buffer 所有权</a><a class="depth-2" href="#28-虚拟中断dma-与-iommu">2.8 虚拟中断、DMA 与 IOMMU</a><a class="depth-2" href="#29-设备实例">2.9 设备实例</a><a class="depth-3" href="#display">Display</a><a class="depth-3" href="#cameraisp">Camera/ISP</a><a class="depth-3" href="#audio">Audio</a><a class="depth-3" href="#ethernet">Ethernet</a><a class="depth-3" href="#cccimodem">CCCI/Modem</a><a class="depth-3" href="#canspi">CAN/SPI</a><a class="depth-2" href="#210-tbox-guest-的虚拟能力">2.10 TBox Guest 的虚拟能力</a><a class="depth-2" href="#211-hostguest-启动与依赖">2.11 Host/Guest 启动与依赖</a><a class="depth-2" href="#212-资源归属表">2.12 资源归属表</a><a class="depth-2" href="#213-故障边界与观测点">2.13 故障边界与观测点</a><a class="depth-2" href="#214-当前图能确认与不能确认的边界">2.14 当前图能确认与不能确认的边界</a></details><article id="chapter-text"><h1 id="02-整机与虚拟化架构">02 整机与虚拟化架构</h1>
 <h2 id="2026-09-20-校订以资源拥有者核对多-os-架构">2026-09-20 校订：以资源拥有者核对多 OS 架构</h2>
-<p>MT8668 System LLA 资料包含 SOS Yocto、UOS Yocto、Android 与 Thyp SDK；Camera 手册只画参与相机的 Yocto Host 和 Android Guest。因此本章扩展到双平台时使用“整机三域、子系统按参与域展开”的描述。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S038 · MT8668_Hypervisor_System_LLA_User_Manual_CN_V1.1.pdf · PDF第5-9页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页<small>〔本地来源〕</small></span></p>
-<p>每个外设建立“物理控制器/IRQ—拥有者—Guest 接口—Host Backend—缓冲共享—恢复 Owner”表。PVT 低速总线资料中虚拟化 SPI 与直通是不同配置：虚拟化由 Guest 前端请求 Host 后端；直通需明确驱动和中断归属，不能让两个系统同时把同一控制器作为独占设备启用。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S283 · 低速总线虚拟化配置.pdf · PDF第4-5页<small>〔本地来源〕</small></span></p>
-<p>新增 GPU 培训说明其 8676 全虚拟化与半虚拟化方案对 SOS GPU 可用性有不同限制，迁移前须检查 Weston/AVM 等消费者；不能把这一实现选择当作所有 Hypervisor 的定义。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U042 · 全虚拟化和半虚拟化GPU差异.pdf · PDF第4页<small>〔本地来源〕</small></span> 共享 pCPU 的 period/budget 还需与 Guest 调度一起分析，参见 <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S278 · T-Hyper+CPU+调度说明.pdf · PDF第4-6页<small>〔本地来源〕</small></span> 和 <a href="23.html">23 章</a>。</p>
+<p>MT8668 System LLA 资料包含 SOS Yocto、UOS Yocto、Android 与 Thyp SDK；Camera 手册只画参与相机的 Yocto Host 和 Android Guest。因此本章扩展到双平台时使用“整机三域、子系统按参与域展开”的描述。<a href="source-SRC0003.html#page-5">S038 · MT8668_Hypervisor_System_LLA_User_Manual_CN_V1.1.pdf · PDF第5-9页</a> <a href="source-SRC0002.html#page-6">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页</a></p>
+<p>每个外设建立“物理控制器/IRQ—拥有者—Guest 接口—Host Backend—缓冲共享—恢复 Owner”表。PVT 低速总线资料中虚拟化 SPI 与直通是不同配置：虚拟化由 Guest 前端请求 Host 后端；直通需明确驱动和中断归属，不能让两个系统同时把同一控制器作为独占设备启用。<a href="source-SRC0007.html#page-4">S283 · 低速总线虚拟化配置.pdf · PDF第4-5页</a></p>
+<p>新增 GPU 培训说明其 8676 全虚拟化与半虚拟化方案对 SOS GPU 可用性有不同限制，迁移前须检查 Weston/AVM 等消费者；不能把这一实现选择当作所有 Hypervisor 的定义。<a href="source-SRC0008.html#page-4">U042 · 全虚拟化和半虚拟化GPU差异.pdf · PDF第4页</a> 共享 pCPU 的 period/budget 还需与 Guest 调度一起分析，参见 <a href="source-SRC0009.html#page-4">S278 · T-Hyper+CPU+调度说明.pdf · PDF第4-6页</a> 和 <a href="23.html">23 章</a>。</p>
 <p>平台资源差异统一见 <a href="17.html">17 章</a>。以下原有 MT8676 细节继续限定为其资料基线。</p>
 <hr>
 <h2 id="21-两颗计算实体独立-mcu-与-soc">2.1 两颗计算实体：独立 MCU 与 SoC</h2>
@@ -30,7 +30,7 @@ VM、IOMMU 和资源分配共同形成隔离边界。[可信度：标准机制�
 </ol>
 <h2 id="23-hypervisorhost-与-guest">2.3 Hypervisor、Host 与 Guest</h2>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>在现有 Host/Guest 划分下，MT8668 LLA 手册进一步确认 SOS Yocto、TBox Yocto UOS、Android UOS 的整机视图。Camera 手册仅展开参与相机的 Host/Android 两域，这是子系统范围，不是整机拓扑改变。PVT 的 T-Hyper 文档给出共享 pCPU 的 period/budget 调度：Guest 内线程可运行不等于此时已获得物理 CPU，性能解释需同时观察两层调度。该资料尚不能把原图所有 Nebula OS 方框映射成已确认的生产进程。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S038 · MT8668_Hypervisor_System_LLA_User_Manual_CN_V1.1.pdf · PDF第5-9页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S278 · T-Hyper+CPU+调度说明.pdf · PDF第4-6页<small>〔本地来源〕</small></span></p>
+<p>在现有 Host/Guest 划分下，MT8668 LLA 手册进一步确认 SOS Yocto、TBox Yocto UOS、Android UOS 的整机视图。Camera 手册仅展开参与相机的 Host/Android 两域，这是子系统范围，不是整机拓扑改变。PVT 的 T-Hyper 文档给出共享 pCPU 的 period/budget 调度：Guest 内线程可运行不等于此时已获得物理 CPU，性能解释需同时观察两层调度。该资料尚不能把原图所有 Nebula OS 方框映射成已确认的生产进程。<a href="source-SRC0003.html#page-5">S038 · MT8668_Hypervisor_System_LLA_User_Manual_CN_V1.1.pdf · PDF第5-9页</a> <a href="source-SRC0009.html#page-4">S278 · T-Hyper+CPU+调度说明.pdf · PDF第4-6页</a></p>
 <p>Hypervisor 是位于 SoC 硬件与多个操作系统域之间的虚拟化管理层。图 2 明确标出
 Hypervisor，并将 SOS/Yocto 标为 Host、Android 与 TBox 标为 Guest。
 [可信度：架构图确认] [证据：original-diagram-02]</p>
@@ -65,7 +65,7 @@ Ready 条件。[可信度：架构图确认] [证据：original-diagram-01]
 [可信度：标准机制推断]</p>
 <h2 id="25-物理设备独占设备共享设备和虚拟设备">2.5 物理设备、独占设备、共享设备和虚拟设备</h2>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>设备的“归属”至少有物理控制器、驱动、虚拟接口、业务调用权四层。PVT SPI 示例中，Guest 的 virtio 前端把操作交给 Host 后端；直通方案则要求对应驱动与 IRQ 归属配套改变。二者是同一架构边界下的不同交付配置，不能一边称直通、一边仍让 Host 普通驱动独占同一控制器。实际 IRQ/管脚和设备号继续由本项目配置确定。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S283 · 低速总线虚拟化配置.pdf · PDF第4-5页<small>〔本地来源〕</small></span></p>
+<p>设备的“归属”至少有物理控制器、驱动、虚拟接口、业务调用权四层。PVT SPI 示例中，Guest 的 virtio 前端把操作交给 Host 后端；直通方案则要求对应驱动与 IRQ 归属配套改变。二者是同一架构边界下的不同交付配置，不能一边称直通、一边仍让 Host 普通驱动独占同一控制器。实际 IRQ/管脚和设备号继续由本项目配置确定。<a href="source-SRC0007.html#page-4">S283 · 低速总线虚拟化配置.pdf · PDF第4-5页</a></p>
 <table>
 <thead>
 <tr>
@@ -104,7 +104,7 @@ Ready 条件。[可信度：架构图确认] [证据：original-diagram-01]
 Hypervisor 设备树/配置、IOMMU 映射和 Host/Guest 驱动绑定日志确认。
 [可信度：待 MT8676 确认]</p>
 <h2 id="26-标准虚拟-io-路径">2.6 标准虚拟 I/O 路径</h2>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-02-figure-1"><figcaption>整机与虚拟化架构 · 图 1 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-02-figure-1"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-02-figure-1.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="整机与虚拟化架构 · 图 1，可使用方向键滚动"><pre class="mermaid">flowchart LR
   APP[&quot;Guest 应用/服务&quot;] --&gt; API[&quot;Guest OS/HAL API&quot;]
   API --&gt; FE[&quot;Guest Frontend&quot;]
   FE --&gt; VQ[&quot;virtqueue/共享内存\nDescriptor + Buffer&quot;]
@@ -113,7 +113,7 @@ Hypervisor 设备树/配置、IOMMU 映射和 Host/Guest 驱动绑定日志确�
   PD --&gt; DEV[&quot;物理设备&quot;]
   DEV -. &quot;中断/DMA完成&quot; .-&gt; PD
   PD -. &quot;Used Ring/虚拟中断&quot; .-&gt; FE
-  FE -. &quot;完成/Buffer归还&quot; .-&gt; APP</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  FE -. &quot;完成/Buffer归还&quot; .-&gt; APP</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   APP[&quot;Guest 应用/服务&quot;] --&gt; API[&quot;Guest OS/HAL API&quot;]
   API --&gt; FE[&quot;Guest Frontend&quot;]
   FE --&gt; VQ[&quot;virtqueue/共享内存\nDescriptor + Buffer&quot;]
@@ -122,7 +122,7 @@ Hypervisor 设备树/配置、IOMMU 映射和 Host/Guest 驱动绑定日志确�
   PD --&gt; DEV[&quot;物理设备&quot;]
   DEV -. &quot;中断/DMA完成&quot; .-&gt; PD
   PD -. &quot;Used Ring/虚拟中断&quot; .-&gt; FE
-  FE -. &quot;完成/Buffer归还&quot; .-&gt; APP</code></pre></details></details><p>实线是请求或 Buffer 的下行路径：Guest API 到 Frontend，Frontend 把描述符放入
+  FE -. &quot;完成/Buffer归还&quot; .-&gt; APP</code></pre></details></details></figure><p>实线是请求或 Buffer 的下行路径：Guest API 到 Frontend，Frontend 把描述符放入
 virtqueue/共享内存，Backend 消费描述符并调用物理驱动。虚线是完成路径：设备产生
 中断或 DMA 完成，Backend 更新完成状态并注入虚拟中断，Frontend 唤醒 Guest 消费者。
 这是标准虚拟 I/O 机制示意，不证明 MT8676 每个设备都采用 virtio，也不证明私有
@@ -157,7 +157,7 @@ Buffer 泄漏或队列永久等待。恢复不能只“重启应用”，还需�
 <h2 id="29-设备实例">2.9 设备实例</h2>
 <h3 id="display">Display</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>MT8676 Display V1.3 描述显示 pipe/OVL 和 DSI/DP 的资源约束；MT8668 的 Display/MML、层数和 DSI 资源不同，平台比较不改变原图 Display 框的职责。MT8668 Proxy-Wayland 的职责分界是 Android HWC 提交显示请求，Linux 服务接收 RpcBinder/VSOCK 调用并使用 Wayland-client 接口。请求跨域、buffer 可导入、fence 完成、物理屏可见分别判断；不能把跨域 RPC 等价为逐帧像素经 socket 拷贝。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S147 · MT8676_Hypervisor_Display_User_Manual_V1.3.pdf · PDF第5-10页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S021 · MT8668_Hypervisor_Display_User_Manual_CN_V1.0.pdf · PDF第5-7页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S028 · MT8668_Hypervisor_Multi_Display_Proxy-Wayland_User_Manual_CN_V1.0.pdf · PDF第5-7页<small>〔本地来源〕</small></span></p>
+<p>MT8676 Display V1.3 描述显示 pipe/OVL 和 DSI/DP 的资源约束；MT8668 的 Display/MML、层数和 DSI 资源不同，平台比较不改变原图 Display 框的职责。MT8668 Proxy-Wayland 的职责分界是 Android HWC 提交显示请求，Linux 服务接收 RpcBinder/VSOCK 调用并使用 Wayland-client 接口。请求跨域、buffer 可导入、fence 完成、物理屏可见分别判断；不能把跨域 RPC 等价为逐帧像素经 socket 拷贝。<a href="source-SRC0010.html#page-5">S147 · MT8676_Hypervisor_Display_User_Manual_V1.3.pdf · PDF第5-10页</a> <a href="source-SRC0011.html#page-5">S021 · MT8668_Hypervisor_Display_User_Manual_CN_V1.0.pdf · PDF第5-7页</a> <a href="source-SRC0012.html#page-5">S028 · MT8668_Hypervisor_Multi_Display_Proxy-Wayland_User_Manual_CN_V1.0.pdf · PDF第5-7页</a></p>
 <p>图 2 的 SOS Drivers 中有 Display，Android Guest 有 HAL/Kernel&amp;Drivers；图 1
 还出现 SurfaceFlinger、Display HAL、DRM、MDP 和 OpenGL。[可信度：架构图确认]
 [证据：original-diagram-01] [证据：original-diagram-02]</p>
@@ -168,10 +168,10 @@ Buffer 泄漏或队列永久等待。恢复不能只“重启应用”，还需�
 <h3 id="cameraisp">Camera/ISP</h3>
 <p>SOS/Yocto Host 区域同时出现 Camera、GStreamer、ISP 和 Camera Application，
 提示物理摄像头与 ISP 更接近 Host。[可信度：架构图确认] [证据：original-diagram-02]
-MT8676 Camera V1.1 文档确认 Yocto/Android camerahalserver 的分工，硬件相关 MW/sensor/driver 位于 Yocto；MT8668 文档进一步明确 RpcBinder/VSOCK 入口。相机框的位置不变，但解释由“可能跨域”收敛为上述版本明确的 Host 服务与 Guest 调用关系；具体 buffer 格式、fence、映射和恢复配置仍需项目接口证据。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S145 · MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF第6-8页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页<small>〔本地来源〕</small></span></p>
+MT8676 Camera V1.1 文档确认 Yocto/Android camerahalserver 的分工，硬件相关 MW/sensor/driver 位于 Yocto；MT8668 文档进一步明确 RpcBinder/VSOCK 入口。相机框的位置不变，但解释由“可能跨域”收敛为上述版本明确的 Host 服务与 Guest 调用关系；具体 buffer 格式、fence、映射和恢复配置仍需项目接口证据。<a href="source-SRC0006.html#page-6">S145 · MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF第6-8页</a> <a href="source-SRC0002.html#page-6">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页</a></p>
 <h3 id="audio">Audio</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>现有 AudioMgr/Audio HAL/Audio Driver 分层可保留，解释需要区分控制与 PCM。8676/8668 对比培训显示：8668 下行 TDM 路径为 32 通道且不需 8676 图示的同样倍频，上行 AFE→HAL 绕过内部 ADSP；上层架构相近不代表 ADSP 输入任务、回采和 routing 直接兼容。AFE 总接口数与该 TDM 路径通道数也不是同一口径。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S045 · Audio模块 8676 vs 8668.pdf · PDF第2-4页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S049 · MT8668_Audio_HW_Interface_User_Guide_V1.1.pdf · PDF第4-7页<small>〔本地来源〕</small></span></p>
+<p>现有 AudioMgr/Audio HAL/Audio Driver 分层可保留，解释需要区分控制与 PCM。8676/8668 对比培训显示：8668 下行 TDM 路径为 32 通道且不需 8676 图示的同样倍频，上行 AFE→HAL 绕过内部 ADSP；上层架构相近不代表 ADSP 输入任务、回采和 routing 直接兼容。AFE 总接口数与该 TDM 路径通道数也不是同一口径。<a href="source-SRC0013.html#page-2">S045 · Audio模块 8676 vs 8668.pdf · PDF第2-4页</a> <a href="source-SRC0014.html#page-4">S049 · MT8668_Audio_HW_Interface_User_Guide_V1.1.pdf · PDF第4-7页</a></p>
 <p>SOS Host 有 Audio Driver 与 AudioMgr，Android 栈有 AudioFlinger、AudioPolicy、
 Audio HAL/AudioControl 等，说明音频既有 Android 策略层又有 Host/物理执行层。
 [可信度：架构图确认] [证据：original-diagram-01] [证据：original-diagram-02]
@@ -184,7 +184,7 @@ DSP/Codec 控制仍需项目 Audio 拓扑确认。</p>
 Topic 新鲜。[可信度：标准机制推断]</p>
 <h3 id="cccimodem">CCCI/Modem</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>PVT TBox 设计把 Guest 侧虚拟音频前端、Host NBL-VMM 后端、CCCI 与 Modem 语音链路分开。CCCI 框表示 AP/Modem 交接的一层，不承包 SIM、网络注册、应用登录和全部音频策略。排查应分别记录控制事件是否到达、语音/数据是否推进，以及 Host/TBox/Modem 是否属于同一次启动与通话会话。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S263 · MT8676 TBOX子系统架构设计.pdf · PDF第1-5页<small>〔本地来源〕</small></span></p>
+<p>PVT TBox 设计把 Guest 侧虚拟音频前端、Host NBL-VMM 后端、CCCI 与 Modem 语音链路分开。CCCI 框表示 AP/Modem 交接的一层，不承包 SIM、网络注册、应用登录和全部音频策略。排查应分别记录控制事件是否到达、语音/数据是否推进，以及 Host/TBox/Modem 是否属于同一次启动与通话会话。<a href="source-SRC0015.html#page-1">S263 · MT8676 TBOX子系统架构设计.pdf · PDF第1-5页</a></p>
 <p>TBox Guest 的 Kernel&amp;Drivers 中出现 CCCI Driver，图 1 Kernel 也出现 CCCI。
 [可信度：架构图确认] [证据：original-diagram-01] [证据：original-diagram-02]
 跨核通信接口（Cross-Core Communication Interface，CCCI）通常连接应用处理器侧
@@ -197,14 +197,14 @@ CAN 负责车辆网络信号，SPI 是芯片间物理串行承载；IPCL 的私�
 Sequence 与流控没有被当前三图定义。[可信度：待 MT8676 确认]</p>
 <h2 id="210-tbox-guest-的虚拟能力">2.10 TBox Guest 的虚拟能力</h2>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>新增三 OS 时间材料补充的是 Android→SOS→TBox 的日历时间/时区同步实现，不足以确认原图 Virtual CLK 的驱动类型或所有寄存器语义。时区经属性监听传播；时间先经 RTC driver/virtio 到 SOS，再经事件、udev 与属性回调到 TBox。联网 TBox 还可能通过 systemd-timesyncd 校时，源仲裁和同步精度须单独验证。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U002 · 3OS time synchronization.pdf · PDF第1-2页<small>〔本地来源〕</small></span></p>
+<p>新增三 OS 时间材料补充的是 Android→SOS→TBox 的日历时间/时区同步实现，不足以确认原图 Virtual CLK 的驱动类型或所有寄存器语义。时区经属性监听传播；时间先经 RTC driver/virtio 到 SOS，再经事件、udev 与属性回调到 TBox。联网 TBox 还可能通过 systemd-timesyncd 校时，源仲裁和同步精度须单独验证。<a href="source-SRC0016.html#page-1">U002 · 3OS time synchronization.pdf · PDF第1-2页</a></p>
 <p>图 2 TBox Guest 中的 <code>Virtual CLK</code> 可理解为向 Guest 提供时间源的虚拟接口，
 <code>Virtual cominfra</code> 可理解为通信基础设施抽象；GPS 和 Telephony Service 分别承接
 定位与蜂窝电话/网络相关能力。[可信度：架构图确认] [证据：original-diagram-02]</p>
 <p>“Virtual CLK 由谁校准”“Virtual cominfra 基于共享内存还是 socket”以及 GPS 是否
 直接使用物理 GNSS，均需要设备配置和服务实现确认。[可信度：待 MT8676 确认]</p>
 <h2 id="211-hostguest-启动与依赖">2.11 Host/Guest 启动与依赖</h2>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+<figure class="mermaid-figure" id="chinese-02-figure-2"><figcaption>整机与虚拟化架构 · 图 2 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-02-figure-2"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-02-figure-2.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="整机与虚拟化架构 · 图 2，可使用方向键滚动"><pre class="mermaid">sequenceDiagram
   participant Boot as Boot/FBL
   participant HV as Hypervisor
   participant Host as SOS/Yocto Host
@@ -219,7 +219,7 @@ Sequence 与流控没有被当前三图定义。[可信度：待 MT8676 确认]<
   Guest-&gt;&gt;BE: Frontend 协商队列/共享内存
   BE--&gt;&gt;Guest: 队列和能力可用
   Guest-&gt;&gt;App: 启动服务、Client 和订阅
-  App--&gt;&gt;Guest: 业务 Ready/首个结果</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  App--&gt;&gt;Guest: 业务 Ready/首个结果</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>sequenceDiagram
   participant Boot as Boot/FBL
   participant HV as Hypervisor
   participant Host as SOS/Yocto Host
@@ -234,7 +234,7 @@ Sequence 与流控没有被当前三图定义。[可信度：待 MT8676 确认]<
   Guest-&gt;&gt;BE: Frontend 协商队列/共享内存
   BE--&gt;&gt;Guest: 队列和能力可用
   Guest-&gt;&gt;App: 启动服务、Client 和订阅
-  App--&gt;&gt;Guest: 业务 Ready/首个结果</code></pre></details></details><p>箭头表示一种依赖安全的通用顺序：Host Backend 在 Guest 访问虚拟设备前应可用；
+  App--&gt;&gt;Guest: 业务 Ready/首个结果</code></pre></details></details></figure><p>箭头表示一种依赖安全的通用顺序：Host Backend 在 Guest 访问虚拟设备前应可用；
 Guest Frontend 建立后，上层服务才可可靠使用资源。实际启动可能并行，也可能由
 重试/探测容忍 Backend 晚到；图中没有给出精确 Ready 信号和超时。
 [可信度：标准机制推断]</p>
@@ -405,4 +405,452 @@ Host/Guest 的真实所有者，必须由 Hypervisor 配置、设备树、IOMMU 
 IOMMU/中断追踪以及带 Generation 的业务日志。[可信度：待 MT8676 确认]</p>
 <hr>
 <p><a href="index.html">返回主题导航</a> · <a href="22.html">本次来源索引</a></p>
-</article><nav class="pager"><a href="01.html">← 上一步：三张架构图阅读指南</a><a href="03.html">下一步：MT8676-SDK与UMDP →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#02-整机与虚拟化架构">02 整机与虚拟化架构</a><a class="depth-2" href="#2026-09-20-校订以资源拥有者核对多-os-架构">2026-09-20 校订：以资源拥有者核对多 OS 架构</a><a class="depth-2" href="#21-两颗计算实体独立-mcu-与-soc">2.1 两颗计算实体：独立 MCU 与 SoC</a><a class="depth-2" href="#22-安全时延和故障隔离边界">2.2 安全、时延和故障隔离边界</a><a class="depth-2" href="#23-hypervisorhost-与-guest">2.3 Hypervisor、Host 与 Guest</a><a class="depth-2" href="#24-启动所有权只描述阶段不猜私有顺序">2.4 启动所有权：只描述阶段，不猜私有顺序</a><a class="depth-2" href="#25-物理设备独占设备共享设备和虚拟设备">2.5 物理设备、独占设备、共享设备和虚拟设备</a><a class="depth-2" href="#26-标准虚拟-io-路径">2.6 标准虚拟 I/O 路径</a><a class="depth-2" href="#27-virtqueue共享内存和-buffer-所有权">2.7 virtqueue、共享内存和 Buffer 所有权</a><a class="depth-2" href="#28-虚拟中断dma-与-iommu">2.8 虚拟中断、DMA 与 IOMMU</a><a class="depth-2" href="#29-设备实例">2.9 设备实例</a><a class="depth-3" href="#display">Display</a><a class="depth-3" href="#cameraisp">Camera/ISP</a><a class="depth-3" href="#audio">Audio</a><a class="depth-3" href="#ethernet">Ethernet</a><a class="depth-3" href="#cccimodem">CCCI/Modem</a><a class="depth-3" href="#canspi">CAN/SPI</a><a class="depth-2" href="#210-tbox-guest-的虚拟能力">2.10 TBox Guest 的虚拟能力</a><a class="depth-2" href="#211-hostguest-启动与依赖">2.11 Host/Guest 启动与依赖</a><a class="depth-2" href="#212-资源归属表">2.12 资源归属表</a><a class="depth-2" href="#213-故障边界与观测点">2.13 故障边界与观测点</a><a class="depth-2" href="#214-当前图能确认与不能确认的边界">2.14 当前图能确认与不能确认的边界</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>
+</article><section class="evidence-excerpts" id="evidence-excerpts"><h2>本章引用的材料内容</h2><p>下面直接展示引用页的文字开头，可展开核对。打开材料页可看全部物理页及完整 PDF，图表和版式以 PDF 为准。提取原文不代表已经逐页验证其适用于当前项目。</p><details><summary>MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF 第 6 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+Confidential B 
+MT8668 Hypervisor Camera  
+User Manual 
+1.2 架构 
+ 
+图 1-1. Camera 虚拟化架构 
+ 
+目前， MT8668 使用 Yocto + Andriod 的双系统组合，Yocto OS 作为 Host，Android OS 作为 Guest。 
+相应地，Yocto 端 Camera 作为 Host， 所有 Camera 相关的硬件，以及对应的 driver 和 SW 逻辑控制都放在 Yocto
+端；Android 端 Camera 作为 Guest，从 Yocto 端获取相关的图像数据。两者之间是基于 RpcBinder + Vsock 的方式来
+实现跨域通信，Android 端 Camera 跨域将 Request 发送给 Yocto 端，Yocto 端接收到 Request 后，经过处理后，将
+图像数据填充到 buffer 中，并将相关 Result 再跨域回传给 Android 端。 
+1.2.1 Android 端 Camera  
+Android 端 Camera 架构如图 1-1 左边所示。从上往下的层次分布依次是 APK、Java Framework、Cameraserver、
+Camerahalserver。除 Camerahalserver 外，其余 Layer 的实现与单 Android OS 无差别。 
+Camerahalserver 又大致分为 3 层： 
+ 
+1. AIDL Adaptor Layer 
+主要负责与 Cameraserver 进行 binder 交互 
+2. Android Adaptor Layer 
+主要负责处理与 Android 强相关的逻辑控制 
+3. Camera Feature Layer 
+底层 Camera 对外提供的功能接口 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0002.html#page-6">阅读整页及原图 →</a></details><details><summary>MT8668_Hypervisor_System_LLA_User_Manual_CN_V1.1.pdf · PDF 第 5 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8668 Hypervisor System LLA 
+ User Manual 
+Confidential B 
+1 Hypervisor System 
+MT8668 Hypervisor system 由 Yocto sos、yocto uos、Android 和 Thyp SDK 四大部分组成。 
+ 
+1.1 Build 命令 
+对于 Hypervisor 3os，需要编译 Yocto auto8668p1_64_sos、auto8668p1_64_uos 和 Android auto8668p1_64 _vm_uos。
+编译指令如 1.1.1 和 1.1.2 章节所示。由于编译过程中会设置一些环境变量，为了避免 Yocto 和 Android 互相干扰，
+建议使用两个不同的终端分别编译 Yocto 和 Android。Yocto 的编译产物：SOS 和 UOS 在 build/tmp/deploy/ 
+auto8668p1_64_sos 目录下。Android 的编译产物在 out/target/product/auto8668p1_64_vm_uos/merged 目录下。编
+译完成后，请将 Android 生成的 dtbo.img、boot.img、vendor_boot.img、init_boot.img、userdata.img、super.img、
+vbmeta.img、vbmeta_system.img、vbmeta_vendor.img，tee.img、scp.img 这十一个 images 复制到 SOS 的编译目录。 
+ 
+1.1.1 Hypervisor Android 编译 
+MT8668 使用 LD2.0 build，请参考 MOL: https://online.mediatek.com/apps/quickstart/QS00266。 
+Build 命令： 
+Python vendor/mediatek/proprietary/scripts/releasetools/split_build_helper.py –run 
+full_${Project}-${mode} 
+ 
+例： 
+Python vendor/mediatek/proprietary/scripts/releasetools/split_build_helper.py –run 
+full_auto8668p1_64_vm_uos-userdebug 
+输出：生成目录out/target/product/${project}/merged 
+ 
+LD2.0 会产生 out_sys &amp; out_hal &amp; out_krn &amp; out 这些文件夹用来存放每个叠层的图片。 
+详情请参考：https://online.mediatek.com/apps/quickstart/QS00178. 
+ 
+查询 Build 命令： 
+Python vendor/mediatek/proprietary/scripts/releasetools/split_build_helper.py 
+full_${Project}-${mode} 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0003.html#page-5">阅读整页及原图 →</a></details><details><summary>MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF 第 6 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Hypervisor Camera 
+User Manual 
+Confidential B 
+ 控制流程  
+ 
+图 1-3. MW 类图 
+ 
+图 1-3 主要是入口层和定制层之间的类流交互图。主要是上层通过  CameraProvider 的 open 接口获取 Camera，
+Camera 通过调用 Camera TurboEngine 获取 CustomizationManager。CustomizationManager 是定制层的管理器，通过
+它实现对客户定制行为的管理。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0006.html#page-6">阅读整页及原图 →</a></details><details><summary>低速总线虚拟化配置.pdf · PDF 第 4 页</summary><pre class="source-text">掌锐电子软件模块研究
+密级：内部公开第 3 页 共 12 页
+低速总线虚拟化配置
+一、SPI
+包括 76 有 7 路 SPI
+1、 SPI 虚拟化配置方法
+Yocto 配置
+CONFIG_DEVICE_MODULES_VHOST_SPI=m
+Android 配置
+CONFIG_VIRTIO_SPI=m
+//后端配置
+//在 spi 总线上添加从设备
+&amp;spi1 {
+pinctrl-names = &quot;default&quot;;
+pinctrl-0 = &lt;&amp;ak7709_codec_spi&gt;;
+/*pinctrl-1 = &lt;&amp;ak7709_codec_pdn&gt;;*/
+status = &quot;okay&quot;;
+ak7709: ak7709@0 {
+status = &quot;okay&quot;;
+compatible = &quot;akm,ak7709&quot;;
+#sound-dai-cells = &lt;0&gt;;
+reg = &lt;0&gt;;
+spi-max-frequency = &lt;1000000&gt;;
+/*ak7709,pdn-gpio = &lt;&amp;pio 147 0&gt;;*/
+};
+};
+//添加 pingctrl 以设置 SPI pinmux
+&amp;pio {
+ak7709_codec_spi: spimode-default {
+pins-cmd-dat {
+pinmux = &lt;PINMUX_GPIO53__FUNC_SPI1_MO&gt;,
+&lt;PINMUX_GPIO52__FUNC_SPI1_MI&gt;,
+&lt;PINMUX_GPIO51__FUNC_SPI1_CSB&gt;,
+&lt;PINMUX_GPIO50__FUNC_SPI1_CLK&gt;;
+};
+};
+//使能虚拟化
+vhost_spi: vhost-spi {
+compatible = &quot;grt,vhost-spi&quot;;
+};
+//前端配置</pre><a href="source-SRC0007.html#page-4">阅读整页及原图 →</a></details><details><summary>全虚拟化和半虚拟化GPU差异.pdf · PDF 第 4 页</summary><pre class="source-text">PVT版权，未经授权，严禁使用
+PVT版权，未经授权，严禁使用
+PVT版权，未经授权，严禁使用
+差异
+8676全虚拟化和半虚拟化差异
+全虚拟化 半虚拟化
+应用
+SOS端和Android端都可以使用GPU SOS端无法使用GPU
+SOS端的应用如果对GPU硬件有依赖,需
+要寻找替代方案,或者迁移到Android
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料</pre><a href="source-SRC0008.html#page-4">阅读整页及原图 →</a></details><details><summary>T-Hyper+CPU+调度说明.pdf · PDF 第 4 页</summary><pre class="source-text">Hypervisor vCPU 调度策略和配置方法
+GRTNBL202002XXXXCopyright © 文档信息:创建于 (固定) GoldenRiver Technologies Co., Ltd. All rights reserved. 4 / 6
+1 Hypervisor VCPU 调度方案
+1.1 虚拟机 CPU 配置
+对于 MT8676 或 MT8678 这颗 SOC 来说，它有 8 个物理核。其中有 4 个小核，分别是 Core0~Core3。有
+3 个中核，分别是 Core4~Core6。有 1 个大核，是 Core7。对于每一个物理 CPU，在 hypervisor 中，都有
+一个虚拟的 vCPU 与之对应。
+物理 CPU 核既可以让一个 VM 独享，也可以让几个 VM 共享。如果 CPU 为某一个 VM 独享，需要在除
+该 VM 之外的所有其他 VM 的配置文件中，将该 CPU 设置成 offline。如果要多个 VM 共享 CPU，则要在相应
+的 VM 配置文件中，让该 CPU 处于 onLine。
+ MT8676 设置 SOS CPU offline 的方法如下：
+在编译时修改
+在文件 yocto/prebuilt/hypervisor/grt_mt8676/nbl_vm_pre.sh 中，添加
+echo 0 &gt; /sys/devices/system/cpu/cpux/online //cpux → cpu0, cpu1, cpu2,… cpu7
+对于 SOS 来说，Core0 用于接收中断，不能关闭。该方法是编译时生效。
+在系统运行时修改
+通过 SOS adb shell 进入目录/vendor/etc/hyper_android，修改 nbl_vm_pre.sh 文件，保存
+重启。
+ MT8676 设置 UOS(Android) CPU offline 的方法如下：
+在编译时修改
+在文件 alps/devices/mediatek/mt6897/init.mt6897.rc 中，添加
+write /sys/devices/system/cpu/cpux/online 0 //cpu x → cpu0, cpu1, cpu2, … cpu7
+对于 UOS(Android)， Core2 用于接收中断，不能设置成 offline。
+在运行时修改
+通过 Android adb shell 进入目录/vendor/etc/init/hw，修改 init.mt8676.rc 文件，保存
+重启。
+ MT8678 设置 SOS CPU offline 的方法如下：
+在编译时修改
+在 文 件 yocto/prebuilt/hypervisor/grt/nbl_yocto_cpu_offline.sh 中 ， 设 置 cpu 的
+offline 状态。</pre><a href="source-SRC0009.html#page-4">阅读整页及原图 →</a></details><details><summary>MT8676_Hypervisor_Display_User_Manual_V1.3.pdf · PDF 第 5 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2024-2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8676 Hypervisor Display 
+User Manual 
+Confidential B 
+1 显示 &amp; 多屏 
+1.1 概述 
+1.1.1 基本概述 
+本章节主要介绍 MT8676 display hypervisor 架构以及多屏配置指南。 
+ 
+1.1.2 缩略词 
+表 1-1. 缩略词  
+缩略词 全称 释义 
+CRTC Cathode Ray Tube Controller 阴极射线管控制器 （即显示控制器） 
+DP Display Port 数字式视频接口标准 
+DPI Digital Parallel Interface  数字并行接口 
+DSC Display Stream Compression 显示流压缩 
+DSI Display Serial Interface 显示串行接口 
+DTS Device Tree 设备树 
+HWC Hardware Composer 硬件合成器 
+LCM Liquid Crystal Display Module 液晶显示模组 
+SerDes Serializer/Deserializer 加串器/解串器 
+ 
+1.1.3 性能 
+表 1-2. 性能 
+名称 性能 
+DISP pipeline 10bit pipe x 3 (MAX 688MHz at 0.75V) 
+DSI 
+DSI0 + DSI1 
+C/D PHY Combo 4-lane x 2 
+DPHY: 2.5Gbps/lane 
+DP DP1.4, 4-lane 8.1Gbps/lane 
+(4-lane mode conflict with USB3) 
+Panel number 1 ~ 6 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0010.html#page-5">阅读整页及原图 →</a></details><details><summary>MT8668_Hypervisor_Display_User_Manual_CN_V1.0.pdf · PDF 第 5 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8668 Hypervisor Display 
+User Manual 
+Confidential B 
+1 硬件架构 
+ 名词解释 
+缩略词 全称及释义 
+CMDQ Command Queue (the Software Driver of GCE) 命令队列（GCE 的软件驱动程序） 
+Disp Display 显示 
+DSC Display Stream Compression 显示流压缩 
+DSI Display Serial Interface 显示串行接口 
+GCE the Hardware of General Command Engine 通用命令引擎的硬件 
+MM Multimedia 多媒体 
+MML Hardware of Multimedia Layer 多媒体层的硬件 
+OVL 
+Overlay, means the Hardware includes the ReadDMA and blender 叠加，指包含读取 DMA 和混合器的硬
+件 
+PQ Picture Quality (enhancement) 图像质量（增强） 
+Resize Scaler-Up or Scaler-Down 缩放放大或缩小 
+TTC Telltale Check 标识检查 
+WDMA Hardware of Write Direct Memory Access 可写内存的硬件 
+WROT Hardware of Write to DRAM and Rotate 可将画面旋转并写入内存的硬件 
+ 
+ 硬件架构总览 
+MT8668 的 Display 硬件架构可分为两大部分——MML_SubSystem 和 Display_SubSystem，后文中将简称为 MML 和
+DISP。 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0011.html#page-5">阅读整页及原图 →</a></details><details><summary>MT8668_Hypervisor_Multi_Display_Proxy-Wayland_User_Manual_CN_V1.0.pdf · PDF 第 5 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8668 Hypervisor Multi Display Proxy-Wayland 
+ User Manual 
+Confidential B 
+1 Proxy-Wayland 
+1.1 概述 
+本章节主要介绍 MT8668 Hypervisor Proxy-Wayland 的实现需求、实现原理及代码结构分布。 
+ Proxy-Wayland 的实现需求 
+当前，车载多媒体娱乐系统正迅猛发展，其背后的多域显示系统管理极为复杂。例如，中控屏、副驾屏、后枕
+屏、仪表盘等各个领域均需各自的显示屏。基于单一芯片，多屏的显示来自于不同的 OS，充分发挥不同 OS 的优
+势，如 Android 多媒体处理的高效性；Linux 的及时性和安全性。 
+然而，要实现单一芯片的多域功能，就不可避免涉及到虚拟技术。目前，车载行业较为流行的多域是 Linux + 
+Android， 其中一路 Linux 是 Host，其它路是 Guest。Proxy-Wayland 正是基于这种跨域需求，实现从 Android guest 
+将图形 buffer 送到 Linux host， 透过 Wayland 进行显示，实现跨域显示的功能。 
+ Proxy-Wayland 的实现原理 
+• Proxy-Wayland 的通信框架以 RPC binder 为基础。 
+• RPC binder 以 Vsock 为基础实现跨域。 
+• Android 端 HWC 通过 Proxy-Wayland binder client 接口将 frame 透过基于 Vsock 的 RPC binder 实现跨域。 
+• Linux 端 Proxy-Wayland binder service 接收到 frame 后，调用 wayland-client API 实现显示功能。 
+ 
+ Proxy-Wayland 的代码结构分布 
+• Android 
+– Code path: vendor/mediatek/proprietary/external/MultiVirtualDisplay 
+▪ Android-client 
+o Proxy-Wayland HWC 接口类 
+o Proxy-Wayland display client 管理类 
+o Proxy-Wayland display client 类 
+▪ libvirtual-display 
+o Binder Bp &amp; Bn 类 
+▪ libdmabufhelper 
+o DMA buffer 传递的参数转换接口类 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0012.html#page-5">阅读整页及原图 →</a></details><details><summary>Audio模块 8676 vs 8668.pdf · PDF 第 2 页</summary><pre class="source-text">8676
+1.ADSP：A核输出通道，不倍频可以输出8ch，
+倍频可以到16ch
+B核输⼊通道接⼊CM 0UL，不倍频可以输
+⼊8ch，倍频可以到16ch
+8668
+1.输出通道不需要倍频，即可输出32ch
+2.输⼊通道都不经过adsp，直接从AFE给到
+hal。
+3.不具备在adspLoopback功能
+8676vs8668，audio_device.xm l配置会有差异</pre><a href="source-SRC0013.html#page-2">阅读整页及原图 →</a></details><details><summary>MT8668_Audio_HW_Interface_User_Guide_V1.1.pdf · PDF 第 4 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved.
+Confidential C
+4
+• AFE: Audio Front End HW
+• AFE MEMIF(FE): PCM DMA, memory read/write
+• Audio interconnection: connection fabric for 
+audio sub module
+– ex: DL MEMIF -&gt; Intercon -&gt; I2S Out
+• DAI (BE) : Digital Audio I/F,eTDM/I2S/DMIC.
+– Enhanced TDM,  can be configured to I2S or 
+TDM
+• MISC 
+– CM: Channel merge to combine echo reference 
+and Mic input
+– GASRC: General audio sampling rate 
+convertor(sample-based)
+– HW gain: digital gain process
+– Bus: SoC Top fabric bus
+MTK Audio HW Concept（名词解释）
+AFE memif
+Audio
+Interconnection
+I2S in &amp; out
+eTDM_IN
+CM
+DMIC
+GASRC
+eTDM_OUT
+eTDM_IN
+eTDM_OUT
+eTDM_OUT
+DRAM
+BUS
+I2S IN
+TDM IN
+I2S OUT
+... DMIC
+BT
+TDM OUT
+... ......
+TDM OUT
+HW gain
+...
+DL
+UL
+UL
+DL
+... ...
+Front End
+Interconnection Back End
+ MediaTek Confidential Release for
+PVETEC
+ MediaTek Confidential Release for
+PVETEC
+MediaTek Confidential Release for
+PVETEC</pre><a href="source-SRC0014.html#page-4">阅读整页及原图 →</a></details><details><summary>MT8676 TBOX子系统架构设计.pdf · PDF 第 1 页</summary><pre class="source-text">M T8676TBO X⼦系统架构设计
+TBO X⼦系统架构
+域
+(D om ain)
+操作系统 核⼼功能与组件
+Yocto
+(S O S )
+Linux
+(Yocto)
+作为安全域(S afetyO S )，负责⾳频和AD S P的后端处理。-NBL-VM M ：虚拟机管
+理，承载AudioBE和AD S PBE。-AudioD river/AD S PD river：驱动层，与硬
+件交互。
+T box
+(U O S )
+Linux 作为⾮安全域(U serO S )，运⾏⽤⼾态应⽤和⾳频中间件。-EcallAPP：紧急呼叫
+应⽤。-M T K YoctoAudioH AL/S peechH AL：硬件抽象层，处理⾳频和语
+⾳。-VirtIO -sndFE/VirtIO -adspFE：前端驱动，通过VirtIO 与S O S 通信。-
+CCCID river：与M O D EM 通信的驱动。
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料</pre><a href="source-SRC0015.html#page-1">阅读整页及原图 →</a></details><details><summary>3OS time synchronization.pdf · PDF 第 1 页</summary><pre class="source-text">时间时区同步说明文档 
+1 时区同步 
+1.1 时区同步原理 
+android 时区写入 prop→sos 端 prop_get 获取时区，同时开启 prop_watch
+函数，监控 android 那边时区变化。 
+当 android 时区变化时，sos 这边通过回调函数，同步 android 时区。在
+android 时区同步给 sos 时，sos 在回调函数内不仅同步了 android 时区同时也
+使用 prop_set_only_uos 函数，将此时 sos 时区信息发送到 uos 端；由此 uos
+获取 sos 时区，也即 android 时区 
+ 
+1.2 时区同步验证： 
+android 端输入： 
+setprop persist.sys.timezone Asia/Tokyo 或者 
+setprop persist.sys.timezone Asia/Shanghai 
+ 
+sos/uos 端输入 date  可以看到时区与 android 是一致的 
+ 
+2 时间同步 
+2.1  android 时间同步给 sos 
+android 时间改变，RTC driver 也会同步更新时间。此时 RTC driver 会获取
+到 android 系统时间通过 virtio 传输到 sos，sos drvier 获取到传输过来的时间
+之后设置为 sos 系统时间。 
+ 
+2.2  sos 时间同步给 tbox os 
+在 sos 收到 android 发送来时间后。发送一个 event 事件。通过 udev 捕获
+这个指定 event 事件，获取当前系统时间设置为 prop。同时注册对应监听 prop
+改变的回调。在回调中 调用 prop_set_only_uos，将这个带有时间信息的 prop 
+发送 tbox uos 端。 
+ 
+tbox os 端注册监听 prop 改变。收到 sos 发送 prop 之后，解析时间信息并
+设置为系统时间。 
+ 
+2.3 时间同步验证方法 
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM</pre><a href="source-SRC0016.html#page-1">阅读整页及原图 →</a></details></section><nav class="pager"><a href="01.html">← 上一步：三张架构图阅读指南</a><a href="03.html">下一步：MT8676-SDK与UMDP →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#02-整机与虚拟化架构">02 整机与虚拟化架构</a><a class="depth-2" href="#2026-09-20-校订以资源拥有者核对多-os-架构">2026-09-20 校订：以资源拥有者核对多 OS 架构</a><a class="depth-2" href="#21-两颗计算实体独立-mcu-与-soc">2.1 两颗计算实体：独立 MCU 与 SoC</a><a class="depth-2" href="#22-安全时延和故障隔离边界">2.2 安全、时延和故障隔离边界</a><a class="depth-2" href="#23-hypervisorhost-与-guest">2.3 Hypervisor、Host 与 Guest</a><a class="depth-2" href="#24-启动所有权只描述阶段不猜私有顺序">2.4 启动所有权：只描述阶段，不猜私有顺序</a><a class="depth-2" href="#25-物理设备独占设备共享设备和虚拟设备">2.5 物理设备、独占设备、共享设备和虚拟设备</a><a class="depth-2" href="#26-标准虚拟-io-路径">2.6 标准虚拟 I/O 路径</a><a class="depth-2" href="#27-virtqueue共享内存和-buffer-所有权">2.7 virtqueue、共享内存和 Buffer 所有权</a><a class="depth-2" href="#28-虚拟中断dma-与-iommu">2.8 虚拟中断、DMA 与 IOMMU</a><a class="depth-2" href="#29-设备实例">2.9 设备实例</a><a class="depth-3" href="#display">Display</a><a class="depth-3" href="#cameraisp">Camera/ISP</a><a class="depth-3" href="#audio">Audio</a><a class="depth-3" href="#ethernet">Ethernet</a><a class="depth-3" href="#cccimodem">CCCI/Modem</a><a class="depth-3" href="#canspi">CAN/SPI</a><a class="depth-2" href="#210-tbox-guest-的虚拟能力">2.10 TBox Guest 的虚拟能力</a><a class="depth-2" href="#211-hostguest-启动与依赖">2.11 Host/Guest 启动与依赖</a><a class="depth-2" href="#212-资源归属表">2.12 资源归属表</a><a class="depth-2" href="#213-故障边界与观测点">2.13 故障边界与观测点</a><a class="depth-2" href="#214-当前图能确认与不能确认的边界">2.14 当前图能确认与不能确认的边界</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

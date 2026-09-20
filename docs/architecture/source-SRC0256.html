@@ -1,0 +1,632 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Yocto_eCall_User_Manual_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Yocto_eCall_User_Manual_V1.0.pdf</h1><p>SRC0256 · 原来源 ID S193 · PDF物理页 · 17 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MT8676软件资料/User Manual/Yocto/Chinese Version/MT8676_Yocto_eCall_User_Manual_V1.0.pdf</p><p>SHA-256：<code>250adb38e25c6b6283b34771f9c10c85d7cf089d2ab7507a1b8be3fdc5054777</code></p><p>原文件大小：905,620 字节</p></details><div class="actions"><a class="button" href="materials/SRC0256.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Yocto_eCall_User_Manual_V1.0.pdf 原 PDF" src="materials/SRC0256.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0256.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version:  1.0 
+Release date:  2024-08-12
+MT8676 Yocto eCall  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0256.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8676 Yocto eCall 
+User Manual 
+Confidential B 
+版本记录 
+版本 日期 作者 描述 
+1.0 2024-08-12 刘宇田 正式版本 
+ 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0256.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8676 Yocto eCall 
+User Manual 
+Confidential B 
+目录 
+版本记录 ··········································································································································································· 2 
+目录 ··················································································································································································· 3 
+图片目录 ··········································································································································································· 3 
+表格目录 ··········································································································································································· 3 
+1 eCall··········································································································································································· 4 
+1.1 概述·········································································································································································· 4 
+ 简单介绍 ······················································································································································ 4 
+ 法规介绍 ······················································································································································ 4 
+1.2 eCall 架构 ································································································································································· 6 
+ eCall 流程 ······················································································································································ 6 
+ eCall API 使用说明 ····································································································································· 11 
+1.3 eCall 定时器 ··························································································································································· 15 
+ EU CS eCall 定时器 ····································································································································· 15 
+附件一 附加条款 ····························································································································································· 17 
+ 
+ 
+图片目录 
+图 1-1. eCall 系统概览 ······························································································································································· 4 
+图 1-2. eCall 软件架构 ······························································································································································· 6 
+图 1-3. eCall 流程 ····································································································································································· 11 
+ 
+表格目录 
+表 1-1.CS eCall 功能性法规 ······················································································································································· 4 
+表 1-2. CS eCall 测试法规 ·························································································································································· 5 
+表 1-3. IMS eCall 功能性法规 ···················································································································································· 5 
+表 1-4. IMS eCall 测试法规························································································································································ 6 
+表 1-5. eCall 控制接口描述 ····················································································································································· 11 
+表 1-6. EN16062 中定义的 eCall 定时器 ································································································································ 15 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0256.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8676 Yocto eCall 
+User Manual 
+Confidential B 
+1 eCall 
+1.1 概述 
+ 简单介绍 
+eCall 是一种车载道路安全系统，可在发生严重事故时自动呼叫紧急服务。一旦  eCall 传感器检测到车辆受到严重 
+撞击或手动发起呼叫，eCall 车载系统 (IVS) 就会与相关公共安全应答点 (PSAP) 建立 e112 语音连接。通过语音连接 
+向 PSAP 发送一组最小数据集 (MSD)，其中包括准确的地理位置数据。 
+2015 年 4 月，欧洲议会规定，自 2018 年 3 月 31 日起，所有新车型都必须配备 eCall 技术。eCall 系统概览如 
+图 1-1 所示。 
+ 
+图 1-1. eCall 系统概览 
+ 
+ 法规介绍 
+基本上，eCall 规范有两种类型，一种是针对调制解调器协议（如 3GPP 规范），另一种是针对高层应用规范（如 
+EN 规范）。通常，MTK 将涵盖调制解调器协议部分，并为客户提供 SDK，以便将高层应用规范与自己的应用程序
+集成。以下是对这些不同规范的简要介绍。有关详细信息，请参阅官方网站上的原始规范。  
+表 1-1.CS eCall 功能性法规 
+法规名称 描述 
+ETSI TS 126.267 (3GPP TS 26.267) General description 
+ETSI TS 126.268 (3GPP TS 26.268) ANSI-C reference code 
+ETSI TS 127.007 (3GPP TS 27.007) 6.27 Initiate eCall +CECALL 
+ETSI TS 122.101 (3GPP TS 22.101) 10.7 Transfer of data during emergency calls 
+ETSI TS 124.008 (3GPP TS 24.008) 4.4.7 eCall inactivity procedure 
+3GPP TS31.102 SIM related requirement for eCall 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0256.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8676 Yocto eCall 
+User Manual 
+Confidential B 
+法规名称 描述 
+ETSI TS 102 936-1 5. UMTS network access eCall NAD conformance tests 6.GSM 
+network access eCall NAD conformance tests 
+EN 16062 eCall high level application requirements (HLAP) 
+EN 16072 PE eCall Operating Requirements 
+EN 15722 eCall minimum set of data (MSD) 
+GOST 33465-2015 Protocols of data exchange between in-vehicle emergency call 
+device/system and emergency response system infrastructure 
+GOST 33464-2015 In-vehicle emergency call device/system. General technical 
+requirement 
+ 
+表 1-2. CS eCall 测试法规 
+法规名称 描述 
+ETSI TS 126.269 (3GPP TS 26.269) eCall Data Transfer; In-band modem solution; conformance test 
+ETSI TS134 123-1 13.3 eCall Emergency Call Procedures 
+ETSI TS 151 010-1 Conformance specification  
+26.9.6a Structured Calls/eCall 
+ETSI TS103 412 Pan-European eCall end to end and in-band modem 
+conformance testing; Prose test specification 
+EN16454 Intelligent transport systems-ESafety-Ecall end to end 
+conformance testing 
+GOST 33467-2015 Functional test methods of in-vehicle emergency call 
+device/system and data transfer protocols 
+GOST 33470-2015 
+Test methods for wireless communication modules of in-vehicle 
+emergency call system 
+ETSI TS 103 428 eCall HLAP Interoperability Testing 
+ 
+表 1-3. IMS eCall 功能性法规 
+法规名称 描述 
+TS24.229 eCall over IMS (NG-eCall) general spec 
+RFC8147 NG-eCall SIP part spec 
+TS23.122 NG-eCall eCall only mode 
+TS24.301 EMM requirement for eCall only mode 
+TS23.401 eCall only mode 
+TS24.008 MM requirement for eCall only mode 
+TS23.216 NG-eCall SRVCC 
+TS23.167 eCall over IMS (NG-eCall) general spec 
+TS27.007 AT CMD of eCall 
+TS31.102 SIM-related requirement for eCall 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0256.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Yocto eCall 
+User Manual 
+Confidential B 
+表 1-4. IMS eCall 测试法规 
+法规名称 描述 
+TS34.229-1 SIP layer test spec of NG-eCall 
+TS36.523 UE conformance test spec of NG-eCall 
+ 
+1.2 eCall 架构 
+软件架构如图 1-2 所示。目前，MTK 解决方案支持 eCall 设置和带内调制解调器 TX/RX，符合 ETSI/3GPP 标准（绿色
+矩形），并提供专有 ML 接口调用 eCall RIL 命令。客户需要将 eCall 平台和应用程序（红色矩形）与 eCall ML 接口
+集成，并使用该产品通过 eCall 测试用例。 
+ 
+图 1-2. eCall 软件架构 
+ eCall 流程 
+虽然 eCall 场景不同，但关键步骤相同。基本上，客户 APP 需要按照以下步骤处理 eCall 流程： 
+1. 发起 ML_MakeFastEcall； 
+2. 维护 IVS 侧的 eCall 计时器，该计时器在 EN16062 中指定； 
+3. 收到 RIL_UNSOL_ECALL_ALACK_POSITIVE_RECEIVED 后发出 RIL_REQUEST_ECALL_RESET_IVS。然后 IVS 和 PSAP 可
+以恢复语音呼叫连接并相互通话。 
+4. 收到 RIL_UNSOL_ECALL_DISCONNECTED 或 RIL_UNSOL_ECALL_ABNORMAL_HANGUP 后挂断电话，PSAP 通过此方
+式指示 IVS 断开呼叫。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0256.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8676 Yocto eCall 
+User Manual 
+Confidential B 
+以下是 eCall 流程序列的详细描述。 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0256.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 Yocto eCall 
+User Manual 
+Confidential B 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0256.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8676 Yocto eCall 
+User Manual 
+Confidential B 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0256.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8676 Yocto eCall 
+User Manual 
+Confidential B 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0256.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8676 Yocto eCall 
+User Manual 
+Confidential B 
+ 
+图 1-3. eCall 流程 
+ eCall API 使用说明 
+下列 eCall API 计划在 MT8676 上开发。如果后续开发生有更新，将提供更新的文档。 
+表 1-5. eCall 控制接口描述 
+接口 描述 
+typedef struct { 
+    int32_t call_id; 
+    uint32_t length; 
+    unsigned char 
+msd_data[ML_ECALL_MSD_MAX_LENGTH]; 
+}ml_ecall_set_msd; 
+MSD 信息结构体 
+call_id: 当前电话 index； 
+length: msd data 的长度； 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0256.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8676 Yocto eCall 
+User Manual 
+Confidential B 
+接口 描述 
+msd_data: msd data 数据；传入参数是 byte 格式 
+(unsigned char), 最大长度 140, 对应的 char 格式最大长度
+是 280. 
+typedef struct { 
+    int32_t arg_num; 
+    int32_t type; 
+    char address[128]; 
+}ml_ecall_set_num; 
+Test number/Reconfiguration number结构体 
+arg_num: 传入参数个数，比如传入有效的 type 和 
+address，则为 2，比如只传入有效的 address， 则为 1; 
+type: 传入参数类型， 1 表示传入 URI 类型， 2 表示传入 
+number 类型； 
+address: Test 或者 Reconfiguration 号码。 
+typedef enum { 
+    ML_EMER_CAT_MANUAL_ECALL = 1, 
+    ML_EMER_CAT_AUTO_ECALL   = 2, 
+}ml_ecall_category; 
+发生 eCall 类别的结构体 
+typedef enum { 
+    ML_ECALL_TEST        = 1, 
+    ML_ECALL_EMERGENCY   = 2, 
+    ML_ECALL_RECONFIG    = 3, 
+}ml_ecall_variant; 
+eCall 类型的结构体 
+typedef enum{ 
+    ML_DOMAIN_AUTO = 0,      /* Automatic mode - 
+LTE(IMS), WG(CS), 1x(C2K) */ 
+    ML_DOMAIN_CS_ONLY = 1,   /* CS domain only - 
+WG(CS) */ 
+    ML_DOMAIN_3GPP_ONLY = 2, /* 3GPP only - 
+LTE(IMS), WG(CS) */ 
+    ML_DOMAIN_3GPP2 = 3,     /* 3GPP2 only - 
+1x(C2K)) */ 
+    ML_DOMAIN_IMS_1xCS = 4,  /* IMS and 1x CS 
+only - LTE(IMS), 1x(C2K) */ 
+    ML_DOMAIN_CS_1x = 5,     /* WG CS and 1x CS 
+only - WG(CS), 1x(C2K) */ 
+    ML_DOMAIN_IMS_ONLY = 6,  /* only IMS call 
+allowed */ 
+}ml_ecall_domain; 
+eCall 通话的网络制式结构体 
+typedef struct{ 
+    ml_ecall_category   ecall_cat; 
+请求拨出 eCall 时传入结构体参数定义 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0256.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8676 Yocto eCall 
+User Manual 
+Confidential B 
+接口 描述 
+    ml_ecall_variant   ecall_variant; 
+    char address[20]; 
+    uint32_t length; 
+    unsigned char 
+msd_data[ML_ECALL_MSD_MAX_LENGTH]; 
+    ml_ecall_domain domain; 
+}ml_ecall_req_msg; 
+typedef struct{ 
+    int32_t data1; 
+    int32_t data2; 
+    int32_t data3; 
+    int32_t data4; 
+}ml_ecall_pri; 
+eCall 优先级参数结构体. data1&gt;data2&gt;data3&gt;data4. 传入参
+数应为 1 2 3 4, 含义分别为:  
+1: 客户设定的 eCall URI;  
+2: USIM 保存的 eCall URI 
+3: 客户设定的  eCall 号码  
+4: USIM 保存的 eCall 号码 
+typedef enum{ 
+    E_ML_ECALL_SENDING_START = 1, 
+    E_ML_ECALL_SENDING_MSD = 2, 
+    E_ML_ECALL_LLACK_RECEIVED = 3, 
+    E_ML_ECALL_ALACK_POSITIVE_RECEIVED = 4, 
+    E_ML_ECALL_ALACK_CLEARDOWN_RECEIVED = 
+5, 
+    E_ML_ECALL_DIALING = 9, 
+    E_ML_ECALL_ALERTING = 10, 
+    E_ML_ECALL_ACTIVE = 11, 
+    E_ML_ECALL_DISCONNECTED = 12, 
+    E_ML_ECALL_IMS_ACTIVE = 13, 
+    E_ML_ECALL_IMS_DISCONNECTED = 14, 
+    E_ML_ECALL_ABNORMAL_HANGUP=15, 
+    E_ML_ECALL_IMS_MSD_ACK = 20, 
+    E_ML_ECALL_IMS_UPDATE_MSD = 21, 
+    E_ML_ECALL_IMS_IN_BAND_TRANSFER = 22, 
+    E_ML_ECALL_IMS_MSD_NACK = 23, 
+    E_ML_ECALL_IMS_SRVCC = 24, 
+    E_ML_ECALL_ONLY_DEREGISTRATION = 31, 
+    E_ML_ECALL_MAY_DEREGISTER = 32, 
+    E_ML_ECALL_PSAP_CALLBACK_START = 40, 
+    
+E_ML_ECALL_PSAP_CALLBACK_IMS_UPDATE_MSD 
+= 41, 
+eCall 上报状态的消息类型枚举定义 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0256.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+MT8676 Yocto eCall 
+User Manual 
+Confidential B 
+接口 描述 
+    E_ML_ECALL_T2_TIMEOUT = 52, 
+    E_ML_ECALL_T5_TIMEOUT = 55, 
+    E_ML_ECALL_T6_TIMEOUT = 56, 
+    E_ML_ECALL_T7_TIMEOUT = 57, 
+    E_ML_ECALL_UNSPECIFIED = 0xffff, 
+}ML_ECall_Indication; 
+typedef struct{ 
+    ML_ECall_Indication ind; 
+    int call_id; 
+} ML_ECALL_IND_T; 
+eCall 上报状态的消息结构体 
+typedef void (*ML_ECALL_MSGCB_T)( 
+    ML_ECALL_IND_T       *pvsMsg 
+); 
+eCall 上报状态消息的回调函数 
+int32_t ML_EcallIndicationInit( 
+ML_ECALL_MSGCB_T cb_func); 
+注册 eCall 状态变化 callback 函数，当 eCall 状态发生变化时
+回调 cb_func 函数 
+参数:  
+输入: ML_ECALL_MSGCB_T cb_func 
+int32_t ML_ResetIvs(void); 
+重置 modem 的 eCall 状态. 
+重连 audio 
+int32_t ML_SetMSD(ml_ecall_set_msd* msd); 
+设置 eCall 的 msd 数据 
+参数:  
+输入: ml_ecall_set_msd* msd 
+int32_t ML_SetTestNumber( 
+  ml_ecall_set_num* test_num); 
+设置 test number 或者 URI 
+参数:  
+输入: ml_ecall_set_num* test_num 
+int32_t ML_SetReconfNumber( 
+  ml_ecall_set_num* reconf_num); 
+设置 reconfig number 或者 URI. 
+参数:  
+输入: ml_ecall_set_num* test_num 
+int32_t ML_MakeFastEcall( 
+  ml_ecall_req_msg* msg); 
+拨出 eCall 同时传入 msd 数据 
+参数:  
+输入: ml_ecall_req_msg* msg 
+int32_t ML_SetEmsdpri(ml_ecall_pri* pri); 
+设置 eCall 优先级类别. 默认优先级是 “1&gt;3&gt;2&gt;4” 
+参数:  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0256.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+MT8676 Yocto eCall 
+User Manual 
+Confidential B 
+接口 描述 
+输入: ml_ecall_pri* pri 
+ 
+1.3 eCall 定时器 
+ EU CS eCall 定时器 
+在 eCall 流程中，EN 16062 定义了 10 个定时器。MTK 在调制解调器端实现了 T2、T3、T5、T6、T7、T10。T1、T9 
+应由 IVS 客户 APP 处理；T4 和 T8 是 PSAP 定时器，应由 PSAP 应用程序处理。 
+表 1-6. EN16062 中定义的 eCall 定时器 
+Name Origin Description Requirements Value 
+T1 IVS 
+Manually initiated eCall(MIeC) false triggering cancellation period 
+•       START: T1 starts as soon as the eCall is manually activated 
+•       STOP: T1 stops when Vehicle occupants cancel the manually triggered eCall 
+transaction. 
+•       EXPIRY: Upon expiry of T1 the IVS-NAD shall start call setup 
+ 
+T2 IVS 
+IVS Call Cleardown Fallback Timer (CCFT) 
+•       START: T2 starts as soon as the IVS-NAD starts with call setup 
+•       STOP: T2 stops when the IVS-NAD receives a call clear-down indication 
+from the mobile network or a call clear-down message from the PSAP . 
+•       EXPIRY: Upon expiry of T2 the IVS-NAD shall clear down the call 
+3600 s (1h) 
+T3 IVS 
+IVS INITIATION signal duration 
+•       START: T3 is started as soon as the IVS-NAD starts sending the INITIATION 
+signal 
+•       STOP: T3 stops when the IVS-NAD receives a SEND MSD signal from the 
+PSAP , at which time the IVS-NAD shall stop sending the INITIATION signal. 
+•       EXPIRY: Upon expiry of T3 the IVS-NAD shall stop sending the INITIATION 
+signal 
+2 s 
+T4 PSAP 
+PSAP wait for INITIATION signal period 
+•       START: T4 starts as soon as the PSAP eCall modem has answered the call 
+•       STOP: T4 stops when the PSAP eCall modem detects an INITIATION signal 
+send by the IVS. 
+•       EXPIRY: Upon expiry of T4, the PSAP eCall modem shall route the call to a 
+PSAP operator 
+5 s 
+T5 IVS 
+IVS wait for SEND MSD period 
+•       START: T5 starts as soon as the IVS-NAD received notification that the call is 
+first answered 
+5 s 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0256.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 16 
+MT8676 Yocto eCall 
+User Manual 
+Confidential B 
+Name Origin Description Requirements Value 
+•       STOP: T5 stops when the IVS-NAD detects a SEND MSD signal sent by the 
+PSAP . 
+•       EXPIRY: Upon expiry of T5 the IVS-NAD shall reconnect the IVS audio 
+system and terminate eCall specific behavior(i.e. it shall not proceed with the 
+sending of MSD data) until requested to do otherwise. 
+T6 IVS 
+IVS wait for AL-ACK period 
+•       START: T6 starts as soon as the IVS-NAD has received LL-ACK 
+•       STOP: T6 stops when the IVS-NAD receives an AL-ACK message 
+•       EXPIRY: Upon expiry of T6, the IVS-NAD shall mark the transfer of the MSD 
+as unsuccessful and reconnect the IVS audio system and terminate eCall specific 
+behavior until requested to do otherwise 
+5 s 
+T7 IVS 
+IVS MSD maximum transmission time 
+•       START: T7 starts as soon as the IVS-NAD starts sending the MSD data 
+•       STOP: T7 stops when the IVS-NAD receives an LL-ACK message 
+•       EXPIRY: Upon expiry of T7, the IVS-NAD shall mark the transfer of the MSD 
+as unsuccessful and reconnect the IVS audio system and terminate eCall specific 
+behavior until requested to do otherwise 
+20 s 
+T8 PSAP 
+PSAP MSD maximum reception time 
+•       START: T8 starts as soon as the PSAP starts sending the SEND MSD signal 
+•       STOP: T8 stops when the PSAP eCall modem receives a valid MSD 
+(reception being acknowledged by sending an LL-ACK) 
+•       EXPIRY: Upon expiry of T8, the PSAP eCall modem shall route the call to a 
+PSAP operator 
+20 s 
+T9 IVS 
+IVS NAD minimum network registration period 
+•       START: T9 starts as soon as the IVS-NAD clears down a call, or gets notified 
+that a call has been cleared down in accordance with EN 16072 Clause 7.17.3 
+•       STOP: T9 is uninterruptable; until T9 expires the IVS-NAD shall remain 
+registered on the serving network, and remain available to receive calls from the 
+PSAP and rescue workers 
+•       EXPIRY: Upon expiry of T9, the IVS-NAD may deregister from the serving 
+network (see T10) 
+3600 s 
+T10 IVS 
+IVS NAD network ‘Deregistration Fallback Timer’ (DFT) 
+•       START: T10 starts as soon as the IVS-NAD clears down a call, or gets notified 
+that a call has been cleared down 
+•       STOP: T10 stops if the IVS-NAD receives or makes a new call 
+•       EXPIRY: Upon expiry of T10, the IVS-NAD shall deregister itself from the 
+serving network 
+12 h  
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0256.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 17 
+MT8676 Yocto eCall 
+User Manual 
+Confidential B 
+附件一 附加条款 
+您(或您所代表的公司或其他法律主体，以下合称「您」)是否得取得、下载与使用本文件及其相关信息皆应以您接受本附加条款为先决要件。
+您对于本文件之使用、取得或下载即表示您已接受本附加条款并同意受本附加条款之拘束。若您不同意受本附加条款之拘束，您将不得使用、
+取得或下载本文件并应立即删除或毁弃所有本文件之副本。 
+ 
+本文件含有联发科技股份有限公司及其关联公司（以下合称「联发科技」）或其授权人之机密信息及专有信息，仅供您为本文件所描述之联发
+科技芯片组作内部使用而不得用于其他任何目的（包括但不限于确认或提供支持任何对联发科技、其供货商及/或其直接或间接客户所提潜在
+专利侵权主张的证据）。禁止未经授权使用或揭露本文件及其中所含信息。您同意赔偿联发科技因您未经授权使用或揭露本文件及其中所含信
+息之一部或全部导致联发科技所受之任何损失或损害。 
+ 
+联发科技及其授权人保有本文件的所有权及组成所有权之各项权利且未针对任何知识产权授权（无论明示或默示、透过禁反言原则或其他方
+式）。联发科技得随时变更本文件内容而无须另行通知。联发科技无须承担与使用或信赖本文件相关或因使用或信赖本文件致生之任何责任，
+包括但不限于间接损害或附带损害赔偿责任。 
+ 
+本文件及联发科技所提供关于本文件之任何其他材料、信息或技术支持，均以现况交付为准，联发科技不负任何明示、默示、法定或其他形式
+之担保责任，特别是适销性、不侵权、针对特定用途之适用性、完整性或正确性之担保责任或任何由贸易惯例或交易、履行过程所生之担保责
+任。对于联发科技为符合您所提规格或遵循特定标准或标准组织的要求所作之交付物，联发科技亦不应承担任何责任。 
+ 
+于未对前述条款造成限制之情形下，联发科技不对其产品任何特定用途之适用性承担任何保证或担保责任，亦不承担任何因产品、电路或软件
+之应用或使用致生之赔偿责任。您同意您应单独承担关于整合您的产品与联发科技产品所涉及之设计、验证与测试之所有责任，并应确保前述
+整合产品符合相关标准及任何安全性要求或其他要件。 
+ 
+本附加条款及所有与本附加条款或本文件相关之行为应以台湾法律管辖、解释与阐明，不适用冲突法原则。 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

@@ -1,0 +1,18 @@
+flowchart TD
+  B["CAN bus has frames"] --> D{"driver indication?"}
+  D -- no --> X["controller/filter"]
+  D -- yes --> P{"PduR routes?"}
+  P -- no --> Y["routing"]
+  P -- yes --> C{"COM signal updated?"}
+  C -- no --> Z["mapping"]
+  C -- yes --> E{"E2E valid/fresh?"}
+  E -- no --> J["counter/CRC/data ID reject"]
+  E -- yes --> S{"SWC consumed the new value?"}
+  S -- no --> K["RTE/Runnable/state machine"]
+  S -- yes --> O["business correct"]
+  X --> R["restore controller/config"]
+  Y --> R
+  Z --> R
+  J --> R
+  K --> V["trigger/readback"]
+  R --> V

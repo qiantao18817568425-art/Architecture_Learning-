@@ -1,0 +1,20 @@
+flowchart TD
+  N["name server / host server"] --> A{"registry reachable/healthy?"}
+  A -- no --> F["name_server/host_server unavailable"]
+  A -- yes --> U{"registration unique?"}
+  U -- no --> D["duplicate service identity/owner conflict"]
+  U -- yes --> S["endpoint session"]
+  S --> R{"subscriber registered?"}
+  R -- no --> RN["subscriber not registered"]
+  R -- yes --> C{"callback queue drains?"}
+  C -- no --> Q["callback queue failures"]
+  C -- yes --> G{"generation/freshness valid?"}
+  G -- no --> O["stale callback/session"]
+  F --> H["restore registry visibility"]
+  D --> J["reject duplicate + reconcile owner"]
+  H --> B["session rebuild"]
+  J --> B
+  RN --> B
+  Q --> B
+  O --> B
+  B --> V["re-subscribe + readback"]

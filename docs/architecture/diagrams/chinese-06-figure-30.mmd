@@ -1,0 +1,15 @@
+flowchart TD
+  A[IO error/missing/stale data] --> B{device and mount present?}
+  B -- no --> B1[media/driver/mount]
+  B -- yes --> C{path/permission/quota valid?}
+  C -- no --> C1[policy/user/storage scope]
+  C -- yes --> D{write and fsync completed?}
+  D -- no --> D1[space/IO/filesystem]
+  D -- yes --> E{reader reopened current data?}
+  E -- no --> E1[cache/version/atomicity]
+  B1 --> R[quiesce writers + preserve evidence]
+  C1 --> R
+  D1 --> R
+  E1 --> R
+  R --> S[repair/remount or atomic rewrite]
+  S --> T[reopen + checksum/content readback]

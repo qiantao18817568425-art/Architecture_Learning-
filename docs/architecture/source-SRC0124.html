@@ -1,0 +1,1555 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Display_Panel_Issue_Debug_SOP_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Display_Panel_Issue_Debug_SOP_V1.0.pdf</h1><p>SRC0124 · 原来源 ID S055 · PDF物理页 · 46 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8668/MTK参考资料/MTK参考资料/MT8676_Display_Panel_Issue_Debug_SOP_V1.0.pdf</p><p>SHA-256：<code>1ee440ddc61d849a9cfe5b752f87898cc941a04801f4566fdd7b25df874312a8</code></p><p>原文件大小：4,028,533 字节</p></details><div class="actions"><a class="button" href="materials/SRC0124.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Display_Panel_Issue_Debug_SOP_V1.0.pdf 原 PDF" src="materials/SRC0124.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0124.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+版本：  1.0 
+出版日期：  2025-07-11 
+MT8676 Display and Panel  
+Issue Debug SOP 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0124.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8676 
+Display and Panel Issue Debug SOP 
+Confidential B 
+版本记录 
+版本 日期 作者 描述 
+1.0 2025-07-11 杨光 正式版 
+ 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0124.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8676 
+Display and Panel Issue Debug SOP 
+Confidential B 
+目录 
+版本记录 ··········································································································································································· 2 
+目录 ··················································································································································································· 3 
+表格目录 ··········································································································································································· 4 
+1 概述 ··········································································································································································· 5 
+1.1 目的·········································································································································································· 5 
+1.2 Interface 能力 ·························································································································································· 5 
+2 缩略词 ······································································································································································· 6 
+2.1 缩略词 ······································································································································································ 6 
+3 Debug Pattern 汇总 ··················································································································································· 7 
+3.1 DSI ············································································································································································ 7 
+3.2 DP ············································································································································································· 8 
+3.3 Display ······································································································································································ 9 
+3.3.1 PQ·································································································································································· 9 
+4 SerDes 调试指南 ····················································································································································· 11 
+4.1 Ser-max96789 调试寄存器 ···································································································································· 11 
+4.2 Des-max96752 调试寄存器 ··································································································································· 14 
+4.3 Debug 流程 ···························································································································································· 14 
+4.4 DP SerDes Driver 调试日志 ··································································································································· 16 
+5 DSI Interface ···························································································································································· 17 
+5.1 DSI Interface 介绍 ·················································································································································· 17 
+5.1.1 HS ································································································································································ 17 
+5.1.2 LP································································································································································· 17 
+5.1.3 HS &amp; LP 状态切换图 ··································································································································· 17 
+5.1.4 DSI MIPI D-PHY 时序规范 ··························································································································· 18 
+5.1.5 Video Mode 介绍 ········································································································································ 20 
+5.2 LCM 问题调试 ······················································································································································· 23 
+5.2.1 DSI Register 介绍 ········································································································································ 23 
+5.2.2 DSI Register Dump 介绍 ······························································································································ 25 
+5.2.3 DSI 调试流程 ·············································································································································· 26 
+5.2.4 帧率异常 ···················································································································································· 26 
+5.2.5 I2C 通信异常 ·············································································································································· 26 
+5.3 DSI DPHY CTS 测试问题 ········································································································································· 27 
+5.3.1 测试仪器 ···················································································································································· 28 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0124.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8676 
+Display and Panel Issue Debug SOP 
+Confidential B 
+5.3.2 测试平台准备 ············································································································································ 28 
+5.3.3 常见 Failed 项目分析 ································································································································· 28 
+5.4 DSI 波形量测 ························································································································································· 36 
+5.4.1 如何测量帧率 ············································································································································ 36 
+5.4.2 如何测量信号 ············································································································································ 38 
+6 DP Interface ····························································································································································· 40 
+6.1 DP 调试 ·································································································································································· 40 
+6.1.1 调试命令 ···················································································································································· 40 
+6.1.2 Aux fail ························································································································································ 40 
+6.1.3 DP  黑屏 ······················································································································································ 41 
+6.2 DP/SerDes 时序 ······················································································································································ 41 
+7 Display 常见问题/故障排除 ···································································································································· 43 
+7.1 hwc 命令 ································································································································································ 43 
+7.2 显示驱动 CMD ······················································································································································· 43 
+7.3 黑屏········································································································································································ 44 
+7.4 花屏/闪屏 ······························································································································································ 44 
+7.5 卡顿········································································································································································ 45 
+附件一 附加条款 ····························································································································································· 46 
+ 
+表格目录 
+表 2-1. 缩略词 ··········································································································································································· 6 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0124.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8676 
+Display and Panel Issue Debug SOP 
+Confidential B 
+1 概述 
+1.1 目的 
+本文档旨在介绍 MT8676 屏幕显示相关问题的调试方法，涵盖了 DSI、DP 接口和 Display 模块。在进行调试时，建
+议遵循由近及远的原则，即从问题的最接近源头开始排查。当无法通过基本的 pattern 判断问题时，应从屏幕端开
+始检查，以避免前端调试无法解决后端异常的问题。 
+ 
+1.2 Interface 能力 
+Port DSI0 DSI1 DP 
+MT8676 
+4 lanes/3 trios 
+DPHY: 2.5Gbps/lane 
+CPHY: 2.18Gsps/trio 
+4 lanes/3 trios 
+DPHY: 2.5Gbps/lane 
+CPHY: 2.18Gsps/trio 
+4 lanes or 2 lanes 
+8.1Gbps/lane 
+Effective 6.48Gbps/lane 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0124.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 
+Display and Panel Issue Debug SOP 
+Confidential B 
+2 缩略词 
+2.1 缩略词 
+表 2-1. 缩略词 
+缩略词 释义 
+DPI Display Pixel Interface 显示像素接口 
+DSI Display Serial Interface 显示串行接口 
+HBP Horizontal Back Porch 水平后肩 
+HFP Horizontal Front Porch 水平前肩 
+HS High Speed 高速 
+Htotal Horizontal total pixels 在显示器的一行扫描周期中包含的总像素数 
+JEIDA Japan Electronic Industry Development Association 日本电子工业振兴协会 
+LP Low Power 低功耗 
+LVDS Low-Voltage Differential Signaling 低压差分信号传输 
+MIPI Mobile Industry Processor Interface 移动行业处理器接口 
+RX Receiver 接收器 
+TX Transmitter 发射器 
+UI Unit Interval 单位间隔 
+VBP Vertical Back Porch 垂直后肩 
+VESA Video Electronics Standards Association 视频电子标准协会 
+VFP Vertical Front Porch 垂直前肩 
+Vtotal Vertical Total Lines 显示器在一帧图像中包含的总扫描行数 
+Des Deserializers 反序列化器 
+DPRX DisplayPort Receiver 接收 DisplayPort 信号的设备或电路部分 
+DPTX DisplayPort Transmitter 负责发送 DisplayPort 信号的设备或组件 
+Ser Serializers 序列化器 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0124.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8676 
+Display and Panel Issue Debug SOP 
+Confidential B 
+3 Debug Pattern 汇总 
+在 Userdebug 版本中，可以使用 GCE 的命令行工具来打 Pattern。e.g. DSI0 
+adb shell &quot;echo gce_wr:0x1400d178,0x61,0xffffffff &gt; /sys/kernel/debug/mtkfb&quot; 
+ 
+可以通过 gce_rd 确认数据是否成功写入： 
+adb shell &quot;echo gce_rd: 0x1400d178 &gt; /sys/kernel/debug/mtkfb; cat /sys/kernel/debug/mtkfb 
+| grep gce_rd” 
+ 
+在 User 版本中，GCE 命令行工具可能无法使用，但可以使用 Clock Debug 命令来进行调试。无论是 User 版本还是
+Userdebug 版本，要使用 Clock Debug 命令，都需要在内核配置中启用相关的 CONFIG 选项。 
+CONFIG_MTK_CLKMGR_DEBUG=y 
+ 
+e.g. DSI0 
+adb shell &quot;echo reg_write 0x1400d178 0x61 &gt; /proc/clkdbg ; cat /proc/clkdbg&quot; 
+ 
+可以通过 reg_read 确认数据是否成功写入： 
+adb shell &quot;echo reg_read 0x1400d178 &gt; /proc/clkdbg ; cat /proc/clkdbg&quot; 
+ 
+3.1 DSI 
+DSI0 base addr: 0x1400d000 
+DSI1 base addr: 0x1420d000 
+Pattern level: base addr + 0xd178 BIT[9:8] 4 档 
+ 
+Type Bypass Recovery 
+grayscale 
+(right) 
+adb shell &quot;echo gce_wr:0x1400d178,0xc11,0xffffffff &gt; 
+/sys/kernel/debug/mtkfb&quot; 
+adb shell &quot;echo 
+gce_wr:0x1400d178,0x0,0xffffffff &gt; 
+/sys/kernel/debug/mtkfb&quot; 
+grayscale 
+(down) 
+adb shell &quot;echo gce_wr:0x1400d178,0xc21,0xffffffff &gt; 
+/sys/kernel/debug/mtkfb&quot; 
+red down adb shell &quot;echo gce_wr:0x1400d178,0xc31,0xffffffff &gt; 
+/sys/kernel/debug/mtkfb&quot; 
+green down adb shell &quot;echo gce_wr:0x1400d178,0xc41,0xffffffff &gt; 
+/sys/kernel/debug/mtkfb&quot; 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0124.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 
+Display and Panel Issue Debug SOP 
+Confidential B 
+Type Bypass Recovery 
+Blue down adb shell &quot;echo gce_wr:0x1400d178,0xc51,0xffffffff &gt; 
+/sys/kernel/debug/mtkfb&quot; 
+gray right r + 
+gray down b 
+adb shell &quot;echo gce_wr:0x1400d178,0xc61,0xffffffff &gt; 
+/sys/kernel/debug/mtkfb&quot; 
+Single Color 
+adb shell &quot;echo gce_wr:0x1400D178,0x0RR00601,ffffffff &gt; 
+/sys/kernel/debug/mtkfb&quot; 
+adb shell &quot;echo gce_wr:0x1400D17c,0x0BB00GG0,ffffffff &gt; 
+/sys/kernel/debug/mtkfb&quot; 
+601 对应纯色 pattern，RR、GG、BB 分别对应 RGB 三个
+8bit 通道 
+ 
+3.2 DP 
+ 
+Type pattern Recover 
+256 vertical gray adb shell “echo gce_wr:0x1400bF00,1,ffffffff &gt; 
+/proc/mtkfb” 
+echo gce_wr:0x1400bF00,0,ffffffff &gt; 
+/proc/mtkfb  
+1024 vertical gray adb shell “echo gce_wr:0x1400bF00,11,ffffffff &gt; 
+/proc/mtkfb” 
+256 horizontal 
+gray 
+adb shell “echo gce_wr:0x1400bF00,21,ffffffff &gt; 
+/proc/mtkfb” 
+1024 horizontal 
+gray 
+adb shell “echo gce_wr:0x1400bF00,31,ffffffff &gt; 
+/proc/mtkfb” 
+color bar adb shell “echo gce_wr:0x1400bF00,41,ffffffff &gt; 
+/proc/mtkfb” 
+纯色 
+adb shell “echo 
+gce_wr:0x1400bF00,51,ffffffff &gt; /proc/mtkfb&quot; 
+adb shell “echo gce_wr:0x1400bF00,val,ffffffff &gt; 
+/proc/mtkfb&quot; 
+val: Blue[9:0], Green[19:10], Red[29:20] 
+  
+frame border(黑
+白颜色为每个像
+素) 
+echo gce_wr:0x1400bF00,61,ffffffff &gt; /proc/mtkfb 
+dot moire (黑白
+颜色为每个像素) 
+echo gce_wr:0x1400bF00,71,ffffffff &gt; /proc/mtkfb 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0124.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8676 
+Display and Panel Issue Debug SOP 
+Confidential B 
+3.3 Display 
+Display 分为 OVL 和 PQ 两部分。OVL 部分没有固定的 pattern 命令，因此如果怀疑 OVL 部分出现异常，建议与
+Display 模块的负责人进行沟通和确认。 
+ 
+3.3.1 PQ 
+Module Bypass Recovery 
+COLOR1 (dp) adb shell &quot;echo reg_write 0x14208400 
+0x200080 &gt; /proc/clkdbg ; cat /proc/clkdbg&quot; 
+adb shell &quot;echo reg_write 0x14208400 
+0x200000 &gt; /proc/clkdbg; cat 
+/proc/clkdbg&quot; 
+AAL1 (dp) adb shell &quot;echo reg_write 0x14202020 0x3 &gt; 
+/proc/clkdbg ; cat /proc/clkdbg&quot; 
+adb shell &quot;echo reg_write 0x14202020 
+0x2 &gt; /proc/clkdbg; cat /proc/clkdbg&quot; 
+CCORR1 (dp) adb shell &quot;echo reg_write 0x14204020 0x3 &gt; 
+/proc/clkdbg ; cat /proc/clkdbg&quot; 
+adb shell &quot;echo reg_write 0x14204020 
+0x2 &gt; /proc/clkdbg; cat /proc/clkdbg&quot; 
+GAMMA1 
+(dp) 
+adb shell &quot;echo reg_write 0x1420e020 0x3 &gt; 
+/proc/clkdbg ; cat /proc/clkdbg&quot; 
+adb shell &quot;echo reg_write 0x1420e020 
+0x2 &gt; /proc/clkdbg; cat /proc/clkdbg&quot; 
+DITHER1 
+(dp) 
+adb shell &quot;echo reg_write 0x14209020 0x3 &gt; 
+/proc/clkdbg ; cat /proc/clkdbg&quot; 
+adb shell &quot;echo reg_write 0x14209020 
+0x2 &gt; /proc/clkdbg; cat /proc/clkdbg&quot; 
+C3D1 (dp) adb shell &quot;echo reg_write 0x14203004 0x13 &gt; 
+/proc/clkdbg ; cat /proc/clkdbg&quot; 
+adb shell &quot;echo reg_write 0x14203004 
+0x12 &gt; /proc/clkdbg; cat /proc/clkdbg&quot; 
+TDSHP1 (dp) 
+adb shell &quot;echo reg_write 0x14218110 0x1 &gt; 
+/proc/clkdbg ; cat /proc/clkdbg&quot; 
+adb shell &quot;echo reg_write 0x14219110 0x1 &gt; 
+/proc/clkdbg ; cat /proc/clkdbg&quot; 
+adb shell &quot;echo reg_write 0x14218110 
+0x0 &gt; /proc/clkdbg; cat /proc/clkdbg&quot; 
+adb shell &quot;echo reg_write 0x14219110 
+0x0 &gt; /proc/clkdbg; cat /proc/clkdbg&quot; 
+SPR1 (dp) adb shell &quot;echo reg_write 0x1421700C 0x1 &gt; 
+/proc/clkdbg ; cat /proc/clkdbg&quot; 
+adb shell &quot;echo reg_write 0x1421700C 
+0x0 &gt; /proc/clkdbg; cat /proc/clkdbg&quot; 
+COLOR0 
+(dsi0) 
+adb shell &quot;echo reg_write 0x14208400 
+0x200080 &gt; /proc/clkdbg ; cat /proc/clkdbg&quot; 
+adb shell &quot;echo reg_write 0x14008400 
+0x200000 &gt; /proc/clkdbg; cat 
+/proc/clkdbg&quot; 
+AAL0 (dsi0) adb shell &quot;echo reg_write 0x14002020 0x3 &gt; 
+/proc/clkdbg ; cat /proc/clkdbg&quot; 
+adb shell &quot;echo reg_write 0x14002020 
+0x2 &gt; /proc/clkdbg; cat /proc/clkdbg&quot; 
+CCORR0 
+(dsi0) 
+adb shell &quot;echo reg_write 0x14004020 0x3 &gt; 
+/proc/clkdbg ; cat /proc/clkdbg&quot; 
+adb shell &quot;echo reg_write 0x14004020 
+0x2 &gt; /proc/clkdbg; cat /proc/clkdbg&quot; 
+GAMMA0 
+(dsi0) 
+adb shell &quot;echo reg_write 0x1400e020 0x3 &gt; 
+/proc/clkdbg ; cat /proc/clkdbg&quot; 
+adb shell &quot;echo reg_write 0x1400e020 
+0x2 &gt; /proc/clkdbg; cat /proc/clkdbg&quot; 
+DITHER0 
+(dsi0) 
+adb shell &quot;echo reg_write 0x14009020 0x3 &gt; 
+/proc/clkdbg ; cat /proc/clkdbg&quot; 
+adb shell &quot;echo reg_write 0x14009020 
+0x2 &gt; /proc/clkdbg; cat /proc/clkdbg&quot; 
+C3D0 (dsi0) adb shell &quot;echo reg_write 0x14003004 0x13 &gt; 
+/proc/clkdbg ; cat /proc/clkdbg&quot; 
+adb shell &quot;echo reg_write 0x14003004 
+0x12 &gt; /proc/clkdbg; cat /proc/clkdbg&quot; 
+TDSHP0 
+(dsi0) 
+adb shell &quot;echo reg_write 0x14018110 0x1 &gt; 
+/proc/clkdbg ; cat /proc/clkdbg&quot; 
+adb shell &quot;echo reg_write 0x14019110 0x1 &gt; 
+/proc/clkdbg ; cat /proc/clkdbg&quot; 
+adb shell &quot;echo reg_write 0x14018110 
+0x0 &gt; /proc/clkdbg; cat /proc/clkdbg&quot; 
+adb shell &quot;echo reg_write 0x14019110 
+0x0 &gt; /proc/clkdbg; cat /proc/clkdbg&quot; 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0124.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8676 
+Display and Panel Issue Debug SOP 
+Confidential B 
+Module Bypass Recovery 
+SPR0 (dsi0) adb shell &quot;echo reg_write 0x1401700C 0x1 &gt; 
+/proc/clkdbg ; cat /proc/clkdbg&quot; 
+adb shell &quot;echo reg_write 0x1401700C 
+0x0 &gt; /proc/clkdbg; cat /proc/clkdbg&quot; 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0124.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8676 
+Display and Panel Issue Debug SOP 
+Confidential B 
+4 SerDes 调试指南 
+在车机平台中，屏幕显示通常通过 SerDes 连接到屏幕。当出现显示异常时，需要同时调试 SerDes 和显示模块。可
+以利用 SerDes 的 Pattern 和寄存器来辅助分析问题。SerDes I2C 寄存器的读写可以通过 I2C-Tools 实现。以下是针对
+MTK 公版以 DSI 为例，在 max96789 和 max96752 上的调试经验总结，供参考。这部分是与厂商调试的记录，最终
+的解释请与厂商确认。 
+ 
+4.1 Ser-max96789 调试寄存器 
+加串器 max96789 作为 DSI RX，可以通过接收端的数据情况进行查看。具体来说，可以检查以下内容：  
+0x102 寄存器的 bit7 用于确认是否接收到 MIPI 时钟，并检测到像素时钟。 
+• 如果 bit7 为 0，在点版阶段，请首先确认硬件上的 MIPI 信号连接是否正常。 
+• 检查是否有信号交换（Swap）的问题，以及 P/N 信号是否画反。 
+ 
+0x55D 寄存器用于确认是否接收到 video 信号，并且检测到 DE, H/V sync。 
+ 
+ 
+0x339, 0x33b, 0x33a, 0x33c 寄存器用于确认 PHY0/1 收到 LP 和 HS 的数据是否有 error，寄存器读一次之后会清 0，
+如果有 error 可以多读几次。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0124.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8676 
+Display and Panel Issue Debug SOP 
+Confidential B 
+ 
+0x3a0, 0x3a2 寄存器用于确认收到的 MIPI 输出是否有 ECC 和 CRC error。 
+ 
+ 
+ 
+– 如果以上寄存器检查结果都正常，说明 max96789 已经正确接收到 DSI 的数据，并且没有错误。然而，如
+果屏幕仍然不亮，则需要进一步确认屏幕的时序设定是否正确。可以通过 max96789 生成测试 Pattern 并发
+送到屏幕，以确认屏幕是否能够显示。如果 Pattern 也无法显示，建议联系 SerDes 厂商和屏幕厂商以寻求
+解决方案。 
+0x332, 0x333, 0x334, 0x335 寄存器用于确认 Lane Swap 和 P/N Swap 设定是否正常。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0124.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8676 
+Display and Panel Issue Debug SOP 
+Confidential B 
+ 
+ 
+ 
+0x13, 0x1F 寄存器用于确认 GMSL Link Lock 状态。 
+ 
+ 
+ 
+0x3A4 寄存器可以关掉 max96789 的 DPI Deskew Bit0。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0124.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+MT8676 
+Display and Panel Issue Debug SOP 
+Confidential B 
+ 
+ 
+4.2 Des-max96752 调试寄存器 
+0x108 寄存器用于确认是否存在 Video Lock 和 Video PKT Detect。 
+ 
+0x1ce 寄存器用于当画面出现锯齿时，可以尝试进行 Swap 操作。 
+ 
+4.3 Debug 流程 
+下图是对以上寄存器说明和 Debug 方法的流程总结，可以按照这个流程来定位问题。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0124.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+MT8676 
+Display and Panel Issue Debug SOP 
+Confidential B 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0124.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 16 
+Confidential B 
+4.4 DP SerDes Driver 调试日志 
+在使用公版 DP SerDes 驱动程序时，如果需要启用调试日志，可以参考以下步骤 。文件： 
+kernel_device_modules-6.1/drivers/gpu/drm/bridge/Makefile 
+修改如下： 
+ifeq ($(CONFIG_DRM_SERDES_DP), m) 
+obj-$(CONFIG_DRM_SERDES_DP) += serdes-dp.o 
+ccflags-y += -DSERDES_DEBUG 
+endif 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0124.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 17 
+Confidential B 
+5 DSI Interface 
+5.1 DSI Interface 介绍 
+DSI（Display Serial Interface）是由 MIPI 联盟制定的显示接口规范。该协议包括应用层、协议层、 链路层和物理
+层。DSI 协议支持两种传输模式：HS（High Speed）模式和 LP（Low Power）模式。 
+ 
+这两种模式可以根据需要动态切换，以优化性能和功耗。 
+ 
+5.1.1 HS 
+在 D-PHY 中，HS（High Speed）模式的摆幅通常为 200mV。视频数据通常通过 HS 模式进行传输，以满足高带宽需
+求。最大传输速度取决于 D-PHY 的版本，不同版本支持的最大速率有所不同。 
+ 
+5.1.2 LP 
+在 DSI D-PHY 中，LP（Low Power）模式的信号幅度通常为 1.2V。LP 模式的最大传输速度为 80 Mbps，通常用于发
+送命令和进行状态切换。 
+ 
+5.1.3 HS &amp; LP 状态切换图 
+在 DSI 协议中，传输从 LP（Low Power）模式切换到 HS（High Speed）模式的过程通常如下： 
+1. LP11 状态：这是空闲状态，表示数据线处于低功耗模式，且两条数据线（ D+和 D-）都为高电平。 
+2. LP01 状态：开始切换过程，D+保持高电平，D-变为低电平。 
+3. LP00 状态：两条数据线都变为低电平，准备进入高速传输。 
+4. SOT（Start of Transmission）：从 LP00 状态进入 HS 模式，开始高速数据传输。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-18"><h2>PDF物理页 18</h2><a href="materials/SRC0124.pdf#page=18" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 18 
+Confidential B 
+通过这种状态转换，DSI 接口能够在低功耗和高速传输之间进行有效切换，以满足不同的操作需求。
+ 
+ 
+5.1.4 DSI MIPI D-PHY 时序规范 
+在 MIPI DSI 协议中，TX 和 RX 之间没有传统意义上的握手协议。相反，它们依赖于严格遵循规范中定义的时序来进
+行数据传输和接收。规范明确定义了从 LP 到 HS 的转换和从 HS 到 LP 的转换。由于没有握手协议，TX 和 RX 的时
+序匹配至关重要。如果两者的时序不匹配，可能会导致数据传输错误或异常。  
+ 
+5.1.4.1 Data Lane 规范 
+在 MIPI DSI 协议中，HS-PREPARE 和 HS-TRAIL 等参数是关键的时序参数，影响着高速传输的性能和可靠性。 了解这
+些参数的含义和规范中的时间要求对于正确配置和调试 DSI 接口非常重要。 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-19"><h2>PDF物理页 19</h2><a href="materials/SRC0124.pdf#page=19" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 19 
+Confidential B 
+ 
+ 
+在 MIPI DSI 协议中，Unit Interval (UI) 是一个重要的时序单位。UI 等于时钟通道（Clock Lane）上任何高速状态的持
+续时间。由于 MIPI 使用的是双倍数据速率（DDR，Double Data Rate）时钟，因此一个 UI 实际上是时钟周期的一
+半。  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-20"><h2>PDF物理页 20</h2><a href="materials/SRC0124.pdf#page=20" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 20 
+Confidential B 
+5.1.4.2 Clock Lane 规范 
+在 MIPI DSI 协议中，Clock Lane 的操作模式可以根据具体应用需求进行配置。规范允许 Clock Lane 在某些情况下不
+返回到 LP 模式，TX 可以直接设定为 Continue Mode。 
+ 
+ 
+ 
+ 
+ 
+5.1.5 Video Mode 介绍 
+在 MIPI DSI 协议中， Video Mode 有三种主要类型：Sync Pulses、Sync Events 和 Burst Mode。对于 MT8676 芯片，三
+种模式都可以支持，但在 RX 端，MIPI 规范只要求支持其中一种模式即可。目前，Sync Pulses Mode 是最常用的模
+式。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-21"><h2>PDF物理页 21</h2><a href="materials/SRC0124.pdf#page=21" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 21 
+Confidential B 
+5.1.5.1 HFP Keep HS 
+Sync Plus Mode 从 DPI 信号而来，有完整的 H 和 V 同步信号，数据包摆放如下图所示。绿色为 LP 的部分，红色为
+HS 的部分。MT8676 芯片支持在每个帧的活动数据结束后返回到 LP 模式，同时在 HFP 期间保持 HS 模式。这种配
+置称为 HFP Keep HS 模式。 
+• HFP Keep HS Mode：在这种模式下，水平前沿期间保持 HS 状态。这可以确保输出的 HFP 更加准确，适合需要
+精确 HFP 的 Panel 或 Bridge。如果需要精确的 HFP，建议使用此模式。 
+• HFP HS EN = 0：如果在 HFP 期间不保持 HS 状态（即 HFP HS EN = 0），则 HFP 可能会因为返回到 LP 模式而增加
+额外的 Data Cycle，导致实际输出的 HFP 偏大。此外，HFP 有最小值的要求，因此在这种模式下需要注意 HFP
+的配置。 
+两个模式的对比如下图所示。在驱动程序中，相关参数为 vdo_per_frame_lp_enable。将其设置为 1 时，表示启用
+HFP Keep HS 模式（即 HFP HS EN = 1）。 
+ 
+ 
+ 
+5.1.5.2 DSI_Frame_Rate_Cal_for_Customer_MT8676 介绍 
+如下 excel 表格可以计算出比较精确的 FPS 所对应的 DSI 数据速率，同时也可以确认 Panel Timing 是否满足要求。 
+HS 
+LP 
+HFP HS EN =1 
+HFP HS EN =0 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-22"><h2>PDF物理页 22</h2><a href="materials/SRC0124.pdf#page=22" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 22 
+Confidential B 
+ 
+ 
+ 
+步骤： 
+1. 输入面板的 H Timing &amp; V Timing，Video Mode，Lane Num 等参数。 
+2. 根据所需帧率计算 Ideal Bit_Freq，对于 D-PHY，这个参数即为 datarate。 
+3. 微调数据速率，得到想要的帧率。数据速率可以精确到 kHz。在驱动程序中需要设置 data_rate_khz 参数以使调
+整生效。 
+4. 如果需要更精准的时序，建议启用 Video Mode keep HS MODE。确保 Htatol 可以被 2 * lane_number 整除。 
+ 
+在调整 DSI 数据速率以获得准确的帧率后，如果发现 Htotal 不满足 2 * Lane Num 的整除要求，，建议通过微调 HFP
+参数来解决这个问题（由于大多数屏幕使用 DE（Data Enable）模式，水平时序的微调通常是可行的。在调整 HFP
+参数后，建议与屏幕厂商确认新的时序设置，以确保兼容性和性能。 ）。 
+另外第 4 步中提到的 Video Mode Keep HS MODE 是指屏幕驱动中的 vdo_per_frame_lp_enable。 
+如果 Htotal 不满足整除要求，可能会导致实际输出的 HFP 出现小数，这可能引起屏幕闪烁或锯齿。  
+ 4 
+ 4 
+ 3 
+ 3 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-23"><h2>PDF物理页 23</h2><a href="materials/SRC0124.pdf#page=23" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 23 
+Confidential B 
+ 
+5.2 LCM 问题调试 
+屏幕在点屏阶段和 DV 测试阶段的问题会有些差异。在点板点屏阶段，针对屏幕的问题，除了要分析软件部分的设
+定，还需要考虑硬件的设计是否正确和焊接是否可靠等。DV 测试阶段的黑花卡更侧重分析软件流程的 Bug。下图
+针对常见的问题做了一个简单的分析步骤，这样在针对复杂的屏幕问题时，通过 DSI 的 Pattern 是否显示正常作为
+一个切入点，能够快速切割定位问题，而不会觉得无从下手。另外需要提到的是 对于黑屏的问题，首先需要确认
+是的背光是否正常，再做后面的分析。 
+MediaTek Proprietary and Confidential. © 2022 MediaTek Inc. All rights reserved.
+MT8676 DSI
+ Serializer
+Deserializer
+Main categories of LCM issues
+Panel bring-up
+1. Disp_pwm backlight issues 
+2. Display black screen, screen artifacts, 
+stuttering
+• Confirm backlight
+• Enable interface pattern
+Display
+1. Display path control
+2. Artifacts/Flickering
+Increase clk
+• Force GPU composition
+• If GPU composition is normal, then 
+disable PQ feature
+• PQ module impact
+3. Stuttering
+• Fence issue
+• SurfaceFlinger/
+HWC
+4. Black screen
+• Bandwidth
+• Power control
+• Cmdq abnormal
+PatternOK
+Failed Ser 
+Pattern
+OK
+DSI owner
+Failed
+Vendor
+Display owner
+SerDes issues
+1. Prioritize contacting the 
+vendor
+2. LCM owner assistance
+Debug
+1. Check PCB wiring sequence and soldering
+- Swap
+- Cold solder joints, missing solder
+2. Check power supply, GPIO status, 
+initialization timing
+3. Dump registers
+Display 
+abnormal
+ 
+ 
+5.2.1 DSI Register 介绍 
+DSI0 Base register 0x1400d000 DSI0 MIPI TX base 0x11e50000 
+DSI1 Base register 0x1420d000 DSI1 MIP TX base 0x11e60000 
+ 
+DSI Register 格式都是 Base 地址加上一个 Offset，具体的 Offset 以及定义可以参考 Register Map。下表介绍了常用的
+DSIRegister 的含义，方便 Debug 的时候使用。 
+地址 名称 介绍 
+1400d000 DSI_START Bit0 为 1 表示 DSI 信号有输出 
+1400d004 DSI_INTSTA 
+中断的状态, 例如 bit12 表示有 buffer underrun, 可以查看 DSI 信号
+的状态 
+1400d038 DSI_SIZE_CON 
+Panel active 的 size, 
+Bit30 ~ Bit16: 高; Bit14 ~ Bit0: 宽 
+1400d010 DSI_COM_CON Bit0: DSI_RESET , software reset  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-24"><h2>PDF物理页 24</h2><a href="materials/SRC0124.pdf#page=24" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 24 
+Confidential B 
+地址 名称 介绍 
+Bit2: DPHY_RESET , MIPI TX software reset 
+1400d014 DSI_MODE_CON Bit1~Bit0 Video mode  
+1400d018 DSI_TXRX_CON 
+Bit16 为 0 代表 continue clock 
+Bit5 ~ Bit2: Lane number 
+1400d01c DSI_PS_CON 
+ 
+Bit19 ~ Bit16: Data format 
+3: RGB888 
+5: DSC 压缩数据 
+1400d020 DSI_VSA_NL = Panel VPW 
+1400d024 DSI_VBP_NL = Panel VBP 
+1400d028 DSI_VFP_NL = Panel VFP 
+1400d02c DSI_VACT_NL = Panel height 
+1400d050 DSI_HSA_WC = Panel HSA*3-10 
+1400d054 DSI_HBP_WC = Panel HBP*3-10 
+1400d058 DSI_HFP_WC 
+Bit14 ~ Bit0 = Panel HFP*3-12 
+Bit31 为 1 表示在每个帧的活动数据结束后，数据通道返回到 LP
+模式，但在 HFP 期间保持 HS 模式。 
+1400d110 DSI_PHY_TIMCON0 
+MIPI Data Lane Timing HQA Test 可能会调整 
+Bit(s) Name Description 
+31:24 DA_HS_TRAIL timing parameter: T_HS-Trail 
+23:16 DA_HS_ZERO timing parameter: T_HS-Zero 
+15:8 DA_HS_PREP timing parameter: T_HS-Prepare 
+7:0 LPX timing parameter: T_LPX 
+   
+ 
+1400d114 DSI_PHY_TIMCON1 MIPI Data Lane Timing HQA Test 可能会调整 
+11e50008 MIPITX_CDPHY_VOLTAGE_SEL 
+MIPI Swing 调整 
+9:6 RG_DSI_HSTX_LDO_REF_SEL Selects 0.4V/0.5V ref voltage 
+(20mV/step, covers 0.3 to 0.6V) 
+  4'b0000: Min. voltage 
+  4'b1000: Typical voltage 
+  4'b0111: Max. voltage 
+ 
+1400d178 DSI_SELF_PAT_CON0 DSI Pattern, 可以出纯色, 灰阶等 Pattern 
+11e5002C MIPITX_PLL_CON0 MIPI Clock PCW, Clock 不同设定会有差异 
+11e50030 MIPITX_PLL_CON1 MIPI Clock 开关和 Divide 
+11e50034 MIPITX_PLL_CON2 MIPI Clock 展频设定 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-25"><h2>PDF物理页 25</h2><a href="materials/SRC0124.pdf#page=25" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 25 
+Confidential B 
+地址 名称 介绍 
+Bit1 为 1 表示开启展频 
+11e50038 MIPITX_PLL_CON3 MIPI Clock 展频设定 
+11e50004 MIPITX_CDPHY_LANE_CON 
+Bit(s) Name Description 
+9 RG_DSI_DEM_EN Enables DSI de-emphasis 
+  1'b0: Off 
+  1'b1: On 
+ 
+ 
+5.2.2 DSI Register Dump 介绍 
+可以通过命令 Dump 所有的 DSI Register： 
+adb shell &quot;echo diagnose&gt;/proc/mtkfb &amp;&amp; cat /proc/mtkfb&quot; &gt; d:\mtkfb.txt 
+ 
+Dump 的结果如下图中所示： 
+ 
+ 
+ 
+ 
+ 
+通过reg_read_len 命令读寄存器，使用前需要打开 config:  
+CONFIG_MTK_CLKMGR_DEBUG=y 
+ 
+adb shell &quot;echo reg_read_len addr len&gt; /proc/clkdbg ; cat /proc/clkdbg&quot;   
+ 
+其中 len 指的是偏移地址长度，会依次读出 addr+offset 的寄存器值。 
+ 
+假设想要 Dump DSI0 0x00~0x100 的地址的值，命令如下： 
+adb shell &quot;echo reg_read_len 0x1400d000 0x100&gt; /proc/clkdbg ; cat /proc/clkdbg&quot; 
+ 
+当diagnose 命令使用异常，可以使用这个命令 Dump 相关的寄存器。 
+ 
+                                                                  DSI0 BASE 
+offset Base+offset Base+offset+4 Base+offset+8
+8 
+Base+offset+C 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-26"><h2>PDF物理页 26</h2><a href="materials/SRC0124.pdf#page=26" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 26 
+Confidential B 
+5.2.3 DSI 调试流程 
+下图为简单的 DSI 调试流程图，可以结合 SerDes 的状态一起来看。 
+ 
+ 
+5.2.4 帧率异常 
+检查屏幕驱动中 Pixel Clock 设定与 data_rate 设定是否正常。文档中搜索关键字，可以找到驱动中参数的位置介
+绍。 
+ 
+5.2.5 I2C 通信异常 
+1. 确认加串器电源晶振是否正常，确认软件时序和 I2C 地址设定，测量 I2C 信号电压是否正常。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-27"><h2>PDF物理页 27</h2><a href="materials/SRC0124.pdf#page=27" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 27 
+Confidential B 
+2. 确认 DWS 设定是否正常。 
+3. 确认 I2C 上拉电阻和驱动电流设定是否正常。 
+1). dts 中找到使用的 I2C 节点： 
+&amp;i2c4 { 
+    pinctrl-names = “default”; 
+    pinctrl-0 = &lt;&amp;i2c4_pins&gt;; 
+}; 
+ 
+2). 在&amp;pio 节点下添加如下内容： 
+&amp;pio { 
+    i2c4_pins: i2c4-default { 
+        pins-bus { 
+            pinmux = &lt;PINMUX_GPIO190__FUNC_SCL4&gt;, 
+ &lt;PINMUX_GPIO191__FUNC_SDA4&gt;; 
+bias-pull-up = &lt;MTK_PULL_SET_RSEL_111&gt;; 
+drive-strength = &lt;MTK_DRIVE_2mA&gt;;  
+        }; 
+    }; 
+}; 
+ 
+参数 定义 
+PINMUX_GPIO190__FUNC_SCL4 
+PINMUX_GPIO191__FUNC_SDA4 
+include/dt-bting/pinctrl/mt6897-pinfunc 查找对应的 I2C 
+pinmux 
+bias-pull-up=&lt;MTK_PULL_SET_RSEL_111&gt; 
+I2C 上拉电阻设定： 
+000: PU75K, PD75K 
+001: PU10K, PD5K 
+010: PU5K, PD75K 
+011: PU4K, PD5K 
+100: PU3K, PD75K 
+101: PU2K, PD5K 
+110: PU1.5K, PD75K 
+111: PU1K, PD5K 
+建议使用 111, 1K 上拉电阻，不要超过 5K 
+drive-strength = &lt;MTK_DRIVE_2mA&gt; include/dt-bting/pinctrl/mt65xx.h 查看驱动电流的范围 
+关掉上拉 + //bias-pull-up = &lt;MTK_PULL_SET_RSEL_111&gt;; 
++ bias-disable; 
+ 
+5.3 DSI DPHY CTS 测试问题 
+CTS 测试的主要目的是验证设备是否符合 MIPI DSI DPHY 规范。CTS 测试主要包含以下几个方面： 
+1. 电气特性测试：电压，边沿等是否满足规范 
+2. 协议一致性测试：MIPI Timing 是否满足规范 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-28"><h2>PDF物理页 28</h2><a href="materials/SRC0124.pdf#page=28" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 28 
+Confidential B 
+3. 信号完整性测试：测试信号质量，眼图，Skew 是否满足规范 
+ 
+5.3.1 测试仪器 
+由于是高速信号，对信号的测试环境和仪器要求比较高。需要使用专用的带 DPHY 协议的测试仪器，并且使用专用
+的探头，探尖，tip 来连接信号到仪器上，同时在使用前需要对仪器做校准。如果没有相关的测试仪器，需要找第
+三方机构做测试。 
+ 
+5.3.2 测试平台准备 
+1. 测试需要焊接差分信号 clock_p, clock_n, data_p, data_n 的测试点。测试点建议选在靠近 Bridge 的输入端。同时
+焊接的 GND 线尽量不要离的很远，线长尽量控制在 1~2cm。data_p 的接法示意图如下图所示，4 根信号共需
+要接 4 个 Tip 到示波器上。 
+2. 测试的平台需要接屏测试，并且屏幕可以显示正常。这样是为了 Bridge 或者 RX 的设定都正常，保证负载端是
+正常的。 
+3. 测试的平台可以播放视频，视频的内容建议 Random 一些，越 Random 越好。或者放一张比较花的图片，避免
+大面积的黑和白。测试平台接 adb，方便 Debug 使用。 
+4. 测试前需要检查每个信号都是稳定正常的，确保焊接，Tip 和 Probe Head 都是正常的。 
+5. DSI 输出设定要关闭展频，同时要记住 DSI Clock，或者测试前量测一下 Clock。 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+5.3.3 常见 Failed 项目分析 
+Continue Clock HS 部分的测试项目如下，红色方框中的项目主要是电气特性相关，绿色方框的项目主要是 MIPI 
+Timing 协议一致性相关，蓝色方框的项目主要是信号质量相关。 
+MT8676 
+DSI0 
+ Serializer 
+MAX96789 
+data_p 
+GND 
+Tip 
+ Probe head 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-29"><h2>PDF物理页 29</h2><a href="materials/SRC0124.pdf#page=29" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 29 
+Confidential B 
+ 
+ 
+5.3.3.1 1.3.4/1.4.4 VOD0/VOD1 Pulse &amp; 1.3.7 VCMTX 
+Clock 和 Data 默认设定都是 200MV，如果出现偏小，可以调整 HSTX 输出电压，增大驱动能力。 
+ 
+ 
+ 
+参考 DSI 寄存器介绍中 MIPITX_CDPHY_VOLTAGE_SEL 寄存器 0x11e50008，20mV 一个 Step，可以通过 adb 更改寄存
+器逐渐调大满足规范。建议调大之后观察这几组值的变化看是否符合预期。 
+ 名称 默认值 建议调整范围 
+D-PHY RG_DSI0_HSTX_LDO_REF_SEL 4’b100 
+0110: 0.36V 
+0111: 0.38V 
+1000: 0.4V 
+1001: 0.42V 
+1010: 0.44V 
+1011: 0.46V 
+ 
+以寄存器 DSI0 为例，DSI1 的寄存器请看寄存器介绍的部分。 
+adb shell &quot;echo gce_rd:0x11e50008 &gt; /sys/kernel/debug/mtkfb; cat /sys/kernel/debug/mtkfb | 
+grep gce_rd&quot; 
+[   83.560777][mtkfb_dbg] gce_rd:0x11e50008 
+[   83.560784]display_debug cmd gce_rd:0x11e50008 
+[   83.561045][reg_dbg] gce_rd: addr(0x11e50008) = 0x44441200 
+ 
+更改 Bit6 ~ Bit9 的值。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-30"><h2>PDF物理页 30</h2><a href="materials/SRC0124.pdf#page=30" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 30 
+Confidential B 
+电压值 Bit6 ~ Bit9 寄存器 
+0.4V 1000 0x44441200 
+0.42V 1001 0x44441240 
+0.44V 1010 0x44441280 
+0.46V 1011 0x444412C0 
+0.48V 1100 0x44441300 
+ 
+根据情况调整需要增加的电压值，例如调整到 0.42V 
+adb shell &quot;echo gce_wr: 0x11e50008,0x44441240,0xffffffff &gt; /sys/kernel/debug/mtkfb&quot; 
+ 
+5.3.3.1.1 软件如何调整电压 
+LK: 
+--- a/platform/mediatek/mt8676/disp/ddp_dsi.c 
++++ b/platform/mediatek/mt8676/disp/ddp_dsi.c 
+@@ -2293,6 +2293,8 @@ void DSI_DPHY_clk_setting(enum DISP_MODULE_ENUM module, void *cmdq, 
+LCM_DSI_PARA 
+ #endif 
+         if (data_Rate &lt; 2500) 
+             MIPITX_OUTREGBIT(DSI_PHY_REG[i]+MIPITX_VOLTAGE_SEL, FLD_RG_DSI_PRD_REF_SEL, 
+0x0); 
++ 
++               MIPITX_OUTREGBIT(DSI_PHY_REG[i]+MIPITX_VOLTAGE_SEL, 
+FLD_RG_DSI_HSTX_LDO_REF_SEL, 0x9);//0.42V 
+ #if 0 
+         if (data_Rate &gt; 2000) 
+             MIPITX_OUTREGBIT(DSI_PHY_REG[i]+MIPITX_VOLTAGE_SEL, FLD_RG_DSI_V2I_REF_SEL, 
+0x4); 
+ 
+--- a/platform/mediatek/mt8676/disp/ddp_reg_mipi.h 
++++ b/platform/mediatek/mt8676/disp/ddp_reg_mipi.h 
+@@ -13,6 +13,7 @@ 
+ #define MIPITX_LANE_CON                    (0x0004UL) 
+ #define MIPITX_VOLTAGE_SEL                (0x0008UL) 
+ #define FLD_RG_DSI_PRD_REF_SEL              REG_FLD(6, 0) 
++#define FLD_RG_DSI_HSTX_LDO_REF_SEL         REG_FLD(4, 6) 
+ #define FLD_RG_DSI_V2I_REF_SEL              REG_FLD(4, 10) 
+ 
+Kernel: 
+--- a/drivers/gpu/drm/mediatek/mediatek_v2/mtk_mipi_tx.c 
++++ b/drivers/gpu/drm/mediatek/mediatek_v2/mtk_mipi_tx.c 
+@@ -2308,6 +2308,9 @@ static int mtk_mipi_tx_pll_dphy_config_mt6991(struct mtk_mipi_tx 
+*mipi_tx) 
+                mtk_mipi_tx_update_bits(mipi_tx, MIPITX_VOLTAGE_SEL_MT6983, 
+                        FLD_RG_DSI_PRD_REF_SEL, 0x4); 
++       mtk_mipi_tx_update_bits(mipi_tx, MIPITX_VOLTAGE_SEL_MT6983, 
++                       FLD_RG_DSI_HSTX_LDO_REF_SEL, 0x9 &lt;&lt; 6); //0.42V 
+ #ifdef IF_ZERO 
+        /* No need keep as default */ 
+        if (rate &gt; 2000) 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-31"><h2>PDF物理页 31</h2><a href="materials/SRC0124.pdf#page=31" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 31 
+Confidential B 
+ 
+5.3.3.2 1.3.8 Voltage Mismatch &amp; 1.4.8 VCMTX Mismatch 
+检查测试环境，探头是否有做校准，PCB Layout 是否等长。 
+ 
+5.3.3.3 1.3.1~3 &amp; 1.3.13~16 MIPI Timing 
+MIPI Timing 如下图中所示可以通过寄存器调整，寄存器 DSI_PHY_TIMCON0 中有说明。 
+ 
+上图中参数需要满足下图中规范的范围，其中 UI = 1/datarate，SW 中设定最小单位是 8UI。 
+ 
+5.3.3.3.1 SW 如何调整时序 
+以下图中 1.3.15 TEOT Failed 为例，现在测试结果为 299.77ns，此值偏大，Pass Limit Max 值为 133.85ns。 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-32"><h2>PDF物理页 32</h2><a href="materials/SRC0124.pdf#page=32" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 32 
+Confidential B 
+ 
+ 
+现在需要调整设定，使得 TEOT 小于 133.85ns Pass 规范: 
+1. 从 5.3.3.3 MIPI Timing 图中，找到 TEOT 信号的位置和规范的范围。 
+2. 1.4.17 确认 UI=2.404ns。 
+3. 根据 UI 计算 TEOT 阈值：TEOT=[~, 105ns+12*UI] = [~, 133.848ns]，也可以直接看提示的 Pass Limit 的值。 
+4. 计算软件设定最小单位 = 8 * UI = 8*2.404 = 19.232ns，SW 设定寄存器值 &lt; 133.848ns/19.232ns = 6.96。 
+5. 根据 UI 计算 HS_TRAIL 阈值：THS_TRAIL&gt; 60ns + 4UI=69.6ns，SW 设定寄存器值 &gt; 69.6ns/19.232= 3.6。 
+6. HS_TRAIL 属于 TEOT 一部分，降低 HS_TRAIL，既是减小 TEOT，同时要保证 THS_TRAIL 也要满足规范，软件设定
+值为整数，则可以取 4 ~ 6 中的一个值通过 adb 设定进去，再测试查看。 
+ 
+5.3.3.3.2 如何将调好的值写进软件 
+SerDes 的 Driver 可以将参数放到 dts 里面客制化，再给到如下的参数里面。 
+LK Panel Driver 
+lcm_get_params()里面添加 
+ 
+ 
+Kernel Panel Driver 
+ext_params 里面添加需要调整的参数 
+ 
+ 
+ 
+5.3.3.3.3 THS_TRAIL Failed 
+THS_TRAIL 比较常见的 Failed 情况是示波器没有抓到正确的 HS_TRAIL。这样调整寄存器也是没有用的，可以看到的
+现象是测出来的 HS_TRAIL 值非常小，如下图中所示只有 4ns 左右。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-33"><h2>PDF物理页 33</h2><a href="materials/SRC0124.pdf#page=33" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 33 
+Confidential B 
+ 
+ 
+可以对比下图中正常的波形，正常的 HS TRAIL 是一段 HS 1 的数据，所以碰到这种情况请确认示波器是否有正确设
+定，或者重新测试，或者可以手动测量确认。 
+ 
+ 
+5.3.3.4 1.3.11~12 Tr/Tf &amp; 1.5.4 Data to Clock Skew 
+信号的质量对 Data 和 Clock 的 Tr/Tf 以及 Data to Clock Skew 的测试项目影响很大。而影响信号质量的根本原因就是
+差分信号阻抗的控制，SoC 输出单端 50 欧姆，差分 100 欧姆。要求 PCB Layout 也遵循这个原则，并且要做阻抗控
+制，这部分可以跟硬件对齐，查看具体的 Layout 要求和 PCB 厂商要求阻抗控制。同样 RX 的部分也要按照同样的
+阻抗设定，这样才能保证信号的完整性。 
+Failed 
+OK 
+HS_TRAIL 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-34"><h2>PDF物理页 34</h2><a href="materials/SRC0124.pdf#page=34" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 34 
+Confidential B 
+5.3.3.4.1 SoC 的阻抗调整 
+SoC 的 MIPI TX 有单端的阻抗调整寄存器，但是不建议调整。目前软件设定默认输出有做阻抗的 Calibration 保证性
+能，如果单独调整某根信号的阻抗，很难保证一致性。 
+ 
+5.3.3.4.2 干扰导致 Skew Fail 
+除了测试的信号接线稳定，还要确认平台和仪器的接地也要稳定，注意排查杂讯的干扰。下图中红色箭头不 预期
+的杂讯，会影响测试结果，需要确认测试环境。 
+ 
+5.3.3.4.3 阻抗不连续信号问题 
+下图中左边 Failed 图片是没有带负载测试的异常波形，极端的阻抗不连续情况，可以看到信号失真很严重，上升
+沿和下降沿的位置出现台阶状，右侧图片是带负载测试的正常波形，可以看出阻抗的连续对波形的影响。当信号
+失真比较严重时，在排除了测试环境的问题后，就需要检查阻抗的部分。 包含 SoC 输出的阻抗，PCB Layout 阻抗，
+RX 端的阻抗。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-35"><h2>PDF物理页 35</h2><a href="materials/SRC0124.pdf#page=35" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 35 
+Confidential B 
+  
+ 
+5.3.3.5 什么情况开 DEM 
+当 datarate &gt; 2.5Gbps 时，可以开启 DEM (de-emphasis)。DEM 开启后信号的幅度会降低，同时需要调大信号的幅
+度，确保可以满足 Spec。 
+以寄存器 DSI0 为例，DSI1 的寄存器请看寄存器介绍的部分。 
+adb shell &quot;echo gce_rd:0x11e50004 &gt; /sys/kernel/debug/mtkfb; cat /sys/kernel/debug/mtkfb | 
+grep gce_rd&quot; 
+[  417.152740][mtkfb_dbg] gce_rd: 0x11e50004 
+[  417.152746]display_debug cmd gce_rd: 0x11e50004 
+[  417.153133][reg_dbg] gce_rd: addr(0x11e50004) = 0x80 
+ 
+0x11e50004 bit9 为 DEM 开关的寄存器，默认为 off，设 1 为开启： 
+adb shell &quot;echo gce_wr:0x11e50004,0x280,0xffffffff &gt; /sys/kernel/debug/mtkfb&quot; 
+ 
+5.3.3.6 1.5.5 &amp; 1.5.6 HS Skew Calibration Burst 
+当 datartate &gt;1.5Gbps 时，协议规定 TX 需要向 RX 发送 Skew Pattern，RX 收到后，可以用来校正 PCB Layout 等导致
+的 Data 和 Clock 的偏移，为高速信号接收提供保障。Skew Pattern 与 Normal 信号的差异如下图： 
+ 
+Skew Pattern 有两种，Initial 的方式和 Periodic 的方式，Periodic 的方式在 Spec 中是可选的，SoC 不支持这种方式，
+只支持 1.5.5 Initial 的方式。 
+ 
+OK 
+Failed 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-36"><h2>PDF物理页 36</h2><a href="materials/SRC0124.pdf#page=36" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 36 
+Confidential B 
+ 
+5.3.3.6.1 1.5.5 Initial HS Skew 测试 
+Initial 的方式是指在 DSI Normal 的信号之前发送 Skew Pattern，只会发送一次，不会周期重复。如果要测试这个信
+号，需要在亮屏之前正确的抓住 Timing。当屏幕亮的时候信号已经发送完毕，是测不到的。 这对信号的测试有难
+度，不建议测试。 
+ 
+5.3.3.6.2 SW Deskew Enable 
+Code Flow 中默认大于 1.5G datarate 会开启，需要加串器也要打开 Deskew 的功能，才能实现此功能，完成信号的
+校准。加串器设定好后，收到 Pattern，并做完校准，会返回 IRQ，可以通过 IRQ 的状态确认。 
+ 
+ 
+5.4 DSI 波形量测 
+波形的量测是常用的 Debug 手段。 
+ 
+5.4.1 如何测量帧率 
+图 1 中是一个每 Line 都回 LP 的 Data 的波形，需要将时间轴拉大一些找到 V Blanking 区域，按照下图测量 1 Frame
+的时间，60fps 1 Frame 的时间大概为 16.6ms。图 2 中是将 V Blanking 区域放大的波形，可以放大确认抓的信号是
+否正确。 
+Support 
+Not Support 
+//DSI deskew pattern enable 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-37"><h2>PDF物理页 37</h2><a href="materials/SRC0124.pdf#page=37" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 37 
+Confidential B 
+ 
+ 
+ 
+图 3 是开启 Video 每个 frame 回一次 LP，可以看到只有在 Blanking 区域有 LP 波形，其它的时间都是 Keep HS。按
+照下图测量 1 frame 的时间，60fps 1 frame 的时间大概为 16.6ms。图 4 是 V blanking 展开的图形，供参考。 
+ 
+1 frame 
+V Blanking 
+ V Blanking 
+1 
+2 
+3 
+1 frame 
+V Blanking 
+V Blanking 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-38"><h2>PDF物理页 38</h2><a href="materials/SRC0124.pdf#page=38" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 38 
+Confidential B 
+ 
+ 
+5.4.2 如何测量信号 
+下图是 1 Line 的 Data &amp; clock 的波形，DP &amp; DN 可以看到 LP 和 HS 部分的波形。其中 Data 上 LP 为 1.2V，HS 为
+200mV，Clock P 的幅度为 200mV。可以确认信号的电压等是否有异常。 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+4 
+V Blanking 区域 
+LP 
+HS 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-39"><h2>PDF物理页 39</h2><a href="materials/SRC0124.pdf#page=39" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 39 
+Confidential B 
+将 LP 部分放大，可以看到 LP 进入 HS 的时序，再放大可以测量 HS prepare 等参数。 
+ 
+ 
+LP11-&gt;LP01-&gt;LP00-&gt;HS
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-40"><h2>PDF物理页 40</h2><a href="materials/SRC0124.pdf#page=40" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 40 
+Confidential B 
+6 DP Interface 
+6.1 DP 调试 
+6.1.1 调试命令 
+1. 打开/关闭 DPTX 调试日志信息。 
+echo dptx:debug_log:on &gt; /proc/mtkfb 
+echo dptx:debug_log:off &gt; /proc/mtkfb 
+2. DP_intf pattern（仅用于非 DSC） 
+echo gce_wr:0x1400bF00,41,ffffffff &gt; /proc/mtkfb 
+3. DPTX pattern（仅用于非 DSC） 
+echo dptx:dppattern &gt; /proc/mtkfb 
+4. DP write cmd 
+echo wrdp:offset:value:mask &gt; /proc/mtkfb 
+5. DP read cmd 
+echo rddp:offset &gt; /proc/mtkfb 
+6. DP intf write cmd 
+echo gec_wr:0x1400bxxx,xxx,xxxx &gt; /proc/mtkfb 
+eg:echo gce_wr:0x1400bF00,41,ffffffff &gt; /proc/mtkfb 
+ 
+6.1.2 Aux fail 
+1. 量测近 SoC 端与 Sink 端 AUX P/N 波形，具体波形查看下面。 
+2. Aux request 波形 DP TX -&gt; DP RX 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-41"><h2>PDF物理页 41</h2><a href="materials/SRC0124.pdf#page=41" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 41 
+Confidential B 
+3. Aux reply 波形 DP RX -&gt; DP TX 
+ 
+ 
+6.1.3 DP  黑屏 
+1. 第一次点 DP 屏幕，参考上面配置。若配置都正确，提 CR 报问题。 
+2. 需要打 DP_intf pattern 查看（6.1 中调试命令）。 
+ 
+6.2 DP/SerDes 时序 
+1. DP 会在 set training start 前，去 call serdes pre_enable/enable，让 SerDes 开始下设定，这里是同步操作，保证
+时序。 
+2. 在 SerDes enable 这个阶段 HPD disconnect，HPD connect，只会检测到 HPD 发生变化，因为是同步行为，不会
+继续向下执行，会阻塞在 SerDes enable 函数内等待完成。 
+3. DP 会在等待 SerDes 结束后，开始 training 前，再次检查连接状态。 
+– 当前连接状态是 connect，会继续开机上电 connect 之后的动作，继续做 training。 
+– 当前连接状态是 disconnect，training 状态会返回断开。接下来动作会跑继续断开的行为。 
+4. 从波形图上来看，出现 2 次 HPD low，这里是 SerDes 产生的 HPD 行为，会阻塞在 SerDes enable 函数，DP 只
+会检测到 HPD，并没有行为。 
+5. 从 log 对应波形分析，波形上有三次拉高状态，对应 log 也存在三次连接状态，并保证 training 是在 SerDes reg 
+setting 之后（即第三次 HPD 拉高）。 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-42"><h2>PDF物理页 42</h2><a href="materials/SRC0124.pdf#page=42" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 42 
+Confidential B 
+ 
+ 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-43"><h2>PDF物理页 43</h2><a href="materials/SRC0124.pdf#page=43" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 43 
+Confidential B 
+7 Display 常见问题/故障排除 
+7.1 hwc 命令 
+• Log CMD: 
+adb shell setprop persist.vendor.debug.hwc.log V &amp;&amp; adb shell setprop 
+vendor.debug.hwc.skip_log 0 &amp;&amp; adb shell dumpsys SurfaceFlinger  
+ 
+• Dump sf info: 
+adb shell dumpsys SurfaceFlinger &gt; sf.log 
+ 
+• Force GPU （GPU 叠图）： 
+adb shell service call SurfaceFlinger 1008 i32 1 
+ 
+7.2 显示驱动 CMD 
+On 都表示开，Off 表示关。 
+ 
+常用的 display mobile log: 
+adb shell “echo mobile:on &gt; /d/mtkfb” 
+ 
+如果要抓开机 log，需要直接改代码： 
+kernel/kernel_device_modules-6.1/drivers/gpu/drm/mediatek/mediatek_v2/mtk_debug.c 
+ 
+ 
+如果要开更详细的 log： 
+adb shell “echo detail:on &gt; /d/mtkfb” 
+ 
+如果要抓开机 log，需要直接改代码： 
+kernel/kernel_device_modules-6.1/drivers/gpu/drm/mediatek/mediatek_v2/mtk_debug.c 
+ 
+ 
+Fence log: 
+adb shell “echo fence:on &gt; /d/mtkfb” 
+ 
+如果要抓开机 log，需要直接改代码： 
+kernel/kernel_device_modules-6.1/drivers/gpu/drm/mediatek/mediatek_v2/mtk_debug.c 
+ 
+ 
+Irq log: 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-44"><h2>PDF物理页 44</h2><a href="materials/SRC0124.pdf#page=44" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 44 
+Confidential B 
+adb shell “echo irq:on &gt; /d/mtkfb” 
+ 
+如果要抓开机 log，需要直接改代码： 
+kernel/kernel_device_modules-6.1/drivers/gpu/drm/mediatek/mediatek_v2/mtk_debug.c 
+ 
+ 
+抓 display diagnose dump: 
+adb shell &quot;echo diagnose &gt; /sys/kernel/debug/mtkfb &amp;&amp; cat /sys/kernel/debug/mtkfb&quot; &gt; 
+mtkfb.txt 
+ 
+7.3 黑屏 
+• 背光是否开启 
+• 如果有 bridge ic, bridge ic 是否 OK 
+• dsi/dp pattern 是否 OK 
+• screencap 是否 OK 
+adb shell screencap -d 0/1 /sdcard/1.png 
+ 
+如果以上几点都 OK，最后就需要 display owner 详细看 log 来定位问题。 
+ 
+7.4 花屏/闪屏 
+• 看 log 中是否有 DISP_OVL/RDMA underflow/abnormal 
+– size 配置是否 OK 
+▪ CMD:  
+adb shell “echo mobile:on &gt; /d/mtkfb” 
+– clk/dram 不够 
+▪ clk  
+o dump: 
+adb shell &quot; echo fmeter &gt; /proc/clkdbg ; cat /proc/clkdbg | grep –e disp&quot; 
+o force 最大： 
+adb shell &quot;echo 0 0 &gt; /sys/module/mtk_mmdvfs_debug/parameters/force_step&quot; 
+▪ dvfs 
+o dump: 
+adb shell &quot;cat /sys/kernel/helio-dvfsrc/dvfsrc_dump | grep -e uv -e Mbps&quot; 
+o force 最大: 
+adb shell &quot;echo 0 &gt; /sys/kernel/helio-dvfsrc/dvfsrc_force_vcore_dvfs_opp&quot; 
+• Force GPU 是否 OK 
+adb shell service call SurfaceFlinger 1008 i32 1 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-45"><h2>PDF物理页 45</h2><a href="materials/SRC0124.pdf#page=45" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 45 
+Confidential B 
+• dsi/dp pattern 是否 OK 
+ 
+7.5 卡顿 
+• 看 main log 是否有 fence timeout 
+ 
+• 看 kernel log 是否有 underflow/abnormal 的 log 
+• 开启 fence log,看对应 fence 是否 release 
+adb shell “echo fence:on &gt; /d/mtkfb” 
+• 抓 systrace 看耗时位置 
+adb shell perfetto -o /data/misc/perfetto-traces/trace -t 10s sched freq idle am wm gfx 
+view input 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-46"><h2>PDF物理页 46</h2><a href="materials/SRC0124.pdf#page=46" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 46 
+Confidential B 
+附件一 附加条款 
+您(或您所代表的公司或其他法律主体，以下合称「您」)是否得取得、下载与使用本文件及其相关信息皆应以您接受本附加条款为先决要件。
+您对于本文件之使用、取得或下载即表示您已接受本附加条款并同意受本附加条款之拘束。若您不同意受本附加条款之拘束，您将不得使用、
+取得或下载本文件并应立即删除或毁弃所有本文件之副本。 
+ 
+本文件含有联发科技股份有限公司及其关联公司（以下合称「联发科技」）或其授权人之机密信息及专有信息，仅供您为本文件所描述之联发
+科技芯片组作内部使用而不得用于其他任何目的（包括但不限于确认或提供支持任何对联发科技、其供货商及/或其直接或间接客户所提潜在
+专利侵权主张的证据）。禁止未经授权使用或揭露本文件及其中所含信息。您同意赔偿联发科技因您未经授权使用或揭露本文件及其中所含信
+息之一部或全部导致联发科技所受之任何损失或损害。 
+ 
+联发科技及其授权人保有本文件的所有权及组成所有权之各项权利且未针对任何知识产权授权（无论明示或默示、透过禁反言原则或其他方
+式）。联发科技得随时变更本文件内容而无须另行通知。联发科技无须承担与使用或信赖本文件相关或因使用或信赖本文件致生之任何责任，
+包括但不限于间接损害或附带损害赔偿责任。 
+ 
+本文件及联发科技所提供关于本文件之任何其他材料、信息或技术支持，均以现况交付为准，联发科技不负任何明示、默示、法定或其他形式
+之担保责任，特别是适销性、不侵权、针对特定用途之适用性、完整性或正确性之担保责任或任何由贸易惯例或交易、履行过程所生之担保责
+任。对于联发科技为符合您所提规格或遵循特定标准或标准组织的要求所作之交付物，联发科技亦不应承担任何责任。 
+ 
+于未对前述条款造成限制之情形下，联发科技不对其产品任何特定用途之适用性承担任何保证或担保责任，亦不承担任何因产品、电路或软件
+之应用或使用致生之赔偿责任。您同意您应单独承担关于整合您的产品与联发科技产品所涉及之设计、验证与测试之所有责任，并应确保前述
+整合产品符合相关标准及任何安全性要求或其他要件。 
+ 
+本附加条款及所有与本附加条款或本文件相关之行为应以台湾法律管辖、解释与阐明，不适用冲突法原则。 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a><a href="#page-18">PDF物理页 18</a><a href="#page-19">PDF物理页 19</a><a href="#page-20">PDF物理页 20</a><a href="#page-21">PDF物理页 21</a><a href="#page-22">PDF物理页 22</a><a href="#page-23">PDF物理页 23</a><a href="#page-24">PDF物理页 24</a><a href="#page-25">PDF物理页 25</a><a href="#page-26">PDF物理页 26</a><a href="#page-27">PDF物理页 27</a><a href="#page-28">PDF物理页 28</a><a href="#page-29">PDF物理页 29</a><a href="#page-30">PDF物理页 30</a><a href="#page-31">PDF物理页 31</a><a href="#page-32">PDF物理页 32</a><a href="#page-33">PDF物理页 33</a><a href="#page-34">PDF物理页 34</a><a href="#page-35">PDF物理页 35</a><a href="#page-36">PDF物理页 36</a><a href="#page-37">PDF物理页 37</a><a href="#page-38">PDF物理页 38</a><a href="#page-39">PDF物理页 39</a><a href="#page-40">PDF物理页 40</a><a href="#page-41">PDF物理页 41</a><a href="#page-42">PDF物理页 42</a><a href="#page-43">PDF物理页 43</a><a href="#page-44">PDF物理页 44</a><a href="#page-45">PDF物理页 45</a><a href="#page-46">PDF物理页 46</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

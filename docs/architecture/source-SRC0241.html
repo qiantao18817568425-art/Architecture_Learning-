@@ -1,0 +1,590 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Hypervisor_Secure_Boot_User_Manual_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Hypervisor_Secure_Boot_User_Manual_V1.0.pdf</h1><p>SRC0241 · 原来源 ID S176 · PDF物理页 · 13 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MT8676软件资料/User Manual/Hypervisor/English Version/MT8676_Hypervisor_Secure_Boot_User_Manual_V1.0.pdf</p><p>SHA-256：<code>8fb29ac94bce928de429376509412d010820fe3b00843f9322862f1ab45f1dd5</code></p><p>原文件大小：549,225 字节</p></details><div class="actions"><a class="button" href="materials/SRC0241.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Hypervisor_Secure_Boot_User_Manual_V1.0.pdf 原 PDF" src="materials/SRC0241.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0241.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version:   1.0 
+Publication date:  2024-11-14
+MT8676 Hypervisor Secure Boot  
+User Manual 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0241.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8676 Hypervisor Secure Boot 
+User Manual 
+Confidential B 
+Version History 
+Version Date Author Description 
+1.0 2024-11-14 Peak Official version 
+ 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0241.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8676 Hypervisor Secure Boot 
+User Manual 
+Confidential B 
+Table of Contents 
+Version History ·································································································································································· 2 
+Table of Contents ······························································································································································· 3 
+List of Figures ····································································································································································· 3 
+List of Tables ······································································································································································ 3 
+1 Secure Boot ······························································································································································· 4 
+1.1 Overview ·································································································································································· 4 
+ Abbreviations ················································································································································ 4 
+ BootRom ······················································································································································· 4 
+1.2 Secure Boot ······························································································································································ 5 
+ Secure Boot Check Process ··························································································································· 5 
+1.3 Download Agent Authentication (DAA) ··················································································································· 7 
+1.4 Security Feature Configuration ································································································································ 7 
+ Generate Key Pairs. ······································································································································· 7 
+ Enable Secure Boot. ······································································································································ 9 
+ Compilation Software ································································································································· 10 
+ Signature First-Loader ································································································································· 10 
+ Signature FIT Format Image ························································································································ 11 
+ Sign the Yocto File System Image. ··············································································································· 11 
+ Sign the MTK Android Format Image. ········································································································· 11 
+1.5 Signature DA ··························································································································································· 12 
+1.6 Generate Authfile ··················································································································································· 12 
+Exhibit 1 Terms and Conditions ········································································································································ 13 
+ 
+List of Figures 
+Figure 1-1. Secure boot check flow ············································································································································ 6 
+Figure 1-2. dakey.h ····································································································································································· 8 
+ 
+List of Tables 
+Table 1-1. Abbreviations ····························································································································································· 4 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0241.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8676 Hypervisor Secure Boot 
+User Manual 
+Confidential B 
+1 Secure Boot 
+1.1 Overview 
+This document provides an overview of the secure boot feature in the MT8676 SoC and its accompanying SDK. During the 
+design and deployment cycle of this product, functionalities and features may change. These changes will be documented 
+in subsequent versions of this document. Additionally, this document describes how to enable secure features. 
+ 
+ Abbreviations 
+Table 1-1. Abbreviations 
+Abbreviation Explanation 
+DA Download Agent download proxy  
+DAA Download Agent Authentication 
+DRAM Dynamic Random Access Memory 
+eFuse Electronic Fuse  
+eMMC Embedded MultiMedia Card  
+EVB Evaluation Board  
+FIT Flattened Image Tree 
+LK2 Litter Kernel 2 
+NVM Non-Volatile Memory  
+PC Power Control 
+ROM Read-only Memory 
+SBC Secure Boot Check  
+SDK Software Development Kit 
+SoC System-on-Chip 
+SRAM Static Random Access Memory  
+TEE Trusted Execution Environment  
+UART Universal Asynchronous Receiver/Transmitter  
+USB USB  
+USBDL USB Download 
+ 
+ BootRom 
+BROM (BootROM) is the software in SoC ROM that cannot be modified. It is the first software executed by the application 
+processor. The main work summary is as follows: 
+• Perform basic hardware configuration for the System on Chip (SoC) as follows:  
+1. Set the Phase-Locked Loop (PLL).  
+2. Configure clocks.  
+3. Initiate system startup. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0241.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8676 Hypervisor Secure Boot 
+User Manual 
+Confidential B 
+• Load the first-stage bootloader from the startup device UFS/eMMC/NAND to initiate the system. 
+• Communicate with the host PC tool to load Download Agent (DA) software for mirroring downloads to external Flash 
+devices that lack software or have corrupted software. 
+• Perform secure boot checks on the first-stage bootloader or download agent using multiple secure boot check keys. 
+ 
+1.2 Secure Boot 
+ Secure Boot Check Process 
+The Secure Boot check process is used to create a trusted execution chain from the hardware root of trust. It can be 
+enabled by burning SBC_EN in eFuse. This process is performed every time the system recovers from power-on reset. 
+Figure 1-1 Demonstrates the basic secure boot check process. Detailed descriptions are as follows.  
+ 
+1. After power-on reset, BROM uses the following process to verify the secure boot check (SBC) public key (SBC_PUBK) in 
+non-volatile memory (NVM, such as eMMC or NAND). BROM sequentially uses the public key hash (SBC_PUBK_HASH) 
+from eFuse. 
+(1) Read the hash value of the secure boot check public key (SBC_PUBK) from eFuse (SBC_PUBK_HASH). 
+(2) Read the SBC public key (SBC_PUBK) from NVM. 
+(3) Calculate the hash value of the data from (2). 
+(4) Check whether the data from (1) and (3) is the same. 
+ 
+2. BROM loads and verifies bl2.img (Yocto LK2), which is the first stage of bootloader. First, BROM reads Yocto LK2 from 
+NVM into the SoC’s SRAM and uses the secure boot check public key (SBC_PUBK) to authenticate Yocto LK2. If Yocto 
+LK2 verification is successful, Yocto LK2 will be executed. The verification method uses SHA256 to compute the hash 
+value, RSA (2048 bits), and MTK or PSS padding (determined by the header of the first stage bootloader) for 
+verification. 
+Note:  
+• If the external storage is NAND flash memory, BROM supports the second copy of LK2. When BROM cannot load the first copy 
+of LK2, BROM attempts to load and authenticate the second copy of LK2. 
+ 
+3. After the first stage bootloader, it runs in the Yocto LK2 stage, where LK2 will verify the Yocto FIT image, Hypervisor, 
+and Android-related images. 
+ 
+4. Yocto LK2 loads the FIT image (such as the Yocto kernel and other FIT images) from NVM into a non-secure DRAM area 
+and verifies it. It uses the VERIFIED public key embedded in LK2 to authenticate and verify the FIT signature of the FIT 
+image, and detects the HASH values of each sub-image in the Fit image. The verification method uses SHA256 to 
+compute the hash value, RSA (2048 bits), and MTK or PSS padding for verification. 
+ 
+5. Yocto LK2 also loads the MTK signed format image (such as TEE, Hypervisor image) from NVM into a secure DRAM 
+area and verifies it. It uses the ROOT public key embedded in the LK2 program to authenticate the image’s CERT1 and 
+uses the IMAGE public key extracted from CERT1 to authenticate the image’s CERT2. If CERT2 verification is successful, 
+this image will be considered legitimate and will continue with the subsequent process. The verification method uses 
+SHA256 to calculate the hash value, RSA (2048 bits), and MTK or PSS for verification. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0241.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Hypervisor Secure Boot 
+User Manual 
+Confidential B 
+6. After Yocto LK2 verifies the images required for 4 and 5 mentioned above, it will jump to TEE. TEE will start the 
+Hypervisor image gz.img. The Hypervisor will first start the Yocto Kernel and then verify the startup of the Android LK2 
+image and Tbox LK2 image. 
+ 
+7. After the Yocto Kernel is executed, the root_check function provided by MediaTek in the Yocto Kernel can be used to 
+implement sampling verification of the read-only system. 
+ 
+8. The method for verifying Android LK2 and Tbox LK2 by the Hypervisor needs to be provided by the Hypervisor vendor. 
+Currently, it is Qianchuan. 
+ 
+9. Android LK2 will verify the Android Kernel through AVB. After executing in the Android Linux system, it can verify the 
+read-only image through dm-verity (on block devices) in the Linux Kernel. 
+Note: 
+• Currently, dm-verity supports only block devices in Linux (eMMC on EXT4). 
+ 
+10. Tbox LK2 will load the Tbox Kernel image into the DRAM area for verification. The Tbox Kernel image is in FIT format. 
+Tbox LK2 will use the VERIFIED public key embedded in Tbox LK2 to authenticate and verify the FIT signature of the FIT 
+image and check the HASH values of each sub-image in the Fit image. The verification method uses SHA256 to 
+calculate the hash value, RSA (2048 bits), and MTK or PSS padding for verification. 
+ 
+11. After the Tbox Kernel is executed, it can implement sampling verification of the read-only system through the 
+root_check function provided by MediaTek in the Yocto Kernel. 
+ 
+ 
+Figure 1-1. Secure boot check flow 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0241.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8676 Hypervisor Secure Boot 
+User Manual 
+Confidential B 
+1.3 Download Agent Authentication (DAA) 
+When the device software in the external memory (eMMC/NAND/...) is empty or damaged, the host PC tool can 
+communicate with the BROM in the SoC, load a DA software into the SRAM of the SoC and execute DA to download the 
+image process. When Enable_DAA is burned, the DA will be authenticated by BROM, and the following process is called 
+Download Agent Authentication (DAA). 
+ 
+1. The host PC tool sends the authentication file (AuthFile) to BROM via USB or UART. 
+2. BROM performs authentication on AuthFile. 
+(1) BROM reads the Secure Boot Check (SBC) public key (SBC_PUBK) from the AuthFile and uses the public key hash 
+(SBC_PUBK_HASH~SBC_PUBK_HASH1) and the corresponding disable bits 
+(SBC_PUBK_HASH_DIS~SBC_PUBK_HASH1_DIS) to authenticate the hash of the SBC key. 
+(2) BROM uses SBC_PUBK to verify AuthFile. 
+(3) BROM obtains the DAA key from the AuthFile. 
+3. The host PC tool sends DA. 
+4. BROM uses the DAA key to verify DA through SHA256/RSA-2048. 
+5. BROM jumps to DA to execute the firmware download process. 
+ 
+Note: 
+• The SBC_PUBK and DAA keys can be different to enhance security levels. 
+• In addition to BROM, the first-stage bootloader also supports the DA protocol, which can be used to verify DA using 
+SHA256/RSA2048. 
+ 
+1.4 Security Feature Configuration 
+ Generate Key Pairs. 
+Generate two pairs of keys (including private key and public key) in Yocto: SBC_KEY and VERIFIED_KEY. Place them in the 
+Yocto system directory meta/meta-MediaTek/conf/machine/keys. 
+1. The command to generate the Yocto private key: 
+openssl genrsa -F4 -out sbc_key.pem 2048 
+openssl genrsa -F4 -out verified_key.pem 2048 
+openssl req -batch -new -x509 -key verified_key.pem -out verified_key.crt 
+ 
+2. The command to generate the Yocto public key: 
+openssl rsa -in sbc_key.pem -pubout &gt; sbc_pubk.pem 
+openssl rsa -in verified_key.pem -pubout &gt; verified_pubk.pem 
+ 
+Two pairs of keys are generated for android OS, including a private key and a public key: the root key (ROOT_KEY) and the 
+image key (IMAGE_KEY). Use pem_to_der.py to convert the format of the root key to DER format in 
+vendor/MediaTek/proprietary/scripts/sign-image_v2/der_extractor. 
+ 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0241.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 Hypervisor Secure Boot 
+User Manual 
+Confidential B 
+3. The command to generate an Android private key: 
+openssl genrsa -out root_prvk.pem 2048 
+python pem_to_der.py root_prvk.pem root_prvk.der 
+openssl genrsa -out img_prvk.pem 2048  
+ 
+4. The command to generate the Android public key: 
+openssl rsa -in root_prvk.pem -pubout &gt; root_pubk.pem 
+python pem_to_der.py root_pubk.pem root_pubk.der 
+openssl rsa -in img_prvk.pem -pubout &gt; img_pubk.pem 
+ 
+Keep using the same method to generate the DA key pair to sign and verify the DA (da_prvk.pem/da_pubk.pem). In 
+addition, Yocto private key content is recommended overwrite the Android private key content, and the Yocto public key 
+content overwrite the Android public key content, so that the configuration will be simpler. 
+ 
+1.4.1.1 Generate oemkey.h 
+Export the root key (root_pubk.der), use der_extractor to generate oemkey.h, this tool is located in the 
+vendor/MediaTek/proprietary/scripts/sign-image_v2/der_extractor/ directory. Please place oemkey.h in 
+the following path: 
+Android DA: $DA_Kit/Raphael-da/custom/$PLATFORM/oemkey.h 
+Yocto LK2: $LK/target/$PROJECT/inc/oemkey.h 
+ 
+Command: 
+chmod 777 der_extractor 
+./der_extractor root_pubk.der oemkey.h ANDROID_SBC 
+ 
+1.4.1.2 Generate dakey.h 
+The dakey.h file contains the public key for verifying DA_BR.bin by LK2. The corresponding private key is used to sign 
+DA_BR.bin. 
+Command: 
+chmod 777 der_extractor 
+./der_extractor da_pubk.der dakey.h ANDROID_SBC 
+ 
+Place dakey.h in the following path: 
+Yocto LK2: $LK2/target/$PROJECT/include/dakey.h 
+ 
+Note:  
+• After generating dakey.h, please replace “OEM” with “DA” (Figure 1-2). 
+ 
+Figure 1-2. dakey.h 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0241.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8676 Hypervisor Secure Boot 
+User Manual 
+Confidential B 
+ 
+ Enable Secure Boot. 
+1.4.2.1 Android Software Security Configuration 
+The default security configuration for the Android side software is enabled; you can check the following configurations: 
+1. LK2 configuration software (Hypervisor Android’s LK2 is compiled in Yocto) 
+Yocto LK2: $LK/project/${PROJECT}.mk 
+ MTK_SECURITY_SW_SUPPORT=yes 
+ 
+ 
+2. Kernel settings 
+32-bit Kernel 
+&lt;kernel path&gt;/arch/arm/configs/&lt;project&gt;_debug_defconfig 
+&lt;kernel path&gt;/arch/arm/configs/&lt;project&gt;_defconfig 
+ 
+64-bit Kernel 
+&lt;kernel path&gt;/arch/arm64/configs/&lt;project&gt;_debug_defconfig 
+&lt;kernel path&gt;/arch/arm64/configs/&lt;project&gt;_defconfig 
+ 
+CONFIG_MTK_SECURITY_SW_SUPPORT=y 
+ 
+1.4.2.2 Software Security Configuration for Yocto 
+meta/meta-mediatek-mt8xxx/conf/machine/[project].conf 
+SECURE_BOOT_ENABLE = “yes” 
+ENABLE_ROOTFS_CHECK= “yes” 
+ 
+1.4.2.3 TBox Software Security Configuration 
+meta/meta-mediatek-mt8xxx/conf/machine/[project]uos_tbox.conf 
+SECURE_BOOT_ENABLE = “yes” 
+ENABLE_ROOTFS_CHECK= “yes” 
+1.4.2.4 BROM Enables Secure Configuration. 
+The above three points all enable the security verification configuration at the software level. To enable the BROM 
+verification first-loader (the first-loader in this project is Yocto LK2), you need to write the eFuse field. 
+ 
+1. Generate SCB_PUBK HASH: 
+Tool path: meta/meta-MediaTek/recipes-bsp/lk/files/pbp 
+Command: 
+chmod 777 der_extractor 
+python pbp.py -j sbc_key.pem -func keyhash_pss -o keyhash 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0241.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8676 Hypervisor Secure Boot 
+User Manual 
+Confidential B 
+ 
+2. Write SBC_PUBK HASH into eFuse: 
+ 
+Step 1: Use “hexdump -C keyhash” or “xxd -c 32 keyhash” to display the hexadecimal keyhash. 
+Note: You must use the -c parameter to generate a standard hexadecimal ASCII display result. 
+ 
+hexdump -C keyhash 
+00000000 16 b1 oe fc 5e 4e 06 76 e9 d9 6e 40 0c 51 ca 36 | ……. 
+00000010 d1 be 93 d2 67 fd 3e af db f6 f7 89 4a 2c 40 18   |…….. 
+xxd -c 32 keyhash 
+00000000 16b1 oefc 5e4e 0676 e9d9 6e40 0c51 ca36 d1be 93d2 67fd 3eaf dbf6 f789 4a2c 
+4018    ……… 
+ 
+Do not use 'hexdump keyhash' for display. 
+hexdump keyhash 
+00000000 b116 fc0e 4e5e 7606 d9e9 406e 510c 36ca 
+00000010 bed1 d293 fd67 ad3e f6db 89f7 2c4a 1840 
+ 
+Step 2: Convert the result to a hexadecimal string. Remove the spaces between characters: 
+16b10efc5e4e0676e9d96e400c51ca36d1be93d267fd3eafdbf6f7894a2c4018 
+ 
+Step 3: Execute the ewriter command: 
+ewriter 1 0 32 16b10efc5e4e0676e9d96e400c51ca36d1be93d267fd3eafdbf6f7894a2c4018 
+ 
+Refer to the MTK_eFuse_Writer_User_Guide for more detailed usage of the ewriter tool. 
+ 
+Note:  
+• To enable the BROM secure boot verification function of the IC, in addition to writing the above SBC_PUBK0_HASH field, it is also 
+necessary to write SBC_EN. The eFuse can only be written once, so it is not recommended to write eFuse to enable the BROM 
+secure boot verification function of the IC during the project development phase. 
+ 
+ Compilation Software 
+Compile the entire project. 
+ 
+ Signature First-Loader 
+1. Signing the first-loader (this project is Yocto LK2) will use two keys: sbc_key.pem and verified_key.pem. 
+2. Key placement directory: 
+&lt;yocto branch&gt;/meta/meta-mediatek/conf/machine/keys/ 
+3. When compiling Yocto LK2, enabling the security configuration will automatically sign Yocto LK2. 
+4. Signing process: Package the SBC public key and the verified public into the key cert, and signed them using the SBC 
+priate key; calculate the image hash, package the hash and verified pub key into the content cert, and sign them using 
+the verified priv key; finally, concatenate the key cert and content cert to the end of the original image to generate the 
+signed image. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0241.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8676 Hypervisor Secure Boot 
+User Manual 
+Confidential B 
+ Signature FIT Format Image 
+1. The first-loader signature (this project is Yocto LK2) requires the verified_key.pem key. 
+2. Key placement directory: 
+&lt;yocto branch&gt;/meta/meta-mediatek/conf/machine/keys/ 
+3. When compiling each FIT image, enabling security configuration will automatically sign the corresponding image. 
+4. Signing process: The FIT image is an open-source standard format image, so the uboot-mkimage tool will be used to 
+sign the image, mainly calculating the original HASH and storing it in the HASH node, and using the verified private key 
+to sign the nodes in the FIT image except for the data node after concatenation, saving the signed result in the 
+signature node. 
+ 
+ Sign the Yocto File System Image. 
+1. The signed Yocto file system will also utilize the verified_key.pem key. 
+2. Key placement directory: 
+&lt;yocto branch&gt;/meta/meta-mediatek/conf/machine/keys/ 
+3. When compiling each file system image, enabling security configuration automatically signs the corresponding image. 
+4. Signature process: MediaTek will provide the file system signature tool mtd_verify. This tool will extract N pieces of 
+data from the original file system image based on the input parameters, each with a fixed size and fixed interval; it will 
+concatenate the extracted parts to calculate the hash, use the verified private key to sign the HASH; and save the 
+information of the input parameters and Signature at the end of the original image. 
+ 
+ Sign the MTK Android Format Image. 
+1.4.7.1 Generate Keys for cert1 and cert2. 
+1. Use root_prvk.pem and img_prvk.pem to generate cert1 and cert2_key. 
+2. Run the following command. 
+python ./vendor/mediatek/proprietary/scripts/sign-image_v2/img_key_deploy.py mt6897  
+cert1_key_path=${KEY_PATH}/root_prvk.pem cert2_key_path=${KEY_PATH}/img_prvk.pem 
+root_key_padding=pss 2&gt;&amp;1 | tee  SecureGen.log 
+ 
+Note:  
+• Do not enter the ./vendor/MediaTek/proprietary/scripts/sign-image_v2/ directory to execute 
+img_key_deploy.py. Execute this command in the root directory of the code repository. 
+• Check whether cert1 and cert2_key for all images have been updated in the following locations. 
+vendor\mediatek\proprietary\custom\mt6897\security\cert_config\cert1\ 
+vendor\mediatek\proprietary\custom\mt6897\security\cert_config\cert2_key\ 
+ 
+1.4.7.2 Signed Image 
+After generating cert1 and cert2_key, run the signing script to generate &lt;image&gt;-verified.bin or &lt;image&gt;-
+verified.img. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0241.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8676 Hypervisor Secure Boot 
+User Manual 
+Confidential B 
+Command: 
+python ./vendor/mediatek/proprietary/scripts/sign-image_v2/SignFlow.py &lt;platform&gt; &lt;project&gt; 
+2&gt;&amp;1 | tee signflow.log 
+or 
+./vendor/mediatek/proprietary/scripts/sign-image/sign_image.sh 2&gt;&amp;1 | tee signflow.log 
+Lunch the project before compilation. 
+ 
+1.5 Signature DA 
+1. Key path setting 
+Export the DA public key (da_prvk.pem). Place it in the Android path 
+vendor/MediaTek/proprietary/scripts/secure_chip_tool/custom_keys. 
+ 
+2. Place the DA that needs to be signed in the prebuilt/resignda/ directory, and execute the following command to 
+sign the DA: 
+cd vendor/mediatek/proprietary/scripts/secure_chip_tool/ 
+python MTK/resign_da.py prebuilt/resignda/DA_BR.bin MT6897 
+settings/Legacy/da/bbchips_pss.ini all out/resignda/DA_BR-resing.bin 
+ 
+1.6 Generate Authfile 
+The DA’s public key is included in the authfile and is used by BROM to authenticate the DA. Therefore, if DAA is enabled, an 
+authfile is required when using flashtool to download the image. All .ini files located in the following locations have been 
+configured for this project. 
+./vendor/mediatek/proprietary/scripts/secure_chip_tools/settings/Legacy/authfile/ 
+ 
+Replace the .pem files for the DA and root private key located at the following location. 
+./vendor/mediatek/proprietary/scripts/secure_chip_tools/custom_keys/ 
+ 
+Authfile generation command: 
+python MTK/toolauth.py -i settings/Legacy/authfile/toolauth_key.ini -g 
+settings/Legacy/authfile/toolauth_gfh_config_pss.ini out/toolauth/auth_sv5.auth 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0241.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8676 Hypervisor Secure Boot 
+User Manual 
+Confidential B 
+Exhibit 1 Terms and Conditions 
+Your access to and use of this document and the information contained herein (collectively this “Document”) is subject to your (including the corporation 
+or other legal entity you represent, collectively “You”) acceptance of the terms and conditions set forth below (“T&amp;C”).  By using, accessing or 
+downloading this Document, You are accepting the T&amp;C and agree to be bound by the T&amp;C.  If You don’t agree to the T&amp;C, You may not use this 
+Document and shall immediately destroy any copy thereof. 
+ 
+This Document contains information that is confidential and proprietary to MediaTek Inc. and/or its affiliates (collectively “MediaTek”) or its licensors 
+and is provided solely for Your internal use with MediaTek’s chipset(s) described in this Document and shall not be used for any other purposes (including 
+but not limited to identifying or providing evidence to support any potential patent infringement claim against MediaTek or any of MediaTek’s suppliers 
+and/or direct or indirect customers).  Unauthorized use or disclosure of the information contained herein is prohibited.  You agree to indemnify 
+MediaTek for any loss or damages suffered by MediaTek for Your unauthorized use or disclosure of this Document, in whole or in part. 
+ 
+MediaTek and its licensors retain titles and all ownership rights in and to this Document and no license (express or implied, by estoppels or otherwise) to 
+any intellectual propriety rights is granted hereunder.  This Document is subject to change without further notification.  MediaTek does not assume any 
+responsibility arising out of or in connection with any use of, or reliance on, this Document, and specifically disclaims any and all liability, including, 
+without limitation, consequential or incidental damages. 
+ 
+THIS DOCUMENT AND ANY OTHER MATERIALS OR TECHNICAL SUPPORT PROVIDED BY MEDIATEK IN CONNECTION WITH THIS DOCUMENT, IF ANY, ARE 
+PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE.  MEDIATEK SPECIFICALLY DISCLAIMS 
+ALL WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, COMPLETENESS OR ACCURACY AND ALL 
+WARRANTIES ARISING OUT OF TRADE USAGE OR OUT OF A COURSE OF DEALING OR COURSE OF PERFORMANCE.  MEDIATEK SHALL NOT BE RESPONSIBLE 
+FOR ANY MEDIATEK DELIVERABLES MADE TO MEET YOUR SPECIFICATIONS OR TO CONFORM TO A PARTICULAR STANDARD OR OPEN FORUM. 
+ 
+Without limiting the generality of the foregoing, MediaTek makes no warranty, representation or guarantee regarding the suitability of its products for 
+any particular purpose, nor does MediaTek assume any liability arising out of the application or use of any product, circuit or software.  You agree that 
+You are solely responsible for the designing, validating and testing Your product incorporating MediaTek’s product and ensure such product meets 
+applicable standards and any safety, security or other requirements. 
+ 
+The above T&amp;C and all acts in connection with the T&amp;C or this Document shall be governed, construed and interpreted in accordance with the laws of 
+Taiwan, without giving effect to the principles of conflicts of law. 
+ 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

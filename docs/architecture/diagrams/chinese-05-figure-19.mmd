@@ -1,0 +1,15 @@
+flowchart TD
+  D["process exit or endpoint generation change confirmed"] --> S["supervisor decision"]
+  S --> M["new MainPID"]
+  M --> A{"service availability?"}
+  A -- no --> U["inspect unit/lower dependency; keep fault open"]
+  U --> S
+  A -- yes --> H["new Client Handle"]
+  H --> R["callback re-register"]
+  R --> G["GET current state"]
+  G --> B["Business cache rebuilt"]
+  B --> V["readback/user verify"]
+  C["callback missing/session stale"] --> H
+  L["synchronous timeout / late response"] --> X["isolate old request"]
+  X --> G
+  Q["stale client/session/generation/business state"] --> G

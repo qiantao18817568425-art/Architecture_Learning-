@@ -1,0 +1,915 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8668_Audio_HW_Interface_User_Guide_V1.1.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8668_Audio_HW_Interface_User_Guide_V1.1.pdf</h1><p>SRC0014 · 原来源 ID S049 · PDF物理页 · 13 个阅读单元</p><p class="note">有引用的指定页/文本核对；未宣称全文逐页审阅。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8668/MTK参考资料/MTK参考资料/MT8668_Audio_HW_Interface_User_Guide_V1.1.pdf</p><p>SHA-256：<code>04511451ad4d3f2f746dc85a9fa1c622d094345c12e30f5f396bf47ee9e845dc</code></p><p>原文件大小：379,331 字节</p></details><div class="actions"><a class="button" href="materials/SRC0014.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8668_Audio_HW_Interface_User_Guide_V1.1.pdf 原 PDF" src="materials/SRC0014.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0014.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved.
+Confidential C
+MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved.
+MT8668 Audio HW Interface User Guide
+ MediaTek Confidential Release for
+PVETEC
+ MediaTek Confidential Release for
+PVETEC
+MediaTek Confidential Release for
+PVETEC</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0014.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved.
+Confidential C
+2
+ MTK Audio HW Concept
+ MT8668 AFE HW capability
+ Audio HW Reference Design
+MT8668 Audio HW Interface User Guide
+ MediaTek Confidential Release for
+PVETEC
+ MediaTek Confidential Release for
+PVETEC
+MediaTek Confidential Release for
+PVETEC</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0014.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved.
+Confidential C
+3
+ MTK Audio HW Concept
+ MT8668 AFE HW capability
+ Audio HW Reference Design
+MT8668 Audio HW Interface User Guide
+ MediaTek Confidential Release for
+PVETEC
+ MediaTek Confidential Release for
+PVETEC
+MediaTek Confidential Release for
+PVETEC</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0014.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved.
+Confidential C
+4
+• AFE: Audio Front End HW
+• AFE MEMIF(FE): PCM DMA, memory read/write
+• Audio interconnection: connection fabric for 
+audio sub module
+– ex: DL MEMIF -&gt; Intercon -&gt; I2S Out
+• DAI (BE) : Digital Audio I/F,eTDM/I2S/DMIC.
+– Enhanced TDM,  can be configured to I2S or 
+TDM
+• MISC 
+– CM: Channel merge to combine echo reference 
+and Mic input
+– GASRC: General audio sampling rate 
+convertor(sample-based)
+– HW gain: digital gain process
+– Bus: SoC Top fabric bus
+MTK Audio HW Concept（名词解释）
+AFE memif
+Audio
+Interconnection
+I2S in &amp; out
+eTDM_IN
+CM
+DMIC
+GASRC
+eTDM_OUT
+eTDM_IN
+eTDM_OUT
+eTDM_OUT
+DRAM
+BUS
+I2S IN
+TDM IN
+I2S OUT
+... DMIC
+BT
+TDM OUT
+... ......
+TDM OUT
+HW gain
+...
+DL
+UL
+UL
+DL
+... ...
+Front End
+Interconnection Back End
+ MediaTek Confidential Release for
+PVETEC
+ MediaTek Confidential Release for
+PVETEC
+MediaTek Confidential Release for
+PVETEC</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0014.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved.
+Confidential C
+5
+ MTK Audio HW Concept
+ MT8668 AFE HW capability
+ Audio HW Reference Design
+MT8668 Audio HW Interface User Guide
+ MediaTek Confidential Release for
+PVETEC
+ MediaTek Confidential Release for
+PVETEC
+MediaTek Confidential Release for
+PVETEC</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0014.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved.
+Confidential C
+MT8668
+afe_interconn
+(Mix engine)
+I_130
+HW Gain 1
+O_7
+O_6
+I_9
+I_8
+HW Gain 0
+O_5
+O_4
+I_7
+I_6
+PCM0
+(Master/Slave)
+I_133
+I_132
+PCM1
+(Slave only)
+I_131
+O_98
+O_97
+O_100
+O_99
+DL SRC
+CH1,2
+O_14
+O_15
+O_96
+I_1
+I_0
+O_22
+O_23
+O_18
+O_19
+VUL_2CH_2
+VUL_2CH_0
+afe_memif
+(80KB)
+I_34
+I_35DL_2CH_1
+O_20
+O_21VUL_2CH_1
+O_24
+O_25VUL_2CH_3
+SDM
+I_36
+I_37DL_2CH_2
+I_32
+I_33DL_2CH_0
+O_26
+O_27VUL_2CH_4
+NLE
+NLE 
+Gain
+I_38
+I_39DL_2CH_3
+O_28
+O_29VUL_2CH_5
+SCP
+(RV55*2)
+Top Bus
+VOW 
+RX 
+Interface
+VOW Interface
+VOW_CLK_MISO
+VOW_DAT_MISO
+I_40
+I_41DL_2CH_4
+I_42
+I_43DL_2CH_5
+I_44
+I_45DL_2CH_6
+I_46
+I_47DL_2CH_7
+O_30
+O_31VUL_2CH_6
+O_32
+O_33VUL_2CH_7
+PMIC
+DL interface
+DL SRC
+CH3,4
+O_16
+O_17SDM
+I_48
+I_49DL_2CH_8
+STF
+O_12
+I_14
+O_113
+O_112
+O_111
+O_110
+I_139
+I_138
+I_137
+I_136
+eTDM in0
+MasterI_135
+I_134
+I_149
+I_148
+I_147
+I_146
+I_145
+I_144 eTDM in4
+(8CH)
+Master
+with pad top
+I_143
+I_142
+eTDM out1
+Master
+eTDM out2
+Master
+eTDM in1
+Master
+eTDM in2
+Master
+etdm_in0
+(form eTDM in0 derict path)
+etdm_in1
+(form eTDM in1 derict path)
+etdm_in2
+(form eTDM in2 derict path)
+etdm_in4
+(form eTDM in4 derict path)
+I_56
+I_57
+I_54
+I_55
+I_60
+I_61
+I_58
+I_59
+O_121
+O_120
+O_123
+O_122
+O_117
+O_116
+eTDM out4
+(8CH)
+Master
+with pad top
+O_119
+O_118
+etdm_In6_0
+(form eTDM in6 derict path)
+Master/Slave
+FM In
+FM 
+SRC
+ConnSYS FM
+O_101
+O_105
+O_104
+O_103
+O_102
+O_106
+O_107
+I_15
+O_13
+HW Gain 3
+O_11
+O_10
+I_13
+I_12
+HW Gain 2
+O_9
+O_8
+I_11
+I_10
+O_39
+O_38
+DL_24CH_0
+(8CH only)
+I_16
+I_17
+I_19
+I_18
+I_21
+I_20
+UL Proximity
+CM1
+(16CH)
+O48~O63
+CM0
+(8CH)
+O40~O47
+O_42
+O_43
+O_40
+O_41
+O_46
+O_47
+O_44
+O_45
+O_50
+O_51
+O_48
+O_49
+O_54
+O_55
+O_52
+O_53
+O_58
+O_59
+O_56
+O_57
+O_62
+O_63
+O_60
+O_61
+VUL_CM0
+VUL_CM1
+O_34
+O_36
+O_35
+O_37
+VUL_2CH_8
+CM0
+VUL_2CH_9
+CM1
+2CH I2S IN
+I2SIN0_MCK
+I2SIN0_BCK
+I2SIN0_LRCK
+I2SIN0_DI
+2CH I2S IN
+I2SIN1_MCK
+I2SIN1_BCK
+I2SIN1_LRCK
+I2SIN1_DI
+2CH I2S IN
+I2SIN2_MCK
+I2SIN2_BCK
+I2SIN2_LRCK
+I2SIN2_DI
+32CH I2S IN
+I2SIN6_MCK
+I2SIN6_BCK
+I2SIN6_LRCK
+I2SIN6_DI
+I2SIN6_DI1
+I2SIN6_DI2
+I2SIN6_DI3
+2CH I2S OUT
+I2SOUT1_MCK 
+I2SOUT1_BCK
+I2SOUT1_LRCK
+I2SOUT1_DO
+2CH I2S OUT
+I2SOUT2_MCK 
+I2SOUT2_BCK
+I2SOUT2_LRCK
+I2SOUT2_DO
+32CH I2S OUT
+I2SOUT6_MCK 
+I2SOUT6_BCK
+I2SOUT6_LRCK
+I2SOUT6_DO
+I2SOUT6_DO1
+I2SOUT6_DO2
+I2SOUT6_DO3
+2CH I2S IN
+FMI2S_MCK
+FMI2S_BCK
+FMI2S_LRCK
+FMI2S_DI
+PMIC Interface
+AUD_CLK_MOSI
+AUD_SYNC_MOSI
+AUD_DAT_MOSI0
+AUD_DAT_MOSI1
+AUD_DAT_MOSI2
+AUD_NLE_MOSI0
+AUD_NLE_MOSI1
+PMIC Interface
+AUD_DAT_MISO2
+AP DMIC
+DMIC_CLK
+DMIC_DAT
+AP DMIC
+DMIC1_CLK
+DMIC1_DAT
+ADDA1
+UL SRC
+DMIC 
+FIFO
+PMIC
+UL interface
+ADDA0
+UL SRC
+DMIC 
+FIFO
+PMIC
+UL interface
+VUL_ETDM0
+VUL_ETDM1
+VUL_ETDM6
+VUL_ETDM4
+VUL_ETDM2
+PMIC Interface
+AUD_DAT_MISO0
+AUD_DAT_MISO1
+PMIC
+DL interface
+MTKAIF4.0
+TX interface
+MTKAIF4.0
+RX interface
+MTKAIF4.0
+RX interface
+I_167
+I_166
+eTDM in6
+(32CH)
+Master &amp; Slave
+with pad top
+I_173
+I_172
+I_171
+I_170
+I_169
+I_168
+I_183
+I_182
+I_181
+I_180
+I_179
+I_178
+I_177
+I_176
+I_175
+I_174
+I_189
+I_188
+I_187
+I_186
+I_185
+I_184
+I_191
+I_190
+I_197
+I_196
+I_195
+I_194
+I_193
+I_192
+General 
+ASRC 0
+O_180
+O_181
+I_198
+I_199
+General 
+ASRC 1
+O_182
+O_183
+I_200
+I_201
+General 
+ASRC 2
+O_184
+O_185
+I_202
+I_203
+General 
+ASRC 3
+O_186
+O_187
+I_204
+I_205
+General 
+ASRC 4
+O_188
+O_189
+I_206
+I_207
+General 
+ASRC 5
+O_190
+O_191
+I_208
+I_209
+General 
+ASRC 6
+O_192
+O_193
+I_210
+I_211
+General 
+ASRC 7
+O_194
+O_195
+I_212
+I_213
+I_88
+I_89
+I_86
+I_87
+I_92
+I_93
+I_90
+I_91
+I_94
+I_95
+I_80
+I_81
+I_78
+I_79
+I_84
+I_85
+I_82
+I_83
+I_98
+I_99
+I_96
+I_97
+I_100
+I_101
+I_104
+I_105
+I_102
+I_103
+I_108
+I_109
+I_106
+I_107
+I_120
+I_121
+I_124
+I_125
+I_122
+I_123
+DL_48CH_0
+(32CH)
++
+DL_2CH_44
+DL_2CH_45
+DL_2CH_46
+CQDMA0
+I2S IQ
+I2SIN_DMA0_BCK
+I2SIN_DMA0_LRCK
+I2SIN_DMA0_DI
+I2SIN_DMA0_DI1
+I2SIN_DMA0_DI2
+I2SIN_DMA0_DI3
+apll_tuner1
+apll_tuner2
+AHB
+AXI
+eTDM out6
+(32CH)
+Master &amp; Slave
+with pad top
+O_152
+O_151
+O_154
+O_153
+O_148
+O_150
+O_149
+O_155
+O_160
+O_159
+O_162
+O_161
+O_156
+O_158
+O_157
+O_168
+O_167
+O_170
+O_169
+O_164
+O_163
+O_166
+O_165
+O_171
+O_176
+O_175
+O_178
+O_177
+O_172
+O_174
+O_173
+O_179
+O_92
+O_93
+O_94
+O_95
+VUL_2CH_37
+VUL_2CH_38
+CM2
+(32CH)
+O64~O95
+O_64
+O_65
+VUL_CM2
+O_109
+O_108 eTDM out0
+Master &amp; Slave
+VUL_2CH_10
+CM2
+eTDM_IN_DMA0
+6
+• 下行 36ch：2组2ch I2S out，1组32ch TDM out
+• 上行 48ch：4组2ch I2S in，1组32ch TDM in，1组8ch slave HS-I2S in
+MT8668 AFE HW Capability
+In/Out Typical Usage Mem IF(FE) Audio IF(BE)
+Max 36ch 
+Output
+2ch/48k/32b * 1 Data PIN DL_2CH_X I2SOUT1: 2ch
+2ch/48k/32b * 1 Data PIN DL_2CH_X I2SOUT2: 2ch
+8ch/48k/32b  * 4 Data PINs
+16ch/48k/32b  * 2 Data PINs DL_48CH_0(32ch) I2SOUT6: 32ch TDM (Master &amp; Slave)
+Max 48ch
+Input
+2ch/48k/32b * 1 Data PIN VUL_2CH_X FMI2S: 2ch (Master &amp; Slave)
+2ch/48k/32b * 1 Data PIN VUL_2CH_X I2SIN0: 2ch
+2ch/48k/32b * 1 Data PIN VUL_2CH_X I2SIN1: 2ch
+2ch/48k/32b * 1 Data PIN VUL_2CH_X I2SIN2: 2ch
+8ch/48K/32b * 4 Data PINs
+16ch/48k/32b  * 2 Data PINs VUL_CM2(32ch) I2SIN6: 32ch TDM (Master &amp; Slave)
+2ch/2048k/18b * 4 Data PINs CQDMA I2SIN_DMA0 (Slave only)
+FE
+BE
+ MediaTek Confidential Release for
+PVETEC
+ MediaTek Confidential Release for
+PVETEC
+MediaTek Confidential Release for
+PVETEC</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0014.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved.
+Confidential C
+7
+Audio Interfaces Capability
+Output 
+Audio IF Audio Capability[*] Support 
+Slave?
+独立
+CLK? PIN
+I2SOUT1 2ch/192k/32b No No O:I2SOUT1_DO
+I2SOUT2 2ch/192k/32b No No O:I2SOUT2_DO
+I2SOUT6 16ch/48k/32b * 2 Data PINs
+8ch/48k/32b * 4 Data PINs Yes No
+O:I2SOUT6_DO
+O:I2SOUT6_DO1
+O:I2SOUT6_DO2
+O:I2SOUT6_DO3
+Input Audio 
+IF Audio Capability[*] Support 
+Slave?
+独立
+CLK? PIN
+FMI2S 2ch/192k/32b Yes Yes
+B0:FMI2SIN_BCK
+B0:FMI2SIN_LRCK
+I0:FMI2SIN_DI
+I2SIN0 2ch/192k/32b No Yes
+O:I2SIN0_BCK
+O:I2SIN0_LRCK
+I0:I2SIN0_DI
+I2SIN1 2ch/192k/32b No No
+O:I2SIN1_BCK
+O:I2SIN1_LRCK
+I0:I2SIN1_DI
+I2SIN2 2ch/192k/32b No No
+I0:I2SIN2_DI
+O:I2SIN2_BCK
+O:I2SIN2_LRCK
+I2SIN6 16ch/48k/32b * 2 Data PINs
+8ch/48k/32b * 4 Data PINs Yes No
+O:I2SIN6_0_BCK
+O:I2SIN6_0_LRCK
+I0:I2SIN6_DI
+I0:I2SIN6_DI1
+I0:I2SIN6_DI2
+I0:I2SIN6_DI3
+I2SIN_DMA0 2ch/2048k/18b * 4 Data PINs
+2ch/192k/32b * 4 Data PINs
+Yes
+(only slave) Yes
+I0:I2SIN_DMA0_BCK
+I0:I2SIN_DMA0_LRCK
+I0:I2SIN_DMA0_DI
+I0:I2SIN_DMA0_DI1
+I0:I2SIN_DMA0_DI2
+I0:I2SIN_DMA0_DI3
+[1] MT8668 BCK 最大能力为 24.576MHz，单根 data pin 的传输数据带宽受此限制
+[2] I2SOUTx和I2SINx 共用一组CLK PIN (例如I2SOUT0和I2SIN0)，需要LRCK/BCK配置保持一致
+[3] I2SIN_DMA0 只支持 slave input，主要功能是为 SDR 设计的 HS-I2S，也能当做普通 I2S IN
+ MediaTek Confidential Release for
+PVETEC
+ MediaTek Confidential Release for
+PVETEC
+MediaTek Confidential Release for
+PVETEC</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0014.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved.
+Confidential C
+8
+• 如果考虑音频接口I2S/TDM的共用时钟，请按照如下规则确认，满足下面条件才有机会：
+– 音频格式（sample rate/channel count/bit depth）需要保持一致，BCK/LRCK(Sync Clock)要保持一致
+– Master/slave mode 要一致
+– 确认是否在可以共clock的 HW group
+Audio Interface Co-clock
+可以共clock的HW Group
+I2SOUT1
+I2SOUT2
+I2SIN0
+I2SIN1
+I2SIN2
+可以共clock的HW Group
+I2SIN6
+I2SOUT6
+可以共clock的HW Group
+FMI2S
+可以共clock的HW Group
+I2SIN_DMA0
+ MediaTek Confidential Release for
+PVETEC
+ MediaTek Confidential Release for
+PVETEC
+MediaTek Confidential Release for
+PVETEC</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0014.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved.
+Confidential C
+9
+Audio Interface Usage Description
+In/Out 音频接口 使用说明
+Max 
+36ch 
+Output
+I2SOUT1: 2ch Channel count = 2ch
+I2SOUT2: 2ch Channel count = 2ch
+I2SOUT6: 32ch TDM master &amp; slave
+BCK &lt;= 24.576MHz，channel count &lt;= 32ch
+典型应用场景：
+16ch/48k/32b * 2 Data PINs 或者 8ch/48K/32b * 4 Data PINs
+Max 
+48ch
+Input
+FMI2S: 2ch master &amp; slave Channel count = 2ch，能够支持master和slave mode
+I2SIN0: 2ch Channel count = 2ch
+I2SIN1: 2ch Channel count = 2ch
+I2SIN2: 2ch Channel count = 2ch
+I2SIN6: 32ch TDM master &amp; slave
+BCK &lt;= 24.576MHz，channel count &lt;= 32ch
+典型应用场景：
+16ch/48k/32b * 2 Data PINs 或者 8ch/48K/32b * 4 Data PINs
+I2SIN_DMA0: 8ch I2S slave(I2S2ch * 4)
+BCK &lt;= 73.728MHz，channel count = 2ch * 4
+典型应用场景：
+2ch/2048k/18b * 4 Data PINs 或者 2ch/48k/32b * 4 Data PINs
+ MediaTek Confidential Release for
+PVETEC
+ MediaTek Confidential Release for
+PVETEC
+MediaTek Confidential Release for
+PVETEC</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0014.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved.
+Confidential C
+10
+ MTK Audio HW Concept
+ MT8668 AFE HW capability
+ Audio HW Reference Design
+MT8668 Audio HW Interface User Guide
+ MediaTek Confidential Release for
+PVETEC
+ MediaTek Confidential Release for
+PVETEC
+MediaTek Confidential Release for
+PVETEC</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0014.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved.
+Confidential C
+I2SOUT1_DO(2ch)
+11
+Int ADSP
+(RV55*1)
+1. SW Mixer
+2. Media effect
+… 
+MT8668 Audio Use Cases
+MT8668 AP
+主驾
+蓝牙
+xCall Phone call
+UPLINK
+DOWNLINK
+I2SIN6_DI (8ch 32bit)
+DP IN
+……
+32ch DL
+2ch UL
+32ch UL
+I2SOUT6_DO (8ch 32bit)
+I2SOUT6_DO1 (8ch 32bit)
+I2SOUT6_DO2 (8ch 32bit)
+I2SOUT6
+I2SIN6_BCK (12.288MHz)
+I2SIN6_LRCK (48K)
+Note: I2SOUT6/I2SIN6 共用 I2SIN6 BCK/LRCK
+副驾
+蓝牙
+I2SIN1_DI(2ch)
+AP Master in/outBT
+uart
+A2B/
+EXT-ADSP
+I2SIN6_DI1 (8ch 32bit)
+I2SIN6_DI2 (8ch 32bit)
+I2SIN6_DI3 (8ch 32bit)I2SIN6
+I2SOUT6_DO2 (8ch 32bit)
+Tbox
+Audio
+Codec
+DAB
+I2SIN_DMA0_BCK
+I2SIN_DMA0_LRCK
+收音机
+FM/AM
+Audio Clock
+Audio Data
+DP INI2SIN1_LRCK
+I2SIN1_BCK
+I2SOUT2_DO(2ch)
+I2SIN2_DI(2ch)
+I2SIN2_LRCK
+I2SIN2_BCK
+I2SIN0_DI(2ch)
+I2SIN0_LRCK
+I2SIN0_BCK
+FMI2SIN_BCK
+FMI2SIN_LRCK
+FMI2SIN_DI(2ch 32bit)
+ MediaTek Confidential Release for
+PVETEC
+ MediaTek Confidential Release for
+PVETEC
+MediaTek Confidential Release for
+PVETEC</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0014.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved.
+Confidential C
+I2SOUT1_DO(2ch)
+12
+Int ADSP
+(RV55*1)
+1. SW Mixer
+2. Media effect
+… 
+MT8668 Audio Use Cases
+MT8668 AP
+主驾
+蓝牙
+xCall Phone call
+UPLINK
+DOWNLINK
+I2SIN6_DI (16ch 32bit)
+DP IN
+……
+32ch DL
+2ch UL
+32ch UL
+I2SOUT6_DO (16ch 32bit)
+I2SOUT6_DO1 (16ch 32bit)
+I2SOUT6
+I2SIN6_BCK (24.576MHz)
+I2SIN6_LRCK (48K)
+Note: I2SOUT6/I2SIN6 共用 I2SIN6 BCK/LRCK
+副驾
+蓝牙
+I2SIN1_DI(2ch)
+AP Master in/outBT
+uart
+A2B/
+EXT-ADSP
+I2SIN6_DI1 (16ch 32bit)
+I2SIN6Tbox
+Audio
+Codec
+DAB
+I2SIN_DMA0_BCK
+I2SIN_DMA0_LRCK
+收音机
+FM/AM
+Audio Clock
+Audio Data
+DP INI2SIN1_LRCK
+I2SIN1_BCK
+I2SOUT2_DO(2ch)
+I2SIN2_DI(2ch)
+I2SIN2_LRCK
+I2SIN2_BCK
+I2SIN0_DI(2ch)
+I2SIN0_LRCK
+I2SIN0_BCK
+FMI2SIN_BCK
+FMI2SIN_LRCK
+FMI2SIN_DI(2ch 32bit)
+ MediaTek Confidential Release for
+PVETEC
+ MediaTek Confidential Release for
+PVETEC
+MediaTek Confidential Release for
+PVETEC</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0014.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved.
+Confidential C
+13
+ MediaTek Confidential Release for
+PVETEC
+ MediaTek Confidential Release for
+PVETEC
+MediaTek Confidential Release for
+PVETEC</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

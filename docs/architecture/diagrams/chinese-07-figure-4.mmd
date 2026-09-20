@@ -1,0 +1,5 @@
+%% Wayland abnormal recovery
+flowchart TB
+  T["stale buffer / fence wait / modeset reject"] --> B["first failed queue, commit or vblank"]
+  B --> W["Weston/DRM path stalls"] --> U["black/frozen output"] --> O["Wayland debug + DRM state + fence timeline"]
+  O --> C["drop stale Generation; release framebuffer/surface"] --> R["recreate output state"] --> V["new frame + vblank + visible check"]

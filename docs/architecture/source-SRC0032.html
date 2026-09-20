@@ -1,0 +1,267 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>Yocto SELinux Introduction(8676).pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>Yocto SELinux Introduction(8676).pdf</h1><p>SRC0032 · 原来源 ID E002 · PDF物理页 · 12 个阅读单元</p><p class="note">有引用的指定页/文本核对；未宣称全文逐页审阅。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>架构知识——中文版/assets/培训解包/Yocto SELinux Introduction(8676).pdf</p><p>SHA-256：<code>c94a6f788bd31105c1d7e7a76c5d3d8849c2934367d6c63d610f8da290c62a93</code></p><p>原文件大小：1,125,010 字节</p></details><div class="actions"><a class="button" href="materials/SRC0032.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="Yocto SELinux Introduction(8676).pdf 原 PDF" src="materials/SRC0032.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0032.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Yocto SELinux 
+目录 
+About SELinux 
+SELinux Mode 
+Yocto SELinux 开发环境搭建 
+Enable SELinux 
+自定义 Sepolicy 
+Debug Log 
+audit2allow 工具介绍 
+常用 debug 指令 
+Android SELinux &amp; Yocto SELinux 对比 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+                                                                                                            Author: Zpengz 
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0032.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">About SELinux 
+DAC（Discretionary Access Control）：传统的 Linux 权限控制方式，基于用户和组的
+权限。文件拥有者可以自由修改文件的访问权限。 
+SELinux（Security-Enhanced Linux ）：基于强制访问控制（MAC），通过安全策略决
+定资源访问，权限不可由任意用户随意更改。 
+对比项 DAC (传统 Linux 权限) SELinux (MAC) 
+权限控制方式 用户/组 安全策略/标签 
+灵活性 高 低（更安全） 
+安全性 较弱 强 
+管理粒度 粗 细 
+SElinux 给每个进程和文件都分配标签，提供精细化的管控，将每个进程拆分成独立的域
+并设定独有的权限。SELinux 策略规则定义了进程如何与文件交互，以及进程如何相互交
+互。只有存在明确允许的 SELinux 策略规则时，才能允许访问 ，降低了被恶意攻击的风
+险。 和 Android 类似， 当前也是采取 DAC+SELinux 的管控模式。 
+Apparmor 也是基于强制访问控制（ MAC）， 之前的方案是使用 Apparmor+DAC， 
+Apparmor 和 SELinux 都是基于 MAC 的管控策略，但是各有一些优缺点： 
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0032.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">特性 SELinux AppArmor 
+策略类型 标签/类型强制 路径强制 
+粒度 细（基于进程/文件标签） 较粗（文件路径级） 
+配置复杂度 中 低 
+debug 灵活性 中等(可单编 selinux, push 文件验证) 高(可动态配置 sepolicy) 
+ 
+ 
+SELinux Mode 
+SELinux 可使用三种模式之一运行： enforcing（强制） 、permissive（宽容）或 disabled
+（禁用） 。 
+• Enforcing 模式是默认操作模式，在 enforcing 模式下 SELinux 可正常运行，并在
+整个系统中强制实施载入的安全策略。 
+• 在 permissive 模式中，系统会象 enforcing 模式一样加载安全策略，包括标记对
+象并在日志中记录访问拒绝条目，但它并不会拒绝任何操作。不建议在生产环境系
+统中使用 permissive 模式，但 permissive 模式对 SELinux 策略开发和调试很有帮
+助。 
+• 强烈建议不要使用禁用（ disabled）模式, 它不仅会使系统避免强制使用  SELinux 
+策略，还会避免为任何持久对象（如文件）添加标签，这使得在以后启用 SELinux 
+非常困难。 
+同 Android SELinux 一 样 ，  在 debug 阶段 针对 SELinux Mode 也 可 以 使 用
+setenforce/getenforce 指令自行切换： 
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0032.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Yocto SELinux 开发环境搭建： 
+1) 构建 Yocto SElinux 必续集成 meta-selinux 仓库，建议首先从开源库中将这个 repo 拉
+下来, 参考指令: 
+git clone https://git.yoctoproject.org/meta-selinux 
+****download 时请注意要和 Yocto 版本对应， 版本不匹配会导致后续编译报错**** 
+2) 集成 chcon， 在 SELinux 初始化阶段会检查是否有集成 chcon,  未安装 chcon 会导致
+init 报错，无法正常 enable SElinux; 集成 chcon 可参考以下修改： 
+ 
+ 
+ 
+Enable SELinux 
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0032.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">1) 在 defconfig 中启用 SELinux 相关支持 
+ 
+****Apparmor 和 SELinux 不能同时开启，如果配置中有打开 apparmor 则需要注释掉 
+2) local.conf 中添加 features 设定 
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0032.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">在 Yocto 项目中，acl、xattr、pam 和 selinux 这几个 DISTRO_FEATURES 之间有一定的
+依赖和关联。 ： 
+启用文件系统的访问控制列表（Access Control List）支持。ACL 允许对文件和目录设置更
+细粒度的权限控制。 
+启用文件系统的扩展属性（eXtended ATTRibutes ）支持。xattr 允许为文件和目录存储额
+外的元数据，SELinux 就是通过 xattr 存储安全上下文的。 
+启用可插拔认证模块（Pluggable Authentication Modules）支持。PAM 是 Linux 下用户
+认证的标准框架，很多安全机制（包括 SELinux）都可以通过 PAM 集成到系统认证流程中。 
+启用 SELinux（Security-Enhanced Linux）强制访问控制系统 
+ 
+*******关于 BBMASK 的设定是为了修复编译报错， 将相关内容添加到黑名单******** 
+3) project.conf 中设定 SELinux mode 
+ 
+如需更改 code 中的 SELinux Mode 设定， 可参考上述修改 
+4) bblayer.conf 中添加 meta-selinux 路径，确保 meta-selinux 在构建层次中，并且优
+先级合适 
+ 
+5) by feature 集成与 SELinux 相关的配置和文件到最终生成的镜像中 
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0032.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">6) by feature 向镜像安装包列表中添加 packagegroup-core-selinux 包 
+ 
+当 DISTRO_FEATURES 包含 selinux 时，才会把  packagegroup-core-selinux 加入到镜像
+安装包列表中。 
+7) By Project/features 加载 selinux 相关.bbapend  
+ 
+当 project 开启了 selinux features 时， 才会去 build meta-selinux 下的 packagegroup -
+core-selinux 等 bb 文件，未启用的 feature/project 对应的 layer 和配方不会被加载，减
+少无关包的构建和依赖。 
+8) fix bin utils license 编译报错 
+ 
+ 
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0032.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">自定义 Sepolicy: 
+sepolicy 存放在路径： 
+ meta/meta-mediatek/dynamic-layers/meta-selinux/recipes-
+security/refpolicy/mtkpolicy/policy/modules/ 
+相关修改为: 
+ 
+如何针对进程添加 sepolicy： 
+在上述目录下存放的多个案例，  每个需要拆分的进程需自行创建三个文件，比如是
+netd.if  netd.fc  netd.te; 
+• te 文件：类型扩展，定义域和类型规则。 
+• if 文件：接口文件，定义可复用的策略接口。 
+• fc 文件：文件上下文，定义文件路径与 SELinux 类型的映射。 
+考虑到会有一些格式问题，建议是从已有案例中直接 copy 出来，操作步骤如下: 
+1)copy netd.if  netd.fc  netd.te 并将 copy 后的文件重命名， 命名为自己进程相关的， 比
+如 mtknetwork 
+2) 将打开重命名后的.fc 文件， 在其中设定当前进程的 bin 档路径与对应的 label 
+3) .if 文件中如果不需要增加接口添加 sepolicy 则无需修改 
+4) 主要配置在.te 文件中， sepolicy 相关语法和需要注意的点请查看下面案例及说明 
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0032.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">****** policy_module 名 称 必 须 与  .te 文 件 名 一 致 ， 否 则 编 译 会 报 错 。  
+****** type/typealias/attribute 声明所有用到的 type 必须先声明，否则编译会报错。type 
+和 class 以及 permission 声 明 后 ， 才 能 在  allow 等 规 则 中 使 用 。  
+****** gen_require 的使用引用外部 type、attribute、class 时必须用 gen_require，否则
+编译器找不到符号。只需声明本  policy 文件中用到的外部符号，避免冗余。  
+****** domain transition ，  init_daemon_domain 等宏用于声明进程的  domain 切换
+（transition） ，否则进程不会进入你定义的 domain。transition 相关的 type 也要声明。 
+******allow 规则必须明确 scontext、tcontext、tclass、permissions。权限要尽量最小化，
+只给进程实际需要的权限，避免过度授权 , 可以用 audit2allow 工具分析缺失的权限 ,。 
+****** 每条规则建议加注释，便于后续维护和安全审计。  
+****** 尽量不要直接添加 unlabel_t 相关的权限，这会导致添加权限的权限过大， 可能会
+遇到 neverallow 限制导致编译报错 
+*********如果自己新建目录存放，请将 metadata.xml 拷贝过去，否则会编译报错********* 
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0032.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Debug Log 
+• /var/log/audit/audit.log：SELinux 审计日志(当前默认会保存，debug 时最常用) 
+• dmesg：内核拒绝、启动阶段，通常适用于抓开机阶段的 avc denied 打印 
+• journalctl：适用于抓用户空间服务、systemd 相关的日志及 avc denied 打印 
+ 
+除此之外，/data/debuglogger/下默认会抓 kernel log 以及 main log 等， 也可以直接查
+看该 log 日志。 
+audit2allow 工具介绍 
+audit2allow 是 SELinux 提供的一个辅助工具，用于分析  SELinux 的审计日志（通常
+是 /var/log/audit/audit.log） ，自动生成相应的策略规则（allow 语句） ，帮助开发者快速
+定位和解决因策略不完善导致的访问拒绝（AVC Denial）问题。 
+ 
+使用 audit2allow 的方式有两种，一种是在编译环境中进行， 另外一种是直接使用平台中
+编译出来的程序执行， 推荐使用后者。 
+1） 将抓取到的 log push 到平台中 
+2） 以默认存储的/var/log/audit/audit.log 为例, 使用 audit2allow -i 
+/var/log/audit/audit.log 指令解析 
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0032.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">以上述结果为例， 如果存在权限缺失，会按进程生成相应的修改 
+ 
+********audit2allow 工具不能解析整个文件夹，有整理两个脚本用于搜集 log 中的所有
+avc denied 打印， 生成的 summary 信息可以使用 audit2allow 工具来解析************ 
+ 
+常用 debug 指令 
+ps -eZ 指令用于检查进程的 label 是否符合预期， ex: 
+# ps -eZ |grep netd 
+system_u:system_r:netd_setup_t:s0  1836 ?        00:00:00 netd_setup.sh 
+system_u:system_r:netd_setup_t:s0  1840 ?        00:00:00 netd 
+ 
+busybox ls -Z /var/log/audit/audit.log 用于检查文件的 label，ls -Z 无法直接使用, ex: 
+# busybox ls -Z /var/log/audit/audit.log 
+system_u:object_r:auditd_log_t:s0 /var/log/audit/audit.log 
+ 
+sesearch 指令检查 policy 是否有 build in, ex： 
+# sesearch -A -s mtknetwork_t 
+allow mtknetwork_t initrc_t:fifo_file { append getattr ioctl lock read write }; 
+allow mtknetwork_t initrc_t:process sigchld; 
+allow mtknetwork_t locale_t:dir search; 
+allow mtknetwork_t locale_t:file { getattr open read }; 
+allow mtknetwork_t mtknetwork_t:association sendto; 
+allow mtknetwork_t mtknetwork_t:dir { add_name getattr ioctl lock open read 
+remove_name search write }; 
+allow mtknetwork_t mtknetwork_t:file { append create getattr ioctl link lock open read 
+rename setattr unlink write }; 
+allow mtknetwork_t mtknetwork_t:lnk_file { getattr ioctl lock read }; 
+allow mtknetwork_t mtknetwork_t:lockdown { confidentiality integrity }; 
+allow mtknetwork_t mtknetwork_t:process { fork sigchld }; 
+ 
+chcon 指令临时更改文件的上下文设定， ex: 
+chcon -t httpd_sys_content_t /var/www/html/index.html 
+ 
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0032.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">restorecon 指令恢复文件的默认 SELinux 安全上下文，ex: 
+restorecon -RV /path/to/file 
+ 
+ 
+Android SELinux &amp; Yocto SELinux 对比 
+1) 文件类型对比 
+ 
+2) 命名规范对比 
+ 
+比如: 
+ 
+和 
+ 
+3) MLS 等安全级别对比 
+       
+4) 单编 SELinux 介绍 
+ 
+5) Neverallow 差异 
+Android 上 SELinux 经过多年迭代， 加了很多 Neverallow 限制来管控 Google 认为敏
+感的权限、或者过大的权限； Yocto SELinux 相关的定义则比较少， 权限加起来相对
+容易，没有 Android 卡得那么细， 但胜过 apparmor/smack 等方案。 
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

@@ -1,0 +1,425 @@
+%%{init: {"flowchart": {"nodeSpacing": 18, "rankSpacing": 8, "padding": 12}, "themeVariables": {"fontSize": "16px"}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph applications["Application"]
+direction TB
+subgraph layout_row_1[" "]
+direction LR
+subgraph layout_row_2[" "]
+direction TB
+a1["Launcher"]
+a4["MediaCenter"]
+a7["CarSettings"]
+a10["Calendar"]
+a13["CoreService"]
+a16["BtPhone"]
+a19["E-Manul"]
+a22["UserCenter"]
+a25["MojiWeather"]
+a1 ~~~ a4 ~~~ a7 ~~~ a10 ~~~ a13 ~~~ a16 ~~~ a19 ~~~ a22 ~~~ a25
+end
+subgraph layout_row_3[" "]
+direction TB
+a2["SystemUI"]
+a5["FileManager"]
+a8["FactoryMode"]
+a11["AcSettings"]
+a14["OTA"]
+a17["SentryMode"]
+a20["Online Video"]
+a23["GaoDeMap"]
+a26["ChangBaKTV"]
+a2 ~~~ a5 ~~~ a8 ~~~ a11 ~~~ a14 ~~~ a17 ~~~ a20 ~~~ a23 ~~~ a26
+end
+subgraph layout_row_4[" "]
+direction TB
+a3["NotificationCenter"]
+a6["TaskCube"]
+a9["Hicar"]
+a12["SpeechAgent"]
+a15["SmartSence"]
+a18["CrossCountry"]
+a21["SceneMode"]
+a24["ThemeStore"]
+a3 ~~~ a6 ~~~ a9 ~~~ a12 ~~~ a15 ~~~ a18 ~~~ a21 ~~~ a24
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+subgraph voice["Voice Recognition"]
+direction TB
+subgraph layout_row_5[" "]
+direction LR
+a27["Iflytek"]
+end
+end
+layout_row_1 ~~~ voice
+end
+subgraph framework["Framework"]
+direction TB
+subgraph java["JAVA Services"]
+direction TB
+subgraph layout_row_6[" "]
+direction LR
+subgraph layout_row_7[" "]
+direction TB
+a28["Activity Manager"]
+a31["Media"]
+a34["Resource Manager"]
+a37["USB Service"]
+a40["Power Manager"]
+a43["WifiService"]
+a46["Package Manager"]
+a49["Bluetooth & BT Profiles"]
+a28 ~~~ a31 ~~~ a34 ~~~ a37 ~~~ a40 ~~~ a43 ~~~ a46 ~~~ a49
+end
+subgraph layout_row_8[" "]
+direction TB
+a29["Notification Manager"]
+a32["WifiService"]
+a35["Input Manager"]
+a38["Location Service"]
+a41["Network Service"]
+a44["AudioService"]
+a47["Content Provider"]
+a50["Storage Manager"]
+a29 ~~~ a32 ~~~ a35 ~~~ a38 ~~~ a41 ~~~ a44 ~~~ a47 ~~~ a50
+end
+subgraph layout_row_9[" "]
+direction TB
+a30["InputMethod Service"]
+a33["SystemUI"]
+a36["Window Manager"]
+a39["BroadCast Radio"]
+a42["Telephony"]
+a45["Bluetooth"]
+a48["Connectivity Service"]
+a51["MBOS Manager"]
+a30 ~~~ a33 ~~~ a36 ~~~ a39 ~~~ a42 ~~~ a45 ~~~ a48 ~~~ a51
+end
+layout_row_7 ~~~ layout_row_8 ~~~ layout_row_9
+end
+end
+subgraph media["JAVA Services / Media"]
+direction TB
+subgraph layout_row_10[" "]
+direction LR
+a52["Media Scanner"]
+a53["Media Provider"]
+a54["Media Player"]
+a52 ~~~ a53 ~~~ a54
+end
+end
+subgraph car["Car Services"]
+direction TB
+subgraph layout_row_11[" "]
+direction LR
+subgraph layout_row_12[" "]
+direction TB
+a55["Car Lib"]
+a58["CarBluetooth UserService"]
+a61["RadioService"]
+a64["CarMedia Service"]
+a67["CarDiagnosticService"]
+a70["CarNight Service"]
+a55 ~~~ a58 ~~~ a61 ~~~ a64 ~~~ a67 ~~~ a70
+end
+subgraph layout_row_13[" "]
+direction TB
+a56["Car Service"]
+a59["CarConfigurationService"]
+a62["CarLocation Service"]
+a65["CarProperty Service"]
+a68["CarInfo Service"]
+a71["CarProjection Service"]
+a56 ~~~ a59 ~~~ a62 ~~~ a65 ~~~ a68 ~~~ a71
+end
+subgraph layout_row_14[" "]
+direction TB
+a57["CarBluetooth Service"]
+a60["CarInput Service"]
+a63["CarPower Service"]
+a66["TboxService"]
+a69["CarDrivingStateService"]
+a72["CarPowerManagementService"]
+a57 ~~~ a60 ~~~ a63 ~~~ a66 ~~~ a69 ~~~ a72
+end
+layout_row_12 ~~~ layout_row_13 ~~~ layout_row_14
+end
+end
+subgraph native["Native Services"]
+direction TB
+subgraph layout_row_15[" "]
+direction LR
+subgraph layout_row_16[" "]
+direction TB
+a73["Surface Flinger"]
+a76["Camera Service"]
+a79["Audio Policy"]
+a82["BT Service"]
+a73 ~~~ a76 ~~~ a79 ~~~ a82
+end
+subgraph layout_row_17[" "]
+direction TB
+a74["Input Flinger"]
+a77["Boot Animation"]
+a80["AndroidAuto Service"]
+a83["BroadCast RadioService"]
+a74 ~~~ a77 ~~~ a80 ~~~ a83
+end
+subgraph layout_row_18[" "]
+direction TB
+a75["MediaServer"]
+a78["Audio Flinger"]
+a81["CarPlay Service"]
+a84["MBOS Service"]
+a75 ~~~ a78 ~~~ a81 ~~~ a84
+end
+layout_row_16 ~~~ layout_row_17 ~~~ layout_row_18
+end
+end
+subgraph system["System"]
+direction TB
+subgraph layout_row_19[" "]
+direction LR
+subgraph layout_row_20[" "]
+direction TB
+a85["Update Engine"]
+a88["vold"]
+a91["lmkd"]
+a94["FCM Service"]
+a85 ~~~ a88 ~~~ a91 ~~~ a94
+end
+subgraph layout_row_21[" "]
+direction TB
+a86["AVM"]
+a89["Tbox Service"]
+a92["ADAS Service"]
+a86 ~~~ a89 ~~~ a92
+end
+subgraph layout_row_22[" "]
+direction TB
+a87["RVC"]
+a90["netd"]
+a93["MBLog"]
+a87 ~~~ a90 ~~~ a93
+end
+layout_row_20 ~~~ layout_row_21 ~~~ layout_row_22
+end
+end
+java ~~~ media ~~~ car ~~~ native ~~~ system
+end
+subgraph runtime["Android Runtime"]
+direction TB
+subgraph layout_row_23[" "]
+direction LR
+a95["ART"]
+a96["Core Libraries"]
+a95 ~~~ a96
+end
+end
+subgraph infra["Infra"]
+direction TB
+subgraph layout_row_24[" "]
+direction LR
+subgraph layout_row_25[" "]
+direction TB
+a97["FDBUS"]
+a100["MB_ipc"]
+a103["vsomeip"]
+a97 ~~~ a100 ~~~ a103
+end
+subgraph layout_row_26[" "]
+direction TB
+a98["canservice"]
+a101["protobuf"]
+a98 ~~~ a101
+end
+subgraph layout_row_27[" "]
+direction TB
+a99["boost"]
+a102["Update_server"]
+a99 ~~~ a102
+end
+layout_row_25 ~~~ layout_row_26 ~~~ layout_row_27
+end
+end
+subgraph libs["Librays（原图拼写）"]
+direction TB
+subgraph layout_row_28[" "]
+direction LR
+subgraph layout_row_29[" "]
+direction TB
+a104["Webkit"]
+a107["CarPlay plug-in"]
+a110["Chromium"]
+a113["Bluetooth Stack"]
+a104 ~~~ a107 ~~~ a110 ~~~ a113
+end
+subgraph layout_row_30[" "]
+direction TB
+a105["OpenMax"]
+a108["OpenGLES"]
+a111["iAP2"]
+a105 ~~~ a108 ~~~ a111
+end
+subgraph layout_row_31[" "]
+direction TB
+a106["Bionic"]
+a109["SQLite"]
+a112["StageFright plug"]
+a106 ~~~ a109 ~~~ a112
+end
+layout_row_29 ~~~ layout_row_30 ~~~ layout_row_31
+end
+end
+subgraph external["External"]
+direction TB
+subgraph layout_row_32[" "]
+direction LR
+subgraph layout_row_33[" "]
+direction TB
+a114["exfat tool"]
+a117["tf_hot_plug"]
+a114 ~~~ a117
+end
+subgraph layout_row_34[" "]
+direction TB
+a115["wpa_supplicant_8"]
+a118["e2fs[ rpgs ]（原图标签待核）"]
+a115 ~~~ a118
+end
+subgraph layout_row_35[" "]
+direction TB
+a116["ntfs_tool"]
+a119["logd"]
+a116 ~~~ a119
+end
+layout_row_33 ~~~ layout_row_34 ~~~ layout_row_35
+end
+end
+subgraph hal["HAL"]
+direction TB
+subgraph layout_row_36[" "]
+direction LR
+subgraph layout_row_37[" "]
+direction TB
+a120["Audio"]
+a123["Bluetooth"]
+a126["RIL"]
+a129["Camera"]
+a132["Lights"]
+a135["AudioControl"]
+a138["tbox"]
+a141["mbsensors"]
+a120 ~~~ a123 ~~~ a126 ~~~ a129 ~~~ a132 ~~~ a135 ~~~ a138 ~~~ a141
+end
+subgraph layout_row_38[" "]
+direction TB
+a121["Media"]
+a124["Power"]
+a127["DRM"]
+a130["Sensors"]
+a133["Location"]
+a136["radio"]
+a139["configstoreHAL"]
+a142["MBOS HAL"]
+a121 ~~~ a124 ~~~ a127 ~~~ a130 ~~~ a133 ~~~ a136 ~~~ a139 ~~~ a142
+end
+subgraph layout_row_39[" "]
+direction TB
+a122["Display"]
+a125["USB"]
+a128["BroadCastRadio"]
+a131["WIFI"]
+a134["BootCtrl"]
+a137["VehicleHAL"]
+a140["mbgnss"]
+a143["mblogd"]
+a122 ~~~ a125 ~~~ a128 ~~~ a131 ~~~ a134 ~~~ a137 ~~~ a140 ~~~ a143
+end
+layout_row_37 ~~~ layout_row_38 ~~~ layout_row_39
+end
+end
+subgraph kernel["Kernel"]
+direction TB
+subgraph layout_row_40[" "]
+direction LR
+subgraph layout_row_41[" "]
+direction TB
+a144["iAP2/MFI"]
+a147["Codec"]
+a150["RTC"]
+a153["Network"]
+a156["Sensor"]
+a159["ethernet"]
+a162["Peripheral(UART SPI GPIO ADC...)"]
+a144 ~~~ a147 ~~~ a150 ~~~ a153 ~~~ a156 ~~~ a159 ~~~ a162
+end
+subgraph layout_row_42[" "]
+direction TB
+a145["Scheduler"]
+a148["OpenGL"]
+a151["DRM"]
+a154["Memory"]
+a157["MT66XX"]
+a160["USB"]
+a163["BootLoader"]
+a145 ~~~ a148 ~~~ a151 ~~~ a154 ~~~ a157 ~~~ a160 ~~~ a163
+end
+subgraph layout_row_43[" "]
+direction TB
+a146["ALSA"]
+a149["eMMC/UFS/SD"]
+a152["MDP"]
+a155["VFS"]
+a158["CCCI"]
+a161["Camera"]
+a146 ~~~ a149 ~~~ a152 ~~~ a155 ~~~ a158 ~~~ a161
+end
+layout_row_41 ~~~ layout_row_42 ~~~ layout_row_43
+end
+end
+applications ~~~ framework ~~~ runtime ~~~ infra ~~~ libs ~~~ external ~~~ hal ~~~ kernel
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent
+style layout_row_5 fill:transparent,stroke:transparent
+style layout_row_6 fill:transparent,stroke:transparent
+style layout_row_7 fill:transparent,stroke:transparent
+style layout_row_8 fill:transparent,stroke:transparent
+style layout_row_9 fill:transparent,stroke:transparent
+style layout_row_10 fill:transparent,stroke:transparent
+style layout_row_11 fill:transparent,stroke:transparent
+style layout_row_12 fill:transparent,stroke:transparent
+style layout_row_13 fill:transparent,stroke:transparent
+style layout_row_14 fill:transparent,stroke:transparent
+style layout_row_15 fill:transparent,stroke:transparent
+style layout_row_16 fill:transparent,stroke:transparent
+style layout_row_17 fill:transparent,stroke:transparent
+style layout_row_18 fill:transparent,stroke:transparent
+style layout_row_19 fill:transparent,stroke:transparent
+style layout_row_20 fill:transparent,stroke:transparent
+style layout_row_21 fill:transparent,stroke:transparent
+style layout_row_22 fill:transparent,stroke:transparent
+style layout_row_23 fill:transparent,stroke:transparent
+style layout_row_24 fill:transparent,stroke:transparent
+style layout_row_25 fill:transparent,stroke:transparent
+style layout_row_26 fill:transparent,stroke:transparent
+style layout_row_27 fill:transparent,stroke:transparent
+style layout_row_28 fill:transparent,stroke:transparent
+style layout_row_29 fill:transparent,stroke:transparent
+style layout_row_30 fill:transparent,stroke:transparent
+style layout_row_31 fill:transparent,stroke:transparent
+style layout_row_32 fill:transparent,stroke:transparent
+style layout_row_33 fill:transparent,stroke:transparent
+style layout_row_34 fill:transparent,stroke:transparent
+style layout_row_35 fill:transparent,stroke:transparent
+style layout_row_36 fill:transparent,stroke:transparent
+style layout_row_37 fill:transparent,stroke:transparent
+style layout_row_38 fill:transparent,stroke:transparent
+style layout_row_39 fill:transparent,stroke:transparent
+style layout_row_40 fill:transparent,stroke:transparent
+style layout_row_41 fill:transparent,stroke:transparent
+style layout_row_42 fill:transparent,stroke:transparent
+style layout_row_43 fill:transparent,stroke:transparent

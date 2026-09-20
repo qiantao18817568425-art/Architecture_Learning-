@@ -1,0 +1,21 @@
+flowchart TD
+  A[black/frozen/corrupt/flicker/jank] --> B{App draw counter advances?}
+  B -- no --> B1[App state/UI thread/invalidation]
+  B -- yes --> C{dequeue and queueBuffer advance?}
+  C -- no --> C1[producer/BufferQueue/fence]
+  C -- yes --> D{SF acquire + latch advances and Layer visible?}
+  D -- no --> D1[Layer/transaction/consumer]
+  D -- yes --> E{HWC validate/present + present fence advances?}
+  E -- no --> E1[composition/HAL resource]
+  E -- yes --> F{DRM/KMS commit + vblank advances?}
+  F -- no --> F1[kernel mode/plane/connector]
+  F -- yes --> G{physical link, panel, backlight valid?}
+  G -- no --> G1[bridge/SerDes/panel/power]
+  B1 --> R[capture first divergent timestamp/counter]
+  C1 --> R
+  D1 --> R
+  E1 --> R
+  F1 --> R
+  G1 --> R
+  R --> S[recover only failed owner boundary]
+  S --> T[display unique pattern and verify every downstream counter]

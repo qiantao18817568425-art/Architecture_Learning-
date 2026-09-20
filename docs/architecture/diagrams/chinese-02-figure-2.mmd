@@ -1,0 +1,16 @@
+sequenceDiagram
+  participant Boot as Boot/FBL
+  participant HV as Hypervisor
+  participant Host as SOS/Yocto Host
+  participant BE as Host Backend
+  participant Guest as Android/TBox Guest
+  participant App as Guest Service/App
+  Boot->>HV: 装载并移交控制
+  HV->>Host: 分配 CPU/内存/设备并启动
+  Host->>BE: 初始化物理驱动与 Backend
+  BE-->>HV: Backend Ready
+  HV->>Guest: 创建 VM/启动 Guest Kernel
+  Guest->>BE: Frontend 协商队列/共享内存
+  BE-->>Guest: 队列和能力可用
+  Guest->>App: 启动服务、Client 和订阅
+  App-->>Guest: 业务 Ready/首个结果

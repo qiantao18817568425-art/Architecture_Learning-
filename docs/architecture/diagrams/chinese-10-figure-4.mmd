@@ -1,0 +1,12 @@
+stateDiagram-v2
+  [*] --> Unknown
+  Unknown --> Off: valid off
+  Unknown --> Invalid: invalid or stale
+  Off --> On: valid active
+  On --> Flashing: flash condition
+  Flashing --> On: steady condition
+  On --> Suppressed: higher priority / mutual exclusion
+  Suppressed --> On: suppression removed
+  Invalid --> Degraded: invalid policy
+  Degraded --> Off: fresh valid off
+  Degraded --> On: fresh valid active

@@ -1,0 +1,547 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>GPU_PARAVIRT_Codebase_DIFF_Introduction_Audio.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>GPU_PARAVIRT_Codebase_DIFF_Introduction_Audio.pdf</h1><p>SRC0118 · 原来源 ID S047 · PDF物理页 · 25 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8668/MTK参考资料/MTK参考资料/GPU_PARAVIRT_Codebase_DIFF_Introduction_Audio.pdf</p><p>SHA-256：<code>a7ec0789a073145cab98ed28b33236606eecbf545e2a25a958121c22820eb5ca</code></p><p>原文件大小：1,234,881 字节</p></details><div class="actions"><a class="button" href="materials/SRC0118.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="GPU_PARAVIRT_Codebase_DIFF_Introduction_Audio.pdf 原 PDF" src="materials/SRC0118.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0118.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+GPU直通Codebase差异说
+明-Audio
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0118.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+平台版本与架构差异说明
+版本对齐：Yocto 同源，Android 平台切换
+原平台与直通平台的版本信息如下；“保持/变化”仅依据已提供的分支和版本说明。
+层级 长安科技mp平台 GPU直通平台 结论
+Android alps-mp-u0.mp9 alps-mp-v0.mp7+alps-mp-b1.mp7
+1.Audio HAL引入更灵活的xml
+配置
+2.Framwork升级为AndroidB1
+Yocto spm-mp-scarthgap.mp5 spm-mp-scarthgap.mp5 同一branch
+Kernel 原平台 Kernel 基线 沿用同一 Yocto branch 一致
+依据：用户提供的版本信息
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0118.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+平台版本与架构差异说明
+Audio HAL的升级由接口、配置方式与映射能力组成
+新平台在 alps-vf-mp-v0.mp7-mp-b1.mp7 中引入更灵活的音频配置方式。
+01
+接口机制
+HIDL → AIDL
+Audio HAL 的接口机制切换为
+AIDL。
+02
+配置方式
+XML 配置
+新增auto_audio_config.xml描述
+音频硬件配置的方式。
+03
+映射对象
+PCM + Channel Mapping
+XML 可配置 PCM 节点与通道
+mapping。
+预期价值：配置更方便、更灵活，便于适配不同 PCM 节点与通道组合。
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0118.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+Audio HAL灵活的XML配置说明
+5
+引入auto_audio_config.xml ，auto_audio_config.xml 是车机音频配置
+文件，用于定制化AudioHAL中的相关功能
+主要配置功能：
+1. 配置AudioFlinger下行的Bus与ALSA节点的对应关系
+2. 配置AudioFlinger下行的每一笔write的数据大小
+3. 配置上下行中ALSA节点：
+必要硬件连接（AFE Interconnect）
+开启硬件的相关参数（pcm_config）及处理数据的参数
+4. 配置ADSP的混音通路
+5. 配置HAL中SW Mixer的混音通路
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0118.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+auto_audio_config.xml
+6
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0118.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+auto_audio_config.xml
+7
+▪ Introduction of auto_audio_config.xml
+▪ Introduction of Lables
+– &lt;channel_map&gt;
+– &lt;bus_stream_maps&gt;
+– &lt;sw_mixer_routes&gt;
+– &lt;hal_sw_mixer_routes&gt;
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0118.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+Introduction of Lables
+&lt;channel_map&gt;
+8
+&lt;channel_map&gt; 是为 AudioHal 中相关通路提供通道映射配置
+完整配置：
+&lt;channel_map&gt;
+&lt;chmap id=&quot;MIC_Record&quot;&gt;    
+&lt;map channels=&quot;2&quot; ch_map=&quot;0x1,0x2&quot;/&gt;
+&lt;map channels=&quot;4&quot; ch_map=&quot;0x1,0x2,0x4,0x8&quot;/&gt;        
+&lt;/chmap&gt;
+&lt;/channel_map&gt;
+AudioHAL中能够通过id和channels获取ch_map,如此则可再不修改code的情况下，通
+过修改xml实现不同的映射关系。
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0118.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+Introduction of Lables
+&lt;channel_map&gt;
+9
+客户如何在AudioHAL中增加自定义的ch_map？
+1. 在xml中增加新的chmap标签，设定唯一的id值,然后对不同的channels数设置ch_map；
+2. 在 AudioConfigManager.h 中增加对应的id值定义，用于code中应用：
+3. AudioHAL中应用，则调用AudioConfigManager::getChannelMapConfig函数即可。
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0118.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+Introduction of Lables
+&lt;bus_stream_maps&gt;
+10
+&lt;bus_stream_maps&gt; 是为 AudioHal 中管理上下行通路的地方，用于bus和alsa节点的对接，
+每一个通路以子标签&lt;bus_stream&gt;作为一个配置单元。
+举例完整配置：
+➢ bus1，对应到ALSA节点的DL1；
+➢ DL1 参数 pcm_config 取自于 pcm_profile 中的配置；
+➢ 硬件在SOC内部连接是DL1_TO_I2SOUT1；
+➢ 数据处理读取的是data_profile的配置。
+从此配置可知，
+bus1 
+数据最终通过
+ I2SOUT1
+ 输出到
+SOC
+外部。
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0118.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+Introduction of Lables
+&lt;bus_stream&gt;
+在 xml 的
+ bus_stream 标签中，有 属性 和 子标签
+➢ 属性
+ hal_buffer_size
+/
+hal_buffer_time
+◆ AF 会读取该值，从而控制 AudioFlinger Mixer 的 buffer_size（每一笔混音大小）
+➢ 子标签
+ pcm_profile
+◆ 标识属性
+ id/
+pcm_stream
+◆ 配置属性
+ period_frames
+/
+period_time_ms
+/
+period_cnt
+/rate/
+fromat
+/channels/
+start_threshold 等属
+性，用以配置ALSA Driver的PCM节点；
+其中，
+pcm_profile 可以有多个，在code中根据
+ id 属性可以获取不同的
+pcm_profile。
+11
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0118.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+Introduction of Lables
+&lt;bus_stream&gt;属性1：
+hal_buffer_frames
+单位：帧数，整型值
+作用：在AF开机open HAL的streamout/streamin时会传入 Samplerate 与 Format 等参数，在 AF 
+get buffer_size 时即以
+ hal_buffer_frames 计算得出返回值
+使用示例：
+属性2：
+hal_buffer_time_ms
+单位：毫秒(ms)，浮点值，如有小数，建议保留 2 位小数，如 5.33/10.67 等
+作用：同
+ hal_buffer_size 类同
+限制条件：当
+ hal_buffer_size 没有在xml中设置时，才会使用此属性
+使用示例：
+默认值：
+当这2个属性均没有设定时，则默认设定
+ hal_buffer_frames 为
+ 1024 帧。
+应用优先级：
+hal_buffer_frames
+ &gt;     
+hal_buffer_time_ms
+ &gt;     default
+12
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0118.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+Introduction of Lables
+&lt;pcm_profile&gt;
+属性成员：
+id/
+pcm_stream
+period_frames
+/
+period_time_ms
+/
+period_cnt
+rate/format/channels/
+start_threshold
+限制条件：
+pcm_profile 该必须包含
+ id，此值是Code获取该设定的唯一标识，如未设定，则此
+ pcm_profile 无效。
+调用方法及其原理：
+使用如下接口可在bus中找到对应的
+ pcm_profile :
+应用xml中
+ pcm_profile 设定的相关参数:
+注意，该函数用于覆盖 config 的初始设定，所以config 需要传入当前的
+rate/format/channels，因为这三个
+变量如不在xml中配置，则使用当前值。
+其中，
+period_frames 与
+ period_cnt 不管xml中是否设定，都会有默认值覆盖掉原先的 config 中的值。
+13
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0118.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+Introduction of Lables
+&lt;pcm_profile&gt;
+xml 配置举例：
+14
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0118.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+Introduction of Lables
+&lt;pcm_profile&gt;
+属性1：
+period_frames
+单位：帧数，整型值
+作用：应用于pcm_stream节点的 pcm_config 参数，如xml无设置则使用default
+属性2：
+period_time_ms
+单位：毫秒(ms)，浮点值，如有小数，建议保留 2 位小数，如 5.33/10.67 等
+作用：同
+ period_frames类同
+限制条件：当
+ period_frames 没有在xml中设置时，才会使用此属性
+period_frames 默认值：
+当这2个属性均没有设定时，则默认设定
+ period_frames
+ = 
+ hal_buffer_frames
+应用优先级：
+period_frames
+ &gt;     
+period_time_ms
+ &gt;     default
+属性3：
+period_cnt
+单位：整型值
+默认值：当
+ period_cnt 没有在xml中设置时，DSP 通路默认为 2，AFE通路默认为 3
+15
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0118.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+Introduction of Lables
+&lt;pcm_profile&gt;
+属性
+ rate/format/channels/
+start_threshold 都是仅当xml中设定时，才会应用。
+属性归类——整型值：
+rate/
+channels/
+start_threshold
+含义：采样率/声道数/起播帧数
+属性归类——字符串：
+ format
+含义：音频采样格式
+可选字符串： “S16_LE”、 “ S32_LE ” 、 “ S8 ” 、 “ S24_LE ” 、 “ S24_3LE ”
+16
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0118.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+Introduction of Lables
+&lt;data_profile&gt;
+所属标签：
+ pcm_profile
+属性成员：
+ rate/format/channels  （同
+ pcm_profile 中的属性定义）
+调用方法及其原理：
+使用该成员函数即可应用xml中
+ data_profile 设定的相关参数。
+注意，该函数用于覆盖参数中的
+ rate/format/channels，如不在xml中配置，则使用传入的当前值。
+当前并非所有的通路都支持
+ data_profile 的设定，这需要SW Code中自行调用才行。
+当前支持的通路如下，其余请自行查看 Code：
+1. BusNormal
+2. BusDsp
+3. AfeMch0
+4. AfeMch1
+5. AfeMch2
+6. DspMch
+7. HAL_Capture_Normal 的配置
+➢ 基于data provider base的类，调用了 initPcmConfig的，但需要根据具体情况而定）
+17
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0118.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+data_profile与 pcm_profile的应用
+前提：相同时间内，
+pcm_profile 与
+ data_profile 消耗的数据量一致。
+应用目的：弥补硬件声道数不足的问题
+应用一：通过将32Bit降为16Bit来提升声道数
+优点：采样率不变，不需要 Codec（ADC/DAC）或外置 ADSP 做特殊的适配修改
+缺点：只能传16Bit/Channel，精度会有损失
+xml 配置举例：I2S6 (
+48K
+*
+8ch
+*
+32bit) -&gt; AFE CM -&gt; HAL (
+48K*16ch*16bit)
+每帧数据都一样大：8ch * 32bit / 8 = 32 Bytes = 16ch * 16bit / 8
+18
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-18"><h2>PDF物理页 18</h2><a href="materials/SRC0118.pdf#page=18" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+data_profile与 pcm_profile的应用
+应用二：通过提升采样率来提升声道数
+优点：采样精度不变，没有精度损失
+缺点：需要外置 ADSP 做特殊的适配修改，Codec（ADC/DAC）大概率不能
+xml 配置举例：I2S6 (
+96K
+*
+8ch
+*
+32bit) -&gt; AFE CM -&gt; HAL (
+48K*16ch*32bit)
+相同时间数据都一样大（N s）：
+96K * Ns * 8ch * 32bit / 8 = 48K * Ns * 16ch * 32bit / 8
+19
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-19"><h2>PDF物理页 19</h2><a href="materials/SRC0118.pdf#page=19" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+Introduction of Lables
+&lt;sw_mixer_routes&gt;
+➢ 该标签用于配置SOC内置ADSP混音通路。
+➢ 子标签
+ sw_mixer_target 作为每一个Mixer的通路配置
+➢ 属性
+name 标识 mixer target的名称
+➢ 属性
+ ch_in
+/
+ch_out
+/
+ch_map
+/
+aurisys_on 是标识 target 使用aurisys 框架时使用
+➢ 属性
+ ch_in 也是mixer 输出的声道数
+➢ 属性
+ ch_map 是
+ch_in 与
+ ch_out 的声道映射关系
+➢ 子标签
+ sw_mixer_source 用于标识 mixer source
+➢ 属性
+name 标识 mixer source 的名称
+➢ 属性
+ ch_in
+/
+ch_out
+/
+ch_map
+/
+aurisys_on是标识 source 使用 aurisys 框架时使用
+➢ 属性
+ ch_out 也是进入mixer 的声道数
+➢ 属性
+ ch_map 是
+ch_in 与
+ ch_out 的声道映射关系
+20
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-20"><h2>PDF物理页 20</h2><a href="materials/SRC0118.pdf#page=20" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+Introduction of Lables
+&lt;sw_mixer_routes&gt;
+➢ 示例配置：
+21
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-21"><h2>PDF物理页 21</h2><a href="materials/SRC0118.pdf#page=21" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+Introduction of Lables
+&lt;hal_sw_mixer_routes&gt;
+➢ 该标签与
+ sw_mixer_routes 标签定义类似，其主要是定制HAL SW Mixer通路
+➢ 子标签
+ sw_mixer_target 作为每一个Mixer的通路配置
+➢ 属性
+address 标识 mixer target的名称
+➢ 属性
+ ch_in
+/
+ch_out
+/
+ch_map
+/
+aurisys_on 是标识 target 使用aurisys 框架时使用
+➢ 属性
+ ch_in 也是mixer 输出的声道数
+➢ 属性
+ ch_map 是
+ch_in 与
+ ch_out 的声道映射关系
+➢ 子标签
+ sw_mixer_source 用于标识 mixer source
+➢ 属性
+ address 属于mixer source的名称
+➢ 属性
+ ch_in
+/
+ch_out
+/
+ch_map
+/
+aurisys_on是标识 source 使用 aurisys 框架时使用
+➢ 属性
+ ch_out 也是进入mixer 的声道数
+➢ 属性
+ ch_map 是
+ch_in 与
+ ch_out 的声道映射关系
+22
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-22"><h2>PDF物理页 22</h2><a href="materials/SRC0118.pdf#page=22" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+Introduction of Lables
+&lt;sw_mixer_routes&gt;
+➢ 示例配置：
+23
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-23"><h2>PDF物理页 23</h2><a href="materials/SRC0118.pdf#page=23" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+Introduction of Lables
+&lt;hal_sw_mixer_routes&gt;
+24
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-24"><h2>PDF物理页 24</h2><a href="materials/SRC0118.pdf#page=24" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">INTERNAL USE
+Confidential C
+Introduction of Lables
+&lt;hal_sw_mixer_routes&gt;
+25
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section><section class="source-page" id="page-25"><h2>PDF物理页 25</h2><a href="materials/SRC0118.pdf#page=25" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">Copyright © MediaTek Inc. All rights reserved.
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+ MediaTek Confidential Release for
+PVETEC_SPM</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a><a href="#page-18">PDF物理页 18</a><a href="#page-19">PDF物理页 19</a><a href="#page-20">PDF物理页 20</a><a href="#page-21">PDF物理页 21</a><a href="#page-22">PDF物理页 22</a><a href="#page-23">PDF物理页 23</a><a href="#page-24">PDF物理页 24</a><a href="#page-25">PDF物理页 25</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

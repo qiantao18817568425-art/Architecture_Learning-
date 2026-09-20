@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MCU内部机制 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details open><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a aria-current="page" href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 原版解释 / 08</div><div class="chapter-title"><p class="eyebrow">CHAPTER 08 · 原版解释全文</p><h1>MCU内部机制</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=08">并排对比两套正文 ↗</a><a class="button secondary" href="08.html">对照中文版 ↗</a><button class="button" data-read="original-08" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 原版解释对照</p><h2>MCU 与主 SoC 的分工怎样理解？</h2><p>MCU 接近车辆信号、实时控制和电源协同；具体分工由项目定义。中断告诉软件有事件，不保证对应报文完整、有效或已被上层使用。</p><ol><li><strong>怎么读：</strong>先看启动/调度，再沿 CAN 和 SPI 走到 SoC，最后看电源状态与诊断。</li><li><strong>项目练习：</strong>以挡位变化为例区分总线接收、MCU 解码、跨芯片发送和座舱消费；每一层保留有效性。</li><li><strong>自检：</strong>IRQ 到达后为什么还要检查报文长度、校验与时间戳？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-2">Day 2</a> <a href="../index.html#day-4">Day 4</a> <a href="../index.html#day-9">Day 9</a> <a href="../index.html#day-18">Day 18</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#08-mcu-内部机制">08 MCU 内部机制</a><a class="depth-2" href="#81-启动栈">8.1 启动栈</a><a class="depth-2" href="#82-调度">8.2 调度</a><a class="depth-2" href="#83-can-收发">8.3 CAN 收发</a><a class="depth-2" href="#84-e2e">8.4 E2E</a><a class="depth-2" href="#85-spiipcl">8.5 SPI/IPCL</a><a class="depth-2" href="#86-电源与安全">8.6 电源与安全</a><a class="depth-2" href="#87-诊断">8.7 诊断</a><a class="depth-2" href="#88-资源所有权">8.8 资源所有权</a><a class="depth-2" href="#89-故障传播矩阵">8.9 故障传播矩阵</a><a class="depth-2" href="#810-模块映射">8.10 模块映射</a><a class="depth-2" href="#811-证据观察责任与待确认">8.11 证据、观察、责任与待确认</a></details><article id="chapter-text"><h1 id="08-mcu-内部机制">08 MCU 内部机制</h1>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MCU内部机制 · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details open><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a aria-current="page" href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 原版解释 / 08</div><div class="chapter-title"><p class="eyebrow">CHAPTER 08 · 原版解释全文</p><h1>MCU内部机制</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=08">并排对比两套正文 ↗</a><a class="button secondary" href="08.html">对照中文版 ↗</a><button class="button" data-read="original-08" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 原版解释对照</p><h2>MCU 与主 SoC 的分工怎样理解？</h2><p>MCU 接近车辆信号、实时控制和电源协同；具体分工由项目定义。中断告诉软件有事件，不保证对应报文完整、有效或已被上层使用。</p><ol><li><strong>怎么读：</strong>先看启动/调度，再沿 CAN 和 SPI 走到 SoC，最后看电源状态与诊断。</li><li><strong>项目练习：</strong>以挡位变化为例区分总线接收、MCU 解码、跨芯片发送和座舱消费；每一层保留有效性。</li><li><strong>自检：</strong>IRQ 到达后为什么还要检查报文长度、校验与时间戳？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-2">Day 2</a> <a href="../index.html#day-4">Day 4</a> <a href="../index.html#day-9">Day 9</a> <a href="../index.html#day-18">Day 18</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#08-mcu-内部机制">08 MCU 内部机制</a><a class="depth-2" href="#81-启动栈">8.1 启动栈</a><a class="depth-2" href="#82-调度">8.2 调度</a><a class="depth-2" href="#83-can-收发">8.3 CAN 收发</a><a class="depth-2" href="#84-e2e">8.4 E2E</a><a class="depth-2" href="#85-spiipcl">8.5 SPI/IPCL</a><a class="depth-2" href="#86-电源与安全">8.6 电源与安全</a><a class="depth-2" href="#87-诊断">8.7 诊断</a><a class="depth-2" href="#88-资源所有权">8.8 资源所有权</a><a class="depth-2" href="#89-故障传播矩阵">8.9 故障传播矩阵</a><a class="depth-2" href="#810-模块映射">8.10 模块映射</a><a class="depth-2" href="#811-证据观察责任与待确认">8.11 证据、观察、责任与待确认</a></details><article id="chapter-text"><h1 id="08-mcu-内部机制">08 MCU 内部机制</h1>
 <blockquote>
 <p>本章于 2026-09-20 按原架构补充正文解释；原图、模块/流程 ID 和分层保持原样。新证据的版本限定随段落标注。<a href="index.html">本轮更新说明</a>。</p>
 </blockquote>
@@ -9,19 +9,19 @@ standard mechanism has no MT8676 evidence ID；method reference ≠ MT8676 imple
 <h2 id="81-启动栈">8.1 启动栈</h2>
 <p>架构学习顺序为 <code>FBL</code> → <code>MCAL</code> → <code>BSW</code> → <code>OS</code> → <code>RTE</code> → <code>SWC</code>；architecture placement ≠ proven exact MT8676 startup order。
 FBL 交接、驱动初始化、基础服务、调度器、RTE 连接和 SWC 激活各是独立 gate。</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% MCU boot normal
+<figure class="mermaid-figure" id="original-08-figure-1"><figcaption>MCU内部机制 · 图 1 · Mermaid</figcaption><details  class="diagram" open data-panel="original-08-figure-1"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-08-figure-1.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MCU内部机制 · 图 1，可使用方向键滚动"><pre class="mermaid">%% MCU boot normal
 flowchart LR
  F[FBL] --&gt; M[MCAL] --&gt; B[BSW] --&gt; O[OS] --&gt; R[RTE] --&gt; S[SWC]
- S -. &quot;health/readback&quot; .-&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>%% MCU boot normal
+ S -. &quot;health/readback&quot; .-&gt; R</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%% MCU boot normal
 flowchart LR
  F[FBL] --&gt; M[MCAL] --&gt; B[BSW] --&gt; O[OS] --&gt; R[RTE] --&gt; S[SWC]
- S -. &quot;health/readback&quot; .-&gt; R</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% MCU boot abnormal recovery
-flowchart LR
+ S -. &quot;health/readback&quot; .-&gt; R</code></pre></details></details></figure><figure class="mermaid-figure" id="original-08-figure-2"><figcaption>MCU内部机制 · 图 2 · Mermaid</figcaption><details  class="diagram" open data-panel="original-08-figure-2"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-08-figure-2.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MCU内部机制 · 图 2，可使用方向键滚动"><pre class="mermaid">%% MCU boot abnormal recovery
+flowchart TB
  T[&quot;reset/brownout/init reject&quot;] --&gt; E[&quot;earliest incomplete gate&quot;] --&gt; F[&quot;direct startup layer&quot;] --&gt; D[&quot;dependent Runnable unavailable&quot;]
- D --&gt; O[&quot;reset reason + init status&quot;] --&gt; C[&quot;quiesce outputs; cleanup&quot;] --&gt; R[&quot;controlled reset/new Generation&quot;] --&gt; V[&quot;health + state readback&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% MCU boot abnormal recovery
-flowchart LR
+ D --&gt; O[&quot;reset reason + init status&quot;] --&gt; C[&quot;quiesce outputs; cleanup&quot;] --&gt; R[&quot;controlled reset/new Generation&quot;] --&gt; V[&quot;health + state readback&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%% MCU boot abnormal recovery
+flowchart TB
  T[&quot;reset/brownout/init reject&quot;] --&gt; E[&quot;earliest incomplete gate&quot;] --&gt; F[&quot;direct startup layer&quot;] --&gt; D[&quot;dependent Runnable unavailable&quot;]
- D --&gt; O[&quot;reset reason + init status&quot;] --&gt; C[&quot;quiesce outputs; cleanup&quot;] --&gt; R[&quot;controlled reset/new Generation&quot;] --&gt; V[&quot;health + state readback&quot;]</code></pre></details></details><p>异常必须区分 brownout、watchdog reset、启动失败和不完整 cleanup。观察 reset reason、各层 init 状态、任务激活和安全输出；Owner 是首个未完成初始化或交接的层。</p>
+ D --&gt; O[&quot;reset reason + init status&quot;] --&gt; C[&quot;quiesce outputs; cleanup&quot;] --&gt; R[&quot;controlled reset/new Generation&quot;] --&gt; V[&quot;health + state readback&quot;]</code></pre></details></details></figure><p>异常必须区分 brownout、watchdog reset、启动失败和不完整 cleanup。观察 reset reason、各层 init 状态、任务激活和安全输出；Owner 是首个未完成初始化或交接的层。</p>
 <table>
 <thead>
 <tr>
@@ -49,19 +49,19 @@ flowchart LR
 </tbody></table>
 <h2 id="82-调度">8.2 调度</h2>
 <p>调度链按 <code>ISR</code> → <code>OS Task</code> → <code>Runnable</code>，触发来自 event/alarm；priority、deadline、jitter、stack/CPU budget、lock/critical section 与 watchdog 相互影响但不等价。</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Scheduling normal
+<figure class="mermaid-figure" id="original-08-figure-3"><figcaption>MCU内部机制 · 图 3 · Mermaid</figcaption><details  class="diagram" open data-panel="original-08-figure-3"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-08-figure-3.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MCU内部机制 · 图 3，可使用方向键滚动"><pre class="mermaid">%% Scheduling normal
 flowchart LR
  I[ISR] --&gt; E[&quot;event/alarm&quot;] --&gt; T[&quot;OS Task&quot;] --&gt; R[Runnable] --&gt; O[&quot;RTE/COM output&quot;]
- O -. &quot;deadline/health counter&quot; .-&gt; T</pre><details><summary>查看原始图代码</summary><pre><code>%% Scheduling normal
+ O -. &quot;deadline/health counter&quot; .-&gt; T</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%% Scheduling normal
 flowchart LR
  I[ISR] --&gt; E[&quot;event/alarm&quot;] --&gt; T[&quot;OS Task&quot;] --&gt; R[Runnable] --&gt; O[&quot;RTE/COM output&quot;]
- O -. &quot;deadline/health counter&quot; .-&gt; T</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Scheduling abnormal recovery
-flowchart LR
+ O -. &quot;deadline/health counter&quot; .-&gt; T</code></pre></details></details></figure><figure class="mermaid-figure" id="original-08-figure-4"><figcaption>MCU内部机制 · 图 4 · Mermaid</figcaption><details  class="diagram" open data-panel="original-08-figure-4"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-08-figure-4.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MCU内部机制 · 图 4，可使用方向键滚动"><pre class="mermaid">%% Scheduling abnormal recovery
+flowchart TB
  T[&quot;interrupt storm/loss or long critical section&quot;] --&gt; E[&quot;first missed ISR/event/deadline&quot;] --&gt; F[&quot;ISR/Task/Runnable&quot;]
- F --&gt; D[&quot;starvation/stale output&quot;] --&gt; O[&quot;trace + runtime + stack watermark&quot;] --&gt; C[&quot;bound admission; release lock&quot;] --&gt; R[&quot;safe/degraded or reset&quot;] --&gt; V[&quot;deadline and state validation&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% Scheduling abnormal recovery
-flowchart LR
+ F --&gt; D[&quot;starvation/stale output&quot;] --&gt; O[&quot;trace + runtime + stack watermark&quot;] --&gt; C[&quot;bound admission; release lock&quot;] --&gt; R[&quot;safe/degraded or reset&quot;] --&gt; V[&quot;deadline and state validation&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%% Scheduling abnormal recovery
+flowchart TB
  T[&quot;interrupt storm/loss or long critical section&quot;] --&gt; E[&quot;first missed ISR/event/deadline&quot;] --&gt; F[&quot;ISR/Task/Runnable&quot;]
- F --&gt; D[&quot;starvation/stale output&quot;] --&gt; O[&quot;trace + runtime + stack watermark&quot;] --&gt; C[&quot;bound admission; release lock&quot;] --&gt; R[&quot;safe/degraded or reset&quot;] --&gt; V[&quot;deadline and state validation&quot;]</code></pre></details></details><p>stack overflow、CPU 饥饿、priority inversion、deadlock 和 watchdog kick 缺失需用调度 trace、运行时间、stack watermark 和锁等待图区分。具体 task identity、period 和预算待配置/trace 确认。</p>
+ F --&gt; D[&quot;starvation/stale output&quot;] --&gt; O[&quot;trace + runtime + stack watermark&quot;] --&gt; C[&quot;bound admission; release lock&quot;] --&gt; R[&quot;safe/degraded or reset&quot;] --&gt; V[&quot;deadline and state validation&quot;]</code></pre></details></details></figure><p>stack overflow、CPU 饥饿、priority inversion、deadlock 和 watchdog kick 缺失需用调度 trace、运行时间、stack watermark 和锁等待图区分。具体 task identity、period 和预算待配置/trace 确认。</p>
 <table>
 <thead>
 <tr>
@@ -89,24 +89,24 @@ flowchart LR
 </tbody></table>
 <h2 id="83-can-收发">8.3 CAN 收发</h2>
 <p>接收链是 <code>transceiver/controller/driver</code> → <code>CanIf</code> → <code>PduR</code> → <code>COM</code> → <code>RTE Port</code> → <code>SWC Runnable</code>。</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% CAN RX normal
+<figure class="mermaid-figure" id="original-08-figure-5"><figcaption>MCU内部机制 · 图 5 · Mermaid</figcaption><details  class="diagram" open data-panel="original-08-figure-5"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-08-figure-5.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MCU内部机制 · 图 5，可使用方向键滚动"><pre class="mermaid">%% CAN RX normal
 flowchart LR
- P[&quot;transceiver/controller/driver&quot;] --&gt; I[CanIf] --&gt; D[PduR] --&gt; C[COM] --&gt; R[&quot;RTE Port&quot;] --&gt; S[&quot;SWC Runnable&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% CAN RX normal
+ P[&quot;transceiver/controller/driver&quot;] --&gt; I[CanIf] --&gt; D[PduR] --&gt; C[COM] --&gt; R[&quot;RTE Port&quot;] --&gt; S[&quot;SWC Runnable&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%% CAN RX normal
 flowchart LR
- P[&quot;transceiver/controller/driver&quot;] --&gt; I[CanIf] --&gt; D[PduR] --&gt; C[COM] --&gt; R[&quot;RTE Port&quot;] --&gt; S[&quot;SWC Runnable&quot;]</code></pre></details></details><p>反向控制/反馈链为 SWC Runnable → <code>RTE Port</code> → <code>COM</code> → <code>PduR</code> → <code>CanIf</code> → transceiver/controller/driver；发送成功不证明对端执行，必须等待 bus/actuator feedback。</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% CAN TX feedback
+ P[&quot;transceiver/controller/driver&quot;] --&gt; I[CanIf] --&gt; D[PduR] --&gt; C[COM] --&gt; R[&quot;RTE Port&quot;] --&gt; S[&quot;SWC Runnable&quot;]</code></pre></details></details></figure><p>反向控制/反馈链为 SWC Runnable → <code>RTE Port</code> → <code>COM</code> → <code>PduR</code> → <code>CanIf</code> → transceiver/controller/driver；发送成功不证明对端执行，必须等待 bus/actuator feedback。</p>
+<figure class="mermaid-figure" id="original-08-figure-6"><figcaption>MCU内部机制 · 图 6 · Mermaid</figcaption><details  class="diagram" open data-panel="original-08-figure-6"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-08-figure-6.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MCU内部机制 · 图 6，可使用方向键滚动"><pre class="mermaid">%% CAN TX feedback
 flowchart RL
  S[&quot;SWC Runnable&quot;] --&gt; R[&quot;RTE Port&quot;] --&gt; C[COM] --&gt; P[PduR] --&gt; I[CanIf] --&gt; D[&quot;transceiver/controller/driver&quot;]
- D -. &quot;bus/actuator feedback&quot; .-&gt; S</pre><details><summary>查看原始图代码</summary><pre><code>%% CAN TX feedback
+ D -. &quot;bus/actuator feedback&quot; .-&gt; S</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%% CAN TX feedback
 flowchart RL
  S[&quot;SWC Runnable&quot;] --&gt; R[&quot;RTE Port&quot;] --&gt; C[COM] --&gt; P[PduR] --&gt; I[CanIf] --&gt; D[&quot;transceiver/controller/driver&quot;]
- D -. &quot;bus/actuator feedback&quot; .-&gt; S</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% CAN abnormal recovery
-flowchart LR
+ D -. &quot;bus/actuator feedback&quot; .-&gt; S</code></pre></details></details></figure><figure class="mermaid-figure" id="original-08-figure-7"><figcaption>MCU内部机制 · 图 7 · Mermaid</figcaption><details  class="diagram" open data-panel="original-08-figure-7"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-08-figure-7.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MCU内部机制 · 图 7，可使用方向键滚动"><pre class="mermaid">%% CAN abnormal recovery
+flowchart TB
  T[&quot;bus loss/overflow/stale frame&quot;] --&gt; E[&quot;first driver/PDU/signal freshness break&quot;] --&gt; F[&quot;CanIf/PduR/COM/RTE/SWC&quot;]
- F --&gt; U[&quot;stale or absent vehicle state&quot;] --&gt; O[&quot;bus trace + PDU counters + RTE validity&quot;] --&gt; C[&quot;discard invalid; reset queue&quot;] --&gt; V[&quot;fresh feedback&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% CAN abnormal recovery
-flowchart LR
+ F --&gt; U[&quot;stale or absent vehicle state&quot;] --&gt; O[&quot;bus trace + PDU counters + RTE validity&quot;] --&gt; C[&quot;discard invalid; reset queue&quot;] --&gt; V[&quot;fresh feedback&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%% CAN abnormal recovery
+flowchart TB
  T[&quot;bus loss/overflow/stale frame&quot;] --&gt; E[&quot;first driver/PDU/signal freshness break&quot;] --&gt; F[&quot;CanIf/PduR/COM/RTE/SWC&quot;]
- F --&gt; U[&quot;stale or absent vehicle state&quot;] --&gt; O[&quot;bus trace + PDU counters + RTE validity&quot;] --&gt; C[&quot;discard invalid; reset queue&quot;] --&gt; V[&quot;fresh feedback&quot;]</code></pre></details></details><p>物理 frame、PDU 路由、signal unpack、RTE update 和 Runnable apply 分层取证；DBC、PDU ID、signal mapping、周期与队列策略待 MT8676 配置确认。</p>
+ F --&gt; U[&quot;stale or absent vehicle state&quot;] --&gt; O[&quot;bus trace + PDU counters + RTE validity&quot;] --&gt; C[&quot;discard invalid; reset queue&quot;] --&gt; V[&quot;fresh feedback&quot;]</code></pre></details></details></figure><p>物理 frame、PDU 路由、signal unpack、RTE update 和 Runnable apply 分层取证；DBC、PDU ID、signal mapping、周期与队列策略待 MT8676 配置确认。</p>
 <table>
 <thead>
 <tr>
@@ -135,17 +135,17 @@ flowchart LR
 <h2 id="84-e2e">8.4 E2E</h2>
 <p>标准 E2E 检查包含 Data ID、CRC、Sequence/Alive Counter、timeout/freshness、duplicate、jump；策略随后决定 invalid、substitution 与 degradation。
 CRC accepted ≠ data fresh ≠ business valid。</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% E2E normal
+<figure class="mermaid-figure" id="original-08-figure-8"><figcaption>MCU内部机制 · 图 8 · Mermaid</figcaption><details  class="diagram" open data-panel="original-08-figure-8"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-08-figure-8.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MCU内部机制 · 图 8，可使用方向键滚动"><pre class="mermaid">%% E2E normal
 flowchart LR
- D[&quot;Data ID&quot;] --&gt; C[CRC] --&gt; S[&quot;Sequence/Alive Counter&quot;] --&gt; F[&quot;timeout/freshness&quot;] --&gt; V[&quot;validity to consumer&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% E2E normal
+ D[&quot;Data ID&quot;] --&gt; C[CRC] --&gt; S[&quot;Sequence/Alive Counter&quot;] --&gt; F[&quot;timeout/freshness&quot;] --&gt; V[&quot;validity to consumer&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%% E2E normal
 flowchart LR
- D[&quot;Data ID&quot;] --&gt; C[CRC] --&gt; S[&quot;Sequence/Alive Counter&quot;] --&gt; F[&quot;timeout/freshness&quot;] --&gt; V[&quot;validity to consumer&quot;]</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% E2E abnormal recovery
-flowchart LR
+ D[&quot;Data ID&quot;] --&gt; C[CRC] --&gt; S[&quot;Sequence/Alive Counter&quot;] --&gt; F[&quot;timeout/freshness&quot;] --&gt; V[&quot;validity to consumer&quot;]</code></pre></details></details></figure><figure class="mermaid-figure" id="original-08-figure-9"><figcaption>MCU内部机制 · 图 9 · Mermaid</figcaption><details  class="diagram" open data-panel="original-08-figure-9"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-08-figure-9.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MCU内部机制 · 图 9，可使用方向键滚动"><pre class="mermaid">%% E2E abnormal recovery
+flowchart TB
  T[&quot;CRC mismatch/duplicate/jump/timeout&quot;] --&gt; E[&quot;first E2E check rejection&quot;] --&gt; I[invalid] --&gt; S[substitution] --&gt; D[degradation]
- D --&gt; O[&quot;counter + freshness evidence&quot;] --&gt; R[&quot;accept only coherent new sequence&quot;] --&gt; V[&quot;consumer readback&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% E2E abnormal recovery
-flowchart LR
+ D --&gt; O[&quot;counter + freshness evidence&quot;] --&gt; R[&quot;accept only coherent new sequence&quot;] --&gt; V[&quot;consumer readback&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%% E2E abnormal recovery
+flowchart TB
  T[&quot;CRC mismatch/duplicate/jump/timeout&quot;] --&gt; E[&quot;first E2E check rejection&quot;] --&gt; I[invalid] --&gt; S[substitution] --&gt; D[degradation]
- D --&gt; O[&quot;counter + freshness evidence&quot;] --&gt; R[&quot;accept only coherent new sequence&quot;] --&gt; V[&quot;consumer readback&quot;]</code></pre></details></details><p>Data ID 值、CRC profile、counter width、超时、替代值和降级策略均待 ECU 配置确认，不从标准机制反推产品合同。</p>
+ D --&gt; O[&quot;counter + freshness evidence&quot;] --&gt; R[&quot;accept only coherent new sequence&quot;] --&gt; V[&quot;consumer readback&quot;]</code></pre></details></details></figure><p>Data ID 值、CRC profile、counter width、超时、替代值和降级策略均待 ECU 配置确认，不从标准机制反推产品合同。</p>
 <table>
 <thead>
 <tr>
@@ -173,26 +173,26 @@ flowchart LR
 </tbody></table>
 <h2 id="85-spiipcl">8.5 SPI/IPCL</h2>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>按 PVT vehicle 方案理解，SPI/GPIO 在 MCU 与 SOS 之间传送/通知，SOS 服务再把车辆数据转成跨域属性消息。中断、一次传输完成、报文校验通过、属性发布是不同完成层级。EINT 资料同时说明管脚号、EINT 与 Linux 中断号的区别；附带 Android KK/L debounce FAQ 只作历史编号案例，不将旧函数直接套到 MT8668 内核。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S281 · vehicle方案.pdf · PDF第2-3页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E005 · EINT_IDH_Share.pdf · PDF第3-8页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E006 · FAQ13938.pdf · PDF第1-2页<small>〔本地来源〕</small></span></p>
+<p>按 PVT vehicle 方案理解，SPI/GPIO 在 MCU 与 SOS 之间传送/通知，SOS 服务再把车辆数据转成跨域属性消息。中断、一次传输完成、报文校验通过、属性发布是不同完成层级。EINT 资料同时说明管脚号、EINT 与 Linux 中断号的区别；附带 Android KK/L debounce FAQ 只作历史编号案例，不将旧函数直接套到 MT8668 内核。<a href="source-SRC0024.html#page-2">S281 · vehicle方案.pdf · PDF第2-3页</a> <a href="source-SRC0028.html#page-3">E005 · EINT_IDH_Share.pdf · PDF第3-8页</a> <a href="source-SRC0034.html#page-1">E006 · FAQ13938.pdf · PDF第1-2页</a></p>
 <p>物理链按 <code>physical byte</code> → <code>frame boundary</code> → <code>DMA/FIFO</code> → <code>IRQ</code> → <code>reassembly</code> → <code>business message</code> → <code>business state</code> 检查。
 physical byte/frame/DMA/FIFO/IRQ/reassembly ≠ business message/state。</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% SPI physical normal
+<figure class="mermaid-figure" id="original-08-figure-10"><figcaption>MCU内部机制 · 图 10 · Mermaid</figcaption><details  class="diagram" open data-panel="original-08-figure-10"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-08-figure-10.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MCU内部机制 · 图 10，可使用方向键滚动"><pre class="mermaid">%% SPI physical normal
 flowchart LR
- B[&quot;physical byte&quot;] --&gt; F[&quot;frame boundary&quot;] --&gt; D[&quot;DMA/FIFO&quot;] --&gt; I[IRQ] --&gt; R[reassembly] --&gt; M[&quot;business message&quot;] --&gt; S[&quot;business state&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% SPI physical normal
+ B[&quot;physical byte&quot;] --&gt; F[&quot;frame boundary&quot;] --&gt; D[&quot;DMA/FIFO&quot;] --&gt; I[IRQ] --&gt; R[reassembly] --&gt; M[&quot;business message&quot;] --&gt; S[&quot;business state&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%% SPI physical normal
 flowchart LR
- B[&quot;physical byte&quot;] --&gt; F[&quot;frame boundary&quot;] --&gt; D[&quot;DMA/FIFO&quot;] --&gt; I[IRQ] --&gt; R[reassembly] --&gt; M[&quot;business message&quot;] --&gt; S[&quot;business state&quot;]</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% SPI business feedback
+ B[&quot;physical byte&quot;] --&gt; F[&quot;frame boundary&quot;] --&gt; D[&quot;DMA/FIFO&quot;] --&gt; I[IRQ] --&gt; R[reassembly] --&gt; M[&quot;business message&quot;] --&gt; S[&quot;business state&quot;]</code></pre></details></details></figure><figure class="mermaid-figure" id="original-08-figure-11"><figcaption>MCU内部机制 · 图 11 · Mermaid</figcaption><details  class="diagram" open data-panel="original-08-figure-11"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-08-figure-11.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MCU内部机制 · 图 11，可使用方向键滚动"><pre class="mermaid">%% SPI business feedback
 flowchart RL
  S[&quot;business command/state&quot;] --&gt; M[&quot;serialize pending framing&quot;] --&gt; Q[&quot;TX queue&quot;] --&gt; P[&quot;SPI physical transfer&quot;]
- P -. &quot;peer response/new sequence&quot; .-&gt; S</pre><details><summary>查看原始图代码</summary><pre><code>%% SPI business feedback
+ P -. &quot;peer response/new sequence&quot; .-&gt; S</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%% SPI business feedback
 flowchart RL
  S[&quot;business command/state&quot;] --&gt; M[&quot;serialize pending framing&quot;] --&gt; Q[&quot;TX queue&quot;] --&gt; P[&quot;SPI physical transfer&quot;]
- P -. &quot;peer response/new sequence&quot; .-&gt; S</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% SPI abnormal recovery
-flowchart LR
+ P -. &quot;peer response/new sequence&quot; .-&gt; S</code></pre></details></details></figure><figure class="mermaid-figure" id="original-08-figure-12"><figcaption>MCU内部机制 · 图 12 · Mermaid</figcaption><details  class="diagram" open data-panel="original-08-figure-12"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-08-figure-12.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MCU内部机制 · 图 12，可使用方向键滚动"><pre class="mermaid">%% SPI abnormal recovery
+flowchart TB
  T[&quot;FIFO overflow/IRQ loss/partial frame&quot;] --&gt; E[&quot;first byte/frame/sequence gap&quot;] --&gt; F[&quot;driver/IPCL reassembly&quot;]
- F --&gt; D[&quot;message loss/stale state&quot;] --&gt; O[&quot;DMA/FIFO/IRQ/sequence counters&quot;] --&gt; C[&quot;flush partial Generation&quot;] --&gt; R[&quot;resync&quot;] --&gt; V[&quot;fresh business readback&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% SPI abnormal recovery
-flowchart LR
+ F --&gt; D[&quot;message loss/stale state&quot;] --&gt; O[&quot;DMA/FIFO/IRQ/sequence counters&quot;] --&gt; C[&quot;flush partial Generation&quot;] --&gt; R[&quot;resync&quot;] --&gt; V[&quot;fresh business readback&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%% SPI abnormal recovery
+flowchart TB
  T[&quot;FIFO overflow/IRQ loss/partial frame&quot;] --&gt; E[&quot;first byte/frame/sequence gap&quot;] --&gt; F[&quot;driver/IPCL reassembly&quot;]
- F --&gt; D[&quot;message loss/stale state&quot;] --&gt; O[&quot;DMA/FIFO/IRQ/sequence counters&quot;] --&gt; C[&quot;flush partial Generation&quot;] --&gt; R[&quot;resync&quot;] --&gt; V[&quot;fresh business readback&quot;]</code></pre></details></details><p>private framing/channel <code>IDs</code>、端点、校验与重同步策略待接口/源码/抓包确认；不得从 flow inventory 的候选链升级为事实。</p>
+ F --&gt; D[&quot;message loss/stale state&quot;] --&gt; O[&quot;DMA/FIFO/IRQ/sequence counters&quot;] --&gt; C[&quot;flush partial Generation&quot;] --&gt; R[&quot;resync&quot;] --&gt; V[&quot;fresh business readback&quot;]</code></pre></details></details></figure><p>private framing/channel <code>IDs</code>、端点、校验与重同步策略待接口/源码/抓包确认；不得从 flow inventory 的候选链升级为事实。</p>
 <table>
 <thead>
 <tr>
@@ -220,29 +220,29 @@ flowchart LR
 </tbody></table>
 <h2 id="86-电源与安全">8.6 电源与安全</h2>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>Host/Guest STR 图帮助解释 MCU 电源协同：MCU/外部信号触发的请求不等于 SoC 已安全进入低功耗，Host 需要等 Guest 完成相应阶段。记录请求来源、各域状态、设备动作和最终进入/退出证据；原图 MCU 电源职责不移动，GPIO 号码则只按本项目原理图/DTS/固件解释，不能从另一平台参考图继承。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S265 · MT8676_Hypervisor_Suspend_Resume_Common_Flow.pdf · PDF第4-6页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S037 · MT8668_Hypervisor_Suspend_Resume_User_Manual_CN_V1.0.pdf · PDF第4-10页<small>〔本地来源〕</small></span></p>
+<p>Host/Guest STR 图帮助解释 MCU 电源协同：MCU/外部信号触发的请求不等于 SoC 已安全进入低功耗，Host 需要等 Guest 完成相应阶段。记录请求来源、各域状态、设备动作和最终进入/退出证据；原图 MCU 电源职责不移动，GPIO 号码则只按本项目原理图/DTS/固件解释，不能从另一平台参考图继承。<a href="source-SRC0035.html#page-4">S265 · MT8676_Hypervisor_Suspend_Resume_Common_Flow.pdf · PDF第4-6页</a> <a href="source-SRC0036.html#page-4">S037 · MT8668_Hypervisor_Suspend_Resume_User_Manual_CN_V1.0.pdf · PDF第4-10页</a></p>
 <p>正常路径与异常/恢复如下。</p>
 <p>状态模型包含 ignition/ACC/STR、wakeup、run、sleep request、quiesce、sleep、resume；实际转换条件和 wiring 待确认。
 独立 MCU 可承担电源输入采样、输出保护、watchdog、reset reason、safe/degraded state 与 functional safety monitor，但不据此发明 ASIL 或 timing contract。</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Power normal
+<figure class="mermaid-figure" id="original-08-figure-13"><figcaption>MCU内部机制 · 图 13 · Mermaid</figcaption><details  class="diagram" open data-panel="original-08-figure-13"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-08-figure-13.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MCU内部机制 · 图 13，可使用方向键滚动"><pre class="mermaid">%% Power normal
 stateDiagram-v2
  [*] --&gt; Wakeup
  Wakeup --&gt; Run
  Run --&gt; Quiesce: sleep request
  Quiesce --&gt; Sleep
- Sleep --&gt; Wakeup: ignition/ACC/STR or approved wake</pre><details><summary>查看原始图代码</summary><pre><code>%% Power normal
+ Sleep --&gt; Wakeup: ignition/ACC/STR or approved wake</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%% Power normal
 stateDiagram-v2
  [*] --&gt; Wakeup
  Wakeup --&gt; Run
  Run --&gt; Quiesce: sleep request
  Quiesce --&gt; Sleep
- Sleep --&gt; Wakeup: ignition/ACC/STR or approved wake</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Power abnormal recovery
-flowchart LR
+ Sleep --&gt; Wakeup: ignition/ACC/STR or approved wake</code></pre></details></details></figure><figure class="mermaid-figure" id="original-08-figure-14"><figcaption>MCU内部机制 · 图 14 · Mermaid</figcaption><details  class="diagram" open data-panel="original-08-figure-14"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-08-figure-14.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MCU内部机制 · 图 14，可使用方向键滚动"><pre class="mermaid">%% Power abnormal recovery
+flowchart TB
  T[&quot;brownout/watchdog/wake conflict&quot;] --&gt; E[&quot;first power-state or health mismatch&quot;] --&gt; F[&quot;power/safety monitor&quot;]
- F --&gt; D[&quot;safe/degraded state&quot;] --&gt; O[&quot;reset reason + input/output snapshot&quot;] --&gt; C[&quot;quiesce hazardous output&quot;] --&gt; R[&quot;controlled reset&quot;] --&gt; V[&quot;state and output readback&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% Power abnormal recovery
-flowchart LR
+ F --&gt; D[&quot;safe/degraded state&quot;] --&gt; O[&quot;reset reason + input/output snapshot&quot;] --&gt; C[&quot;quiesce hazardous output&quot;] --&gt; R[&quot;controlled reset&quot;] --&gt; V[&quot;state and output readback&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%% Power abnormal recovery
+flowchart TB
  T[&quot;brownout/watchdog/wake conflict&quot;] --&gt; E[&quot;first power-state or health mismatch&quot;] --&gt; F[&quot;power/safety monitor&quot;]
- F --&gt; D[&quot;safe/degraded state&quot;] --&gt; O[&quot;reset reason + input/output snapshot&quot;] --&gt; C[&quot;quiesce hazardous output&quot;] --&gt; R[&quot;controlled reset&quot;] --&gt; V[&quot;state and output readback&quot;]</code></pre></details></details><p>诊断 ownership 与功能安全 monitoring ownership 要分开；安全 monitor 报警不自动证明被监控 SWC 是根因。</p>
+ F --&gt; D[&quot;safe/degraded state&quot;] --&gt; O[&quot;reset reason + input/output snapshot&quot;] --&gt; C[&quot;quiesce hazardous output&quot;] --&gt; R[&quot;controlled reset&quot;] --&gt; V[&quot;state and output readback&quot;]</code></pre></details></details></figure><p>诊断 ownership 与功能安全 monitoring ownership 要分开；安全 monitor 报警不自动证明被监控 SWC 是根因。</p>
 <table>
 <thead>
 <tr>
@@ -271,24 +271,24 @@ flowchart LR
 <h2 id="87-诊断">8.7 诊断</h2>
 <p>正常路径与异常/恢复如下。</p>
 <p>DTC 生成/存储链与 tester 会话链是两个独立合同；前者不借 DoIP/UDS 证明，后者也不把一次响应等同于 DTC 已生成。</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% DTC generation storage
+<figure class="mermaid-figure" id="original-08-figure-15"><figcaption>MCU内部机制 · 图 15 · Mermaid</figcaption><details  class="diagram" open data-panel="original-08-figure-15"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-08-figure-15.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MCU内部机制 · 图 15，可使用方向键滚动"><pre class="mermaid">%% DTC generation storage
 flowchart LR
-  FM[&quot;fault monitor&quot;] --&gt; FQ[&quot;debounce/qualification&quot;] --&gt; DR[&quot;DTC record&quot;] --&gt; FF[&quot;freeze frame&quot;] --&gt; DS[&quot;diagnostic storage&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% DTC generation storage
+  FM[&quot;fault monitor&quot;] --&gt; FQ[&quot;debounce/qualification&quot;] --&gt; DR[&quot;DTC record&quot;] --&gt; FF[&quot;freeze frame&quot;] --&gt; DS[&quot;diagnostic storage&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%% DTC generation storage
 flowchart LR
-  FM[&quot;fault monitor&quot;] --&gt; FQ[&quot;debounce/qualification&quot;] --&gt; DR[&quot;DTC record&quot;] --&gt; FF[&quot;freeze frame&quot;] --&gt; DS[&quot;diagnostic storage&quot;]</code></pre></details></details><p>tester 请求/响应按 tester ↔ DoIP gateway boundary ↔ UDS service ↔ diagnostic storage 双向检查；DoIP 只承载诊断消息，不等同于 UDS 业务。</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Diagnostic request response
-flowchart LR
-  TE[tester] --&gt; DG[&quot;DoIP gateway boundary&quot;] --&gt; US[&quot;UDS service&quot;] --&gt; DS[&quot;diagnostic storage&quot;]
-  DS --&gt; US --&gt; DG --&gt; TE</pre><details><summary>查看原始图代码</summary><pre><code>%% Diagnostic request response
+  FM[&quot;fault monitor&quot;] --&gt; FQ[&quot;debounce/qualification&quot;] --&gt; DR[&quot;DTC record&quot;] --&gt; FF[&quot;freeze frame&quot;] --&gt; DS[&quot;diagnostic storage&quot;]</code></pre></details></details></figure><p>tester 请求/响应按 tester ↔ DoIP gateway boundary ↔ UDS service ↔ diagnostic storage 双向检查；DoIP 只承载诊断消息，不等同于 UDS 业务。</p>
+<figure class="mermaid-figure" id="original-08-figure-16"><figcaption>MCU内部机制 · 图 16 · Mermaid</figcaption><details  class="diagram" open data-panel="original-08-figure-16"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-08-figure-16.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MCU内部机制 · 图 16，可使用方向键滚动"><pre class="mermaid">%% Diagnostic request response
 flowchart LR
   TE[tester] --&gt; DG[&quot;DoIP gateway boundary&quot;] --&gt; US[&quot;UDS service&quot;] --&gt; DS[&quot;diagnostic storage&quot;]
-  DS --&gt; US --&gt; DG --&gt; TE</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Diagnostics abnormal recovery
+  DS --&gt; US --&gt; DG --&gt; TE</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%% Diagnostic request response
 flowchart LR
+  TE[tester] --&gt; DG[&quot;DoIP gateway boundary&quot;] --&gt; US[&quot;UDS service&quot;] --&gt; DS[&quot;diagnostic storage&quot;]
+  DS --&gt; US --&gt; DG --&gt; TE</code></pre></details></details></figure><figure class="mermaid-figure" id="original-08-figure-17"><figcaption>MCU内部机制 · 图 17 · Mermaid</figcaption><details  class="diagram" open data-panel="original-08-figure-17"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-08-figure-17.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="MCU内部机制 · 图 17，可使用方向键滚动"><pre class="mermaid">%% Diagnostics abnormal recovery
+flowchart TB
   T[&quot;DTC storage or UDS transport failure&quot;] --&gt; E[&quot;first monitor/store/service/gateway break&quot;] --&gt; U[&quot;tester symptom&quot;]
-  U --&gt; O[&quot;DTC status + freeze frame + UDS trace&quot;] --&gt; C[&quot;clear request if authorized&quot;] --&gt; R[&quot;repair/re-evaluate&quot;] --&gt; V[&quot;fault inactive + operation validated&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% Diagnostics abnormal recovery
-flowchart LR
+  U --&gt; O[&quot;DTC status + freeze frame + UDS trace&quot;] --&gt; C[&quot;clear request if authorized&quot;] --&gt; R[&quot;repair/re-evaluate&quot;] --&gt; V[&quot;fault inactive + operation validated&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>%% Diagnostics abnormal recovery
+flowchart TB
   T[&quot;DTC storage or UDS transport failure&quot;] --&gt; E[&quot;first monitor/store/service/gateway break&quot;] --&gt; U[&quot;tester symptom&quot;]
-  U --&gt; O[&quot;DTC status + freeze frame + UDS trace&quot;] --&gt; C[&quot;clear request if authorized&quot;] --&gt; R[&quot;repair/re-evaluate&quot;] --&gt; V[&quot;fault inactive + operation validated&quot;]</code></pre></details></details><p>DTC stored ≠ fault active ≠ clear accepted ≠ recovery validated。清除记录不是修复；freeze frame 与当前状态要分别保存。UDS service、security policy、DTC 编号和 DoIP gateway topology 待确认。</p>
+  U --&gt; O[&quot;DTC status + freeze frame + UDS trace&quot;] --&gt; C[&quot;clear request if authorized&quot;] --&gt; R[&quot;repair/re-evaluate&quot;] --&gt; V[&quot;fault inactive + operation validated&quot;]</code></pre></details></details></figure><p>DTC stored ≠ fault active ≠ clear accepted ≠ recovery validated。清除记录不是修复；freeze frame 与当前状态要分别保存。UDS service、security policy、DTC 编号和 DoIP gateway topology 待确认。</p>
 <table>
 <thead>
 <tr>
@@ -637,4 +637,186 @@ initial Owner 提供 escalation artifacts：reset reason、调度 trace、bus �
 <p>图中标签/容器/显式箭头是架构图事实；标准 AUTOSAR 链、调度与 UDS 机制不继承图证据。
 method documents 仅作方法参考。private process identity、private framing/channel <code>IDs</code>、exact timeout/retry/threshold、exact hardware topology、exact recovery policy 均待确认。</p>
 <p>需补取 linker/map 与启动 trace、OS/RTE/COM/CanIf/PduR 配置、DBC、E2E profile、SPI/IPCL 接口与抓包、电源状态表、watchdog/reset reason、DTC/UDS/DoIP 配置。</p>
-</article><nav class="pager"><a href="07.html">← 上一步：SOS-Yocto内部机制</a><a href="09.html">下一步：TBox通信模组内部机制 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#08-mcu-内部机制">08 MCU 内部机制</a><a class="depth-2" href="#81-启动栈">8.1 启动栈</a><a class="depth-2" href="#82-调度">8.2 调度</a><a class="depth-2" href="#83-can-收发">8.3 CAN 收发</a><a class="depth-2" href="#84-e2e">8.4 E2E</a><a class="depth-2" href="#85-spiipcl">8.5 SPI/IPCL</a><a class="depth-2" href="#86-电源与安全">8.6 电源与安全</a><a class="depth-2" href="#87-诊断">8.7 诊断</a><a class="depth-2" href="#88-资源所有权">8.8 资源所有权</a><a class="depth-2" href="#89-故障传播矩阵">8.9 故障传播矩阵</a><a class="depth-2" href="#810-模块映射">8.10 模块映射</a><a class="depth-2" href="#811-证据观察责任与待确认">8.11 证据、观察、责任与待确认</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>
+</article><section class="evidence-excerpts" id="evidence-excerpts"><h2>本章引用的材料内容</h2><p>下面直接展示引用页的文字开头，可展开核对。打开材料页可看全部物理页及完整 PDF，图表和版式以 PDF 为准。提取原文不代表已经逐页验证其适用于当前项目。</p><details><summary>vehicle方案.pdf · PDF 第 2 页</summary><pre class="source-text">这一页没有足够的可提取文字，请打开原 PDF 查看图示。</pre><a href="source-SRC0024.html#page-2">阅读整页及原图 →</a></details><details><summary>EINT_IDH_Share.pdf · PDF 第 3 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+Confidential C
+3
+ Eint: External Interrupt
+ Chained Interrupt controller with GIC
+ Irqdomain, virq
+ Driver depend on gpio driver, as function of gpio
+gpio register platform driver, eint not platform driver
+Eint Introduction
+ MediaTek Confidential Release for
+IDH Study
+ MediaTek Confidential Release for
+IDH Study
+MediaTek Confidential Release for
+IDH Study</pre><a href="source-SRC0028.html#page-3">阅读整页及原图 →</a></details><details><summary>FAQ13938.pdf · PDF 第 1 页</summary><pre class="source-text">[FAQ13938] Android L 上 上 EINT 函数 函数  mt_eint_set_hw_debounce() 函数的 函数的
+参数变化说明
+参数变化说明
+[DESCRIPTION]
+ 
+随着
+linux 
+上
+deviceTree
+的导入，
+mt_eint_set_hw_debounce()
+这个函数的参数也发生了一点变化
+ 
+，所以使用的时候请注意一下。
+详情如下：
+KK
+：
+void 
+mt_eint_set_hw_debounce
+(unsigned int 
+eint_num
+, unsigned int ms);
+ 
+L
+：
+void 
+mt_eint_set_hw_debounce
+(unsigned int 
+gpio_pin
+, unsigned int ms)
+。
+ 
+ 
+[SOLUTION]
+ 
+这里有两种方法来解决这个问题：
+方法一：
+我们有提供另外一个函数来设定
+debounce
+：
+int 
+mt_gpio_set_debounce
+(unsigned 
+gpio
+, unsigned debounce)
+ 
+；然后使用这个函数来实现。使用
+demo
+如下（这里以耳机检测
+module
+：
+accdet
+为例）：
+ 
+备注：
+&quot;mediatek, ACCDET-eint&quot; 
+这个节点来自于
+DCT
+生成的文件：
+cust_eint.dtsi
+，
+其他用到
+eint
+的
+module
+也可以在这里文件
+里查看到相关信息。
+ 
+方法二：
+仍然采用函数：
+void 
+mt_eint_set_hw_debounce
+(unsigned int 
+gpio_pin
+, unsigned int ms)
+；只是我们在使用的时候将第一个
+参数修改成
+gpio_pin
+；使用
+demo
+如下（这里仍然以耳机检测
+module
+：
+accdet
+为例）：
+备注：
+这里写
+gpio_pin
+的时候，若直接使用
+dct
+生成的宏，则需要将
+gpio_pin
+的最高
+bit
+清
+0
+；因为
+DCT tool
+生成定义宏的时候
+有去设定这个
+bit
+为
+1
+；
+&quot;Mediatek Confidential&quot;</pre><a href="source-SRC0034.html#page-1">阅读整页及原图 →</a></details><details><summary>MT8676_Hypervisor_Suspend_Resume_Common_Flow.pdf · PDF 第 4 页</summary><pre class="source-text">— 4 —
+1.1 概述
+本章节主要介绍 MT8676 Hypervisor Suspend/Resume 流程。
+在 MT8676 平台上，Suspend 即 Suspend to RAM，此状态使所有的设备进入低功耗状态，仅保留
+RAM 自刷新。
+Suspend Power State：
+• Tasks “freezed”
+• 外部设备/内部部分模块关电或者进入低功耗模式
+• System PLL/clock close
+• ARM off
+• DRAM 自刷新
+• PMIC 进入低功耗模式
+• VCORE off
+• SPM run
+• 等待硬件唤醒事件
+在 MT8676 Hypervisor（L+L+A）系统上， Host OS SoS 与 Guest OS Tbox 系统都是 Yocto， Guest
+OS IVI 系统是 Android。系统级 Suspend 由 Host OS 发起，触发 Guest OS 运行 Suspend Flow，
+Guest OS 都完成 Suspend Flow 之后，Host OS 可以进入 Suspend，Host OS Suspend 完成之后整
+个系统才能进入省电的深度休眠模式。
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料</pre><a href="source-SRC0035.html#page-4">阅读整页及原图 →</a></details><details><summary>MT8668_Hypervisor_Suspend_Resume_User_Manual_CN_V1.0.pdf · PDF 第 4 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8668 Hypervisor Suspend &amp; Resume 
+User Manual 
+Confidential B 
+1 Suspend/Resume 
+1.1 概述 
+本章节主要介绍 MT8668 Hypervisor Suspend/Resume 流程以及常见问题的处理方法。 
+ 
+在 MT8668 平台上，Suspend 即 Suspend to RAM，此状态使所有的设备进入低功耗状态，仅保留 RAM 自刷新。  
+ 
+Suspend Power State： 
+ 
+• Tasks “freezed” 
+• 外部设备/内部部分模块关电或者进入低功耗模式 
+• System PLL/clock close 
+• ARM off 
+• DRAM 自刷新 
+• PMIC 进入低功耗模式 
+• VCORE off 
+• SPM run 
+• 等待硬件唤醒事件 
+ 
+在 MT8668 Hypervisor（L+L+A）系统上， Host OS SoS 与 Guest OS T-Box 系统都是 Yocto， Guest OS IVI 系统是
+Android。系统级 Suspend 由 Host OS 发起，触发 Guest OS 运行 Suspend Flow，Guest OS 都完成 Suspend Flow 之
+后，Host OS 可以进入 Suspend，Host OS Suspend 完成之后整个系统才能进入省电的深度休眠模式。 
+ 
+1.2 架构/流程概要 
+ Hypervisor Suspend 流程 
+Hypervisor Suspend 框架图如图 1-1（以 EINT 触发系统进出休眠为例）： 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0036.html#page-4">阅读整页及原图 →</a></details></section><nav class="pager"><a href="07.html">← 上一步：SOS-Yocto内部机制</a><a href="09.html">下一步：TBox通信模组内部机制 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#08-mcu-内部机制">08 MCU 内部机制</a><a class="depth-2" href="#81-启动栈">8.1 启动栈</a><a class="depth-2" href="#82-调度">8.2 调度</a><a class="depth-2" href="#83-can-收发">8.3 CAN 收发</a><a class="depth-2" href="#84-e2e">8.4 E2E</a><a class="depth-2" href="#85-spiipcl">8.5 SPI/IPCL</a><a class="depth-2" href="#86-电源与安全">8.6 电源与安全</a><a class="depth-2" href="#87-诊断">8.7 诊断</a><a class="depth-2" href="#88-资源所有权">8.8 资源所有权</a><a class="depth-2" href="#89-故障传播矩阵">8.9 故障传播矩阵</a><a class="depth-2" href="#810-模块映射">8.10 模块映射</a><a class="depth-2" href="#811-证据观察责任与待确认">8.11 证据、观察、责任与待确认</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

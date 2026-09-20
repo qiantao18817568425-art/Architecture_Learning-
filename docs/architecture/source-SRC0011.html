@@ -1,0 +1,729 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8668_Hypervisor_Display_User_Manual_CN_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8668_Hypervisor_Display_User_Manual_CN_V1.0.pdf</h1><p>SRC0011 · 原来源 ID S021 · PDF物理页 · 16 个阅读单元</p><p class="note">有引用的指定页/文本核对；未宣称全文逐页审阅。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8668/MTK参考资料/MTK参考资料/Android/MT8668_Hypervisor_Display_User_Manual_CN_V1.0.pdf</p><p>SHA-256：<code>e6f862cdda05f6ab226dfd244182a2b14d8531edd9ec0d8fd4d04dcf774fdb84</code></p><p>原文件大小：751,281 字节</p></details><div class="actions"><a class="button" href="materials/SRC0011.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8668_Hypervisor_Display_User_Manual_CN_V1.0.pdf 原 PDF" src="materials/SRC0011.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0011.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+版本:  1.0 
+出版日期:  2026-01-28 
+MT8668 Hypervisor Display 
+User Manual 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0011.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8668 Hypervisor Display 
+User Manual 
+Confidential B 
+版本记录 
+版本 日期 作者 描述 
+1.0 2026-01-28 李庆 正式版 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0011.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8668 Hypervisor Display 
+User Manual 
+Confidential B 
+目录 
+版本记录 ··········································································································································································· 2 
+目录 ··················································································································································································· 3 
+图片目录 ··········································································································································································· 4 
+表格目录 ··········································································································································································· 4 
+1 硬件架构 ··································································································································································· 5 
+ 名词解释 ·································································································································································· 5 
+ 硬件架构总览 ·························································································································································· 5 
+ 显示子系统的硬件架构 ······························································································································· 6 
+ 显示子系统在整个系统中的常见位置 ······································································································· 7 
+ 显示子系统的预设内部通路 ······················································································································· 8 
+ MML SubSystem ······················································································································································· 8 
+ MML 的定义 ················································································································································· 8 
+ MML 的用途 ················································································································································· 9 
+ Display SubSystem ···················································································································································· 9 
+ GCE ········································································································································································· 10 
+ 主要硬件规格 ························································································································································ 11 
+ Pixel Throughput ···················································································································································· 11 
+2 软件架构 ································································································································································· 12 
+ 显示相关的整体软件架构 ···································································································································· 12 
+3 特定要求 ································································································································································· 14 
+ SOC 对 Panel 的 VFP 和 VBP 的要求 ····················································································································· 14 
+ 主屏必须是 DSI0 ··················································································································································· 14 
+4 系统评估方法 ························································································································································· 15 
+附件一 附加条款 ····························································································································································· 16 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0011.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8668 Hypervisor Display 
+User Manual 
+Confidential B 
+图片目录 
+图 1-1. Display pipeline 架构 ····················································································································································· 6 
+图 1-2. 整个 Display Pipeline 示例 ············································································································································ 7 
+图 1-3. Display Pipeline 示例 ····················································································································································· 8 
+图 1-4. exDMA Config on Pipeline-0 示例 ······························································································································· 10 
+图 2-1. 显示相关的整体软件架构图 ······································································································································ 13 
+图 2-2. 基于虚拟 CMDQ 的 MML 框架 ·································································································································· 13 
+ 
+表格目录 
+表 1-1. 主要硬件规格 ······························································································································································ 11 
+表 4-1. 多屏评估所需的基本信息 ·········································································································································· 15 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0011.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8668 Hypervisor Display 
+User Manual 
+Confidential B 
+1 硬件架构 
+ 名词解释 
+缩略词 全称及释义 
+CMDQ Command Queue (the Software Driver of GCE) 命令队列（GCE 的软件驱动程序） 
+Disp Display 显示 
+DSC Display Stream Compression 显示流压缩 
+DSI Display Serial Interface 显示串行接口 
+GCE the Hardware of General Command Engine 通用命令引擎的硬件 
+MM Multimedia 多媒体 
+MML Hardware of Multimedia Layer 多媒体层的硬件 
+OVL 
+Overlay, means the Hardware includes the ReadDMA and blender 叠加，指包含读取 DMA 和混合器的硬
+件 
+PQ Picture Quality (enhancement) 图像质量（增强） 
+Resize Scaler-Up or Scaler-Down 缩放放大或缩小 
+TTC Telltale Check 标识检查 
+WDMA Hardware of Write Direct Memory Access 可写内存的硬件 
+WROT Hardware of Write to DRAM and Rotate 可将画面旋转并写入内存的硬件 
+ 
+ 硬件架构总览 
+MT8668 的 Display 硬件架构可分为两大部分——MML_SubSystem 和 Display_SubSystem，后文中将简称为 MML 和
+DISP。 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0011.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8668 Hypervisor Display 
+User Manual 
+Confidential B 
+ 显示子系统的硬件架构 
+MediaTek Proprietary and Confidential. © 2022 MediaTek Inc. All rights reserved.
+MML SubSystem
+Display SubSystem
+Layer7
+Layer6
+Layer5
+Layer4
+Layer3
+Layer2
+Layer1
+Layer0
+Layer8
+Layer9
+Disp-PQ-0
+Disp-PQ-1
+TTC0
+TTC1
+TTC2
+TTC3
+DSI0
+DSI1
+WDMA
+MML-
+RDMA0
+MML
+PQ-Resize0
+MML-
+WROT0DRAM Buffer DRAM Buffer
+DRAM Buffer
+DRAM Buffer
+DRAM Buffer
+DRAM Buffer
+DRAM Buffer
+DRAM Buffer
+DRAM Buffer
+DRAM Buffer DRAM Buffer
+Serializer
+Serializer
+MML-
+RDMA1
+MML
+Resize1
+MML-
+WDMA0DRAM Buffer DRAM Buffer
+Layer0 and Layer1 should be output to the same DSI.
+Layer2 and Layer3 should be output to the same DSI.
+Layer4 and Layer5 should be output to the same DSI.
+Layer6 and Layer7 should be output to the same DSI.
+ 
+图 1-1. Display pipeline 架构 
+ 
+MML_SubSystem，即 Multimedia Layer Sub System，共有 2 套独立的 MML 硬件可用，每套硬件中均包含 MML-
+RDMA（Read Direct Memory Access），MML-PQ（Picture Quality enhancement），MML-Resize（Scaler-Up or Scaler-
+Down）和 MML-WROT（Rotate &amp;&amp;Write to dram）。 
+Display SubSystem 共有 10 个硬件图层可被使用（其中 2 个硬件图层是专用于显示“需要进行功能安全检测的图
+层”，例如 Telltale），可以将多个硬件图层组合在一起进行 Alpha-Blending 并且显示到同一个屏。它还有 2 套
+Display-PQ 以及 2 个 DSC（Display Stream Compression）。最后，MT8668 支持同时从 2 个 DSI（Display Serial 
+Interface）输出画面。 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0011.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8668 Hypervisor Display 
+User Manual 
+Confidential B 
+ 显示子系统在整个系统中的常见位置 
+MediaTek Proprietary and Confidential. © 2022 MediaTek Inc. All rights reserved.
+DRAM Buffer
+Display is the last section of the whole path, and the next section is SerDes or Panel. The data source of Display can be roughly divided into 
+three categories: 
+– GPU-Output-Buffer which come from UI or game
+- GPU will adjust the color format, width and height as required during its processing
+– Video-Decoder-Output-Buffer &amp;&amp; ISP-Output-Buffer after Camera shooting
+- Its possible for MML(Multi-Media-Layer) to adjust the color format and width and height first before the picture 
+effect(PQ).
+GPU
+MML
+SubSystem
+DISPLAY
+SubSystemVideo Decoder
+Camera-Input
+DRAM Buffer
+DRAM Buffer
+SerDes
+Panel
+……
+ 
+图 1-2. 整个 Display Pipeline 示例 
+ 
+Display 在整个处理链路的最后一段，后端是 SerDes/Panel。 
+Display 的数据源大致可分为三类： 
+ 
+• GPU 产生的 UI 或游戏等画面 
+• 网络或者本地的视频经 Video-Decoder 解码后的 Output-Buffer 
+• Camera 拍摄后经 ISP 处理后的数据 
+ 
+其中，GPU 在自身的处理过程中会按需求调整色彩格式、宽高等，而 Video-Decoder 以及 Camera 的输出一般会需
+要 MML 调整色彩格式和宽高，并且可能会同步调整对应图层内容的画面效果（ MML-PQ）。 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0011.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8668 Hypervisor Display 
+User Manual 
+Confidential B 
+ 显示子系统的预设内部通路 
+MediaTek Proprietary and Confidential. © 2022 MediaTek Inc. All rights reserved.
+Layer3
+Layer2
+Layer1
+Layer0
+Disp-PQ-0 Layer8
+TTC0
+DSI0
+Serializer
+Layer7
+Layer6
+Layer5
+Layer4
+Disp-PQ-1 Layer9
+TTC1
+DSI1 Deserializer ICD
+Serializer
+Deserializer CID
+Deserializer HUD
+Yocto Layer for nonTelltale
+Android Layer
+Yocto Layer for Telltale
+WDMA DRAM Buffer
+DRAM Buffer
+DRAM Buffer
+DRAM Buffer
+DRAM Buffer
+DRAM Buffer
+DRAM Buffer
+DRAM 
+Buffer
+DRAM Buffer
+CID ICD HUD
+DRAM Buffer
+ 
+图 1-3. Display Pipeline 示例 
+ 
+以当前公版的配置作为例子，可以参考图 1-3。 
+在这里例子中，Display 被配置为 3 个 Pipeline： 
+ 
+• Pipeline0 即 CID：共 4 层 Layer（Yocto 和 Android 同屏显示），支持 display-pq 以及 Telltale-Check，最后由
+DSI0-superframe 输出到一个屏。 
+• Pipeline1 即 HUD：共 2 层 Layer（Yocto 和 Android 同屏显示）， 最后由 DSI0-superframe 输出到一个屏。 
+• Pipeline2 即 ICD：共 3 层 Layer（Yocto 和 Android 同屏显示）， 最后由 DSI1 输出到一个屏。 
+ 
+ MML SubSystem 
+ MML 的定义 
+MML 的全称是 Multiple Media Layer，它是 Display 之前的预处理。从前端的 DRAM Buffer A 中读数据，经过 MML
+的各项处理后，再将处理后的数据写入 DRAM Buffer B，而 DRAM Buffer B 将可被送到真正的显示流程中使用。
+MML 包含了几个子模块，其中 MML-RDMA 用于从 DRAM Buffer A 中读取数据，PQ-Resize 将对数据进行画质方面的
+改善以及宽高方面的缩放，而 WROT 可将画面进行多种角度的旋转并最终将数据写入 DRAM Buffer B 中。 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0011.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8668 Hypervisor Display 
+User Manual 
+Confidential B 
+并非每个图层都需要经过 MML，通常只有视频图层或 Camera-Preview 图层会经过 MML 的处理。而 UI 类型（UI 界
+面以及游戏界面等）的图层并不会经过 MML，因为他们是由 GPU 画出并且 GPU 可同步处理画质调整以及宽高缩
+放。 
+ 
+ MML 的用途 
+• Color format conversion（YUV12/NV12/RGB888…之间的互相转换） 
+• Resize and crop（可指定矩形区域进行缩放和剪裁） 
+• Rotate mirror and flip 
+• Image quality enhancement function 
+• HDR Video 的支持（HDR meta data 的处理） 
+ 
+ Display SubSystem 
+Display Subsystem 是一个硬件群体，可分为三大部分——Overlay，Display-PQ，以及 DSC 和 Output-Interface。请注
+意，并不能将 Display Subsystem 拆分为若干硬件单独考虑，因为相互之间会有依赖关系。  
+ 
+• Overlay 是 Display Subsystem 的第一部分，其中包含了 RDMA 和 Blender。RDMA 可将数据从 DRAM Buffer 中按
+需读取，然后 blender 可将若干个 RDMA 读取的数据进行 Alpha-Blend，即所谓的“Display 硬件叠图”。 
+• Display-PQ 是 Display Subsystem 的第二部分，其中的 PQ 是 Picture-Quality 的首字母缩写，它可将前端
+“overlay”处理后的数据按使用者的需求进行调节或优化，以迎合各种不同的主观喜好或减少甚至避免对使用
+者视力的影响。 
+• DSC 和 Output-Interface 是 Display Subsystem 的第三部分，DSC 硬件共有 2 套，Output-interface 包含 2 个 DSI。
+DSC 硬件一般可被绕过，只有当这些 Output-Interface 需要输出 DSC 压缩数据时，才需在其前端加入 DSC 硬件
+的支持。 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0011.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8668 Hypervisor Display 
+User Manual 
+Confidential B 
+MediaTek Proprietary and Confidential. © 2022 MediaTek Inc. All rights reserved.
+Software
+Hardware
+Layer0
+Android Layer
+Layer1
+Android Layer
+Layer2
+Android Layer
+Layer3
+Yocto Layer
+Layer8
+Yocto Layer
+Composing
+PQ-0
+DSI0
+Yocto Android
+Layer3
+Yocto Layer
+Layer8
+Yocto Layer
+Layer0
+Android Layer
+Layer1
+Android Layer
+Layer2
+Android Layer
+Yocto
+could 
+see only 
+2 
+hardwar
+e layers Android 
+could see 
+only 3 
+hardware 
+layers
+For the example in the diagram, there are 5 DISP 
+hardware layers on this screen, and the screen can 
+display images from Yocto and Android VMs at the 
+same time. 
+From the observer's perspective, Layer8 is the top 
+layer and Layer0 is the bottom layer. This 
+virtualization method uses the hardware overlay 
+logic of DISP itself to compose the layers of the two 
+VMs through hardware (OVL) and display them 
+directly on the screen.
+CID
+Yocto Layer for nonTelltale
+Android Layer
+Yocto Layer for Telltale
+ 
+图 1-4. exDMA Config on Pipeline-0 示例 
+ 
+在图 1-4 这个例子中，这个屏上共有 5 个 DISP 硬件图层（Layer0~Layer3 以及 Layer8），并且这个屏上可以同时显
+示来源于 Yocto 和 Android 两个 VM 的画面。从观察者的视角看，Layer8 是最上层，而 Layer 0 是最下层。这种虚拟
+化方法是借助于 DISP 本身的硬件叠图逻辑实现，即将两个 VM 的图层（多个 Layer）通过硬件（Blender）叠合后直
+接显示到屏。 
+ 
+ GCE 
+GCE 是 Display 内部使用的辅助型硬件，它会代替 CPU 更新 MML 和 DISP 的寄存器，并且将多个 MML 或 DISP 的硬
+件 IRQ 转化为一个 IRQ，所以它的作用是进行“高实时性要求的硬件寄存器更新等”，同时可以大幅降低 Display
+对 CPU 的依赖。 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0011.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8668 Hypervisor Display 
+User Manual 
+Confidential B 
+ 主要硬件规格 
+表 1-1. 主要硬件规格 
+Component 
+Specification 
+Note:  
+The following are only the upper limits of the capabilities of each sub-module, and the overall capabilities must be 
+considered in actual evaluation.  
+MML 
+1 ⨯ MML-Full + 1 ⨯ MML-Light 
+Time Sharing by multiple users with software 
+MML-Full: Color-format conversion, Resize, PQ (Video Picture-Quality), Rotating 
+MML-Light: Color-format conversion, Resize 
+Maximum throughput: 550 MPixel/sec 
+OVL 
+4 groups of OVL and each OVL supports 2 layers 
+2 groups of OVL and each OVL supports 1 layer which only should be used on Telltale 
+Maximum width 2880 with AFBC 
+Maximum width 8192 without AFBC 
+Maximum throughput: 550 MPixel/sec 
+Display_PQ 
+2 ⨯ PQ could be applied to 2 display pipelines. 
+Maximum width 2880 with TD-Sharpness 
+Follow the width limitation of OVL without TD-Sharpness. 
+DSI 2 ⨯ MIPI DSI transmitter up to D-PHY 2.5 Gbps/lane 
+ 
+ Pixel Throughput 
+已预设 MML 和 Display 的 Pixel_Throughput 为 550M，即每个 Pipe 每秒可以处理 550M 个像素点。 
+请注意，对于 Display 来说，Pixel_Throughput 需包含 Blanking，即 Active 的像素点个数最大值肯定小于上述数值。 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0011.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8668 Hypervisor Display 
+User Manual 
+Confidential B 
+2 软件架构 
+ 显示相关的整体软件架构 
+如图 2-1，当前 MT8668 的 Display 相关软件分布在 Yocto 和 Android 两个 OS 中，第三个 OS-Yocto 中不存在任何
+Display 相关实现。 
+Yocto 是 Host 端，它可以控制到真实的 Display 硬件，它不仅处理 Yocto 自身的完整软件流程，也要处理 Guest 端的
+Display 控制请求。 
+Android 是 Guest 端，它不会实际控制到硬件，而是通过图中 A、B、C、D、E 多条虚拟化途径将对硬件的需求发送
+到 Host 端的 Yocto。需要强调的是，虽然 Android 是虚拟化的 Guest 端，但对 Android 上层是透明的，即 Android 
+APP 并不需要关心虚拟化的具体做法，只需按照单 Android 的规则去使用即可。 
+图中的五条虚拟化途径分别是： 
+ 
+• A：PQ，即画质调整相关的虚拟化途径 
+• B：Proxy-Display，作为对“E”的补充，用于支持更多的 Android Display 
+• C：LED，背光控制的虚拟化途径 
+• D：Android 从 Yocto 获取所需的屏参等 
+• E：Android 虚拟化显示的主要途径，MML 通过这种方式实现虚拟化，而 DISP 也会优先选择这种途径 
+ 
+重点介绍 E 这条路： 
+硬件 GCE，是 Display/MML 的专用协处理器，可代替 CPU 去和 Display/MML 硬件进行交互，避免 CPU 的响应不及
+时导致的时序问题，CMDQ 就是硬件 GCE 的软件驱动。 
+作为 Host 的 Yocto 中，包含了完整的 Display driver 即图中 Yocto 区域的“MTK DRM Driver”。“MTK DRM Driver”对上
+承接“Wayland Server”通过 libdrm 下发的 IOCTL，并且转换为 Display 硬件的寄存器读写指令，再通过图中的“CMDQ 
+Driver”控制“GCE HW”控制众多的 Display 硬件（OVL、DSI 等）。 
+作为 Guest 的 Android 端，也包含了完整的 Display driver 即图中 Android 区域的“MTK DRM Driver”。“MTK DRM 
+Driver”对上承接“HWC”（HardWare Composer）通过 libdrm 下发的 IOCTL，并且转换为 Display 硬件的寄存器读写操
+作指令，再通过图中的“CMDQ Driver”控制“GCE HW”控制 Display 硬件。Android 的 Display 仅需控制 OVL 即可，因
+为只有它们与画面本身有关，而其他硬件（DSC、DSI 等）都由 Host 端控制。 
+Android 端的基本显示流程和 Yocto 类似，但有一个重要区别，Android 端的“CMDQ Driver”下方并不是“GCE HW”而
+是“CMDQ Virtio FE”（FE 即 FrondEnd）。“CMDQ Virtio FE”通过“Virtio”管道将整包“Display 硬件的寄存器读写操作指
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0011.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8668 Hypervisor Display 
+User Manual 
+Confidential B 
+令”传递到 Yocto（Host）端的“CMDQ Virtio BE” （BE 即 BackEnd），然后“CMDQ Virtio BE”再将指令包传递到真实的
+Host 中的“CMDQ Driver”。 
+ 
+MediaTek Proprietary and Confidential. © 2022 MediaTek Inc. All rights reserved.
+Android
+MTK DRM Driver
+Yocto
+MTK DRM Driver
+HW SW Main FlowBuffer Queue Optional FlowAndroidYocto
+Plane …… Plane
+Plane PlanePlane
+Layer
+Plane
+…
+……
+Layer
+DSI0
+Wayland-Server
+HWC
+GCE Driver
+GCE DriverGCE
+Virtual BackEnd Driver
+GCE
+Virtual FrontEnd Driver
+GCE HW
+Layer Layer Layer … Layer
+DSI1
+Layer Layer
+PQService PQService
+Wayland-Client
+Wayland-
+Proxy
+LEDS
+Virtio FE
+LEDS
+Virtio BE
+LEDS
+Driver
+DRM 
+Virtio FE
+DRM 
+Virtio BE
+A
+B
+C
+D
+E
+ 
+图 2-1. 显示相关的整体软件架构图 
+ 
+MediaTek Proprietary and Confidential. © 2022 MediaTek Inc. All rights reserved.
+Android
+HW SW Main FlowBuffer Queue Optional FlowAndroidYocto
+Yocto
+GCE Virtual BackEndGCE Driver
+GCE HW
+GCE Virtual FrontEnd
+GCE Driver
+MML Common-Driver
+MML Common-Driver
+MML V4L2-Adapter
+HWC C2-VDEC C2-VENC
+MML HW MML HW
+G-Stream MML V4L2-AdapterMML DRM-Adapter
+ 
+图 2-2. 基于虚拟 CMDQ 的 MML 框架 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0011.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+MT8668 Hypervisor Display 
+User Manual 
+Confidential B 
+3 特定要求 
+ SOC 对 Panel 的 VFP 和 VBP 的要求 
+以下两条需要被满足，否则有不能支持的风险： 
+ 
+• VFP 时间段须不小于 156µs。 
+• VSA 和 VBP 的时间段须不小于 70µs。 
+ 
+ 主屏必须是 DSI0 
+若当前车机系统中只有一个屏，则这个屏必须通过 DSI0 输出； 
+若当前车机系统有多个屏，则主屏（Primary-Display）必须通过 DSI0 输出。 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0011.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+MT8668 Hypervisor Display 
+User Manual 
+Confidential B 
+4 系统评估方法 
+示意图如表 4-1 所示，其中内容请按实际需求填写： 
+ 
+表 4-1. 多屏评估所需的基本信息 
+Panel Interface Resolution DSC Video 
+PQ 
+HDR 
+Video 
+LK 
+Static 
+Logo 
+Boot 
+Animation SerDes 
+Layer ID 
+(bottom: 
+1) 
+Layer 
+Source Width Height Other 
+Comments 
+CID DSI0 1920*1080 
+60fps 
+No 
+DSC Yes Yes Yes Yes MAX96789 
+4 Yocto 1280 720  
+3 Android 1920 500  
+2 Android 1600 200  
+1 Android 1920 1080  
+ 
+基本规则： 
+• 若某个屏需要开机动画，则 Yocto 至少需要一个硬件图层。 
+• 若某个屏需要支持 Android 中的 Video PQ，则 Android 至少需要两个硬件图层。 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0011.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 16 
+MT8668 Hypervisor Display 
+User Manual 
+Confidential B 
+附件一 附加条款 
+您(或您所代表的公司或其他法律主体，以下合称「您」)是否得取得、下载与使用本文件及其相关信息皆应以您接受本附加条款为先决要件。
+您对于本文件之使用、取得或下载即表示您已接受本附加条款并同意受本附加条款之拘束。若您不同意受本附加条款之拘束，您将不得使用、
+取得或下载本文件并应立即删除或毁弃所有本文件之副本。 
+ 
+本文件含有联发科技股份有限公司及其关联公司（以下合称「联发科技」）或其授权人之机密信息及专有信息，仅供您为本文件所描述之联发
+科技芯片组作内部使用而不得用于其他任何目的（包括但不限于确认或提供支持任何对联发科技、其供货商及/或其直接或间接客户所提潜在
+专利侵权主张的证据）。禁止未经授权使用或揭露本文件及其中所含信息。您同意赔偿联发科技因您未经授权使用或揭露本文件及其中所含信
+息之一部或全部导致联发科技所受之任何损失或损害。 
+ 
+联发科技及其授权人保有本文件的所有权及组成所有权之各项权利且未针对任何知识产权授权（无论明示或默示、透过禁反言原则或其他方
+式）。联发科技得随时变更本文件内容而无须另行通知。联发科技无须承担与使用或信赖本文件相关或因使用或信赖本文件致生之任何责任，
+包括但不限于间接损害或附带损害赔偿责任。 
+ 
+本文件及联发科技所提供关于本文件之任何其他材料、信息或技术支持，均以现况交付为准，联发科技不负任何明示、默示、法定或其他形式
+之担保责任，特别是适销性、不侵权、针对特定用途之适用性、完整性或正确性之担保责任或任何由贸易惯例或交易、履行过程所生之担保责
+任。对于联发科技为符合您所提规格或遵循特定标准或标准组织的要求所作之交付物，联发科技亦不应承担任何责任。 
+ 
+于未对前述条款造成限制之情形下，联发科技不对其产品任何特定用途之适用性承担任何保证或担保责任，亦不承担任何因产品、电路或软件
+之应用或使用致生之赔偿责任。您同意您应单独承担关于整合您的产品与联发科技产品所涉及之设计、验证与测试之所有责任，并应确保前述
+整合产品符合相关标准及任何安全性要求或其他要件。 
+ 
+本附加条款及所有与本附加条款或本文件相关之行为应以台湾法律管辖、解释与阐明，不适用冲突法原则。 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

@@ -1,0 +1,230 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>启动时序与并行依赖逐步解读 · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details open><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a aria-current="page" href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 24</div><div class="chapter-title"><p class="eyebrow">CHAPTER 24 · 中文版全文</p><h1>启动时序与并行依赖逐步解读</h1><div class="actions"><button class="button" data-read="24" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>启动图中哪些线真的表示并行？</h2><p>颜色表示启动阶段，多条执行线表示重叠推进的路径；等待门槛决定消费者什么时候能够继续。无刻度示意图不能给出实测耗时。</p><ol><li><strong>怎么读：</strong>沿 SOS 主线进入 systemd，再看虚拟机与 Android 分支，最后对照模块属性及共享目录的等待点。</li><li><strong>项目练习：</strong>为 post-fs-data 停滞列出条件的生产者、消费者、状态变化和相同时钟下的证据。</li><li><strong>自检：</strong>模块完成属性置位为什么不等于相机首帧已经可用？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#24-启动时序从上电到业务可用">24 启动时序：从上电到业务可用</a><a class="depth-2" href="#先记住读图规则">先记住读图规则</a><a class="depth-2" href="#第一步辨认阶段与执行路径">第一步：辨认阶段与执行路径</a><a class="depth-2" href="#第二步沿-sos-主线理解基础环境">第二步：沿 SOS 主线理解基础环境</a><a class="depth-2" href="#第三步理解-systemd-与虚拟机分支">第三步：理解 systemd 与虚拟机分支</a><a class="depth-2" href="#第四步跟随-android-的两阶段-init">第四步：跟随 Android 的两阶段 init</a><a class="depth-2" href="#第五步找到真正的等待门槛">第五步：找到真正的等待门槛</a><a class="depth-3" href="#模块完成属性">模块完成属性</a><a class="depth-3" href="#userdatavirtiofsd-与共享媒体挂载">userdata、virtiofsd 与共享媒体挂载</a><a class="depth-2" href="#第六步把启动完成拆成业务里程碑">第六步：把启动完成拆成业务里程碑</a><a class="depth-2" href="#实践android-停在-post-fs-data-时怎么分析">实践：Android 停在 post-fs-data 时怎么分析</a><a class="depth-2" href="#与已有材料一起阅读">与已有材料一起阅读</a></details><article id="chapter-text"><h1 id="24-启动时序从上电到业务可用">24 启动时序：从上电到业务可用</h1>
+<p>这章以用户于 2026-09-20 补充的启动时序图为直接证据，补充第 14 章的启动解释。它描述图示项目的启动组织方式，不修改原有架构，也不把这些服务名、依赖或颜色推广为所有 MT8676 / MT8668 版本的标准配置。</p>
+<h2 id="先记住读图规则">先记住读图规则</h2>
+<p><strong>颜色表示不同启动阶段；分出的多条执行线才表示同时推进的执行路径。</strong> 同一条线上颜色改变，是进入另一阶段，不能据此认定启动了另一个线程。多条线在时间上有重叠，表示并行路径；是否同一时刻在不同 CPU 核上真正执行，还需要调度轨迹证明。</p>
+<p>图中的竖向虚线多用于把文字标注连接到里程碑，不应把每根虚线都当成独立执行线程。长箭头也不是固定时长承诺。这张图没有统一时间刻度、实测时间戳、CPU 编号或完整调度轨迹，不能从线段长度计算启动耗时。</p>
+<p><figure class="mermaid-figure" id="startup-chinese"><figcaption>启动阶段、并行路径与等待门槛 · Mermaid</figcaption><details  class="diagram" open data-panel="startup-chinese"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/startup-chinese.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="启动阶段、并行路径与等待门槛，可使用方向键滚动"><pre class="mermaid">flowchart LR
+ subgraph entry[&quot;共同启动链：同一线变色表示阶段切换&quot;]
+ lk2[&quot;SOS LK2&quot;] --&gt; tfa[&quot;TF-A&quot;] --&gt; neb[&quot;nebula&quot;] --&gt; kernel[&quot;SOS kernel&lt;br/&gt;start_kernel&quot;] --&gt; init[&quot;initramfs / execve /init&quot;] --&gt; root[&quot;挂载 Yocto_system.img 到 /sysroot&lt;br/&gt;switch_root → systemd&quot;]
+ end
+ subgraph host[&quot;SOS 用户空间主线&quot;]
+ boot[&quot;system.slice / bootop.service&lt;br/&gt;bootop.sh&quot;] --&gt; mod[&quot;systemd-modules-load.service&lt;br/&gt;10-kernel-modules.conf&quot;] --&gt; targets[&quot;local-fs / sysinit / multi-user targets&quot;] --&gt; cluster[&quot;Cluster 方向继续运行&quot;]
+ end
+ root --&gt; boot
+ subgraph vm[&quot;虚拟机相关并行路径&quot;]
+ srv[&quot;nbl_vm_srv start&quot;] --&gt; srvrun[&quot;nbl_vm_srv Running&quot;]
+ vmm[&quot;nbl_vmm start&quot;] --&gt; vmmrun[&quot;nbl_vmm Running&quot;]
+ end
+ boot --&gt; srv
+ srv --&gt; vmm
+ subgraph android[&quot;Android 启动路径&quot;]
+ alk2[&quot;Android LK2&quot;] --&gt; ak[&quot;Android kernel&quot;] --&gt; first[&quot;first stage init&lt;br/&gt;基础挂载 / 挂载 system / switch root&quot;] --&gt; second[&quot;execve /system/bin/init&lt;br/&gt;second stage init&quot;] --&gt; actions[&quot;early-init / init / late-init&lt;br/&gt;early-fs / fs / post-fs / late-fs&quot;] --&gt; post[&quot;post-fs-data&lt;br/&gt;wait_for_prop vendor.all.modules.ready 1&quot;] --&gt; shared[&quot;等待 virtiofsd&lt;br/&gt;挂载 /data/vendor/share/media&quot;] --&gt; late[&quot;early-boot / boot / nonencrypted&quot;]
+ end
+ vmm --&gt; alk2
+ subgraph loader[&quot;模块加载并行路径&quot;]
+ start[&quot;modprobe Load_Module_START&quot;] --&gt; done[&quot;Load_Module_DONE&quot;] --&gt; ready[&quot;setprop vendor.all.modules.ready 1&quot;]
+ end
+ second --&gt; start
+ ready -. &quot;满足等待条件&quot; .-&gt; post
+ subgraph share[&quot;Host 共享文件系统前置条件&quot;]
+ data[&quot;userdata 检查与挂载&lt;br/&gt;按 unit / mount 日志核实&quot;] --&gt; virt[&quot;virtiofsd init&quot;]
+ end
+ mod -. &quot;图示依赖&quot; .-&gt; data
+ virt -. &quot;后端就绪条件&quot; .-&gt; shared
+ subgraph framework[&quot;Android 框架分支&quot;]
+ z[&quot;zygote-start&quot;] --&gt; ss[&quot;system_server start&quot;] --&gt; launcher[&quot;launcher start&quot;]
+ end
+ shared --&gt; z
+ late --&gt; log[&quot;mobile_log_d 日志服务&quot;]
+ classDef early fill:#dcecff,stroke:#2467bf,color:#102847
+ classDef firmware fill:#f0dbff,stroke:#a51cd0,color:#40134e
+ classDef sosKernel fill:#fff0d2,stroke:#d98200,color:#5c3500
+ classDef hostStage fill:#f8ddff,stroke:#b100c0,color:#42004a
+ classDef androidStage fill:#ffe2e2,stroke:#c52222,color:#650a0a
+ classDef waiting fill:#f6f1be,stroke:#8a8000,color:#454000
+ class lk2,ak,first early
+ class tfa,neb firmware
+ class kernel,init,root sosKernel
+ class boot,mod,targets,cluster,srv,srvrun,vmm,vmmrun hostStage
+ class second,actions,post,late,start,done,ready,z,ss,launcher,log androidStage
+ class data,virt,shared waiting</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
+ subgraph entry[&quot;共同启动链：同一线变色表示阶段切换&quot;]
+ lk2[&quot;SOS LK2&quot;] --&gt; tfa[&quot;TF-A&quot;] --&gt; neb[&quot;nebula&quot;] --&gt; kernel[&quot;SOS kernel&lt;br/&gt;start_kernel&quot;] --&gt; init[&quot;initramfs / execve /init&quot;] --&gt; root[&quot;挂载 Yocto_system.img 到 /sysroot&lt;br/&gt;switch_root → systemd&quot;]
+ end
+ subgraph host[&quot;SOS 用户空间主线&quot;]
+ boot[&quot;system.slice / bootop.service&lt;br/&gt;bootop.sh&quot;] --&gt; mod[&quot;systemd-modules-load.service&lt;br/&gt;10-kernel-modules.conf&quot;] --&gt; targets[&quot;local-fs / sysinit / multi-user targets&quot;] --&gt; cluster[&quot;Cluster 方向继续运行&quot;]
+ end
+ root --&gt; boot
+ subgraph vm[&quot;虚拟机相关并行路径&quot;]
+ srv[&quot;nbl_vm_srv start&quot;] --&gt; srvrun[&quot;nbl_vm_srv Running&quot;]
+ vmm[&quot;nbl_vmm start&quot;] --&gt; vmmrun[&quot;nbl_vmm Running&quot;]
+ end
+ boot --&gt; srv
+ srv --&gt; vmm
+ subgraph android[&quot;Android 启动路径&quot;]
+ alk2[&quot;Android LK2&quot;] --&gt; ak[&quot;Android kernel&quot;] --&gt; first[&quot;first stage init&lt;br/&gt;基础挂载 / 挂载 system / switch root&quot;] --&gt; second[&quot;execve /system/bin/init&lt;br/&gt;second stage init&quot;] --&gt; actions[&quot;early-init / init / late-init&lt;br/&gt;early-fs / fs / post-fs / late-fs&quot;] --&gt; post[&quot;post-fs-data&lt;br/&gt;wait_for_prop vendor.all.modules.ready 1&quot;] --&gt; shared[&quot;等待 virtiofsd&lt;br/&gt;挂载 /data/vendor/share/media&quot;] --&gt; late[&quot;early-boot / boot / nonencrypted&quot;]
+ end
+ vmm --&gt; alk2
+ subgraph loader[&quot;模块加载并行路径&quot;]
+ start[&quot;modprobe Load_Module_START&quot;] --&gt; done[&quot;Load_Module_DONE&quot;] --&gt; ready[&quot;setprop vendor.all.modules.ready 1&quot;]
+ end
+ second --&gt; start
+ ready -. &quot;满足等待条件&quot; .-&gt; post
+ subgraph share[&quot;Host 共享文件系统前置条件&quot;]
+ data[&quot;userdata 检查与挂载&lt;br/&gt;按 unit / mount 日志核实&quot;] --&gt; virt[&quot;virtiofsd init&quot;]
+ end
+ mod -. &quot;图示依赖&quot; .-&gt; data
+ virt -. &quot;后端就绪条件&quot; .-&gt; shared
+ subgraph framework[&quot;Android 框架分支&quot;]
+ z[&quot;zygote-start&quot;] --&gt; ss[&quot;system_server start&quot;] --&gt; launcher[&quot;launcher start&quot;]
+ end
+ shared --&gt; z
+ late --&gt; log[&quot;mobile_log_d 日志服务&quot;]
+ classDef early fill:#dcecff,stroke:#2467bf,color:#102847
+ classDef firmware fill:#f0dbff,stroke:#a51cd0,color:#40134e
+ classDef sosKernel fill:#fff0d2,stroke:#d98200,color:#5c3500
+ classDef hostStage fill:#f8ddff,stroke:#b100c0,color:#42004a
+ classDef androidStage fill:#ffe2e2,stroke:#c52222,color:#650a0a
+ classDef waiting fill:#f6f1be,stroke:#8a8000,color:#454000
+ class lk2,ak,first early
+ class tfa,neb firmware
+ class kernel,init,root sosKernel
+ class boot,mod,targets,cluster,srv,srvrun,vmm,vmmrun hostStage
+ class second,actions,post,late,start,done,ready,z,ss,launcher,log androidStage
+ class data,virt,shared waiting</code></pre></details></details><p class="note">颜色区分阶段，多条明确分支线表示并行推进；虚线文字表示依赖条件。此图按原图抽取主流程并拆分阅读，合并了同类函数/trigger，未表达精确耗时、CPU 调度或所有 unit 依赖。bootopCamera.service 原图依赖边不清，不新增它到首帧的连线。详细节点与限制见第 24 章和原图。</p><details class="original-reference"><summary>查看源文件原图作对照</summary><a href="assets/启动时序-用户提供-20260920.png" target="_blank" rel="noopener"><img loading="lazy" src="assets/启动时序-用户提供-20260920.png" alt="启动阶段、并行路径与等待门槛 源图"></a></details></figure></p>
+<p>原图完整保留。建议点击原图放大，先沿下方 SOS 主线读到 systemd，再回到分叉处看虚拟机和 Android。图中的拼写与目标机版本应以启动脚本、unit 文件和 init rc 核实；这里不默默修正成另一套项目命名。</p>
+<h2 id="第一步辨认阶段与执行路径">第一步：辨认阶段与执行路径</h2>
+<table>
+<thead>
+<tr>
+<th>观察对象</th>
+<th>原图中可以确认的内容</th>
+<th>新手应怎样理解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SOS LK2、TF-A、nebula</td>
+<td>启动链最左侧的连续阶段</td>
+<td>先沿同一主线阅读；颜色变化本身不意味着并行</td>
+</tr>
+<tr>
+<td>SOS kernel 与 initramfs</td>
+<td>橙色为主的内核、早期用户空间工作</td>
+<td>系统逐步建立运行环境并准备根文件系统</td>
+</tr>
+<tr>
+<td>SOS systemd 用户空间</td>
+<td>紫色为主的服务组织，主线继续到 Cluster</td>
+<td>系统可以组织多个服务；进程运行与业务可用要分别判断</td>
+</tr>
+<tr>
+<td>nbl_vm_srv / nbl_vmm</td>
+<td>从主流程分出的持续运行线</td>
+<td>与主线形成并行路径；不能把它们解释为主线停止后的串行步骤</td>
+</tr>
+<tr>
+<td>Android kernel / first stage init</td>
+<td>Android LK2 后蓝色为主的阶段</td>
+<td>Guest 开始建立自己的内核与早期用户空间</td>
+</tr>
+<tr>
+<td>Android second stage init</td>
+<td>红色为主的 init action 与后续框架工作</td>
+<td>按触发点推进，并在依赖处等待</td>
+</tr>
+<tr>
+<td>黄色说明与连线</td>
+<td>userdata、virtiofsd、挂载及等待注释</td>
+<td>它们强调前置条件，不是凭颜色定义出的第三套 OS</td>
+</tr>
+</tbody></table>
+<p>颜色只结合本图局部图例和文字识别，不能建立“蓝色必然等于某个 OS”的全局规则。例如 SOS LK2 与 Android kernel 都出现蓝色，TF-A 与 SOS 用户空间也使用相近的紫色。</p>
+<h2 id="第二步沿-sos-主线理解基础环境">第二步：沿 SOS 主线理解基础环境</h2>
+<p>图示从 SOS LK2、TF-A、nebula 进入 SOS 内核。<code>start_kernel</code> 附近列出 <code>setup_arch()</code>、<code>parse_early_param()</code>、<code>trap_init()</code>、<code>mm_init()</code>、<code>sched_init()</code>、<code>console_init()</code>、<code>rest_init()</code> 等观察标签。这些标签帮助定位启动区段，图的排版不等于精确函数调用栈，也不是每个函数都在独立线程并行运行。</p>
+<p>之后图中标出 <code>kernel_init()</code>、<code>populate_rootfs()</code>、<code>prepare_namespace()</code> 和 <code>execve(&quot;/init&quot;)</code>。新手可以把这一段理解为：内核建立基本执行环境，准备早期根文件系统，把控制交给早期用户空间。要分析某次实际启动卡在哪一步，需要在相同构建版本的内核日志中找到对应里程碑。</p>
+<p>早期用户空间附近标有挂载 <code>/proc /sys /dev</code>、加载 predatamount 模块、将 <code>Yocto_system.img</code> 挂载到 <code>/sysroot</code>，以及 <code>switch_root /sysroot /lib/systemd/systemd</code>。原图给出的模块示例包含 <code>phy-mtk-ufs</code>、<code>optee</code>、<code>monitor_hang</code>、<code>mtk_wdt_hyper</code>、<code>aee_hangdet</code>、<code>aee_aed</code>、<code>mrdump</code>、<code>bootprof</code>。这是一份图示配置清单，不能直接当作另一项目必须加载的模块集合。</p>
+<p>这一阶段的关键问题是：根文件系统是否准备好，预期模块是否加载完成，是否确实进入 systemd。单独出现 <code>init: Loaded module</code> 日志，只能说明对应模块加载点，不能替代所有设备和业务 ready 的判定。</p>
+<h2 id="第三步理解-systemd-与虚拟机分支">第三步：理解 systemd 与虚拟机分支</h2>
+<p>进入 systemd 后，图中标出 <code>system.slice</code>、<code>bootop.service</code> / <code>bootop.sh</code>、<code>systemd-modules-load.service</code>，以及 <code>local-fs.target</code>、<code>sysinit.target</code>、<code>multi-user.target</code>。模块清单位置标为 <code>/etc/modules-load.d/10-kernel-modules.conf</code>。</p>
+<p>target 是组织和同步启动单元的节点。图上先后位置给出阅读顺序，精确的强制依赖仍应检查对应版本 unit 的 <code>After=</code>、<code>Before=</code>、<code>Requires=</code>、<code>Wants=</code> 与实际日志。不能仅凭横向位置就新增一条源码中不存在的依赖。</p>
+<p>原图从 SOS 启动流程分出 <code>nbl_vm_srv</code> 和 <code>nbl_vmm</code> 运行线，并连接到 Android LK2 / kernel 的启动。主线继续朝 Cluster 推进，而虚拟机相关路径也继续运行。这正是“多条线表示同时运行”的读法：<strong>SOS 服务链和 Android 启动链可以重叠推进，遇到跨域依赖时再等待。</strong></p>
+<p>图中还出现 <code>bootopNbl.service</code> 和 <code>bootopCamera.service</code>。其中 <code>bootopCamera.service</code> 没有足够清楚的完整依赖边，故这里只记录其出现，不编造它与 Android 首帧或 Cluster ready 之间的严格先后关系。</p>
+<h2 id="第四步跟随-android-的两阶段-init">第四步：跟随 Android 的两阶段 init</h2>
+<p>Android 分支由 Android LK2 进入 kernel，随后图示 <code>execve(&quot;/init&quot;)</code>、first stage init、挂载基础文件系统、挂载 system、switch root，以及 <code>execve(&quot;/system/bin/init&quot;)</code> 进入 second stage init。</p>
+<p>second stage 后图中标出 <code>early-init</code>、<code>init</code>、<code>late-init</code>、<code>early-fs</code>、<code>fs</code>、<code>post-fs</code>、<code>late-fs</code>、<code>post-fs-data</code>、<code>early-boot</code>、<code>boot</code>、<code>nonencrypted</code> 等触发点。这些是阅读 init action 的定位标签，不能把所有同名触发点都当成独立常驻进程。</p>
+<p><code>zygote-start</code>、<code>system_server start</code>、<code>launcher start</code> 连接到后续框架路径。理解时要分别回答：进程是否创建、系统服务是否完成初始化、桌面是否显示、目标业务是否具备依赖。Launcher 出现不等于 Camera、音频、车辆信号等全部 ready。</p>
+<h2 id="第五步找到真正的等待门槛">第五步：找到真正的等待门槛</h2>
+<h3 id="模块完成属性">模块完成属性</h3>
+<p>原图明确标出 <code>modprobe: Load_Module_START</code>、<code>Load_Module_DONE</code>、<code>setprop vendor.all.modules.ready 1</code>，以及 <code>post-fs-data</code> 附近的 <code>wait_for_prop vendor.all.modules.ready 1</code>。</p>
+<p>解释这段时应区分生产者和消费者：模块加载路径完成后设置属性，等待方观察属性达到目标值后继续。属性写入成功只能按该项目对它的定义说明“这一批模块加载已完成”；设备探测成功、节点可用、服务 ready、首帧或首声仍要独立验证。</p>
+<p>排查时至少收集：加载开始与结束、属性变化时间、等待方进入与退出等待的时间、对应 init rc 和模块清单。若属性已置位但业务仍不可用，继续向设备探测和服务状态查，不能反复归因于同一个等待点。</p>
+<h3 id="userdatavirtiofsd-与共享媒体挂载">userdata、virtiofsd 与共享媒体挂载</h3>
+<p>原图说明 userdata 挂载依赖相关模块加载完成，并将 <code>virtiofsd init</code> 与 userdata 挂载关联；Android 侧有等待 virtiofsd 启动以及挂载共享媒体到 <code>/data/vendor/share/media</code> 的标注。</p>
+<p>新手应把它拆成三个可核查条件：Host 侧 userdata 是否可访问，virtiofsd 是否按正确配置提供后端，Guest 侧目标挂载是否成功且可访问所需内容。后端进程存在不能单独证明 Guest 挂载成功；目录存在也不能证明当前会话已经挂载了正确的共享内容。</p>
+<p>图中的 unit 标签指向 <code>systemd-fsck@dev-disk-by\\x2dpartlabel-yocto\\x2duserdata.service</code>。不要把 fsck 服务名直接等同于所有挂载动作；实际 fsck、mount unit 和启动脚本之间的关系应以目标机 unit 文件为准。原图黄色文字表达的是这段 userdata 依赖，需要分别验证检查完成与挂载完成。</p>
+<h2 id="第六步把启动完成拆成业务里程碑">第六步：把启动完成拆成业务里程碑</h2>
+<table>
+<thead>
+<tr>
+<th>里程碑</th>
+<th>能证明什么</th>
+<th>还不能证明什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>内核进入用户空间</td>
+<td>已推进到用户空间入口</td>
+<td>所有模块、文件系统和外设已可用</td>
+</tr>
+<tr>
+<td>systemd unit active</td>
+<td>unit 达到其定义的活动状态</td>
+<td>业务服务对所有请求都 ready</td>
+</tr>
+<tr>
+<td>nbl_vmm Running</td>
+<td>图示虚拟机管理路径运行</td>
+<td>Guest 系统和业务都已初始化</td>
+</tr>
+<tr>
+<td>vendor.all.modules.ready=1</td>
+<td>项目定义的模块完成属性满足</td>
+<td>相机已经产生有效的新帧</td>
+</tr>
+<tr>
+<td>共享目录挂载完成</td>
+<td>指定挂载操作成功</td>
+<td>标定、权限、内容版本和消费者都正确</td>
+</tr>
+<tr>
+<td>Launcher 出现</td>
+<td>桌面相关路径已有可见结果</td>
+<td>首次倒车、首次导航播报都满足要求</td>
+</tr>
+<tr>
+<td>业务首个有效结果</td>
+<td>对该业务有直接完成证据</td>
+<td>其他业务也已完成或恢复能力已验证</td>
+</tr>
+</tbody></table>
+<p>对于倒车影像，建议沿“挡位有效 → 请求被接受 → 所需设备/服务 ready → 首个新鲜 buffer → 合成/present → 用户可见且标定正确”记录里程碑。对于音频则沿“策略允许 → PCM 推进 → route 生效 → DSP/Codec/功放可用 → 实际首声”记录。这些是验证方法，具体阈值需要项目要求与实测数据。</p>
+<h2 id="实践android-停在-post-fs-data-时怎么分析">实践：Android 停在 post-fs-data 时怎么分析</h2>
+<p>先写现象：哪次启动、哪个软件版本、Android 最后推进到哪里、SOS 是否继续推进、是否复现。不要一开始就写“并行启动导致卡死”。</p>
+<ol>
+<li>保存 SOS 与 Android 的启动日志，并记录各自时钟类型。未经映射的跨 OS 时间戳不直接相减。</li>
+<li>检查等待的是模块完成属性、文件系统、virtiofsd，还是其他 init action；确认准确条件与等待方。</li>
+<li>查生产者是否开始、是否完成、是否发布了消费者正在等待的状态，状态是否属于本次启动。</li>
+<li>若条件已经满足，检查消费者是否观察到状态变化以及后续失败点。把超时、失败和未采到日志分开。</li>
+<li>复核版本对应的 unit / rc / 模块清单；提出最小验证，不直接删除等待条件或强行置位 ready。</li>
+<li>用业务首个有效结果验收恢复；另行核查重启、休眠唤醒、异常恢复，避免只验证一次冷启动。</li>
+</ol>
+<p>建议输出一张表：启动会话、域、时钟、事件、前置条件、证据位置、结论、待确认项。未知耗时写“缺少可比较时间戳”，不从原图估算毫秒数。</p>
+<h2 id="与已有材料一起阅读">与已有材料一起阅读</h2>
+<ul>
+<li><a href="14.html">14 启动、休眠与升级</a>：生命周期职责和恢复方法。</li>
+<li><a href="07.html">07 SOS 与 Yocto</a>：服务、显示与硬件相关职责；以站内目录中的同编号章节为准。</li>
+<li><a href="20.html">20 时间与跨域通信</a>：跨域日志比较的时钟前提；以同编号章节为准。</li>
+<li><a href="22.html">22 来源与覆盖范围</a>：逐页原文和版本追溯入口。</li>
+</ul>
+<p>本章直接证据：用户提供的启动图及其明确读图规则。操作系统术语解释用于教学；图未给出的依赖、阈值、线程归属和平台覆盖范围均保留待验证。</p>
+</article><nav class="pager"><a href="14.html">← 上一步：系统生命周期业务流程</a><a href="15.html">下一步：统一诊断手册 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#24-启动时序从上电到业务可用">24 启动时序：从上电到业务可用</a><a class="depth-2" href="#先记住读图规则">先记住读图规则</a><a class="depth-2" href="#第一步辨认阶段与执行路径">第一步：辨认阶段与执行路径</a><a class="depth-2" href="#第二步沿-sos-主线理解基础环境">第二步：沿 SOS 主线理解基础环境</a><a class="depth-2" href="#第三步理解-systemd-与虚拟机分支">第三步：理解 systemd 与虚拟机分支</a><a class="depth-2" href="#第四步跟随-android-的两阶段-init">第四步：跟随 Android 的两阶段 init</a><a class="depth-2" href="#第五步找到真正的等待门槛">第五步：找到真正的等待门槛</a><a class="depth-3" href="#模块完成属性">模块完成属性</a><a class="depth-3" href="#userdatavirtiofsd-与共享媒体挂载">userdata、virtiofsd 与共享媒体挂载</a><a class="depth-2" href="#第六步把启动完成拆成业务里程碑">第六步：把启动完成拆成业务里程碑</a><a class="depth-2" href="#实践android-停在-post-fs-data-时怎么分析">实践：Android 停在 post-fs-data 时怎么分析</a><a class="depth-2" href="#与已有材料一起阅读">与已有材料一起阅读</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

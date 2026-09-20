@@ -1,0 +1,5 @@
+%% TBox supervisor abnormal recovery
+flowchart TB
+  T["service DOWN / ready=false / process restart"] --> E["first supervisor/service/session break"]
+  E --> S["stale Handle/callback/cache"] --> U["business symptom"] --> O["unit + service event + API return + Generation"]
+  O --> C["close old Handle; unregister callback"] --> R["wait service UP; new Handle/register"] --> V["GET/readback + business validation"]

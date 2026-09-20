@@ -1,0 +1,1331 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Android_DSI_Panel_User_Manual_ V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Android_DSI_Panel_User_Manual_ V1.0.pdf</h1><p>SRC0188 · 原来源 ID S121 · PDF物理页 · 44 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MT8676软件资料/User Manual/Android/English Version/MT8676_Android_DSI_Panel_User_Manual_ V1.0.pdf</p><p>SHA-256：<code>1619663e55af75d298ea6846a7ab577577418eaef27c844142097ed8a9566e1a</code></p><p>原文件大小：2,553,137 字节</p></details><div class="actions"><a class="button" href="materials/SRC0188.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Android_DSI_Panel_User_Manual_ V1.0.pdf 原 PDF" src="materials/SRC0188.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0188.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version:  1.0 
+Release date:  2024-08-12 
+MT8676 Android DSI Panel 
+User Manual 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0188.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+Version History 
+Version Date Author Description 
+1.0 2024-08-12 Henry Tu Official release 
+ 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0188.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+Table of Contents 
+Version History ·································································································································································· 2 
+Table of Contents ······························································································································································· 3 
+1 Overview ··································································································································································· 4 
+2 Preconditions for Bring Up ········································································································································· 5 
+2.1 Obtain the Following Information from the Panel Vendor ······················································································· 5 
+2.2 HW Schematic Review ·············································································································································· 5 
+3 Early-Stage Preparation ············································································································································· 6 
+3.1 SW env: LK2 ······························································································································································ 6 
+3.2 SW env: Kernel-6.1 ··················································································································································· 7 
+4 Important Notes ························································································································································ 9 
+5 LK Drivers ································································································································································ 10 
+5.1 Add New LCM Driver in LK2 ··································································································································· 10 
+5.2 Porting LCM Driver in LK········································································································································· 11 
+5.3 DSI Command Usage in LK ····································································································································· 19 
+6 Kernel DRM Drivers ················································································································································· 21 
+6.1 Add Kernel LCM Driver in Kernel ···························································································································· 21 
+6.2 Porting LCM Driver in Kernel ·································································································································· 24 
+7 Extremely precise FPS ·············································································································································· 29 
+8 Bring up Debug SOP ················································································································································· 30 
+8.1 Panel Not Work in LK Stage ···································································································································· 30 
+8.2 Panel Does Work in the Kernel Stage ····················································································································· 31 
+8.3 Panel Does not Work in Resume Stage ·················································································································· 31 
+8.4 Panel Flicker ··························································································································································· 32 
+9 Dump Reg ································································································································································ 34 
+9.1 LK Stage ·································································································································································· 34 
+9.2 Kernel Dump Reg ···················································································································································· 34 
+9.3 Adb cmd Debug Reg Setting ··································································································································· 34 
+9.4 Test Pattern CMD···················································································································································· 35 
+9.5 Analyze Reg ···························································································································································· 35 
+10 How to Use MTK max96789 Panel Driver ················································································································· 38 
+Exhibit 1 Terms and Conditions ········································································································································ 44 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0188.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+1 Overview 
+This document aims to present a SOP for panel driver porting, along with the associated debugging skills. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0188.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+2 Preconditions for Bring Up 
+2.1 Obtain the Following Information from the Panel Vendor 
+• The panel vendor needs to illuminate the panel on the fixture using an external input signal 
+• Gets “power on/off sequence, port number, ddic number, cmd/vdo mode, Cphy/dphy, Lane number” and so on 
+• Initiates/deinitiates cmd (must be the command mentioned in item 1) 
+• Width/height/vfp/vbp/vsa/hfp/hbp/hsa/fps/mipi clock and so on 
+• Bist mode cmd (optional) 
+• Sends cmd to ddic with dcs/generic or another type 
+• cmd&lt;0xB0 used with DCS; cmd &gt;= 0xB0 used with Generic by default 
+• DSC parameter, slice number (make sure the SoC supports those DSC parameters first) 
+• How to implement other functions (backlight/fps change/cabc…) 
+• If the panel connects to SOC with a bridge, get those settings from the panel vendor or bridge vendor 
+ 
+2.2 HW Schematic Review 
+• Configures panel power control 
+– If HW design uses MTK’s regulator, you can obtain the control function from the PMIC owner (function in LK/Kernel) 
+– If HW design uses a 3rd party PMIC, obtain the control function from the 3rd party vendor 
+• Configures GPIO 
+– Configures GPIO in DWS using the GPIO table 
+• Configures backlight 
+– Pulls the backlight control GPIO to high when bringing it up, then configures it to the correct function later  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0188.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+3 Early-Stage Preparation 
+3.1 SW env: LK2 
+Note: 
+• If there is no link, skip this step. 
+ 
+1. Adds a new LCM driver 
+2. Modifies LCM support list in $(project).mk 
+3. Adds the panel driver ko to ko_order_table in the device folder 
+4. Adds the LCM driver setting to the list 
+5. Adds LCM driver info in lcmd_drv.h 
+ 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0188.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+3.2 SW env: Kernel-6.1 
+Note:  
+• The settings for Kernel-6.6 are the same as below, but the paths are different 
+ 
+1. Adds a new panel driver 
+2. Adds LCM config in kconfig 
+3. Adds LCM config in makefile 
+4. Adds LCM config in kernel config 
+5. Adds LCM config in kleaf 
+6. Adds LCM config in dts 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0188.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0188.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+4 Important Notes 
+• To prevent panel flickering when boot from LK to kernel, settings of DSI/MIPI_TX/panel are all based on LK 
+parameters after kernel startup. Only after suspend/resume, all DSI and panel parameters are obtained  from the 
+Kernel. If the parameters after suspend/resume are different from those at power-on startup, please check the 
+differences in these three parts of the settings. 
+• It is normal for the system to not work properly when the kernel panel driver is not ready, as the Kernel will fetch 
+some parameters for display at startup. 
+• The parameters marked as 'must set' on the following pages are mandatory, while other parts should be filled in as 
+needed. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0188.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+5 LK Drivers 
+• How to determine whether the project uses LK or LK2? 
+– The MTK_LK_VERSION in the projectconfig.mk in the Device folder corresponds to the project 
+• LK2 key path: /vendor/mediatek/proprietary/bootable/bootloader/lk2/ 
+• LK key path: /vendor/mediatek/proprietary/bootable/bootloader/lk/ 
+• MTK key path: /vendor/mediatek/proprietary/bootable/bootloader/lk2/ 
+• OR: /vendor/mediatek/proprietary/bootable/bootloader/lk/ 
+ 
+5.1 Add New LCM Driver in LK2 
+• Step 1: Adds your &lt;lcm driver&gt; 
+– Adds your &lt;lcm driver&gt; into the following path: 
+▪ Creates a new folder under the /vendor/mediatek/proprietary/bootable/bootloader/lk2/dev/lcm/ 
+directory, note that the folder name should be the same as the name added in the second step of the mk file, it 
+is recommended to copy the existing driver and rename it 
+▪ The name of driver (xxx.c) need same as folder name 
+▪ Please refer to Section 6.2 Porting LCM Driver in Kernel for detail information 
+– Takes &lt;max96789_dsi_vdo&gt; for example:  
+• Step 2: Adds your &lt;lcm config&gt; in &lt;project&gt; makefile 
+– Adds your &lt;lcm confing&gt; in &lt;project&gt;.mk 
+vendor\mediatek\proprietary\bootable\bootloader\lk2\project\&lt;project&gt;.mk 
+– Takes &lt; max96789_dsi_vdo &gt; for example: 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0188.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+▪ Single panel setting: 
+▪ Multi-panel setting: 
+• Step 3: Adds your &lt;lcm main structure&gt; into lcm list 
+– Adds your &lt;lcm main structure&gt; into lcm list in vendor\mediatek\proprietary\: 
+▪ bootable\bootloader\lk2\dev\lcm\mt65xx_lcm_list.c  
+▪ bootable\bootloader\lk2\dev\lcm\include\lcm_drv.h 
+– Takes &lt; max96789_dsi_vdo &gt; for example: 
+• Step 4: Switches the logo if the LCM resolution is different 
+– Modify define marco of BOOT_LOGO in device\mediatekprojects\&lt;project&gt;\projectconfig.mk 
+– Take &lt; max96789_dsi_vdo &gt; for example: 
+• Step 5: Rebuilds LK 
+– Rebuilds lk and re-download lk.img. 
+ 
+5.2 Porting LCM Driver in LK 
+• Step 1: Implements the lcm_drv structure (must set) 
+– Takes &lt;tv101wum_n16_wuxga_dsi_video_boe_rtq6752.c&gt; for example: 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0188.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+• Step 2: Fills the LCM parameters (must set) 
+– Configures the basic information according to the HW connection, LCM type, DSI mode, LCM size, and PLL in the 
+lcm_get_params function 
+▪ LCM width/height 
+▪ LCMparams (dsi setting, must set)  
+▪ LCMparams (video timing, must set) 
+▪ esd config (optional) 
+▪ PLL configuration (PLL_CLOCK and data_rate must set at least one) 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0188.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+▪ ssc config (optional)  
+▪ MiPi clock mode config (optional) 
+▪ cphy/dphy config (by case) 
+▪ Dual port setting (by case) 
+– Sets the cmd or vdo mode depending on the panel. Please ask the panel vendor how to set it  
+– DSC parameter configuration: obtain parameters from the vendor. 
+▪ If DSC needs to be enabled, DSC must be enabled and DSC parameters must be set. 
+▪ DSC enablement depends on the panel, and DSC parameters need to be provided by the panel vendor. 
+▪ MTK specific parameter dsc_cfg: Set to 0x22 for 8bpc to 8bpp, set to 0x828 for 10bpc to 8bpp. 
+▪ Other parameters correspond one-to-one with the parameters provided by the panel vendor. 
+▪ Note that the range of rc_buf_thresh is 14-126. If the vendor’s data is much larger than this, shift the data to the 
+right with 6 bits 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0188.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+o Demo for DCS settings 
+o Vendor dsc setting example 1 
+o Vendor dsc setting example 2 
+– GPIO configuration (refer to GPIO SOP) 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0188.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+ 
+• Step 3: Implements the LCM init power function (must set) 
+– According to the init process specified in the LCM datasheet, pull down/up the reset pin, delay, and set the LCM init 
+register 
+• Step 4: Implements the LCM init function (must set) 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0188.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 16 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+– According to the init process specified in the LCM datasheet, pull down/up the reset pin, delay, and set the LCM init 
+register: 
+• Step 5: Implements LCM suspend/resume functions (optional) 
+• Step 6: LCM compare function porting (if multi-panel is compatible, need LCM Compare ID function) 
+• Step 7: LCM set backlight function porting (only need config when LCM PWM used) 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0188.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 17 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+ 
+•  Step 8: Fills in the  initialization parameters (must set) 
+• Step 9: Other used settings (copy from other drivers, must set) 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-18"><h2>PDF物理页 18</h2><a href="materials/SRC0188.pdf#page=18" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 18 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-19"><h2>PDF物理页 19</h2><a href="materials/SRC0188.pdf#page=19" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 19 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+5.3 DSI Command Usage in LK 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-20"><h2>PDF物理页 20</h2><a href="materials/SRC0188.pdf#page=20" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 20 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+   
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-21"><h2>PDF物理页 21</h2><a href="materials/SRC0188.pdf#page=21" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 21 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+6 Kernel DRM Drivers 
+• Key path: /kernel/ kernel_device_modules-6.1/drivers/gpu/drm/ 
+• MTK key path: /kernel/ kernel_device_modules-6.1/drivers/gpu/drm/metiatek/Mediatek_v2 
+ 
+ 
+6.1 Add Kernel LCM Driver in Kernel 
+• Step 1: Adds your &lt;lcm driver&gt; 
+• Step 2: Adds your &lt;lcm msg&gt; to Kconfig &amp; Makefile 
+• Step 3: Checks ProjectConfig. 
+– Adds your DRM panel configuration and set it to 'm' 
+– Adds below GKI config to device/mediatekxxx/$(project)/ko_order_table.csv 
+– Adds ko to kleaf kernel/kernel_device_modules-6.1/kernel/kleaf/ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-22"><h2>PDF物理页 22</h2><a href="materials/SRC0188.pdf#page=22" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 22 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+ 
+• Step 4: Set the LCM node to the project DTS. 
+– /kernel/ kernel_device_modules-6.1/arch/arm64/boot/dts/mediatek/$(project).dts 
+– ➔Sets panel name must be the same as of_device_id in your DRM driver 
+– Checks GPIO pins ➔ lcm_reset, bl_en, avdd_en, avee_en &amp; other control pins 
+– Adds you panel dts node, from 0 to N, and you must follow the following rules.  
+– Single port setting 
+panel@0 { 
+        compatible = &quot;hx83112b,fhdp_dsi_cmd_auo_rt4801_drv&quot;;&quot;; 
+        reg = &lt;0&gt;;&gt;; 
+        pm-enable-gpios = &lt;&amp;pio 103 0&gt;;&gt;; 
+        reset-gpios = &lt;&amp;pio 44 0&gt;;&gt;; 
+        pinctrl-names = &quot;default&quot;;&quot;; 
+        port { 
+                panel_in: endpoint {in: endpoint { 
+                        remote-endpoint = &lt;&amp;dsi_out&gt;;remote-endpoint = 
+&lt;&amp;dsi_out&gt;; 
+                }; 
+        }; 
+}; 
+panel1@1 { 
+        compatible = &quot;lg,fhdp_dsi_cmd&quot;;&quot;; 
+        reg = &lt;0&gt;;&gt;; 
+        pm-enable-gpios = &lt;&amp;pio 103 0&gt;;&gt;; 
+        reset-gpios = &lt;&amp;pio 44 0&gt;;&gt;; 
+        pinctrl-names = &quot;default&quot;;&quot;; 
+        port { 
+               panel_in1: endpoint { 
+                       remote-endpoint = &lt;&amp;dsi_out&gt;;remote-endpoint = 
+&lt;&amp;dsi_out&gt;; 
+               }; 
+CUSTOM_LK_LCM=“hx83112b_fhdp_dsi_vdo_auo_rt4801 lg_fhdp_dsi_cmd&quot;  
+Kernel node must set panel 0~X，refer to lk 
+Config CUSTOM_LK_LCM = “LCM_B,LCM_A”. 
+So dts note need to set as: 
+panel@0{ 
+        Compatible = “LCM_B” 
+}; 
+panel1@1{ 
+        Compatible = “LCM_A” 
+}; 
+&amp;dsi0 { 
+    status = &quot;okay&quot;;&quot;; 
+    #address-cells = &lt;1&gt;;&gt;; 
+    #size-cells = &lt;0&gt;;&gt;; 
+    panel@0 { 
+        compatible = &quot;lg,0565g40108&quot;; 
+        reg = &lt;0&gt;;&gt;; 
+        pm-enable-gpios = &lt;&amp;pio 103 0&gt;; 
+        reset-gpios = &lt;&amp;pio 44 0&gt;; 
+       pinctrl-names = &quot;default&quot;;&quot;; 
+       port { 
+           panel_in: endpoint {in: endpoint { 
+               remote-endpoint = &lt;&amp;dsi_out&gt;;remote-endpoint = &lt;&amp;dsi_out&gt;; 
+           }; 
+      }; 
+}; 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-23"><h2>PDF物理页 23</h2><a href="materials/SRC0188.pdf#page=23" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 23 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+– Dual port setting 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-24"><h2>PDF物理页 24</h2><a href="materials/SRC0188.pdf#page=24" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 24 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+ 
+6.2 Porting LCM Driver in Kernel 
+• Panel driver structure brief introduction (must set) 
+– DRM original structure  
+– MTK extension structure  
+– MTK extension structure (DSC) 
+ 
+ 
+Pixel clock 
+Frame Width 
+HFP 
+HSA 
+HBP 
+Frame Height 
+VFP 
+VSA 
+VBP 
+FPS 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-25"><h2>PDF物理页 25</h2><a href="materials/SRC0188.pdf#page=25" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 25 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+ 
+• Panel driver function’s brief introduction 
+– DRM original function 
+– DRM extension function 
+Panel power disable 
+Panel suspend sequence 
+Panel power on 
+Panel initialize sequence 
+Panel mode configuration  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-26"><h2>PDF物理页 26</h2><a href="materials/SRC0188.pdf#page=26" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 26 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+• Porting the probe function (must set) 
+• Porting the remove function (must set) 
+• Porting prepare function (must set) 
+• Port the panel_init function (must set) 
+• Porting enable function (must set) 
+• Porting disable function (must set) 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-27"><h2>PDF物理页 27</h2><a href="materials/SRC0188.pdf#page=27" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 27 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+• Porting the unprepare function (must set) 
+• Port the get_modes function (must set) 
+• Porting MTK extension reset function (optional) 
+• Porting MTK extension set_backlight_cmdq function (by case) 
+• Port MTK extension ext_param_set function (by case) 
+• Porting MTK extension: ata_check function (optional) 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-28"><h2>PDF物理页 28</h2><a href="materials/SRC0188.pdf#page=28" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 28 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+• Port the MTK extension parameters structure (must set) 
+Notes: 
+• In super frame mode, the pll_clk/crop_width/crop_height/physcial_width/physical_height must be set, 
+otherwise, the pll_clk must be set 
+– Pll_clk: mipi clock 
+– Crop width/crop height: In super frame mode, it should be set to correspond to the width/height of one of the panels 
+– Physical_width/physical_height: In super frame mode, physical_with should be set to the sum of the widths of the two panels. 
+And the physical_height should be set to the larger of the two panels 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-29"><h2>PDF物理页 29</h2><a href="materials/SRC0188.pdf#page=29" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 29 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+7 Extremely precise FPS 
+• In pen case, very precise FPS (120+-0.01) is required, which can be achieved through data_rate_khz 
+• First, calculate the approximate value (value of “ideal bit freq”) through the table (ask PM for it) and fill it into 
+data_rate, then fine-tune it through data_rate_khz 
+• Note: even if data_rate_khz is set, data_rate/pll_clk also needs to be set (whether it's LK or Kernel) 
+• Data_rate_khz needs to be fine-tuned based on the measurement of FPS, and currently cannot be calculated 
+theoretically. 
+• Vdo_per_frame_lp_enable corresponds to the “video mode keep hs mode” in the table below, which has a relatively 
+large impact on the FPS of vdo mode 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-30"><h2>PDF物理页 30</h2><a href="materials/SRC0188.pdf#page=30" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 30 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+8 Bring up Debug SOP 
+8.1 Panel Not Work in LK Stage 
+• Does backlight work？ 
+– If yes, check the next step. 
+– If not, is the backlight setting correct? (The backlight uses the DTS setting even when it is in LK) 
+– Can override this by pulling the backlight control GPIO to high when bringing it up 
+– If backlight control is done by I2C, seek help from the I2C vendor. 
+▪ disp_pwm mode 
+▪ I2C mode 
+▪ Lcm pwm mode 
+• Is the panel power supply correct? 
+– If yes, check the next step 
+– If not, measure the voltage of each path. If any one is abnormal, ask the PMIC owner how to control. 
+• Is the panel power-on sequence correct? 
+– Measure the voltage with an oscilloscope. 
+• Does the Init command work? (Read DDIC register: 0x0A; if not 0, it means okay. If not okay, panel support is needed. 
+Ask for the panel vendor.) 
+– If yes, check the next step. 
+– If not 
+▪ Send the init command with generic or DCS. 
+▪ Test the BIST pattern (obtain it from the panel vendor). 
+o BIST can work, which means panel power control is correct. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-31"><h2>PDF物理页 31</h2><a href="materials/SRC0188.pdf#page=31" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 31 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+o BIST cannot work 
+o Does the configuration need a lane swap? 
+o Use a logic analyzer to capture the data of sending the init command to the panel vendor for inspection. 
+• Does the MIPI signal meet the requirements? (CPHY needs to measure the signal of the pin at the panel side) 
+– Dphy wave with video data 
+– Dphy wave without VDO data 
+– Cphy wave 
+• Does the logo file exist? If there is no logo file, only a line of text is displayed on the screen, which needs to be 
+carefully observed 
+ 
+8.2 Panel Does Work in the Kernel Stage 
+• Check the status of the panel power 
+– At the Kernel stage, the regulator will disable when nobody is using it, and the panel driver needs to get and enable 
+it. 
+• Check the backlight status 
+– AAL may turn off the backlight when it malfunctions. Disable AAL and test again. 
+– Does the backlight control function run? 
+• Check the status of the Kernel panel driver 
+– Observe the log to see if the driver loads normally. 
+– Is ESD enabled? Disable it and test again  
+– Does multi-FPS support? Only enable one of them when bringing it up 
+8.3 Panel Does not Work in Resume Stage 
+• Check the status of the panel power 
+– Check the status of the panel power-on code work 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-32"><h2>PDF物理页 32</h2><a href="materials/SRC0188.pdf#page=32" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 32 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+• Check the backlight status 
+– Check the backlight control code's work status 
+• Check the status of the Kernel panel driver 
+– Observe the log to see if the driver loads normally 
+– Dump the register and compare it with LK 
+ 
+8.4 Panel Flicker 
+• Does DSC enable 
+– Yes, check the DSC parameters 
+▪ Does DSC test pattern work normal? (Used cmd:echo reg_write 0x14015078 0x400000FF &gt; /proc/clkdbg ; cat 
+/proc/clkdbg) 
+o Yes, call for help from the display owner 
+o No, is there a normal work time? If yes, dump and compare reg when work normal and wrong 
+o Dump cmd:  
+a) Kernel stage: adb shell “echo mobile:on &gt; /d/mtkfb“;adb shell ”echo diagnose&gt;/d/mtkfb &amp;&amp; cat 
+/d/mtkfb” &gt;  mtkfb.txt and search “DSC” 
+b) LK stage: call the dump function at the end of the ddp_dsc_config 
+o Typical DSC flicker: 
+– Similar flickering may be caused by AFBC, try turning off AFBC and test it again 
+▪ Turn off AFBC command: 
+adb shell setprop debug.mediatek.disp_decompress 0 
+adb shell stop 
+adb shell start  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-33"><h2>PDF物理页 33</h2><a href="materials/SRC0188.pdf#page=33" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 33 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+▪ Typical AFBC flicker: 
+• Check the DSI test pattern work status 
+– DSI test pattern cmd:echo reg_write 0x14017178 0x31 &gt; /proc/clkdbg ; cat /proc/clkdbg 
+▪ 0x1401xxxx is dsi base addr, its value will vary depending on the soc 
+▪ You can obtain it with the dsix node in the dts file 
+▪ 0x178 is the DSI test pattern address, obtain it using SOC CODA (get CODA from CPM) 
+– If yes, call for help from the display owner. 
+– If not, does the log contain the phrase 'dsi underrun'? 
+▪ Is there a normal work time 
+o Yes, dumping and comparing work normally and incorrectly for DSI/MIPITX/DSC registers. 
+o Dump cmd: adb shell “echo mobile:on &gt; /d/mtkfb“;adb shell ”echo diagnose&gt;/d/mtkfb &amp;&amp; cat /d/mtkfb” 
+&gt;  mtkfb.txt search “dsi” in it 
+▪ Does it only appear after a certain operation (such as switching FPS)? 
+o Dump and compare the register when it works normally and when it is faulty. 
+o For example (works incorrectly after changing fps): 
+o Call for help from the DDIC vendor. 
+o Is the order of changes in mmclk correct when change fps? (When mmclk increases, set mmclk first and then 
+switch fps. when mmclk decreases, switch fps first and then set mmclk. refer to the 
+mtk_dsi_set_mmclk_by_datarate function for the calculation method of mmclk, and refer to the 
+mtk_crtc_disp_mode_switch_begin function for the switching logic) 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-34"><h2>PDF物理页 34</h2><a href="materials/SRC0188.pdf#page=34" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 34 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+9 Dump Reg 
+9.1 LK Stage 
+• Call DSI_DumpRegister() in end of Ddp_dsi.c/ddp_dsi_trigger() 
+• Call dsc_dump() in end of Ddp_dsi.c/dsc_config() 
+• LK display log off by default in ddp_log.h,need turn on it frist 
+9.2 Kernel Dump Reg  
+• Get dump information from the log 
+– Use the following commands when the screen is shown and provide the mtkfb.txt file. 
+▪ adb shell &quot;echo mobile:on &gt; /d/mtkfb“ 
+▪ adb shell &quot;echo diagnose&gt;/d/mtkfb &amp;&amp; cat /d/mtkfb&quot; &gt;  mtkfb.txt 
+• How to enable the command: clkdbg 
+– File path: kernel-xx/drivers/clk/mediatek/clkdbg.c/common_cmds[] 
+– Func: clkdbg_reg_read() and clkdbg_reg_write() 
+– How: if clkdbg_reg_read() and clkdbg_reg_write() was enclosed within pre-defined directives #if 
+defined( CONFIG_MTK_ENG_BUILD, mask it 
+ 
+9.3 Adb cmd Debug Reg Setting 
+• Command for reading/writing register 
+– Read reg: echo reg_read addr&gt; /proc/clkdbg ; cat /proc/clkdbg 
+– Read reg with length: echo reg_read_len addr length&gt; /proc/clkdbg ; cat /proc/clkdbg 
+– Write reg: echo reg_write addr value&gt; /proc/clkdbg ; cat /proc/clkdbg 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-35"><h2>PDF物理页 35</h2><a href="materials/SRC0188.pdf#page=35" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 35 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+▪ For example: 
+o echo reg_read 0x1400D178 &gt; /proc/clkdbg ; cat /proc/clkdbg 
+o echo reg_write 0x1400D178 0x31 &gt; /proc/clkdbg ; cat /proc/clkdbg 
+o echo reg_read_len 0x1400D000 0x00001000 &gt; /proc/clkdbg ; cat /proc/clkdbg 
+Notes: 
+• Usually, MTK supporter say let xxx’s yyy be zzz, xxx means some module, get this module’s base addr with Debug SOP, yyy means 
+offset, zzz means set value 
+• The executed cmd will be: echo reg_write xxx_base_addr+yyy zzz&gt; /proc/clkdbg ; cat /proc/clkdbg 
+• For example, to adjust driving strength of MIPI, supporter will say: make mipi_tx’s 0x10 reg bit6-9 to 0111, the cmd is: echo 
+reg_read 0x11f60010 &gt; /proc/clkdbg;cat /proc/clkdbg,  //mipi_tx base addr is 0x11f60000, read 0x11f60010 first (if 
+read return 0) 
+• Let return date 0 bit6-9 or 0111 get 0x1c0: echo reg_write 0x11f60010 0x1c0&gt; /proc/clkdbg ; cat 
+/proc/clkdbg 
+ 
+9.4 Test Pattern CMD 
+• ADB cmd: 
+– echo reg_write “DSI/DSC_base_reg+offset_addr” value&gt; /proc/clkdbg ; cat /proc/clkdbg 
+– Get DSI/DSC base reg with this sop in page 130 
+– Offset： 
+▪ Dsi:0x178 or 0x17c  
+▪ Dsc:0x78 or 0x6c，ask it for MTK 
+– Value： 
+▪ Dsi: 0xc41 
+▪ Dsc: 0x4000FFFF (blue), or ask for MTK 
+• Add the cmd in the code: 
+– DSI: call DSI_OUTREG32(NULL, DSI_REG_BASE[0]+offset, value); at the end of func:Ddp_dsi_trigger 
+– DSC: call DISP_REG_SET(handle, base+offset, value); at the end of func:dsc_config 
+– Offset/value refers to ADB command 
+ 
+9.5 Analyze Reg 
+• This is just an example. Get the correct offset from Coda. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-36"><h2>PDF物理页 36</h2><a href="materials/SRC0188.pdf#page=36" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 36 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+• DSI part (Other Regs are debug or status reg, which can be ignored) 
+• MIPI TX part (Other registers are for debugging or status, which can be ignored) 
+ 
+ 
+• DSC part (Other regs are debug or status registers, which can be ignored) 
+Bit0=1 means DSI start, if 0 means DSI 
+not enable or dump fail 
+DSI status, ignore it 
+VSA VBP VFP VACT 
+HAS_WC HBP_WC 
+VB_PS_WC/HFP_WC BLLP 
+NOTE: HSA_WC=HAS*3-10，the same as HBP/HFP 
+Read status reg 
+DSI Timing control 
+DSI PHY Timing 
+control 
+Read status reg 
+ Phy vol sel 
+Pll control 1/2/3/4 
+Pll control 0 
+Lane swap setting 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-37"><h2>PDF物理页 37</h2><a href="materials/SRC0188.pdf#page=37" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 37 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+  
+  
+DSC control 
+ DSC status 
+ DSC PIC W 
+DSC PIC H 
+DSC PPS0-19 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-38"><h2>PDF物理页 38</h2><a href="materials/SRC0188.pdf#page=38" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 38 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+10 How to Use MTK max96789 Panel Driver 
+A driver for the serializer-deserializer max96789+max96752 is provided by MTK, and this driver can be referred to by 
+developers for development. 
+How to use it: 
+1. Add birdge-serdes-max96789.ko/panel-serdes-max96789.ko to the KO table (if it does not exist)  
+2. Set MTK_LCM_LIST_SUPPORT=&quot;max96789_dsi_vdo&quot; in LK's project.mk  
+3. Add birdge-serdes-max96789.ko/panel-serdes-max96789.ko to kleaf (if it does not exist)  
+4. Add CONFIG_DRM_PANEL_SERDES=m to defconfig (if it does not exist) 
+5. If enable the hotplug function, need to set CONFIG_ENABLE_SERDES_HOTPLUG=y in defconfig. If use the interrupt 
+method, need set “#define ENABLE_HOTPLUG_INT 1” in birdge-serdes-max96789.c 
+6. Add the following settings to DTS. 
+7. Other settings are hard-coded in the driver. If they do not meet the needs, they can be stripped out and written to 
+DTS. 
+&amp;i2c1 
+{                                                                               
+              
+    status = &quot;okay&quot;; 
+    max96789: max96789@40 {                  // max96789 setting, must set 
+        compatible = &quot;maxiam,max96789&quot;;      // compatible name, must set 
+        reg = &lt;0x40&gt;;                        // IIC addr of max96789, must set  
+        reset-gpios = &lt;&amp;pio 24 0&gt;;           // GPIO of max96789 pwdn pin, must 
+set 
+        interrupt-parent = &lt;&amp;pio&gt;; 
+        interrupts = &lt;187 IRQ_TYPE_EDGE_RISING&gt;;// must set when enable 
+interrupt mode for hotplug 
+        pinctrl-names = &quot;default&quot;; 
+        inited-in-lk = &lt;0&gt;;                  // set to 1 when max96789 
+initialize in LK 
+        setting = &lt;&amp;setting_compatible&gt;;     // panel setting, must set 
+    }; 
+}; 
+&amp;max96789 { 
+    setting_compatible: compatible-node {    // compatible panel setting, only 
+for demo! 
+        comp-cmd = &lt;                   // Command of determine which compatible 
+panel it is  
+            0x01 0x1a 0x0b 0x83 0x50 0x00 0x01 0x00 0x00 0x00 0x00 0x00 0x00 
+0xd4 // format: &lt;r/w&gt;&lt;iic addr&gt;&lt;cmd len&gt;&lt;cmd data&gt;, only for demo 
+           // r/w: read cmd=0, write cmd=1 
+           // iic addr: iic addr for read device 
+           // cmd len: cmd data len for write 
+           // cmd data: cmd data 
+            0x00 0x1a 0x0b // read cmd, format: &lt;r/w&gt;&lt;iic addr&gt;&lt;cmd len&gt;, must 
+in the end of “comp-cmd” and must only one read cmd 
+        &gt;; 
+        comp-exp {         // compatible panel setting 
+            comp-setting = &lt;0xf0 0x10 &amp;setting_bt&gt;,  // first compatible panel 
+setting, format: &lt;mask&gt;&lt;exception data&gt;&lt;panel setting node&gt;  
+               // mask: the return data of read cmd AND the mask 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-39"><h2>PDF物理页 39</h2><a href="materials/SRC0188.pdf#page=39" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 39 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+// exception: the data of exception, if it equal to return data AND mask, will 
+used this panel setting 
+// panel setting node: which panel setting with this setting 
+                   &lt;0xff 0xff &amp;setting_hy&gt;;  // NOTE: default setting If none of 
+the previous items match 
+        }; 
+    }; 
+    setting_bt: setting@1 {        // panel setting, must set at least one 
+        ser-super-frame = &lt;0&gt;;     // super frame set to 1, otherwise set to 0 
+        ser-init-cmd = &lt;           // init cmd of serializer, format: 
+&lt;reg&gt;&lt;data&gt;&lt;delay&gt;, must set 
+            0x0001 0x08 0x00 
+            0x0203 0x00 0x00       // reg: reg addr 
+            0x1404 0x29 0x00       // data: data to write 
+            0x1504 0x29 0x00       // delay: how long to delay after send this 
+cmd, unit: ms 
+            ………………… 
+        &gt;; 
+        ser-deinit-cmd = &lt;            // serializer deinit cmd, must set 
+            0x0010 0x80 0x20 
+        &gt;; 
+        des-link-status-cmd = &lt;       // detect deserializer link status 
+command, if enable hotplug must set 
+            0x001f 0x18 0x0 
+        &gt;; 
+        desdef {                      // deserializer setting, must set 
+            des-i2c-addr = &lt;0x4c&gt;;    // iic addr of deserializer 
+            bl-i2c-addr = &lt;0x1a&gt;;     // iic addr of backlight 
+            bl-dummy-i2c-addr = &lt;0x1f&gt;; // if iic addr of backlight same as 
+touch panel, use it to avoid alloc i2c_client fail 
+            des-init-command = &lt;      // init command for deserializer 
+                0x01ce 0x5e 2 
+                0x06ff 0x22 0x0       // must set if hotplug enable, we read 
+this to find if deserializer was initialized, must same as link-indicate-command 
+            &gt;; 
+            link-indicate-command = &lt; // must set if hotplug enable, must same 
+as one of “des-init-command” 
+                0x06ff 0x22 0x0 
+            &gt;; 
+            bl-on-command = &lt;          // command of turn on backlight, get it 
+from panel vendor 
+                0x83 0x50 0x00 0x01 0x00 0x00 0x00 0x00 0x00 0x00 0xd4 
+            &gt;; 
+            bl-off-command = &lt;         // command of turn off backlight 
+                0x83 0x00 0x00 0x02 0x00 0x00 0x00 0x00 0x00 0x00 0x85 
+            &gt;; 
+            panel-mode-setting {             // panel timing, must set 
+                panel-mode-width = &lt;1920&gt;;   // width 
+                panel-mode-height = &lt;1080&gt;;  // height 
+                panel-mode-hfp = &lt;40&gt;;       // HFP 
+                panel-mode-hsa = &lt;40&gt;;       // HSA 
+                panel-mode-hbp = &lt;80&gt;;       // HBP 
+                panel-mode-vfp = &lt;24&gt;;       // VFP 
+                panel-mode-vsa = &lt;2&gt;;        // VSA 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-40"><h2>PDF物理页 40</h2><a href="materials/SRC0188.pdf#page=40" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 40 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+                panel-mode-vbp = &lt;10&gt;;       // VBP 
+                panel-mode-vrefresh = &lt;60&gt;;  // frame per second 
+                panel-mode-pll = &lt;478&gt;;      // mipi pll clock, driver will 
+calculate a PLL according with the panel timing. If any deviation, it will 
+replace the driver-calculated result. 
+                panel-mode-lppf = &lt;1&gt;;       // set it to 1 when need MIPI enter 
+LP status per-frame 
+                panel-mode-width-mm = &lt;129&gt;; // panel physical width, unit: mm  
+                panel-mode-height-mm = &lt;64&gt;; // panel physical height, unit: mm 
+            }; 
+        }; 
+    }; 
+    setting_hy: setting@2 { 
+        ser-dual-link = &lt;0&gt;; 
+        ser-init-command = &lt; 
+            0x0001 0x08 0x00 
+            ……………… 
+        &gt;; 
+        desdef { 
+            des-i2c-addr = &lt;0x4c&gt;; 
+            bl-i2c-addr = &lt;0x1a&gt;; 
+            des-init-command = &lt; 
+                0x01ce 0x4e 2 
+            &gt;; 
+            bl-on-command = &lt; 
+                0x83 0x50 0x00 0x01 0x00 0x00 0x00 0x00 0x00 0x00 0xd4 
+            &gt;; 
+            bl-off-command = &lt; 
+                0x83 0x00 0x00 0x02 0x00 0x00 0x00 0x00 0x00 0x00 0x85 
+            &gt;; 
+            panel-mode-setting { 
+                panel-mode-width = &lt;1920&gt;; 
+                panel-mode-height = &lt;1080&gt;; 
+                panel-mode-hfp = &lt;40&gt;; 
+                panel-mode-hsa = &lt;40&gt;; 
+                panel-mode-hbp = &lt;80&gt;; 
+                panel-mode-vfp = &lt;24&gt;; 
+                panel-mode-vsa = &lt;2&gt;; 
+                panel-mode-vbp = &lt;10&gt;; 
+                panel-mode-vrefresh = &lt;60&gt;; 
+                panel-mode-pll = &lt;478&gt;; 
+                panel-mode-lppf = &lt;1&gt;; 
+                panel-mode-width-mm = &lt;129&gt;; 
+                panel-mode-height-mm = &lt;64&gt;; 
+            }; 
+        }; 
+    }; 
+    superframe_setting: setting@3 {    // demo of super frame setting  
+        ser-super-frame = &lt;1&gt;;         // must set to 1 when super frame enable 
+        ser-init-command = &lt;  
+            0x0002 0x73 0x0 
+            ………………… 
+        &gt;; 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-41"><h2>PDF物理页 41</h2><a href="materials/SRC0188.pdf#page=41" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 41 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+        ser-timing-command = &lt;  // super frame timming setting, must set when 
+super frame enable 
+            0x385 0x50 0x0 
+            0x386 0x02 0x0 
+            0x387 0x00 0x0 
+            0x3A5 0x18 0x0            // Note: the order of reg addr connot 
+change! 
+            0x3A7 0x00 0x0 
+            0x3A6 0xa0 0x0 
+            0x3A8 0x38 0x0 
+            0x3A9 0x04 0x0 
+            0x3AA 0x50 0x0 
+            0x3AC 0x0A 0x0 
+            0x3AB 0x00 0x0 
+            0x3AD 0x00 0x0 
+            0x3AE 0x0f 0x0 
+        &gt;; 
+        serdes-dual-setting-command = &lt;   // remap deserializer addr, get more 
+info from MAXIAM 
+            0 0x0010 0x21 255  
+            1 0x0000 0x90 0  
+            2 0x0073 0x31 0 
+            2 0x0042 0x36 0  
+            2 0x0043 0x34 0   
+            0 0x0010 0x22 255 
+            1 0x0000 0x94 0  
+            3 0x0073 0x32 0 
+            3 0x0042 0x38 0 
+            3 0x0043 0x34 0  
+            0 0x0010 0x23 255 
+            3 0x0050 0x01 0 
+        &gt;; 
+        ser-lut-command = &lt;              // lut command for asymmetric super 
+frame 
+        &gt;; 
+        ser-deinit-command = &lt;  
+            0x0010 0x80 0x20 
+        &gt;; 
+        des-link-status-command = &lt;  
+            0x001f 0x18 0x0 
+        &gt;; 
+        desdef {                     // deserializer default setting, must set 
+            des-i2c-addr = &lt;0x4c&gt;;   // deserializer default i2c addr, must set 
+            bl-i2c-addr = &lt;0x1a&gt;;    // deserializer backlight default i2c addr 
+        }; 
+        desa {               // linka deserializer config, must set when super 
+frame enable 
+            des-i2c-addr = &lt;0x48&gt;; // linka des i2c addr, it was remap by 
+serializer 
+            bl-i2c-addr = &lt;0x1b&gt;;  // linka backlight i2c addr, it was remap by 
+serializer 
+            des-init-command = &lt;       // linka deserializer initialize command 
+                0x01ce 0x5e 2 
+                0x06ff 0x22 0x0    // must set if hotplug enable, we read this 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-42"><h2>PDF物理页 42</h2><a href="materials/SRC0188.pdf#page=42" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 42 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+to find if deserializer was initialized, must same as link-indicate-command  
+            &gt;; 
+            link-indicate-command = &lt;  // must set if hotplug enable, must same 
+as one of “des-init-command” 
+                0x06ff 0x22 0x0 
+            &gt;; 
+            bl-on-command = &lt;            // the meaning same as single link 
+                0x83 0x50 0x00 0x01 0x00 0x00 0x00 0x00 0x00 0x00 0xd4 
+            &gt;; 
+            bl-off-command = &lt;           // the meaning same as single link 
+                0x83 0x00 0x00 0x02 0x00 0x00 0x00 0x00 0x00 0x00 0x85 
+            &gt;; 
+            panel-mode-setting {          // the meaning same as single link 
+setting 
+                panel-mode-width = &lt;1920&gt;; 
+                panel-mode-height = &lt;1080&gt;; 
+                panel-mode-hfp = &lt;40&gt;;    // Note: it must be an integer 
+multiple of 4 
+                panel-mode-hsa = &lt;41&gt;;    // Note: The sum of it and the value 
+of desb minus 10 must be an integer multiple of 4 
+                panel-mode-hbp = &lt;79&gt;;    // Note: The sum of it and the value 
+of desb minus 10 must be an integer multiple of 4 
+                panel-mode-vfp = &lt;24&gt;;    // Note: must be desa_vfp/desb_vfp = 
+desa_ height/desb_height in asymmetrice mode 
+                panel-mode-vsa = &lt;3&gt;      // Note: must be desa_vsa/desb_vsa = 
+desa_ height/desb_height in asymmetrice mode; 
+                panel-mode-vbp = &lt;9&gt;;     // Note: must be desa_vbp/desb_vbp = 
+desa_ height/desb_height in asymmetrice mode 
+                panel-mode-vrefresh = &lt;60&gt;; 
+                panel-mode-pll = &lt;478&gt;;   // super frame not used it 
+                panel-mode-lppf = &lt;1&gt;;    // super frame must set to 1 
+                panel-mode-width-mm = &lt;129&gt;; 
+                panel-mode-height-mm = &lt;64&gt;; 
+            }; 
+        }; 
+        desb {               // the meaning same as linka, must set when super 
+frame enable 
+            des-i2c-addr = &lt;0x4a&gt;; 
+            bl-i2c-addr = &lt;0x1c&gt;; 
+            des-init-command = &lt; 
+                0x01ce 0x5e 2 
+                0x06ff 0x22 0x0  
+            &gt;; 
+            link-indicate-command = &lt;  
+                0x06ff 0x22 0x0 
+            &gt;; 
+            bl-on-command = &lt; 
+                0x83 0x50 0x00 0x01 0x00 0x00 0x00 0x00 0x00 0x00 0xd4 
+            &gt;; 
+            bl-off-command = &lt; 
+                0x83 0x00 0x00 0x02 0x00 0x00 0x00 0x00 0x00 0x00 0x85 
+            &gt;; 
+            panel-mode-setting { 
+                panel-mode-width = &lt;1920&gt;; 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-43"><h2>PDF物理页 43</h2><a href="materials/SRC0188.pdf#page=43" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 43 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+                panel-mode-height = &lt;1080&gt;; 
+                panel-mode-hfp = &lt;40&gt;; 
+                panel-mode-hsa = &lt;41&gt;; 
+                panel-mode-hbp = &lt;79&gt;; 
+                panel-mode-vfp = &lt;24&gt;; 
+                panel-mode-vsa = &lt;3&gt;; 
+                panel-mode-vbp = &lt;9&gt;; 
+                panel-mode-vrefresh = &lt;60&gt;; 
+                panel-mode-pll = &lt;478&gt;; 
+                panel-mode-lppf = &lt;1&gt;; 
+                panel-mode-width-mm = &lt;129&gt;; 
+                panel-mode-height-mm = &lt;64&gt;; 
+            }; 
+        }; 
+    }; 
+ 
+}; 
+&amp;dsi0 { 
+    status = &quot;okay&quot;; 
+    #address-cells = &lt;1&gt;; 
+    #size-cells = &lt;0&gt;; 
+    panel1@0 { 
+        compatible = &quot;lcm,dsi,max96789&quot;;  // panel setting 
+        reg = &lt;0&gt;; 
+        ser = &lt;&amp;max96789&gt;;                // panel link with which serializer, 
+must set 
+        port { 
+            panel_in1: endpoint { 
+                remote-endpoint = &lt;&amp;dsi_out&gt;; 
+            }; 
+        }; 
+    }; 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-44"><h2>PDF物理页 44</h2><a href="materials/SRC0188.pdf#page=44" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 44 
+MT8676 Android DSI Panel 
+User Manual 
+Confidential B 
+Exhibit 1 Terms and Conditions 
+Your access to and use of this document and the information contained herein (collectively this “Document”) is subject to your (including the corporation 
+or other legal entity you represent, collectively “You”) acceptance of the terms and conditions set forth below (“T&amp;C”).  By using, accessing or 
+downloading this Document, You are accepting the T&amp;C and agree to be bound by the T&amp;C.  If You don’t agree to the T&amp;C, You may not use this 
+Document and shall immediately destroy any copy thereof. 
+ 
+This Document contains information that is confidential and proprietary to MediaTek Inc. and/or its affiliates (collectively “MediaTek”) or its licensors 
+and is provided solely for Your internal use with MediaTek’s chipset(s) described in this Document and shall not be used for any other purposes (including 
+but not limited to identifying or providing evidence to support any potential patent infringement claim against MediaTek or any of MediaTek’s suppliers 
+and/or direct or indirect customers).  Unauthorized use or disclosure of the information contained herein is prohibited.  You agree to indemnify 
+MediaTek for any loss or damages suffered by MediaTek for Your unauthorized use or disclosure of this Document, in whole or in part. 
+ 
+MediaTek and its licensors retain titles and all ownership rights in and to this Document and no license (express or implied, by estoppels or otherwise) to 
+any intellectual propriety rights is granted hereunder.  This Document is subject to change without further notification.  MediaTek does not assume any 
+responsibility arising out of or in connection with any use of, or reliance on, this Document, and specifically disclaims any and all liability, including, 
+without limitation, consequential or incidental damages. 
+ 
+THIS DOCUMENT AND ANY OTHER MATERIALS OR TECHNICAL SUPPORT PROVIDED BY MEDIATEK IN CONNECTION WITH THIS DOCUMENT, IF ANY, ARE 
+PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE.  MEDIATEK SPECIFICALLY DISCLAIMS 
+ALL WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, COMPLETENESS OR ACCURACY AND ALL 
+WARRANTIES ARISING OUT OF TRADE USAGE OR OUT OF A COURSE OF DEALING OR COURSE OF PERFORMANCE.  MEDIATEK SHALL NOT BE RESPONSIBLE 
+FOR ANY MEDIATEK DELIVERABLES MADE TO MEET YOUR SPECIFICATIONS OR TO CONFORM TO A PARTICULAR STANDARD OR OPEN FORUM. 
+ 
+Without limiting the generality of the foregoing, MediaTek makes no warranty, representation or guarantee regarding the suitability of its products for 
+any particular purpose, nor does MediaTek assume any liability arising out of the application or use of any product, circuit or software.  You agree that 
+You are solely responsible for the designing, validating and testing Your product incorporating MediaTek’s product and ensure such product meets 
+applicable standards and any safety, security or other requirements. 
+ 
+The above T&amp;C and all acts in connection with the T&amp;C or this Document shall be governed, construed and interpreted in accordance with the laws of 
+Taiwan, without giving effect to the principles of conflicts of law. 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a><a href="#page-18">PDF物理页 18</a><a href="#page-19">PDF物理页 19</a><a href="#page-20">PDF物理页 20</a><a href="#page-21">PDF物理页 21</a><a href="#page-22">PDF物理页 22</a><a href="#page-23">PDF物理页 23</a><a href="#page-24">PDF物理页 24</a><a href="#page-25">PDF物理页 25</a><a href="#page-26">PDF物理页 26</a><a href="#page-27">PDF物理页 27</a><a href="#page-28">PDF物理页 28</a><a href="#page-29">PDF物理页 29</a><a href="#page-30">PDF物理页 30</a><a href="#page-31">PDF物理页 31</a><a href="#page-32">PDF物理页 32</a><a href="#page-33">PDF物理页 33</a><a href="#page-34">PDF物理页 34</a><a href="#page-35">PDF物理页 35</a><a href="#page-36">PDF物理页 36</a><a href="#page-37">PDF物理页 37</a><a href="#page-38">PDF物理页 38</a><a href="#page-39">PDF物理页 39</a><a href="#page-40">PDF物理页 40</a><a href="#page-41">PDF物理页 41</a><a href="#page-42">PDF物理页 42</a><a href="#page-43">PDF物理页 43</a><a href="#page-44">PDF物理页 44</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

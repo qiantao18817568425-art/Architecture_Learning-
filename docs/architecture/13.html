@@ -1,7 +1,7 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>通信模块业务流程 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details open><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a aria-current="page" href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 13</div><div class="chapter-title"><p class="eyebrow">CHAPTER 13 · 中文版全文</p><h1>通信模块业务流程</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=13">并排对比两套正文 ↗</a><a class="button secondary" href="original-13.html">对照原版解释 ↗</a><button class="button" data-read="13" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>远程业务跨越哪些不同故障域？</h2><p>应用请求、系统网络、虚拟网络、TBox、Modem 与外部服务构成多段链路。传输成功不等于云端业务成功，返回内容也必须关联当前请求。</p><ol><li><strong>怎么读：</strong>选 Data 或远程控制一个流程，对照正向请求和返回/状态；再查 SIM、SMS、GNSS 等专题。</li><li><strong>项目练习：</strong>比较“IP 已分配但 DNS 失败”和“TLS 已连接但鉴权失败”，写出不同责任边界。</li><li><strong>自检：</strong>哪一条证据能把应用层问题与蜂窝注册问题区分开？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-9">Day 9</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#13-mt8676-通信模块业务流程">13 MT8676 通信模块业务流程</a><a class="depth-2" href="#2026-09-20-校订内部通信外网与云业务三层分界">2026-09-20 校订：内部通信、外网与云业务三层分界</a><a class="depth-2" href="#业务流程-flow-26">业务流程 FLOW-26</a><a class="depth-3" href="#sdk-data-call">SDK Data Call</a><a class="depth-3" href="#触发目标与边界">触发、目标与边界</a><a class="depth-3" href="#正常链">正常链</a><a class="depth-3" href="#分层子链与方向">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环">反馈闭环</a><a class="depth-3" href="#异常分支">异常分支</a><a class="depth-3" href="#日志与诊断">日志与诊断</a><a class="depth-3" href="#责任域">责任域</a><a class="depth-3" href="#证据与置信度">证据与置信度</a><a class="depth-2" href="#业务流程-flow-27">业务流程 FLOW-27</a><a class="depth-3" href="#network-注册信号和异常检测">Network 注册、信号和异常检测</a><a class="depth-3" href="#触发目标与边界-1">触发、目标与边界</a><a class="depth-3" href="#正常链-1">正常链</a><a class="depth-3" href="#分层子链与方向-1">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-1">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-1">反馈闭环</a><a class="depth-3" href="#异常分支-1">异常分支</a><a class="depth-3" href="#日志与诊断-1">日志与诊断</a><a class="depth-3" href="#责任域-1">责任域</a><a class="depth-3" href="#证据与置信度-1">证据与置信度</a><a class="depth-2" href="#业务流程-flow-28">业务流程 FLOW-28</a><a class="depth-3" href="#sim-初始化和卡状态">SIM 初始化和卡状态</a><a class="depth-3" href="#触发目标与边界-2">触发、目标与边界</a><a class="depth-3" href="#正常链-2">正常链</a><a class="depth-3" href="#分层子链与方向-2">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-2">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-2">反馈闭环</a><a class="depth-3" href="#异常分支-2">异常分支</a><a class="depth-3" href="#日志与诊断-2">日志与诊断</a><a class="depth-3" href="#责任域-2">责任域</a><a class="depth-3" href="#证据与置信度-2">证据与置信度</a><a class="depth-2" href="#业务流程-flow-29">业务流程 FLOW-29</a><a class="depth-3" href="#sms-收发">SMS 收发</a><a class="depth-3" href="#触发目标与边界-3">触发、目标与边界</a><a class="depth-3" href="#正常链-3">正常链</a><a class="depth-3" href="#分层子链与方向-3">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-3">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-3">反馈闭环</a><a class="depth-3" href="#异常分支-3">异常分支</a><a class="depth-3" href="#日志与诊断-3">日志与诊断</a><a class="depth-3" href="#责任域-3">责任域</a><a class="depth-3" href="#证据与置信度-3">证据与置信度</a><a class="depth-2" href="#业务流程-flow-30">业务流程 FLOW-30</a><a class="depth-3" href="#at-通道">AT 通道</a><a class="depth-3" href="#触发目标与边界-4">触发、目标与边界</a><a class="depth-3" href="#正常链-4">正常链</a><a class="depth-3" href="#分层子链与方向-4">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-4">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-4">反馈闭环</a><a class="depth-3" href="#异常分支-4">异常分支</a><a class="depth-3" href="#日志与诊断-4">日志与诊断</a><a class="depth-3" href="#责任域-4">责任域</a><a class="depth-3" href="#证据与置信度-4">证据与置信度</a><a class="depth-2" href="#业务流程-flow-31">业务流程 FLOW-31</a><a class="depth-3" href="#gnsslocation">GNSS/Location</a><a class="depth-3" href="#触发目标与边界-5">触发、目标与边界</a><a class="depth-3" href="#正常链-5">正常链</a><a class="depth-3" href="#分层子链与方向-5">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-5">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-5">反馈闭环</a><a class="depth-3" href="#异常分支-5">异常分支</a><a class="depth-3" href="#日志与诊断-5">日志与诊断</a><a class="depth-3" href="#责任域-5">责任域</a><a class="depth-3" href="#证据与置信度-5">证据与置信度</a><a class="depth-2" href="#业务流程-flow-32">业务流程 FLOW-32</a><a class="depth-3" href="#imu">IMU</a><a class="depth-3" href="#触发目标与边界-6">触发、目标与边界</a><a class="depth-3" href="#正常链-6">正常链</a><a class="depth-3" href="#分层子链与方向-6">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-6">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-6">反馈闭环</a><a class="depth-3" href="#异常分支-6">异常分支</a><a class="depth-3" href="#日志与诊断-6">日志与诊断</a><a class="depth-3" href="#责任域-6">责任域</a><a class="depth-3" href="#证据与置信度-6">证据与置信度</a><a class="depth-2" href="#业务流程-flow-33">业务流程 FLOW-33</a><a class="depth-3" href="#device-management">Device Management</a><a class="depth-3" href="#触发目标与边界-7">触发、目标与边界</a><a class="depth-3" href="#正常链-7">正常链</a><a class="depth-3" href="#分层子链与方向-7">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-7">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-7">反馈闭环</a><a class="depth-3" href="#异常分支-7">异常分支</a><a class="depth-3" href="#日志与诊断-7">日志与诊断</a><a class="depth-3" href="#责任域-7">责任域</a><a class="depth-3" href="#证据与置信度-7">证据与置信度</a><a class="depth-2" href="#业务流程-flow-34">业务流程 FLOW-34</a><a class="depth-3" href="#powerwakelockwakeup">Power/WakeLock/Wakeup</a><a class="depth-3" href="#触发目标与边界-8">触发、目标与边界</a><a class="depth-3" href="#正常链-8">正常链</a><a class="depth-3" href="#分层子链与方向-8">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-8">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-8">反馈闭环</a><a class="depth-3" href="#异常分支-8">异常分支</a><a class="depth-3" href="#日志与诊断-8">日志与诊断</a><a class="depth-3" href="#责任域-8">责任域</a><a class="depth-3" href="#证据与置信度-8">证据与置信度</a><a class="depth-2" href="#业务流程-flow-35">业务流程 FLOW-35</a><a class="depth-3" href="#log-manager">Log Manager</a><a class="depth-3" href="#触发目标与边界-9">触发、目标与边界</a><a class="depth-3" href="#正常链-9">正常链</a><a class="depth-3" href="#分层子链与方向-9">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-9">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-9">反馈闭环</a><a class="depth-3" href="#异常分支-9">异常分支</a><a class="depth-3" href="#日志与诊断-9">日志与诊断</a><a class="depth-3" href="#责任域-9">责任域</a><a class="depth-3" href="#证据与置信度-9">证据与置信度</a><a class="depth-2" href="#业务流程-flow-36">业务流程 FLOW-36</a><a class="depth-3" href="#蜂窝远程监控和远控">蜂窝远程监控和远控</a><a class="depth-3" href="#触发目标与边界-10">触发、目标与边界</a><a class="depth-3" href="#正常链-10">正常链</a><a class="depth-3" href="#分层子链与方向-10">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-10">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-10">反馈闭环</a><a class="depth-3" href="#异常分支-10">异常分支</a><a class="depth-3" href="#日志与诊断-10">日志与诊断</a><a class="depth-3" href="#责任域-10">责任域</a><a class="depth-3" href="#证据与置信度-10">证据与置信度</a><a class="depth-2" href="#业务流程-supp-usb-u-vold-mediascanner-filemanager-c349a32">业务流程 supp-usb-u-vold-mediascanner-filemanager-c349a32</a><a class="depth-3" href="#usbu盘voldmediascannerfilemanager">USB/U盘/vold/MediaScanner/FileManager</a><a class="depth-3" href="#触发目标与边界-11">触发、目标与边界</a><a class="depth-3" href="#正常链-11">正常链</a><a class="depth-3" href="#分层子链与方向-11">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-11">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-11">反馈闭环</a><a class="depth-3" href="#异常分支-11">异常分支</a><a class="depth-3" href="#日志与诊断-11">日志与诊断</a><a class="depth-3" href="#责任域-11">责任域</a><a class="depth-3" href="#证据与置信度-11">证据与置信度</a><a class="depth-2" href="#业务流程-supp-launcher-systemui-notificationcenter-b5c6ca0">业务流程 supp-launcher-systemui-notificationcenter-b5c6ca0</a><a class="depth-3" href="#launchersystemuinotificationcenter">Launcher/SystemUI/NotificationCenter</a><a class="depth-3" href="#触发目标与边界-12">触发、目标与边界</a><a class="depth-3" href="#正常链-12">正常链</a><a class="depth-3" href="#分层子链与方向-12">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-12">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-12">反馈闭环</a><a class="depth-3" href="#异常分支-12">异常分支</a><a class="depth-3" href="#日志与诊断-12">日志与诊断</a><a class="depth-3" href="#责任域-12">责任域</a><a class="depth-3" href="#证据与置信度-12">证据与置信度</a><a class="depth-2" href="#业务流程-supp-hicar-carplay-android-auto-529100d">业务流程 supp-hicar-carplay-android-auto-529100d</a><a class="depth-3" href="#hicarcarplayandroid-auto">HiCar/CarPlay/Android Auto</a><a class="depth-3" href="#触发目标与边界-13">触发、目标与边界</a><a class="depth-3" href="#正常链-13">正常链</a><a class="depth-3" href="#分层子链与方向-13">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-13">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-13">反馈闭环</a><a class="depth-3" href="#异常分支-13">异常分支</a><a class="depth-3" href="#日志与诊断-13">日志与诊断</a><a class="depth-3" href="#责任域-13">责任域</a><a class="depth-3" href="#证据与置信度-13">证据与置信度</a><a class="depth-2" href="#业务流程-supp-wi-fi-some-ip-0e27a82">业务流程 supp-wi-fi-some-ip-0e27a82</a><a class="depth-3" href="#wi-fi移动网络虚拟以太网someip">Wi-Fi/移动网络/虚拟以太网/SOME/IP</a><a class="depth-3" href="#触发目标与边界-14">触发、目标与边界</a><a class="depth-3" href="#正常链-14">正常链</a><a class="depth-3" href="#分层子链与方向-14">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-14">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-14">反馈闭环</a><a class="depth-3" href="#异常分支-14">异常分支</a><a class="depth-3" href="#日志与诊断-14">日志与诊断</a><a class="depth-3" href="#责任域-14">责任域</a><a class="depth-3" href="#证据与置信度-14">证据与置信度</a><a class="depth-2" href="#业务流程-supp-item-93a8258">业务流程 supp-item-93a8258</a><a class="depth-3" href="#跨域日志和时间同步">跨域日志和时间同步</a><a class="depth-3" href="#触发目标与边界-15">触发、目标与边界</a><a class="depth-3" href="#正常链-15">正常链</a><a class="depth-3" href="#分层子链与方向-15">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-15">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-15">反馈闭环</a><a class="depth-3" href="#异常分支-15">异常分支</a><a class="depth-3" href="#日志与诊断-15">日志与诊断</a><a class="depth-3" href="#责任域-15">责任域</a><a class="depth-3" href="#证据与置信度-15">证据与置信度</a></details><article id="chapter-text"><h1 id="13-mt8676-通信模块业务流程">13 MT8676 通信模块业务流程</h1>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>通信模块业务流程 · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details open><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a aria-current="page" href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 13</div><div class="chapter-title"><p class="eyebrow">CHAPTER 13 · 中文版全文</p><h1>通信模块业务流程</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=13">并排对比两套正文 ↗</a><a class="button secondary" href="original-13.html">对照原版解释 ↗</a><button class="button" data-read="13" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>远程业务跨越哪些不同故障域？</h2><p>应用请求、系统网络、虚拟网络、TBox、Modem 与外部服务构成多段链路。传输成功不等于云端业务成功，返回内容也必须关联当前请求。</p><ol><li><strong>怎么读：</strong>选 Data 或远程控制一个流程，对照正向请求和返回/状态；再查 SIM、SMS、GNSS 等专题。</li><li><strong>项目练习：</strong>比较“IP 已分配但 DNS 失败”和“TLS 已连接但鉴权失败”，写出不同责任边界。</li><li><strong>自检：</strong>哪一条证据能把应用层问题与蜂窝注册问题区分开？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-9">Day 9</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#13-mt8676-通信模块业务流程">13 MT8676 通信模块业务流程</a><a class="depth-2" href="#2026-09-20-校订内部通信外网与云业务三层分界">2026-09-20 校订：内部通信、外网与云业务三层分界</a><a class="depth-2" href="#业务流程-flow-26">业务流程 FLOW-26</a><a class="depth-3" href="#sdk-data-call">SDK Data Call</a><a class="depth-3" href="#触发目标与边界">触发、目标与边界</a><a class="depth-3" href="#正常链">正常链</a><a class="depth-3" href="#分层子链与方向">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环">反馈闭环</a><a class="depth-3" href="#异常分支">异常分支</a><a class="depth-3" href="#日志与诊断">日志与诊断</a><a class="depth-3" href="#责任域">责任域</a><a class="depth-3" href="#证据与置信度">证据与置信度</a><a class="depth-2" href="#业务流程-flow-27">业务流程 FLOW-27</a><a class="depth-3" href="#network-注册信号和异常检测">Network 注册、信号和异常检测</a><a class="depth-3" href="#触发目标与边界-1">触发、目标与边界</a><a class="depth-3" href="#正常链-1">正常链</a><a class="depth-3" href="#分层子链与方向-1">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-1">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-1">反馈闭环</a><a class="depth-3" href="#异常分支-1">异常分支</a><a class="depth-3" href="#日志与诊断-1">日志与诊断</a><a class="depth-3" href="#责任域-1">责任域</a><a class="depth-3" href="#证据与置信度-1">证据与置信度</a><a class="depth-2" href="#业务流程-flow-28">业务流程 FLOW-28</a><a class="depth-3" href="#sim-初始化和卡状态">SIM 初始化和卡状态</a><a class="depth-3" href="#触发目标与边界-2">触发、目标与边界</a><a class="depth-3" href="#正常链-2">正常链</a><a class="depth-3" href="#分层子链与方向-2">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-2">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-2">反馈闭环</a><a class="depth-3" href="#异常分支-2">异常分支</a><a class="depth-3" href="#日志与诊断-2">日志与诊断</a><a class="depth-3" href="#责任域-2">责任域</a><a class="depth-3" href="#证据与置信度-2">证据与置信度</a><a class="depth-2" href="#业务流程-flow-29">业务流程 FLOW-29</a><a class="depth-3" href="#sms-收发">SMS 收发</a><a class="depth-3" href="#触发目标与边界-3">触发、目标与边界</a><a class="depth-3" href="#正常链-3">正常链</a><a class="depth-3" href="#分层子链与方向-3">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-3">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-3">反馈闭环</a><a class="depth-3" href="#异常分支-3">异常分支</a><a class="depth-3" href="#日志与诊断-3">日志与诊断</a><a class="depth-3" href="#责任域-3">责任域</a><a class="depth-3" href="#证据与置信度-3">证据与置信度</a><a class="depth-2" href="#业务流程-flow-30">业务流程 FLOW-30</a><a class="depth-3" href="#at-通道">AT 通道</a><a class="depth-3" href="#触发目标与边界-4">触发、目标与边界</a><a class="depth-3" href="#正常链-4">正常链</a><a class="depth-3" href="#分层子链与方向-4">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-4">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-4">反馈闭环</a><a class="depth-3" href="#异常分支-4">异常分支</a><a class="depth-3" href="#日志与诊断-4">日志与诊断</a><a class="depth-3" href="#责任域-4">责任域</a><a class="depth-3" href="#证据与置信度-4">证据与置信度</a><a class="depth-2" href="#业务流程-flow-31">业务流程 FLOW-31</a><a class="depth-3" href="#gnsslocation">GNSS/Location</a><a class="depth-3" href="#触发目标与边界-5">触发、目标与边界</a><a class="depth-3" href="#正常链-5">正常链</a><a class="depth-3" href="#分层子链与方向-5">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-5">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-5">反馈闭环</a><a class="depth-3" href="#异常分支-5">异常分支</a><a class="depth-3" href="#日志与诊断-5">日志与诊断</a><a class="depth-3" href="#责任域-5">责任域</a><a class="depth-3" href="#证据与置信度-5">证据与置信度</a><a class="depth-2" href="#业务流程-flow-32">业务流程 FLOW-32</a><a class="depth-3" href="#imu">IMU</a><a class="depth-3" href="#触发目标与边界-6">触发、目标与边界</a><a class="depth-3" href="#正常链-6">正常链</a><a class="depth-3" href="#分层子链与方向-6">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-6">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-6">反馈闭环</a><a class="depth-3" href="#异常分支-6">异常分支</a><a class="depth-3" href="#日志与诊断-6">日志与诊断</a><a class="depth-3" href="#责任域-6">责任域</a><a class="depth-3" href="#证据与置信度-6">证据与置信度</a><a class="depth-2" href="#业务流程-flow-33">业务流程 FLOW-33</a><a class="depth-3" href="#device-management">Device Management</a><a class="depth-3" href="#触发目标与边界-7">触发、目标与边界</a><a class="depth-3" href="#正常链-7">正常链</a><a class="depth-3" href="#分层子链与方向-7">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-7">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-7">反馈闭环</a><a class="depth-3" href="#异常分支-7">异常分支</a><a class="depth-3" href="#日志与诊断-7">日志与诊断</a><a class="depth-3" href="#责任域-7">责任域</a><a class="depth-3" href="#证据与置信度-7">证据与置信度</a><a class="depth-2" href="#业务流程-flow-34">业务流程 FLOW-34</a><a class="depth-3" href="#powerwakelockwakeup">Power/WakeLock/Wakeup</a><a class="depth-3" href="#触发目标与边界-8">触发、目标与边界</a><a class="depth-3" href="#正常链-8">正常链</a><a class="depth-3" href="#分层子链与方向-8">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-8">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-8">反馈闭环</a><a class="depth-3" href="#异常分支-8">异常分支</a><a class="depth-3" href="#日志与诊断-8">日志与诊断</a><a class="depth-3" href="#责任域-8">责任域</a><a class="depth-3" href="#证据与置信度-8">证据与置信度</a><a class="depth-2" href="#业务流程-flow-35">业务流程 FLOW-35</a><a class="depth-3" href="#log-manager">Log Manager</a><a class="depth-3" href="#触发目标与边界-9">触发、目标与边界</a><a class="depth-3" href="#正常链-9">正常链</a><a class="depth-3" href="#分层子链与方向-9">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-9">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-9">反馈闭环</a><a class="depth-3" href="#异常分支-9">异常分支</a><a class="depth-3" href="#日志与诊断-9">日志与诊断</a><a class="depth-3" href="#责任域-9">责任域</a><a class="depth-3" href="#证据与置信度-9">证据与置信度</a><a class="depth-2" href="#业务流程-flow-36">业务流程 FLOW-36</a><a class="depth-3" href="#蜂窝远程监控和远控">蜂窝远程监控和远控</a><a class="depth-3" href="#触发目标与边界-10">触发、目标与边界</a><a class="depth-3" href="#正常链-10">正常链</a><a class="depth-3" href="#分层子链与方向-10">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-10">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-10">反馈闭环</a><a class="depth-3" href="#异常分支-10">异常分支</a><a class="depth-3" href="#日志与诊断-10">日志与诊断</a><a class="depth-3" href="#责任域-10">责任域</a><a class="depth-3" href="#证据与置信度-10">证据与置信度</a><a class="depth-2" href="#业务流程-supp-usb-u-vold-mediascanner-filemanager-c349a32">业务流程 supp-usb-u-vold-mediascanner-filemanager-c349a32</a><a class="depth-3" href="#usbu盘voldmediascannerfilemanager">USB/U盘/vold/MediaScanner/FileManager</a><a class="depth-3" href="#触发目标与边界-11">触发、目标与边界</a><a class="depth-3" href="#正常链-11">正常链</a><a class="depth-3" href="#分层子链与方向-11">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-11">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-11">反馈闭环</a><a class="depth-3" href="#异常分支-11">异常分支</a><a class="depth-3" href="#日志与诊断-11">日志与诊断</a><a class="depth-3" href="#责任域-11">责任域</a><a class="depth-3" href="#证据与置信度-11">证据与置信度</a><a class="depth-2" href="#业务流程-supp-launcher-systemui-notificationcenter-b5c6ca0">业务流程 supp-launcher-systemui-notificationcenter-b5c6ca0</a><a class="depth-3" href="#launchersystemuinotificationcenter">Launcher/SystemUI/NotificationCenter</a><a class="depth-3" href="#触发目标与边界-12">触发、目标与边界</a><a class="depth-3" href="#正常链-12">正常链</a><a class="depth-3" href="#分层子链与方向-12">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-12">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-12">反馈闭环</a><a class="depth-3" href="#异常分支-12">异常分支</a><a class="depth-3" href="#日志与诊断-12">日志与诊断</a><a class="depth-3" href="#责任域-12">责任域</a><a class="depth-3" href="#证据与置信度-12">证据与置信度</a><a class="depth-2" href="#业务流程-supp-hicar-carplay-android-auto-529100d">业务流程 supp-hicar-carplay-android-auto-529100d</a><a class="depth-3" href="#hicarcarplayandroid-auto">HiCar/CarPlay/Android Auto</a><a class="depth-3" href="#触发目标与边界-13">触发、目标与边界</a><a class="depth-3" href="#正常链-13">正常链</a><a class="depth-3" href="#分层子链与方向-13">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-13">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-13">反馈闭环</a><a class="depth-3" href="#异常分支-13">异常分支</a><a class="depth-3" href="#日志与诊断-13">日志与诊断</a><a class="depth-3" href="#责任域-13">责任域</a><a class="depth-3" href="#证据与置信度-13">证据与置信度</a><a class="depth-2" href="#业务流程-supp-wi-fi-some-ip-0e27a82">业务流程 supp-wi-fi-some-ip-0e27a82</a><a class="depth-3" href="#wi-fi移动网络虚拟以太网someip">Wi-Fi/移动网络/虚拟以太网/SOME/IP</a><a class="depth-3" href="#触发目标与边界-14">触发、目标与边界</a><a class="depth-3" href="#正常链-14">正常链</a><a class="depth-3" href="#分层子链与方向-14">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-14">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-14">反馈闭环</a><a class="depth-3" href="#异常分支-14">异常分支</a><a class="depth-3" href="#日志与诊断-14">日志与诊断</a><a class="depth-3" href="#责任域-14">责任域</a><a class="depth-3" href="#证据与置信度-14">证据与置信度</a><a class="depth-2" href="#业务流程-supp-item-93a8258">业务流程 supp-item-93a8258</a><a class="depth-3" href="#跨域日志和时间同步">跨域日志和时间同步</a><a class="depth-3" href="#触发目标与边界-15">触发、目标与边界</a><a class="depth-3" href="#正常链-15">正常链</a><a class="depth-3" href="#分层子链与方向-15">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-15">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-15">反馈闭环</a><a class="depth-3" href="#异常分支-15">异常分支</a><a class="depth-3" href="#日志与诊断-15">日志与诊断</a><a class="depth-3" href="#责任域-15">责任域</a><a class="depth-3" href="#证据与置信度-15">证据与置信度</a></details><article id="chapter-text"><h1 id="13-mt8676-通信模块业务流程">13 MT8676 通信模块业务流程</h1>
 <h2 id="2026-09-20-校订内部通信外网与云业务三层分界">2026-09-20 校订：内部通信、外网与云业务三层分界</h2>
-<p>vmnet 解决虚拟以太网/IP 路由与转发；VSOCK 按 CID/端口连接跨域服务，VSOCKX 是该交付的扩展。三者不能因为都叫“虚拟网络”而混用地址表与排查命令。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S282 · vmnet配置说明.pdf · PDF第4-5页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U038 · Vsock api 文档v2.0.pdf · PDF第4-13页<small>〔本地来源〕</small></span></p>
-<p>TBox/Android 无网先标注故障发生层：SIM、注册、数据会话、Host/Guest 接口、转发/路由、DNS、TLS/业务登录。TSP 未登录与整车无网络不是同一结论。Modem logger 路径、开关、默认模式须按版本和客户配置核对；保留 Host/TBox/Modem 同一时间窗日志。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S279 · tbox整车无网络案例分享.pdf<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S280 · TBOX未登录TSP.pdf<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S304 · modem log常见分析方法.pdf · PDF第1-3页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S305 · Tbox_Telephony_MD and mdlog SOP.pdf · PDF第2-4页<small>〔本地来源〕</small></span></p>
+<p>vmnet 解决虚拟以太网/IP 路由与转发；VSOCK 按 CID/端口连接跨域服务，VSOCKX 是该交付的扩展。三者不能因为都叫“虚拟网络”而混用地址表与排查命令。<a href="source-SRC0027.html#page-4">S282 · vmnet配置说明.pdf · PDF第4-5页</a> <a href="source-SRC0019.html#page-4">U038 · Vsock api 文档v2.0.pdf · PDF第4-13页</a></p>
+<p>TBox/Android 无网先标注故障发生层：SIM、注册、数据会话、Host/Guest 接口、转发/路由、DNS、TLS/业务登录。TSP 未登录与整车无网络不是同一结论。Modem logger 路径、开关、默认模式须按版本和客户配置核对；保留 Host/TBox/Modem 同一时间窗日志。<a href="source-SRC0038.html">S279 · tbox整车无网络案例分享.pdf</a> <a href="source-SRC0042.html">S280 · TBOX未登录TSP.pdf</a> <a href="source-SRC0037.html#page-1">S304 · modem log常见分析方法.pdf · PDF第1-3页</a> <a href="source-SRC0039.html#page-2">S305 · Tbox_Telephony_MD and mdlog SOP.pdf · PDF第2-4页</a></p>
 <p>MBOS 的 mb.os、mb.qnx.ivi_service、mb.qnxcmd_service 是用户新图中的 FDBus 服务角色，不能仅凭名字并入 UMDP 的接口表。服务端点和旧回调失效规则见 <a href="18.html">18 章</a>、<a href="20.html">20 章</a>。</p>
 <hr>
 <p>本章覆盖 SDK/UMDP 的 Data Call、网络、SIM、SMS、AT、GNSS、IMU、设备管理、Power、Log、远控，以及 USB、系统入口、手机互联、Wi-Fi/SOME/IP 和跨域时间日志。</p>
@@ -12,7 +12,7 @@
 <p>触发条件：应用调用 Data init/set APN/start data call。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。APN 配置进入 PDP/Data Call 请求，成功证据必须包括当前 Session 的 IP 地址、路由和 data callback；同步返回成功不等于承载已经可用。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-13-figure-1"><figcaption>通信模块业务流程 · 图 1 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-1"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-1.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 1，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;上层应用&quot;]
   N1[&quot;Favalon Data Client&quot;]
   N0 --&gt; N1
@@ -25,7 +25,7 @@
   N5[&quot;Telephony/Modem&quot;]
   N4 --&gt; N5
   N6[&quot;结果/回调&quot;]
-  N5 --&gt; N6</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N5 --&gt; N6</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;上层应用&quot;]
   N1[&quot;Favalon Data Client&quot;]
   N0 --&gt; N1
@@ -38,10 +38,10 @@
   N5[&quot;Telephony/Modem&quot;]
   N4 --&gt; N5
   N6[&quot;结果/回调&quot;]
-  N5 --&gt; N6</code></pre></details></details><p>正常链按当前 Generation 顺序推进：上层应用&gt;Favalon Data Client&gt;Client Library&gt;fb_modemServices/UMDP&gt;Platform Adapter&gt;Telephony/Modem&gt;结果/回调。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N5 --&gt; N6</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：上层应用&gt;Favalon Data Client&gt;Client Library&gt;fb_modemServices/UMDP&gt;Platform Adapter&gt;Telephony/Modem&gt;结果/回调。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向">分层子链与方向</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>数据呼叫先满足服务/Modem ready，再区分注册、数据会话建立、IP获得、Host/Guest路由和应用业务。MT8668 API手册的ready约束只用于解释新平台，不能直接替换本节Favalon函数。vmnet配置影响虚拟以太网转发；VSOCK连通不证明IP网络正常，TSP证书或登录失败也不等同PDP失败。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S075 · MT8668_Yocto_T-Box_User_Manual_CN_V1.0.pdf · PDF第5-7页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S282 · vmnet配置说明.pdf · PDF第4-5页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S279 · tbox整车无网络案例分享.pdf · PDF第2页<small>〔本地来源〕</small></span></p>
+<p>数据呼叫先满足服务/Modem ready，再区分注册、数据会话建立、IP获得、Host/Guest路由和应用业务。MT8668 API手册的ready约束只用于解释新平台，不能直接替换本节Favalon函数。vmnet配置影响虚拟以太网转发；VSOCK连通不证明IP网络正常，TSP证书或登录失败也不等同PDP失败。<a href="source-SRC0018.html#page-5">S075 · MT8668_Yocto_T-Box_User_Manual_CN_V1.0.pdf · PDF第5-7页</a> <a href="source-SRC0027.html#page-4">S282 · vmnet配置说明.pdf · PDF第4-5页</a> <a href="source-SRC0038.html#page-2">S279 · tbox整车无网络案例分享.pdf · PDF第2页</a></p>
 <table>
 <thead>
 <tr>
@@ -153,7 +153,7 @@
 <h3 id="反馈闭环">反馈闭环</h3>
 <p>库存定义的反馈是：Favalon 同步结果与 data service callback 确认 PDP/接口/IP 地址可用。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-13-figure-2"><figcaption>通信模块业务流程 · 图 2 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-2"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-2.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 2，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;Client 未初始化&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -166,7 +166,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;Client 未初始化&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -179,7 +179,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：Client 未初始化；fb_modemServices 未 Ready；APN/注册失败；callback 丢失或旧 generation。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：Client 未初始化；fb_modemServices 未 Ready；APN/注册失败；callback 丢失或旧 generation。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断">日志与诊断</h3>
 <p>库存建议日志：data_test；Favalon request/timeout；fb_modemServices journal；mtktelephonyservice；ip addr/route。</p>
 <table>
@@ -247,7 +247,7 @@
 <p>触发条件：Network Client 初始化/注册回调或周期查询信号。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。PLMN、信号强度、注册域和异常检测要使用同一时间基准；频繁切网需要区分网络侧变化、Modem 重选、回调积压和 UI 消费滞后。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链-1">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-13-figure-3"><figcaption>通信模块业务流程 · 图 3 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-3"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-3.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 3，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;上层应用&quot;]
   N1[&quot;Favalon Network Client&quot;]
   N0 --&gt; N1
@@ -256,7 +256,7 @@
   N3[&quot;mtktelephonyservice/Modem&quot;]
   N2 --&gt; N3
   N4[&quot;状态回调/异常检测&quot;]
-  N3 --&gt; N4</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N3 --&gt; N4</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;上层应用&quot;]
   N1[&quot;Favalon Network Client&quot;]
   N0 --&gt; N1
@@ -265,10 +265,10 @@
   N3[&quot;mtktelephonyservice/Modem&quot;]
   N2 --&gt; N3
   N4[&quot;状态回调/异常检测&quot;]
-  N3 --&gt; N4</code></pre></details></details><p>正常链按当前 Generation 顺序推进：上层应用&gt;Favalon Network Client&gt;fb_modemServices&gt;mtktelephonyservice/Modem&gt;状态回调/异常检测。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N3 --&gt; N4</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：上层应用&gt;Favalon Network Client&gt;fb_modemServices&gt;mtktelephonyservice/Modem&gt;状态回调/异常检测。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向-1">分层子链与方向</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>网络注册、信号质量、数据链路和云端业务分别取证。PVT Modem分析材料涉及校准、PLMN、注册和小区/RSRP线索；同一ESM错误可能需要结合拒绝原因与运营商/配置进一步判断，不能单独宣称用户欠费。以第一个失败阶段分配排查责任，后续重试和TSP未上线可能只是传播结果。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S304 · modem log常见分析方法.pdf · PDF第1-3页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S279 · tbox整车无网络案例分享.pdf · PDF第2页<small>〔本地来源〕</small></span></p>
+<p>网络注册、信号质量、数据链路和云端业务分别取证。PVT Modem分析材料涉及校准、PLMN、注册和小区/RSRP线索；同一ESM错误可能需要结合拒绝原因与运营商/配置进一步判断，不能单独宣称用户欠费。以第一个失败阶段分配排查责任，后续重试和TSP未上线可能只是传播结果。<a href="source-SRC0037.html#page-1">S304 · modem log常见分析方法.pdf · PDF第1-3页</a> <a href="source-SRC0038.html#page-2">S279 · tbox整车无网络案例分享.pdf · PDF第2页</a></p>
 <table>
 <thead>
 <tr>
@@ -380,7 +380,7 @@
 <h3 id="反馈闭环-1">反馈闭环</h3>
 <p>库存定义的反馈是：注册制式/PLMN/信号 callback 与 Modem 当前状态一致确认。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支-1">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-13-figure-4"><figcaption>通信模块业务流程 · 图 4 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-4"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-4.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 4，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;SIM/天线异常&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -393,7 +393,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;SIM/天线异常&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -406,7 +406,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：SIM/天线异常；网络注册超时；频繁切网；callback session 失效。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：SIM/天线异常；网络注册超时；频繁切网；callback session 失效。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断-1">日志与诊断</h3>
 <p>库存建议日志：nw_test；Favalon network callback；fb_modemServices；mtktelephonyservice；abnormal detection。</p>
 <table>
@@ -474,7 +474,7 @@
 <p>触发条件：TBOX 启动或 SIM 插拔/PIN 状态变化。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。PIN/PUK、DDS、SIM 插拔和状态查询属于不同状态面；卡已检测不等于已解锁，已解锁不等于已注册。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链-2">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-13-figure-5"><figcaption>通信模块业务流程 · 图 5 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-5"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-5.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 5，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;应用&quot;]
   N1[&quot;Favalon SIM Client&quot;]
   N0 --&gt; N1
@@ -483,7 +483,7 @@
   N3[&quot;Telephony/Modem&quot;]
   N2 --&gt; N3
   N4[&quot;SIM 状态回调&quot;]
-  N3 --&gt; N4</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N3 --&gt; N4</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;应用&quot;]
   N1[&quot;Favalon SIM Client&quot;]
   N0 --&gt; N1
@@ -492,7 +492,7 @@
   N3[&quot;Telephony/Modem&quot;]
   N2 --&gt; N3
   N4[&quot;SIM 状态回调&quot;]
-  N3 --&gt; N4</code></pre></details></details><p>正常链按当前 Generation 顺序推进：应用&gt;Favalon SIM Client&gt;fb_modemServices&gt;Telephony/Modem&gt;SIM 状态回调。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N3 --&gt; N4</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：应用&gt;Favalon SIM Client&gt;fb_modemServices&gt;Telephony/Modem&gt;SIM 状态回调。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向-2">分层子链与方向</h3>
 <table>
 <thead>
@@ -605,7 +605,7 @@
 <h3 id="反馈闭环-2">反馈闭环</h3>
 <p>库存定义的反馈是：SIM Client 收到 card/PIN/DDS 回调并通过查询确认当前状态。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支-2">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-13-figure-6"><figcaption>通信模块业务流程 · 图 6 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-6"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-6.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 6，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;SIM 物理不可见&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -618,7 +618,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;SIM 物理不可见&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -631,7 +631,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：SIM 物理不可见；PIN/PUK 状态错误；fb_modemServices 未 Ready；回调注册丢失。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：SIM 物理不可见；PIN/PUK 状态错误；fb_modemServices 未 Ready；回调注册丢失。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断-2">日志与诊断</h3>
 <p>库存建议日志：sim_test；Favalon SIM callback；fb_modemServices journal；mtktelephonyservice SIM；CCCI。</p>
 <table>
@@ -699,7 +699,7 @@
 <p>触发条件：应用发送 SMS 或网络下发短信 URC。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。发送侧关联 messageRef、PDU 与 SMSC，接收侧核对接收回调、去重和持久化；API 返回不等于对端已收到。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链-3">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-13-figure-7"><figcaption>通信模块业务流程 · 图 7 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-7"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-7.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 7，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;应用&quot;]
   N1[&quot;Favalon SMS Client&quot;]
   N0 --&gt; N1
@@ -710,7 +710,7 @@
   N4[&quot;网络&quot;]
   N3 --&gt; N4
   N5[&quot;收发回调&quot;]
-  N4 --&gt; N5</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N4 --&gt; N5</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;应用&quot;]
   N1[&quot;Favalon SMS Client&quot;]
   N0 --&gt; N1
@@ -721,7 +721,7 @@
   N4[&quot;网络&quot;]
   N3 --&gt; N4
   N5[&quot;收发回调&quot;]
-  N4 --&gt; N5</code></pre></details></details><p>正常链按当前 Generation 顺序推进：应用&gt;Favalon SMS Client&gt;fb_modemServices&gt;Telephony/Modem&gt;网络&gt;收发回调。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N4 --&gt; N5</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：应用&gt;Favalon SMS Client&gt;fb_modemServices&gt;Telephony/Modem&gt;网络&gt;收发回调。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向-3">分层子链与方向</h3>
 <table>
 <thead>
@@ -834,7 +834,7 @@
 <h3 id="反馈闭环-3">反馈闭环</h3>
 <p>库存定义的反馈是：发送结果 messageRef/错误码确认，接收回调可 read/list 并持久化。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支-3">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-13-figure-8"><figcaption>通信模块业务流程 · 图 8 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-8"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-8.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 8，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;SMSC/网络不可用&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -847,7 +847,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;SMSC/网络不可用&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -860,7 +860,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：SMSC/网络不可用；PDU 编码错误；存储满；接收 callback 未注册。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：SMSC/网络不可用；PDU 编码错误；存储满；接收 callback 未注册。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断-3">日志与诊断</h3>
 <p>库存建议日志：sms_test；Favalon SMS request/callback；fb_modemServices；Telephony SMS/URC；存储列表。</p>
 <table>
@@ -928,7 +928,7 @@
 <p>触发条件：应用提交 AT 命令或订阅 URC。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。每个 AT channel 使用 requestId 关联响应，同时把 URC 作为异步事件单独处理；并发请求串扰和 late response 不能覆盖新请求。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链-4">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-13-figure-9"><figcaption>通信模块业务流程 · 图 9 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-9"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-9.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 9，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;应用&quot;]
   N1[&quot;Favalon AT Client&quot;]
   N0 --&gt; N1
@@ -939,7 +939,7 @@
   N4[&quot;Modem&quot;]
   N3 --&gt; N4
   N5[&quot;响应/URC 回调&quot;]
-  N4 --&gt; N5</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N4 --&gt; N5</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;应用&quot;]
   N1[&quot;Favalon AT Client&quot;]
   N0 --&gt; N1
@@ -950,7 +950,7 @@
   N4[&quot;Modem&quot;]
   N3 --&gt; N4
   N5[&quot;响应/URC 回调&quot;]
-  N4 --&gt; N5</code></pre></details></details><p>正常链按当前 Generation 顺序推进：应用&gt;Favalon AT Client&gt;UMDP Modem Service&gt;AT/URC 通道&gt;Modem&gt;响应/URC 回调。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N4 --&gt; N5</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：应用&gt;Favalon AT Client&gt;UMDP Modem Service&gt;AT/URC 通道&gt;Modem&gt;响应/URC 回调。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向-4">分层子链与方向</h3>
 <table>
 <thead>
@@ -1063,7 +1063,7 @@
 <h3 id="反馈闭环-4">反馈闭环</h3>
 <p>库存定义的反馈是：命令按 channel/requestId 返回最终 OK/ERROR，URC 交付注册 Client；目标消费者完成状态确认。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支-4">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-13-figure-10"><figcaption>通信模块业务流程 · 图 10 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-10"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-10.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 10，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;AT channel 未打开&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -1076,7 +1076,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;AT channel 未打开&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -1089,7 +1089,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：AT channel 未打开；命令超时；URC 解析/路由错误；并发请求串扰。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：AT channel 未打开；命令超时；URC 解析/路由错误；并发请求串扰。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断-4">日志与诊断</h3>
 <p>库存建议日志：at_test；AT requestId/channel；fb_modemServices；CCCI/Modem URC。</p>
 <table>
@@ -1157,7 +1157,7 @@
 <p>触发条件：应用 start Location 或设置 NMEA/频率/定位源。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。GNSS 会话核对 NMEA、fix、timestamp 与精度状态；stop 后回调停止是释放完成的一部分，最后一个旧 fix 不得冒充新会话定位。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链-5">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-13-figure-11"><figcaption>通信模块业务流程 · 图 11 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-11"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-11.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 11，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;应用&quot;]
   N1[&quot;Favalon Location Client&quot;]
   N0 --&gt; N1
@@ -1166,7 +1166,7 @@
   N3[&quot;GNSS/mbgnss&quot;]
   N2 --&gt; N3
   N4[&quot;位置/NMEA 回调&quot;]
-  N3 --&gt; N4</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N3 --&gt; N4</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;应用&quot;]
   N1[&quot;Favalon Location Client&quot;]
   N0 --&gt; N1
@@ -1175,10 +1175,10 @@
   N3[&quot;GNSS/mbgnss&quot;]
   N2 --&gt; N3
   N4[&quot;位置/NMEA 回调&quot;]
-  N3 --&gt; N4</code></pre></details></details><p>正常链按当前 Generation 顺序推进：应用&gt;Favalon Location Client&gt;UMDP Location/Adapter&gt;GNSS/mbgnss&gt;位置/NMEA 回调。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N3 --&gt; N4</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：应用&gt;Favalon Location Client&gt;UMDP Location/Adapter&gt;GNSS/mbgnss&gt;位置/NMEA 回调。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向-5">分层子链与方向</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>GNSS定位结果、GNSS授时、TBox系统日历时间、Android/SOS显示时间不是一个状态。PVT三OS文档描述的是日历时间/时区传播，尚不能证明GNSS已成为该项目权威时钟或给出帧同步精度。保留原定位链，解释时增加时钟来源、fix有效性、采样时刻/接收时刻与当前会话；不要把时区换算当成跨时钟域同步。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U002 · 3OS time synchronization.pdf · PDF第1-2页<small>〔本地来源〕</small></span></p>
+<p>GNSS定位结果、GNSS授时、TBox系统日历时间、Android/SOS显示时间不是一个状态。PVT三OS文档描述的是日历时间/时区传播，尚不能证明GNSS已成为该项目权威时钟或给出帧同步精度。保留原定位链，解释时增加时钟来源、fix有效性、采样时刻/接收时刻与当前会话；不要把时区换算当成跨时钟域同步。<a href="source-SRC0016.html#page-1">U002 · 3OS time synchronization.pdf · PDF第1-2页</a></p>
 <table>
 <thead>
 <tr>
@@ -1290,7 +1290,7 @@
 <h3 id="反馈闭环-5">反馈闭环</h3>
 <p>库存定义的反馈是：Location callback 提供 timestamp/fix/status，stop 后确认回调停止。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支-5">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-13-figure-12"><figcaption>通信模块业务流程 · 图 12 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-12"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-12.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 12，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;GNSS 未定位&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -1303,7 +1303,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;GNSS 未定位&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -1316,7 +1316,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：GNSS 未定位；天线/EPO 异常；NMEA mask 错误；callback 线程/会话失效。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：GNSS 未定位；天线/EPO 异常；NMEA mask 错误；callback 线程/会话失效。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断-5">日志与诊断</h3>
 <p>库存建议日志：gnss_test；Location callback/NMEA；UMDP location；mbgnss/kernel GNSS。</p>
 <table>
@@ -1384,7 +1384,7 @@
 <p>触发条件：应用 start IMU 采样并配置频率。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。IMU 采样按采样 sequence 和时间戳观察，FIFO overrun 与消费者慢必须分开；stop 后资源释放后不应继续收到旧批次。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链-6">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-13-figure-13"><figcaption>通信模块业务流程 · 图 13 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-13"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-13.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 13，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;应用&quot;]
   N1[&quot;Favalon IMU Client&quot;]
   N0 --&gt; N1
@@ -1393,7 +1393,7 @@
   N3[&quot;Sensor/mbsensors&quot;]
   N2 --&gt; N3
   N4[&quot;采样回调&quot;]
-  N3 --&gt; N4</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N3 --&gt; N4</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;应用&quot;]
   N1[&quot;Favalon IMU Client&quot;]
   N0 --&gt; N1
@@ -1402,7 +1402,7 @@
   N3[&quot;Sensor/mbsensors&quot;]
   N2 --&gt; N3
   N4[&quot;采样回调&quot;]
-  N3 --&gt; N4</code></pre></details></details><p>正常链按当前 Generation 顺序推进：应用&gt;Favalon IMU Client&gt;UMDP IMU/Adapter&gt;Sensor/mbsensors&gt;采样回调。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N3 --&gt; N4</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：应用&gt;Favalon IMU Client&gt;UMDP IMU/Adapter&gt;Sensor/mbsensors&gt;采样回调。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向-6">分层子链与方向</h3>
 <table>
 <thead>
@@ -1515,7 +1515,7 @@
 <h3 id="反馈闭环-6">反馈闭环</h3>
 <p>库存定义的反馈是：IMU callback sequence/timestamp 连续，stop 后确认资源释放。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支-6">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-13-figure-14"><figcaption>通信模块业务流程 · 图 14 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-14"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-14.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 14，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;Sensor HAL 无数据&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -1528,7 +1528,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;Sensor HAL 无数据&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -1541,7 +1541,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：Sensor HAL 无数据；采样频率错误；FIFO overrun；callback 丢失。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：Sensor HAL 无数据；采样频率错误；FIFO overrun；callback 丢失。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断-6">日志与诊断</h3>
 <p>库存建议日志：imu_test；Favalon IMU callback；UMDP imu；mbsensors/Sensor HAL；FIFO stats。</p>
 <table>
@@ -1609,7 +1609,7 @@
 <p>触发条件：应用查询版本/IMEI/SN 或切换 Operating Mode。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。Device Management 查询 IMEI、Operating Mode 等设备属性，经 Platform Adapter 到具体能力提供者；缓存值不等于 Modem 当前值。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链-7">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-13-figure-15"><figcaption>通信模块业务流程 · 图 15 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-15"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-15.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 15，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;应用&quot;]
   N1[&quot;Favalon DM Client&quot;]
   N0 --&gt; N1
@@ -1618,7 +1618,7 @@
   N3[&quot;Platform Adapter&quot;]
   N2 --&gt; N3
   N4[&quot;设备信息/模式结果&quot;]
-  N3 --&gt; N4</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N3 --&gt; N4</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;应用&quot;]
   N1[&quot;Favalon DM Client&quot;]
   N0 --&gt; N1
@@ -1627,7 +1627,7 @@
   N3[&quot;Platform Adapter&quot;]
   N2 --&gt; N3
   N4[&quot;设备信息/模式结果&quot;]
-  N3 --&gt; N4</code></pre></details></details><p>正常链按当前 Generation 顺序推进：应用&gt;Favalon DM Client&gt;UMDP Device Service&gt;Platform Adapter&gt;设备信息/模式结果。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N3 --&gt; N4</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：应用&gt;Favalon DM Client&gt;UMDP Device Service&gt;Platform Adapter&gt;设备信息/模式结果。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向-7">分层子链与方向</h3>
 <table>
 <thead>
@@ -1740,7 +1740,7 @@
 <h3 id="反馈闭环-7">反馈闭环</h3>
 <p>库存定义的反馈是：DM 同步结果/回调与 Platform Adapter 实际设备状态一致。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支-7">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-13-figure-16"><figcaption>通信模块业务流程 · 图 16 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-16"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-16.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 16，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;fb_modemServices/DM 未 Ready&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -1753,7 +1753,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;fb_modemServices/DM 未 Ready&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -1766,7 +1766,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：fb_modemServices/DM 未 Ready；Platform Adapter 读取失败；权限/参数错误；同步超时。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：fb_modemServices/DM 未 Ready；Platform Adapter 读取失败；权限/参数错误；同步超时。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断-7">日志与诊断</h3>
 <p>库存建议日志：dm_test；Favalon DM request；UMDP dev；系统版本/设备节点。</p>
 <table>
@@ -1834,7 +1834,7 @@
 <p>触发条件：ACC/RTC/Modem 唤醒或应用申请/释放 WakeLock。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。WakeLock 与 wakeup source 分别记录引用所有者；Suspend/Resume 需要核对申请、系统决策、硬件进入和恢复回调，引用泄漏会阻止休眠。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链-8">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-13-figure-17"><figcaption>通信模块业务流程 · 图 17 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-17"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-17.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 17，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;应用/电源事件&quot;]
   N1[&quot;Favalon Power/WakeLock/Wakeup Client&quot;]
   N0 --&gt; N1
@@ -1845,7 +1845,7 @@
   N4[&quot;系统电源/唤醒源&quot;]
   N3 --&gt; N4
   N5[&quot;状态回调&quot;]
-  N4 --&gt; N5</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N4 --&gt; N5</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;应用/电源事件&quot;]
   N1[&quot;Favalon Power/WakeLock/Wakeup Client&quot;]
   N0 --&gt; N1
@@ -1856,10 +1856,10 @@
   N4[&quot;系统电源/唤醒源&quot;]
   N3 --&gt; N4
   N5[&quot;状态回调&quot;]
-  N4 --&gt; N5</code></pre></details></details><p>正常链按当前 Generation 顺序推进：应用/电源事件&gt;Favalon Power/WakeLock/Wakeup Client&gt;fb_powerMgr&gt;Platform Adapter&gt;系统电源/唤醒源&gt;状态回调。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N4 --&gt; N5</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：应用/电源事件&gt;Favalon Power/WakeLock/Wakeup Client&gt;fb_powerMgr&gt;Platform Adapter&gt;系统电源/唤醒源&gt;状态回调。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向-8">分层子链与方向</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>某个Guest持有或释放WakeLock，只能解释该域/该服务的阻塞条件，不能直接推出整机是否进入STR。MTK总体流程是Host门控Guest完成后再进入深度休眠；PVT低功耗例子建议观察wakeup_sources和唤醒事件，但应按列名与增量分析，不能沿用另一内核截图的固定列号。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S265 · MT8676_Hypervisor_Suspend_Resume_Common_Flow.pdf · PDF第4-6页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S262 · Low_power_debug_sop_v1.4.pdf · PDF第3-4页<small>〔本地来源〕</small></span></p>
+<p>某个Guest持有或释放WakeLock，只能解释该域/该服务的阻塞条件，不能直接推出整机是否进入STR。MTK总体流程是Host门控Guest完成后再进入深度休眠；PVT低功耗例子建议观察wakeup_sources和唤醒事件，但应按列名与增量分析，不能沿用另一内核截图的固定列号。<a href="source-SRC0035.html#page-4">S265 · MT8676_Hypervisor_Suspend_Resume_Common_Flow.pdf · PDF第4-6页</a> <a href="source-SRC0043.html#page-3">S262 · Low_power_debug_sop_v1.4.pdf · PDF第3-4页</a></p>
 <table>
 <thead>
 <tr>
@@ -1971,7 +1971,7 @@
 <h3 id="反馈闭环-8">反馈闭环</h3>
 <p>库存定义的反馈是：fb_powerMgr 记录 wake source/WakeLock 引用，Suspend/Resume 后状态一致确认。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支-8">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-13-figure-18"><figcaption>通信模块业务流程 · 图 18 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-18"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-18.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 18，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;fb_modem 依赖未 Ready&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -1984,7 +1984,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;fb_modem 依赖未 Ready&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -1997,7 +1997,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：fb_modem 依赖未 Ready；WakeLock 泄漏；唤醒源未注册；Suspend 阶段超时。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：fb_modem 依赖未 Ready；WakeLock 泄漏；唤醒源未注册；Suspend 阶段超时。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断-8">日志与诊断</h3>
 <p>库存建议日志：power_test/wakelock_test/wakeup_test；systemd fb_powerMgr；journalctl；wakeup_sources。</p>
 <table>
@@ -2065,7 +2065,7 @@
 <p>触发条件：服务产生日志或触发抓取/级别配置。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。Log Manager 同时检查 journald、挂载、轮转和导出；服务启动不等于路径已挂载可写，文件存在也不等于轮转与持久化策略生效。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链-9">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-13-figure-19"><figcaption>通信模块业务流程 · 图 19 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-19"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-19.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 19，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;应用/服务日志&quot;]
   N1[&quot;Favalon Log Client&quot;]
   N0 --&gt; N1
@@ -2074,7 +2074,7 @@
   N3[&quot;journald/挂载点&quot;]
   N2 --&gt; N3
   N4[&quot;持久化/导出&quot;]
-  N3 --&gt; N4</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N3 --&gt; N4</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;应用/服务日志&quot;]
   N1[&quot;Favalon Log Client&quot;]
   N0 --&gt; N1
@@ -2083,10 +2083,10 @@
   N3[&quot;journald/挂载点&quot;]
   N2 --&gt; N3
   N4[&quot;持久化/导出&quot;]
-  N3 --&gt; N4</code></pre></details></details><p>正常链按当前 Generation 顺序推进：应用/服务日志&gt;Favalon Log Client&gt;fb_logMgr&gt;journald/挂载点&gt;持久化/导出。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N3 --&gt; N4</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：应用/服务日志&gt;Favalon Log Client&gt;fb_logMgr&gt;journald/挂载点&gt;持久化/导出。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向-9">分层子链与方向</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>Log Manager需要覆盖常态记录、故障缓存和关闭阶段落盘。PVT资料补充Host读取UOS pstore，以及shutdown时移动日志服务退出后的块存储路径；Modem日志目录/模式依版本配置。把“日志服务结束”“最后一次写盘”“文件系统卸载”“完全断电”“下次导出”分别放入时间线，避免以文件缺失否定故障发生。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S272 · MTK_Log_SOS_dump_uos_pstore.pdf · PDF第3页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S273 · MTK_Log_SOS_shutdown_pstore_dump_to_BLK.pdf · PDF第3页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S305 · Tbox_Telephony_MD and mdlog SOP.pdf · PDF第2-4页<small>〔本地来源〕</small></span></p>
+<p>Log Manager需要覆盖常态记录、故障缓存和关闭阶段落盘。PVT资料补充Host读取UOS pstore，以及shutdown时移动日志服务退出后的块存储路径；Modem日志目录/模式依版本配置。把“日志服务结束”“最后一次写盘”“文件系统卸载”“完全断电”“下次导出”分别放入时间线，避免以文件缺失否定故障发生。<a href="source-SRC0025.html#page-3">S272 · MTK_Log_SOS_dump_uos_pstore.pdf · PDF第3页</a> <a href="source-SRC0026.html#page-3">S273 · MTK_Log_SOS_shutdown_pstore_dump_to_BLK.pdf · PDF第3页</a> <a href="source-SRC0039.html#page-2">S305 · Tbox_Telephony_MD and mdlog SOP.pdf · PDF第2-4页</a></p>
 <table>
 <thead>
 <tr>
@@ -2198,7 +2198,7 @@
 <h3 id="反馈闭环-9">反馈闭环</h3>
 <p>库存定义的反馈是：fb_logMgr 确认 journald 输入、文件落盘/轮转和导出完成。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支-9">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-13-figure-20"><figcaption>通信模块业务流程 · 图 20 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-20"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-20.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 20，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;/data 等挂载未就绪&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -2211,7 +2211,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;/data 等挂载未就绪&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -2224,7 +2224,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：/data 等挂载未就绪；journald socket 不可用；磁盘满；轮转/权限错误。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：/data 等挂载未就绪；journald socket 不可用；磁盘满；轮转/权限错误。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断-9">日志与诊断</h3>
 <p>库存建议日志：journalctl -u fb_logMgr；mount/df；logmanager.conf；umdploglevel.conf。</p>
 <table>
@@ -2292,7 +2292,7 @@
 <p>触发条件：云端 TSP 下发远控或 TBox 周期上报。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。TSP 鉴权通过后才进入远控请求，远控必须等待车辆执行回读；云端 accepted、座舱转发和 ECU 执行是三个不同状态。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链-10">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-13-figure-21"><figcaption>通信模块业务流程 · 图 21 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-21"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-21.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 21，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;云端/TSP&quot;]
   N1[&quot;Modem/Data Call&quot;]
   N0 --&gt; N1
@@ -2303,7 +2303,7 @@
   N4[&quot;CarService/MCU&quot;]
   N3 --&gt; N4
   N5[&quot;执行反馈&quot;]
-  N4 --&gt; N5</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N4 --&gt; N5</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;云端/TSP&quot;]
   N1[&quot;Modem/Data Call&quot;]
   N0 --&gt; N1
@@ -2314,10 +2314,10 @@
   N4[&quot;CarService/MCU&quot;]
   N3 --&gt; N4
   N5[&quot;执行反馈&quot;]
-  N4 --&gt; N5</code></pre></details></details><p>正常链按当前 Generation 顺序推进：云端/TSP&gt;Modem/Data Call&gt;TBOX-APP business/core communication&gt;SOME/IP/FDBus/IPCL&gt;CarService/MCU&gt;执行反馈。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N4 --&gt; N5</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：云端/TSP&gt;Modem/Data Call&gt;TBOX-APP business/core communication&gt;SOME/IP/FDBus/IPCL&gt;CarService/MCU&gt;执行反馈。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向-10">分层子链与方向</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>远程监控/远控在蜂窝链路之外还依赖时间、证书、云环境和车辆执行反馈。PVT无网鱼骨图把证书下载/环境不匹配/私钥状态等列为仅影响相关TSP应用的分支，因此“远控失败”不能直接归于Modem。按连接、鉴权、请求接受、车辆执行、反馈回读分段保留证据；不要自动执行案例中的证书删除/重置操作。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S279 · tbox整车无网络案例分享.pdf · PDF第2页<small>〔本地来源〕</small></span></p>
+<p>远程监控/远控在蜂窝链路之外还依赖时间、证书、云环境和车辆执行反馈。PVT无网鱼骨图把证书下载/环境不匹配/私钥状态等列为仅影响相关TSP应用的分支，因此“远控失败”不能直接归于Modem。按连接、鉴权、请求接受、车辆执行、反馈回读分段保留证据；不要自动执行案例中的证书删除/重置操作。<a href="source-SRC0038.html#page-2">S279 · tbox整车无网络案例分享.pdf · PDF第2页</a></p>
 <table>
 <thead>
 <tr>
@@ -2429,7 +2429,7 @@
 <h3 id="反馈闭环-10">反馈闭环</h3>
 <p>库存定义的反馈是：TBOX business 校验云端响应，车辆执行状态经 MCU 回传并由云端确认。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支-10">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-13-figure-22"><figcaption>通信模块业务流程 · 图 22 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-22"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-22.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 22，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;Data Call 断开&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -2442,7 +2442,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;Data Call 断开&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -2455,7 +2455,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：Data Call 断开；鉴权/时钟失败；SOME/IP/IPCL 路由失败；ECU 拒绝/反馈超时。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：Data Call 断开；鉴权/时钟失败；SOME/IP/IPCL 路由失败；ECU 拒绝/反馈超时。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断-10">日志与诊断</h3>
 <p>库存建议日志：Modem/Data Call；TBOX business/core communication；SOME/IP trace；IPCL sequence；CAN feedback。</p>
 <table>
@@ -2523,7 +2523,7 @@
 <p>触发条件：USB uevent 报告存储设备插入/拔出。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。USB U 盘插入后由内核枚举、vold 挂载、MediaScanner 建索引、FileManager 展示；拔出必须先终止访问并释放句柄，避免把残留索引误当在线文件。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链-11">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-13-figure-23"><figcaption>通信模块业务流程 · 图 23 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-23"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-23.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 23，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;USB&quot;]
   N1[&quot;Kernel/Storage HAL&quot;]
   N0 --&gt; N1
@@ -2532,7 +2532,7 @@
   N3[&quot;Media Scanner/Provider&quot;]
   N2 --&gt; N3
   N4[&quot;FileManager&quot;]
-  N3 --&gt; N4</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N3 --&gt; N4</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;USB&quot;]
   N1[&quot;Kernel/Storage HAL&quot;]
   N0 --&gt; N1
@@ -2541,7 +2541,7 @@
   N3[&quot;Media Scanner/Provider&quot;]
   N2 --&gt; N3
   N4[&quot;FileManager&quot;]
-  N3 --&gt; N4</code></pre></details></details><p>正常链按当前 Generation 顺序推进：USB&gt;Kernel/Storage HAL&gt;vold&gt;Media Scanner/Provider&gt;FileManager。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N3 --&gt; N4</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：USB&gt;Kernel/Storage HAL&gt;vold&gt;Media Scanner/Provider&gt;FileManager。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向-11">分层子链与方向</h3>
 <table>
 <thead>
@@ -2653,7 +2653,7 @@
 <h3 id="反馈闭环-11">反馈闭环</h3>
 <p>库存定义的反馈是：vold 挂载状态确认，MediaScanner 完成扫描且 MediaProvider/FileManager 可查询文件。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支-11">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-13-figure-24"><figcaption>通信模块业务流程 · 图 24 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-24"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-24.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 24，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;USB 枚举失败&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -2666,7 +2666,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;USB 枚举失败&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -2679,7 +2679,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：USB 枚举失败；文件系统/exfat/ntfs 挂载失败；拔出时句柄未释放；MediaProvider 索引未更新。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：USB 枚举失败；文件系统/exfat/ntfs 挂载失败；拔出时句柄未释放；MediaProvider 索引未更新。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断-11">日志与诊断</h3>
 <p>库存建议日志：kernel USB/uevent；vold log；mount/lsblk；MediaScanner；MediaProvider query。</p>
 <table>
@@ -2747,7 +2747,7 @@
 <p>触发条件：系统启动、Home 操作或应用发布 Notification。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。Launcher、SystemUI、NotificationCenter 与 Window focus 分属入口、系统装饰、通知聚合和窗口调度；界面可见不等于输入焦点已交付。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链-12">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-13-figure-25"><figcaption>通信模块业务流程 · 图 25 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-25"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-25.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 25，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;System Server&quot;]
   N1[&quot;Launcher/SystemUI&quot;]
   N0 --&gt; N1
@@ -2756,7 +2756,7 @@
   N3[&quot;NotificationCenter&quot;]
   N2 --&gt; N3
   N4[&quot;用户交互&quot;]
-  N3 --&gt; N4</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N3 --&gt; N4</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;System Server&quot;]
   N1[&quot;Launcher/SystemUI&quot;]
   N0 --&gt; N1
@@ -2765,7 +2765,7 @@
   N3[&quot;NotificationCenter&quot;]
   N2 --&gt; N3
   N4[&quot;用户交互&quot;]
-  N3 --&gt; N4</code></pre></details></details><p>正常链按当前 Generation 顺序推进：System Server&gt;Launcher/SystemUI&gt;Notification Manager&gt;NotificationCenter&gt;用户交互。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N3 --&gt; N4</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：System Server&gt;Launcher/SystemUI&gt;Notification Manager&gt;NotificationCenter&gt;用户交互。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向-12">分层子链与方向</h3>
 <table>
 <thead>
@@ -2877,7 +2877,7 @@
 <h3 id="反馈闭环-12">反馈闭环</h3>
 <p>库存定义的反馈是：Launcher/SystemUI 窗口可见，NotificationManager 入库并由 NotificationCenter 确认展示/清除。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支-12">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-13-figure-26"><figcaption>通信模块业务流程 · 图 26 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-26"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-26.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 26，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;SystemUI crash&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -2890,7 +2890,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;SystemUI crash&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -2903,7 +2903,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：SystemUI crash；Binder notification 失败；Window focus 错误；通知渠道/权限抑制。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：SystemUI crash；Binder notification 失败；Window focus 错误；通知渠道/权限抑制。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断-12">日志与诊断</h3>
 <p>库存建议日志：logcat ActivityTaskManager/SystemUI；dumpsys window；dumpsys notification；Launcher state。</p>
 <table>
@@ -2971,7 +2971,7 @@
 <p>触发条件：手机通过 USB/Wi-Fi 配对并请求投屏。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。HiCar、CarPlay 和 Android Auto 均需区分发现/认证、控制会话、音频路由与首个视频帧；连接图标不证明投屏内容已经可见。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链-13">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-13-figure-27"><figcaption>通信模块业务流程 · 图 27 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-27"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-27.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 27，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;手机/USB/无线链路&quot;]
   N1[&quot;Projection Service&quot;]
   N0 --&gt; N1
@@ -2980,7 +2980,7 @@
   N3[&quot;Display/Audio/Input&quot;]
   N2 --&gt; N3
   N4[&quot;手机反馈&quot;]
-  N3 --&gt; N4</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N3 --&gt; N4</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;手机/USB/无线链路&quot;]
   N1[&quot;Projection Service&quot;]
   N0 --&gt; N1
@@ -2989,7 +2989,7 @@
   N3[&quot;Display/Audio/Input&quot;]
   N2 --&gt; N3
   N4[&quot;手机反馈&quot;]
-  N3 --&gt; N4</code></pre></details></details><p>正常链按当前 Generation 顺序推进：手机/USB/无线链路&gt;Projection Service&gt;协议栈&gt;Display/Audio/Input&gt;手机反馈。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N3 --&gt; N4</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：手机/USB/无线链路&gt;Projection Service&gt;协议栈&gt;Display/Audio/Input&gt;手机反馈。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向-13">分层子链与方向</h3>
 <table>
 <thead>
@@ -3101,7 +3101,7 @@
 <h3 id="反馈闭环-13">反馈闭环</h3>
 <p>库存定义的反馈是：Projection Service 确认 session、首个视频帧、音频路由和输入回传。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支-13">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-13-figure-28"><figcaption>通信模块业务流程 · 图 28 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-28"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-28.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 28，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;认证/iAP2/MFi 失败&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -3114,7 +3114,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;认证/iAP2/MFi 失败&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -3127,7 +3127,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：认证/iAP2/MFi 失败；USB/Wi-Fi 断链；解码/Surface 无帧；Audio/Input route 错误。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：认证/iAP2/MFi 失败；USB/Wi-Fi 断链；解码/Surface 无帧；Audio/Input route 错误。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断-13">日志与诊断</h3>
 <p>库存建议日志：USB/Wi-Fi；CarPlay/iAP2/AndroidAuto service；MediaCodec/Surface；AudioPolicy；input event。</p>
 <table>
@@ -3195,7 +3195,7 @@
 <p>触发条件：网络接口上线、IP 配置或 SOME/IP 服务发现触发。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。Wi-Fi 建链后还要验证虚拟 Ethernet、IP 配置、SOME/IP service discovery 和业务订阅；链路 up 不等于服务可发现。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链-14">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-13-figure-29"><figcaption>通信模块业务流程 · 图 29 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-29"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-29.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 29，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;网络硬件/Modem&quot;]
   N1[&quot;驱动/HAL&quot;]
   N0 --&gt; N1
@@ -3206,7 +3206,7 @@
   N4[&quot;SOME/IP&quot;]
   N3 --&gt; N4
   N5[&quot;应用&quot;]
-  N4 --&gt; N5</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N4 --&gt; N5</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;网络硬件/Modem&quot;]
   N1[&quot;驱动/HAL&quot;]
   N0 --&gt; N1
@@ -3217,7 +3217,7 @@
   N4[&quot;SOME/IP&quot;]
   N3 --&gt; N4
   N5[&quot;应用&quot;]
-  N4 --&gt; N5</code></pre></details></details><p>正常链按当前 Generation 顺序推进：网络硬件/Modem&gt;驱动/HAL&gt;Network Service/netd&gt;虚拟 Ethernet&gt;SOME/IP&gt;应用。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N4 --&gt; N5</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：网络硬件/Modem&gt;驱动/HAL&gt;Network Service/netd&gt;虚拟 Ethernet&gt;SOME/IP&gt;应用。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向-14">分层子链与方向</h3>
 <table>
 <thead>
@@ -3329,7 +3329,7 @@
 <h3 id="反馈闭环-14">反馈闭环</h3>
 <p>库存定义的反馈是：NetworkService/netd 确认路由/DNS，SOME/IP Client 确认 service/eventgroup 可用。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支-14">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-13-figure-30"><figcaption>通信模块业务流程 · 图 30 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-30"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-30.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 30，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;WPA/蜂窝注册失败&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -3342,7 +3342,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;WPA/蜂窝注册失败&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -3355,7 +3355,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：WPA/蜂窝注册失败；DHCP/路由错误；虚拟 Ethernet backend 未就绪；SOME/IP discovery/订阅失败。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：WPA/蜂窝注册失败；DHCP/路由错误；虚拟 Ethernet backend 未就绪；SOME/IP discovery/订阅失败。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断-14">日志与诊断</h3>
 <p>库存建议日志：wpa_supplicant；ip addr/route；netd；tcpdump；vsomeip/RoutingManager。</p>
 <table>
@@ -3419,13 +3419,13 @@
 </ul>
 <h2 id="业务流程-supp-item-93a8258">业务流程 supp-item-93a8258</h2>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>最新PVT资料已给出三OS日历时间的具体传播：Android RTC driver经virtio更新SOS；SOS通过event/udev与属性回调同步TBox；时区另经prop_watch和prop_set_only_uos传播。联网TBox还可能用NTP，文档未定义完整仲裁。保留本节原跨域日志链，解释时记录clockId、bootId、采样点和映射误差；不同OS单调时间不得直接相减，UTC+8仅是明确时区前提下的显示换算。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U002 · 3OS time synchronization.pdf · PDF第1-2页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U047 · 软件开发培训-音视频解码常见问题及分析.pdf · PDF第8页<small>〔本地来源〕</small></span></p>
+<p>最新PVT资料已给出三OS日历时间的具体传播：Android RTC driver经virtio更新SOS；SOS通过event/udev与属性回调同步TBox；时区另经prop_watch和prop_set_only_uos传播。联网TBox还可能用NTP，文档未定义完整仲裁。保留本节原跨域日志链，解释时记录clockId、bootId、采样点和映射误差；不同OS单调时间不得直接相减，UTC+8仅是明确时区前提下的显示换算。<a href="source-SRC0016.html#page-1">U002 · 3OS time synchronization.pdf · PDF第1-2页</a> <a href="source-SRC0023.html#page-8">U047 · 软件开发培训-音视频解码常见问题及分析.pdf · PDF第8页</a></p>
 <h3 id="跨域日志和时间同步">跨域日志和时间同步</h3>
 <h3 id="触发目标与边界-15">触发、目标与边界</h3>
 <p>触发条件：各域启动、故障抓取或时间校准事件。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。跨域日志依赖时间同步、单调时钟和关联 ID；采集导出时保留原时间域及换算依据，不能只按墙上时间排序。</p>
 <p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
 <h3 id="正常链-15">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="chinese-13-figure-31"><figcaption>通信模块业务流程 · 图 31 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-31"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-31.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 31，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;MCU/SOS/Android/TBox 日志源&quot;]
   N1[&quot;LogMgr/MBLog/syslog&quot;]
   N0 --&gt; N1
@@ -3434,7 +3434,7 @@
   N3[&quot;关联 ID&quot;]
   N2 --&gt; N3
   N4[&quot;采集导出&quot;]
-  N3 --&gt; N4</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N3 --&gt; N4</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;MCU/SOS/Android/TBox 日志源&quot;]
   N1[&quot;LogMgr/MBLog/syslog&quot;]
   N0 --&gt; N1
@@ -3443,7 +3443,7 @@
   N3[&quot;关联 ID&quot;]
   N2 --&gt; N3
   N4[&quot;采集导出&quot;]
-  N3 --&gt; N4</code></pre></details></details><p>正常链按当前 Generation 顺序推进：MCU/SOS/Android/TBox 日志源&gt;LogMgr/MBLog/syslog&gt;统一时间基线&gt;关联 ID&gt;采集导出。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+  N3 --&gt; N4</code></pre></details></details></figure><p>正常链按当前 Generation 顺序推进：MCU/SOS/Android/TBox 日志源&gt;LogMgr/MBLog/syslog&gt;统一时间基线&gt;关联 ID&gt;采集导出。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
 <h3 id="分层子链与方向-15">分层子链与方向</h3>
 <table>
 <thead>
@@ -3555,7 +3555,7 @@
 <h3 id="反馈闭环-15">反馈闭环</h3>
 <p>库存定义的反馈是：MCU/SOS/Android/TBox 时间偏差在阈值内，日志以同一 request/sequence 可关联确认。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
 <h3 id="异常分支-15">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="chinese-13-figure-32"><figcaption>通信模块业务流程 · 图 32 · Mermaid</figcaption><details  class="diagram" open data-panel="chinese-13-figure-32"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/chinese-13-figure-32.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="通信模块业务流程 · 图 32，可使用方向键滚动"><pre class="mermaid">flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;RTC/NTP 源不同步&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -3568,7 +3568,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
   S -- 否 --&gt; F0[&quot;RTC/NTP 源不同步&quot;]
   S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
@@ -3581,7 +3581,7 @@
   F1 --&gt; R
   F2 --&gt; R
   F3 --&gt; R
-  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：RTC/NTP 源不同步；时区/单调时钟混用；日志丢包/轮转；关联 ID 未透传。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details></figure><p>主要故障候选为：RTC/NTP 源不同步；时区/单调时钟混用；日志丢包/轮转；关联 ID 未透传。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
 <h3 id="日志与诊断-15">日志与诊断</h3>
 <p>库存建议日志：RTC/NTP/chrony；MCU tick；logcat/journalctl/syslog；MBLog；requestId/sequence。</p>
 <table>
@@ -3645,4 +3645,425 @@
 </ul>
 <hr>
 <p><a href="index.html">返回主题导航</a> · <a href="22.html">本次来源索引</a></p>
-</article><nav class="pager"><a href="12.html">← 上一步：音频与语音业务流程</a><a href="19.html">下一步：Camera跨域架构与DDR资源预算 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#13-mt8676-通信模块业务流程">13 MT8676 通信模块业务流程</a><a class="depth-2" href="#2026-09-20-校订内部通信外网与云业务三层分界">2026-09-20 校订：内部通信、外网与云业务三层分界</a><a class="depth-2" href="#业务流程-flow-26">业务流程 FLOW-26</a><a class="depth-3" href="#sdk-data-call">SDK Data Call</a><a class="depth-3" href="#触发目标与边界">触发、目标与边界</a><a class="depth-3" href="#正常链">正常链</a><a class="depth-3" href="#分层子链与方向">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环">反馈闭环</a><a class="depth-3" href="#异常分支">异常分支</a><a class="depth-3" href="#日志与诊断">日志与诊断</a><a class="depth-3" href="#责任域">责任域</a><a class="depth-3" href="#证据与置信度">证据与置信度</a><a class="depth-2" href="#业务流程-flow-27">业务流程 FLOW-27</a><a class="depth-3" href="#network-注册信号和异常检测">Network 注册、信号和异常检测</a><a class="depth-3" href="#触发目标与边界-1">触发、目标与边界</a><a class="depth-3" href="#正常链-1">正常链</a><a class="depth-3" href="#分层子链与方向-1">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-1">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-1">反馈闭环</a><a class="depth-3" href="#异常分支-1">异常分支</a><a class="depth-3" href="#日志与诊断-1">日志与诊断</a><a class="depth-3" href="#责任域-1">责任域</a><a class="depth-3" href="#证据与置信度-1">证据与置信度</a><a class="depth-2" href="#业务流程-flow-28">业务流程 FLOW-28</a><a class="depth-3" href="#sim-初始化和卡状态">SIM 初始化和卡状态</a><a class="depth-3" href="#触发目标与边界-2">触发、目标与边界</a><a class="depth-3" href="#正常链-2">正常链</a><a class="depth-3" href="#分层子链与方向-2">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-2">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-2">反馈闭环</a><a class="depth-3" href="#异常分支-2">异常分支</a><a class="depth-3" href="#日志与诊断-2">日志与诊断</a><a class="depth-3" href="#责任域-2">责任域</a><a class="depth-3" href="#证据与置信度-2">证据与置信度</a><a class="depth-2" href="#业务流程-flow-29">业务流程 FLOW-29</a><a class="depth-3" href="#sms-收发">SMS 收发</a><a class="depth-3" href="#触发目标与边界-3">触发、目标与边界</a><a class="depth-3" href="#正常链-3">正常链</a><a class="depth-3" href="#分层子链与方向-3">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-3">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-3">反馈闭环</a><a class="depth-3" href="#异常分支-3">异常分支</a><a class="depth-3" href="#日志与诊断-3">日志与诊断</a><a class="depth-3" href="#责任域-3">责任域</a><a class="depth-3" href="#证据与置信度-3">证据与置信度</a><a class="depth-2" href="#业务流程-flow-30">业务流程 FLOW-30</a><a class="depth-3" href="#at-通道">AT 通道</a><a class="depth-3" href="#触发目标与边界-4">触发、目标与边界</a><a class="depth-3" href="#正常链-4">正常链</a><a class="depth-3" href="#分层子链与方向-4">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-4">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-4">反馈闭环</a><a class="depth-3" href="#异常分支-4">异常分支</a><a class="depth-3" href="#日志与诊断-4">日志与诊断</a><a class="depth-3" href="#责任域-4">责任域</a><a class="depth-3" href="#证据与置信度-4">证据与置信度</a><a class="depth-2" href="#业务流程-flow-31">业务流程 FLOW-31</a><a class="depth-3" href="#gnsslocation">GNSS/Location</a><a class="depth-3" href="#触发目标与边界-5">触发、目标与边界</a><a class="depth-3" href="#正常链-5">正常链</a><a class="depth-3" href="#分层子链与方向-5">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-5">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-5">反馈闭环</a><a class="depth-3" href="#异常分支-5">异常分支</a><a class="depth-3" href="#日志与诊断-5">日志与诊断</a><a class="depth-3" href="#责任域-5">责任域</a><a class="depth-3" href="#证据与置信度-5">证据与置信度</a><a class="depth-2" href="#业务流程-flow-32">业务流程 FLOW-32</a><a class="depth-3" href="#imu">IMU</a><a class="depth-3" href="#触发目标与边界-6">触发、目标与边界</a><a class="depth-3" href="#正常链-6">正常链</a><a class="depth-3" href="#分层子链与方向-6">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-6">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-6">反馈闭环</a><a class="depth-3" href="#异常分支-6">异常分支</a><a class="depth-3" href="#日志与诊断-6">日志与诊断</a><a class="depth-3" href="#责任域-6">责任域</a><a class="depth-3" href="#证据与置信度-6">证据与置信度</a><a class="depth-2" href="#业务流程-flow-33">业务流程 FLOW-33</a><a class="depth-3" href="#device-management">Device Management</a><a class="depth-3" href="#触发目标与边界-7">触发、目标与边界</a><a class="depth-3" href="#正常链-7">正常链</a><a class="depth-3" href="#分层子链与方向-7">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-7">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-7">反馈闭环</a><a class="depth-3" href="#异常分支-7">异常分支</a><a class="depth-3" href="#日志与诊断-7">日志与诊断</a><a class="depth-3" href="#责任域-7">责任域</a><a class="depth-3" href="#证据与置信度-7">证据与置信度</a><a class="depth-2" href="#业务流程-flow-34">业务流程 FLOW-34</a><a class="depth-3" href="#powerwakelockwakeup">Power/WakeLock/Wakeup</a><a class="depth-3" href="#触发目标与边界-8">触发、目标与边界</a><a class="depth-3" href="#正常链-8">正常链</a><a class="depth-3" href="#分层子链与方向-8">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-8">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-8">反馈闭环</a><a class="depth-3" href="#异常分支-8">异常分支</a><a class="depth-3" href="#日志与诊断-8">日志与诊断</a><a class="depth-3" href="#责任域-8">责任域</a><a class="depth-3" href="#证据与置信度-8">证据与置信度</a><a class="depth-2" href="#业务流程-flow-35">业务流程 FLOW-35</a><a class="depth-3" href="#log-manager">Log Manager</a><a class="depth-3" href="#触发目标与边界-9">触发、目标与边界</a><a class="depth-3" href="#正常链-9">正常链</a><a class="depth-3" href="#分层子链与方向-9">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-9">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-9">反馈闭环</a><a class="depth-3" href="#异常分支-9">异常分支</a><a class="depth-3" href="#日志与诊断-9">日志与诊断</a><a class="depth-3" href="#责任域-9">责任域</a><a class="depth-3" href="#证据与置信度-9">证据与置信度</a><a class="depth-2" href="#业务流程-flow-36">业务流程 FLOW-36</a><a class="depth-3" href="#蜂窝远程监控和远控">蜂窝远程监控和远控</a><a class="depth-3" href="#触发目标与边界-10">触发、目标与边界</a><a class="depth-3" href="#正常链-10">正常链</a><a class="depth-3" href="#分层子链与方向-10">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-10">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-10">反馈闭环</a><a class="depth-3" href="#异常分支-10">异常分支</a><a class="depth-3" href="#日志与诊断-10">日志与诊断</a><a class="depth-3" href="#责任域-10">责任域</a><a class="depth-3" href="#证据与置信度-10">证据与置信度</a><a class="depth-2" href="#业务流程-supp-usb-u-vold-mediascanner-filemanager-c349a32">业务流程 supp-usb-u-vold-mediascanner-filemanager-c349a32</a><a class="depth-3" href="#usbu盘voldmediascannerfilemanager">USB/U盘/vold/MediaScanner/FileManager</a><a class="depth-3" href="#触发目标与边界-11">触发、目标与边界</a><a class="depth-3" href="#正常链-11">正常链</a><a class="depth-3" href="#分层子链与方向-11">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-11">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-11">反馈闭环</a><a class="depth-3" href="#异常分支-11">异常分支</a><a class="depth-3" href="#日志与诊断-11">日志与诊断</a><a class="depth-3" href="#责任域-11">责任域</a><a class="depth-3" href="#证据与置信度-11">证据与置信度</a><a class="depth-2" href="#业务流程-supp-launcher-systemui-notificationcenter-b5c6ca0">业务流程 supp-launcher-systemui-notificationcenter-b5c6ca0</a><a class="depth-3" href="#launchersystemuinotificationcenter">Launcher/SystemUI/NotificationCenter</a><a class="depth-3" href="#触发目标与边界-12">触发、目标与边界</a><a class="depth-3" href="#正常链-12">正常链</a><a class="depth-3" href="#分层子链与方向-12">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-12">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-12">反馈闭环</a><a class="depth-3" href="#异常分支-12">异常分支</a><a class="depth-3" href="#日志与诊断-12">日志与诊断</a><a class="depth-3" href="#责任域-12">责任域</a><a class="depth-3" href="#证据与置信度-12">证据与置信度</a><a class="depth-2" href="#业务流程-supp-hicar-carplay-android-auto-529100d">业务流程 supp-hicar-carplay-android-auto-529100d</a><a class="depth-3" href="#hicarcarplayandroid-auto">HiCar/CarPlay/Android Auto</a><a class="depth-3" href="#触发目标与边界-13">触发、目标与边界</a><a class="depth-3" href="#正常链-13">正常链</a><a class="depth-3" href="#分层子链与方向-13">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-13">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-13">反馈闭环</a><a class="depth-3" href="#异常分支-13">异常分支</a><a class="depth-3" href="#日志与诊断-13">日志与诊断</a><a class="depth-3" href="#责任域-13">责任域</a><a class="depth-3" href="#证据与置信度-13">证据与置信度</a><a class="depth-2" href="#业务流程-supp-wi-fi-some-ip-0e27a82">业务流程 supp-wi-fi-some-ip-0e27a82</a><a class="depth-3" href="#wi-fi移动网络虚拟以太网someip">Wi-Fi/移动网络/虚拟以太网/SOME/IP</a><a class="depth-3" href="#触发目标与边界-14">触发、目标与边界</a><a class="depth-3" href="#正常链-14">正常链</a><a class="depth-3" href="#分层子链与方向-14">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-14">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-14">反馈闭环</a><a class="depth-3" href="#异常分支-14">异常分支</a><a class="depth-3" href="#日志与诊断-14">日志与诊断</a><a class="depth-3" href="#责任域-14">责任域</a><a class="depth-3" href="#证据与置信度-14">证据与置信度</a><a class="depth-2" href="#业务流程-supp-item-93a8258">业务流程 supp-item-93a8258</a><a class="depth-3" href="#跨域日志和时间同步">跨域日志和时间同步</a><a class="depth-3" href="#触发目标与边界-15">触发、目标与边界</a><a class="depth-3" href="#正常链-15">正常链</a><a class="depth-3" href="#分层子链与方向-15">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-15">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-15">反馈闭环</a><a class="depth-3" href="#异常分支-15">异常分支</a><a class="depth-3" href="#日志与诊断-15">日志与诊断</a><a class="depth-3" href="#责任域-15">责任域</a><a class="depth-3" href="#证据与置信度-15">证据与置信度</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>
+</article><section class="evidence-excerpts" id="evidence-excerpts"><h2>本章引用的材料内容</h2><p>下面直接展示引用页的文字开头，可展开核对。打开材料页可看全部物理页及完整 PDF，图表和版式以 PDF 为准。提取原文不代表已经逐页验证其适用于当前项目。</p><details><summary>3OS time synchronization.pdf · PDF 第 1 页</summary><pre class="source-text">时间时区同步说明文档 
+1 时区同步 
+1.1 时区同步原理 
+android 时区写入 prop→sos 端 prop_get 获取时区，同时开启 prop_watch
+函数，监控 android 那边时区变化。 
+当 android 时区变化时，sos 这边通过回调函数，同步 android 时区。在
+android 时区同步给 sos 时，sos 在回调函数内不仅同步了 android 时区同时也
+使用 prop_set_only_uos 函数，将此时 sos 时区信息发送到 uos 端；由此 uos
+获取 sos 时区，也即 android 时区 
+ 
+1.2 时区同步验证： 
+android 端输入： 
+setprop persist.sys.timezone Asia/Tokyo 或者 
+setprop persist.sys.timezone Asia/Shanghai 
+ 
+sos/uos 端输入 date  可以看到时区与 android 是一致的 
+ 
+2 时间同步 
+2.1  android 时间同步给 sos 
+android 时间改变，RTC driver 也会同步更新时间。此时 RTC driver 会获取
+到 android 系统时间通过 virtio 传输到 sos，sos drvier 获取到传输过来的时间
+之后设置为 sos 系统时间。 
+ 
+2.2  sos 时间同步给 tbox os 
+在 sos 收到 android 发送来时间后。发送一个 event 事件。通过 udev 捕获
+这个指定 event 事件，获取当前系统时间设置为 prop。同时注册对应监听 prop
+改变的回调。在回调中 调用 prop_set_only_uos，将这个带有时间信息的 prop 
+发送 tbox uos 端。 
+ 
+tbox os 端注册监听 prop 改变。收到 sos 发送 prop 之后，解析时间信息并
+设置为系统时间。 
+ 
+2.3 时间同步验证方法 
+ MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM
+MediaTek Confidential Release for
+PVETEC_SPM</pre><a href="source-SRC0016.html#page-1">阅读整页及原图 →</a></details><details><summary>MT8668_Yocto_T-Box_User_Manual_CN_V1.0.pdf · PDF 第 5 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8668 Yocto T-Box 
+ User Manual 
+Confidential B 
+1 T-Box 
+1.1 概述 
+ 简单介绍 
+本文介绍 Hypervisor T-Box 架构、API 使用及注意事项。 
+ 
+ T-Box 缩略词 
+表 1-1.缩略词 
+缩略词 全称 释义 
+API Application Programming Interface 应用程序编程接口 
+APN Access Point Name 接入点 
+T-Box Telematics-BOX 车联网控制单元 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0018.html#page-5">阅读整页及原图 →</a></details><details><summary>Vsock api 文档v2.0.pdf · PDF 第 4 页</summary><pre class="source-text">Vsock api 文档
+GRTNBL20241118 Copyright © 2020 GoldenRiver Technologies Co., Ltd. All rights reserved. 4
+一. VSOCK 介绍
+Vsocks 是一种在 VM 与其主机操作系统之间直接提供套接字通信（流或数据报）的方
+法。主机和每个 VM 都有一个 32 位的 CID（上下文标识符），并且可以连接或绑定
+到一个 32 位的端口号。&lt; 1024 的端口是特权端口。
+特殊值
+有几个特殊地址：
+VMADDR_CID_ANY(-1U)表示任何要绑定的地址；
+VMADDR_CID_HYPERVISOR(0)保留用于管理程序中内置的服务；
+VMADDR_CID_LOCAL(1)是本地通信(回送)的众所周知的地址；
+VMADDR_CID_HOST(2)是主机的众所周知的地址。
+特殊常数 VMADDR_PORT_ANY(-1U)表示要绑定的任何端口号。
+VMADDR_CID_LOCAL(1)将数据包定向到生成数据包的同一主机。这对于在单个主机上测
+试应用程序和调试很有用。
+可以将通过 IOCTL_VM_SOCKETS_GET_LOCAL_CID 获得的本地 CID 用于相同的目的，但是
+最好使用 VMADDR_CID_LOCAL。
+名称 值 描述
+VMADDR_PORT_ANY -1 绑定到随机可用端口
+VMADDR_CID_ANY -1 绑定到 CID（只在虚拟机
+内生效）
+VMADDR_CID_HYPERVISOR 0 管理程序的 CID
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅
+谦川科技内部资料
+仅供长城项目内部参阅</pre><a href="source-SRC0019.html#page-4">阅读整页及原图 →</a></details><details><summary>软件开发培训-音视频解码常见问题及分析.pdf · PDF 第 8 页</summary><pre class="source-text">七、常见
+log
+及分析
+遇到问题，首先看
+mediaserver
+的进程，搜
+mediacodec
+，或
+nuplayer
+等
+看到是硬解的话，搜索硬解码进程，可以搜
+c2mtk
+，进程号是硬解码的进程，全搜，对应开始或结束或问题时间点去
+查看异常定位问题。
+D 
+PipelineWatcher
+: [0xb4000072478eb0a8] 
+pipelineFull
+: too many frames in pipeline (6)
+这个一般不是异常，正常播放视频几乎都有这些信息，这个只能说明
+mediacodec
+处理
+dequeueOutputbuffer
+在等待处理数据
+视频出现卡顿，一般有两种可能，一种是分辨率过高，解码吃力。在
+8676
+和
+8678
+上比较少。
+硬解码的能力能到
+4K 60fps
+，软解可能只有
+1080P 30
+或
+60fps
+还有更常见的可能，是解码后数据不能及时送出去，音频和视频下行通道堵塞，都会引起卡顿。
+常见的
+log
+能看到
+wait fence
+“
+wait fence
+” 
+是
+vdec
+hal
+在等待
+framebuffer
+上的
+fence
+信息（
+vdec
+和
+display
+之间的
+sync
+机制），
+所以这种
+time out
+通常是
+display
+或者
+PQ 
+处理不及时，导致
+framebuffer 
+循环卡主的
+播放卡顿，
+音频下行链路卡住可能也会打印。
+Mtk
+说少量打印一般问题不大，频繁打印就需要考虑显示有卡顿
+若怀疑送显有卡顿，尝试输入下面的
+cmd
+再验证下是否能复制到问题：
+adb
+shell service call 
+SurfaceFlinger
+1008 i32 1  //
+关闭
+PQ
+复现问题时的
+log 
+和时间点
+记录正常界面与异常界面的时间点。
+导出
+MTKLOG, 
+与前面
+dump
+出的数据一并提供用于分析。
+an error 
+ged
+handle 
+这个不是异常，几乎每次播放都有
+如果使用了硬解码，可能
+mainlog
+里看不到异常。可以简单的确定
+kernel log
+里有没有异常，搜索
+vdec|utc
+，在
+sos
+中搜
+kernel
+和
+vcp
+log
+utc
+时间可能没有和
+mainlog
+一致，那就
+kernel utc+8 = 
+mainlog
+时间
+看看
+vdec
+相关有没有在对应时间点有没有
+fail
+或
+error
+提示，来确定是底层故障。
+还有一个
+vcplog
+也可以搜索，也是搜
+vdec
+，
+vcplog
+里没有
+utc
+打印，时间需要跟
+kernel
+去对齐</pre><a href="source-SRC0023.html#page-8">阅读整页及原图 →</a></details><details><summary>MTK_Log_SOS_dump_uos_pstore.pdf · PDF 第 3 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+ 3
+• UOS在进行suspend/shutdown过程中，若在mobile_log_d进程退出后，系统出现被block
+的情况，无落盘日志可以查看；
+• 新增：SOS在UOS开机/suspend/resume/shutdown等阶段，主动dump UOS的pstore日志
+做落盘，cover住UOS自身无法落盘日志的阶段。
+目的
+ MediaTek Confidential Release for
+PVT
+ MediaTek Confidential Release for
+PVT
+MediaTek Confidential Release for
+PVT</pre><a href="source-SRC0025.html#page-3">阅读整页及原图 →</a></details><details><summary>MTK_Log_SOS_shutdown_pstore_dump_to_BLK.pdf · PDF 第 3 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.
+ 3
+• 在shutdown/reboot的过程中，Yocto端mobile_log_d进程会被systemd第二轮（发送
+sigterm）杀掉，后续log无法落盘；
+• 现状：last_kmsg机制是将log通过ramoops写到DRAM中，而在shutdown最后阶段SOC会
+掉电， DRAM中的内容也会丢失；
+• 新增：增加pstore后端为blk，在shutdown过程中，blk设备卸载前将现场的kmsg/pmsg存
+到pstore的裸分区中，blk数据掉电也能保持，在下一次开机将日志读取出来存储到文件
+系统。
+目的
+ MediaTek Confidential Release for
+PVT
+ MediaTek Confidential Release for
+PVT
+MediaTek Confidential Release for
+PVT</pre><a href="source-SRC0026.html#page-3">阅读整页及原图 →</a></details><details><summary>vmnet配置说明.pdf · PDF 第 4 页</summary><pre class="source-text">掌锐电子软件模块研究
+密级：内部公开第 3 页 共 8 页
+一、名词解释
+Virtio：一种跨虚拟机的通信机制。
+Virtio-net 协议：一种基于 virtio 的协议，可以虚拟出一个以太网卡，让虚拟
+机间可透过 tcp/ip 通信。
+Virtio-vosck 协议：一种基于 virtio 的协议，可以用于跨虚拟机通信。
+Vhost：可将 virtio 后端对 virtio-queue 的控制权转让给内核的机制。让内核
+模块与前端驱动直接通信。
+Socket 接口：一种可用于网路通信的接口。
+Tap：layer 2 虚拟网路设备，可以虚拟出一个以太网卡，并提供可以注入/接收
+以太网讯框（ethernet frame）的接口，供其他模块使用。
+SNAT：一种网络地址转换（NAT）技术，用于修改数据包的源 IP 地址。SNAT 通
+常用于将内部网络的私有 IP 地址转换为公共 IP 地址，以便在互联网中进行通信。
+二、OS 间虚拟化通路搭建
+1、概述
+虚拟网路设备目的在于提供 yocto/android 虚拟机沟通的机制，有两种类型 vnet
+与 vsock。这两种机制都能让 yocto/android 虚拟机通信，差别在 vnet 会经过
+tcp/ip 网路堆叠，而 vsock 不会。因此，vsock 更高效（因為没有 protocol
+overhead），而 vnet 更通用（因為走 tcp/ip，相容于网路应用，也可用来访问
+外网）。目前 nebula hypervisor 的设计是 modem 放在 yocto 端，因此 android
+端是没有网路可用的。因此会使用 vnet 在 android 端建立虚拟以太网卡，然后
+在 yocto 端在把收到的讯框转发给 modem，间接让 android 虚拟机也可以透过
+modem 上网。Vsock 主要用于内网通信，yocto/android 虚拟机上如果有些系统
+服务想要共享一些讯息，则可以使用 vsock 来达成。
+only release for 长安 内部使用 严禁外传
+only release for 长安 内部使用 严禁外传
+only release for 长安 内部使用 严禁外传
+only release for 长安 内部使用 严禁外传
+only release for 长安 内部使用 严禁外传
+only release for 长安 内部使用 严禁外传
+only release for 长安 内部使用 严禁外传
+only release for 长安 内部使用 严禁外传
+only release for 长安 内部使用 严禁外传</pre><a href="source-SRC0027.html#page-4">阅读整页及原图 →</a></details><details><summary>MT8676_Hypervisor_Suspend_Resume_Common_Flow.pdf · PDF 第 4 页</summary><pre class="source-text">— 4 —
+1.1 概述
+本章节主要介绍 MT8676 Hypervisor Suspend/Resume 流程。
+在 MT8676 平台上，Suspend 即 Suspend to RAM，此状态使所有的设备进入低功耗状态，仅保留
+RAM 自刷新。
+Suspend Power State：
+• Tasks “freezed”
+• 外部设备/内部部分模块关电或者进入低功耗模式
+• System PLL/clock close
+• ARM off
+• DRAM 自刷新
+• PMIC 进入低功耗模式
+• VCORE off
+• SPM run
+• 等待硬件唤醒事件
+在 MT8676 Hypervisor（L+L+A）系统上， Host OS SoS 与 Guest OS Tbox 系统都是 Yocto， Guest
+OS IVI 系统是 Android。系统级 Suspend 由 Host OS 发起，触发 Guest OS 运行 Suspend Flow，
+Guest OS 都完成 Suspend Flow 之后，Host OS 可以进入 Suspend，Host OS Suspend 完成之后整
+个系统才能进入省电的深度休眠模式。
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料
+PVT 内部资料</pre><a href="source-SRC0035.html#page-4">阅读整页及原图 →</a></details><details><summary>modem log常见分析方法.pdf · PDF 第 1 页</summary><pre class="source-text">modem log分析方法
+1、查看是否校准
+搜索calibration
+2、查看搜网驻网情况
+搜索MSG_ID_NWSEL_NAS_SV_PLMN_SEARCH_CNF检查搜网情况
+表明搜索到了4G的PLMN，即将开始驻网
+查看OTA message对应时间点显示的驻网情况</pre><a href="source-SRC0037.html#page-1">阅读整页及原图 →</a></details><details><summary>tbox整车无网络案例分享.pdf · PDF 第 1 页</summary><pre class="source-text">Internal use – confidential 
+掌锐电子</pre><a href="source-SRC0038.html#page-1">阅读整页及原图 →</a></details><details><summary>tbox整车无网络案例分享.pdf · PDF 第 2 页</summary><pre class="source-text">Internal use – confidential 
+2
+LUXSHARE-ICT
+ThunderX Confidential
+整车无网络鱼骨图
+一级原因 二级原因 三级原因 四级原因 五级原因 六级原因 责任方 责任人 行动项1
+1.APP联
+网异常
+1.1 APP自身
+网络异常
+1.1.1 APP 程序
+异常 IVI 查看是否是单个APP网络异常，APP自身排查
+1.2 PKI 证书
+异常(证书异
+常只会影响
+连接TSP应
+用）
+1.2.1 PKI 证书
+策略问题
+1.2.1.1 证书没有正常下
+载 TBOX 抓取pki log，分析为什么没有下证成功
+1.2.1.2 下载的证书与车
+机环境不匹配 TBOX 删除当前证书，初始化，重新下载证书
+1.2.1.3 TEE数据丢失，
+android证书还在，导
+致证书与TEE中私钥不
+匹配
+TBOX 删除当前证书，初始化，重新下载证书
+1.2.1.4 应用在证书下载
+成功前创建链接去连接
+云端，证书下载成功后，
+应用没有重新创建链接
+导致双向失败
+TBOX
+1、应用在下证前不要连接云端，下证成功后再
+连接云端
+2、下证成功后重启车机
+1.3 流量异常
+1.3.1 车厂流量
+策略配置错误，
+需要查看云平台
+流量配置策略
+整车
+1.联系运营商确认SIM卡套餐是否正常
+2.云平台查看配置是否正确（vin，iccid，车型
+等绑定信息）
+1.3.2 用户流量
+使用完毕，需要
+云平台查看
+整车 联系运营商确认SIM卡套餐是否正常
+1.3.2 停卡 整车
+1.更换IMEI号导致的停卡
+2.如联通触发1小时拨号次数上限的停卡
+3.发送短信超过上线触发的挺卡
+联系运营商重新开通</pre><a href="source-SRC0038.html#page-2">阅读整页及原图 →</a></details><details><summary>Tbox_Telephony_MD and mdlog SOP.pdf · PDF 第 2 页</summary><pre class="source-text">modem log sop 
+一、 代码位置与编译流程 
+• bb 文件位置 
+meta/meta-mediatek/recipes-devtools/mdlogger.bb 
+• 源码位置 
+src/devtool/mdlogger 
+二、 Build-in 与启动规则 
+• Build-in 规则 
+o 参考 debug_level.bbclass，判断 URL 和环境变量，决定 DEBUG_LEVEL 
+o 客户默认关闭，需配置 MTK_LOG_CUSTOMER_SUPPORT = &quot;yes&quot; 才 build-in 
+• 启动规则 
+o user 版本默认关闭，可通过命令开启 
+o https://online.mediatek.com/apps/faq/detail?faqid=FAQ19560&amp;list=SW 
+三、 日志存储与管理 
+• 存储路径 
+o 日志存储于 /data/debuglogger/mdlog1 目录，每次 start/stop 都会生成新的
+Folder 
+o 存储路径可以自定义来设定, 需要再 User Debug Load 下通过改 Property 方式
+进行, 修改 Property 需要将 emdlogger 关闭的前提下进行 
+▪ setprop debug.mdlogger.log2sd.path &lt;path&gt; 
+Note, 关闭 emdlogger 的命令: emdlogger_ctrl 7 
+设定好新的 Log 路径后需再重启 emdlogger;  
+▪ 开启 SD mode: emdlogger_ctrl 6 
+▪ 开启 PLS mode: emdlogger_ctrl 11 
+四、Rotate 机制 
+• SIZE 管控（仅 SD MODE 有 SIZE 管控，PLS/USB MODE 下无此机制） 
+ MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage
+MediaTek Confidential Release for
+PVT Usage</pre><a href="source-SRC0039.html#page-2">阅读整页及原图 →</a></details><details><summary>TBOX未登录TSP.pdf · PDF 第 1 页</summary><pre class="source-text">掌锐电子</pre><a href="source-SRC0042.html#page-1">阅读整页及原图 →</a></details><details><summary>Low_power_debug_sop_v1.4.pdf · PDF 第 3 页</summary><pre class="source-text">这一页没有足够的可提取文字，请打开原 PDF 查看图示。</pre><a href="source-SRC0043.html#page-3">阅读整页及原图 →</a></details></section><nav class="pager"><a href="12.html">← 上一步：音频与语音业务流程</a><a href="19.html">下一步：Camera跨域架构与DDR资源预算 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#13-mt8676-通信模块业务流程">13 MT8676 通信模块业务流程</a><a class="depth-2" href="#2026-09-20-校订内部通信外网与云业务三层分界">2026-09-20 校订：内部通信、外网与云业务三层分界</a><a class="depth-2" href="#业务流程-flow-26">业务流程 FLOW-26</a><a class="depth-3" href="#sdk-data-call">SDK Data Call</a><a class="depth-3" href="#触发目标与边界">触发、目标与边界</a><a class="depth-3" href="#正常链">正常链</a><a class="depth-3" href="#分层子链与方向">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环">反馈闭环</a><a class="depth-3" href="#异常分支">异常分支</a><a class="depth-3" href="#日志与诊断">日志与诊断</a><a class="depth-3" href="#责任域">责任域</a><a class="depth-3" href="#证据与置信度">证据与置信度</a><a class="depth-2" href="#业务流程-flow-27">业务流程 FLOW-27</a><a class="depth-3" href="#network-注册信号和异常检测">Network 注册、信号和异常检测</a><a class="depth-3" href="#触发目标与边界-1">触发、目标与边界</a><a class="depth-3" href="#正常链-1">正常链</a><a class="depth-3" href="#分层子链与方向-1">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-1">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-1">反馈闭环</a><a class="depth-3" href="#异常分支-1">异常分支</a><a class="depth-3" href="#日志与诊断-1">日志与诊断</a><a class="depth-3" href="#责任域-1">责任域</a><a class="depth-3" href="#证据与置信度-1">证据与置信度</a><a class="depth-2" href="#业务流程-flow-28">业务流程 FLOW-28</a><a class="depth-3" href="#sim-初始化和卡状态">SIM 初始化和卡状态</a><a class="depth-3" href="#触发目标与边界-2">触发、目标与边界</a><a class="depth-3" href="#正常链-2">正常链</a><a class="depth-3" href="#分层子链与方向-2">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-2">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-2">反馈闭环</a><a class="depth-3" href="#异常分支-2">异常分支</a><a class="depth-3" href="#日志与诊断-2">日志与诊断</a><a class="depth-3" href="#责任域-2">责任域</a><a class="depth-3" href="#证据与置信度-2">证据与置信度</a><a class="depth-2" href="#业务流程-flow-29">业务流程 FLOW-29</a><a class="depth-3" href="#sms-收发">SMS 收发</a><a class="depth-3" href="#触发目标与边界-3">触发、目标与边界</a><a class="depth-3" href="#正常链-3">正常链</a><a class="depth-3" href="#分层子链与方向-3">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-3">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-3">反馈闭环</a><a class="depth-3" href="#异常分支-3">异常分支</a><a class="depth-3" href="#日志与诊断-3">日志与诊断</a><a class="depth-3" href="#责任域-3">责任域</a><a class="depth-3" href="#证据与置信度-3">证据与置信度</a><a class="depth-2" href="#业务流程-flow-30">业务流程 FLOW-30</a><a class="depth-3" href="#at-通道">AT 通道</a><a class="depth-3" href="#触发目标与边界-4">触发、目标与边界</a><a class="depth-3" href="#正常链-4">正常链</a><a class="depth-3" href="#分层子链与方向-4">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-4">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-4">反馈闭环</a><a class="depth-3" href="#异常分支-4">异常分支</a><a class="depth-3" href="#日志与诊断-4">日志与诊断</a><a class="depth-3" href="#责任域-4">责任域</a><a class="depth-3" href="#证据与置信度-4">证据与置信度</a><a class="depth-2" href="#业务流程-flow-31">业务流程 FLOW-31</a><a class="depth-3" href="#gnsslocation">GNSS/Location</a><a class="depth-3" href="#触发目标与边界-5">触发、目标与边界</a><a class="depth-3" href="#正常链-5">正常链</a><a class="depth-3" href="#分层子链与方向-5">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-5">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-5">反馈闭环</a><a class="depth-3" href="#异常分支-5">异常分支</a><a class="depth-3" href="#日志与诊断-5">日志与诊断</a><a class="depth-3" href="#责任域-5">责任域</a><a class="depth-3" href="#证据与置信度-5">证据与置信度</a><a class="depth-2" href="#业务流程-flow-32">业务流程 FLOW-32</a><a class="depth-3" href="#imu">IMU</a><a class="depth-3" href="#触发目标与边界-6">触发、目标与边界</a><a class="depth-3" href="#正常链-6">正常链</a><a class="depth-3" href="#分层子链与方向-6">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-6">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-6">反馈闭环</a><a class="depth-3" href="#异常分支-6">异常分支</a><a class="depth-3" href="#日志与诊断-6">日志与诊断</a><a class="depth-3" href="#责任域-6">责任域</a><a class="depth-3" href="#证据与置信度-6">证据与置信度</a><a class="depth-2" href="#业务流程-flow-33">业务流程 FLOW-33</a><a class="depth-3" href="#device-management">Device Management</a><a class="depth-3" href="#触发目标与边界-7">触发、目标与边界</a><a class="depth-3" href="#正常链-7">正常链</a><a class="depth-3" href="#分层子链与方向-7">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-7">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-7">反馈闭环</a><a class="depth-3" href="#异常分支-7">异常分支</a><a class="depth-3" href="#日志与诊断-7">日志与诊断</a><a class="depth-3" href="#责任域-7">责任域</a><a class="depth-3" href="#证据与置信度-7">证据与置信度</a><a class="depth-2" href="#业务流程-flow-34">业务流程 FLOW-34</a><a class="depth-3" href="#powerwakelockwakeup">Power/WakeLock/Wakeup</a><a class="depth-3" href="#触发目标与边界-8">触发、目标与边界</a><a class="depth-3" href="#正常链-8">正常链</a><a class="depth-3" href="#分层子链与方向-8">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-8">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-8">反馈闭环</a><a class="depth-3" href="#异常分支-8">异常分支</a><a class="depth-3" href="#日志与诊断-8">日志与诊断</a><a class="depth-3" href="#责任域-8">责任域</a><a class="depth-3" href="#证据与置信度-8">证据与置信度</a><a class="depth-2" href="#业务流程-flow-35">业务流程 FLOW-35</a><a class="depth-3" href="#log-manager">Log Manager</a><a class="depth-3" href="#触发目标与边界-9">触发、目标与边界</a><a class="depth-3" href="#正常链-9">正常链</a><a class="depth-3" href="#分层子链与方向-9">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-9">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-9">反馈闭环</a><a class="depth-3" href="#异常分支-9">异常分支</a><a class="depth-3" href="#日志与诊断-9">日志与诊断</a><a class="depth-3" href="#责任域-9">责任域</a><a class="depth-3" href="#证据与置信度-9">证据与置信度</a><a class="depth-2" href="#业务流程-flow-36">业务流程 FLOW-36</a><a class="depth-3" href="#蜂窝远程监控和远控">蜂窝远程监控和远控</a><a class="depth-3" href="#触发目标与边界-10">触发、目标与边界</a><a class="depth-3" href="#正常链-10">正常链</a><a class="depth-3" href="#分层子链与方向-10">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-10">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-10">反馈闭环</a><a class="depth-3" href="#异常分支-10">异常分支</a><a class="depth-3" href="#日志与诊断-10">日志与诊断</a><a class="depth-3" href="#责任域-10">责任域</a><a class="depth-3" href="#证据与置信度-10">证据与置信度</a><a class="depth-2" href="#业务流程-supp-usb-u-vold-mediascanner-filemanager-c349a32">业务流程 supp-usb-u-vold-mediascanner-filemanager-c349a32</a><a class="depth-3" href="#usbu盘voldmediascannerfilemanager">USB/U盘/vold/MediaScanner/FileManager</a><a class="depth-3" href="#触发目标与边界-11">触发、目标与边界</a><a class="depth-3" href="#正常链-11">正常链</a><a class="depth-3" href="#分层子链与方向-11">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-11">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-11">反馈闭环</a><a class="depth-3" href="#异常分支-11">异常分支</a><a class="depth-3" href="#日志与诊断-11">日志与诊断</a><a class="depth-3" href="#责任域-11">责任域</a><a class="depth-3" href="#证据与置信度-11">证据与置信度</a><a class="depth-2" href="#业务流程-supp-launcher-systemui-notificationcenter-b5c6ca0">业务流程 supp-launcher-systemui-notificationcenter-b5c6ca0</a><a class="depth-3" href="#launchersystemuinotificationcenter">Launcher/SystemUI/NotificationCenter</a><a class="depth-3" href="#触发目标与边界-12">触发、目标与边界</a><a class="depth-3" href="#正常链-12">正常链</a><a class="depth-3" href="#分层子链与方向-12">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-12">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-12">反馈闭环</a><a class="depth-3" href="#异常分支-12">异常分支</a><a class="depth-3" href="#日志与诊断-12">日志与诊断</a><a class="depth-3" href="#责任域-12">责任域</a><a class="depth-3" href="#证据与置信度-12">证据与置信度</a><a class="depth-2" href="#业务流程-supp-hicar-carplay-android-auto-529100d">业务流程 supp-hicar-carplay-android-auto-529100d</a><a class="depth-3" href="#hicarcarplayandroid-auto">HiCar/CarPlay/Android Auto</a><a class="depth-3" href="#触发目标与边界-13">触发、目标与边界</a><a class="depth-3" href="#正常链-13">正常链</a><a class="depth-3" href="#分层子链与方向-13">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-13">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-13">反馈闭环</a><a class="depth-3" href="#异常分支-13">异常分支</a><a class="depth-3" href="#日志与诊断-13">日志与诊断</a><a class="depth-3" href="#责任域-13">责任域</a><a class="depth-3" href="#证据与置信度-13">证据与置信度</a><a class="depth-2" href="#业务流程-supp-wi-fi-some-ip-0e27a82">业务流程 supp-wi-fi-some-ip-0e27a82</a><a class="depth-3" href="#wi-fi移动网络虚拟以太网someip">Wi-Fi/移动网络/虚拟以太网/SOME/IP</a><a class="depth-3" href="#触发目标与边界-14">触发、目标与边界</a><a class="depth-3" href="#正常链-14">正常链</a><a class="depth-3" href="#分层子链与方向-14">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-14">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-14">反馈闭环</a><a class="depth-3" href="#异常分支-14">异常分支</a><a class="depth-3" href="#日志与诊断-14">日志与诊断</a><a class="depth-3" href="#责任域-14">责任域</a><a class="depth-3" href="#证据与置信度-14">证据与置信度</a><a class="depth-2" href="#业务流程-supp-item-93a8258">业务流程 supp-item-93a8258</a><a class="depth-3" href="#跨域日志和时间同步">跨域日志和时间同步</a><a class="depth-3" href="#触发目标与边界-15">触发、目标与边界</a><a class="depth-3" href="#正常链-15">正常链</a><a class="depth-3" href="#分层子链与方向-15">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-15">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-15">反馈闭环</a><a class="depth-3" href="#异常分支-15">异常分支</a><a class="depth-3" href="#日志与诊断-15">日志与诊断</a><a class="depth-3" href="#责任域-15">责任域</a><a class="depth-3" href="#证据与置信度-15">证据与置信度</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

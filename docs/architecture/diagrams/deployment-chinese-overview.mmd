@@ -1,0 +1,38 @@
+%%{init: {"flowchart": {"nodeSpacing": 18, "rankSpacing": 8, "padding": 12}, "themeVariables": {"fontSize": "16px"}}}%%
+flowchart LR
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph MCU["独立 MCU 域"]
+direction TB
+msw["SWCs · RTE / E2E<br/>OS · BSW · MCAL · FBL"]
+mhw["MCU 硬件"]
+msw ~~~ mhw
+end
+subgraph soc["SoC 部署视图"]
+direction TB
+subgraph domains["图示软件域"]
+direction TB
+subgraph domain_row1[" "]
+direction LR
+host["SOS / YOCTO · Host<br/>应用 · OS Runtime<br/>Infrastructure · Drivers"]
+android["UOS Android · Guest<br/>应用 · AOSP / CarService / MBOS<br/>Runtime · HAL · Infrastructure<br/>Kernel & Drivers"]
+host ~~~ android
+end
+subgraph domain_row2[" "]
+direction LR
+tbox["UOS Tbox · Guest<br/>Application / Tbox · GPS<br/>Telephony · 虚拟连接 / 时钟<br/>Kernel & Drivers / ccci"]
+nebula["Nebula os<br/>UOS / SOS VM process<br/>Micro Kernel"]
+tbox ~~~ nebula
+end
+domain_row1 ~~~ domain_row2
+end
+hv["Hypervisor"]
+hw["SoC 硬件"]
+domains ~~~ hv ~~~ hw
+end
+MCU ~~~ soc
+style domain_row1 fill:transparent,stroke:transparent
+style domain_row2 fill:transparent,stroke:transparent
+style MCU fill:#fff3e4,stroke:#bc9258
+style soc fill:#edf5f0,stroke:#678c76
+classDef guest fill:#e8effb,stroke:#7c95b6,color:#183352
+class android,tbox guest

@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>音频与语音业务流程 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details open><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a aria-current="page" href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 原版解释 / 12</div><div class="chapter-title"><p class="eyebrow">CHAPTER 12 · 原版解释全文</p><h1>音频与语音业务流程</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=12">并排对比两套正文 ↗</a><a class="button secondary" href="12.html">对照中文版 ↗</a><button class="button" data-read="original-12" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 原版解释对照</p><h2>焦点拿到了为什么还是没有声音？</h2><p>焦点是策略许可，PCM 是音频数据，route 决定路径，DSP/Codec/功放决定后级处理与输出。每一层成功只能证明本层合同满足。</p><ol><li><strong>怎么读：</strong>从媒体播放开始，再读导航 duck/恢复、录音和电话；对照音源、音区和会话身份。</li><li><strong>项目练习：</strong>跟踪导航开始、媒体降低音量、导航实际可听、导航结束和媒体恢复；检查结束回调是否属于当前会话。</li><li><strong>自检：</strong>旧导航结束事件为何可能破坏新通话的音量？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-23">Day 23</a> <a href="../index.html#day-34">Day 34</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#第-12-章音频与语音业务流程">第 12 章　音频与语音业务流程</a><a class="depth-2" href="#业务流程-flow-18">业务流程 FLOW-18</a><a class="depth-3" href="#本地与在线视频">本地与在线视频</a><a class="depth-3" href="#触发目标与边界">触发、目标与边界</a><a class="depth-3" href="#正常链">正常链</a><a class="depth-3" href="#分层子链与方向">分层子链与方向</a><a class="depth-3" href="#资源生命周期">资源生命周期</a><a class="depth-3" href="#反馈闭环">反馈闭环</a><a class="depth-3" href="#异常分支">异常分支</a><a class="depth-3" href="#日志与诊断">日志与诊断</a><a class="depth-3" href="#责任域">责任域</a><a class="depth-3" href="#证据与置信度">证据与置信度</a><a class="depth-2" href="#业务流程-flow-19">业务流程 FLOW-19</a><a class="depth-3" href="#导航播报与-duckmute">导航播报与 Duck/Mute</a><a class="depth-3" href="#触发目标与边界-1">触发、目标与边界</a><a class="depth-3" href="#正常链-1">正常链</a><a class="depth-3" href="#分层子链与方向-1">分层子链与方向</a><a class="depth-3" href="#资源生命周期-1">资源生命周期</a><a class="depth-3" href="#反馈闭环-1">反馈闭环</a><a class="depth-3" href="#异常分支-1">异常分支</a><a class="depth-3" href="#日志与诊断-1">日志与诊断</a><a class="depth-3" href="#责任域-1">责任域</a><a class="depth-3" href="#证据与置信度-1">证据与置信度</a><a class="depth-2" href="#业务流程-flow-20">业务流程 FLOW-20</a><a class="depth-3" href="#语音识别与语音车控">语音识别与语音车控</a><a class="depth-3" href="#触发目标与边界-2">触发、目标与边界</a><a class="depth-3" href="#正常链-2">正常链</a><a class="depth-3" href="#分层子链与方向-2">分层子链与方向</a><a class="depth-3" href="#资源生命周期-2">资源生命周期</a><a class="depth-3" href="#反馈闭环-2">反馈闭环</a><a class="depth-3" href="#异常分支-2">异常分支</a><a class="depth-3" href="#日志与诊断-2">日志与诊断</a><a class="depth-3" href="#责任域-2">责任域</a><a class="depth-3" href="#证据与置信度-2">证据与置信度</a><a class="depth-2" href="#业务流程-flow-21">业务流程 FLOW-21</a><a class="depth-3" href="#蓝牙电话">蓝牙电话</a><a class="depth-3" href="#触发目标与边界-3">触发、目标与边界</a><a class="depth-3" href="#正常链-3">正常链</a><a class="depth-3" href="#分层子链与方向-3">分层子链与方向</a><a class="depth-3" href="#资源生命周期-3">资源生命周期</a><a class="depth-3" href="#反馈闭环-3">反馈闭环</a><a class="depth-3" href="#异常分支-3">异常分支</a><a class="depth-3" href="#日志与诊断-3">日志与诊断</a><a class="depth-3" href="#责任域-3">责任域</a><a class="depth-3" href="#证据与置信度-3">证据与置信度</a><a class="depth-2" href="#业务流程-flow-22">业务流程 FLOW-22</a><a class="depth-3" href="#voiceecallxcall">Voice/eCall/xCall</a><a class="depth-3" href="#触发目标与边界-4">触发、目标与边界</a><a class="depth-3" href="#正常链-4">正常链</a><a class="depth-3" href="#分层子链与方向-4">分层子链与方向</a><a class="depth-3" href="#资源生命周期-4">资源生命周期</a><a class="depth-3" href="#反馈闭环-4">反馈闭环</a><a class="depth-3" href="#异常分支-4">异常分支</a><a class="depth-3" href="#日志与诊断-4">日志与诊断</a><a class="depth-3" href="#责任域-4">责任域</a><a class="depth-3" href="#证据与置信度-4">证据与置信度</a><a class="depth-2" href="#业务流程-flow-23">业务流程 FLOW-23</a><a class="depth-3" href="#broadcastradio">BroadcastRadio</a><a class="depth-3" href="#触发目标与边界-5">触发、目标与边界</a><a class="depth-3" href="#正常链-5">正常链</a><a class="depth-3" href="#分层子链与方向-5">分层子链与方向</a><a class="depth-3" href="#资源生命周期-5">资源生命周期</a><a class="depth-3" href="#反馈闭环-5">反馈闭环</a><a class="depth-3" href="#异常分支-5">异常分支</a><a class="depth-3" href="#日志与诊断-5">日志与诊断</a><a class="depth-3" href="#责任域-5">责任域</a><a class="depth-3" href="#证据与置信度-5">证据与置信度</a><a class="depth-2" href="#业务流程-flow-24">业务流程 FLOW-24</a><a class="depth-3" href="#ktv麦克风aecasr">KTV、麦克风、AEC、ASR</a><a class="depth-3" href="#触发目标与边界-6">触发、目标与边界</a><a class="depth-3" href="#正常链-6">正常链</a><a class="depth-3" href="#分层子链与方向-6">分层子链与方向</a><a class="depth-3" href="#资源生命周期-6">资源生命周期</a><a class="depth-3" href="#反馈闭环-6">反馈闭环</a><a class="depth-3" href="#异常分支-6">异常分支</a><a class="depth-3" href="#日志与诊断-6">日志与诊断</a><a class="depth-3" href="#责任域-6">责任域</a><a class="depth-3" href="#证据与置信度-6">证据与置信度</a><a class="depth-2" href="#业务流程-flow-25">业务流程 FLOW-25</a><a class="depth-3" href="#dsp功放与扬声器">DSP、功放与扬声器</a><a class="depth-3" href="#触发目标与边界-7">触发、目标与边界</a><a class="depth-3" href="#正常链-7">正常链</a><a class="depth-3" href="#分层子链与方向-7">分层子链与方向</a><a class="depth-3" href="#资源生命周期-7">资源生命周期</a><a class="depth-3" href="#反馈闭环-7">反馈闭环</a><a class="depth-3" href="#异常分支-7">异常分支</a><a class="depth-3" href="#日志与诊断-7">日志与诊断</a><a class="depth-3" href="#责任域-7">责任域</a><a class="depth-3" href="#证据与置信度-7">证据与置信度</a></details><article id="chapter-text"><h1 id="第-12-章音频与语音业务流程">第 12 章　音频与语音业务流程</h1>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>音频与语音业务流程 · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details open><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a aria-current="page" href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 原版解释 / 12</div><div class="chapter-title"><p class="eyebrow">CHAPTER 12 · 原版解释全文</p><h1>音频与语音业务流程</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=12">并排对比两套正文 ↗</a><a class="button secondary" href="12.html">对照中文版 ↗</a><button class="button" data-read="original-12" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 原版解释对照</p><h2>焦点拿到了为什么还是没有声音？</h2><p>焦点是策略许可，PCM 是音频数据，route 决定路径，DSP/Codec/功放决定后级处理与输出。每一层成功只能证明本层合同满足。</p><ol><li><strong>怎么读：</strong>从媒体播放开始，再读导航 duck/恢复、录音和电话；对照音源、音区和会话身份。</li><li><strong>项目练习：</strong>跟踪导航开始、媒体降低音量、导航实际可听、导航结束和媒体恢复；检查结束回调是否属于当前会话。</li><li><strong>自检：</strong>旧导航结束事件为何可能破坏新通话的音量？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-23">Day 23</a> <a href="../index.html#day-34">Day 34</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#第-12-章音频与语音业务流程">第 12 章　音频与语音业务流程</a><a class="depth-2" href="#业务流程-flow-18">业务流程 FLOW-18</a><a class="depth-3" href="#本地与在线视频">本地与在线视频</a><a class="depth-3" href="#触发目标与边界">触发、目标与边界</a><a class="depth-3" href="#正常链">正常链</a><a class="depth-3" href="#分层子链与方向">分层子链与方向</a><a class="depth-3" href="#资源生命周期">资源生命周期</a><a class="depth-3" href="#反馈闭环">反馈闭环</a><a class="depth-3" href="#异常分支">异常分支</a><a class="depth-3" href="#日志与诊断">日志与诊断</a><a class="depth-3" href="#责任域">责任域</a><a class="depth-3" href="#证据与置信度">证据与置信度</a><a class="depth-2" href="#业务流程-flow-19">业务流程 FLOW-19</a><a class="depth-3" href="#导航播报与-duckmute">导航播报与 Duck/Mute</a><a class="depth-3" href="#触发目标与边界-1">触发、目标与边界</a><a class="depth-3" href="#正常链-1">正常链</a><a class="depth-3" href="#分层子链与方向-1">分层子链与方向</a><a class="depth-3" href="#资源生命周期-1">资源生命周期</a><a class="depth-3" href="#反馈闭环-1">反馈闭环</a><a class="depth-3" href="#异常分支-1">异常分支</a><a class="depth-3" href="#日志与诊断-1">日志与诊断</a><a class="depth-3" href="#责任域-1">责任域</a><a class="depth-3" href="#证据与置信度-1">证据与置信度</a><a class="depth-2" href="#业务流程-flow-20">业务流程 FLOW-20</a><a class="depth-3" href="#语音识别与语音车控">语音识别与语音车控</a><a class="depth-3" href="#触发目标与边界-2">触发、目标与边界</a><a class="depth-3" href="#正常链-2">正常链</a><a class="depth-3" href="#分层子链与方向-2">分层子链与方向</a><a class="depth-3" href="#资源生命周期-2">资源生命周期</a><a class="depth-3" href="#反馈闭环-2">反馈闭环</a><a class="depth-3" href="#异常分支-2">异常分支</a><a class="depth-3" href="#日志与诊断-2">日志与诊断</a><a class="depth-3" href="#责任域-2">责任域</a><a class="depth-3" href="#证据与置信度-2">证据与置信度</a><a class="depth-2" href="#业务流程-flow-21">业务流程 FLOW-21</a><a class="depth-3" href="#蓝牙电话">蓝牙电话</a><a class="depth-3" href="#触发目标与边界-3">触发、目标与边界</a><a class="depth-3" href="#正常链-3">正常链</a><a class="depth-3" href="#分层子链与方向-3">分层子链与方向</a><a class="depth-3" href="#资源生命周期-3">资源生命周期</a><a class="depth-3" href="#反馈闭环-3">反馈闭环</a><a class="depth-3" href="#异常分支-3">异常分支</a><a class="depth-3" href="#日志与诊断-3">日志与诊断</a><a class="depth-3" href="#责任域-3">责任域</a><a class="depth-3" href="#证据与置信度-3">证据与置信度</a><a class="depth-2" href="#业务流程-flow-22">业务流程 FLOW-22</a><a class="depth-3" href="#voiceecallxcall">Voice/eCall/xCall</a><a class="depth-3" href="#触发目标与边界-4">触发、目标与边界</a><a class="depth-3" href="#正常链-4">正常链</a><a class="depth-3" href="#分层子链与方向-4">分层子链与方向</a><a class="depth-3" href="#资源生命周期-4">资源生命周期</a><a class="depth-3" href="#反馈闭环-4">反馈闭环</a><a class="depth-3" href="#异常分支-4">异常分支</a><a class="depth-3" href="#日志与诊断-4">日志与诊断</a><a class="depth-3" href="#责任域-4">责任域</a><a class="depth-3" href="#证据与置信度-4">证据与置信度</a><a class="depth-2" href="#业务流程-flow-23">业务流程 FLOW-23</a><a class="depth-3" href="#broadcastradio">BroadcastRadio</a><a class="depth-3" href="#触发目标与边界-5">触发、目标与边界</a><a class="depth-3" href="#正常链-5">正常链</a><a class="depth-3" href="#分层子链与方向-5">分层子链与方向</a><a class="depth-3" href="#资源生命周期-5">资源生命周期</a><a class="depth-3" href="#反馈闭环-5">反馈闭环</a><a class="depth-3" href="#异常分支-5">异常分支</a><a class="depth-3" href="#日志与诊断-5">日志与诊断</a><a class="depth-3" href="#责任域-5">责任域</a><a class="depth-3" href="#证据与置信度-5">证据与置信度</a><a class="depth-2" href="#业务流程-flow-24">业务流程 FLOW-24</a><a class="depth-3" href="#ktv麦克风aecasr">KTV、麦克风、AEC、ASR</a><a class="depth-3" href="#触发目标与边界-6">触发、目标与边界</a><a class="depth-3" href="#正常链-6">正常链</a><a class="depth-3" href="#分层子链与方向-6">分层子链与方向</a><a class="depth-3" href="#资源生命周期-6">资源生命周期</a><a class="depth-3" href="#反馈闭环-6">反馈闭环</a><a class="depth-3" href="#异常分支-6">异常分支</a><a class="depth-3" href="#日志与诊断-6">日志与诊断</a><a class="depth-3" href="#责任域-6">责任域</a><a class="depth-3" href="#证据与置信度-6">证据与置信度</a><a class="depth-2" href="#业务流程-flow-25">业务流程 FLOW-25</a><a class="depth-3" href="#dsp功放与扬声器">DSP、功放与扬声器</a><a class="depth-3" href="#触发目标与边界-7">触发、目标与边界</a><a class="depth-3" href="#正常链-7">正常链</a><a class="depth-3" href="#分层子链与方向-7">分层子链与方向</a><a class="depth-3" href="#资源生命周期-7">资源生命周期</a><a class="depth-3" href="#反馈闭环-7">反馈闭环</a><a class="depth-3" href="#异常分支-7">异常分支</a><a class="depth-3" href="#日志与诊断-7">日志与诊断</a><a class="depth-3" href="#责任域-7">责任域</a><a class="depth-3" href="#证据与置信度-7">证据与置信度</a></details><article id="chapter-text"><h1 id="第-12-章音频与语音业务流程">第 12 章　音频与语音业务流程</h1>
 <blockquote>
 <p>本章于 2026-09-20 按原架构补充正文解释；原图、模块/流程 ID 和分层保持原样。新证据的版本限定随段落标注。<a href="index.html">本轮更新说明</a>。</p>
 </blockquote>
@@ -10,7 +10,7 @@
 <p>用户选择本地文件或在线 URL，媒体源和播放会话达到可准备状态。目标是分离控制命令、网络/文件数据、解复用与解码、视频 Surface、AudioTrack、音视频时钟、物理输出和停止释放。本卡使用库存流程作为诊断骨架，不把相邻模块、标准协议行为或候选进程关系提升为 MT8676 私有事实。</p>
 <p>[置信度：mixed] 原图或 MT8676 资料只直接支撑所列模块、标签、局部箭头和明确资料内容；完整端到端顺序、Buffer/音频资源合同和恢复步骤由标准机制与受控业务假设补充。具体设备、属性、流 ID、周期、线程、进程和阈值仍需项目配置及运行证据确认。</p>
 <h3 id="正常链">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-12-figure-1"><figcaption>音频与语音业务流程 · 图 1 · Mermaid</figcaption><details  class="diagram" open data-panel="original-12-figure-1"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-12-figure-1.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="音频与语音业务流程 · 图 1，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;Media-App&quot;]
   N1[&quot;source/demux&quot;]
   N0 --&gt; N1
@@ -23,7 +23,7 @@
   N5[&quot;display+DSP/amplifier&quot;]
   N4 --&gt; N5
   N6[&quot;user-observation&quot;]
-  N5 --&gt; N6</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N5 --&gt; N6</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;Media-App&quot;]
   N1[&quot;source/demux&quot;]
   N0 --&gt; N1
@@ -36,10 +36,10 @@
   N5[&quot;display+DSP/amplifier&quot;]
   N4 --&gt; N5
   N6[&quot;user-observation&quot;]
-  N5 --&gt; N6</code></pre></details></details><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。media prepared ≠ first frame/audio ≠ clocks advancing ≠ EOS/stop completed。本地可读或网络缓冲可用不等于 MediaCodec 有输出；视频首帧不等于 AudioTrack 有声。</p>
+  N5 --&gt; N6</code></pre></details></details></figure><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。media prepared ≠ first frame/audio ≠ clocks advancing ≠ EOS/stop completed。本地可读或网络缓冲可用不等于 MediaCodec 有输出；视频首帧不等于 AudioTrack 有声。</p>
 <h3 id="分层子链与方向">分层子链与方向</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>视频播放出现积压时，沿码流输入→解码组件→输出 buffer→显示/音频消费者→归还链观察。PVT 的 pipelineFull 与 wait fence 日志提示管线或同步等待，不足以单独指向 Vcodec；音频下行或播放锚点也可能造成视频等待/丢帧。日志媒体 timeUs 应先判明字段语义，不能直接当作延迟差。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U047 · 软件开发培训-音视频解码常见问题及分析.pdf · PDF第6-10页<small>〔本地来源〕</small></span></p>
+<p>视频播放出现积压时，沿码流输入→解码组件→输出 buffer→显示/音频消费者→归还链观察。PVT 的 pipelineFull 与 wait fence 日志提示管线或同步等待，不足以单独指向 Vcodec；音频下行或播放锚点也可能造成视频等待/丢帧。日志媒体 timeUs 应先判明字段语义，不能直接当作延迟差。<a href="source-SRC0023.html#page-6">U047 · 软件开发培训-音视频解码常见问题及分析.pdf · PDF第6-10页</a></p>
 <p>控制平面负责触发、模式、焦点、路由或会话命令；数据平面负责 frame、buffer、PCM 或算法事件；策略平面负责状态机、优先级、合成或 focus/route 决策；物理输出平面负责屏、麦克风、DSP、功放或扬声器；反馈平面负责回读、callback、fence、首帧、最终状态或用户可见/可听结果。五个平面可以共享服务，但不能用其中一个平面的成功替代其他平面。</p>
 <p>对于显示类流程，trigger valid ≠ source frame available ≠ buffer transported ≠ composed ≠ presented ≠ physically visible。对于音频类流程，control accepted ≠ audio data flowing ≠ focus granted ≠ route active ≠ DSP/amplifier output audible。排障必须标明当前分析的是哪一个平面以及数据方向，避免把控制返回当作物理结果。</p>
 <h3 id="资源生命周期">资源生命周期</h3>
@@ -80,7 +80,7 @@
 <h3 id="反馈闭环">反馈闭环</h3>
 <p>反馈必须与原触发或请求相关，而不是只看时间接近。显示链优先使用首帧、frame callback、PageFlip/present fence 与物理观察；音频链使用 track/route、DSP/功放状态和物理有声；控制链使用权威回读或最终状态。反馈缺失时保留最后一个正确输出和第一个缺失输入。</p>
 <h3 id="异常分支">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="original-12-figure-2"><figcaption>音频与语音业务流程 · 图 2 · Mermaid</figcaption><details  class="diagram" open data-panel="original-12-figure-2"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-12-figure-2.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="音频与语音业务流程 · 图 2，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[&quot;本地与在线视频异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
   B -- 否 --&gt; B1[&quot;网络/文件读取停滞&quot;]
   B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
@@ -92,7 +92,7 @@
   B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
   C1 --&gt; R
   D1 --&gt; R
-  E1 --&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  E1 --&gt; R</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[&quot;本地与在线视频异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
   B -- 否 --&gt; B1[&quot;网络/文件读取停滞&quot;]
   B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
@@ -104,7 +104,7 @@
   B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
   C1 --&gt; R
   D1 --&gt; R
-  E1 --&gt; R</code></pre></details></details><p>本流程的主要异常分支为：网络/文件读取停滞；demux/MediaCodec 错误；输出 Surface 失效；AudioTrack underrun 或停止不完整。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
+  E1 --&gt; R</code></pre></details></details></figure><p>本流程的主要异常分支为：网络/文件读取停滞；demux/MediaCodec 错误；输出 Surface 失效；AudioTrack underrun 或停止不完整。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
 <p>恢复路径：创建新播放 Session，重新准备源和 codec，验证新首帧、音视频时钟推进、物理声画以及 EOS/stop 后资源释放，拒绝旧回调。恢复后验证必须覆盖新 Generation/Session、资源重新创建、关键 callback/fence/readback、物理结果以及旧会话隔离。只看到进程存活、API 返回或日志停止报错均不足以宣布业务恢复。</p>
 <h3 id="日志与诊断">日志与诊断</h3>
 <table>
@@ -164,7 +164,7 @@
 <p>地图导航发布提示音/TTS 请求并申请瞬态音频焦点。目标是把焦点控制平面、提示音数据平面、duck/mute 策略、硬件 route、提示音物理输出和原音源恢复分开。本卡使用库存流程作为诊断骨架，不把相邻模块、标准协议行为或候选进程关系提升为 MT8676 私有事实。</p>
 <p>[置信度：mixed] 原图或 MT8676 资料只直接支撑所列模块、标签、局部箭头和明确资料内容；完整端到端顺序、Buffer/音频资源合同和恢复步骤由标准机制与受控业务假设补充。具体设备、属性、流 ID、周期、线程、进程和阈值仍需项目配置及运行证据确认。</p>
 <h3 id="正常链-1">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-12-figure-3"><figcaption>音频与语音业务流程 · 图 3 · Mermaid</figcaption><details  class="diagram" open data-panel="original-12-figure-3"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-12-figure-3.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="音频与语音业务流程 · 图 3，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;Navigation&quot;]
   N1[&quot;AudioFocus-request&quot;]
   N0 --&gt; N1
@@ -179,7 +179,7 @@
   N6[&quot;DSP/amplifier&quot;]
   N5 --&gt; N6
   N7[&quot;speaker&quot;]
-  N6 --&gt; N7</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N6 --&gt; N7</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;Navigation&quot;]
   N1[&quot;AudioFocus-request&quot;]
   N0 --&gt; N1
@@ -194,10 +194,10 @@
   N6[&quot;DSP/amplifier&quot;]
   N5 --&gt; N6
   N7[&quot;speaker&quot;]
-  N6 --&gt; N7</code></pre></details></details><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。<code>AudioFocus</code> granted 不等于提示音数据已流动；duck 生效不等于目标 route 有声；prompt complete 不等于 abandon 已完成；原音源恢复还需验证 mute 与增益状态。</p>
+  N6 --&gt; N7</code></pre></details></details></figure><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。<code>AudioFocus</code> granted 不等于提示音数据已流动；duck 生效不等于目标 route 有声；prompt complete 不等于 abandon 已完成；原音源恢复还需验证 mute 与增益状态。</p>
 <h3 id="分层子链与方向-1">分层子链与方向</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>新版 Day 34 说明导航 duck 和恢复必须绑定当前 session、音区及策略状态。获得音频焦点只是逻辑资格，随后还需验证当前 PCM、route、增益、后级 ready 与目标音区输出。导航结束后先确认是否已被通话/告警或新会话接管，再恢复媒体；旧结束回调不能把当前更高优先业务下的媒体抬高。PVT/MTK 资料负责确认真实 AFE/ADSP/总线路径，教学策略示例不替代车型批准的优先级矩阵。[最新站点 Day 34](http[本地资料库路径] <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S045 · Audio模块 8676 vs 8668.pdf · PDF第2-4页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S049 · MT8668_Audio_HW_Interface_User_Guide_V1.1.pdf · PDF第4-7页<small>〔本地来源〕</small></span></p>
+<p>新版 Day 34 说明导航 duck 和恢复必须绑定当前 session、音区及策略状态。获得音频焦点只是逻辑资格，随后还需验证当前 PCM、route、增益、后级 ready 与目标音区输出。导航结束后先确认是否已被通话/告警或新会话接管，再恢复媒体；旧结束回调不能把当前更高优先业务下的媒体抬高。PVT/MTK 资料负责确认真实 AFE/ADSP/总线路径，教学策略示例不替代车型批准的优先级矩阵。[最新站点 Day 34](http[本地资料库路径] <a href="source-SRC0013.html#page-2">S045 · Audio模块 8676 vs 8668.pdf · PDF第2-4页</a> <a href="source-SRC0014.html#page-4">S049 · MT8668_Audio_HW_Interface_User_Guide_V1.1.pdf · PDF第4-7页</a></p>
 <p>控制平面负责触发、模式、焦点、路由或会话命令；数据平面负责 frame、buffer、PCM 或算法事件；策略平面负责状态机、优先级、合成或 focus/route 决策；物理输出平面负责屏、麦克风、DSP、功放或扬声器；反馈平面负责回读、callback、fence、首帧、最终状态或用户可见/可听结果。五个平面可以共享服务，但不能用其中一个平面的成功替代其他平面。</p>
 <p>对于显示类流程，trigger valid ≠ source frame available ≠ buffer transported ≠ composed ≠ presented ≠ physically visible。对于音频类流程，control accepted ≠ audio data flowing ≠ focus granted ≠ route active ≠ DSP/amplifier output audible。排障必须标明当前分析的是哪一个平面以及数据方向，避免把控制返回当作物理结果。</p>
 <h3 id="资源生命周期-1">资源生命周期</h3>
@@ -238,7 +238,7 @@
 <h3 id="反馈闭环-1">反馈闭环</h3>
 <p>反馈必须与原触发或请求相关，而不是只看时间接近。显示链优先使用首帧、frame callback、PageFlip/present fence 与物理观察；音频链使用 track/route、DSP/功放状态和物理有声；控制链使用权威回读或最终状态。反馈缺失时保留最后一个正确输出和第一个缺失输入。</p>
 <h3 id="异常分支-1">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="original-12-figure-4"><figcaption>音频与语音业务流程 · 图 4 · Mermaid</figcaption><details  class="diagram" open data-panel="original-12-figure-4"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-12-figure-4.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="音频与语音业务流程 · 图 4，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[&quot;导航播报与 Duck/Mute异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
   B -- 否 --&gt; B1[&quot;AudioFocus 拒绝或回调丢失&quot;]
   B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
@@ -250,7 +250,7 @@
   B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
   C1 --&gt; R
   D1 --&gt; R
-  E1 --&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  E1 --&gt; R</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[&quot;导航播报与 Duck/Mute异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
   B -- 否 --&gt; B1[&quot;AudioFocus 拒绝或回调丢失&quot;]
   B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
@@ -262,7 +262,7 @@
   B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
   C1 --&gt; R
   D1 --&gt; R
-  E1 --&gt; R</code></pre></details></details><p>本流程的主要异常分支为：AudioFocus 拒绝或回调丢失；duck/mute 策略错误；AudioTrack 无数据或 underrun；DSP route/功放无物理输出。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
+  E1 --&gt; R</code></pre></details></details></figure><p>本流程的主要异常分支为：AudioFocus 拒绝或回调丢失；duck/mute 策略错误；AudioTrack 无数据或 underrun；DSP route/功放无物理输出。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
 <p>恢复路径：用新焦点请求和新 AudioTrack 播放提示，验证扬声器有声；结束后 abandon 并确认原音源、route、mute 和增益恢复。恢复后验证必须覆盖新 Generation/Session、资源重新创建、关键 callback/fence/readback、物理结果以及旧会话隔离。只看到进程存活、API 返回或日志停止报错均不足以宣布业务恢复。</p>
 <h3 id="日志与诊断-1">日志与诊断</h3>
 <table>
@@ -322,7 +322,7 @@
 <p>唤醒词命中或方向盘语音键发起本代采音、识别和语义会话。目标是分离麦克风采音、AudioRecord、AEC、ASR 文本、语义映射、车辆控制、ECU 回读和播报/界面确认。本卡使用库存流程作为诊断骨架，不把相邻模块、标准协议行为或候选进程关系提升为 MT8676 私有事实。</p>
 <p>[置信度：mixed] 原图或 MT8676 资料只直接支撑所列模块、标签、局部箭头和明确资料内容；完整端到端顺序、Buffer/音频资源合同和恢复步骤由标准机制与受控业务假设补充。具体设备、属性、流 ID、周期、线程、进程和阈值仍需项目配置及运行证据确认。</p>
 <h3 id="正常链-2">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-12-figure-5"><figcaption>音频与语音业务流程 · 图 5 · Mermaid</figcaption><details  class="diagram" open data-panel="original-12-figure-5"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-12-figure-5.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="音频与语音业务流程 · 图 5，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;microphone&quot;]
   N1[&quot;AudioRecord&quot;]
   N0 --&gt; N1
@@ -341,7 +341,7 @@
   N8[&quot;readback&quot;]
   N7 --&gt; N8
   N9[&quot;spoken/visual-feedback&quot;]
-  N8 --&gt; N9</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N8 --&gt; N9</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;microphone&quot;]
   N1[&quot;AudioRecord&quot;]
   N0 --&gt; N1
@@ -360,10 +360,10 @@
   N8[&quot;readback&quot;]
   N7 --&gt; N8
   N9[&quot;spoken/visual-feedback&quot;]
-  N8 --&gt; N9</code></pre></details></details><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。ASR text ≠ semantic intent ≠ vehicle SET accepted ≠ ECU executed ≠ readback matched ≠ spoken/visual confirmation。AEC reference 缺失、识别错、意图错和车控失败必须分别定位。</p>
+  N8 --&gt; N9</code></pre></details></details></figure><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。ASR text ≠ semantic intent ≠ vehicle SET accepted ≠ ECU executed ≠ readback matched ≠ spoken/visual confirmation。AEC reference 缺失、识别错、意图错和车控失败必须分别定位。</p>
 <h3 id="分层子链与方向-2">分层子链与方向</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>语音车控包含麦克风采集、ASR/意图、车辆命令和状态反馈多个完成点。8676/8668 Audio 对比说明新平台输入可绕过内部 ADSP，原语音架构层次可保留，但采集处理/回声参考在何处执行必须重新核对，不能假定继续由8676 ADSP B核承担。车辆反馈沿对应属性链验证，识别成功或发送成功不等于 ECU 执行成功。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S045 · Audio模块 8676 vs 8668.pdf · PDF第2-4页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S281 · vehicle方案.pdf · PDF第2-3页<small>〔本地来源〕</small></span></p>
+<p>语音车控包含麦克风采集、ASR/意图、车辆命令和状态反馈多个完成点。8676/8668 Audio 对比说明新平台输入可绕过内部 ADSP，原语音架构层次可保留，但采集处理/回声参考在何处执行必须重新核对，不能假定继续由8676 ADSP B核承担。车辆反馈沿对应属性链验证，识别成功或发送成功不等于 ECU 执行成功。<a href="source-SRC0013.html#page-2">S045 · Audio模块 8676 vs 8668.pdf · PDF第2-4页</a> <a href="source-SRC0024.html#page-2">S281 · vehicle方案.pdf · PDF第2-3页</a></p>
 <p>控制平面负责触发、模式、焦点、路由或会话命令；数据平面负责 frame、buffer、PCM 或算法事件；策略平面负责状态机、优先级、合成或 focus/route 决策；物理输出平面负责屏、麦克风、DSP、功放或扬声器；反馈平面负责回读、callback、fence、首帧、最终状态或用户可见/可听结果。五个平面可以共享服务，但不能用其中一个平面的成功替代其他平面。</p>
 <p>对于显示类流程，trigger valid ≠ source frame available ≠ buffer transported ≠ composed ≠ presented ≠ physically visible。对于音频类流程，control accepted ≠ audio data flowing ≠ focus granted ≠ route active ≠ DSP/amplifier output audible。排障必须标明当前分析的是哪一个平面以及数据方向，避免把控制返回当作物理结果。</p>
 <h3 id="资源生命周期-2">资源生命周期</h3>
@@ -404,7 +404,7 @@
 <h3 id="反馈闭环-2">反馈闭环</h3>
 <p>反馈必须与原触发或请求相关，而不是只看时间接近。显示链优先使用首帧、frame callback、PageFlip/present fence 与物理观察；音频链使用 track/route、DSP/功放状态和物理有声；控制链使用权威回读或最终状态。反馈缺失时保留最后一个正确输出和第一个缺失输入。</p>
 <h3 id="异常分支-2">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="original-12-figure-6"><figcaption>音频与语音业务流程 · 图 6 · Mermaid</figcaption><details  class="diagram" open data-panel="original-12-figure-6"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-12-figure-6.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="音频与语音业务流程 · 图 6，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[&quot;语音识别与语音车控异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
   B -- 否 --&gt; B1[&quot;麦克风/AudioRecord 不推进&quot;]
   B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
@@ -416,7 +416,7 @@
   B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
   C1 --&gt; R
   D1 --&gt; R
-  E1 --&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  E1 --&gt; R</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[&quot;语音识别与语音车控异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
   B -- 否 --&gt; B1[&quot;麦克风/AudioRecord 不推进&quot;]
   B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
@@ -428,7 +428,7 @@
   B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
   C1 --&gt; R
   D1 --&gt; R
-  E1 --&gt; R</code></pre></details></details><p>本流程的主要异常分支为：麦克风/AudioRecord 不推进；AEC reference 或回声处理异常；ASR Session 超时/回调丢失；语义或车辆控制/ECU 回读不匹配。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
+  E1 --&gt; R</code></pre></details></details></figure><p>本流程的主要异常分支为：麦克风/AudioRecord 不推进；AEC reference 或回声处理异常；ASR Session 超时/回调丢失；语义或车辆控制/ECU 回读不匹配。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
 <p>恢复路径：重建采音、AEC 和 ASR Session，以新请求执行语义和车控，取得 ECU 权威回读并完成播报/显示；旧识别回调不得触发新车控。恢复后验证必须覆盖新 Generation/Session、资源重新创建、关键 callback/fence/readback、物理结果以及旧会话隔离。只看到进程存活、API 返回或日志停止报错均不足以宣布业务恢复。</p>
 <h3 id="日志与诊断-2">日志与诊断</h3>
 <table>
@@ -488,7 +488,7 @@
 <p>HFP 来电、拨号、接听或挂断事件进入当前蓝牙电话 Session。目标是分离蓝牙 Profile/呼叫状态、<code>HFP</code> 控制、<code>SCO</code> 音频承载、焦点、路由以及物理麦克风和扬声器。本卡使用库存流程作为诊断骨架，不把相邻模块、标准协议行为或候选进程关系提升为 MT8676 私有事实。</p>
 <p>[置信度：mixed] 原图或 MT8676 资料只直接支撑所列模块、标签、局部箭头和明确资料内容；完整端到端顺序、Buffer/音频资源合同和恢复步骤由标准机制与受控业务假设补充。具体设备、属性、流 ID、周期、线程、进程和阈值仍需项目配置及运行证据确认。</p>
 <h3 id="正常链-3">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-12-figure-7"><figcaption>音频与语音业务流程 · 图 7 · Mermaid</figcaption><details  class="diagram" open data-panel="original-12-figure-7"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-12-figure-7.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="音频与语音业务流程 · 图 7，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;Bluetooth-HFP&quot;]
   N1[&quot;BtPhone&quot;]
   N0 --&gt; N1
@@ -505,7 +505,7 @@
   N7[&quot;DSP&quot;]
   N6 --&gt; N7
   N8[&quot;microphone+speaker&quot;]
-  N7 --&gt; N8</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N7 --&gt; N8</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;Bluetooth-HFP&quot;]
   N1[&quot;BtPhone&quot;]
   N0 --&gt; N1
@@ -522,7 +522,7 @@
   N7[&quot;DSP&quot;]
   N6 --&gt; N7
   N8[&quot;microphone+speaker&quot;]
-  N7 --&gt; N8</code></pre></details></details><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。call state ≠ voice bearer ≠ SCO/modem audio route ≠ physical microphone/speaker path。Profile connected 不等于当前呼叫 SCO 已建立；焦点正确也不证明上下行语音均可用。</p>
+  N7 --&gt; N8</code></pre></details></details></figure><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。call state ≠ voice bearer ≠ SCO/modem audio route ≠ physical microphone/speaker path。Profile connected 不等于当前呼叫 SCO 已建立；焦点正确也不证明上下行语音均可用。</p>
 <h3 id="分层子链与方向-3">分层子链与方向</h3>
 <p>控制平面负责触发、模式、焦点、路由或会话命令；数据平面负责 frame、buffer、PCM 或算法事件；策略平面负责状态机、优先级、合成或 focus/route 决策；物理输出平面负责屏、麦克风、DSP、功放或扬声器；反馈平面负责回读、callback、fence、首帧、最终状态或用户可见/可听结果。五个平面可以共享服务，但不能用其中一个平面的成功替代其他平面。</p>
 <p>对于显示类流程，trigger valid ≠ source frame available ≠ buffer transported ≠ composed ≠ presented ≠ physically visible。对于音频类流程，control accepted ≠ audio data flowing ≠ focus granted ≠ route active ≠ DSP/amplifier output audible。排障必须标明当前分析的是哪一个平面以及数据方向，避免把控制返回当作物理结果。</p>
@@ -564,7 +564,7 @@
 <h3 id="反馈闭环-3">反馈闭环</h3>
 <p>反馈必须与原触发或请求相关，而不是只看时间接近。显示链优先使用首帧、frame callback、PageFlip/present fence 与物理观察；音频链使用 track/route、DSP/功放状态和物理有声；控制链使用权威回读或最终状态。反馈缺失时保留最后一个正确输出和第一个缺失输入。</p>
 <h3 id="异常分支-3">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="original-12-figure-8"><figcaption>音频与语音业务流程 · 图 8 · Mermaid</figcaption><details  class="diagram" open data-panel="original-12-figure-8"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-12-figure-8.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="音频与语音业务流程 · 图 8，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[&quot;蓝牙电话异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
   B -- 否 --&gt; B1[&quot;HFP Profile/AT 状态异常&quot;]
   B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
@@ -576,7 +576,7 @@
   B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
   C1 --&gt; R
   D1 --&gt; R
-  E1 --&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  E1 --&gt; R</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[&quot;蓝牙电话异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
   B -- 否 --&gt; B1[&quot;HFP Profile/AT 状态异常&quot;]
   B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
@@ -588,7 +588,7 @@
   B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
   C1 --&gt; R
   D1 --&gt; R
-  E1 --&gt; R</code></pre></details></details><p>本流程的主要异常分支为：HFP Profile/AT 状态异常；SCO 建链或包流异常；焦点/route 冲突；物理麦克风或扬声器单向无声。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
+  E1 --&gt; R</code></pre></details></details></figure><p>本流程的主要异常分支为：HFP Profile/AT 状态异常；SCO 建链或包流异常；焦点/route 冲突；物理麦克风或扬声器单向无声。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
 <p>恢复路径：建立新 call Session 和 SCO route，分别验证上行、下行、焦点和物理输出；挂断后释放路由并隔离旧 Session 事件。恢复后验证必须覆盖新 Generation/Session、资源重新创建、关键 callback/fence/readback、物理结果以及旧会话隔离。只看到进程存活、API 返回或日志停止报错均不足以宣布业务恢复。</p>
 <h3 id="日志与诊断-3">日志与诊断</h3>
 <table>
@@ -648,7 +648,7 @@
 <p>紧急呼叫、xCall 命令或用户拨号发起 Voice Client 调用。目标是跟踪 SDK Client、UMDP/服务、Telephony/Modem、Audio Service、物理语音通路和呼叫回调，且不把图示组件强绑定成未证实的单进程链。本卡使用库存流程作为诊断骨架，不把相邻模块、标准协议行为或候选进程关系提升为 MT8676 私有事实。</p>
 <p>[置信度：mixed] 原图或 MT8676 资料只直接支撑所列模块、标签、局部箭头和明确资料内容；完整端到端顺序、Buffer/音频资源合同和恢复步骤由标准机制与受控业务假设补充。具体设备、属性、流 ID、周期、线程、进程和阈值仍需项目配置及运行证据确认。</p>
 <h3 id="正常链-4">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-12-figure-9"><figcaption>音频与语音业务流程 · 图 9 · Mermaid</figcaption><details  class="diagram" open data-panel="original-12-figure-9"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-12-figure-9.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="音频与语音业务流程 · 图 9，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;application/xCall&quot;]
   N1[&quot;Favalon-Voice-Client&quot;]
   N0 --&gt; N1
@@ -661,7 +661,7 @@
   N5[&quot;DSP-route&quot;]
   N4 --&gt; N5
   N6[&quot;call-event-callback&quot;]
-  N5 --&gt; N6</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N5 --&gt; N6</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;application/xCall&quot;]
   N1[&quot;Favalon-Voice-Client&quot;]
   N0 --&gt; N1
@@ -674,10 +674,10 @@
   N5[&quot;DSP-route&quot;]
   N4 --&gt; N5
   N6[&quot;call-event-callback&quot;]
-  N5 --&gt; N6</code></pre></details></details><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。同步调用返回不等于呼叫已建立；<code>callId</code> 存在不等于 voice bearer 和音频 route Ready；hangup 请求返回不等于最终状态。FLOW-22 的 SDK 图片证据与标准恢复推断保持分离。</p>
+  N5 --&gt; N6</code></pre></details></details></figure><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。同步调用返回不等于呼叫已建立；<code>callId</code> 存在不等于 voice bearer 和音频 route Ready；hangup 请求返回不等于最终状态。FLOW-22 的 SDK 图片证据与标准恢复推断保持分离。</p>
 <h3 id="分层子链与方向-4">分层子链与方向</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>PVT TBox 设计中的 Guest 虚拟音频前端、Host 后端、CCCI/Modem 语音通路，解释了本流程跨越通信控制和音频数据的原因。建立呼叫、PCM 通路准备、上行采集、下行播放是不同状态；仅有通话 UI/注册事件不能证明双向声音。保存 Host/TBox/Modem 的同会话证据，并按项目音频配置确认 route/采样/端口，不能从公版图继承量产 busId。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S263 · MT8676 TBOX子系统架构设计.pdf · PDF第1-5页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S052 · MT8668_Public_domain_audio_planning-202601-to-PVT.pdf · PDF第1页<small>〔本地来源〕</small></span></p>
+<p>PVT TBox 设计中的 Guest 虚拟音频前端、Host 后端、CCCI/Modem 语音通路，解释了本流程跨越通信控制和音频数据的原因。建立呼叫、PCM 通路准备、上行采集、下行播放是不同状态；仅有通话 UI/注册事件不能证明双向声音。保存 Host/TBox/Modem 的同会话证据，并按项目音频配置确认 route/采样/端口，不能从公版图继承量产 busId。<a href="source-SRC0015.html#page-1">S263 · MT8676 TBOX子系统架构设计.pdf · PDF第1-5页</a> <a href="source-SRC0041.html#page-1">S052 · MT8668_Public_domain_audio_planning-202601-to-PVT.pdf · PDF第1页</a></p>
 <p>控制平面负责触发、模式、焦点、路由或会话命令；数据平面负责 frame、buffer、PCM 或算法事件；策略平面负责状态机、优先级、合成或 focus/route 决策；物理输出平面负责屏、麦克风、DSP、功放或扬声器；反馈平面负责回读、callback、fence、首帧、最终状态或用户可见/可听结果。五个平面可以共享服务，但不能用其中一个平面的成功替代其他平面。</p>
 <p>对于显示类流程，trigger valid ≠ source frame available ≠ buffer transported ≠ composed ≠ presented ≠ physically visible。对于音频类流程，control accepted ≠ audio data flowing ≠ focus granted ≠ route active ≠ DSP/amplifier output audible。排障必须标明当前分析的是哪一个平面以及数据方向，避免把控制返回当作物理结果。</p>
 <h3 id="资源生命周期-4">资源生命周期</h3>
@@ -718,7 +718,7 @@
 <h3 id="反馈闭环-4">反馈闭环</h3>
 <p>反馈必须与原触发或请求相关，而不是只看时间接近。显示链优先使用首帧、frame callback、PageFlip/present fence 与物理观察；音频链使用 track/route、DSP/功放状态和物理有声；控制链使用权威回读或最终状态。反馈缺失时保留最后一个正确输出和第一个缺失输入。</p>
 <h3 id="异常分支-4">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="original-12-figure-10"><figcaption>音频与语音业务流程 · 图 10 · Mermaid</figcaption><details  class="diagram" open data-panel="original-12-figure-10"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-12-figure-10.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="音频与语音业务流程 · 图 10，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[&quot;Voice/eCall/xCall异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
   B -- 否 --&gt; B1[&quot;SDK Client 未初始化或服务 DOWN&quot;]
   B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
@@ -730,7 +730,7 @@
   B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
   C1 --&gt; R
   D1 --&gt; R
-  E1 --&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  E1 --&gt; R</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[&quot;Voice/eCall/xCall异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
   B -- 否 --&gt; B1[&quot;SDK Client 未初始化或服务 DOWN&quot;]
   B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
@@ -742,7 +742,7 @@
   B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
   C1 --&gt; R
   D1 --&gt; R
-  E1 --&gt; R</code></pre></details></details><p>本流程的主要异常分支为：SDK Client 未初始化或服务 DOWN；fb_modemServices/Telephony 未 Ready；呼叫回调丢失或旧 Session；Audio route 未建立或物理通路无声。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
+  E1 --&gt; R</code></pre></details></details></figure><p>本流程的主要异常分支为：SDK Client 未初始化或服务 DOWN；fb_modemServices/Telephony 未 Ready；呼叫回调丢失或旧 Session；Audio route 未建立或物理通路无声。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
 <p>恢复路径：获取新 Client Handle 和 call Session，重新注册回调并发起新呼叫，验证 Telephony、Audio route、物理通话和最终挂断状态；旧 callId 事件不得污染。恢复后验证必须覆盖新 Generation/Session、资源重新创建、关键 callback/fence/readback、物理结果以及旧会话隔离。只看到进程存活、API 返回或日志停止报错均不足以宣布业务恢复。</p>
 <h3 id="日志与诊断-4">日志与诊断</h3>
 <table>
@@ -802,7 +802,7 @@
 <p>用户选台、搜台或系统恢复上次频点，产生新的调谐请求。目标是把控制调谐、射频锁定、metadata、音频数据、焦点/路由、DSP/功放和扬声器有声状态拆开。本卡使用库存流程作为诊断骨架，不把相邻模块、标准协议行为或候选进程关系提升为 MT8676 私有事实。</p>
 <p>[置信度：mixed] 原图或 MT8676 资料只直接支撑所列模块、标签、局部箭头和明确资料内容；完整端到端顺序、Buffer/音频资源合同和恢复步骤由标准机制与受控业务假设补充。具体设备、属性、流 ID、周期、线程、进程和阈值仍需项目配置及运行证据确认。</p>
 <h3 id="正常链-5">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-12-figure-11"><figcaption>音频与语音业务流程 · 图 11 · Mermaid</figcaption><details  class="diagram" open data-panel="original-12-figure-11"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-12-figure-11.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="音频与语音业务流程 · 图 11，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;Radio-App&quot;]
   N1[&quot;BroadcastRadio-Service/HAL&quot;]
   N0 --&gt; N1
@@ -817,7 +817,7 @@
   N6[&quot;DSP/amplifier&quot;]
   N5 --&gt; N6
   N7[&quot;speaker&quot;]
-  N6 --&gt; N7</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N6 --&gt; N7</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;Radio-App&quot;]
   N1[&quot;BroadcastRadio-Service/HAL&quot;]
   N0 --&gt; N1
@@ -832,7 +832,7 @@
   N6[&quot;DSP/amplifier&quot;]
   N5 --&gt; N6
   N7[&quot;speaker&quot;]
-  N6 --&gt; N7</code></pre></details></details><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。调谐请求 accepted 不等于 tuner locked；tuned 回调不等于 audio data flowing；metadata 正确不等于扬声器有声。BroadcastRadio 状态必须与当前请求和区域配置关联。</p>
+  N6 --&gt; N7</code></pre></details></details></figure><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。调谐请求 accepted 不等于 tuner locked；tuned 回调不等于 audio data flowing；metadata 正确不等于扬声器有声。BroadcastRadio 状态必须与当前请求和区域配置关联。</p>
 <h3 id="分层子链与方向-5">分层子链与方向</h3>
 <p>控制平面负责触发、模式、焦点、路由或会话命令；数据平面负责 frame、buffer、PCM 或算法事件；策略平面负责状态机、优先级、合成或 focus/route 决策；物理输出平面负责屏、麦克风、DSP、功放或扬声器；反馈平面负责回读、callback、fence、首帧、最终状态或用户可见/可听结果。五个平面可以共享服务，但不能用其中一个平面的成功替代其他平面。</p>
 <p>对于显示类流程，trigger valid ≠ source frame available ≠ buffer transported ≠ composed ≠ presented ≠ physically visible。对于音频类流程，control accepted ≠ audio data flowing ≠ focus granted ≠ route active ≠ DSP/amplifier output audible。排障必须标明当前分析的是哪一个平面以及数据方向，避免把控制返回当作物理结果。</p>
@@ -874,7 +874,7 @@
 <h3 id="反馈闭环-5">反馈闭环</h3>
 <p>反馈必须与原触发或请求相关，而不是只看时间接近。显示链优先使用首帧、frame callback、PageFlip/present fence 与物理观察；音频链使用 track/route、DSP/功放状态和物理有声；控制链使用权威回读或最终状态。反馈缺失时保留最后一个正确输出和第一个缺失输入。</p>
 <h3 id="异常分支-5">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="original-12-figure-12"><figcaption>音频与语音业务流程 · 图 12 · Mermaid</figcaption><details  class="diagram" open data-panel="original-12-figure-12"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-12-figure-12.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="音频与语音业务流程 · 图 12，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[&quot;BroadcastRadio异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
   B -- 否 --&gt; B1[&quot;天线/调谐器异常&quot;]
   B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
@@ -886,7 +886,7 @@
   B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
   C1 --&gt; R
   D1 --&gt; R
-  E1 --&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  E1 --&gt; R</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[&quot;BroadcastRadio异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
   B -- 否 --&gt; B1[&quot;天线/调谐器异常&quot;]
   B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
@@ -898,7 +898,7 @@
   B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
   C1 --&gt; R
   D1 --&gt; R
-  E1 --&gt; R</code></pre></details></details><p>本流程的主要异常分支为：天线/调谐器异常；Radio HAL 回调缺失；频点/区域配置不匹配；Audio route 静音或物理输出失败。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
+  E1 --&gt; R</code></pre></details></details></figure><p>本流程的主要异常分支为：天线/调谐器异常；Radio HAL 回调缺失；频点/区域配置不匹配；Audio route 静音或物理输出失败。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
 <p>恢复路径：发起新调谐 Session，验证 tuner lock、tuned/metadata 回调、音频 route 和扬声器有声；旧频点回调不得覆盖新选择。恢复后验证必须覆盖新 Generation/Session、资源重新创建、关键 callback/fence/readback、物理结果以及旧会话隔离。只看到进程存活、API 返回或日志停止报错均不足以宣布业务恢复。</p>
 <h3 id="日志与诊断-5">日志与诊断</h3>
 <table>
@@ -958,7 +958,7 @@
 <p>用户进入 KTV/点歌并授权麦克风，创建采音、AEC、混音和播放会话。目标是同时跟踪麦克风采集、AEC reference、伴奏与人声混音、ASR、AudioTrack、DSP route 和物理声学回路。本卡使用库存流程作为诊断骨架，不把相邻模块、标准协议行为或候选进程关系提升为 MT8676 私有事实。</p>
 <p>[置信度：mixed] 原图或 MT8676 资料只直接支撑所列模块、标签、局部箭头和明确资料内容；完整端到端顺序、Buffer/音频资源合同和恢复步骤由标准机制与受控业务假设补充。具体设备、属性、流 ID、周期、线程、进程和阈值仍需项目配置及运行证据确认。</p>
 <h3 id="正常链-6">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-12-figure-13"><figcaption>音频与语音业务流程 · 图 13 · Mermaid</figcaption><details  class="diagram" open data-panel="original-12-figure-13"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-12-figure-13.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="音频与语音业务流程 · 图 13，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;microphone&quot;]
   N1[&quot;AudioRecord&quot;]
   N0 --&gt; N1
@@ -975,7 +975,7 @@
   N7[&quot;DSP/amplifier&quot;]
   N6 --&gt; N7
   N8[&quot;speaker&quot;]
-  N7 --&gt; N8</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N7 --&gt; N8</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;microphone&quot;]
   N1[&quot;AudioRecord&quot;]
   N0 --&gt; N1
@@ -992,10 +992,10 @@
   N7[&quot;DSP/amplifier&quot;]
   N6 --&gt; N7
   N8[&quot;speaker&quot;]
-  N7 --&gt; N8</code></pre></details></details><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。<code>KTV</code> 页面可用不等于麦克风已占用；AudioRecord 有数据不等于 AEC reference 正确；AEC 收敛不等于混音同步；ASR 状态也不证明扬声器输出。时钟漂移需从采集、伴奏和播放三端对齐。</p>
+  N7 --&gt; N8</code></pre></details></details></figure><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。<code>KTV</code> 页面可用不等于麦克风已占用；AudioRecord 有数据不等于 AEC reference 正确；AEC 收敛不等于混音同步；ASR 状态也不证明扬声器输出。时钟漂移需从采集、伴奏和播放三端对齐。</p>
 <h3 id="分层子链与方向-6">分层子链与方向</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>KTV/AEC/ASR 同时消费采集流和参考流，关键是相同时间语义下的路由与时延对齐。平台比较资料显示上行 ADSP 处理位置不同，AFE 通道总量与单条 TDM 通路能力也不可混算；原算法框保留，实际输入算法、回声参考、采样率/位宽与时钟由新平台音频方案确认。没有对应测试就不填写统一时延阈值。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S045 · Audio模块 8676 vs 8668.pdf · PDF第2-4页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S049 · MT8668_Audio_HW_Interface_User_Guide_V1.1.pdf · PDF第4-7页<small>〔本地来源〕</small></span></p>
+<p>KTV/AEC/ASR 同时消费采集流和参考流，关键是相同时间语义下的路由与时延对齐。平台比较资料显示上行 ADSP 处理位置不同，AFE 通道总量与单条 TDM 通路能力也不可混算；原算法框保留，实际输入算法、回声参考、采样率/位宽与时钟由新平台音频方案确认。没有对应测试就不填写统一时延阈值。<a href="source-SRC0013.html#page-2">S045 · Audio模块 8676 vs 8668.pdf · PDF第2-4页</a> <a href="source-SRC0014.html#page-4">S049 · MT8668_Audio_HW_Interface_User_Guide_V1.1.pdf · PDF第4-7页</a></p>
 <p>控制平面负责触发、模式、焦点、路由或会话命令；数据平面负责 frame、buffer、PCM 或算法事件；策略平面负责状态机、优先级、合成或 focus/route 决策；物理输出平面负责屏、麦克风、DSP、功放或扬声器；反馈平面负责回读、callback、fence、首帧、最终状态或用户可见/可听结果。五个平面可以共享服务，但不能用其中一个平面的成功替代其他平面。</p>
 <p>对于显示类流程，trigger valid ≠ source frame available ≠ buffer transported ≠ composed ≠ presented ≠ physically visible。对于音频类流程，control accepted ≠ audio data flowing ≠ focus granted ≠ route active ≠ DSP/amplifier output audible。排障必须标明当前分析的是哪一个平面以及数据方向，避免把控制返回当作物理结果。</p>
 <h3 id="资源生命周期-6">资源生命周期</h3>
@@ -1036,7 +1036,7 @@
 <h3 id="反馈闭环-6">反馈闭环</h3>
 <p>反馈必须与原触发或请求相关，而不是只看时间接近。显示链优先使用首帧、frame callback、PageFlip/present fence 与物理观察；音频链使用 track/route、DSP/功放状态和物理有声；控制链使用权威回读或最终状态。反馈缺失时保留最后一个正确输出和第一个缺失输入。</p>
 <h3 id="异常分支-6">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="original-12-figure-14"><figcaption>音频与语音业务流程 · 图 14 · Mermaid</figcaption><details  class="diagram" open data-panel="original-12-figure-14"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-12-figure-14.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="音频与语音业务流程 · 图 14，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[&quot;KTV、麦克风、AEC、ASR异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
   B -- 否 --&gt; B1[&quot;麦克风权限/设备占用&quot;]
   B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
@@ -1048,7 +1048,7 @@
   B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
   C1 --&gt; R
   D1 --&gt; R
-  E1 --&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  E1 --&gt; R</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[&quot;KTV、麦克风、AEC、ASR异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
   B -- 否 --&gt; B1[&quot;麦克风权限/设备占用&quot;]
   B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
@@ -1060,7 +1060,7 @@
   B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
   C1 --&gt; R
   D1 --&gt; R
-  E1 --&gt; R</code></pre></details></details><p>本流程的主要异常分支为：麦克风权限/设备占用；AEC reference 缺失；采样率或时钟漂移导致混音异常；AudioTrack underrun 或 DSP route 无声。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
+  E1 --&gt; R</code></pre></details></details></figure><p>本流程的主要异常分支为：麦克风权限/设备占用；AEC reference 缺失；采样率或时钟漂移导致混音异常；AudioTrack underrun 或 DSP route 无声。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
 <p>恢复路径：重建 AudioRecord、AEC、混音和 AudioTrack，以新 Session 验证回声指标、录放同步、ASR 状态和物理有声；释放旧设备和旧回调。恢复后验证必须覆盖新 Generation/Session、资源重新创建、关键 callback/fence/readback、物理结果以及旧会话隔离。只看到进程存活、API 返回或日志停止报错均不足以宣布业务恢复。</p>
 <h3 id="日志与诊断-6">日志与诊断</h3>
 <table>
@@ -1120,7 +1120,7 @@
 <p>音频策略选定输出设备并启动 PCM stream，要求形成可听物理输出。目标是把应用/策略、AudioFlinger、HAL、ALSA、DSP/Codec、功放上电/静音、扬声器与声学输出逐层确认。本卡使用库存流程作为诊断骨架，不把相邻模块、标准协议行为或候选进程关系提升为 MT8676 私有事实。</p>
 <p>[置信度：mixed] 原图或 MT8676 资料只直接支撑所列模块、标签、局部箭头和明确资料内容；完整端到端顺序、Buffer/音频资源合同和恢复步骤由标准机制与受控业务假设补充。具体设备、属性、流 ID、周期、线程、进程和阈值仍需项目配置及运行证据确认。</p>
 <h3 id="正常链-7">正常链</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-12-figure-15"><figcaption>音频与语音业务流程 · 图 15 · Mermaid</figcaption><details  class="diagram" open data-panel="original-12-figure-15"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-12-figure-15.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="音频与语音业务流程 · 图 15，可使用方向键滚动"><pre class="mermaid">flowchart LR
   N0[&quot;Audio-App/policy&quot;]
   N1[&quot;AudioFlinger&quot;]
   N0 --&gt; N1
@@ -1135,7 +1135,7 @@
   N6[&quot;speaker&quot;]
   N5 --&gt; N6
   N7[&quot;acoustic-output&quot;]
-  N6 --&gt; N7</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N6 --&gt; N7</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   N0[&quot;Audio-App/policy&quot;]
   N1[&quot;AudioFlinger&quot;]
   N0 --&gt; N1
@@ -1150,10 +1150,10 @@
   N6[&quot;speaker&quot;]
   N5 --&gt; N6
   N7[&quot;acoustic-output&quot;]
-  N6 --&gt; N7</code></pre></details></details><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。control accepted ≠ audio data flowing ≠ focus granted ≠ route active ≠ DSP/amplifier output audible。ALSA stream running 不等于 DSP route 正确；DSP 有数据不等于功放退出保护；功放正常不等于扬声器声学输出正常。</p>
+  N6 --&gt; N7</code></pre></details></details></figure><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。control accepted ≠ audio data flowing ≠ focus granted ≠ route active ≠ DSP/amplifier output audible。ALSA stream running 不等于 DSP route 正确；DSP 有数据不等于功放退出保护；功放正常不等于扬声器声学输出正常。</p>
 <h3 id="分层子链与方向-7">分层子链与方向</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>DSP、Codec/功放、扬声器的控制状态与 PCM 连续性应分开解释。AFE Guide 的 MEMIF/DAI、FE/BE 与 TDM/时钟约束有助于定位路由哪一层完成；32通道路径不等于全部AFE资源总数。验证无声时依次核对有效PCM、route/slot、物理接口、功放状态和最终输出；原架构不改变，但具体外部DSP/A2B型号与引脚继续按项目设计。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S049 · MT8668_Audio_HW_Interface_User_Guide_V1.1.pdf · PDF第4-7页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S052 · MT8668_Public_domain_audio_planning-202601-to-PVT.pdf · PDF第1页<small>〔本地来源〕</small></span></p>
+<p>DSP、Codec/功放、扬声器的控制状态与 PCM 连续性应分开解释。AFE Guide 的 MEMIF/DAI、FE/BE 与 TDM/时钟约束有助于定位路由哪一层完成；32通道路径不等于全部AFE资源总数。验证无声时依次核对有效PCM、route/slot、物理接口、功放状态和最终输出；原架构不改变，但具体外部DSP/A2B型号与引脚继续按项目设计。<a href="source-SRC0014.html#page-4">S049 · MT8668_Audio_HW_Interface_User_Guide_V1.1.pdf · PDF第4-7页</a> <a href="source-SRC0041.html#page-1">S052 · MT8668_Public_domain_audio_planning-202601-to-PVT.pdf · PDF第1页</a></p>
 <p>控制平面负责触发、模式、焦点、路由或会话命令；数据平面负责 frame、buffer、PCM 或算法事件；策略平面负责状态机、优先级、合成或 focus/route 决策；物理输出平面负责屏、麦克风、DSP、功放或扬声器；反馈平面负责回读、callback、fence、首帧、最终状态或用户可见/可听结果。五个平面可以共享服务，但不能用其中一个平面的成功替代其他平面。</p>
 <p>对于显示类流程，trigger valid ≠ source frame available ≠ buffer transported ≠ composed ≠ presented ≠ physically visible。对于音频类流程，control accepted ≠ audio data flowing ≠ focus granted ≠ route active ≠ DSP/amplifier output audible。排障必须标明当前分析的是哪一个平面以及数据方向，避免把控制返回当作物理结果。</p>
 <h3 id="资源生命周期-7">资源生命周期</h3>
@@ -1194,7 +1194,7 @@
 <h3 id="反馈闭环-7">反馈闭环</h3>
 <p>反馈必须与原触发或请求相关，而不是只看时间接近。显示链优先使用首帧、frame callback、PageFlip/present fence 与物理观察；音频链使用 track/route、DSP/功放状态和物理有声；控制链使用权威回读或最终状态。反馈缺失时保留最后一个正确输出和第一个缺失输入。</p>
 <h3 id="异常分支-7">异常分支</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="original-12-figure-16"><figcaption>音频与语音业务流程 · 图 16 · Mermaid</figcaption><details  class="diagram" open data-panel="original-12-figure-16"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-12-figure-16.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="音频与语音业务流程 · 图 16，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[&quot;DSP、功放与扬声器异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
   B -- 否 --&gt; B1[&quot;Audio HAL open/route 失败&quot;]
   B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
@@ -1206,7 +1206,7 @@
   B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
   C1 --&gt; R
   D1 --&gt; R
-  E1 --&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  E1 --&gt; R</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[&quot;DSP、功放与扬声器异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
   B -- 否 --&gt; B1[&quot;Audio HAL open/route 失败&quot;]
   B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
@@ -1218,7 +1218,7 @@
   B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
   C1 --&gt; R
   D1 --&gt; R
-  E1 --&gt; R</code></pre></details></details><p>本流程的主要异常分支为：Audio HAL open/route 失败；ALSA XRUN 或 stream 不推进；DSP 固件/通路/Codec 异常；功放保护、mute 或扬声器故障。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
+  E1 --&gt; R</code></pre></details></details></figure><p>本流程的主要异常分支为：Audio HAL open/route 失败；ALSA XRUN 或 stream 不推进；DSP 固件/通路/Codec 异常；功放保护、mute 或扬声器故障。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
 <p>恢复路径：用新 stream 与 DSP route 重建数据面，验证 ALSA 推进、DSP 状态、功放上电/退出 mute 和物理声学输出；旧 route 不得继续占用。恢复后验证必须覆盖新 Generation/Session、资源重新创建、关键 callback/fence/readback、物理结果以及旧会话隔离。只看到进程存活、API 返回或日志停止报错均不足以宣布业务恢复。</p>
 <h3 id="日志与诊断-7">日志与诊断</h3>
 <table>
@@ -1272,4 +1272,592 @@
 <p>责任划分以最早断点为准：触发/源所有者证明输入；资源生产者证明创建和发布；中间服务证明当前代传输与策略；合成/音频策略证明最终决策；驱动与硬件证明物理输出；业务应用证明用户状态。跨团队升级材料至少包含软件版本、统一时间窗、触发/请求原文、各层输入输出、资源身份和 holder、回调/fence/readback、恢复动作及恢复后物理证据。</p>
 <h3 id="证据与置信度-7">证据与置信度</h3>
 <p>[置信度：mixed] 证据 ID 为 <code>original-diagram-01,original-diagram-02</code>。它们支撑可见架构元素或明确资料内容；本卡的完整诊断链和异常树属于受控组合。若接口描述、部署清单、状态机规格或运行 trace 与本卡不同，以项目证据为准并更新库存。</p>
-</article><nav class="pager"><a href="11.html">← 上一步：显示相机与驾驶辅助业务流程</a><a href="13.html">下一步：通信模块业务流程 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#第-12-章音频与语音业务流程">第 12 章　音频与语音业务流程</a><a class="depth-2" href="#业务流程-flow-18">业务流程 FLOW-18</a><a class="depth-3" href="#本地与在线视频">本地与在线视频</a><a class="depth-3" href="#触发目标与边界">触发、目标与边界</a><a class="depth-3" href="#正常链">正常链</a><a class="depth-3" href="#分层子链与方向">分层子链与方向</a><a class="depth-3" href="#资源生命周期">资源生命周期</a><a class="depth-3" href="#反馈闭环">反馈闭环</a><a class="depth-3" href="#异常分支">异常分支</a><a class="depth-3" href="#日志与诊断">日志与诊断</a><a class="depth-3" href="#责任域">责任域</a><a class="depth-3" href="#证据与置信度">证据与置信度</a><a class="depth-2" href="#业务流程-flow-19">业务流程 FLOW-19</a><a class="depth-3" href="#导航播报与-duckmute">导航播报与 Duck/Mute</a><a class="depth-3" href="#触发目标与边界-1">触发、目标与边界</a><a class="depth-3" href="#正常链-1">正常链</a><a class="depth-3" href="#分层子链与方向-1">分层子链与方向</a><a class="depth-3" href="#资源生命周期-1">资源生命周期</a><a class="depth-3" href="#反馈闭环-1">反馈闭环</a><a class="depth-3" href="#异常分支-1">异常分支</a><a class="depth-3" href="#日志与诊断-1">日志与诊断</a><a class="depth-3" href="#责任域-1">责任域</a><a class="depth-3" href="#证据与置信度-1">证据与置信度</a><a class="depth-2" href="#业务流程-flow-20">业务流程 FLOW-20</a><a class="depth-3" href="#语音识别与语音车控">语音识别与语音车控</a><a class="depth-3" href="#触发目标与边界-2">触发、目标与边界</a><a class="depth-3" href="#正常链-2">正常链</a><a class="depth-3" href="#分层子链与方向-2">分层子链与方向</a><a class="depth-3" href="#资源生命周期-2">资源生命周期</a><a class="depth-3" href="#反馈闭环-2">反馈闭环</a><a class="depth-3" href="#异常分支-2">异常分支</a><a class="depth-3" href="#日志与诊断-2">日志与诊断</a><a class="depth-3" href="#责任域-2">责任域</a><a class="depth-3" href="#证据与置信度-2">证据与置信度</a><a class="depth-2" href="#业务流程-flow-21">业务流程 FLOW-21</a><a class="depth-3" href="#蓝牙电话">蓝牙电话</a><a class="depth-3" href="#触发目标与边界-3">触发、目标与边界</a><a class="depth-3" href="#正常链-3">正常链</a><a class="depth-3" href="#分层子链与方向-3">分层子链与方向</a><a class="depth-3" href="#资源生命周期-3">资源生命周期</a><a class="depth-3" href="#反馈闭环-3">反馈闭环</a><a class="depth-3" href="#异常分支-3">异常分支</a><a class="depth-3" href="#日志与诊断-3">日志与诊断</a><a class="depth-3" href="#责任域-3">责任域</a><a class="depth-3" href="#证据与置信度-3">证据与置信度</a><a class="depth-2" href="#业务流程-flow-22">业务流程 FLOW-22</a><a class="depth-3" href="#voiceecallxcall">Voice/eCall/xCall</a><a class="depth-3" href="#触发目标与边界-4">触发、目标与边界</a><a class="depth-3" href="#正常链-4">正常链</a><a class="depth-3" href="#分层子链与方向-4">分层子链与方向</a><a class="depth-3" href="#资源生命周期-4">资源生命周期</a><a class="depth-3" href="#反馈闭环-4">反馈闭环</a><a class="depth-3" href="#异常分支-4">异常分支</a><a class="depth-3" href="#日志与诊断-4">日志与诊断</a><a class="depth-3" href="#责任域-4">责任域</a><a class="depth-3" href="#证据与置信度-4">证据与置信度</a><a class="depth-2" href="#业务流程-flow-23">业务流程 FLOW-23</a><a class="depth-3" href="#broadcastradio">BroadcastRadio</a><a class="depth-3" href="#触发目标与边界-5">触发、目标与边界</a><a class="depth-3" href="#正常链-5">正常链</a><a class="depth-3" href="#分层子链与方向-5">分层子链与方向</a><a class="depth-3" href="#资源生命周期-5">资源生命周期</a><a class="depth-3" href="#反馈闭环-5">反馈闭环</a><a class="depth-3" href="#异常分支-5">异常分支</a><a class="depth-3" href="#日志与诊断-5">日志与诊断</a><a class="depth-3" href="#责任域-5">责任域</a><a class="depth-3" href="#证据与置信度-5">证据与置信度</a><a class="depth-2" href="#业务流程-flow-24">业务流程 FLOW-24</a><a class="depth-3" href="#ktv麦克风aecasr">KTV、麦克风、AEC、ASR</a><a class="depth-3" href="#触发目标与边界-6">触发、目标与边界</a><a class="depth-3" href="#正常链-6">正常链</a><a class="depth-3" href="#分层子链与方向-6">分层子链与方向</a><a class="depth-3" href="#资源生命周期-6">资源生命周期</a><a class="depth-3" href="#反馈闭环-6">反馈闭环</a><a class="depth-3" href="#异常分支-6">异常分支</a><a class="depth-3" href="#日志与诊断-6">日志与诊断</a><a class="depth-3" href="#责任域-6">责任域</a><a class="depth-3" href="#证据与置信度-6">证据与置信度</a><a class="depth-2" href="#业务流程-flow-25">业务流程 FLOW-25</a><a class="depth-3" href="#dsp功放与扬声器">DSP、功放与扬声器</a><a class="depth-3" href="#触发目标与边界-7">触发、目标与边界</a><a class="depth-3" href="#正常链-7">正常链</a><a class="depth-3" href="#分层子链与方向-7">分层子链与方向</a><a class="depth-3" href="#资源生命周期-7">资源生命周期</a><a class="depth-3" href="#反馈闭环-7">反馈闭环</a><a class="depth-3" href="#异常分支-7">异常分支</a><a class="depth-3" href="#日志与诊断-7">日志与诊断</a><a class="depth-3" href="#责任域-7">责任域</a><a class="depth-3" href="#证据与置信度-7">证据与置信度</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>
+</article><section class="evidence-excerpts" id="evidence-excerpts"><h2>本章引用的材料内容</h2><p>下面直接展示引用页的文字开头，可展开核对。打开材料页可看全部物理页及完整 PDF，图表和版式以 PDF 为准。提取原文不代表已经逐页验证其适用于当前项目。</p><details><summary>Audio模块 8676 vs 8668.pdf · PDF 第 2 页</summary><pre class="source-text">8676
+1.ADSP：A核输出通道，不倍频可以输出8ch，
+倍频可以到16ch
+B核输⼊通道接⼊CM 0UL，不倍频可以输
+⼊8ch，倍频可以到16ch
+8668
+1.输出通道不需要倍频，即可输出32ch
+2.输⼊通道都不经过adsp，直接从AFE给到
+hal。
+3.不具备在adspLoopback功能
+8676vs8668，audio_device.xm l配置会有差异</pre><a href="source-SRC0013.html#page-2">阅读整页及原图 →</a></details><details><summary>MT8668_Audio_HW_Interface_User_Guide_V1.1.pdf · PDF 第 4 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2023 MediaTek Inc. All rights reserved.
+Confidential C
+4
+• AFE: Audio Front End HW
+• AFE MEMIF(FE): PCM DMA, memory read/write
+• Audio interconnection: connection fabric for 
+audio sub module
+– ex: DL MEMIF -&gt; Intercon -&gt; I2S Out
+• DAI (BE) : Digital Audio I/F,eTDM/I2S/DMIC.
+– Enhanced TDM,  can be configured to I2S or 
+TDM
+• MISC 
+– CM: Channel merge to combine echo reference 
+and Mic input
+– GASRC: General audio sampling rate 
+convertor(sample-based)
+– HW gain: digital gain process
+– Bus: SoC Top fabric bus
+MTK Audio HW Concept（名词解释）
+AFE memif
+Audio
+Interconnection
+I2S in &amp; out
+eTDM_IN
+CM
+DMIC
+GASRC
+eTDM_OUT
+eTDM_IN
+eTDM_OUT
+eTDM_OUT
+DRAM
+BUS
+I2S IN
+TDM IN
+I2S OUT
+... DMIC
+BT
+TDM OUT
+... ......
+TDM OUT
+HW gain
+...
+DL
+UL
+UL
+DL
+... ...
+Front End
+Interconnection Back End
+ MediaTek Confidential Release for
+PVETEC
+ MediaTek Confidential Release for
+PVETEC
+MediaTek Confidential Release for
+PVETEC</pre><a href="source-SRC0014.html#page-4">阅读整页及原图 →</a></details><details><summary>MT8676 TBOX子系统架构设计.pdf · PDF 第 1 页</summary><pre class="source-text">M T8676TBO X⼦系统架构设计
+TBO X⼦系统架构
+域
+(D om ain)
+操作系统 核⼼功能与组件
+Yocto
+(S O S )
+Linux
+(Yocto)
+作为安全域(S afetyO S )，负责⾳频和AD S P的后端处理。-NBL-VM M ：虚拟机管
+理，承载AudioBE和AD S PBE。-AudioD river/AD S PD river：驱动层，与硬
+件交互。
+T box
+(U O S )
+Linux 作为⾮安全域(U serO S )，运⾏⽤⼾态应⽤和⾳频中间件。-EcallAPP：紧急呼叫
+应⽤。-M T K YoctoAudioH AL/S peechH AL：硬件抽象层，处理⾳频和语
+⾳。-VirtIO -sndFE/VirtIO -adspFE：前端驱动，通过VirtIO 与S O S 通信。-
+CCCID river：与M O D EM 通信的驱动。
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料
+PVT资料</pre><a href="source-SRC0015.html#page-1">阅读整页及原图 →</a></details><details><summary>软件开发培训-音视频解码常见问题及分析.pdf · PDF 第 6 页</summary><pre class="source-text">五、使用硬编解码分析
+对于
+8676
+或
+78
+，若是使用的视频硬解码，可能使用硬编解码场景和出现异常时更多。
+硬编码用于录制视频文件，录制为
+H264
+或
+H265
+硬解码用于使用
+AVC/HEVC
+等常见视频流的场景，比如本地播放时大多
+mp4
+文件，
+carplay
+等投屏工
+具，爱奇艺等播放软件
+比如可以用这个确定播放和停止，也可以看到解码编码当时的数量
+D C2MtkComponentStore: 
+onNumberOfVideoInstancesChanged
+: Decoder 1, Encoder 1
+D C2MtkComponentStore: 
+onNumberOfVideoInstancesChanged
+: Decoder 0, Encoder 1
+可以搜索
+onNumberOfVideoInstancesChanged
+若是视频解码看到
+c2.mtk.XXX
+表示走的
+mtk
+的硬解码，若是音频或
+c2.android
+则是走的软解码
+遇到问题，首先看
+mediaserver
+的进程，搜
+mediacodec
+，或
+nuplayer
+等
+看到是硬解的话，搜索硬解码进程，可以搜
+c2mtk
+，进程号是硬解码的进程，全搜，对应开始或结束
+或问题时间点去查看异常定位问题。
+D 
+PipelineWatcher
+: [0xb4000072478eb0a8] 
+pipelineFull
+: too many frames in pipeline (6)
+这个一般不是异常，正常播放视频几乎都有这些信息，这个只能说明
+mediacodec
+处理
+dequeueOutputbuffer
+在等待处理数据</pre><a href="source-SRC0023.html#page-6">阅读整页及原图 →</a></details><details><summary>vehicle方案.pdf · PDF 第 2 页</summary><pre class="source-text">这一页没有足够的可提取文字，请打开原 PDF 查看图示。</pre><a href="source-SRC0024.html#page-2">阅读整页及原图 →</a></details><details><summary>MT8668_Public_domain_audio_planning-202601-to-PVT.pdf · PDF 第 1 页</summary><pre class="source-text">FM SDR DABDP-INEXT ADSP/A2BEXT BT
+( 不在 demo board)
+Tbox Audio Codec
+Audio AFE HW
+主
+驾
+bus
+0
+媒
+体
+2
+ch
+副
+驾
+bus
+100
+媒
+体
+2
+ch
+主
+驾
+bus
+9
+12
+ch
+媒
+体
+副
+驾
+bus
+109
+12
+ch
+媒
+体
+主
+驾
+bus
+6
+提
+示
+音
+主
+驾
+bus
+3
+来
+电
+铃
+声
+主
+驾
+bus
+4
+电
+话
+下
+行
+主
+驾
+bus
+5
+闹
+钟
+输
+出
+ADSP Core A
+Task
+PB0
+Task
+PB1
+Task
+PB14
+Task
+PB15
+Task
+PB2
+Task
+PB3
+Task
+PB4
+Task
+PB5
+Task
+PB6
+Task
+PB7
+Task
+PB8
+Task
+PB10
+SW Mixer 0
+Task Music
+=&gt; CH13-14
+SW Mixer 1
+Task Playback
+=&gt; CH1-12
+=&gt; CH1-12 =&gt; CH7
+=&gt; CH15-16=&gt; CH1-12
+=&gt; CH8
+=&gt; CH6
+=&gt; CH5
+=&gt; CH8
+Task 
+PB11
+=&gt; SPK alloc
+DLM2
+(32CH)
+I2SOUT6(32ch 32bit)
+UL Path Bypass INT-ADSPDL Path Go Through INT-ADSPDL Path Bypass INT-ADSP
+主
+驾
+bus
+1
+导
+航
+主
+驾
+bus
+2
+语
+音
+回
+复
+=&gt; CH3
+DL4
+=&gt; CH4
+DL7
+=&gt; CH9
+DL6
+=&gt; CH10
+DL2
+副
+驾
+普
+通
+录
+音
+主
+驾
+普
+通
+录
+音
+VUL_CM2
+I2SIN6(32ch 32bit)
+主
+驾
+智
+能
+语
+音
+录
+音
+FMI2S
+UL2
+I2SOUT1
+DL1
+主
+驾
+DP
+IN
+录
+音
+I2SIN0
+UL0
+I2SIN_DMA0
+CQDMA0
+I2SIN1
+UL1
+副
+驾
+蓝
+牙
+通
+话
+RX
+I2SOUT2
+=&gt; CH6
+整车喇叭
+DL44
+独立喇叭
+I2SIN1 clock I2SIN6 clock
+SDR
+Si47962
+Ecall_I2S
+ES8311Q
+AW83611
+TSR-Q1
+AK7709
+AD2428W
+BT Audio DTB
+百瑞 BT 模组
+AW85601AW85601AW85601AW85601
+4 x 4Pin(4CH) TDM OUT
+主
+驾
+普
+通
+FM
+in
+主
+驾
+S
+D
+R
+录
+音
+AD2428W
+A2B SPH1642HT5H-1
+4 x SPH8855LM4H-1
+LT7911D
+TYPE C connector
+125: CAM_SCL2
+126: CAM_SDA2
+SCP_SPI0 (48/49/50/51)
+131: SCL5
+132: SDA5
+131: SCL5
+132: SDA5
+6: UCTS2
+7: URTS2
+114:UTXD2
+115:URXD2
+125: CAM_SCL2
+126: CAM_SDA2
+SPI2(40/41/42/43)
+主
+驾
+bus
+7
+系
+统
+音
+主
+驾
+K
+歌
+下
+行
+UL5
+主
+驾
+蓝
+牙
+通
+话
+mic
+in
+...
+主
+驾
+蓝
+牙
+通
+话
+出
+声
+副
+驾
+蓝
+牙
+通
+话
+下
+行
+=&gt; CH6
+DL5
+I2SIN2
+UL37
+独立 MIC
+I2SIN2 clock
+PCM1_OUTPCM1_IN
+USB HW
+USB
+IN
+UART
+HW
+UART
+HW
+USB
+OUT
+BTCVSD
+(share
+memory
+interaction)
+BTCVSD
+IN
+BTCVSD
+OUT
+主
+驾
+K
+歌
+人
+声
+上
+行
+主
+驾
+蓝
+牙
+音
+乐
+输
+入
+副
+驾
+蓝
+牙
+音
+乐
+输
+出
+主
+驾
+K
+歌
+伴
+奏
+下
+行
+副驾 A2DP
+Source 输出 USB
+KTV
+主驾 A2DP
+Sink 输入
+ USB 伴奏
+外放
+主驾蓝牙通话
+TX&amp;RX
+主
+驾
+蓝
+牙
+通
+话
+TX
+主
+驾
+蓝
+牙
+通
+话
+RX
+Y
+T
+通
+话
+出
+声
+I2SIN6 clock slave clock I2SIN0 clock slave clock I2SIN2 clock
+NULL
+Y
+T
+通
+话
+mic
+in
+Modem
+I2SIN1 clock
+UL38
+Y
+T
+通
+话
+ref
+in
+UL4
+主
+驾
+蓝
+牙
+通
+话
+ref
+in
+REF REF
+Y
+T
+通
+话
+上
+行
+Y
+T
+通
+话
+下
+行
+USBBT A2DP &amp; HFP Tbox X-Call
+后
+排
+bus
+200
+媒
+体
+2
+ch
+整车 MIC
+Task
+PB9
+Y
+S
+bus
+10000
+媒体
+2
+ch
+Y
+S
+bus
+10001
+非媒
+体
+2ch
+乘客音频场景
+主驾音频场景
+Tbox 音频场景
+Yocto SOS 音频场景
+=&gt; CH9
+DL46
+Y
+S
+bus
+10002
+非媒
+体
+2
+ch
+UL7
+Y
+S
+普
+通
+录
+音
+ MediaTek Confidential Release for
+PVT
+MediaTek Confidential Release for
+PVT
+MediaTek Confident
+……本页余下内容见完整材料页。</pre><a href="source-SRC0041.html#page-1">阅读整页及原图 →</a></details></section><nav class="pager"><a href="11.html">← 上一步：显示相机与驾驶辅助业务流程</a><a href="13.html">下一步：通信模块业务流程 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#第-12-章音频与语音业务流程">第 12 章　音频与语音业务流程</a><a class="depth-2" href="#业务流程-flow-18">业务流程 FLOW-18</a><a class="depth-3" href="#本地与在线视频">本地与在线视频</a><a class="depth-3" href="#触发目标与边界">触发、目标与边界</a><a class="depth-3" href="#正常链">正常链</a><a class="depth-3" href="#分层子链与方向">分层子链与方向</a><a class="depth-3" href="#资源生命周期">资源生命周期</a><a class="depth-3" href="#反馈闭环">反馈闭环</a><a class="depth-3" href="#异常分支">异常分支</a><a class="depth-3" href="#日志与诊断">日志与诊断</a><a class="depth-3" href="#责任域">责任域</a><a class="depth-3" href="#证据与置信度">证据与置信度</a><a class="depth-2" href="#业务流程-flow-19">业务流程 FLOW-19</a><a class="depth-3" href="#导航播报与-duckmute">导航播报与 Duck/Mute</a><a class="depth-3" href="#触发目标与边界-1">触发、目标与边界</a><a class="depth-3" href="#正常链-1">正常链</a><a class="depth-3" href="#分层子链与方向-1">分层子链与方向</a><a class="depth-3" href="#资源生命周期-1">资源生命周期</a><a class="depth-3" href="#反馈闭环-1">反馈闭环</a><a class="depth-3" href="#异常分支-1">异常分支</a><a class="depth-3" href="#日志与诊断-1">日志与诊断</a><a class="depth-3" href="#责任域-1">责任域</a><a class="depth-3" href="#证据与置信度-1">证据与置信度</a><a class="depth-2" href="#业务流程-flow-20">业务流程 FLOW-20</a><a class="depth-3" href="#语音识别与语音车控">语音识别与语音车控</a><a class="depth-3" href="#触发目标与边界-2">触发、目标与边界</a><a class="depth-3" href="#正常链-2">正常链</a><a class="depth-3" href="#分层子链与方向-2">分层子链与方向</a><a class="depth-3" href="#资源生命周期-2">资源生命周期</a><a class="depth-3" href="#反馈闭环-2">反馈闭环</a><a class="depth-3" href="#异常分支-2">异常分支</a><a class="depth-3" href="#日志与诊断-2">日志与诊断</a><a class="depth-3" href="#责任域-2">责任域</a><a class="depth-3" href="#证据与置信度-2">证据与置信度</a><a class="depth-2" href="#业务流程-flow-21">业务流程 FLOW-21</a><a class="depth-3" href="#蓝牙电话">蓝牙电话</a><a class="depth-3" href="#触发目标与边界-3">触发、目标与边界</a><a class="depth-3" href="#正常链-3">正常链</a><a class="depth-3" href="#分层子链与方向-3">分层子链与方向</a><a class="depth-3" href="#资源生命周期-3">资源生命周期</a><a class="depth-3" href="#反馈闭环-3">反馈闭环</a><a class="depth-3" href="#异常分支-3">异常分支</a><a class="depth-3" href="#日志与诊断-3">日志与诊断</a><a class="depth-3" href="#责任域-3">责任域</a><a class="depth-3" href="#证据与置信度-3">证据与置信度</a><a class="depth-2" href="#业务流程-flow-22">业务流程 FLOW-22</a><a class="depth-3" href="#voiceecallxcall">Voice/eCall/xCall</a><a class="depth-3" href="#触发目标与边界-4">触发、目标与边界</a><a class="depth-3" href="#正常链-4">正常链</a><a class="depth-3" href="#分层子链与方向-4">分层子链与方向</a><a class="depth-3" href="#资源生命周期-4">资源生命周期</a><a class="depth-3" href="#反馈闭环-4">反馈闭环</a><a class="depth-3" href="#异常分支-4">异常分支</a><a class="depth-3" href="#日志与诊断-4">日志与诊断</a><a class="depth-3" href="#责任域-4">责任域</a><a class="depth-3" href="#证据与置信度-4">证据与置信度</a><a class="depth-2" href="#业务流程-flow-23">业务流程 FLOW-23</a><a class="depth-3" href="#broadcastradio">BroadcastRadio</a><a class="depth-3" href="#触发目标与边界-5">触发、目标与边界</a><a class="depth-3" href="#正常链-5">正常链</a><a class="depth-3" href="#分层子链与方向-5">分层子链与方向</a><a class="depth-3" href="#资源生命周期-5">资源生命周期</a><a class="depth-3" href="#反馈闭环-5">反馈闭环</a><a class="depth-3" href="#异常分支-5">异常分支</a><a class="depth-3" href="#日志与诊断-5">日志与诊断</a><a class="depth-3" href="#责任域-5">责任域</a><a class="depth-3" href="#证据与置信度-5">证据与置信度</a><a class="depth-2" href="#业务流程-flow-24">业务流程 FLOW-24</a><a class="depth-3" href="#ktv麦克风aecasr">KTV、麦克风、AEC、ASR</a><a class="depth-3" href="#触发目标与边界-6">触发、目标与边界</a><a class="depth-3" href="#正常链-6">正常链</a><a class="depth-3" href="#分层子链与方向-6">分层子链与方向</a><a class="depth-3" href="#资源生命周期-6">资源生命周期</a><a class="depth-3" href="#反馈闭环-6">反馈闭环</a><a class="depth-3" href="#异常分支-6">异常分支</a><a class="depth-3" href="#日志与诊断-6">日志与诊断</a><a class="depth-3" href="#责任域-6">责任域</a><a class="depth-3" href="#证据与置信度-6">证据与置信度</a><a class="depth-2" href="#业务流程-flow-25">业务流程 FLOW-25</a><a class="depth-3" href="#dsp功放与扬声器">DSP、功放与扬声器</a><a class="depth-3" href="#触发目标与边界-7">触发、目标与边界</a><a class="depth-3" href="#正常链-7">正常链</a><a class="depth-3" href="#分层子链与方向-7">分层子链与方向</a><a class="depth-3" href="#资源生命周期-7">资源生命周期</a><a class="depth-3" href="#反馈闭环-7">反馈闭环</a><a class="depth-3" href="#异常分支-7">异常分支</a><a class="depth-3" href="#日志与诊断-7">日志与诊断</a><a class="depth-3" href="#责任域-7">责任域</a><a class="depth-3" href="#证据与置信度-7">证据与置信度</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

@@ -1,0 +1,46 @@
+%%{init: {"flowchart": {"nodeSpacing": 18, "rankSpacing": 8, "padding": 12}, "themeVariables": {"fontSize": "16px"}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph kernel["Kernel"]
+direction TB
+subgraph layout_row_1[" "]
+direction LR
+subgraph layout_row_2[" "]
+direction TB
+a144["iAP2/MFI"]
+a147["Codec"]
+a150["RTC"]
+a153["Network"]
+a156["Sensor"]
+a159["ethernet"]
+a162["Peripheral(UART SPI GPIO ADC...)"]
+a144 ~~~ a147 ~~~ a150 ~~~ a153 ~~~ a156 ~~~ a159 ~~~ a162
+end
+subgraph layout_row_3[" "]
+direction TB
+a145["Scheduler"]
+a148["OpenGL"]
+a151["DRM"]
+a154["Memory"]
+a157["MT66XX"]
+a160["USB"]
+a163["BootLoader"]
+a145 ~~~ a148 ~~~ a151 ~~~ a154 ~~~ a157 ~~~ a160 ~~~ a163
+end
+subgraph layout_row_4[" "]
+direction TB
+a146["ALSA"]
+a149["eMMC/UFS/SD"]
+a152["MDP"]
+a155["VFS"]
+a158["CCCI"]
+a161["Camera"]
+a146 ~~~ a149 ~~~ a152 ~~~ a155 ~~~ a158 ~~~ a161
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent

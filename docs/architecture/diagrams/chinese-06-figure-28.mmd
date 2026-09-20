@@ -1,0 +1,15 @@
+flowchart TD
+  A[device unavailable/data fail] --> B{attach/enumeration completed?}
+  B -- no --> B1[power/cable/PHY/controller]
+  B -- yes --> C{role/configuration/permission valid?}
+  C -- no --> C1[Framework policy]
+  C -- yes --> D{endpoint transfer completes?}
+  D -- no --> D1[driver/device/queue]
+  D -- yes --> E{consumer parses and applies?}
+  E -- no --> E1[protocol/business state]
+  B1 --> R[close old descriptors]
+  C1 --> R
+  D1 --> R
+  E1 --> R
+  R --> S[detach/re-enumerate new Generation]
+  S --> T[permission + transfer + content readback]

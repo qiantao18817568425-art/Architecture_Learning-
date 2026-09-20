@@ -1,0 +1,277 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>artifact.json · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>artifact.json</h1><p>SRC0350 · 原来源 ID S288 · 全文 · 1 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>Camera架构/artifact.json</p><p>SHA-256：<code>a73fb13ae14bc42200ba35af94f6cc7a799129eaa804200807e0add3ba02ff50</code></p><p>原文件大小：22,464 字节</p></details><div class="actions"><a class="button" href="materials/SRC0350.json" download>下载完整原文件</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><article id="source-text"><section class="source-page" id="page-1"><h2>全文 1</h2><pre class="source-text">{
+  &quot;surface&quot;: &quot;report&quot;,
+  &quot;manifest&quot;: {
+    &quot;version&quot;: 1,
+    &quot;surface&quot;: &quot;report&quot;,
+    &quot;title&quot;: &quot;MT8668 Camera架构与DDR计算：最终可追溯版&quot;,
+    &quot;description&quot;: &quot;基于3840×1536双Composite最终基线，合并历史Camera DDR讨论，提供可复算公式、场景对比、算力口径和决策追溯。&quot;,
+    &quot;generatedAt&quot;: &quot;2026-09-04T12:00:00+08:00&quot;,
+    &quot;cards&quot;: [
+      {
+        &quot;id&quot;: &quot;baseline_payload&quot;,
+        &quot;description&quot;: &quot;四方向完整经过一次DDR读或写（P），packed YUV422，25fps。&quot;,
+        &quot;dataset&quot;: &quot;headline&quot;,
+        &quot;sourceId&quot;: &quot;src_calc&quot;,
+        &quot;metrics&quot;: [
+          { &quot;label&quot;: &quot;25fps基准P（GB/s）&quot;, &quot;field&quot;: &quot;p25_gb_s&quot;, &quot;format&quot;: &quot;number&quot; }
+        ]
+      },
+      {
+        &quot;id&quot;: &quot;staged_e2e&quot;,
+        &quot;description&quot;: &quot;Composite落DDR、写7个独立输出、再由7路消费者读取。&quot;,
+        &quot;dataset&quot;: &quot;headline&quot;,
+        &quot;sourceId&quot;: &quot;src_calc&quot;,
+        &quot;metrics&quot;: [
+          { &quot;label&quot;: &quot;25fps七输出端到端（GB/s）&quot;, &quot;field&quot;: &quot;staged7_e2e_25&quot;, &quot;format&quot;: &quot;number&quot; }
+        ]
+      },
+      {
+        &quot;id&quot;: &quot;pqdip_util&quot;,
+        &quot;description&quot;: &quot;按会议约250 Mpixel/s能力口径估算；能力定义仍需MTK确认。&quot;,
+        &quot;dataset&quot;: &quot;headline&quot;,
+        &quot;sourceId&quot;: &quot;src_calc&quot;,
+        &quot;metrics&quot;: [
+          { &quot;label&quot;: &quot;PQDIP三路@25fps利用率&quot;, &quot;field&quot;: &quot;pqdip_util_25&quot;, &quot;format&quot;: &quot;percent&quot; }
+        ]
+      },
+      {
+        &quot;id&quot;: &quot;fps_delta&quot;,
+        &quot;description&quot;: &quot;分辨率和格式不变时，像素率、Payload与理论DDR流量均线性增加。&quot;,
+        &quot;dataset&quot;: &quot;headline&quot;,
+        &quot;sourceId&quot;: &quot;src_calc&quot;,
+        &quot;metrics&quot;: [
+          { &quot;label&quot;: &quot;30fps相对25fps增幅&quot;, &quot;field&quot;: &quot;fps_delta&quot;, &quot;format&quot;: &quot;percent&quot; }
+        ]
+      }
+    ],
+    &quot;charts&quot;: [
+      {
+        &quot;id&quot;: &quot;ddr_scenarios_chart&quot;,
+        &quot;title&quot;: &quot;端到端DDR模型取决于Buffer路径，而不只取决于分辨率&quot;,
+        &quot;subtitle&quot;: &quot;packed YUV422；包含Camera生产侧和AVM/DVR消费者读取；不含Display、GPU、Vcodec、DMS及其他系统Master。&quot;,
+        &quot;headerMarkdown&quot;: &quot;数值是**理论Payload模型**，用于方案比较，不等同于DDR计数器实测值。&quot;,
+        &quot;type&quot;: &quot;bar&quot;,
+        &quot;dataset&quot;: &quot;ddr_scenarios&quot;,
+        &quot;sourceId&quot;: &quot;src_calc&quot;,
+        &quot;encodings&quot;: {
+          &quot;x&quot;: { &quot;field&quot;: &quot;scenario&quot;, &quot;type&quot;: &quot;ordinal&quot;, &quot;label&quot;: &quot;数据路径&quot; },
+          &quot;y&quot;: { &quot;field&quot;: &quot;e2e_gb_s&quot;, &quot;type&quot;: &quot;quantitative&quot;, &quot;label&quot;: &quot;端到端DDR流量&quot;, &quot;format&quot;: &quot;number&quot;, &quot;unit&quot;: &quot;GB/s&quot; },
+          &quot;color&quot;: { &quot;field&quot;: &quot;fps_label&quot;, &quot;type&quot;: &quot;nominal&quot;, &quot;label&quot;: &quot;帧率&quot; },
+          &quot;tooltip&quot;: [
+            { &quot;field&quot;: &quot;producer_gb_s&quot;, &quot;type&quot;: &quot;quantitative&quot;, &quot;label&quot;: &quot;Camera生产侧&quot;, &quot;unit&quot;: &quot;GB/s&quot; },
+            { &quot;field&quot;: &quot;p_factor&quot;, &quot;type&quot;: &quot;quantitative&quot;, &quot;label&quot;: &quot;端到端P倍数&quot; },
+            { &quot;field&quot;: &quot;assumption&quot;, &quot;type&quot;: &quot;text&quot;, &quot;label&quot;: &quot;关键假设&quot; }
+          ]
+        },
+        &quot;yAxisTitle&quot;: &quot;GB/s（Payload）&quot;,
+        &quot;valueFormat&quot;: &quot;number&quot;,
+        &quot;unit&quot;: &quot;GB/s&quot;,
+        &quot;layout&quot;: &quot;full&quot;
+      }
+    ],
+    &quot;tables&quot;: [
+      {
+        &quot;id&quot;: &quot;ddr_scenario_table&quot;,
+        &quot;title&quot;: &quot;DDR场景逐项计算结果&quot;,
+        &quot;subtitle&quot;: &quot;P为四方向完整经过一次DDR读或写；25fps时P=0.589824GB/s，30fps时P=0.7077888GB/s。&quot;,
+        &quot;dataset&quot;: &quot;ddr_scenarios&quot;,
+        &quot;sourceId&quot;: &quot;src_calc&quot;,
+        &quot;defaultSort&quot;: { &quot;field&quot;: &quot;e2e_gb_s&quot;, &quot;direction&quot;: &quot;asc&quot; },
+        &quot;density&quot;: &quot;dense&quot;,
+        &quot;layout&quot;: &quot;full&quot;,
+        &quot;columns&quot;: [
+          { &quot;field&quot;: &quot;scenario&quot;, &quot;label&quot;: &quot;场景&quot;, &quot;type&quot;: &quot;text&quot; },
+          { &quot;field&quot;: &quot;fps_label&quot;, &quot;label&quot;: &quot;帧率&quot;, &quot;type&quot;: &quot;text&quot; },
+          { &quot;field&quot;: &quot;producer_gb_s&quot;, &quot;label&quot;: &quot;生产侧GB/s&quot;, &quot;format&quot;: &quot;number&quot; },
+          { &quot;field&quot;: &quot;e2e_gb_s&quot;, &quot;label&quot;: &quot;端到端GB/s&quot;, &quot;format&quot;: &quot;number&quot; },
+          { &quot;field&quot;: &quot;p_factor&quot;, &quot;label&quot;: &quot;端到端P倍数&quot;, &quot;format&quot;: &quot;number&quot; },
+          { &quot;field&quot;: &quot;assumption&quot;, &quot;label&quot;: &quot;关键假设&quot;, &quot;type&quot;: &quot;text&quot; }
+        ]
+      },
+      {
+        &quot;id&quot;: &quot;history_table&quot;,
+        &quot;title&quot;: &quot;历史口径合并与替代关系&quot;,
+        &quot;subtitle&quot;: &quot;旧文档保留用于方法追溯；当前数值一律以1920×1536单方向、3840×1536 Composite为基线。&quot;,
+        &quot;dataset&quot;: &quot;history&quot;,
+        &quot;sourceId&quot;: &quot;src_history&quot;,
+        &quot;defaultSort&quot;: { &quot;field&quot;: &quot;date&quot;, &quot;direction&quot;: &quot;asc&quot; },
+        &quot;density&quot;: &quot;dense&quot;,
+        &quot;layout&quot;: &quot;full&quot;,
+        &quot;columns&quot;: [
+          { &quot;field&quot;: &quot;date&quot;, &quot;label&quot;: &quot;日期&quot;, &quot;type&quot;: &quot;date&quot; },
+          { &quot;field&quot;: &quot;stage&quot;, &quot;label&quot;: &quot;阶段&quot;, &quot;type&quot;: &quot;text&quot; },
+          { &quot;field&quot;: &quot;geometry&quot;, &quot;label&quot;: &quot;输入口径&quot;, &quot;type&quot;: &quot;text&quot; },
+          { &quot;field&quot;: &quot;conclusion&quot;, &quot;label&quot;: &quot;主要结论&quot;, &quot;type&quot;: &quot;text&quot; },
+          { &quot;field&quot;: &quot;status&quot;, &quot;label&quot;: &quot;当前状态&quot;, &quot;type&quot;: &quot;text&quot; }
+        ]
+      },
+      {
+        &quot;id&quot;: &quot;decision_table&quot;,
+        &quot;title&quot;: &quot;决策追溯矩阵&quot;,
+        &quot;subtitle&quot;: &quot;把已确认、目标设计、条件成立和未确认项分开，避免估算被误读成量产承诺。&quot;,
+        &quot;dataset&quot;: &quot;decisions&quot;,
+        &quot;sourceId&quot;: &quot;src_history&quot;,
+        &quot;defaultSort&quot;: { &quot;field&quot;: &quot;id&quot;, &quot;direction&quot;: &quot;asc&quot; },
+        &quot;density&quot;: &quot;dense&quot;,
+        &quot;layout&quot;: &quot;full&quot;,
+        &quot;columns&quot;: [
+          { &quot;field&quot;: &quot;id&quot;, &quot;label&quot;: &quot;ID&quot;, &quot;type&quot;: &quot;text&quot; },
+          { &quot;field&quot;: &quot;decision&quot;, &quot;label&quot;: &quot;结论&quot;, &quot;type&quot;: &quot;text&quot; },
+          { &quot;field&quot;: &quot;status&quot;, &quot;label&quot;: &quot;状态&quot;, &quot;type&quot;: &quot;text&quot; },
+          { &quot;field&quot;: &quot;basis&quot;, &quot;label&quot;: &quot;依据&quot;, &quot;type&quot;: &quot;text&quot; },
+          { &quot;field&quot;: &quot;impact&quot;, &quot;label&quot;: &quot;若变化的影响&quot;, &quot;type&quot;: &quot;text&quot; }
+        ]
+      }
+    ],
+    &quot;sources&quot;: [
+      { &quot;id&quot;: &quot;src_calc&quot;, &quot;label&quot;: &quot;Camera DDR可复算脚本&quot;, &quot;path&quot;: &quot;T12T问题分析总结性材料/T12T资料库/Camera架构/camera_ddr_calculation.py&quot; },
+      { &quot;id&quot;: &quot;src_history&quot;, &quot;label&quot;: &quot;历史Camera文档与版本指纹&quot;, &quot;path&quot;: &quot;T12T问题分析总结性材料/T12T资料库/Camera架构/MT8668_Camera架构与DDR计算_最终可追溯版.md&quot; },
+      { &quot;id&quot;: &quot;src_topology&quot;, &quot;label&quot;: &quot;已确认Camera物理拓扑图&quot;, &quot;path&quot;: &quot;T12T问题分析总结性材料/T12T资料库/Camera架构/camera-physical-topology-confirmed.jpg&quot; },
+      { &quot;id&quot;: &quot;src_driver&quot;, &quot;label&quot;: &quot;MT8668 Yocto Camera Driver User Manual CN V1.0&quot;, &quot;path&quot;: &quot;T12T问题分析总结性材料/T12T资料库/8668/MTK参考资料/MTK参考资料/Yocto/MT8668_Yocto_Camera_Driver_User_Manual_CN_V1.0.pdf&quot; },
+      { &quot;id&quot;: &quot;src_hypervisor&quot;, &quot;label&quot;: &quot;MT8668 Hypervisor Camera User Manual CN V1.0&quot;, &quot;path&quot;: &quot;T12T问题分析总结性材料/T12T资料库/8668/MTK参考资料/MTK参考资料/Android/MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf&quot; },
+      { &quot;id&quot;: &quot;src_ddr_manual&quot;, &quot;label&quot;: &quot;MT8668 Yocto DDR User Manual CN V1.0&quot;, &quot;path&quot;: &quot;T12T问题分析总结性材料/T12T资料库/8668/MTK参考资料/MTK参考资料/Yocto/MT8668_Yocto_DDR_User_Manual_CN_V1.0.pdf&quot; },
+      { &quot;id&quot;: &quot;src_vdmabuf&quot;, &quot;label&quot;: &quot;MT8676 Camera Virtualization参考材料&quot;, &quot;path&quot;: &quot;T12T问题分析总结性材料/T12T资料库/MT8676_Camera_Virtualization 1.pdf&quot; }
+    ],
+    &quot;blocks&quot;: [
+      { &quot;id&quot;: &quot;title&quot;, &quot;type&quot;: &quot;markdown&quot;, &quot;body&quot;: &quot;# MT8668 Camera架构与DDR计算：最终可追溯版&quot; },
+      {
+        &quot;id&quot;: &quot;scope&quot;,
+        &quot;type&quot;: &quot;markdown&quot;,
+        &quot;body&quot;: &quot;## 最终基线与结论\n\n**几何基线：** 两路横向Composite，每路3840×1536；单方向1920×1536。**链路：** 四路环视Camera经域控MAX96712聚合，再由两颗MAX96717形成前+右、后+左两条6Gbps组合流，MT8668侧经MAX96712/CSI接收。**软件：** Yocto Host持有Camera硬件、驱动和HAL；Android Guest通过RpcBinder/VSOCK传Request/Result，像素面目标是共享DMA-BUF。\n\n若业务必须得到AVM四方向与DVR左/右/后三方向独立输出，当前分流是PQDIP 6路 + MML 1路。25fps时PQDIP每实例三路为221.184Mpixel/s；若约250Mpixel/s是同口径可持续能力，则利用率88.47%。30fps会达到265.4208Mpixel/s，超过该口径。&quot;
+      },
+      { &quot;id&quot;: &quot;metrics&quot;, &quot;type&quot;: &quot;metric-strip&quot;, &quot;cardIds&quot;: [&quot;baseline_payload&quot;, &quot;staged_e2e&quot;, &quot;pqdip_util&quot;, &quot;fps_delta&quot;] },
+      {
+        &quot;id&quot;: &quot;definitions&quot;,
+        &quot;type&quot;: &quot;markdown&quot;,
+        &quot;body&quot;: &quot;## 五类指标必须分开\n\n1. **图像吞吐：** `W×H×fps×输出次数`，单位pixel/s或Mpixel/s。2. **GMSL/CSI有效Payload：** `W×H×fps×bits_per_pixel`，单位bit/s。3. **DDR流量：** `sizeimage×fps×读写次数`，单位Byte/s。4. **Buffer占用：** `sizeimage×buffer_count×stream_count`，单位Byte。5. **CPU/GPU/Vcodec能力：** 分别使用cycles/s、operations/s、samples/s或macroblocks/s。\n\n例如单方向1920×1536@25为73.728Mpixel/s；packed YUV422按2Byte/pixel后，一次DDR读或写才是147.456MB/s。73.728Mpixel/s不能写成73.728MB/s。&quot;
+      },
+      {
+        &quot;id&quot;: &quot;formula&quot;,
+        &quot;type&quot;: &quot;markdown&quot;,
+        &quot;sourceId&quot;: &quot;src_calc&quot;,
+        &quot;body&quot;: &quot;## DDR和链路的复算公式\n\n无对齐时：`PixelRate=W×H×fps`，`FrameBytes=W×H×bytes_per_pixel`，`Payload=FrameBytes×fps`，`LinkPayload=Payload×8`。工程中应优先使用HAL/V4L2实际返回值：`FrameBytes=sizeimage`，`DDRPayload=sizeimage×fps`。若只能从几何估算：`Stride=ceil(W×Bpp/row_alignment)×row_alignment`，`FrameBytes=Stride×aligned_height`。\n\n本项目按UYVY/YUYV packed YUV422、2Byte/pixel：单方向一帧5.89824MB；一个Composite一帧11.79648MB；四方向一次DDR读或写定义为P，25fps时P=0.589824GB/s，30fps时P=0.7077888GB/s。30fps相对25fps的所有线性指标增加20%。&quot;
+      },
+      { &quot;id&quot;: &quot;ddr_chart&quot;, &quot;type&quot;: &quot;chart&quot;, &quot;chartId&quot;: &quot;ddr_scenarios_chart&quot;, &quot;layout&quot;: &quot;full&quot; },
+      { &quot;id&quot;: &quot;ddr_table&quot;, &quot;type&quot;: &quot;table&quot;, &quot;tableId&quot;: &quot;ddr_scenario_table&quot;, &quot;layout&quot;: &quot;full&quot; },
+      {
+        &quot;id&quot;: &quot;scenario_explanation&quot;,
+        &quot;type&quot;: &quot;markdown&quot;,
+        &quot;body&quot;: &quot;## DDR场景如何拆账\n\n- **OTF七输出：** Composite不完整落DDR，生产侧仅写7个方向输出=1.75P；加7路消费者读取后=3.5P。它是理想目标，MT8668当前链路能否做到尚未确认。\n- **Staged四共享：** P1写Composite=1P，P2读Composite=1P，写四方向共享Buffer=1P，生产侧=3P；AVM读4路+DVR读3路=1.75P，端到端=4.75P。\n- **Staged七独立：** 输入写1P+输入读1P+七输出写1.75P=3.75P；加消费者1.75P，端到端=5.5P。\n- **输入读放大示例：** 若多输出累计输入读取升至1.75P，端到端为6.25P。这只是示例，不是上界。\n\n一次CPU完整复制包含读和写，额外增加2P：25fps为1.179648GB/s，30fps为1.4155776GB/s。&quot;
+      },
+      {
+        &quot;id&quot;: &quot;compute&quot;,
+        &quot;type&quot;: &quot;markdown&quot;,
+        &quot;sourceId&quot;: &quot;src_calc&quot;,
+        &quot;body&quot;: &quot;## PQDIP、MML、CPU/GPU和Vcodec算力\n\n**PQDIP：** `OutputPixelRate=Σ(output_width×output_height×fps)`；`Utilization=OutputPixelRate/HardwareCapacity`。每实例三路在25fps为221.184Mpixel/s、余量28.816Mpixel/s；30fps为265.4208Mpixel/s、相对250口径超15.4208Mpixel/s。250是否为峰值或保证值、按输入还是输出计数，仍需MTK书面确认。\n\n**MML：** 前视一路是73.728Mpixel/s@25或88.4736Mpixel/s@30；没有Camera可用capacity前不能算可靠利用率。\n\n**CPU：** `RequiredCycles=PixelRate×cycles_per_pixel`，同时核对输入读+输出写的内存流量。**GPU：** 核对operations/pixel、输入输出Bytes、格式转换和与UI/3D并发。**Vcodec：** 优先用厂商的resolution×fps×stream_count能力表；H.264辅助口径为11520macroblocks/frame，单路25fps为288000macroblocks/s，四路为1152000macroblocks/s；HEVC按64×64 CTU为720CTU/frame。这里macroblocks/s不能误写成Megabyte/s。&quot;
+      },
+      {
+        &quot;id&quot;: &quot;buffer&quot;,
+        &quot;type&quot;: &quot;markdown&quot;,
+        &quot;sourceId&quot;: &quot;src_calc&quot;,
+        &quot;body&quot;: &quot;## Buffer内存占用\n\n单方向帧为5.89824MB（5.625MiB），单Composite帧为11.79648MB（11.25MiB）。若方向输出各6个Buffer、两路Composite中间池各3个Buffer：四方向共享输出池141.55776MB；七物理输出池247.72608MB；两Composite中间池70.77888MB；Staged+四共享合计212.33664MB；Staged+七独立合计318.50496MB。共享DMA-BUF是多方引用同一物理内存，不应再为Android重复计一整份图像池。&quot;
+      },
+      {
+        &quot;id&quot;: &quot;ddr_peak&quot;,
+        &quot;type&quot;: &quot;markdown&quot;,
+        &quot;sourceId&quot;: &quot;src_ddr_manual&quot;,
+        &quot;body&quot;: &quot;## DDR理论峰值不能直接作为Camera签核值\n\nMT8668 DDR材料给出LPDDR5X最高7500Mbps数据率和最高24GB容量。容量不是带宽；7500Mbps是每pin data rate。理论峰值为`DataRate(MT/s)×AggregateBusWidth(bit)/8`。仅用于解释：32bit时为30GB/s，64bit时为60GB/s；32/64bit不是本项目板级配置。量产签核必须确认通道数、总线宽度、实际频点与效率，并将Display、GPU、Vcodec、DMS、CPU和其他DMA Master一起计入。&quot;
+      },
+      { &quot;id&quot;: &quot;history&quot;, &quot;type&quot;: &quot;table&quot;, &quot;tableId&quot;: &quot;history_table&quot;, &quot;layout&quot;: &quot;full&quot; },
+      {
+        &quot;id&quot;: &quot;change_impact&quot;,
+        &quot;type&quot;: &quot;markdown&quot;,
+        &quot;body&quot;: &quot;## 尺寸变更影响\n\n2026-09-03会议材料曾按单方向1920×1526@25计算：73.248Mpixel/s，PQDIP三路219.744Mpixel/s。最终高度改为1536，增幅0.6553%；单路增加0.480Mpixel/s、一次DDR读或写增加0.960MB/s、PQDIP三路增加1.440Mpixel/s。更早的1920×1080@30仅保留计算方法；1536相对1080高度增加42.2222%，旧带宽数值不再适用于当前项目。&quot;
+      },
+      { &quot;id&quot;: &quot;decisions&quot;, &quot;type&quot;: &quot;table&quot;, &quot;tableId&quot;: &quot;decision_table&quot;, &quot;layout&quot;: &quot;full&quot; },
+      {
+        &quot;id&quot;: &quot;validation&quot;,
+        &quot;type&quot;: &quot;markdown&quot;,
+        &quot;body&quot;: &quot;## 校验结论与签核边界\n\n**总体评价：带条件可用于评审。** 基础Payload、P倍数、PQDIP三路负载、Buffer池、GMSL Payload和尺寸变更均由独立脚本复算。仍未验证：约250Mpixel/s的正式口径、Composite首次落DDR位置、PQDIP/MML是否重复读取输入、MML与Display共享余量、真实bytesperline/sizeimage、MT8668 DMA-BUF跨域实现、量产25/30fps、Encoder对stride/offset/crop的支持，以及硬件计数器实测。\n\n因此报告中的DDR均为Payload估算，不包含协议效率、缓存命中、读放大、内部压缩或全系统并发的最终影响。&quot;
+      },
+      {
+        &quot;id&quot;: &quot;verification_plan&quot;,
+        &quot;type&quot;: &quot;markdown&quot;,
+        &quot;body&quot;: &quot;## 实测与签核步骤\n\n1. 导出每个stream的width/height/format/bytesperline/sizeimage/buffer_count。2. 冻结两路Composite的实际fps、SOF和时间戳关系。3. 在25fps与30fps分别采集P1、P2、PQDIP、MML的fps和处理时间。4. 用DDR计数器按“只开P1→四共享输出→七独立输出→AVM→DVR→Display/GPU/DMS”逐级测增量。5. 反推Composite写、P2读和输出写次数，验证P模型。6. 验证四共享相对七独立是否接近0.75P差值。7. 做慢消费者、Android重启、VSOCK断连、Sensor ESD和Buffer泄漏测试。8. 高温降频及最坏并发下运行至少30分钟，记录平均/峰值DDR、P95/P99延迟、掉帧和重复帧。9. 由MTK/PVT分别书面签核PQDIP、MML和DDR。&quot;
+      }
+    ]
+  },
+  &quot;snapshot&quot;: {
+    &quot;version&quot;: 1,
+    &quot;generatedAt&quot;: &quot;2026-09-04T12:00:00+08:00&quot;,
+    &quot;status&quot;: &quot;ready&quot;,
+    &quot;datasets&quot;: {
+      &quot;headline&quot;: [
+        {
+          &quot;p25_gb_s&quot;: 0.589824,
+          &quot;staged7_e2e_25&quot;: 3.244032,
+          &quot;pqdip_util_25&quot;: 0.884736,
+          &quot;fps_delta&quot;: 0.2
+        }
+      ],
+      &quot;ddr_scenarios&quot;: [
+        { &quot;scenario&quot;: &quot;OTF七输出&quot;, &quot;fps_label&quot;: &quot;25fps&quot;, &quot;producer_gb_s&quot;: 1.032192, &quot;e2e_gb_s&quot;: 2.064384, &quot;p_factor&quot;: 3.5, &quot;assumption&quot;: &quot;Composite不完整落DDR&quot; },
+        { &quot;scenario&quot;: &quot;OTF七输出&quot;, &quot;fps_label&quot;: &quot;30fps&quot;, &quot;producer_gb_s&quot;: 1.2386304, &quot;e2e_gb_s&quot;: 2.4772608, &quot;p_factor&quot;: 3.5, &quot;assumption&quot;: &quot;Composite不完整落DDR&quot; },
+        { &quot;scenario&quot;: &quot;Staged四共享&quot;, &quot;fps_label&quot;: &quot;25fps&quot;, &quot;producer_gb_s&quot;: 1.769472, &quot;e2e_gb_s&quot;: 2.801664, &quot;p_factor&quot;: 4.75, &quot;assumption&quot;: &quot;写四方向物理Buffer并由AVM/DVR共享&quot; },
+        { &quot;scenario&quot;: &quot;Staged四共享&quot;, &quot;fps_label&quot;: &quot;30fps&quot;, &quot;producer_gb_s&quot;: 2.1233664, &quot;e2e_gb_s&quot;: 3.3619968, &quot;p_factor&quot;: 4.75, &quot;assumption&quot;: &quot;写四方向物理Buffer并由AVM/DVR共享&quot; },
+        { &quot;scenario&quot;: &quot;Staged七独立&quot;, &quot;fps_label&quot;: &quot;25fps&quot;, &quot;producer_gb_s&quot;: 2.21184, &quot;e2e_gb_s&quot;: 3.244032, &quot;p_factor&quot;: 5.5, &quot;assumption&quot;: &quot;P2读取一次Composite并写七个输出&quot; },
+        { &quot;scenario&quot;: &quot;Staged七独立&quot;, &quot;fps_label&quot;: &quot;30fps&quot;, &quot;producer_gb_s&quot;: 2.654208, &quot;e2e_gb_s&quot;: 3.8928384, &quot;p_factor&quot;: 5.5, &quot;assumption&quot;: &quot;P2读取一次Composite并写七个输出&quot; },
+        { &quot;scenario&quot;: &quot;输入读放大示例&quot;, &quot;fps_label&quot;: &quot;25fps&quot;, &quot;producer_gb_s&quot;: 2.654208, &quot;e2e_gb_s&quot;: 3.6864, &quot;p_factor&quot;: 6.25, &quot;assumption&quot;: &quot;多输出累计输入读取为1.75P；非上界&quot; },
+        { &quot;scenario&quot;: &quot;输入读放大示例&quot;, &quot;fps_label&quot;: &quot;30fps&quot;, &quot;producer_gb_s&quot;: 3.1850496, &quot;e2e_gb_s&quot;: 4.42368, &quot;p_factor&quot;: 6.25, &quot;assumption&quot;: &quot;多输出累计输入读取为1.75P；非上界&quot; }
+      ],
+      &quot;history&quot;: [
+        { &quot;date&quot;: &quot;2026-08-25&quot;, &quot;stage&quot;: &quot;通用虚拟化模型&quot;, &quot;geometry&quot;: &quot;4×1920×1080@30；2×3840×1080 Composite&quot;, &quot;conclusion&quot;: &quot;建立1P/3P、VC直达、实时拆分和Staged方法&quot;, &quot;status&quot;: &quot;方法保留，尺寸被替代&quot; },
+        { &quot;date&quot;: &quot;2026-09-03&quot;, &quot;stage&quot;: &quot;会议材料解读&quot;, &quot;geometry&quot;: &quot;单方向1920×1526@25；Composite 3840×1526&quot;, &quot;conclusion&quot;: &quot;73.248Mpixel/s；PQDIP三路219.744；PQDIP6+MML1&quot;, &quot;status&quot;: &quot;分流保留，尺寸被替代&quot; },
+        { &quot;date&quot;: &quot;2026-09-04&quot;, &quot;stage&quot;: &quot;物理拓扑确认&quot;, &quot;geometry&quot;: &quot;单方向1920×1536；Composite 3840×1536&quot;, &quot;conclusion&quot;: &quot;确认MAX96712/MAX96717、前+右和后+左、3/6Gbps&quot;, &quot;status&quot;: &quot;当前几何与链路基线&quot; },
+        { &quot;date&quot;: &quot;2026-09-04&quot;, &quot;stage&quot;: &quot;最终可追溯版&quot;, &quot;geometry&quot;: &quot;1536高度；同时核算25/30fps&quot;, &quot;conclusion&quot;: &quot;重算PQDIP、DDR、Buffer、GMSL、CPU copy与Vcodec辅助指标&quot;, &quot;status&quot;: &quot;当前评审主文档&quot; }
+      ],
+      &quot;decisions&quot;: [
+        { &quot;id&quot;: &quot;D-001&quot;, &quot;decision&quot;: &quot;两路Composite均为3840×1536横拼&quot;, &quot;status&quot;: &quot;已确认&quot;, &quot;basis&quot;: &quot;2026-09-04用户确认及SerDes拓扑图&quot;, &quot;impact&quot;: &quot;尺寸变化需重算全部Pixel/DDR/Buffer&quot; },
+        { &quot;id&quot;: &quot;D-002&quot;, &quot;decision&quot;: &quot;Composite0前+右，Composite1后+左&quot;, &quot;status&quot;: &quot;已确认&quot;, &quot;basis&quot;: &quot;SerDes拓扑图标注&quot;, &quot;impact&quot;: &quot;变化会影响ROI和业务映射&quot; },
+        { &quot;id&quot;: &quot;D-003&quot;, &quot;decision&quot;: &quot;Yocto为Camera Host，Android为Guest&quot;, &quot;status&quot;: &quot;已确认&quot;, &quot;basis&quot;: &quot;MT8668 Hypervisor Camera手册&quot;, &quot;impact&quot;: &quot;决定HAL和跨域控制路径&quot; },
+        { &quot;id&quot;: &quot;D-004&quot;, &quot;decision&quot;: &quot;Android跨域使用Request/Result&quot;, &quot;status&quot;: &quot;已确认&quot;, &quot;basis&quot;: &quot;RpcBinder/VSOCK手册说明&quot;, &quot;impact&quot;: &quot;决定控制面接口&quot; },
+        { &quot;id&quot;: &quot;D-005&quot;, &quot;decision&quot;: &quot;像素面共享DMA-BUF并避免RPC整帧复制&quot;, &quot;status&quot;: &quot;目标设计&quot;, &quot;basis&quot;: &quot;MT8676参考与DDR原则&quot;, &quot;impact&quot;: &quot;失败时至少增加一次完整复制2P&quot; },
+        { &quot;id&quot;: &quot;D-006&quot;, &quot;decision&quot;: &quot;业务为AVM4+DVR环视3，共7个stream&quot;, &quot;status&quot;: &quot;会议确认&quot;, &quot;basis&quot;: &quot;2026-09-03会议材料&quot;, &quot;impact&quot;: &quot;决定输出像素与写DDR量&quot; },
+        { &quot;id&quot;: &quot;D-007&quot;, &quot;decision&quot;: &quot;P2使用PQDIP6+MML1&quot;, &quot;status&quot;: &quot;条件成立&quot;, &quot;basis&quot;: &quot;App必须拿独立图且PQDIP约250Mpixel/s&quot;, &quot;impact&quot;: &quot;共享输出或Composite直用时可优化&quot; },
+        { &quot;id&quot;: &quot;D-008&quot;, &quot;decision&quot;: &quot;25fps为当前PQDIP核算口径&quot;, &quot;status&quot;: &quot;待产品冻结&quot;, &quot;basis&quot;: &quot;会议输出按25fps而输入表出现30fps&quot;, &quot;impact&quot;: &quot;30fps使三路超过250口径&quot; },
+        { &quot;id&quot;: &quot;D-009&quot;, &quot;decision&quot;: &quot;UYVY/YUYV按2Byte/pixel估算&quot;, &quot;status&quot;: &quot;待格式冻结&quot;, &quot;basis&quot;: &quot;MT8668 Driver手册&quot;, &quot;impact&quot;: &quot;格式变化会线性改变DDR&quot; },
+        { &quot;id&quot;: &quot;D-010&quot;, &quot;decision&quot;: &quot;Composite先完整落DDR&quot;, &quot;status&quot;: &quot;未确认&quot;, &quot;basis&quot;: &quot;当前仅能建立路径模型&quot;, &quot;impact&quot;: &quot;决定OTF与Staged场景选择&quot; },
+        { &quot;id&quot;: &quot;D-011&quot;, &quot;decision&quot;: &quot;AVM/DVR共享四方向物理Buffer&quot;, &quot;status&quot;: &quot;推荐、未确认&quot;, &quot;basis&quot;: &quot;DDR优化推导&quot;, &quot;impact&quot;: &quot;25fps相对七独立少写442.368MB/s&quot; },
+        { &quot;id&quot;: &quot;D-012&quot;, &quot;decision&quot;: &quot;MML有足够Camera余量&quot;, &quot;status&quot;: &quot;未确认&quot;, &quot;basis&quot;: &quot;需要MTK/PVT数据&quot;, &quot;impact&quot;: &quot;不成立则前视需另寻资源&quot; }
+      ]
+    }
+  },
+  &quot;sources&quot;: [
+    {
+      &quot;id&quot;: &quot;src_calc&quot;,
+      &quot;label&quot;: &quot;Camera DDR可复算脚本&quot;,
+      &quot;path&quot;: &quot;T12T问题分析总结性材料/T12T资料库/Camera架构/camera_ddr_calculation.py&quot;,
+      &quot;query&quot;: {
+        &quot;engine&quot;: &quot;local-python&quot;,
+        &quot;language&quot;: &quot;python&quot;,
+        &quot;description&quot;: &quot;以1920×1536、packed YUV422 2Byte/pixel、25/30fps复算Payload、P倍数、PQDIP利用率和Buffer池。&quot;,
+        &quot;executed_at&quot;: &quot;2026-09-04T12:00:00+08:00&quot;,
+        &quot;metric_definitions&quot;: [&quot;P=四方向完整经过一次DDR读或写&quot;, &quot;端到端=Camera生产侧+AVM/DVR消费者读取&quot;]
+      }
+    },
+    {
+      &quot;id&quot;: &quot;src_history&quot;,
+      &quot;label&quot;: &quot;历史Camera文档与版本指纹&quot;,
+      &quot;path&quot;: &quot;T12T问题分析总结性材料/T12T资料库/Camera架构/MT8668_Camera架构与DDR计算_最终可追溯版.md&quot;,
+      &quot;query&quot;: {
+        &quot;engine&quot;: &quot;document-lineage&quot;,
+        &quot;description&quot;: &quot;合并2026-08-25通用模型、2026-09-03会议材料、2026-09-04拓扑确认及最终1536重算；正文保存SHA-256指纹。&quot;
+      }
+    },
+    { &quot;id&quot;: &quot;src_topology&quot;, &quot;label&quot;: &quot;已确认Camera物理拓扑图&quot;, &quot;path&quot;: &quot;T12T问题分析总结性材料/T12T资料库/Camera架构/camera-physical-topology-confirmed.jpg&quot; },
+    { &quot;id&quot;: &quot;src_driver&quot;, &quot;label&quot;: &quot;MT8668 Yocto Camera Driver User Manual CN V1.0&quot;, &quot;path&quot;: &quot;T12T问题分析总结性材料/T12T资料库/8668/MTK参考资料/MTK参考资料/Yocto/MT8668_Yocto_Camera_Driver_User_Manual_CN_V1.0.pdf&quot; },
+    { &quot;id&quot;: &quot;src_hypervisor&quot;, &quot;label&quot;: &quot;MT8668 Hypervisor Camera User Manual CN V1.0&quot;, &quot;path&quot;: &quot;T12T问题分析总结性材料/T12T资料库/8668/MTK参考资料/MTK参考资料/Android/MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf&quot; },
+    { &quot;id&quot;: &quot;src_ddr_manual&quot;, &quot;label&quot;: &quot;MT8668 Yocto DDR User Manual CN V1.0&quot;, &quot;path&quot;: &quot;T12T问题分析总结性材料/T12T资料库/8668/MTK参考资料/MTK参考资料/Yocto/MT8668_Yocto_DDR_User_Manual_CN_V1.0.pdf&quot; },
+    { &quot;id&quot;: &quot;src_vdmabuf&quot;, &quot;label&quot;: &quot;MT8676 Camera Virtualization参考材料&quot;, &quot;path&quot;: &quot;T12T问题分析总结性材料/T12T资料库/MT8676_Camera_Virtualization 1.pdf&quot; }
+  ],
+  &quot;package_info&quot;: {
+    &quot;root&quot;: &quot;T12T问题分析总结性材料/T12T资料库/Camera架构&quot;,
+    &quot;manifestPath&quot;: &quot;artifact.json&quot;,
+    &quot;snapshotPath&quot;: &quot;artifact.json&quot;
+  }
+}
+</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">全文 1</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

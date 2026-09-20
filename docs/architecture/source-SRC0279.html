@@ -1,0 +1,850 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Yocto_Camera_Driver_JSON_Arch_User_Manual_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Yocto_Camera_Driver_JSON_Arch_User_Manual_V1.0.pdf</h1><p>SRC0279 · 原来源 ID S216 · PDF物理页 · 28 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MT8676软件资料/User Manual/Yocto/English Version/MT8676_Yocto_Camera_Driver_JSON_Arch_User_Manual_V1.0.pdf</p><p>SHA-256：<code>0a8a2336080c09009f28bc5399bdb384e3ed1650a84c58ec6c0a93bf5351bb0b</code></p><p>原文件大小：1,962,216 字节</p></details><div class="actions"><a class="button" href="materials/SRC0279.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Yocto_Camera_Driver_JSON_Arch_User_Manual_V1.0.pdf 原 PDF" src="materials/SRC0279.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0279.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version:  1.0 
+Release date:  2025-06-12
+MT8676 Yocto Camera Sensor Driver 
+JSON Arch User Manual 
+JSON Arch 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0279.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+Version History 
+Version Date Author Description 
+1.0 2025-06-12 Jianmin Zhou Official release 
+ 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0279.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+Table of Contents 
+Version History ·································································································································································· 2 
+Table of Contents ······························································································································································· 3 
+1 Camera Driver JSON Arch ··········································································································································· 4 
+1.1 Overview ·································································································································································· 4 
+1.2 Configuration/Customization Guideline ··················································································································· 4 
+ How to Add a New Sensor ···························································································································· 4 
+ How to Add a New Tuning File ···················································································································· 26 
+Exhibit 1 Terms and Conditions ········································································································································ 28 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0279.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+1 Camera Driver JSON Arch 
+1.1 Overview 
+This chapter primarily discusses the sensor porting method for the MT8676 camera post decoupling Refactor, along with 
+the debugging approach and considerations for related issues. 
+For the design architecture and principles of camera refactor, please refer to the following document: MT8678 JSON Design 
+EN.pptx. 
+ 
+1.2 Configuration/Customization Guideline 
+This section primarily discusses the porting guide for the camera refactor decoupling architecture. 
+ 
+ How to Add a New Sensor 
+JSON conversion only supports YUV sensors. 
+1.2.1.1 Porting File List 
+Yocto: 
+• Kernel Space 
+– \src\kernel\linux\v6.1_mt8676\co_device_modules\arch\arm64\boot\dts\mediatek\cust_mt8
+676_camera_v4l2.dtsi 
+– \src\kernel\modules\mt8676\camera\imgsensor\src-v4l2\$(sensor_name).json 
+• User Space 
+– \src\multimedia\camera-hal\mt8676\mtkcam-
+core\external\firmware\sensor\$(sensor_name).bin 
+– \src\multimedia\camera-hal\mt8676\mtkcam-
+core\external\firmware\camera\metadata\$(sensor_name)\$(sensor_name).json 
+– \src\multimedia\camera-hal\mt8676\hardware\mtkcam-
+core\external\firmware\camera\tuning\$(sensor_name)_tuning_param.json 
+• Config Files 
+– \src\meta\meta-mediatek-mt8676\recipes-multimedia\mtkcam-mt8676\mtkcam-mt8676.bb 
+ 
+1.2.1.2 Add Sensor Firmware Files to the Kernel 
+Yocto： 
+• Kernel Space 
+– \src\kernel\modules\mt8676\camera\imgsensor\src-v4l2 
+• User Space 
+– \src\multimedia\camera-hal\mt8676\mtkcam-
+core\external\firmware\sensor\$(sensor_name).bin 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0279.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+$(sensor_name).json file is generated by a dedicated tool: Camera Firmware JSON Generator. This tool is a web page 
+interface where developers can fill in the required form content according to the prompts on the page, and finally click 
+save to generate $(sensor_name).json file. 
+The meaning of the parameters in the web tool form can be found in the document MT8678 JSON Design EN.ppt. 
+ 
+ 
+ 
+The $(sensor_name).json file that is generated needs to be saved to the 
+\src\kernel\modules\mt8676\camera\imgsensor\src-v4l2\ directory. 
+ 
+ 
+Execute the command “python3 gen_sensor_firmware.py ./sensor_name.json” in the src-v4l2/ directory. 
+ 
+ 
+ 
+After the successful execution of the script, a file named sensor_name.bin is generated in the src-v4l2/ directory. 
+ 
+ 
+The generated $(sensor_name).bin binary file can be pushed to the /vendor/firmware/sensor/ directory on the 
+development board using adb. Subsequently, the development board can be restarted. 
+Click “载入 JSON” to load existing sensor JSON files for modification. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0279.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+ 
+ 
+Note: By pushing the firmware.bin file to the /vendor/firmware/sensor/ directory on the development board 
+using adb, firmware debugging can be facilitated without the need to rebuild the driver source code repeatedly. 
+ 
+After confirming that the firmware does not require any further modifications, save the JSON file. Subsequently, during the 
+next full build process, all firmware files will be compiled into the image. Following the complete burning process, the 
+development board system will include all firmware.bin files. 
+ 
+1.2.1.3 Modify dts Files 
+Yocto: 
+\src\kernel\linux\v6.1_mt8676\co_device_modules\arch\arm64\boot\dts\mediatek\cust_mt8676_cam
+era_v4l2.dtsi 
+ 
+By analyzing the hardware schematic, the current sensor’s connection to a specific I2C can be identified. Then, sensor 
+configuration should be added under the corresponding I2C, as illustrated below: 
+• Added Sensor0 
+ 
+Note: If the sensor needs to be changed in the legacy method, then a new attribute needs to be added under the sensor 
+node: mediatek, legacy-search; 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0279.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+ 
+ 
+Concerning the correlation between seninf and sensor, please refer to the diagram below. The value of csi-port in 
+seninf_top represents the actual hardware-connected csi-port. 
+ 
+ 
+The part corresponding to the configuration in dts is as follows. It is necessary to refer to the sensor’s specification sheet 
+for configuring the power-on sequence. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0279.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+ 
+ 
+Additional note: For the fixed regulator, para1 and para2 need to be configured the same as in the dts, with identical 
+values. 
+The format of pw_seq in the most recent version of the code max96712mipiyuv_sensor.c is as follows: 
+ 
+ 
+ 
+1.2.1.4 Add New Meta Files 
+Copy a metadata template folder (\src\multimedia\camera-hal\mt8676\mtkcam-
+core\external\firmware\metadata\max96712_mipi_yuv), and change the folder name to the sensor name 
+currently being ported (e.g., xxxx_mipi_yuv). 
+Modify the sensor name in the names of all JSON files under the xxxx_mipi_yuv folder and also in these files to the nam
+e of the sensor currently being ported. Ensure that the letter casing matches the format used in the template file. 
+Take max96712_mipi_yuv as an example. The folder names in all JSON files containing max96712_mipi_yuv or 
+MAX96712_MIPI_YUV need to be changed to the name of the sensor currently being ported. 
+ 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0279.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+ 
+ 
+Note: 
+• A sensor has several different types of JSON files (all with the suffix _SENSOR_DRVNAME_xxx.json), and each JSON file needs to be 
+modified in the manner described above. 
+• If it is a raw or another type of sensor, you need to copy the corresponding sensor type’s JSON and modify it based on that. 
+• If you need to modify the resolution, you can refer to the following JSON and change it to the new resolution. 
+ 
+ 
+ 
+After the modification is completed, the xxxx_mipi_yuv/ folder should be pushed to the 
+/vendor/firmware/camera/metadata/ folder on the development board using adb push. The system should then be 
+rebooted. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0279.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+After confirming that no more modifications are needed for the metadata, place the respective metadata file in the 
+\src\multimedia\camera-hal\mt8676\mtkcam-core\external\firmware\metadata\max96712_mipi_yuv 
+directory. Subsequently, execute the full build command to build all firmware files into the image. Following complete 
+burning, all metadata files will be included in the development board system. 
+ 
+Note: If errors similar to the following occur during the full build process, it indicates differences in native basic tags between different 
+versions. During version migration, some tags will be synchronized to mtk_metadata_tag.h, and therefore a script will be needed to 
+update MapStringToEnum.cpp. 
+ 
+mtkcam-core/external/MapStringToEnum.cpp:738:41: error: use of undeclared identifier 
+'MTK_MFNR_FEA                                       TURE_STORE_BSS2META'; did you mean 
+'MTK_MFNR_FEATURE_START'? 
+{&quot;MTK_MFNR_FEATURE_STORE_BSS2META&quot;, MTK_MFNR_FEATURE_STORE_BSS2META}, 
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+ 
+Update the script execution method: Go to the mtkcam-core/external/ directory, and execute python MapStringTo
+Enum.py.. 
+The full build command should be executed again. 
+ 
+1.2.1.5 Configure Sensor Format 
+Modification should be made in the web interface Camera Firmware JSON Generator. 
+Configure UYVY or YUYV according to the format output by the bridge: 
+ 
+ 
+Locate all instances where sensor_output_dataformat is configured and change them to the actual format. 
+ 
+1.2.1.6 Configure Mode Structure 
+Modification should be made in the web interface Camera Firmware JSON Generator. 
+The relevant parameters of the setting are to be confirmed with the vendor and filled into the structure. 
+ 
+Pclk-&gt;pixel clock, Unit: Hz 
+Linelength-&gt;HTS 
+Framelength-&gt;VTS 
+Linelength × framelength = pclk 
+Grabwindow_width -&gt; camera size width (This value is not available on MT8676 and will be filled in the solution section 
+later). 
+Grabwindow_height -&gt; camera size height (This value is not available on MT8676 and will be filled in the solution section 
+later). 
+Mipi_pixel_rate-&gt; mipi datarate × lane_number/bitdepth, YUV bitdepth = 16 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0279.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+ 
+ 
+The following diagram borrows an explanation of winsize info from a previous version to describe the meanings of each 
+field. 
+ 
+ 
+Limitation: Full size (4:3) or full size (16:9) width and height need 4x alignment. 
+ 
+The size (width and height) of the sensor output should match the size of Grabwindow_width/Grabwindow_height. 
+ 
+Grab window request: 
+1. The width must be a multiple of 16 and the height must be a multiple of 4. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0279.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+2. The viewing angles are consistent at the same ratio; the ratios of 4:3 and 16:9 require that the window output by 
+the sensor ensures that the horizontal direction is consistent with the full size. 
+3. The grab window setting recommendations are consistent with the window output by the sensor. In special 
+cases: grabwindow width(height) ≤ sensor output width(height) - startx(y) 
+ 
+1.2.1.7 Configure static_ctx 
+Modification should be made in the web interface Camera Firmware JSON Generator. 
+1. The sensor_id field below is filled with the corresponding sensor ID. 
+2. The i2c_add_table below generally only needs to be configured with 0x52, which is the actual address of the 
+deserializer. 
+3. Configure the resolution; this is the value of grabwindow mentioned earlier. 
+4. Configure mipi_lane_num, which represents the number of MIPI lanes here. 
+ 
+ 
+5. cam_type is filled according to the type of module scene. If it is a single sensor, you can fill in 
+MTK_SENSOR_TYPE_SINGLE, which has the following values to choose: 
+ 
+– SENSOR_TYPE_COMB_AVM represents the combined frame AVM. 
+– SENSOR_TYPE_MULTI represents multicam. 
+– SENSOR_TYPE_MULTI_ASYNC Indicates a multicam camera with independent VC channels. 
+– SENSOR_TYPE_NON_COMB_AVM represents non-combined AVM. 
+ 
+6. sensor_output_dataformat represents the format of the data output by the module, filled in the actual format. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0279.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+ 
+ 
+Regarding the configuration of multicam group info, refer to the following configuration in the JSON web tool: 
+ 
+ 
+ 
+The format in the final JSON file will include sensor ID and VC information from one master sensor and four slave sensors in 
+their respective DTS files. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0279.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+ 
+Regarding the configuration of multicam_group_info, you can refer to the following configuration: 
+You need to fill in the number of VC channels, and you need to fill in four channels. If it is a multicam with only two or 
+three drivers, you also need to fill in the information of 4 channels. For channels that are not used, just fill in 0 for 
+vc_data_type. 
+ 
+ 
+1.2.1.8 Configure VC Information 
+Modification should be made in the web interface Camera Firmware JSON Generator. 
+A single VC can be configured as follows: 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0279.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+ 
+ 
+If there are multiple VCs, primarily modify the channel and user_data_desc. 
+ 
+1.2.1.9 Configure to Get the Sensor ID 
+Modification should be made in the web interface Camera Firmware JSON Generator. 
+  
+ 
+1.2.1.10 Configure Sensor Init 
+Modification should be made in the web interface Camera Firmware JSON Generator. 
+The primary task involves configuring the module’s settings, which necessitates debugging and generation by both the 
+customer and the vendor. 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0279.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 16 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+1.2.1.11 Configure get_sensor_usage 
+Modification should be made in the web interface Camera Firmware JSON Generator. 
+ 
+ 
+Its values can be selected as follows: COMB represents combined frame AVM; MUTI represents multicam; NONCOMB 
+represents non-combined frame AVM; MUTICAM_SYNC represents a multi cam camera where the slave is independent and 
+does not affect each other, and for a single sensor configuration, it should be set as SINGLE. 
+ 
+ 
+1.2.1.12 Configure Streaming Control 
+Modify in the web interface Camera Firmware JSON Generator. 
+All initialization settings should be placed within the sensor_init() function. The functions for enabling and disabling 
+MIPI should be placed in the streaming_control() function. 
+ 
+ 
+1.2.1.13 subdrv_static_ctx Structure Member Analysis 
+Member Meaning 
+sensor_id Sensor ID define in kd_imgsensor.h. 
+reg_addr_sensor_id Sensor register address where sensor ID is read. Up to 3 bytes.  
+i2c_addr_table I2C write ID, end in 0xff, 4 for maximum. Ex. i2c_addr_table = {0x20, 0x6e, 0xff},. 
+eeprom_info The address of eeprom_info_struct. If there is no eeprom device, set to 0. 
+eeprom_num Array size of the eeprom_info_struct. If there is no eeprom device, set to 0.  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0279.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 17 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+Member Meaning 
+resolution Full pixel size of sensor output. 
+mirror Set IMAGE_HV_MIRROR if the sensor orientation is 180 degrees difference from 
+module orientation. 
+mclk Overwrite MCLK frequency (MHz) 
+isp_driving_current Overwrite MCLK driving current (mA) 
+sensor_interface_type Data output interface type. Set default MIPI. 
+mipi_sensor_type C-PHY or D-PHY 
+mipi_lane_num How many lanes/trios of MIPI-PHY 
+ob_pedestal OB offset. General is 64. 
+sensor_output_dataformat Bayer order, 4-cell order and SW/HW remo. 
+ana_gain_def Default analog gain. Set 4x. 1024base. 
+ana_gain_min Minimum analog gain. 1024base. 
+ana_gain_max Maximum analog gain. 1024base. 
+ana_gain_type Sony: type 0;       OV: type 1;       Samsung: type 2;       Hinyx: type 3;       GC: type 4  
+ana_gain_step Minimum valid step of analog gain. 1024base. 
+ana_gain_table Use valid analog gain table. Remove unsuitable value which is not linearity. 1024base. 
+ana_gain_table_size Size of analog gain table 
+min_gain_iso Set minimum ISO 100. 
+exposure_def Default exposure line. Set 0x3D0. 
+exposure_min Minimum exposure line 
+exposure_max Maximum exposure line 
+exposure_step Minimum valid step of exposure line 
+exposure_margin Maximum margin of exposure line 
+frame_length_max Maximum framelength 
+ae_effective_frame AE effective frame 
+frame_time_delay_frame The frame “frame length” setting takes effect. Sony sensor is filled in 3; other sensors 
+are filled in 2. 
+start_exposure_offset Parameter tuned in CTS sensor fusion test. 
+pdaf_type Reference enum IMGSENSOR_PDAF_SUPPORT_TYPE_ENUM 
+hdr_type Reference enum IMGSENSOR_HDR_SUPPORT_TYPE_ENUM 
+seamless_switch_support If sensor supports seamless switch, set 1 to enable seamless switch function.  
+temperature_support Set to 1 if sensor supports temperature sensor readout. 
+g_temp Implement get temperature function. 
+g_gain2reg Implement analog gain to register mapping rule. 
+s_gph Implement set enable/disable group hold function. 
+s_cali Implement the function to write data from eeprom_info_struct to sensor (ex: QSC, 
+cross-talk, …) 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-18"><h2>PDF物理页 18</h2><a href="materials/SRC0279.pdf#page=18" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 18 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+Member Meaning 
+Member Meaning 
+reg_addr_stream Sensor register address where streaming on/off is controlled. 
+reg_addr_mirror_flip Sensor register address where mirror/flip on/off is controlled. No use to set to 0.  
+reg_addr_exposure Sensor register address where exposure line is set. Up to 3 channels of exposure. Up 
+to 3 bytes. 
+long_exposure_support Set to 1 if sensor supports long exposure left shift function. 
+reg_addr_exposure_lshift Sensor register address where long exposure left shift is set. 
+reg_addr_ana_gain Sensor register address where analog gain is set. Up to 3 chann els of exposure. Up to 
+3 bytes. 
+reg_addr_frame_length Sensor register address where framelength is set.  
+reg_addr_temp_en If “temperature_support” is set to 1. Sensor register address where temperature 
+sensor on/off is controlled. 
+reg_addr_temp_read If “temperature_support” is set to 1. Sensor register address where temperature 
+output is read. 
+reg_addr_auto_extend For Sony sensor, sensor register address where auto extend function enable/disable is 
+controlled. 
+reg_addr_frame_count For Samsung sensor, sensor register address where frame count is read to determine 
+if sensor stream is off or not. 
+reg_addr_fast_mode For Sony sensor, sensor register address where fast mode on/off is controlled.  
+init_setting_table The address of sensor initial setting table 
+init_setting_len Array size of the sensor initial setting table 
+mode The address of subdrv_mode_struct 
+sensor_mode_num Array size of the subdrv_mode_struct 
+list The address of customized feature control list 
+list_len Array size of the customized feature control list 
+checksum_value The calculated value when Test Pattern output, for Camera Auto Test  
+ 
+1.2.1.14 Sensor Mode Setting 
+Subdrv_mode_struct mode_struct[] structure array is used to store data configurations for different Sensor Modes. 
+The following example using “preview” illustrates some fields that customers need to modify. For a YUV sensor, the sensor 
+mode and preview are generally identical. However, for a raw sensor, there may be differences based on specific 
+requirements for configuration. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-19"><h2>PDF物理页 19</h2><a href="materials/SRC0279.pdf#page=19" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 19 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-20"><h2>PDF物理页 20</h2><a href="materials/SRC0279.pdf#page=20" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 20 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+The following is the explanation in .c code.  
+ 
+ 
+1.2.1.15 Driver Functions 
+ Driver Operation Function List 
+The list of driver functions is as follows: 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-21"><h2>PDF物理页 21</h2><a href="materials/SRC0279.pdf#page=21" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 21 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+ 
+ 
+In the code for the imgsensor starting with the adapter name, it is often called to the driver code through the 
+subdrv_call method, which is the function list above, for example: 
+ 
+ 
+The call above will be called to the get_sensor_id in the function list above. 
+There are many functions in the list above that start with “common”. This section utilizes a common processing flow. It 
+does not need to be specifically implemented in the sensor driver. Further elaboration will not be provided below. 
+The following is a description of the get_imgsensor_id and open functions that your company may change. 
+ 
+ get_imgsensor_id Function 
+During startup, the search sensor process retrieves the ID by utilizing the get_imgsensor_id function. If the retrieval of 
+the ID is successful, the UI will display the camera APP’s icon. 
+The primary purpose of the following function is to acquire the sensor ID and determine whether there is a link to the 
+module. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-22"><h2>PDF物理页 22</h2><a href="materials/SRC0279.pdf#page=22" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 22 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+ 
+ 
+ Open Function 
+This function will be called every time when the camera is accessed. 
+Read sensor_id to verify if the I2C communication is functioning properly. 
+The sensor_init function is called to initialize some variables in the ctx structure. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-23"><h2>PDF物理页 23</h2><a href="materials/SRC0279.pdf#page=23" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 23 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+ 
+ 
+Note: 
+1. Explanation about resolution 
+Due to different scenarios, the size of the image provided to the user space and the size of VC actually received by seninf 
+are different. 
+So there will be two resolutions in the driver, and customers can use the driver of max96712isx, a non-combined frame 
+AVM, as an example. 
+The following macros should be searched for to compare configurations. 
+ 
+ 
+2. Regarding the part of GPIO power supply in DTS, you can also choose the regulator packaging method. 
+The usage is as follows. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-24"><h2>PDF物理页 24</h2><a href="materials/SRC0279.pdf#page=24" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 24 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+ 
+ 
+ 
+3. UT test command 
+C:\Users&gt;adb shell sentest_v4l2    //just search sensor, not streaming 
+ 
+[show_Sensors]sensorNum 2 
+[show_Sensors]name:SENSOR_DRVNAME_OV05A20_MIPI_RAW type:0 
+[show_Sensors]index:0, SensorDevIdx:1 
+[show_Sensors]name:SENSOR_DRVNAME_IMX576_MIPI_RAW type:0 
+[show_Sensors]index:1, SensorDevIdx:2 
+[main]Param: 1 &lt;sensorDev&gt; &lt;scenario&gt; &lt;fps&gt; 
+[main]&lt;sensorDev&gt; : main(1), Sub(2), Main2(4), sub2(8), Main3(16) 
+[main]&lt;scenario&gt;  : Pre(0), Cap(1), VD(2), slim1(3), slim2(4) 
+ 
+The output shows that sensorNum is not 0 and display the specific name of the sensor, indicating the search sensor is 
+successful. Then test the output of the sensor. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-25"><h2>PDF物理页 25</h2><a href="materials/SRC0279.pdf#page=25" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 25 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+ 
+C:\Users&gt; adb shell sentest_v4l2  1 0     //search sensor, then open main (1) sensor 
+preview (0) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-26"><h2>PDF物理页 26</h2><a href="materials/SRC0279.pdf#page=26" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 26 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+4. The command to check seninf status is as follows. Once the results are found, they can be sent to MediaTek for 
+confirmation. 
+ 
+ 
+5. Access max96712 directly via I2C commands 
+The following is the value read from register 0x108. 
+echo 0x8a0  0x84&gt; /sys/devices/platform/soc/13b30000.i2c/i2c-8/8-0052/debug_i2c_ops 
+ 
+ 
+The folloiwng is 0x8a0 register written as 0x84. 
+echo 0x52 0x8a0 0x84&gt; /sys/devices/platform/11cc0000.i2c/i2c-8/8-0052/debug_i2c_ops 
+ 
+6. The command to enable sensor driver log 
+echo 1 &gt; /sys/module/imgsensor/parameters/sensor_debug 
+ 
+7. If the serial port log printing stops, open the UART command: 
+adb shell setprop persist.vendor.uartconsole.enable 1 
+ 
+ How to Add a New Tuning File 
+Design principles reference: MT8678 JSON Design EN.pptx 
+Add method: When porting a new sensor, in the tuning section, simply add a 
+${SENSOR_DRIVER_NAME}_tuning_param.json file. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-27"><h2>PDF物理页 27</h2><a href="materials/SRC0279.pdf#page=27" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 27 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+ 
+ 
+Note: 
+• If you need to build into the image, place the JSON file in the \src\multimedia\camera-hal\mt8676\mtkcam-coremtkcam-
+core\external\firmware\camera\tuning directory 
+• If you need to add a sensor’s tuning JSON file separately, use adb push to push the tuning JSON file to the 
+vendor/firmware/camera/tuning/ directory 
+ 
+${SENSOR_DRIVER_NAME}_tuning_param.json: Copy an existing template and modify the name of 
+sensor_driver_name. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-28"><h2>PDF物理页 28</h2><a href="materials/SRC0279.pdf#page=28" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 28 
+MT8676 Yocto Camera Sensor Driver JSON Arch 
+User Manual 
+Confidential B 
+Exhibit 1 Terms and Conditions 
+Your access to and use of this document and the information contained herein (collectively this “Document”) is subject to your (including the corporation 
+or other legal entity you represent, collectively “You”) acceptance of the terms and conditions set forth below (“T&amp;C”).  By using, accessing or 
+downloading this Document, You are accepting the T&amp;C and agree to be bound by the T&amp;C.  If You don’t agree to the T&amp;C, You may not use this 
+Document and shall immediately destroy any copy thereof. 
+ 
+This Document contains information that is confidential and proprietary to MediaTek Inc. and/or its affiliates (collectively “MediaTek”) or its licensors 
+and is provided solely for Your internal use with MediaTek’s chipset(s) described in this Document and shall not be used for any other purposes (including 
+but not limited to identifying or providing evidence to support any potential patent infringement claim against MediaTek or any of MediaTek’s suppliers 
+and/or direct or indirect customers).  Unauthorized use or disclosure of the information contained herein is prohibited.  You agree to indemnify 
+MediaTek for any loss or damages suffered by MediaTek for Your unauthorized use or disclosure of this Document, in whole or in part. 
+ 
+MediaTek and its licensors retain titles and all ownership rights in and to this Document and no license (express or implied, by estoppels or otherwise) to 
+any intellectual propriety rights is granted hereunder.  This Document is subject to change without further notification.  MediaTek does not assume any 
+responsibility arising out of or in connection with any use of, or reliance on, this Document, and specifically disclaims any and all liability, including, 
+without limitation, consequential or incidental damages. 
+ 
+THIS DOCUMENT AND ANY OTHER MATERIALS OR TECHNICAL SUPPORT PROVIDED BY MEDIATEK IN CONNECTION WITH THIS DOCUMENT, IF ANY, ARE 
+PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE.  MEDIATEK SPECIFICALLY DISCLAIMS 
+ALL WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, COMPLETENESS OR ACCURACY AND ALL 
+WARRANTIES ARISING OUT OF TRADE USAGE OR OUT OF A COURSE OF DEALING OR COURSE OF PERFORMANCE.  MEDIATEK SHALL NOT BE RESPONSIBLE 
+FOR ANY MEDIATEK DELIVERABLES MADE TO MEET YOUR SPECIFICATIONS OR TO CONFORM TO A PARTICULAR STANDARD OR OPEN FORUM. 
+ 
+Without limiting the generality of the foregoing, MediaTek makes no warranty, representation or guarantee regarding the suitability of its products for 
+any particular purpose, nor does MediaTek assume any liability arising out of the application or use of any product, circuit or software.  You agree that 
+You are solely responsible for the designing, validating and testing Your product incorporating MediaTek’s product and ensure such product meets 
+applicable standards and any safety, security or other requirements. 
+ 
+The above T&amp;C and all acts in connection with the T&amp;C or this Document shall be governed, construed and interpreted in accordance with the laws of 
+Taiwan, without giving effect to the principles of conflicts of law. 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a><a href="#page-18">PDF物理页 18</a><a href="#page-19">PDF物理页 19</a><a href="#page-20">PDF物理页 20</a><a href="#page-21">PDF物理页 21</a><a href="#page-22">PDF物理页 22</a><a href="#page-23">PDF物理页 23</a><a href="#page-24">PDF物理页 24</a><a href="#page-25">PDF物理页 25</a><a href="#page-26">PDF物理页 26</a><a href="#page-27">PDF物理页 27</a><a href="#page-28">PDF物理页 28</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

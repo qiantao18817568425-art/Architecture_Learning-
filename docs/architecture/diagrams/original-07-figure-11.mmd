@@ -1,0 +1,5 @@
+%% Vehicle abnormal recovery
+flowchart TB
+  VT["frame/session/cache fault trigger"] --> VE["earliest raw/decode/freshness/publish break"] --> DF["direct decoder/CanService/VehicleIF failure"]
+  DF --> DP["downstream stale/absent state"] --> US["vehicle-state symptom"] --> OB["capture + validity + timestamp + counters"]
+  OB --> CL["clear stale cache/subscription"] --> RV["new session + fresh readback"] --> OW["vehicle-data Owner validates consumed state"]

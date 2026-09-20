@@ -1,0 +1,476 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Yocto_OTA_User_Manual_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Yocto_OTA_User_Manual_V1.0.pdf</h1><p>SRC0263 · 原来源 ID S200 · PDF物理页 · 14 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MT8676软件资料/User Manual/Yocto/Chinese Version/MT8676_Yocto_OTA_User_Manual_V1.0.pdf</p><p>SHA-256：<code>ebcdec122bb5ca48d52b38fc083c31891f173cc306c8d3e783f2d7f569bf1a2d</code></p><p>原文件大小：886,367 字节</p></details><div class="actions"><a class="button" href="materials/SRC0263.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Yocto_OTA_User_Manual_V1.0.pdf 原 PDF" src="materials/SRC0263.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0263.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+版本：  1.0 
+出版日期：  2024-09-19 
+MT8676 Yocto OTA User Manual 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0263.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8676 Yocto OTA 
+ 
+User Manual 
+Confidential B 
+版本记录 
+版本 日期 作者 描述 
+1.0 2024-09-19 Yiru Feng 正式版 
+ 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0263.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8676 Yocto OTA 
+ 
+User Manual 
+Confidential B 
+目录 
+版本记录 ··········································································································································································· 2 
+目录 ··················································································································································································· 3 
+图片目录 ··········································································································································································· 3 
+表格目录 ··········································································································································································· 4 
+1 OTA ············································································································································································ 5 
+1.1 概述·········································································································································································· 5 
+1.1.1 简单介绍 ······················································································································································ 5 
+1.1.2 目的 ······························································································································································ 5 
+1.1.3 目标读者 ······················································································································································ 5 
+1.1.4 如何使用本文档 ·········································································································································· 5 
+1.2 OTA 升级的定义 ······················································································································································ 6 
+1.3 OTA 缩略词 ······························································································································································ 6 
+1.4 打开 A/B 系统升级 ·················································································································································· 6 
+1.5 架构概述 ·································································································································································· 7 
+1.5.1 A/B 系统升级进程 ······································································································································· 7 
+1.5.1.1 如何执行 Yocto Full/Delta OTA 升级······························································································ 8 
+1.5.2 A/B 系统分区布局 ······································································································································· 9 
+1.5.3 Yocto OTA编译升级包架构 (临时方案) ···································································································· 10 
+1.5.3.1 编译 Yocto targetfiles.zip ·············································································································· 10 
+1.5.3.2 编译 Full otapackage.zip ··············································································································· 11 
+1.5.3.3 编译 Delta otapackage.zip ············································································································ 11 
+1.5.4 修改升级包的签名 ···································································································································· 12 
+1.5.5 LK2 启动控制流程 ······································································································································ 13 
+附件一 附加条款 ····························································································································································· 14 
+ 
+图片目录 
+图 1-1. Yocto OTA升级架构 ······················································································································································ 7 
+图 1-2. Yocto A/B 分区布局 ······················································································································································· 9 
+图 1-3. Yocto OTA 编译升级包架构 ········································································································································ 10 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0263.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8676 Yocto OTA 
+ 
+User Manual 
+Confidential B 
+图 1-4. Yocto LK2 启动流程 ····················································································································································· 13 
+ 
+表格目录 
+表 1-1. 章节概述········································································································································································ 5 
+表 1-2. 缩略词 ··········································································································································································· 6 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0263.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8676 Yocto OTA 
+ 
+User Manual 
+Confidential B 
+1 OTA 
+1.1 概述 
+1.1.1 简单介绍 
+Yocto A/B 系统更新的介绍如下： 
+• 系统更新方式为 A/B update，即设备运行两套完全并行的系统，active_slot 和非 active_slot 
+• 磁盘上始终保留一个可启动的系统，设备不会变砖 
+• LK2 阶段根据 misc 分区中 AB 标志设置确认 active_slot 并加载对应分区数据 
+• OTA 升级保持在正常模式的后台运行，用户无感 
+ 
+1.1.2 目的 
+本文档为用户提供了 Yocto A/B 系统更新的指南。 
+主要介绍了在 Yocto 平台上生成 OTA 包的方法及 OTA 测试方法；同时介绍了启动流程中 AB 标志的使用。 
+1.1.3 目标读者 
+本文档主要面向如下群体： 
+• 具备 OTA A/B 系统更新（无缝更新）技术知识的工程师 
+ 
+1.1.4 如何使用本文档 
+本部分解释了本文档中信息的分布方式，并提供了一些提示和示例，以简化在本文档中查找和理解信息。  
+下表 概述了本文档中的各个章节。 
+表 1-1. 章节概述 
+编号 章节 描述 
+1.1 概述 描述了本文档的范围和布局 
+1.2 OTA 升级的定义 规定了 OTA 升级的定义 
+1.3 OTA 缩略词 列举了 OTA 缩略语 
+1.4 打开 A/B 系统升级 在联发科技平台打开 AB 系统升级所需服务 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0263.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Yocto OTA 
+ 
+User Manual 
+Confidential B 
+编号 章节 描述 
+1.5.1 A/B 系统升级进程 A/B 系统升级的架构及升级方式介绍 
+1.5.2 A/B 系统分区布局 A/B 分区介绍 
+1.5.3 OTA 编译包 介绍如何制作 OTA 全量升级包和差分升级包 
+1.5.4 修改升级包的签名 介绍升级包签名 key 及其客制化 
+1.5.5 LK2 启动控制流程 Yocto LK2 阶段 bootctl 参数介绍 
+ 
+1.2 OTA 升级的定义 
+OTA 的专业术语定义如下： 
+全包升级：全包升级是指对设备的待升级分区数据进行完整的更新，升级包内包含各个分区的完整 image 信息。 
+差分升级：差分升级，也称作增量升级，是指对设备的待升级分区数据与目标版本对应分区数据的差异部分进行
+更新，升级包内只包含两个版本的差异部分，这能极大缩减升级包的大小。  
+ 
+批注：只能在编译差分包时使用的旧版本或源版本的设备上安装对应的增量更新包。 
+1.3 OTA 缩略词 
+本文档使用的缩略语如下： 
+表 1-2. 缩略词 
+缩略词 全称 释义 
+Bootctl Boot Control A/B slot 标识结构体，存储在 misc 分区中 
+LK2 Little Kernel 2 微型内核，Yocto 启动阶段 
+OTA Over-The-Air 空中下载升级，分为 full update (全包升级)，delta update (差分升级) 
+ 
+1.4 打开 A/B 系统升级 
+请在对应 project.bb file 中添加以下模块： 
+• recipes-auto/images/mtk-core-image-auto8676.bb:  
+–   update-engine-sideload-u \ 
+–   update-verifier-u \ 
+ 
+update-engine-sideload-u: OTA 升级模块，进行读写分区等操作 
+update-verifier-u: OTA 重启成功后，修改新 slot 标志位 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0263.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8676 Yocto OTA 
+ 
+User Manual 
+Confidential B 
+1.5 架构概述 
+本章节简要描述系统的各个模块及其关系。 
+1. A/B 系统升级进程 
+2. A/B 系统分区布局 
+3. 编译升级包架构 
+4. 修改升级包的签名 
+5. LK2 启动控制流程  
+1.5.1 A/B 系统升级进程 
+ 
+图 1-1. Yocto OTA升级架构 
+ 
+上图描述了 Yocto OTA升级的整体架构，从图中能获取到如下信息： 
+1. Yocto OTA升级支持两种触发方式：本地升级和网络升级，联发科技只支持本地升级，网络升级需要客户自行
+实现。本地升级是指升级包存放在本地环境内，利用升级脚本去触发升级；网络升级是指升级包存放到远程服
+务器内，升级时需要 OTA APP 通过无线网络远程下载和安装更新包。 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0263.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 Yocto OTA 
+ 
+User Manual 
+Confidential B 
+2. 以本地升级为例，OTA 升级的大致流程如下： 
+– 将升级包存放到本地 PC 环境内 
+– 执行 OTA update script 调用 update_engine sideload 触发升级 
+– 对升级包进行完整性与准确性校验（校验 key 相关内容请查看 1.5.4） 
+– 将升级包内的升级数据分别更新到对应分区内 
+– 对已经更新到分区内的数据进行校验，确保数据的准确性 
+– 更新系统启动控制参数，即 Bootctl 信息，确保系统下一次启动加载新的 slot 分区数据 
+– 切换 boot region，确保系统的下一次启动时加载新的 preloader 分区数据 
+– 重启设备 
+ 
+1.5.1.1 如何执行 Yocto Full/Delta OTA 升级 
+测试环境设置 
+1. The PC has Python 3 environment  
+2. Flash base load in DUT  
+3. Get OTA package 
+ 
+测试步骤 
+1. Device connected Yocto ADB environment 
+2. Execute the upgrade script:  
+python3 hypervisor_update.py --file otapackage_delta.zip &gt; update.txt 2&gt;&amp;1 
+Note: 
+▪ hypervisor_update.py: Update script 
+▪ otapackage_delta.zip: OTA package. Unlimited package name 
+▪ &gt; update.txt 2&gt;&amp;1: Store the upgrade log in update.txt in the current directory 
+ 
+预期结果 
+1. Update should be completed, and update.txt prints the following log: [INFO:update_attempter_android.cc(600)] 
+Update successfully applied, waiting to reboot. 
+2. The first restart after the upgrade should successfully enter the HomeScreen. 
+3. Check whether setting-version has been updated. 
+Note: If the test upgrade fails, please provide the update log and UART log in CR. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0263.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8676 Yocto OTA 
+ 
+User Manual 
+Confidential B 
+1.5.2 A/B 系统分区布局 
+ 
+图 1-2. Yocto A/B 分区布局 
+ 
+Yocto AB 分区布局如上图所示，可以在分区表中进行 AB 分区的配置： 
+meta/meta-mediatek-mt8676/recipes-bsp/ptgen/files/auto8676p1_64/partition_table_emmc_ab.csv 
+ 
+1. 删减 AB 分区升级，需先将目标分区修改为单分区，并将分区表中对应【 OTA_Update】改为 N。 
+ 
+ 
+2. 新增 AB 分区升级，需同时新增 partition_a/b 两个分区，并将分区表中对应【OTA_Update】设置为 Y。AB 分
+区需要保持 size 一致。 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0263.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8676 Yocto OTA 
+ 
+User Manual 
+Confidential B 
+1.5.3 Yocto OTA 编译升级包架构 (临时方案) 
+ 
+图 1-3. Yocto OTA编译升级包架构 
+ 
+上图描述了 Yocto OTA编译升级包的架构，从图中能获取到如下信息： 
+1. Yocto 编译升级包暂时需要借助 Android 的编译环境下进行 
+2. Yocto Only 编译升级包的大致流程如下： 
+– 编译 Yocto targetfiles.zip 
+– 利用 Yocto targetfiles.zip 在 Android 编译环境下编译生成全量升级包和差分升级包 
+ 
+1.5.3.1 编译 Yocto targetfiles.zip 
+Yocto 的 targetfiles.zip 需要手动替换新版本全部的 AB images 到/default_target/IMAGE 和/RADIO 下，并重新压
+缩生成 yocto_target.zip。 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0263.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8676 Yocto OTA 
+ 
+User Manual 
+Confidential B 
+ 
+ 
+在当前/default_target/目录下，执行 zip -r yocto_target.zip . 
+1.5.3.2 编译 Full otapackage.zip 
+得到 yocto_target.zip 后，就可以在 Android 的编译环境下编译 Yocto 的全量升级包。 
+编译指令： 
+./out_sys/host/linux-x86/bin/ota_from_target_files -v --block -p out_sys/host/linux-x86 -k 
+build/make/target/product/security/testkey --skip_postinstall yocto_target.zip.zip 
+otapackage_full.zip 
+ 
+批注： 
+• ota_from_target_files：升级包编译脚本 
+• build/make/target/product/security/testkey：对升级包进行签名的 key 路径，联发科技默认使用 Google 提供的 testkey，贵
+司可指定其它的 key 路径，使用-k 参数指定。 
+如何更换签名 key，请参考 1.5.4。 
+• yocto_target.zip：Yocto 的 targetfiles.zip 
+• otapackage_full.zip：最终产生的 Yocto 全量升级包，包名可随意指定 
+• 请务必确保在 Android 的编译环境下编译升级包，并确保编译全包前有执行 source &amp; lunch 
+ 
+1.5.3.3 编译 Delta otapackage.zip 
+前提条件： 
+编译差分包需要预先准备两份 yocto_target.zip。一份是基底版本（ source 版本）的 yocto_target.zip，此处命名为
+source_yocto_target.zip；一份是目标版本（target 版本）的 yocto_target.zip，此处命名为 target_yocto_target.zip。 
+批注：请务必确保平台上烧录的基底版本 load 和基底版本的 target_files.zip 是同一次编译得到的。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0263.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8676 Yocto OTA 
+ 
+User Manual 
+Confidential B 
+ 
+编译指令： 
+./out_sys/host/linux-x86/bin/ota_from_target_files -v --block -p out_sys/host/linux-x86 -k 
+build/make/target/product/security/testkey --skip_postinstall -i 
+source_yocto_target_files.zip target_yocto_target_files.zip otapackage_delta.zip 
+ 
+批注： 
+• ota_from_target_files：升级包编译脚本 
+• build/make/target/product/security/testkey：对升级包进行签名的 key 路径，联发科技默认使用 Google 提供的 testkey，贵
+司可指定其它的 key 路径，使用-k 参数指定。 
+如何更换签名 key，请参考 1.5.4。  
+• source_yocto_target.zip：source 版本的 yocto_target.zip 
+• target_yocto_target.zip：target 版本的 yocto_target.zip 
+• otapackage_delta.zip：最终产生的 yocto 差分升级包，包名可随意指定 
+• 请务必确保在 Android 的编译环境下编译升级包，并确保编译全包前有执行 source &amp; lunch 
+ 
+1.5.4 修改升级包的签名 
+OTA 升级会使用到两把 key：xxx.pk8 和 xxx.x509.pem。 
+ 
+1. xxx.pk8 格式的 key 用于在做包时对升级包签名。 
+2. xxx.x509.pem 格式的 key 用于在 OTA 升级过程中进行升级包的校验。 
+ 
+请参考如下两步去修改升级包的签名 key： 
+1. 将 1.5.3.2 和 1.5.3.3 内的编译指令 -k 参数后更换为需要使用的 xxx.pk8 和 xxx.x509.pem 文件路径。 
+2. 将meta/meta-mediatek/recipes-support/update-engine-sideload-u/files/ota/otacerts.zip 内
+更换实际使用的 xxx.x509.pem 文件。 
+ 
+更换 key 后需确认以下两支文件一致，升级校验才可通过： 
+• otapackage.zip 的/META-INF/com/android/otacert 文件 
+• device 的/system/etc/security/otacerts.zip 文件 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0263.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8676 Yocto OTA 
+ 
+User Manual 
+Confidential B 
+1.5.5 LK2 启动控制流程 
+ 
+图 1-4. Yocto LK2 启动流程 
+ 
+1. OTA 升级完成后重启，Yocto OS 启动，进入 Yocto LK2 阶段。 
+2. 检查当前 slot 内 Yocto 是否有被成功启动过，即检查 boot control 内的 Yocto successful boot 的值是否为 1。 
+3. 如果 Yocto successful boot 的值为 1，意味着当前 slot“可启动”，不做操作，机器继续启动；如果 Yocto 
+successful boot 的值为 0，意味着当前 slot“之前未成功启动过”，则检查当前 slot 的可重启次数是否大于 0，
+即检查 boot control 内的 tries_remaining 的值。  
+4. 如果 tries_remaining 的值大于 0，则将 tries_remaining 的值减 1，继续启动； 否则意味着当前 slot“不可启
+动”，将当前 slot 标记为 invalid，即将当前 slot 的 priority、Yocto successful boot 全部置 0； 
+5. 然后检查当前是否还存在可用 slot，即检查是否存在 priority 不为 0 的 slot，如果不存在，系统报错 Error 信
+息；如果存在，则将 rollback slot 的 priority 设定为 15，并触发 Yocto 重启完成 rollback。 
+6. Yocto 启动成功时，将当前 slot Yocto successful boot 的值置为 1。 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0263.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+MT8676 Yocto OTA 
+ 
+User Manual 
+Confidential B 
+附件一 附加条款 
+您(或您所代表的公司或其他法律主体，以下合称「您」)是否得取得、下载与使用本文件及其相关信息皆应以您接受本附加条款为先决要件。
+您对于本文件之使用、取得或下载即表示您已接受本附加条款并同意受本附加条款之拘束。若您不同意受本附加条款之拘束，您将不得使用、
+取得或下载本文件并应立即删除或毁弃所有本文件之副本。 
+ 
+本文件含有联发科技股份有限公司及其关联公司（以下合称「联发科技」）或其授权人之机密信息及专有信息，仅供您为本文件所描述之联发
+科技芯片组作内部使用而不得用于其他任何目的（包括但不限于确认或提供支持任何对联发科技、其供货商及/或其直接或间接客户所提潜在
+专利侵权主张的证据）。禁止未经授权使用或揭露本文件及其中所含信息。您同意赔偿联发科技因您未经授权使用或揭露本文件及其中所含信
+息之一部或全部导致联发科技所受之任何损失或损害。 
+ 
+联发科技及其授权人保有本文件的所有权及组成所有权之各项权利且未针对任何知识产权授权（无论明示或默示、透过禁反言原则或其他方
+式）。联发科技得随时变更本文件内容而无须另行通知。联发科技无须承担与使用或信赖本文件相关或因使用或信赖本文件致生之任何责任，
+包括但不限于间接损害或附带损害赔偿责任。 
+ 
+本文件及联发科技所提供关于本文件之任何其他材料、信息或技术支持，均以现况交付为准，联发科技不负任何明示、默示、法定或其他形式
+之担保责任，特别是适销性、不侵权、针对特定用途之适用性、完整性或正确性之担保责任或任何由贸易惯例或交易、履行过程所生之担保责
+任。对于联发科技为符合您所提规格或遵循特定标准或标准组织的要求所作之交付物，联发科技亦不应承担任何责任。 
+ 
+于未对前述条款造成限制之情形下，联发科技不对其产品任何特定用途之适用性承担任何保证或担保责任，亦不承担任何因产品、电路或软件
+之应用或使用致生之赔偿责任。您同意您应单独承担关于整合您的产品与联发科技产品所涉及之设计、验证与测试之所有责任，并应确保前述
+整合产品符合相关标准及任何安全性要求或其他要件。 
+ 
+本附加条款及所有与本附加条款或本文件相关之行为应以台湾法律管辖、解释与阐明，不适用冲突法原则。 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

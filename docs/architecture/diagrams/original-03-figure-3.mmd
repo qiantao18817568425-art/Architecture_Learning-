@@ -1,0 +1,22 @@
+sequenceDiagram
+  participant App as Upper Application
+  participant Client as Favalon Client
+  participant Server as SDK Server
+  participant Lower as Lower Platform
+  App->>Client: 同步请求
+  alt Server 不可用/Socket 失败
+    Client-->>App: 连接或服务错误
+  else 请求已发送
+    Client->>Server: request
+    Server->>Lower: lower request
+    alt 期限内响应
+      Lower-->>Server: result
+      Server-->>Client: response
+      Client-->>App: success/error result
+    else 等待到期
+      Client-->>App: timeout
+      Lower-->>Server: late result
+      Server-->>Client: late response
+      Client->>Client: 丢弃或隔离旧请求（策略待确认）
+    end
+  end

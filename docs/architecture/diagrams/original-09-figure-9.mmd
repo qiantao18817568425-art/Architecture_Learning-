@@ -1,0 +1,8 @@
+%% Suspend resume generation
+stateDiagram-v2
+ [*] --> Active
+ Active --> Quiesce: suspend request
+ Quiesce --> Suspended
+ Suspended --> Resume: RTC/Modem/independent wake
+ Resume --> Active: new Generation + state readback
+ Resume --> Degraded: service/session restore failure

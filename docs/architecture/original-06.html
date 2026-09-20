@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>Android内部机制与稳定性 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details open><summary>第三阶段 · 走进各个运行域</summary><a aria-current="page" href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 原版解释 / 06</div><div class="chapter-title"><p class="eyebrow">CHAPTER 06 · 原版解释全文</p><h1>Android内部机制与稳定性</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=06">并排对比两套正文 ↗</a><a class="button secondary" href="06.html">对照中文版 ↗</a><button class="button" data-read="original-06" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 原版解释对照</p><h2>Android 显示和稳定性为什么跨很多模块？</h2><p>App 提交工作后还需要系统服务、图形队列、合成和显示设备。ANR、Watchdog、低内存回收各有触发机制；它们是线索，不能单凭名字判断根因。</p><ol><li><strong>怎么读：</strong>先看进程/线程和生命周期，再跟一帧 BufferQueue→SurfaceFlinger→HWC，最后看资源与故障机制。</li><li><strong>项目练习：</strong>当 App 有日志却没有新画面时，分别列出 UI 更新、buffer 入队、合成、present 的证据。</li><li><strong>自检：</strong>屏幕仍刷新是否能证明相机帧也是新的？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-6">Day 6</a> <a href="../index.html#day-22">Day 22</a> <a href="../index.html#day-23">Day 23</a> <a href="../index.html#day-24">Day 24</a> <a href="../index.html#day-26">Day 26</a> <a href="../index.html#day-27">Day 27</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#06-android-内部机制图形资源与稳定性">06 Android 内部机制、图形资源与稳定性</a><a class="depth-2" href="#61-生命周期窗口与输入">6.1 生命周期、窗口与输入</a><a class="depth-3" href="#611-生命周期和窗口正常路径">6.1.1 生命周期和窗口正常路径</a><a class="depth-3" href="#612-输入事件正常路径">6.1.2 输入事件正常路径</a><a class="depth-3" href="#613-生命周期窗口与输入异常传播恢复路径">6.1.3 生命周期、窗口与输入异常传播/恢复路径</a><a class="depth-2" href="#62-android-图像渲染">6.2 Android 图像渲染</a><a class="depth-3" href="#621-端到端正常路径">6.2.1 端到端正常路径</a><a class="depth-3" href="#622-帧的资源与观察模型">6.2.2 帧的资源与观察模型</a><a class="depth-3" href="#623-渲染异常传播恢复路径">6.2.3 渲染异常传播/恢复路径</a><a class="depth-2" href="#63-bufferqueuesurfacecontrol-与所有权">6.3 BufferQueue、SurfaceControl 与所有权</a><a class="depth-3" href="#631-正常所有权闭环">6.3.1 正常所有权闭环</a><a class="depth-3" href="#632-正常释放对称性">6.3.2 正常释放对称性</a><a class="depth-3" href="#633-异常传播与恢复">6.3.3 异常传播与恢复</a><a class="depth-2" href="#64-surface-与图形资源泄漏">6.4 Surface 与图形资源泄漏</a><a class="depth-3" href="#641-先定义泄漏证据">6.4.1 先定义“泄漏证据”</a><a class="depth-3" href="#642-正常图创建使用释放">6.4.2 正常图：创建—使用—释放</a><a class="depth-3" href="#643-异常传播恢复图">6.4.3 异常传播/恢复图</a><a class="depth-3" href="#644-十二类泄漏矩阵">6.4.4 十二类泄漏矩阵</a><a class="depth-3" href="#645-泄漏与积压如何区分">6.4.5 泄漏与积压如何区分</a><a class="depth-2" href="#65-黑屏冻屏花屏闪屏与卡顿">6.5 黑屏、冻屏、花屏、闪屏与卡顿</a><a class="depth-3" href="#651-五层正常显示链">6.5.1 五层正常显示链</a><a class="depth-3" href="#652-症状不能互换">6.5.2 症状不能互换</a><a class="depth-3" href="#653-异常传播恢复图">6.5.3 异常传播/恢复图</a><a class="depth-2" href="#66-android-内部资源与稳定性">6.6 Android 内部资源与稳定性</a><a class="depth-3" href="#661-camera">6.6.1 Camera</a><a class="depth-3" href="#662-mediacodec">6.6.2 MediaCodec</a><a class="depth-3" href="#663-audio">6.6.3 Audio</a><a class="depth-3" href="#664-内存与-lmkd">6.6.4 内存与 LMKD</a><a class="depth-3" href="#665-anr">6.6.5 ANR</a><a class="depth-3" href="#666-wakelock">6.6.6 WakeLock</a><a class="depth-3" href="#667-网络">6.6.7 网络</a><a class="depth-3" href="#668-usb">6.6.8 USB</a><a class="depth-3" href="#669-存储">6.6.9 存储</a><a class="depth-2" href="#67-android-内部通信异常">6.7 Android 内部通信异常</a><a class="depth-3" href="#671-正常状态链">6.7.1 正常状态链</a><a class="depth-3" href="#672-异常传播与恢复">6.7.2 异常传播与恢复</a><a class="depth-3" href="#673-八类异常与首个断点">6.7.3 八类异常与首个断点</a><a class="depth-2" href="#68-现场使用方法与证据边界">6.8 现场使用方法与证据边界</a><a class="depth-3" href="#681-一张统一排查表">6.8.1 一张统一排查表</a><a class="depth-3" href="#682-本章不能直接证明什么">6.8.2 本章不能直接证明什么</a><a class="depth-3" href="#683-最小闭环">6.8.3 最小闭环</a><a class="depth-2" href="#69-证据预审门禁与非等价关系">6.9 证据预审门禁与非等价关系</a><a class="depth-3" href="#691-生命周期到物理显示的状态不等式">6.9.1 生命周期到物理显示的状态不等式</a><a class="depth-3" href="#692-输入事件不等式">6.9.2 输入事件不等式</a><a class="depth-3" href="#693-三类-fence-不能互换">6.9.3 三类 Fence 不能互换</a><a class="depth-3" href="#694-windowsurfacelayerbuffer-与内存不等价">6.9.4 Window、Surface、Layer、Buffer 与内存不等价</a><a class="depth-3" href="#695-surfacecontrol-本地句柄与远端-layer">6.9.5 SurfaceControl 本地句柄与远端 Layer</a><a class="depth-3" href="#696-imagereader-三态和-maximages">6.9.6 ImageReader 三态和 maxImages</a><a class="depth-3" href="#697-mediacodec-五个独立资源面">6.9.7 MediaCodec 五个独立资源面</a><a class="depth-3" href="#698-virtualdisplaysurface-与-mediaprojection">6.9.8 VirtualDisplay、Surface 与 MediaProjection</a><a class="depth-3" href="#699-九类资源的-creatorholderconsumerreleaser-合同">6.9.9 九类资源的 creator—holder—consumer—releaser 合同</a><a class="depth-3" href="#6910-binder-服务与业务结果不等式">6.9.10 Binder 服务与业务结果不等式</a><a class="depth-3" href="#6911-android-版本和命令边界">6.9.11 Android 版本和命令边界</a></details><article id="chapter-text"><h1 id="06-android-内部机制图形资源与稳定性">06 Android 内部机制、图形资源与稳定性</h1>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>Android内部机制与稳定性 · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details open><summary>第三阶段 · 走进各个运行域</summary><a aria-current="page" href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 原版解释 / 06</div><div class="chapter-title"><p class="eyebrow">CHAPTER 06 · 原版解释全文</p><h1>Android内部机制与稳定性</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=06">并排对比两套正文 ↗</a><a class="button secondary" href="06.html">对照中文版 ↗</a><button class="button" data-read="original-06" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 原版解释对照</p><h2>Android 显示和稳定性为什么跨很多模块？</h2><p>App 提交工作后还需要系统服务、图形队列、合成和显示设备。ANR、Watchdog、低内存回收各有触发机制；它们是线索，不能单凭名字判断根因。</p><ol><li><strong>怎么读：</strong>先看进程/线程和生命周期，再跟一帧 BufferQueue→SurfaceFlinger→HWC，最后看资源与故障机制。</li><li><strong>项目练习：</strong>当 App 有日志却没有新画面时，分别列出 UI 更新、buffer 入队、合成、present 的证据。</li><li><strong>自检：</strong>屏幕仍刷新是否能证明相机帧也是新的？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-6">Day 6</a> <a href="../index.html#day-22">Day 22</a> <a href="../index.html#day-23">Day 23</a> <a href="../index.html#day-24">Day 24</a> <a href="../index.html#day-26">Day 26</a> <a href="../index.html#day-27">Day 27</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#06-android-内部机制图形资源与稳定性">06 Android 内部机制、图形资源与稳定性</a><a class="depth-2" href="#61-生命周期窗口与输入">6.1 生命周期、窗口与输入</a><a class="depth-3" href="#611-生命周期和窗口正常路径">6.1.1 生命周期和窗口正常路径</a><a class="depth-3" href="#612-输入事件正常路径">6.1.2 输入事件正常路径</a><a class="depth-3" href="#613-生命周期窗口与输入异常传播恢复路径">6.1.3 生命周期、窗口与输入异常传播/恢复路径</a><a class="depth-2" href="#62-android-图像渲染">6.2 Android 图像渲染</a><a class="depth-3" href="#621-端到端正常路径">6.2.1 端到端正常路径</a><a class="depth-3" href="#622-帧的资源与观察模型">6.2.2 帧的资源与观察模型</a><a class="depth-3" href="#623-渲染异常传播恢复路径">6.2.3 渲染异常传播/恢复路径</a><a class="depth-2" href="#63-bufferqueuesurfacecontrol-与所有权">6.3 BufferQueue、SurfaceControl 与所有权</a><a class="depth-3" href="#631-正常所有权闭环">6.3.1 正常所有权闭环</a><a class="depth-3" href="#632-正常释放对称性">6.3.2 正常释放对称性</a><a class="depth-3" href="#633-异常传播与恢复">6.3.3 异常传播与恢复</a><a class="depth-2" href="#64-surface-与图形资源泄漏">6.4 Surface 与图形资源泄漏</a><a class="depth-3" href="#641-先定义泄漏证据">6.4.1 先定义“泄漏证据”</a><a class="depth-3" href="#642-正常图创建使用释放">6.4.2 正常图：创建—使用—释放</a><a class="depth-3" href="#643-异常传播恢复图">6.4.3 异常传播/恢复图</a><a class="depth-3" href="#644-十二类泄漏矩阵">6.4.4 十二类泄漏矩阵</a><a class="depth-3" href="#645-泄漏与积压如何区分">6.4.5 泄漏与积压如何区分</a><a class="depth-2" href="#65-黑屏冻屏花屏闪屏与卡顿">6.5 黑屏、冻屏、花屏、闪屏与卡顿</a><a class="depth-3" href="#651-五层正常显示链">6.5.1 五层正常显示链</a><a class="depth-3" href="#652-症状不能互换">6.5.2 症状不能互换</a><a class="depth-3" href="#653-异常传播恢复图">6.5.3 异常传播/恢复图</a><a class="depth-2" href="#66-android-内部资源与稳定性">6.6 Android 内部资源与稳定性</a><a class="depth-3" href="#661-camera">6.6.1 Camera</a><a class="depth-3" href="#662-mediacodec">6.6.2 MediaCodec</a><a class="depth-3" href="#663-audio">6.6.3 Audio</a><a class="depth-3" href="#664-内存与-lmkd">6.6.4 内存与 LMKD</a><a class="depth-3" href="#665-anr">6.6.5 ANR</a><a class="depth-3" href="#666-wakelock">6.6.6 WakeLock</a><a class="depth-3" href="#667-网络">6.6.7 网络</a><a class="depth-3" href="#668-usb">6.6.8 USB</a><a class="depth-3" href="#669-存储">6.6.9 存储</a><a class="depth-2" href="#67-android-内部通信异常">6.7 Android 内部通信异常</a><a class="depth-3" href="#671-正常状态链">6.7.1 正常状态链</a><a class="depth-3" href="#672-异常传播与恢复">6.7.2 异常传播与恢复</a><a class="depth-3" href="#673-八类异常与首个断点">6.7.3 八类异常与首个断点</a><a class="depth-2" href="#68-现场使用方法与证据边界">6.8 现场使用方法与证据边界</a><a class="depth-3" href="#681-一张统一排查表">6.8.1 一张统一排查表</a><a class="depth-3" href="#682-本章不能直接证明什么">6.8.2 本章不能直接证明什么</a><a class="depth-3" href="#683-最小闭环">6.8.3 最小闭环</a><a class="depth-2" href="#69-证据预审门禁与非等价关系">6.9 证据预审门禁与非等价关系</a><a class="depth-3" href="#691-生命周期到物理显示的状态不等式">6.9.1 生命周期到物理显示的状态不等式</a><a class="depth-3" href="#692-输入事件不等式">6.9.2 输入事件不等式</a><a class="depth-3" href="#693-三类-fence-不能互换">6.9.3 三类 Fence 不能互换</a><a class="depth-3" href="#694-windowsurfacelayerbuffer-与内存不等价">6.9.4 Window、Surface、Layer、Buffer 与内存不等价</a><a class="depth-3" href="#695-surfacecontrol-本地句柄与远端-layer">6.9.5 SurfaceControl 本地句柄与远端 Layer</a><a class="depth-3" href="#696-imagereader-三态和-maximages">6.9.6 ImageReader 三态和 maxImages</a><a class="depth-3" href="#697-mediacodec-五个独立资源面">6.9.7 MediaCodec 五个独立资源面</a><a class="depth-3" href="#698-virtualdisplaysurface-与-mediaprojection">6.9.8 VirtualDisplay、Surface 与 MediaProjection</a><a class="depth-3" href="#699-九类资源的-creatorholderconsumerreleaser-合同">6.9.9 九类资源的 creator—holder—consumer—releaser 合同</a><a class="depth-3" href="#6910-binder-服务与业务结果不等式">6.9.10 Binder 服务与业务结果不等式</a><a class="depth-3" href="#6911-android-版本和命令边界">6.9.11 Android 版本和命令边界</a></details><article id="chapter-text"><h1 id="06-android-内部机制图形资源与稳定性">06 Android 内部机制、图形资源与稳定性</h1>
 <blockquote>
 <p>本章于 2026-09-20 按原架构补充正文解释；原图、模块/流程 ID 和分层保持原样。新证据的版本限定随段落标注。<a href="index.html">本轮更新说明</a>。</p>
 </blockquote>
@@ -9,7 +9,7 @@
 <p>先按下列顺序理解第一条主链；这些英文标签也作为后续图中的稳定对照点：</p>
 <p><code>launch request</code> → <code>AMS/ATMS</code> → <code>process attach</code> → <code>Activity lifecycle</code> → <code>Window/DecorView</code> → <code>WMS</code> → <code>ViewRootImpl</code> → <code>visible + focused</code>。</p>
 <p>[可信度：标准机制推断] <code>AMS</code> 管进程与组件状态，<code>ATMS</code> 管任务、Activity 与显示区域，<code>WMS</code> 管窗口 token、层级、布局、可见性和输入焦点。它们在具体 Android 版本中可能同处系统服务进程，但逻辑职责仍要分开。Activity 的 <code>onResume</code> 只说明生命周期到达某状态，不等于窗口已经可见、有 Surface、获得焦点或已经成功出帧。</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+<figure class="mermaid-figure" id="original-06-figure-1"><figcaption>Android内部机制与稳定性 · 图 1 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-1"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-1.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 1，可使用方向键滚动"><pre class="mermaid">sequenceDiagram
   participant C as Caller/Launcher
   participant A as AMS/ATMS
   participant P as App process
@@ -22,7 +22,7 @@
   L-&gt;&gt;L: create Window/DecorView
   L-&gt;&gt;W: add window + token/layout
   W--&gt;&gt;V: relayout, Surface and focus state
-  V--&gt;&gt;L: visible + focused + traversal</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  V--&gt;&gt;L: visible + focused + traversal</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>sequenceDiagram
   participant C as Caller/Launcher
   participant A as AMS/ATMS
   participant P as App process
@@ -35,7 +35,7 @@
   L-&gt;&gt;L: create Window/DecorView
   L-&gt;&gt;W: add window + token/layout
   W--&gt;&gt;V: relayout, Surface and focus state
-  V--&gt;&gt;L: visible + focused + traversal</code></pre></details></details><table>
+  V--&gt;&gt;L: visible + focused + traversal</code></pre></details></details></figure><table>
 <thead>
 <tr>
 <th>位置</th>
@@ -81,7 +81,7 @@
 </tbody></table>
 <h3 id="612-输入事件正常路径">6.1.2 输入事件正常路径</h3>
 <p>第二条主链的首个事件必须按顺序对齐：<code>input device/driver</code> → <code>EventHub</code> → <code>InputReader</code> → <code>InputDispatcher</code> → <code>focused Window/InputChannel</code> → <code>ViewRootImpl</code> → <code>View dispatch</code>。[可信度：标准机制推断] 图 1 能确认 Input Flinger、Input Manager 和 Window Manager 等模块标签，但不能单靠图示证明当前产品的进程拆分、线程名或版本实现。[可信度：架构图确认] [证据：original-diagram-01]</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+<figure class="mermaid-figure" id="original-06-figure-2"><figcaption>Android内部机制与稳定性 · 图 2 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-2"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-2.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 2，可使用方向键滚动"><pre class="mermaid">sequenceDiagram
   participant D as input device/driver
   participant E as EventHub
   participant R as InputReader
@@ -95,7 +95,7 @@
   I-&gt;&gt;C: dispatch to focused target
   C-&gt;&gt;V: receive on app channel
   V-&gt;&gt;U: deliver to hierarchy
-  U--&gt;&gt;I: finish acknowledgement</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  U--&gt;&gt;I: finish acknowledgement</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>sequenceDiagram
   participant D as input device/driver
   participant E as EventHub
   participant R as InputReader
@@ -109,9 +109,9 @@
   I-&gt;&gt;C: dispatch to focused target
   C-&gt;&gt;V: receive on app channel
   V-&gt;&gt;U: deliver to hierarchy
-  U--&gt;&gt;I: finish acknowledgement</code></pre></details></details><p><code>getevent</code> 能看到输入只说明内核输入层收到事件，<strong>getevent ≠ app consumed</strong>。还要继续证明 <code>InputReader</code> 产出了正确逻辑事件、<code>InputDispatcher</code> 选中了正确焦点窗口、目标 channel 可写、应用主线程真正消费并回传完成确认。[可信度：标准机制推断]</p>
+  U--&gt;&gt;I: finish acknowledgement</code></pre></details></details></figure><p><code>getevent</code> 能看到输入只说明内核输入层收到事件，<strong>getevent ≠ app consumed</strong>。还要继续证明 <code>InputReader</code> 产出了正确逻辑事件、<code>InputDispatcher</code> 选中了正确焦点窗口、目标 channel 可写、应用主线程真正消费并回传完成确认。[可信度：标准机制推断]</p>
 <h3 id="613-生命周期窗口与输入异常传播恢复路径">6.1.3 生命周期、窗口与输入异常传播/恢复路径</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="original-06-figure-3"><figcaption>Android内部机制与稳定性 · 图 3 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-3"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-3.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 3，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[launch/input request] --&gt; B{process and lifecycle valid?}
   B -- no --&gt; B1[process death, stale token or lifecycle stall]
   B -- yes --&gt; C{window visible and focus correct?}
@@ -129,7 +129,7 @@
   F1 --&gt; R
   R --&gt; S[recreate process/window/channel]
   S --&gt; T[restore visible + focus]
-  T --&gt; U[inject real user action and readback verify]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  T --&gt; U[inject real user action and readback verify]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[launch/input request] --&gt; B{process and lifecycle valid?}
   B -- no --&gt; B1[process death, stale token or lifecycle stall]
   B -- yes --&gt; C{window visible and focus correct?}
@@ -147,12 +147,12 @@
   F1 --&gt; R
   R --&gt; S[recreate process/window/channel]
   S --&gt; T[restore visible + focus]
-  T --&gt; U[inject real user action and readback verify]</code></pre></details></details><p>异常链不能只写“点击无响应”。<code>focus mismatch</code> 的责任边界在窗口/显示选择；<code>blocked consumer</code> 在应用主线程或目标消费者；<code>channel death</code> 要区分服务端未清理旧 channel 与客户端进程死亡；<code>permission/injection rejection</code> 属于输入策略或调用权限；<code>queue/backpressure</code> 则要比较入队、派发、完成确认的累计差值。</p>
+  T --&gt; U[inject real user action and readback verify]</code></pre></details></details></figure><p>异常链不能只写“点击无响应”。<code>focus mismatch</code> 的责任边界在窗口/显示选择；<code>blocked consumer</code> 在应用主线程或目标消费者；<code>channel death</code> 要区分服务端未清理旧 channel 与客户端进程死亡；<code>permission/injection rejection</code> 属于输入策略或调用权限；<code>queue/backpressure</code> 则要比较入队、派发、完成确认的累计差值。</p>
 <p>最早可证伪断点是“原始输入是否被规范化为正确事件”，其后依次是目标焦点、channel 写入、应用接收和业务消费。Owner 边界以第一个偏离契约的位置为准。恢复后必须重新读取当前 Window/焦点/Display、确认 channel 属于新 <code>Generation</code>，再用真实操作完成 <code>readback verify</code>，不能把进程重启当成业务恢复。</p>
 <h2 id="62-android-图像渲染">6.2 Android 图像渲染</h2>
 <h3 id="621-端到端正常路径">6.2.1 端到端正常路径</h3>
 <p>完整方向链固定为：<code>App UI</code> → <code>Choreographer/VSYNC</code> → <code>ViewRootImpl</code> → <code>HWUI/RenderThread</code> → <code>Skia/OpenGL ES/Vulkan</code> → <code>EGL</code> → <code>ANativeWindow/Surface</code> → <code>BufferQueue</code> → <code>SurfaceFlinger</code> → <code>HWC</code> → <code>Display HAL</code> → <code>DRM/KMS/MDP</code> → <code>physical display</code>。[可信度：标准机制推断]</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-06-figure-4"><figcaption>Android内部机制与稳定性 · 图 4 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-4"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-4.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 4，可使用方向键滚动"><pre class="mermaid">flowchart TB
   A[App UI] --&gt; B[Choreographer/VSYNC]
   B --&gt; C[ViewRootImpl]
   C --&gt; D[HWUI/RenderThread]
@@ -164,7 +164,7 @@
   I --&gt; J[HWC]
   J --&gt; K[Display HAL]
   K --&gt; L[DRM/KMS/MDP]
-  L --&gt; M[physical display]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  L --&gt; M[physical display]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TB
   A[App UI] --&gt; B[Choreographer/VSYNC]
   B --&gt; C[ViewRootImpl]
   C --&gt; D[HWUI/RenderThread]
@@ -176,7 +176,7 @@
   I --&gt; J[HWC]
   J --&gt; K[Display HAL]
   K --&gt; L[DRM/KMS/MDP]
-  L --&gt; M[physical display]</code></pre></details></details><p><code>UI thread</code> 负责业务状态、View 树和 traversal；硬件加速时，绘制命令可交给 <code>RenderThread</code>，由 Skia 经 GPU 接口生成内容。生产者提交 Buffer 和 <code>acquire fence</code>；消费者等待写入完成后使用 Buffer，合成/扫描输出完成后通过 <code>release fence</code> 允许生产者复用。Fence 是“某次内存/硬件工作是否完成”的同步所有权，不是普通业务锁。[可信度：标准机制推断]</p>
+  L --&gt; M[physical display]</code></pre></details></details></figure><p><code>UI thread</code> 负责业务状态、View 树和 traversal；硬件加速时，绘制命令可交给 <code>RenderThread</code>，由 Skia 经 GPU 接口生成内容。生产者提交 Buffer 和 <code>acquire fence</code>；消费者等待写入完成后使用 Buffer，合成/扫描输出完成后通过 <code>release fence</code> 允许生产者复用。Fence 是“某次内存/硬件工作是否完成”的同步所有权，不是普通业务锁。[可信度：标准机制推断]</p>
 <p>图 1 确认 MT8676 分层中存在 Surface Flinger、Display HAL、DRM、MDP、OpenGL、Display 等标签。[可信度：架构图确认] [证据：original-diagram-01] 它不确认本产品究竟选用 GLES 还是 Vulkan、不确认每层直通或经过 Host 合成器，也不确认具体 HWC 接口代际。[可信度：待 MT8676 确认]</p>
 <h3 id="622-帧的资源与观察模型">6.2.2 帧的资源与观察模型</h3>
 <table>
@@ -232,7 +232,7 @@
 </tr>
 </tbody></table>
 <h3 id="623-渲染异常传播恢复路径">6.2.3 渲染异常传播/恢复路径</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="original-06-figure-5"><figcaption>Android内部机制与稳定性 · 图 5 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-5"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-5.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 5，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[UI state changed] --&gt; B{traversal/draw produced?}
   B -- no --&gt; B1[UI thread blocked or invalidation lost]
   B -- yes --&gt; C{Buffer queued with signaled fence?}
@@ -250,7 +250,7 @@
   F1 --&gt; R
   R --&gt; S[release old resources and recreate new Generation]
   S --&gt; T[produce unique test frame]
-  T --&gt; U[verify latch, present, vblank and visible result]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  T --&gt; U[verify latch, present, vblank and visible result]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[UI state changed] --&gt; B{traversal/draw produced?}
   B -- no --&gt; B1[UI thread blocked or invalidation lost]
   B -- yes --&gt; C{Buffer queued with signaled fence?}
@@ -268,12 +268,12 @@
   F1 --&gt; R
   R --&gt; S[release old resources and recreate new Generation]
   S --&gt; T[produce unique test frame]
-  T --&gt; U[verify latch, present, vblank and visible result]</code></pre></details></details><p>两个否定式必须牢记：<code>queueBuffer</code> 成功只证明生产者完成提交，<strong>queue 成功 ≠ SF latch</strong>；HWC/DRM 返回 present 或 commit 成功也不能单独证明面板像素与背光正常，<strong>present 成功 ≠ 面板有图</strong>。[可信度：标准机制推断]</p>
+  T --&gt; U[verify latch, present, vblank and visible result]</code></pre></details></details></figure><p>两个否定式必须牢记：<code>queueBuffer</code> 成功只证明生产者完成提交，<strong>queue 成功 ≠ SF latch</strong>；HWC/DRM 返回 present 或 commit 成功也不能单独证明面板像素与背光正常，<strong>present 成功 ≠ 面板有图</strong>。[可信度：标准机制推断]</p>
 <p>最早可证伪断点是本次业务状态是否触发 traversal，之后按 queue、acquire/latch、validate/present、commit/vblank、panel/backlight 顺序查。Owner 边界分别为应用 UI、生产者/队列、SurfaceFlinger、HWC/HAL、Kernel/物理显示。恢复必须提交带可识别内容的新帧，并用同一 <code>Generation</code> 的 frame number、fence、present 与肉眼/摄像或屏幕采集结果闭环。</p>
 <h2 id="63-bufferqueuesurfacecontrol-与所有权">6.3 BufferQueue、SurfaceControl 与所有权</h2>
 <h3 id="631-正常所有权闭环">6.3.1 正常所有权闭环</h3>
 <p>一次完整循环固定为：<code>connect</code> → <code>dequeue</code> → <code>render</code> → <code>queue</code> → <code>acquire</code> → <code>fence wait</code> → <code>compose</code> → <code>release</code> → <code>producer reuse</code> → <code>disconnect</code>。[可信度：标准机制推断]</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+<figure class="mermaid-figure" id="original-06-figure-6"><figcaption>Android内部机制与稳定性 · 图 6 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-6"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-6.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 6，可使用方向键滚动"><pre class="mermaid">sequenceDiagram
   participant P as Producer
   participant Q as BufferQueue
   participant C as Consumer/SF
@@ -286,7 +286,7 @@
   C-&gt;&gt;C: compose/present
   C-&gt;&gt;Q: release + release fence
   Q--&gt;&gt;P: producer reuse
-  P-&gt;&gt;Q: disconnect</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  P-&gt;&gt;Q: disconnect</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>sequenceDiagram
   participant P as Producer
   participant Q as BufferQueue
   participant C as Consumer/SF
@@ -299,7 +299,7 @@
   C-&gt;&gt;C: compose/present
   C-&gt;&gt;Q: release + release fence
   Q--&gt;&gt;P: producer reuse
-  P-&gt;&gt;Q: disconnect</code></pre></details></details><table>
+  P-&gt;&gt;Q: disconnect</code></pre></details></details></figure><table>
 <thead>
 <tr>
 <th>状态</th>
@@ -347,7 +347,7 @@
 </tbody></table>
 <p><code>SurfaceControl.Transaction</code> 描述 Layer 的位置、裁剪、透明度、层级、显示归属、可见性或 Buffer 等原子变更；<code>apply</code> 只是把事务提交到合成系统，最终显示仍受 latch、合成、present 与物理链路约束。创建 <code>Layer</code> 必须有对称的 hide/detach、<code>remove</code>、Java/native 引用释放以及相关 Surface/Buffer 消费者退出。[可信度：标准机制推断]</p>
 <h3 id="632-正常释放对称性">6.3.2 正常释放对称性</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-06-figure-7"><figcaption>Android内部机制与稳定性 · 图 7 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-7"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-7.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 7，可使用方向键滚动"><pre class="mermaid">flowchart TB
   A[create producer/consumer] --&gt; B[connect + create Layer]
   B --&gt; C[dequeue/queue/acquire/release loops]
   C --&gt; D[stop new work]
@@ -355,7 +355,7 @@
   E --&gt; F[disconnect producer/consumer]
   F --&gt; G[remove Layer + apply transaction]
   G --&gt; H[close/release wrappers and callbacks]
-  H --&gt; I[verify create count − release count returns to baseline]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  H --&gt; I[verify create count − release count returns to baseline]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TB
   A[create producer/consumer] --&gt; B[connect + create Layer]
   B --&gt; C[dequeue/queue/acquire/release loops]
   C --&gt; D[stop new work]
@@ -363,9 +363,9 @@
   E --&gt; F[disconnect producer/consumer]
   F --&gt; G[remove Layer + apply transaction]
   G --&gt; H[close/release wrappers and callbacks]
-  H --&gt; I[verify create count − release count returns to baseline]</code></pre></details></details><p>这里的 <code>normal release symmetry</code> 是“谁创建、谁安排释放；谁持有、谁在生命周期结束时放弃引用；谁消费、谁归还 Buffer”。关闭 Java wrapper 而 native consumer 仍存活、移除 Layer 但 producer 仍连续出帧、进程死亡但远端 Binder/图层仍残留，都不是完整对称。</p>
+  H --&gt; I[verify create count − release count returns to baseline]</code></pre></details></details></figure><p>这里的 <code>normal release symmetry</code> 是“谁创建、谁安排释放；谁持有、谁在生命周期结束时放弃引用；谁消费、谁归还 Buffer”。关闭 Java wrapper 而 native consumer 仍存活、移除 Layer 但 producer 仍连续出帧、进程死亡但远端 Binder/图层仍残留，都不是完整对称。</p>
 <h3 id="633-异常传播与恢复">6.3.3 异常传播与恢复</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">stateDiagram-v2
+<figure class="mermaid-figure" id="original-06-figure-8"><figcaption>Android内部机制与稳定性 · 图 8 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-8"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-8.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 8，可使用方向键滚动"><pre class="mermaid">stateDiagram-v2
   [*] --&gt; Connected
   Connected --&gt; ProducerOwned: dequeue
   ProducerOwned --&gt; Queued: queue
@@ -378,7 +378,7 @@
   Stalled --&gt; Draining: stop producer + snapshot ownership
   Draining --&gt; Disconnected: cancel/release/disconnect
   Disconnected --&gt; Connected: recreate new Generation
-  Connected --&gt; Verified: unique frame + state readback</pre><details><summary>查看原始图代码</summary><pre><code>stateDiagram-v2
+  Connected --&gt; Verified: unique frame + state readback</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>stateDiagram-v2
   [*] --&gt; Connected
   Connected --&gt; ProducerOwned: dequeue
   ProducerOwned --&gt; Queued: queue
@@ -391,7 +391,7 @@
   Stalled --&gt; Draining: stop producer + snapshot ownership
   Draining --&gt; Disconnected: cancel/release/disconnect
   Disconnected --&gt; Connected: recreate new Generation
-  Connected --&gt; Verified: unique frame + state readback</code></pre></details></details><p>异常定位要同时记录生产者/消费者 connect 状态、slot 状态、frame number、Buffer handle、acquire/release fence、Layer/Display 和 <code>Generation</code>。最早可证伪断点是“本轮 dequeue 获得的 slot 是否在合法所有权状态”。Owner 边界为创建 Surface 的上层、BufferQueue 协调层、实际消费者和 Layer 所属 Window/Display。恢复时先阻止旧生产者继续写，确定 outstanding Buffer 的归属，再按释放对称性清理；重新创建后必须验证旧回调/旧 Layer 不再活动。</p>
+  Connected --&gt; Verified: unique frame + state readback</code></pre></details></details></figure><p>异常定位要同时记录生产者/消费者 connect 状态、slot 状态、frame number、Buffer handle、acquire/release fence、Layer/Display 和 <code>Generation</code>。最早可证伪断点是“本轮 dequeue 获得的 slot 是否在合法所有权状态”。Owner 边界为创建 Surface 的上层、BufferQueue 协调层、实际消费者和 Layer 所属 Window/Display。恢复时先阻止旧生产者继续写，确定 outstanding Buffer 的归属，再按释放对称性清理；重新创建后必须验证旧回调/旧 Layer 不再活动。</p>
 <p>注意版本差异：<code>BLASTBufferQueue</code> 是否出现、<code>SurfaceControl</code> API 形态、HWC 是 AIDL 还是 HIDL、转储中的字段名称都不能写成 MT8676 固定合同。[可信度：待 MT8676 确认]</p>
 <h2 id="64-surface-与图形资源泄漏">6.4 Surface 与图形资源泄漏</h2>
 <h3 id="641-先定义泄漏证据">6.4.1 先定义“泄漏证据”</h3>
@@ -405,7 +405,7 @@
 </ol>
 <p>Surface 未 release、BufferQueue 积压、GraphicBuffer/Gralloc/GPU 增长、<code>WindowLeaked</code>、ImageReader 未 close、MediaCodec output Surface 残留、VirtualDisplay 未 release <strong>互不等同</strong>。它们可能相互影响，但必须分别证明对象、队列、内存和生命周期。[可信度：标准机制推断]</p>
 <h3 id="642-正常图创建使用释放">6.4.2 正常图：创建—使用—释放</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-06-figure-9"><figcaption>Android内部机制与稳定性 · 图 9 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-9"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-9.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 9，可使用方向键滚动"><pre class="mermaid">flowchart TB
   A[Lifecycle owner creates resource] --&gt; B[wrapper obtains native handle]
   B --&gt; C[producer/consumer connects]
   C --&gt; D[use buffers/layers/callbacks]
@@ -413,7 +413,7 @@
   E --&gt; F[drain/cancel outstanding work]
   F --&gt; G[disconnect/release/close]
   G --&gt; H[remove Layer and unregister callback]
-  H --&gt; I[reference and counters return to baseline]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  H --&gt; I[reference and counters return to baseline]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TB
   A[Lifecycle owner creates resource] --&gt; B[wrapper obtains native handle]
   B --&gt; C[producer/consumer connects]
   C --&gt; D[use buffers/layers/callbacks]
@@ -421,8 +421,8 @@
   E --&gt; F[drain/cancel outstanding work]
   F --&gt; G[disconnect/release/close]
   G --&gt; H[remove Layer and unregister callback]
-  H --&gt; I[reference and counters return to baseline]</code></pre></details></details><h3 id="643-异常传播恢复图">6.4.3 异常传播/恢复图</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  H --&gt; I[reference and counters return to baseline]</code></pre></details></details></figure><h3 id="643-异常传播恢复图">6.4.3 异常传播/恢复图</h3>
+<figure class="mermaid-figure" id="original-06-figure-10"><figcaption>Android内部机制与稳定性 · 图 10 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-10"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-10.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 10，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[owner lifecycle ends] --&gt; B{new work stopped?}
   B -- no --&gt; B1[callback/task recreates references]
   B -- yes --&gt; C{outstanding buffer/fence drained?}
@@ -437,7 +437,7 @@
   E1 --&gt; F
   F --&gt; G[quiesce old Generation]
   G --&gt; H[release in reverse dependency order]
-  H --&gt; I[repeat stable workload and verify convergence]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  H --&gt; I[repeat stable workload and verify convergence]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[owner lifecycle ends] --&gt; B{new work stopped?}
   B -- no --&gt; B1[callback/task recreates references]
   B -- yes --&gt; C{outstanding buffer/fence drained?}
@@ -452,7 +452,7 @@
   E1 --&gt; F
   F --&gt; G[quiesce old Generation]
   G --&gt; H[release in reverse dependency order]
-  H --&gt; I[repeat stable workload and verify convergence]</code></pre></details></details><h3 id="644-十二类泄漏矩阵">6.4.4 十二类泄漏矩阵</h3>
+  H --&gt; I[repeat stable workload and verify convergence]</code></pre></details></details></figure><h3 id="644-十二类泄漏矩阵">6.4.4 十二类泄漏矩阵</h3>
 <table>
 <thead>
 <tr>
@@ -659,17 +659,17 @@
 <h2 id="65-黑屏冻屏花屏闪屏与卡顿">6.5 黑屏、冻屏、花屏、闪屏与卡顿</h2>
 <h3 id="651-五层正常显示链">6.5.1 五层正常显示链</h3>
 <p>诊断顺序固定为：<code>content production</code> → <code>Buffer exchange</code> → <code>composition</code> → <code>display driver</code> → <code>physical link/panel</code>。</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-06-figure-11"><figcaption>Android内部机制与稳定性 · 图 11 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-11"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-11.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 11，可使用方向键滚动"><pre class="mermaid">flowchart TB
   A[content production: App draw] --&gt; B[Buffer exchange: dequeue/queue/acquire]
   B --&gt; C[composition: latch/validate/present]
   C --&gt; D[display driver: commit/vblank]
   D --&gt; E[physical link/panel: bridge/backlight/pixels]
-  E --&gt; F[user sees new unique frame]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  E --&gt; F[user sees new unique frame]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TB
   A[content production: App draw] --&gt; B[Buffer exchange: dequeue/queue/acquire]
   B --&gt; C[composition: latch/validate/present]
   C --&gt; D[display driver: commit/vblank]
   D --&gt; E[physical link/panel: bridge/backlight/pixels]
-  E --&gt; F[user sees new unique frame]</code></pre></details></details><p>图 1 对 Surface Flinger、Display HAL、DRM、MDP 与 Display 模块存在性提供直接支持。[可信度：架构图确认] [证据：original-diagram-01] 逐帧的 HWC validate/present、DRM/KMS commit/vblank 与面板时序是标准诊断模型，具体实现路径待 MT8676 运行证据确认。[可信度：标准机制推断]</p>
+  E --&gt; F[user sees new unique frame]</code></pre></details></details></figure><p>图 1 对 Surface Flinger、Display HAL、DRM、MDP 与 Display 模块存在性提供直接支持。[可信度：架构图确认] [证据：original-diagram-01] 逐帧的 HWC validate/present、DRM/KMS commit/vblank 与面板时序是标准诊断模型，具体实现路径待 MT8676 运行证据确认。[可信度：标准机制推断]</p>
 <h3 id="652-症状不能互换">6.5.2 症状不能互换</h3>
 <table>
 <thead>
@@ -718,7 +718,7 @@
 </tr>
 </tbody></table>
 <h3 id="653-异常传播恢复图">6.5.3 异常传播/恢复图</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+<figure class="mermaid-figure" id="original-06-figure-12"><figcaption>Android内部机制与稳定性 · 图 12 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-12"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-12.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 12，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[black/frozen/corrupt/flicker/jank] --&gt; B{App draw counter advances?}
   B -- no --&gt; B1[App state/UI thread/invalidation]
   B -- yes --&gt; C{dequeue and queueBuffer advance?}
@@ -738,7 +738,7 @@
   F1 --&gt; R
   G1 --&gt; R
   R --&gt; S[recover only failed owner boundary]
-  S --&gt; T[display unique pattern and verify every downstream counter]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  S --&gt; T[display unique pattern and verify every downstream counter]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[black/frozen/corrupt/flicker/jank] --&gt; B{App draw counter advances?}
   B -- no --&gt; B1[App state/UI thread/invalidation]
   B -- yes --&gt; C{dequeue and queueBuffer advance?}
@@ -758,28 +758,28 @@
   F1 --&gt; R
   G1 --&gt; R
   R --&gt; S[recover only failed owner boundary]
-  S --&gt; T[display unique pattern and verify every downstream counter]</code></pre></details></details><p>最早可证伪断点从 App draw 计数开始；若推进，才看 <code>dequeue</code>/<code>queueBuffer</code>；再看 SF acquire/latch、<code>Layer visible</code>；然后 HWC validate/present 与 <code>present fence</code>；再看 DRM/KMS commit、<code>vblank</code>、<code>hotplug</code>；最后看物理链路、panel 和背光。Owner 边界严格对应 App、BufferQueue、SurfaceFlinger、HWC/Display HAL、Kernel、硬件显示。</p>
+  S --&gt; T[display unique pattern and verify every downstream counter]</code></pre></details></details></figure><p>最早可证伪断点从 App draw 计数开始；若推进，才看 <code>dequeue</code>/<code>queueBuffer</code>；再看 SF acquire/latch、<code>Layer visible</code>；然后 HWC validate/present 与 <code>present fence</code>；再看 DRM/KMS commit、<code>vblank</code>、<code>hotplug</code>；最后看物理链路、panel 和背光。Owner 边界严格对应 App、BufferQueue、SurfaceFlinger、HWC/Display HAL、Kernel、硬件显示。</p>
 <p>正常日志中“底层无报错”不能排除上游没有新内容；反过来应用持续打印 draw 也不能证明帧已交给消费者。恢复后要用颜色/时间戳或帧号明确的测试图，同时验证上游内容、队列、latch、present、vblank 与实际可见结果属于同一代际。</p>
 <h2 id="66-android-内部资源与稳定性">6.6 Android 内部资源与稳定性</h2>
 <p>图 1 确认 MT8676 Android 分层包含 Camera Service、MediaServer、Audio Flinger、Audio Policy、Network Service、Storage Manager、USB Service 以及相应 HAL/Kernel 标签。[可信度：架构图确认] [证据：original-diagram-01] 以下九类链路按标准 Android 机制解释；模块存在不等于已确认具体进程、版本、参数或厂商实现。[可信度：标准机制推断]</p>
 <h3 id="661-camera">6.6.1 Camera</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>MTK 文档解释了 Camera API 之下的跨域延伸：应用的 open/configure/capture 面向 Android 服务，硬件配置与请求执行依赖 Yocto Host；回到 Android 的 Result/buffer 仍需满足当前 stream/session 和 fence 条件。因而 Android 侧超时可能是 Host 未就绪、源端停帧、请求队列或消费者归还缓冲失败。保留本节原有 Android 对象关系，通过同一 cameraId/request/session 串联两域证据。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S145 · MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF第6-8页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页<small>〔本地来源〕</small></span></p>
+<p>MTK 文档解释了 Camera API 之下的跨域延伸：应用的 open/configure/capture 面向 Android 服务，硬件配置与请求执行依赖 Yocto Host；回到 Android 的 Result/buffer 仍需满足当前 stream/session 和 fence 条件。因而 Android 侧超时可能是 Host 未就绪、源端停帧、请求队列或消费者归还缓冲失败。保留本节原有 Android 对象关系，通过同一 cameraId/request/session 串联两域证据。<a href="source-SRC0006.html#page-6">S145 · MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF第6-8页</a> <a href="source-SRC0002.html#page-6">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页</a></p>
 <p><strong>正常路径。</strong> App/AVM/RVC 发起 Camera 请求，经 Framework API、Camera service/provider、Camera HAL 和内核传感器/ISP，输出到预览 Surface、ImageReader 或编码器。图 1 确认 Camera Service、Camera HAL、Kernel Camera、AVM/RVC 标签存在。[可信度：架构图确认] [证据：original-diagram-01]</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-06-figure-13"><figcaption>Android内部机制与稳定性 · 图 13 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-13"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-13.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 13，可使用方向键滚动"><pre class="mermaid">flowchart TB
   A[App/AVM/RVC request] --&gt; B[Camera API/service]
   B --&gt; C[provider + Camera HAL]
   C --&gt; D[sensor/ISP/driver]
   D --&gt; E[capture buffer + fence]
   E --&gt; F[preview Surface/ImageReader/Codec]
-  F --&gt; G[visible frame or algorithm result]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  F --&gt; G[visible frame or algorithm result]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TB
   A[App/AVM/RVC request] --&gt; B[Camera API/service]
   B --&gt; C[provider + Camera HAL]
   C --&gt; D[sensor/ISP/driver]
   D --&gt; E[capture buffer + fence]
   E --&gt; F[preview Surface/ImageReader/Codec]
-  F --&gt; G[visible frame or algorithm result]</code></pre></details></details><p><strong>异常传播/恢复路径。</strong></p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  F --&gt; G[visible frame or algorithm result]</code></pre></details></details></figure><p><strong>异常传播/恢复路径。</strong></p>
+<figure class="mermaid-figure" id="original-06-figure-14"><figcaption>Android内部机制与稳定性 · 图 14 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-14"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-14.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 14，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[open/configure/capture] --&gt; B{device + Session valid?}
   B -- no --&gt; B1[service/device death or stale Session]
   B -- yes --&gt; C{request reaches HAL and sensor?}
@@ -793,7 +793,7 @@
   D1 --&gt; R
   E1 --&gt; R
   R --&gt; S[close targets, Session, Device in reverse order]
-  S --&gt; T[reopen + unique frame + metadata readback]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  S --&gt; T[reopen + unique frame + metadata readback]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[open/configure/capture] --&gt; B{device + Session valid?}
   B -- no --&gt; B1[service/device death or stale Session]
   B -- yes --&gt; C{request reaches HAL and sensor?}
@@ -807,26 +807,26 @@
   D1 --&gt; R
   E1 --&gt; R
   R --&gt; S[close targets, Session, Device in reverse order]
-  S --&gt; T[reopen + unique frame + metadata readback]</code></pre></details></details><p><strong>资源模型。</strong> CameraDevice 拥有 Session；Session 拥有 request 与 target 集合；每个 Image/Buffer 在 HAL、队列和消费者之间迁移所有权。不能把“预览无图”直接等同于 sensor 未出帧。</p>
+  S --&gt; T[reopen + unique frame + metadata readback]</code></pre></details></details></figure><p><strong>资源模型。</strong> CameraDevice 拥有 Session；Session 拥有 request 与 target 集合；每个 Image/Buffer 在 HAL、队列和消费者之间迁移所有权。不能把“预览无图”直接等同于 sensor 未出帧。</p>
 <p><strong>最早可证伪断点。</strong> open/configure 是否成功并产生当前代际 Session；随后是 request、HAL result、Buffer/Fence 和 consumer acquire/release。<strong>Owner 边界。</strong> App/Camera Framework/HAL/Kernel/target consumer 分段负责。<strong>回读验证。</strong> 恢复后核对新 device/session/request Generation、连续 frame number、关键 metadata 和实际预览内容。</p>
 <h3 id="662-mediacodec">6.6.2 MediaCodec</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>PVT 编解码案例强调输入、硬解组件、输出 buffer、显示/音频消费者需合看。pipelineFull 可能只是管线积压提示，wait fence 说明对应同步点未推进，二者单独都不能锁定 Vcodec 根因。尤其日志中的媒体 timeUs 可能是播放位置，不能把 31583ms 直接算作“迟到31.583秒”；应核对该版本代码字段和播放锚点，再计算 lateness。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U047 · 软件开发培训-音视频解码常见问题及分析.pdf · PDF第6-10页<small>〔本地来源〕</small></span></p>
+<p>PVT 编解码案例强调输入、硬解组件、输出 buffer、显示/音频消费者需合看。pipelineFull 可能只是管线积压提示，wait fence 说明对应同步点未推进，二者单独都不能锁定 Vcodec 根因。尤其日志中的媒体 timeUs 可能是播放位置，不能把 31583ms 直接算作“迟到31.583秒”；应核对该版本代码字段和播放锚点，再计算 lateness。<a href="source-SRC0023.html#page-6">U047 · 软件开发培训-音视频解码常见问题及分析.pdf · PDF第6-10页</a></p>
 <p><strong>正常路径。</strong> Extractor/业务输入压缩数据，Codec service/component 消费 input Buffer，硬件或软件解码，向 output Surface 或应用 output Buffer 输出。</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-06-figure-15"><figcaption>Android内部机制与稳定性 · 图 15 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-15"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-15.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 15，可使用方向键滚动"><pre class="mermaid">flowchart LR
   A[compressed stream] --&gt; B[extractor + timestamps]
   B --&gt; C[MediaCodec input queue]
   C --&gt; D[codec component]
   D --&gt; E[decoded output + fence]
   E --&gt; F[output Surface or app buffer]
-  F --&gt; G[render/consume + release]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  F --&gt; G[render/consume + release]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   A[compressed stream] --&gt; B[extractor + timestamps]
   B --&gt; C[MediaCodec input queue]
   C --&gt; D[codec component]
   D --&gt; E[decoded output + fence]
   E --&gt; F[output Surface or app buffer]
-  F --&gt; G[render/consume + release]</code></pre></details></details><p><strong>异常传播/恢复路径。</strong></p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  F --&gt; G[render/consume + release]</code></pre></details></details></figure><p><strong>异常传播/恢复路径。</strong></p>
+<figure class="mermaid-figure" id="original-06-figure-16"><figcaption>Android内部机制与稳定性 · 图 16 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-16"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-16.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 16，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[configure/start] --&gt; B{format and component accepted?}
   B -- no --&gt; B1[unsupported/configuration/resource]
   B -- yes --&gt; C{input timestamps advance?}
@@ -840,7 +840,7 @@
   D1 --&gt; R
   E1 --&gt; R
   R --&gt; S[flush/stop/release under valid state]
-  S --&gt; T[new codec + new Surface + timestamp readback]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  S --&gt; T[new codec + new Surface + timestamp readback]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[configure/start] --&gt; B{format and component accepted?}
   B -- no --&gt; B1[unsupported/configuration/resource]
   B -- yes --&gt; C{input timestamps advance?}
@@ -854,24 +854,24 @@
   D1 --&gt; R
   E1 --&gt; R
   R --&gt; S[flush/stop/release under valid state]
-  S --&gt; T[new codec + new Surface + timestamp readback]</code></pre></details></details><p><strong>资源模型。</strong> Codec 状态机、input/output Buffer、native component、output Surface 和 timestamp 必须属于同一会话。<code>flush</code>、<code>stop</code>、<code>release</code> 的合法顺序随状态而定，不应在错误状态无限重试。</p>
+  S --&gt; T[new codec + new Surface + timestamp readback]</code></pre></details></details></figure><p><strong>资源模型。</strong> Codec 状态机、input/output Buffer、native component、output Surface 和 timestamp 必须属于同一会话。<code>flush</code>、<code>stop</code>、<code>release</code> 的合法顺序随状态而定，不应在错误状态无限重试。</p>
 <p><strong>最早可证伪断点。</strong> 首个输入 Buffer 是否携正确格式与时间戳被接受。<strong>Owner 边界。</strong> 上游 demux、Codec Framework/component、Surface consumer 各自负责。<strong>回读验证。</strong> 用新会话首帧时间戳、连续输出计数、Surface frame number 和声音/画面结果证明恢复。</p>
 <h3 id="663-audio">6.6.3 Audio</h3>
 <p><strong>正常路径。</strong> App/Media 创建 Track，Audio policy 选择策略、设备与路由，AudioFlinger 混音/线程处理，经 Audio HAL、内核 PCM/Codec 输出到功放和扬声器。图 1 确认 AudioService、AudioFlinger、AudioPolicy、Audio HAL、ALSA、Codec 等标签存在。[可信度：架构图确认] [证据：original-diagram-01]</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-06-figure-17"><figcaption>Android内部机制与稳定性 · 图 17 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-17"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-17.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 17，可使用方向键滚动"><pre class="mermaid">flowchart LR
   A[App samples + usage] --&gt; B[AudioTrack/Audio service]
   B --&gt; C[Audio policy route]
   C --&gt; D[AudioFlinger thread/mix]
   D --&gt; E[Audio HAL]
   E --&gt; F[ALSA/PCM/Codec]
-  F --&gt; G[amplifier/speaker]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  F --&gt; G[amplifier/speaker]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   A[App samples + usage] --&gt; B[AudioTrack/Audio service]
   B --&gt; C[Audio policy route]
   C --&gt; D[AudioFlinger thread/mix]
   D --&gt; E[Audio HAL]
   E --&gt; F[ALSA/PCM/Codec]
-  F --&gt; G[amplifier/speaker]</code></pre></details></details><p><strong>异常传播/恢复路径。</strong></p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  F --&gt; G[amplifier/speaker]</code></pre></details></details></figure><p><strong>异常传播/恢复路径。</strong></p>
+<figure class="mermaid-figure" id="original-06-figure-18"><figcaption>Android内部机制与稳定性 · 图 18 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-18"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-18.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 18，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[start/write] --&gt; B{Track accepted and advancing?}
   B -- no --&gt; B1[client/session/state]
   B -- yes --&gt; C{policy route/device correct?}
@@ -885,7 +885,7 @@
   D1 --&gt; R
   E1 --&gt; R
   R --&gt; S[reselect route + recreate Track Generation]
-  S --&gt; T[play identifiable tone + route readback]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  S --&gt; T[play identifiable tone + route readback]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[start/write] --&gt; B{Track accepted and advancing?}
   B -- no --&gt; B1[client/session/state]
   B -- yes --&gt; C{policy route/device correct?}
@@ -899,26 +899,26 @@
   D1 --&gt; R
   E1 --&gt; R
   R --&gt; S[reselect route + recreate Track Generation]
-  S --&gt; T[play identifiable tone + route readback]</code></pre></details></details><p><strong>资源模型。</strong> Track、session、shared Buffer、mixer/output thread、route/device、volume/mute 和硬件时钟共同决定输出；write 成功不等于扬声器有声。</p>
+  S --&gt; T[play identifiable tone + route readback]</code></pre></details></details></figure><p><strong>资源模型。</strong> Track、session、shared Buffer、mixer/output thread、route/device、volume/mute 和硬件时钟共同决定输出；write 成功不等于扬声器有声。</p>
 <p><strong>最早可证伪断点。</strong> Track frame position 是否推进。<strong>Owner 边界。</strong> App、Audio policy、AudioFlinger、HAL、Kernel/Codec/amp 分段。<strong>回读验证。</strong> 核对新 Track/session、route/device、frame position、HAL/PCM 计数并播放可识别音频。</p>
 <h3 id="664-内存与-lmkd">6.6.4 内存与 LMKD</h3>
 <p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
-<p>PVT 的 lmkd→system_server SWT 案例中，AMS updateOomAdjLocked 等待 lmkd socket，lmkd 高 CPU/epoll 路径异常形成系统阻塞。解释架构责任时应沿等待链找到首个不推进的服务，不能以最终 watchdog 对象为根因。若伴随内存增长，先分用户堆、图形共享 buffer 与内核页；page_owner 提供页分配栈，不能替代所有进程堆与 dma-buf 归属分析。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S261 · lmkd+引发的system_server+SWT.pdf · PDF第2-5页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E003 · 使用page_owner定位内存泄露.pdf · PDF第3-8页<small>〔本地来源〕</small></span></p>
+<p>PVT 的 lmkd→system_server SWT 案例中，AMS updateOomAdjLocked 等待 lmkd socket，lmkd 高 CPU/epoll 路径异常形成系统阻塞。解释架构责任时应沿等待链找到首个不推进的服务，不能以最终 watchdog 对象为根因。若伴随内存增长，先分用户堆、图形共享 buffer 与内核页；page_owner 提供页分配栈，不能替代所有进程堆与 dma-buf 归属分析。<a href="source-SRC0029.html#page-2">S261 · lmkd+引发的system_server+SWT.pdf · PDF第2-5页</a> <a href="source-SRC0030.html#page-3">E003 · 使用page_owner定位内存泄露.pdf · PDF第3-8页</a></p>
 <p><strong>正常路径。</strong> 进程申请 Java/native/共享/图形内存，内核负责页与回收，系统按压力评估进程重要性，必要时由低内存策略释放缓存或终止候选进程。[可信度：标准机制推断]</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-06-figure-19"><figcaption>Android内部机制与稳定性 · 图 19 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-19"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-19.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 19，可使用方向键滚动"><pre class="mermaid">flowchart TB
   A[allocation request] --&gt; B[Java/native/graphics allocator]
   B --&gt; C[process mappings + shared buffers]
   C --&gt; D[kernel pages/reclaim]
   D --&gt; E[memory pressure accounting]
   E --&gt; F[trim/reclaim or LMKD decision]
-  F --&gt; G[stable process or lifecycle restart]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  F --&gt; G[stable process or lifecycle restart]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TB
   A[allocation request] --&gt; B[Java/native/graphics allocator]
   B --&gt; C[process mappings + shared buffers]
   C --&gt; D[kernel pages/reclaim]
   D --&gt; E[memory pressure accounting]
   E --&gt; F[trim/reclaim or LMKD decision]
-  F --&gt; G[stable process or lifecycle restart]</code></pre></details></details><p><strong>异常传播/恢复路径。</strong></p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  F --&gt; G[stable process or lifecycle restart]</code></pre></details></details></figure><p><strong>异常传播/恢复路径。</strong></p>
+<figure class="mermaid-figure" id="original-06-figure-20"><figcaption>Android内部机制与稳定性 · 图 20 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-20"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-20.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 20，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[memory grows] --&gt; B{workload-scaled and releasable?}
   B -- yes --&gt; B1[cache/high-water behavior]
   B -- no --&gt; C{owner/reference identified?}
@@ -931,7 +931,7 @@
   D1 --&gt; R
   D2 --&gt; R
   R --&gt; S[release leak owner + retire Generation]
-  S --&gt; T[repeat workload + verify convergence]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  S --&gt; T[repeat workload + verify convergence]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[memory grows] --&gt; B{workload-scaled and releasable?}
   B -- yes --&gt; B1[cache/high-water behavior]
   B -- no --&gt; C{owner/reference identified?}
@@ -944,22 +944,22 @@
   D1 --&gt; R
   D2 --&gt; R
   R --&gt; S[release leak owner + retire Generation]
-  S --&gt; T[repeat workload + verify convergence]</code></pre></details></details><p><strong>资源模型。</strong> 必须拆分 Java heap、native heap、mmap/shared、GraphicBuffer/Gralloc、GPU、内核与文件缓存；进程 RSS/PSS 的单值不能替代所有权分析。</p>
+  S --&gt; T[repeat workload + verify convergence]</code></pre></details></details></figure><p><strong>资源模型。</strong> 必须拆分 Java heap、native heap、mmap/shared、GraphicBuffer/Gralloc、GPU、内核与文件缓存；进程 RSS/PSS 的单值不能替代所有权分析。</p>
 <p><strong>最早可证伪断点。</strong> 稳定负载结束后分配—释放差值是否收敛。<strong>Owner 边界。</strong> 分配调用者、native/graphics consumer、系统内存策略和内核回收分别负责。<strong>回读验证。</strong> 重复同一场景，比较多个 Generation 的曲线、owner 数量、回收/kill 时间线和业务恢复。</p>
 <h3 id="665-anr">6.6.5 ANR</h3>
 <p><strong>正常路径。</strong> 主线程 Looper 持续取消息、执行短任务、处理输入/生命周期/广播，Binder 工作线程按时返回，Watchdog/系统超时监督不触发。</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-06-figure-21"><figcaption>Android内部机制与稳定性 · 图 21 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-21"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-21.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 21，可使用方向键滚动"><pre class="mermaid">flowchart LR
   A[event or lifecycle request] --&gt; B[enqueue message]
   B --&gt; C[main Looper dispatch]
   C --&gt; D[bounded work or async handoff]
   D --&gt; E[finish/acknowledge]
-  E --&gt; F[next message]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  E --&gt; F[next message]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   A[event or lifecycle request] --&gt; B[enqueue message]
   B --&gt; C[main Looper dispatch]
   C --&gt; D[bounded work or async handoff]
   D --&gt; E[finish/acknowledge]
-  E --&gt; F[next message]</code></pre></details></details><p><strong>异常传播/恢复路径。</strong></p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  E --&gt; F[next message]</code></pre></details></details></figure><p><strong>异常传播/恢复路径。</strong></p>
+<figure class="mermaid-figure" id="original-06-figure-22"><figcaption>Android内部机制与稳定性 · 图 22 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-22"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-22.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 22，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[response deadline missed] --&gt; B[capture ANR traces]
   B --&gt; C{main thread state?}
   C -- lock --&gt; C1[lock inversion/deadlock]
@@ -971,7 +971,7 @@
   C3 --&gt; R
   C4 --&gt; R
   R --&gt; S[restart only if state cannot recover]
-  S --&gt; T[replay event + latency/readback verification]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  S --&gt; T[replay event + latency/readback verification]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[response deadline missed] --&gt; B[capture ANR traces]
   B --&gt; C{main thread state?}
   C -- lock --&gt; C1[lock inversion/deadlock]
@@ -983,22 +983,22 @@
   C3 --&gt; R
   C4 --&gt; R
   R --&gt; S[restart only if state cannot recover]
-  S --&gt; T[replay event + latency/readback verification]</code></pre></details></details><p><strong>资源模型。</strong> 主线程时间、锁、Binder 同步等待、CPU、I/O 与消息队列是关键资源。ANR 是症状分类，不直接等同于 CPU 高、死锁或 Binder 故障。</p>
+  S --&gt; T[replay event + latency/readback verification]</code></pre></details></details></figure><p><strong>资源模型。</strong> 主线程时间、锁、Binder 同步等待、CPU、I/O 与消息队列是关键资源。ANR 是症状分类，不直接等同于 CPU 高、死锁或 Binder 故障。</p>
 <p><strong>最早可证伪断点。</strong> 触发事件是否入队，以及主线程从何时不再完成消息。<strong>Owner 边界。</strong> 事件发送方、App 主线程、锁 owner、远端服务和系统调度分别判断。<strong>回读验证。</strong> 修复后重复同一交互，验证消息延迟、完成确认和业务状态，而非仅看 ANR 弹窗消失。</p>
 <h3 id="666-wakelock">6.6.6 WakeLock</h3>
 <p><strong>正常路径。</strong> 业务在确需保持执行/设备唤醒时 acquire，工作完成或取消后在所有出口 release，电源管理重新允许休眠。</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-06-figure-23"><figcaption>Android内部机制与稳定性 · 图 23 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-23"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-23.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 23，可使用方向键滚动"><pre class="mermaid">flowchart LR
   A[bounded work starts] --&gt; B[acquire WakeLock with owner tag]
   B --&gt; C[CPU/device remains available]
   C --&gt; D[work completes/cancels/errors]
   D --&gt; E[release on every path]
-  E --&gt; F[power state readback]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  E --&gt; F[power state readback]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   A[bounded work starts] --&gt; B[acquire WakeLock with owner tag]
   B --&gt; C[CPU/device remains available]
   C --&gt; D[work completes/cancels/errors]
   D --&gt; E[release on every path]
-  E --&gt; F[power state readback]</code></pre></details></details><p><strong>异常传播/恢复路径。</strong></p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  E --&gt; F[power state readback]</code></pre></details></details></figure><p><strong>异常传播/恢复路径。</strong></p>
+<figure class="mermaid-figure" id="original-06-figure-24"><figcaption>Android内部机制与稳定性 · 图 24 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-24"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-24.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 24，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[unexpected awake/power drain] --&gt; B{active owner still has work?}
   B -- yes --&gt; B1[long operation or downstream stall]
   B -- no --&gt; C{acquire/release balanced?}
@@ -1009,7 +1009,7 @@
   C1 --&gt; R
   D1 --&gt; R
   R --&gt; S[release old token + prevent stale callback reacquire]
-  S --&gt; T[screen-off/suspend and business readback]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  S --&gt; T[screen-off/suspend and business readback]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[unexpected awake/power drain] --&gt; B{active owner still has work?}
   B -- yes --&gt; B1[long operation or downstream stall]
   B -- no --&gt; C{acquire/release balanced?}
@@ -1020,24 +1020,24 @@
   C1 --&gt; R
   D1 --&gt; R
   R --&gt; S[release old token + prevent stale callback reacquire]
-  S --&gt; T[screen-off/suspend and business readback]</code></pre></details></details><p><strong>资源模型。</strong> token、owner/tag、acquire/release 计数、超时策略、持有时段和关联业务共同构成证据；“设备未休眠”不等于某一个 WakeLock 泄漏。</p>
+  S --&gt; T[screen-off/suspend and business readback]</code></pre></details></details></figure><p><strong>资源模型。</strong> token、owner/tag、acquire/release 计数、超时策略、持有时段和关联业务共同构成证据；“设备未休眠”不等于某一个 WakeLock 泄漏。</p>
 <p><strong>最早可证伪断点。</strong> 业务结束事件后 token 是否仍由原 owner 持有。<strong>Owner 边界。</strong> 申请方负责对称释放，Power Manager 负责状态，阻塞的下游负责解释工作未结束。<strong>回读验证。</strong> 确认旧 token 不活跃、功耗状态可转换，唤醒后目标业务仍正确。</p>
 <h3 id="667-网络">6.6.7 网络</h3>
 <p><strong>正常路径。</strong> App 请求网络，经 Connectivity/Network service 选择能力与默认/绑定网络，socket 通过 Netd/策略、内核协议栈、网卡驱动到外部端点。</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-06-figure-25"><figcaption>Android内部机制与稳定性 · 图 25 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-25"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-25.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 25，可使用方向键滚动"><pre class="mermaid">flowchart LR
   A[App request/socket] --&gt; B[Connectivity selection]
   B --&gt; C[policy/DNS/Netd]
   C --&gt; D[kernel socket + TCP/UDP]
   D --&gt; E[interface/driver/link]
   E --&gt; F[peer service]
-  F --&gt; G[response + app state]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  F --&gt; G[response + app state]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   A[App request/socket] --&gt; B[Connectivity selection]
   B --&gt; C[policy/DNS/Netd]
   C --&gt; D[kernel socket + TCP/UDP]
   D --&gt; E[interface/driver/link]
   E --&gt; F[peer service]
-  F --&gt; G[response + app state]</code></pre></details></details><p><strong>异常传播/恢复路径。</strong></p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  F --&gt; G[response + app state]</code></pre></details></details></figure><p><strong>异常传播/恢复路径。</strong></p>
+<figure class="mermaid-figure" id="original-06-figure-26"><figcaption>Android内部机制与稳定性 · 图 26 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-26"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-26.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 26，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[request fails/stale] --&gt; B{network selected and validated?}
   B -- no --&gt; B1[capability/default/binding]
   B -- yes --&gt; C{DNS/route/policy valid?}
@@ -1051,7 +1051,7 @@
   D1 --&gt; R
   E1 --&gt; R
   R --&gt; S[reselect + reconnect + resubscribe]
-  S --&gt; T[authoritative query + business readback]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  S --&gt; T[authoritative query + business readback]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[request fails/stale] --&gt; B{network selected and validated?}
   B -- no --&gt; B1[capability/default/binding]
   B -- yes --&gt; C{DNS/route/policy valid?}
@@ -1065,24 +1065,24 @@
   D1 --&gt; R
   E1 --&gt; R
   R --&gt; S[reselect + reconnect + resubscribe]
-  S --&gt; T[authoritative query + business readback]</code></pre></details></details><p><strong>资源模型。</strong> Network handle、interface、route、DNS、socket、session、subscription 和业务 cache 有不同生命周期；link up 不等于 RPC 会话或数据新鲜。</p>
+  S --&gt; T[authoritative query + business readback]</code></pre></details></details></figure><p><strong>资源模型。</strong> Network handle、interface、route、DNS、socket、session、subscription 和业务 cache 有不同生命周期；link up 不等于 RPC 会话或数据新鲜。</p>
 <p><strong>最早可证伪断点。</strong> 请求实际绑定的是哪一个 Network/interface。<strong>Owner 边界。</strong> App、Connectivity/Netd、Kernel/driver、外部服务、业务状态机。<strong>回读验证。</strong> 新 Network 与 socket Generation 下重新查询权威状态并验证用户结果。</p>
 <h3 id="668-usb">6.6.8 USB</h3>
 <p><strong>正常路径。</strong> 物理插入触发控制器/PHY 枚举，内核建立 device/interface/endpoint，Framework USB service 处理权限与角色，目标应用或协议服务打开 endpoint 交换数据。图 1 确认 USB Service、USB HAL 和 Kernel USB 标签存在。[可信度：架构图确认] [证据：original-diagram-01]</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-06-figure-27"><figcaption>Android内部机制与稳定性 · 图 27 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-27"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-27.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 27，可使用方向键滚动"><pre class="mermaid">flowchart TB
   A[attach + power] --&gt; B[PHY/controller enumeration]
   B --&gt; C[kernel device/interface/endpoint]
   C --&gt; D[USB service permission/role]
   D --&gt; E[app/protocol opens endpoint]
   E --&gt; F[transfer + completion]
-  F --&gt; G[business consume]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  F --&gt; G[business consume]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TB
   A[attach + power] --&gt; B[PHY/controller enumeration]
   B --&gt; C[kernel device/interface/endpoint]
   C --&gt; D[USB service permission/role]
   D --&gt; E[app/protocol opens endpoint]
   E --&gt; F[transfer + completion]
-  F --&gt; G[business consume]</code></pre></details></details><p><strong>异常传播/恢复路径。</strong></p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  F --&gt; G[business consume]</code></pre></details></details></figure><p><strong>异常传播/恢复路径。</strong></p>
+<figure class="mermaid-figure" id="original-06-figure-28"><figcaption>Android内部机制与稳定性 · 图 28 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-28"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-28.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 28，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[device unavailable/data fail] --&gt; B{attach/enumeration completed?}
   B -- no --&gt; B1[power/cable/PHY/controller]
   B -- yes --&gt; C{role/configuration/permission valid?}
@@ -1096,7 +1096,7 @@
   D1 --&gt; R
   E1 --&gt; R
   R --&gt; S[detach/re-enumerate new Generation]
-  S --&gt; T[permission + transfer + content readback]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  S --&gt; T[permission + transfer + content readback]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[device unavailable/data fail] --&gt; B{attach/enumeration completed?}
   B -- no --&gt; B1[power/cable/PHY/controller]
   B -- yes --&gt; C{role/configuration/permission valid?}
@@ -1110,24 +1110,24 @@
   D1 --&gt; R
   E1 --&gt; R
   R --&gt; S[detach/re-enumerate new Generation]
-  S --&gt; T[permission + transfer + content readback]</code></pre></details></details><p><strong>资源模型。</strong> device address、configuration、interface claim、endpoint/file descriptor、permission 与 attach Generation 必须一致；旧 descriptor 不能跨重枚举复用。</p>
+  S --&gt; T[permission + transfer + content readback]</code></pre></details></details></figure><p><strong>资源模型。</strong> device address、configuration、interface claim、endpoint/file descriptor、permission 与 attach Generation 必须一致；旧 descriptor 不能跨重枚举复用。</p>
 <p><strong>最早可证伪断点。</strong> attach 后是否完成枚举并得到当前 device identity。<strong>Owner 边界。</strong> 物理/控制器、Kernel、USB service、应用协议。<strong>回读验证。</strong> 核对新 identity、角色/权限、双向 transfer completion 和实际内容。</p>
 <h3 id="669-存储">6.6.9 存储</h3>
 <p><strong>正常路径。</strong> 块设备/闪存经驱动、文件系统和挂载进入 Vold/Storage 管理，应用通过 VFS/Framework API 打开、读写、同步和关闭。</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-06-figure-29"><figcaption>Android内部机制与稳定性 · 图 29 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-29"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-29.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 29，可使用方向键滚动"><pre class="mermaid">flowchart LR
   A[flash/block device] --&gt; B[driver + block IO]
   B --&gt; C[filesystem check/mount]
   C --&gt; D[Vold/Storage policy]
   D --&gt; E[VFS/file API]
   E --&gt; F[read/write/fsync/close]
-  F --&gt; G[durable data + app readback]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  F --&gt; G[durable data + app readback]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart LR
   A[flash/block device] --&gt; B[driver + block IO]
   B --&gt; C[filesystem check/mount]
   C --&gt; D[Vold/Storage policy]
   D --&gt; E[VFS/file API]
   E --&gt; F[read/write/fsync/close]
-  F --&gt; G[durable data + app readback]</code></pre></details></details><p><strong>异常传播/恢复路径。</strong></p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  F --&gt; G[durable data + app readback]</code></pre></details></details></figure><p><strong>异常传播/恢复路径。</strong></p>
+<figure class="mermaid-figure" id="original-06-figure-30"><figcaption>Android内部机制与稳定性 · 图 30 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-30"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-30.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 30，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[IO error/missing/stale data] --&gt; B{device and mount present?}
   B -- no --&gt; B1[media/driver/mount]
   B -- yes --&gt; C{path/permission/quota valid?}
@@ -1141,7 +1141,7 @@
   D1 --&gt; R
   E1 --&gt; R
   R --&gt; S[repair/remount or atomic rewrite]
-  S --&gt; T[reopen + checksum/content readback]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  S --&gt; T[reopen + checksum/content readback]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[IO error/missing/stale data] --&gt; B{device and mount present?}
   B -- no --&gt; B1[media/driver/mount]
   B -- yes --&gt; C{path/permission/quota valid?}
@@ -1155,12 +1155,12 @@
   D1 --&gt; R
   E1 --&gt; R
   R --&gt; S[repair/remount or atomic rewrite]
-  S --&gt; T[reopen + checksum/content readback]</code></pre></details></details><p><strong>资源模型。</strong> mount namespace、user/storage scope、path、file descriptor、page cache、dirty data、filesystem transaction 和介质共同决定持久性；write 返回不等于断电后一定持久。</p>
+  S --&gt; T[reopen + checksum/content readback]</code></pre></details></details></figure><p><strong>资源模型。</strong> mount namespace、user/storage scope、path、file descriptor、page cache、dirty data、filesystem transaction 和介质共同决定持久性；write 返回不等于断电后一定持久。</p>
 <p><strong>最早可证伪断点。</strong> 当前进程看到的 mount/path 是否对应目标存储。<strong>Owner 边界。</strong> App、Storage/Vold、filesystem/VFS、block driver、介质。<strong>回读验证。</strong> close/reopen 后校验内容、版本或校验值，并在要求的掉电语义下复核。</p>
 <h2 id="67-android-内部通信异常">6.7 Android 内部通信异常</h2>
 <h3 id="671-正常状态链">6.7.1 正常状态链</h3>
 <p>Android 内部调用至少要分成：服务发现/handle、传输调用、服务执行、回调投递、消费者状态应用和用户结果。核心不变量是：<code>transport success ≠ callback delivered ≠ business state applied</code>。[可信度：标准机制推断]</p>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+<figure class="mermaid-figure" id="original-06-figure-31"><figcaption>Android内部机制与稳定性 · 图 31 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-31"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-31.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 31，可使用方向键滚动"><pre class="mermaid">sequenceDiagram
   participant C as Client state machine
   participant P as Binder Proxy
   participant D as Binder driver
@@ -1173,7 +1173,7 @@
   B--&gt;&gt;S: result/current version
   S--&gt;&gt;C: reply or callback
   C-&gt;&gt;C: validate Generation + apply state
-  C-&gt;&gt;B: authoritative state readback</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  C-&gt;&gt;B: authoritative state readback</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>sequenceDiagram
   participant C as Client state machine
   participant P as Binder Proxy
   participant D as Binder driver
@@ -1186,8 +1186,8 @@
   B--&gt;&gt;S: result/current version
   S--&gt;&gt;C: reply or callback
   C-&gt;&gt;C: validate Generation + apply state
-  C-&gt;&gt;B: authoritative state readback</code></pre></details></details><h3 id="672-异常传播与恢复">6.7.2 异常传播与恢复</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  C-&gt;&gt;B: authoritative state readback</code></pre></details></details></figure><h3 id="672-异常传播与恢复">6.7.2 异常传播与恢复</h3>
+<figure class="mermaid-figure" id="original-06-figure-32"><figcaption>Android内部机制与稳定性 · 图 32 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-32"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-32.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 32，可使用方向键滚动"><pre class="mermaid">flowchart TD
   A[request issued] --&gt; B{Binder call accepted?}
   B -- no --&gt; B1[Binder call failure]
   B -- blocked --&gt; B2[Binder call blocked / thread-pool starvation]
@@ -1209,7 +1209,7 @@
   S --&gt; T[reconnect new handle/session]
   T --&gt; U[re-register callback/subscription]
   U --&gt; V[authoritative state readback]
-  V --&gt; W[user-result verify]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  V --&gt; W[user-result verify]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TD
   A[request issued] --&gt; B{Binder call accepted?}
   B -- no --&gt; B1[Binder call failure]
   B -- blocked --&gt; B2[Binder call blocked / thread-pool starvation]
@@ -1231,7 +1231,7 @@
   S --&gt; T[reconnect new handle/session]
   T --&gt; U[re-register callback/subscription]
   U --&gt; V[authoritative state readback]
-  V --&gt; W[user-result verify]</code></pre></details></details><h3 id="673-八类异常与首个断点">6.7.3 八类异常与首个断点</h3>
+  V --&gt; W[user-result verify]</code></pre></details></details></figure><h3 id="673-八类异常与首个断点">6.7.3 八类异常与首个断点</h3>
 <table>
 <thead>
 <tr>
@@ -1375,7 +1375,7 @@
 <p>术语与图标签也必须分开：图 1 直接出现 <code>AudioService</code> 与 <code>MediaServer</code> 标签，只能证明对应 occurrence 存在；正文对其 Android 标准职责的解释属于标准机制，不证明 MT8676 的类、进程拆分或服务版本。[可信度：架构图确认] [证据：original-diagram-01] <code>WMS</code> 是本文对标准 Window Manager Service 的缩写；图 1 的原始标签是 Window Manager，并未直接写出 <code>WMS</code>。两者的语义映射属于标准机制，具体实现仍待当前 build 证据确认。[可信度：标准机制推断]</p>
 <p>因此 terminology 中这些标准解释保持 method-reference 且不绑定 MT8676 图证据；图中 occurrence 的 Direct 事实由模块清单和相邻的 <code>original-diagram-01</code> 引用承载。</p>
 <h3 id="683-最小闭环">6.8.3 最小闭环</h3>
-<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+<figure class="mermaid-figure" id="original-06-figure-33"><figcaption>Android内部机制与稳定性 · 图 33 · Mermaid</figcaption><details  class="diagram" open data-panel="original-06-figure-33"><summary>展开 / 收起图表</summary><div class="diagram-tools"><button type="button" data-expand>大屏阅读</button><button type="button" data-zoom="readable">清晰字号</button><button type="button" data-zoom="in" aria-label="放大图表">＋</button><button type="button" data-zoom="out" aria-label="缩小图表">−</button><button type="button" data-zoom="actual">原始比例</button><button type="button" data-zoom="reset">查看全图</button><a href="diagrams/original-06-figure-33.mmd" download>下载 Mermaid</a></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Android内部机制与稳定性 · 图 33，可使用方向键滚动"><pre class="mermaid">flowchart TB
   A[freeze scenario + Generation] --&gt; B[collect synchronized evidence]
   B --&gt; C[find earliest divergent boundary]
   C --&gt; D[identify creator/holder/consumer/releaser]
@@ -1384,7 +1384,7 @@
   F --&gt; G[user-visible verification]
   G --&gt; H{repeatable and convergent?}
   H -- no --&gt; B
-  H -- yes --&gt; I[close with evidence package]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  H -- yes --&gt; I[close with evidence package]</pre></div><p class="diagram-status" role="status">图表进入可见区域后生成。</p><details><summary>查看 Mermaid 源码</summary><pre><code>flowchart TB
   A[freeze scenario + Generation] --&gt; B[collect synchronized evidence]
   B --&gt; C[find earliest divergent boundary]
   C --&gt; D[identify creator/holder/consumer/releaser]
@@ -1393,7 +1393,7 @@
   F --&gt; G[user-visible verification]
   G --&gt; H{repeatable and convergent?}
   H -- no --&gt; B
-  H -- yes --&gt; I[close with evidence package]</code></pre></details></details><h2 id="69-证据预审门禁与非等价关系">6.9 证据预审门禁与非等价关系</h2>
+  H -- yes --&gt; I[close with evidence package]</code></pre></details></details></figure><h2 id="69-证据预审门禁与非等价关系">6.9 证据预审门禁与非等价关系</h2>
 <p>本节把容易越级推断的结论集中锁定。它不是重复前文，而是现场复核时的拒绝条件：只要有人用左侧某个“成功”直接证明右侧全部成功，就应回到逐层证据。</p>
 <h3 id="691-生命周期到物理显示的状态不等式">6.9.1 生命周期到物理显示的状态不等式</h3>
 <pre><code>Activity Resumed ≠ Window Visible/Focused ≠ Surface Valid
@@ -1626,4 +1626,155 @@
 <h3 id="6911-android-版本和命令边界">6.9.11 Android 版本和命令边界</h3>
 <p>必须先采集 build fingerprint、API level、framework/vendor revision、debuggable/SELinux 和 Composer/Gralloc 信息，再选择命令与字段。<code>command/dump fields depend on Android version, permission, SELinux and vendor implementation</code>。<code>dumpsys</code>、Perfetto、Winscope、DRM debugfs、dma-buf 或 GPU counter 均只是通用观测建议，不保证当前 MT8676 build 可用。[可信度：待 MT8676 确认]</p>
 <p>版本差异至少包括 Window/BLAST 提交路径、HWC legacy/HWC2/HIDL/AIDL、Gralloc allocator/mapper、HWUI/RenderEngine 的 GLES/Vulkan 后端、ImageReader API、MediaCodec Surface API、VirtualDisplay/MediaProjection 权限与 InputDispatcher/多显示焦点。缺少当前设备证据时，不得填入固定 Buffer 数、队列深度、超时、内存阈值、HAL 版本或私有服务名。</p>
-</article><nav class="pager"><a href="18.html">← 上一步：盟博OS架构与服务边界</a><a href="07.html">下一步：SOS-Yocto内部机制 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#06-android-内部机制图形资源与稳定性">06 Android 内部机制、图形资源与稳定性</a><a class="depth-2" href="#61-生命周期窗口与输入">6.1 生命周期、窗口与输入</a><a class="depth-3" href="#611-生命周期和窗口正常路径">6.1.1 生命周期和窗口正常路径</a><a class="depth-3" href="#612-输入事件正常路径">6.1.2 输入事件正常路径</a><a class="depth-3" href="#613-生命周期窗口与输入异常传播恢复路径">6.1.3 生命周期、窗口与输入异常传播/恢复路径</a><a class="depth-2" href="#62-android-图像渲染">6.2 Android 图像渲染</a><a class="depth-3" href="#621-端到端正常路径">6.2.1 端到端正常路径</a><a class="depth-3" href="#622-帧的资源与观察模型">6.2.2 帧的资源与观察模型</a><a class="depth-3" href="#623-渲染异常传播恢复路径">6.2.3 渲染异常传播/恢复路径</a><a class="depth-2" href="#63-bufferqueuesurfacecontrol-与所有权">6.3 BufferQueue、SurfaceControl 与所有权</a><a class="depth-3" href="#631-正常所有权闭环">6.3.1 正常所有权闭环</a><a class="depth-3" href="#632-正常释放对称性">6.3.2 正常释放对称性</a><a class="depth-3" href="#633-异常传播与恢复">6.3.3 异常传播与恢复</a><a class="depth-2" href="#64-surface-与图形资源泄漏">6.4 Surface 与图形资源泄漏</a><a class="depth-3" href="#641-先定义泄漏证据">6.4.1 先定义“泄漏证据”</a><a class="depth-3" href="#642-正常图创建使用释放">6.4.2 正常图：创建—使用—释放</a><a class="depth-3" href="#643-异常传播恢复图">6.4.3 异常传播/恢复图</a><a class="depth-3" href="#644-十二类泄漏矩阵">6.4.4 十二类泄漏矩阵</a><a class="depth-3" href="#645-泄漏与积压如何区分">6.4.5 泄漏与积压如何区分</a><a class="depth-2" href="#65-黑屏冻屏花屏闪屏与卡顿">6.5 黑屏、冻屏、花屏、闪屏与卡顿</a><a class="depth-3" href="#651-五层正常显示链">6.5.1 五层正常显示链</a><a class="depth-3" href="#652-症状不能互换">6.5.2 症状不能互换</a><a class="depth-3" href="#653-异常传播恢复图">6.5.3 异常传播/恢复图</a><a class="depth-2" href="#66-android-内部资源与稳定性">6.6 Android 内部资源与稳定性</a><a class="depth-3" href="#661-camera">6.6.1 Camera</a><a class="depth-3" href="#662-mediacodec">6.6.2 MediaCodec</a><a class="depth-3" href="#663-audio">6.6.3 Audio</a><a class="depth-3" href="#664-内存与-lmkd">6.6.4 内存与 LMKD</a><a class="depth-3" href="#665-anr">6.6.5 ANR</a><a class="depth-3" href="#666-wakelock">6.6.6 WakeLock</a><a class="depth-3" href="#667-网络">6.6.7 网络</a><a class="depth-3" href="#668-usb">6.6.8 USB</a><a class="depth-3" href="#669-存储">6.6.9 存储</a><a class="depth-2" href="#67-android-内部通信异常">6.7 Android 内部通信异常</a><a class="depth-3" href="#671-正常状态链">6.7.1 正常状态链</a><a class="depth-3" href="#672-异常传播与恢复">6.7.2 异常传播与恢复</a><a class="depth-3" href="#673-八类异常与首个断点">6.7.3 八类异常与首个断点</a><a class="depth-2" href="#68-现场使用方法与证据边界">6.8 现场使用方法与证据边界</a><a class="depth-3" href="#681-一张统一排查表">6.8.1 一张统一排查表</a><a class="depth-3" href="#682-本章不能直接证明什么">6.8.2 本章不能直接证明什么</a><a class="depth-3" href="#683-最小闭环">6.8.3 最小闭环</a><a class="depth-2" href="#69-证据预审门禁与非等价关系">6.9 证据预审门禁与非等价关系</a><a class="depth-3" href="#691-生命周期到物理显示的状态不等式">6.9.1 生命周期到物理显示的状态不等式</a><a class="depth-3" href="#692-输入事件不等式">6.9.2 输入事件不等式</a><a class="depth-3" href="#693-三类-fence-不能互换">6.9.3 三类 Fence 不能互换</a><a class="depth-3" href="#694-windowsurfacelayerbuffer-与内存不等价">6.9.4 Window、Surface、Layer、Buffer 与内存不等价</a><a class="depth-3" href="#695-surfacecontrol-本地句柄与远端-layer">6.9.5 SurfaceControl 本地句柄与远端 Layer</a><a class="depth-3" href="#696-imagereader-三态和-maximages">6.9.6 ImageReader 三态和 maxImages</a><a class="depth-3" href="#697-mediacodec-五个独立资源面">6.9.7 MediaCodec 五个独立资源面</a><a class="depth-3" href="#698-virtualdisplaysurface-与-mediaprojection">6.9.8 VirtualDisplay、Surface 与 MediaProjection</a><a class="depth-3" href="#699-九类资源的-creatorholderconsumerreleaser-合同">6.9.9 九类资源的 creator—holder—consumer—releaser 合同</a><a class="depth-3" href="#6910-binder-服务与业务结果不等式">6.9.10 Binder 服务与业务结果不等式</a><a class="depth-3" href="#6911-android-版本和命令边界">6.9.11 Android 版本和命令边界</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>
+</article><section class="evidence-excerpts" id="evidence-excerpts"><h2>本章引用的材料内容</h2><p>下面直接展示引用页的文字开头，可展开核对。打开材料页可看全部物理页及完整 PDF，图表和版式以 PDF 为准。提取原文不代表已经逐页验证其适用于当前项目。</p><details><summary>MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF 第 6 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2026 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+Confidential B 
+MT8668 Hypervisor Camera  
+User Manual 
+1.2 架构 
+ 
+图 1-1. Camera 虚拟化架构 
+ 
+目前， MT8668 使用 Yocto + Andriod 的双系统组合，Yocto OS 作为 Host，Android OS 作为 Guest。 
+相应地，Yocto 端 Camera 作为 Host， 所有 Camera 相关的硬件，以及对应的 driver 和 SW 逻辑控制都放在 Yocto
+端；Android 端 Camera 作为 Guest，从 Yocto 端获取相关的图像数据。两者之间是基于 RpcBinder + Vsock 的方式来
+实现跨域通信，Android 端 Camera 跨域将 Request 发送给 Yocto 端，Yocto 端接收到 Request 后，经过处理后，将
+图像数据填充到 buffer 中，并将相关 Result 再跨域回传给 Android 端。 
+1.2.1 Android 端 Camera  
+Android 端 Camera 架构如图 1-1 左边所示。从上往下的层次分布依次是 APK、Java Framework、Cameraserver、
+Camerahalserver。除 Camerahalserver 外，其余 Layer 的实现与单 Android OS 无差别。 
+Camerahalserver 又大致分为 3 层： 
+ 
+1. AIDL Adaptor Layer 
+主要负责与 Cameraserver 进行 binder 交互 
+2. Android Adaptor Layer 
+主要负责处理与 Android 强相关的逻辑控制 
+3. Camera Feature Layer 
+底层 Camera 对外提供的功能接口 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0002.html#page-6">阅读整页及原图 →</a></details><details><summary>MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF 第 6 页</summary><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Hypervisor Camera 
+User Manual 
+Confidential B 
+ 控制流程  
+ 
+图 1-3. MW 类图 
+ 
+图 1-3 主要是入口层和定制层之间的类流交互图。主要是上层通过  CameraProvider 的 open 接口获取 Camera，
+Camera 通过调用 Camera TurboEngine 获取 CustomizationManager。CustomizationManager 是定制层的管理器，通过
+它实现对客户定制行为的管理。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre><a href="source-SRC0006.html#page-6">阅读整页及原图 →</a></details><details><summary>软件开发培训-音视频解码常见问题及分析.pdf · PDF 第 6 页</summary><pre class="source-text">五、使用硬编解码分析
+对于
+8676
+或
+78
+，若是使用的视频硬解码，可能使用硬编解码场景和出现异常时更多。
+硬编码用于录制视频文件，录制为
+H264
+或
+H265
+硬解码用于使用
+AVC/HEVC
+等常见视频流的场景，比如本地播放时大多
+mp4
+文件，
+carplay
+等投屏工
+具，爱奇艺等播放软件
+比如可以用这个确定播放和停止，也可以看到解码编码当时的数量
+D C2MtkComponentStore: 
+onNumberOfVideoInstancesChanged
+: Decoder 1, Encoder 1
+D C2MtkComponentStore: 
+onNumberOfVideoInstancesChanged
+: Decoder 0, Encoder 1
+可以搜索
+onNumberOfVideoInstancesChanged
+若是视频解码看到
+c2.mtk.XXX
+表示走的
+mtk
+的硬解码，若是音频或
+c2.android
+则是走的软解码
+遇到问题，首先看
+mediaserver
+的进程，搜
+mediacodec
+，或
+nuplayer
+等
+看到是硬解的话，搜索硬解码进程，可以搜
+c2mtk
+，进程号是硬解码的进程，全搜，对应开始或结束
+或问题时间点去查看异常定位问题。
+D 
+PipelineWatcher
+: [0xb4000072478eb0a8] 
+pipelineFull
+: too many frames in pipeline (6)
+这个一般不是异常，正常播放视频几乎都有这些信息，这个只能说明
+mediacodec
+处理
+dequeueOutputbuffer
+在等待处理数据</pre><a href="source-SRC0023.html#page-6">阅读整页及原图 →</a></details><details><summary>lmkd+引发的system_server+SWT.pdf · PDF 第 2 页</summary><pre class="source-text">掌锐电子软件模块研究
+1 - 5 密级：内部公开
+一，问题现象
+monkey 测试出现 Android 黑屏
+二，问题分析
+2.1 解析 system_server SWT 信息
+Subject: Blocked in monitor com.android.server.am.ActivityManagerService on monitor
+thread (watchdog.monitor) for 93s, Blocked in handler on on display thread
+(android.display) for 93s, Blocked in handler on on ActivityManager (ActivityManager) for
+93s
+watchdog.monitor 检察 AMS 状态被阻塞，其次 block display 线程和 ActivityManager
+2.2 检测被 block 线程堆栈信息
+1，watchdog.monitor 被 block 堆栈信息
+2，display thread 被 block 堆栈信息</pre><a href="source-SRC0029.html#page-2">阅读整页及原图 →</a></details><details><summary>使用page_owner定位内存泄露.pdf · PDF 第 3 页</summary><pre class="source-text">掌锐电子
+2 - 12 密级：
+一、page_ext 结构解析
+page_owner 依附在 page_ext 结构中，先分析 page_ext 结构。
+1.1 page_ext
+Linux 内核的 page_ext 机制是一种为每个物理页框（page frame）添加“扩展数据”的轻
+量级框架，它允许内核子系统在不修改核心 struct page 的情况下，为每
+个页框关联额外的私有数据（例如 page owner 信息、页空闲跟踪等）。
+1.struct page_ext_operations
+// include/linux/page_ext.h
+struct page_ext_operations {
+size_t offset; // 该模块的数据在 page_ext 结构中的偏移量（由核心自动填充）
+size_t size; // 该模块需要的数据大小
+bool (*need)(void); // 判断是否需要实际分配内存
+void (*init)(void); // 分配完成后，模块的初始化回调（可选）
+};
+struct page_ext {
+unsigned long flags;
+};
+static bool __init invoke_need_callbacks(void)
+{
+int i;
+int entries = ARRAY_SIZE(page_ext_ops);
+bool need = false;
+for (i = 0; i &lt; entries; i++) {
+if (page_ext_ops[i]-&gt;need &amp;&amp; page_ext_ops[i]-&gt;need()) {
+page_ext_ops[i]-&gt;offset = page_ext_size;
+page_ext_size += page_ext_ops[i]-&gt;size;
+need = true;
+}
+}
+return need;
+}
+例如，page_owner 模块定义如下：
+// mm/page_owner.c
+static __init bool need_page_owner(void)</pre><a href="source-SRC0030.html#page-3">阅读整页及原图 →</a></details></section><nav class="pager"><a href="18.html">← 上一步：盟博OS架构与服务边界</a><a href="07.html">下一步：SOS-Yocto内部机制 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#06-android-内部机制图形资源与稳定性">06 Android 内部机制、图形资源与稳定性</a><a class="depth-2" href="#61-生命周期窗口与输入">6.1 生命周期、窗口与输入</a><a class="depth-3" href="#611-生命周期和窗口正常路径">6.1.1 生命周期和窗口正常路径</a><a class="depth-3" href="#612-输入事件正常路径">6.1.2 输入事件正常路径</a><a class="depth-3" href="#613-生命周期窗口与输入异常传播恢复路径">6.1.3 生命周期、窗口与输入异常传播/恢复路径</a><a class="depth-2" href="#62-android-图像渲染">6.2 Android 图像渲染</a><a class="depth-3" href="#621-端到端正常路径">6.2.1 端到端正常路径</a><a class="depth-3" href="#622-帧的资源与观察模型">6.2.2 帧的资源与观察模型</a><a class="depth-3" href="#623-渲染异常传播恢复路径">6.2.3 渲染异常传播/恢复路径</a><a class="depth-2" href="#63-bufferqueuesurfacecontrol-与所有权">6.3 BufferQueue、SurfaceControl 与所有权</a><a class="depth-3" href="#631-正常所有权闭环">6.3.1 正常所有权闭环</a><a class="depth-3" href="#632-正常释放对称性">6.3.2 正常释放对称性</a><a class="depth-3" href="#633-异常传播与恢复">6.3.3 异常传播与恢复</a><a class="depth-2" href="#64-surface-与图形资源泄漏">6.4 Surface 与图形资源泄漏</a><a class="depth-3" href="#641-先定义泄漏证据">6.4.1 先定义“泄漏证据”</a><a class="depth-3" href="#642-正常图创建使用释放">6.4.2 正常图：创建—使用—释放</a><a class="depth-3" href="#643-异常传播恢复图">6.4.3 异常传播/恢复图</a><a class="depth-3" href="#644-十二类泄漏矩阵">6.4.4 十二类泄漏矩阵</a><a class="depth-3" href="#645-泄漏与积压如何区分">6.4.5 泄漏与积压如何区分</a><a class="depth-2" href="#65-黑屏冻屏花屏闪屏与卡顿">6.5 黑屏、冻屏、花屏、闪屏与卡顿</a><a class="depth-3" href="#651-五层正常显示链">6.5.1 五层正常显示链</a><a class="depth-3" href="#652-症状不能互换">6.5.2 症状不能互换</a><a class="depth-3" href="#653-异常传播恢复图">6.5.3 异常传播/恢复图</a><a class="depth-2" href="#66-android-内部资源与稳定性">6.6 Android 内部资源与稳定性</a><a class="depth-3" href="#661-camera">6.6.1 Camera</a><a class="depth-3" href="#662-mediacodec">6.6.2 MediaCodec</a><a class="depth-3" href="#663-audio">6.6.3 Audio</a><a class="depth-3" href="#664-内存与-lmkd">6.6.4 内存与 LMKD</a><a class="depth-3" href="#665-anr">6.6.5 ANR</a><a class="depth-3" href="#666-wakelock">6.6.6 WakeLock</a><a class="depth-3" href="#667-网络">6.6.7 网络</a><a class="depth-3" href="#668-usb">6.6.8 USB</a><a class="depth-3" href="#669-存储">6.6.9 存储</a><a class="depth-2" href="#67-android-内部通信异常">6.7 Android 内部通信异常</a><a class="depth-3" href="#671-正常状态链">6.7.1 正常状态链</a><a class="depth-3" href="#672-异常传播与恢复">6.7.2 异常传播与恢复</a><a class="depth-3" href="#673-八类异常与首个断点">6.7.3 八类异常与首个断点</a><a class="depth-2" href="#68-现场使用方法与证据边界">6.8 现场使用方法与证据边界</a><a class="depth-3" href="#681-一张统一排查表">6.8.1 一张统一排查表</a><a class="depth-3" href="#682-本章不能直接证明什么">6.8.2 本章不能直接证明什么</a><a class="depth-3" href="#683-最小闭环">6.8.3 最小闭环</a><a class="depth-2" href="#69-证据预审门禁与非等价关系">6.9 证据预审门禁与非等价关系</a><a class="depth-3" href="#691-生命周期到物理显示的状态不等式">6.9.1 生命周期到物理显示的状态不等式</a><a class="depth-3" href="#692-输入事件不等式">6.9.2 输入事件不等式</a><a class="depth-3" href="#693-三类-fence-不能互换">6.9.3 三类 Fence 不能互换</a><a class="depth-3" href="#694-windowsurfacelayerbuffer-与内存不等价">6.9.4 Window、Surface、Layer、Buffer 与内存不等价</a><a class="depth-3" href="#695-surfacecontrol-本地句柄与远端-layer">6.9.5 SurfaceControl 本地句柄与远端 Layer</a><a class="depth-3" href="#696-imagereader-三态和-maximages">6.9.6 ImageReader 三态和 maxImages</a><a class="depth-3" href="#697-mediacodec-五个独立资源面">6.9.7 MediaCodec 五个独立资源面</a><a class="depth-3" href="#698-virtualdisplaysurface-与-mediaprojection">6.9.8 VirtualDisplay、Surface 与 MediaProjection</a><a class="depth-3" href="#699-九类资源的-creatorholderconsumerreleaser-合同">6.9.9 九类资源的 creator—holder—consumer—releaser 合同</a><a class="depth-3" href="#6910-binder-服务与业务结果不等式">6.9.10 Binder 服务与业务结果不等式</a><a class="depth-3" href="#6911-android-版本和命令边界">6.9.11 Android 版本和命令边界</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

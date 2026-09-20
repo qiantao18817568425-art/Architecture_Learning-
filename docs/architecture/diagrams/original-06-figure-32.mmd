@@ -1,0 +1,23 @@
+flowchart TD
+  A[request issued] --> B{Binder call accepted?}
+  B -- no --> B1[Binder call failure]
+  B -- blocked --> B2[Binder call blocked / thread-pool starvation]
+  B -- yes --> C{service Generation alive?}
+  C -- no --> C1[service death]
+  C -- yes --> D{reply/callback delivered?}
+  D -- no --> D1[callback loss or queue backlog]
+  D -- yes --> E{Generation and version current?}
+  E -- no --> E1[Generation mismatch / stale callback]
+  E -- yes --> F{consumer applied state?}
+  F -- no --> F1[state divergence]
+  B1 --> R[capture transaction result and identities]
+  B2 --> R
+  C1 --> R
+  D1 --> R
+  E1 --> R
+  F1 --> R
+  R --> S[timeout policy stops indefinite wait]
+  S --> T[reconnect new handle/session]
+  T --> U[re-register callback/subscription]
+  U --> V[authoritative state readback]
+  V --> W[user-result verify]

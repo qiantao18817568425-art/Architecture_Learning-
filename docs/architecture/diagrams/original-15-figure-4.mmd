@@ -1,0 +1,9 @@
+flowchart TD
+  A["timeout/无更新"] --> B{"本端请求已入 channel?"}
+  B -- 否 --> B1["Client/序列化/队列"]
+  B -- 是 --> C{"双端 transport 证据成对?"}
+  C -- 否 --> C1["承载/Hypervisor/driver"]
+  C -- 是 --> D{"decode/router 命中?"}
+  D -- 否 --> D1["版本/注册/发现/路由"]
+  D -- 是 --> E{"consumer 与状态机应用?"}
+  E -- 否 --> E1["线程/代际/策略/资源"]

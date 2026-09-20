@@ -1,0 +1,12 @@
+sequenceDiagram
+  participant UI as AcSettings
+  participant VS as Vehicle Service
+  participant MCU as MCU / bus
+  participant ECU as HVAC ECU
+  UI->>VS: SET target value + request token
+  VS->>MCU: command accepted for transport
+  MCU->>ECU: bus command
+  ECU-->>MCU: authoritative status
+  MCU-->>VS: status + generation
+  VS-->>UI: callback / GET readback
+  Note over UI,ECU: accepted, executed, matched and rendered are separate states

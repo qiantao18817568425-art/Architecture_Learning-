@@ -1,0 +1,9 @@
+flowchart TB
+  A["Android App / cameraserver"] --> G["Guest camerahalserver"]
+  G <-->|"Request / Result：RpcBinder + VSOCK"| H["Yocto Host camerahalserver"]
+  Y["Yocto Gst / FastRvc"] <-->|"Local Binder"| H
+  H --> T["CameraTurboEngine / Pipeline"]
+  T --> D["Camera Driver / P1 / P2"]
+  C["Sensor / SerDes / CSI"] --> D
+  D --> B["图像 Buffer"]
+  B --> O["AVM / DVR / 显示或编码消费者"]

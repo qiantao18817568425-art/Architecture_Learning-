@@ -1,0 +1,953 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Yocto_T-Box_User_Manual_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Yocto_T-Box_User_Manual_V1.0.pdf</h1><p>SRC0298 · 原来源 ID S235 · PDF物理页 · 18 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MT8676软件资料/User Manual/Yocto/English Version/MT8676_Yocto_T-Box_User_Manual_V1.0.pdf</p><p>SHA-256：<code>0bcc7a720a9d7977288ea975eecb6c0e2e07a4a9ff3a4d80111cb35ac08f35b6</code></p><p>原文件大小：536,265 字节</p></details><div class="actions"><a class="button" href="materials/SRC0298.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Yocto_T-Box_User_Manual_V1.0.pdf 原 PDF" src="materials/SRC0298.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0298.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version:  1.0 
+Release date:  2024-08-12
+MT8676 Yocto T-Box User Manual 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0298.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8676 Yocto T-Box 
+ User Manual 
+Confidential B 
+Version History 
+Version Date Author Description 
+1.0 2024-08-12 Liuyutian Liu Official release 
+ 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0298.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8676 Yocto T-Box 
+ User Manual 
+Confidential B 
+Table of Contents 
+Version History ·································································································································································· 2 
+Table of Contents ······························································································································································· 3 
+List of Figures ····································································································································································· 3 
+List of Tables ······································································································································································ 3 
+1 T-Box ·········································································································································································· 4 
+1.1 Overview ·································································································································································· 4 
+ Brief Introduction ·········································································································································· 4 
+ T-Box Abbreviations ······································································································································ 4 
+1.2 Architecture/Process Overview ································································································································ 5 
+ T-Box Architecture ········································································································································· 5 
+ T-Box API Usage ············································································································································· 5 
+1.3 Frequently asked question/Troubleshoot ·············································································································· 16 
+ SIM/CALL/SMS/Telephony Network Tips ···································································································· 16 
+ Data Tips ····················································································································································· 16 
+ Network Tips ··············································································································································· 16 
+ IMS Tips ······················································································································································· 17 
+Exhibit 1 Terms and Conditions ········································································································································ 18 
+ 
+ 
+List of Figures 
+Figure 1-1. Yocto T-Box architecture ·········································································································································· 5 
+ 
+List of Tables 
+Table 1-1. Abbreviations ····························································································································································· 4 
+Table 1-2. Modem state and IMEI interface description ············································································································ 5 
+Table 1-3. SIM interface description ·········································································································································· 6 
+Table 1-4. Telephony NW interface description ························································································································· 7 
+Table 1-5. Data interface description ········································································································································· 8 
+Table 1-6. Call module interface description ···························································································································· 10 
+Table 1-7. Call interface description ········································································································································· 11 
+Table 1-8. IMS interface description ········································································································································ 12 
+Table 1-9. eCall control interface description ··························································································································· 12 
+Table 1-10. AT blacklist interface description ··························································································································· 15 
+Table 1-11. MIPC Keep alive interface description ··················································································································· 15 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0298.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8676 Yocto T-Box 
+ User Manual 
+Confidential B 
+1 T-Box 
+1.1 Overview 
+ Brief Introduction 
+This section introduces the Yocto T-Box architecture, API usage and precautions. 
+ 
+ T-Box Abbreviations 
+Table 1-1. Abbreviations 
+Abbreviation Explanation 
+API Application Programming Interface 
+APN Access Point Name 
+T-Box Telematics-BOX 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0298.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8676 Yocto T-Box 
+ User Manual 
+Confidential B 
+1.2 Architecture/Process Overview 
+ T-Box Architecture 
+ 
+Figure 1-1. Yocto T-Box architecture 
+ 
+ T-Box API Usage 
+1.2.2.1 Modem State/IMEI Interface and Call Sequence Description 
+All other T-Box APIs require modem ready to work properly except ML_GetModemStat. 
+ 
+Table 1-2. Modem state and IMEI interface description 
+Interface/Struct Description 
+Int ML_GetModemStat(char *stat, uint32_t 
+statlen) 
+Get modem state, stat will return “ready” if modem has boot up 
+success. 
+Int ML_GetImei(char* imei, size_t imeiLen) Get IMEI of device. 
+On success, 0 is returned. On error, -1 is returned.  
+ 
+1.2.2.2 SIM Interface and Call Sequence Description 
+All other SIM APIs require SIM present to work properly except ML_GetCardStatus. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0298.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Yocto T-Box 
+ User Manual 
+Confidential B 
+Table 1-3. SIM interface description 
+Interface/Struct Description 
+typedef enum 
+{ 
+    E_ML_SIM_CARD_STATE_UNKNOWN                     = 
+0xB01,    /**&lt; Card state unknown. */ 
+    E_ML_SIM_CARD_STATE_ABSENT                      = 0xB02,    /**&lt; 
+Card is absent. */ 
+    E_ML_SIM_CARD_STATE_PRESENT                     = 0xB03,    /**&lt; 
+Card is present. */ 
+    E_ML_SIM_CARD_STATE_ERROR_UNKNOWN               = 
+0xB04,    /**&lt; Unknown error state. */ 
+    E_ML_SIM_CARD_STATE_ERROR_POWER_DOWN            = 
+0xB05,    /**&lt; Power down. */ 
+    E_ML_SIM_CARD_STATE_ERROR_POLL_ERROR            = 
+0xB06,    /**&lt; Poll error. */ 
+    E_ML_SIM_CARD_STATE_ERROR_NO_ATR_RECEIVED       = 
+0xB07,    /**&lt;  Failed to receive an answer to reset.  */ 
+    E_ML_SIM_CARD_STATE_ERROR_VOLT_MISMATCH         = 
+0xB08,    /**&lt; Voltage mismatch. */ 
+    E_ML_SIM_CARD_STATE_ERROR_PARITY_ERROR          = 
+0xB09,    /**&lt; Parity error. */ 
+    E_ML_SIM_CARD_STATE_ERROR_SIM_TECHNICAL_PROBLEMS= 
+0xB0A,    /**&lt; Card returned technical problems. */ 
+}E_ML_SIM_CARD_STATE_TYPE_T;  /**&lt; Card state. */ 
+SIM card state struct. 
+Int32_t ML_Sim_GetCardStatus(ML_SIM_CARD_STATUS_INFO_T 
+*pvsSimStatus) 
+Get SIM state. The value of pvsSimStatus will 
+return “present” when SIM card is present. 
+Function return value is int type. On success, 0 is 
+returned. On error, -1 is returned. 
+Int ML_SIM_GetICCID(char *iccid, size_t iccidLen) Get ICCID of SIM card. 
+Function return value is int type. On success, 0 is 
+returned. On error, -1 is returned. 
+Int ML_SIM_GetMsisdn(char *msisdn, size_t msisdnLen) Get MSISDN of SIM card. 
+Function return value is int type. On success, 0 is 
+returned. On error, -1 is returned. 
+Int ML_SIM_GetImsi(char *imsi, size_t imsilen) Get IMSI of SIM card. 
+Function return value is int type. On success, 0 is 
+returned. On error, -1 is returned. 
+Int ML_SIM_GetMccMnc(char *mcc, size_t mccLen, char*mnc, 
+size_t mncLen) 
+Get MCCMNC of SIM card. 
+Function return value is int type. On success, 0 is 
+returned. On error, -1 is returned. 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0298.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8676 Yocto T-Box 
+ User Manual 
+Confidential B 
+1.2.2.3 Telephony NW Interface and Call Sequence Description 
+Table 1-4. Telephony NW interface description 
+Interface/Struct Description 
+typedef enum 
+{ 
+    E_ML_NW_PS_UNKNOWN          = 0x00, 
+    E_ML_NW_PS_ATTACHED         = 0x01, 
+    E_ML_NW_PS_DETACHED         = 0x02, 
+}E_ML_NW_PS_REG_STATE_TYPE_T; 
+Struct of PS registration state. 
+typedef enum 
+{ 
+    E_ML_NW_CS_UNKNOWN          = 0x00, 
+    E_ML_NW_CS_ATTACHED         = 0x01, 
+    E_ML_NW_CS_DETACHED         = 0x02, 
+}E_ML_NW_CS_REG_STATE_TYPE_T; 
+Struct of CS registration state. 
+int ML_GetNetState( 
+E_ML_NW_PS_REG_STATE_TYPE_T * ps,  
+E_ML_NW_CS_REG_STATE_TYPE_T * cs  
+) 
+Get CS/PS registration state. 
+Function return value is int type. On success, 0 is returned. On 
+error, -1 is returned. 
+Notice: This interface should be used after SIM present. 
+int32_t ML_GetOperatorCode ( 
+uint8_t * op_code 
+) 
+Get operator name. Value of op_code is “1” when sim 
+operator is CU. Value of op_code is “0” when SIM operator is 
+CMCC. 
+Function return value is int type. On success, 0 is returned. On 
+error, -1 is returned. 
+Notice: This interface should be used after SIM present. 
+typedef enum 
+{ 
+    E_ML_NW_RAT_GSM                     = 0, 
+    E_ML_NW_RAT_UTRAN                   = 2, 
+    E_ML_NW_RAT_GSMW_EGPRS              = 3, 
+    E_ML_NW_RAT_UTRANW_HSDPA            = 4, 
+    E_ML_NW_RAT_UTRANW_HSUPA            = 5, 
+    E_ML_NW_RAT_UTRANW_HSDPA_AND_HSUPA  = 6, 
+    E_ML_NW_RAT_E_UTRAN                 = 7, 
+#ifdef SPM_TELEPHONY_NR_SUPPORT 
+    E_ML_NW_RAT_NR                      = 8, 
+#endif 
+}E_ML_NW_RADIO_ACCESS_TYPE_T; 
+Struct of radio access type. 
+int ML_GetRadioAccessType ( 
+E_ML_NW_RADIO_ACCESS_TYPE_T * access_type 
+) 
+Get radio access type of network registered. 
+Function return value is int type. On success, 0 is returned. On 
+error, -1 is returned. 
+Notice: This interface should be used after SIM present. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0298.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 Yocto T-Box 
+ User Manual 
+Confidential B 
+Interface/Struct Description 
+int ML_GetSignalStrength ( 
+int8_t * sig_level 
+) 
+ 
+Get signal strength level. Sig_level: 0~4. For signal level 
+thresholds, refer to AOSP default classification. 
+Function return value is int type. On success, 0 is returned. On 
+error, -1 is returned. 
+Notice: This interface should be used after SIM present. 
+int ML_SetAirplaneMode ( 
+uint8_t on_off 
+) 
+ 
+Set airplane mode. Input value “on_off” will be set to 1 if 
+airplane on. Input value “on_off” will be set to 0 if airplane off. 
+Function return value is int type. On success, 0 is returned. On 
+error, -1 is returned. 
+Notice: This interface should be used after SIM present. 
+typedef void 
+(*ml_signal_strength_cb_t)(ML_SignalStrength 
+*state); 
+Signal strength call back function. 
+int ML_SignalStregthInit ( 
+ml_signal_strength_cb_t evt_cb 
+) 
+Init signal strength call back function. 
+Function return value is int type. On success, 0 is returned. On 
+error, -1 is returned. 
+typedef enum 
+{ 
+    E_ML_AUTO = 0, 
+    E_ML_2GONLY = 1, 
+    E_ML_3GONLY = 2, 
+    E_ML_4GONLY = 3, 
+#ifdef SPM_TELEPHONY_NR_SUPPORT 
+    E_ML_5GONLY = 4, 
+    E_ML_5GAUTO = 5, 
+    E_ML_5G4GAUTO = 6, 
+#endif 
+}ml_nw_net_mode_e; 
+Struct of network mode. 
+int ML_SetNetMode ( 
+ml_nw_net_mode_e mode 
+) 
+Set network mode. 
+Function return value is int type. On success, 0 is returned. On 
+error, -1 is returned. 
+int ML_GetNetMode ( 
+ml_nw_net_mode_e * mode 
+) 
+Get network mode. 
+Function return value is int type. On success, 0 is returned. On 
+error, -1 is returned. 
+ 
+1.2.2.4 Data Interface and Call Sequence Description 
+Table 1-5. Data interface description 
+Interface/Struct Description 
+typedef struct { 
+unsigned char profile_idx; 
+ml_apn_pdp_type_e pdp_type; 
+Struct of APN info  
+profile_idx: 1 – 8 (1: Public profile ID; 2-8: Private profile ID, support 
+up to 7 private APNs) 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0298.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8676 Yocto T-Box 
+ User Manual 
+Confidential B 
+Interface/Struct Description 
+ml_apn_auth_proto_e auth_proto; 
+char apn_name[ML_APN_NAME_SIZE]; 
+char username[ML_APN_USERNAME_SIZE]; 
+char password[ML_APN_PASSWORD_SIZE]; 
+}ml_apn_info_s 
+pdp_type: IPV4/IPV6/IPV4V6; for details, refer to 
+ml_apn_pdp_type_e enum 
+auth_proto: default/none/pap/chap/pap_chap  
+apn_name: APN name 
+int ML_APN_Get ( 
+unsigned char profile_idx, 
+ml_apn_info_s * apn  
+) 
+Get APN info from input value “profile_idx”. 
+Parameters: 
+in: unsigned char profile_idx  
+out: ml_apn_info_s *apn 
+APN initial flow:   
+After the card is recognized at startup, mtktelephonyservice will 
+determine whether /data/vendor/telephony/apn.db exists. If not, it 
+generates /data/vendor/telephony/apn.db according to 
+/vendor/etc/apns_conf.xml. Then it obtains the APN of the SIM card 
+from apn.db through the card’s mccmnc and sets the APN to the 
+modem. 
+Notice: 
+    This interface needs to be called after the card is recognized, that 
+is, after ML_Sim_GetCardStatus() returns present. 
+int ML_APN_Set ( 
+const ml_apn_info_s * apn 
+) 
+Set APN to modem and apn 
+database(/data/vendor/telephony/apn.db) 
+Parameters: 
+in: const ml_apn_info_s * apn 
+Notice: 
+    This interface needs to be called after the card is recognized  
+int ML_DataCallInit ( 
+ml_data_call_evt_cb_t evt_cb 
+) 
+Register the data call status change callback function, and call back 
+the evt_cb function when the data call status changes. 
+Parameters: 
+ in: ml_data_call_evt_cb_t evt_cb 
+int ML_DataCallStart ( 
+const ml_data_call_s * data_call,  
+ml_data_call_error_e * err ) 
+Establish public/private PDN connection. 
+This is synchronous interface. It sends PDN establishment command 
+to modem, and this interface returns after modem returns. 
+Parameters: 
+    in: const ml_data_call_s * data_call 
+    out: ml_data_call_error_e * err  
+int ML_DataCallStop ( 
+char profile_idx,  
+ml_data_call_ip_family_e ip_family,  
+ml_data_call_error_e * err ) 
+ 
+Disconnect the public/private PDN connection. 
+This is synchronous interface. It sends the PDN establishment 
+command to the modem, and this interface will return only after the 
+modem returns. 
+Parameters: 
+    in: char profile_idx 
+    in: ml_data_call_ip_family_e ip_family  
+    out: ml_data_call_error_e * err  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0298.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8676 Yocto T-Box 
+ User Manual 
+Confidential B 
+Interface/Struct Description 
+int ML_DataCallStart_Ext ( 
+const ml_data_call_s * data_call,  
+ml_data_call_error_e * err ) 
+Establish public/private PDN connection. 
+This asynchronous interface, returns directly after issuing the PDN 
+establishment command, without waiting for the modem execution 
+result. The status of establishing PDN is called back to the APP 
+through the callback function registered by ML_DataCallInit. 
+Parameters: 
+    in: const ml_data_call_s * data_call 
+    out: ml_data_call_error_e * err  
+int ML_DataCallStop_Ext ( 
+char profile_idx,  
+ml_data_call_ip_family_e ip_family,  
+ml_data_call_error_e * err ) 
+ 
+Disconnect public/private PDN connection 
+Asynchronous interface, returns directly after issuing the disconnect 
+PDN command, without waiting for the modem execution result. The 
+disconnect PDN status is called back to the APP through the callback 
+function registered by ML_DataCallInit. 
+Parameters: 
+    in: char profile_idx 
+    in: ml_data_call_ip_family_e ip_family  
+    out: ml_data_call_error_e * err  
+int ML_getDataCallReason ( 
+int32_t profile_idx,  
+ML_DataCallFailCause * reason ) 
+ 
+When PDN establishment fails, get failcause. 
+Parameters: 
+    in: profile_idx 
+    in/out: reason   
+Int ML_DataCallInfoGet( 
+char profile_idx, 
+ml_data_call_ip_family_e ip_family, 
+ml_data_call_info_s *info, 
+ml_data_call_error_e *err 
+) 
+Get data call information according to profile_idx and ip_family. 
+Parameters: 
+    in: char profile_idx 
+    in: ml_data_call_ip_family_e ip_family 
+    out: ml_data_call_info_s *info 
+  out: ml_data_call_error_e *err 
+  
+1.2.2.5 Call Interface and Call Sequence Description 
+All call module interfaces need to be called based on network registration. 
+Table 1-6. Call module interface description 
+Interface/Struct Description 
+typedef struct { 
+    int32_t                       CallId; 
+    char                        PhoneNum[32]; 
+    E_ML_VCALL_STATE_TYPE_T     State; 
+    int32_t             call_end_reason; 
+} ML_VCALL_INFO_T; 
+Struct of call message information. 
+CallId: Current call index; 
+PhoneNum[32]: The opponent's phone number; 
+State: Call state; 
+call_end_reason: The reason of call end; 
+typedef void (*ML_VCALL_MSGCB_T) ( 
+    ML_VCALL_INFO_T       *pvsMsg); 
+Call state callback function. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0298.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8676 Yocto T-Box 
+ User Manual 
+Confidential B 
+Interface/Struct Description 
+Int32_t 
+ML_VcallInit(ML_VCALL_MSGCB_T 
+cb_func) 
+Register the call state callback function. 
+The callback function is triggered when a call comes in, and the call 
+information is returned through the callback function. 
+Parameters: 
+    out: ML_VCALL_MSGCB_T cb_func; 
+Int ML_VcallStart(const char 
+*PhoneNumber) 
+Dial a call. 
+Parameters: 
+    in: const char *PhoneNumber; 
+Int ML_VcallAnswer(void) Answer a call. 
+Int ML_VcallEnd (void) Hang up a call. 
+ 
+1.2.2.6 SMS Interface and Call Sequence Description  
+The SMS interfaces must be called based on the network registration. 
+Table 1-7. Call interface description 
+Interface/Struct Description 
+typedef enum { 
+    E_ML_SMS_FORMAT_GSM_7BIT        = 0, 
+    E_ML_SMS_FORMAT_BINARY_DATA     = 1, 
+    E_ML_SMS_FORMAT_UCS2            = 2, 
+    E_ML_SMS_FORMAT_IRA             = 3, 
+   }E_ML_SMS_FORMAT_T; 
+Enum of SMS format type. 
+typedef struct { 
+    E_ML_SMS_FORMAT_T       format; 
+    char                    PhoneNum[ML_SMS_MAX_ADDR_LENGTH];  
+    int32_t                   SmsDataLen; 
+    char                    SmsData[ML_SMS_MAX_MT_MSG_LENGTH]; 
+} ML_SMS_INFO_T; 
+Struct of SMS information. 
+typedef void (*ML_SMS_RXMSGCB_T) ( 
+    ML_SMS_INFO_T       *pvsMsg 
+); 
+SMS callback function. 
+Int ML_SmsInit(ML_SMS_RXMSGCB_T cb_func) Register SMS callback function. 
+The callback function is triggered when receiving 
+SMS, and the SMS information is returned through 
+the callback function. 
+Parameters: 
+    out: ML_SMS_RXMSGCB_T cb_func; 
+Int32_t ML_Sms_Sent(const ML_SMS_INFO_T *pvsSms) Send SMS. 
+This is an asynchronous interface. After sending SMS 
+request, it will asynchronously wait for md to return 
+response, and will not block the thread. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0298.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8676 Yocto T-Box 
+ User Manual 
+Confidential B 
+Interface/Struct Description 
+Parameters: 
+    in: const ML_SMS_INFO_T *pvsSms; 
+ 
+ 
+1.2.2.7 IMS Interface and Call Sequence Description 
+Table 1-8. IMS interface description 
+Interface/Struct Description 
+Int ML_EnableIms(uint8_t on_off) Enable/disable the IMS registration. 
+Input parameter: On_off is 1, which means the IMS function is enabled. 
+On_off is 0, which means the IMS function is disabled. 
+Int ML_GetImsRegState(int8_t 
+*reg_state ) 
+Get the IMS registration status. 
+Output parameter: Reg_state value is 1, which means IMS is registered. 
+Reg_state value is 0, which means IMS is not registered. 
+ 
+1.2.2.8 Ecall Interface and Call Sequence Description 
+The following APIs are planned to be added in MT8676, based on the ECALL-related RIL Request in the ecall overall 
+sequence in the Ecall Overview document.  
+Table 1-9. eCall control interface description 
+Interface/Struct Description 
+typedef struct { 
+    int32_t call_id; 
+    uint32_t length; 
+    unsigned char 
+msd_data[ML_ECALL_MSD_MAX_LENGTH]; 
+}ml_ecall_set_msd; 
+Struct of MSD information. 
+typedef struct { 
+    int32_t arg_num; 
+    int32_t type; 
+    char address[128]; 
+}ml_ecall_set_num; 
+Struct of test number/reconfiguration number information. 
+typedef enum { 
+    ML_EMER_CAT_MANUAL_ECALL = 1, 
+    ML_EMER_CAT_AUTO_ECALL   = 2, 
+}ml_ecall_category; 
+Enum of ecall category. 
+typedef enum { 
+    ML_ECALL_TEST        = 1, 
+    ML_ECALL_EMERGENCY   = 2, 
+    ML_ECALL_RECONFIG    = 3, 
+Enum of ecall variant. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0298.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8676 Yocto T-Box 
+ User Manual 
+Confidential B 
+Interface/Struct Description 
+}ml_ecall_variant; 
+typedef enum{ 
+    ML_DOMAIN_AUTO = 0,      /* Automatic mode - 
+LTE(IMS), WG(CS), 1x(C2K) */ 
+    ML_DOMAIN_CS_ONLY = 1,   /* CS domain only - 
+WG(CS) */ 
+    ML_DOMAIN_3GPP_ONLY = 2, /* 3GPP only - 
+LTE(IMS), WG(CS) */ 
+    ML_DOMAIN_3GPP2 = 3,     /* 3GPP2 only - 
+1x(C2K)) */ 
+    ML_DOMAIN_IMS_1xCS = 4,  /* IMS and 1x CS only 
+- LTE(IMS), 1x(C2K) */ 
+    ML_DOMAIN_CS_1x = 5,     /* WG CS and 1x CS 
+only - WG(CS), 1x(C2K) */ 
+    ML_DOMAIN_IMS_ONLY = 6,  /* only IMS call 
+allowed */ 
+}ml_ecall_domain; 
+Enum of radio domain when make ecall. 
+typedef struct{ 
+    ml_ecall_category   ecall_cat; 
+    ml_ecall_variant   ecall_variant; 
+    char address[20]; 
+    uint32_t length; 
+    unsigned char 
+msd_data[ML_ECALL_MSD_MAX_LENGTH]; 
+    ml_ecall_domain domain; 
+}ml_ecall_req_msg; 
+Struct of input parameter when requesting to make an ecall. 
+typedef struct{ 
+    int32_t data1; 
+    int32_t data2; 
+    int32_t data3; 
+    int32_t data4; 
+}ml_ecall_pri; 
+Ecall priority parameter structure. data1&gt;data2&gt;data3&gt;data4. 
+The input parameters should be 1 2 3 4, which means:  
+1 - eCall URI set by the customer; 
+2 - eCall URI saved by USIM; 
+3 - eCall number set by the customer; 
+4 - eCall number saved by USIM; 
+typedef enum{ 
+    E_ML_ECALL_SENDING_START = 1, 
+    E_ML_ECALL_SENDING_MSD = 2, 
+    E_ML_ECALL_LLACK_RECEIVED = 3, 
+    E_ML_ECALL_ALACK_POSITIVE_RECEIVED = 4, 
+    E_ML_ECALL_ALACK_CLEARDOWN_RECEIVED = 5, 
+    E_ML_ECALL_DIALING = 9, 
+    E_ML_ECALL_ALERTING = 10, 
+    E_ML_ECALL_ACTIVE = 11, 
+    E_ML_ECALL_DISCONNECTED = 12, 
+    E_ML_ECALL_IMS_ACTIVE = 13, 
+Enum of ecall indication type. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0298.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+MT8676 Yocto T-Box 
+ User Manual 
+Confidential B 
+Interface/Struct Description 
+    E_ML_ECALL_IMS_DISCONNECTED = 14, 
+    E_ML_ECALL_ABNORMAL_HANGUP=15, 
+    E_ML_ECALL_IMS_MSD_ACK = 20, 
+    E_ML_ECALL_IMS_UPDATE_MSD = 21, 
+    E_ML_ECALL_IMS_IN_BAND_TRANSFER = 22, 
+    E_ML_ECALL_IMS_MSD_NACK = 23, 
+    E_ML_ECALL_IMS_SRVCC = 24, 
+    E_ML_ECALL_ONLY_DEREGISTRATION = 31, 
+    E_ML_ECALL_MAY_DEREGISTER = 32, 
+    E_ML_ECALL_PSAP_CALLBACK_START = 40, 
+    E_ML_ECALL_PSAP_CALLBACK_IMS_UPDATE_MSD 
+= 41, 
+    E_ML_ECALL_T2_TIMEOUT = 52, 
+    E_ML_ECALL_T5_TIMEOUT = 55, 
+    E_ML_ECALL_T6_TIMEOUT = 56, 
+    E_ML_ECALL_T7_TIMEOUT = 57, 
+    E_ML_ECALL_UNSPECIFIED = 0xffff, 
+}ML_ECall_Indication; 
+typedef struct{ 
+    ML_ECall_Indication ind; 
+    int call_id; 
+} ML_ECALL_IND_T; 
+Struct of ecall indication. 
+typedef void (*ML_ECALL_MSGCB_T)( 
+    ML_ECALL_IND_T       *pvsMsg 
+); 
+Callback function for reporting ecall indication. 
+int32_t ML_EcallIndicationInit( 
+ML_ECALL_MSGCB_T cb_func); 
+Register the ecall indication callback function, and call back the 
+cb_func function when the ecall status changes. 
+Parameters: 
+In: ML_ECALL_MSGCB_T cb_func 
+int32_t ML_ResetIvs(void); Reset ecall state in modem and reconnect audio channel. 
+int32_t ML_SetMSD(ml_ecall_set_msd* msd); Set MSD. 
+Parameters: 
+    In: ml_ecall_set_msd* msd 
+int32_t ML_SetTestNumber( 
+  ml_ecall_set_num* test_num); 
+Set test number or URI. 
+Parameters: 
+    In: ml_ecall_set_num* test_num 
+int32_t ML_SetReconfNumber( 
+  ml_ecall_set_num* reconf_num); 
+Set reconfig number or URI. 
+Parameters: 
+    In: ml_ecall_set_num* test_num 
+int32_t ML_MakeFastEcall( 
+  ml_ecall_req_msg* msg); 
+Trigger an ecall and transmit MSD data in one command. 
+Parameters: 
+    In: ml_ecall_req_msg* msg 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0298.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+MT8676 Yocto T-Box 
+ User Manual 
+Confidential B 
+Interface/Struct Description 
+int32_t ML_SetEmsdpri(ml_ecall_pri* pri); Set priority of test/reconfiguration eCall number/URI 
+The default priority is “1&gt;3&gt;2&gt;4”. 
+Parameters: 
+    In: ml_ecall_pri* pri 
+ 
+1.2.2.9 Suspend of Modem Interface and Call Sequence Description 
+Table 1-10. AT blacklist interface description 
+Interface/Struct Description 
+Int ML_SendAT(const char* atCmd, char* finalRsp, uint32_t resp_len, 
+int64_t timout_ms); 
+Int ML_SetUnsolResponseFilter(ML_UnsolResponseFilter filter) 
+Before entering IPO, enable the AT URC 
+blacklist filtering function: 
+1. Call ML_SendAT function to send AT 
+command: AT+EURCFLT=1. 
+2. Call ML_SetUnsolResponseFilter(0) 
+After exiting IPO, disable the AT URC blacklist 
+filtering function: 
+1. Call ML_SendAT function to send AT 
+command: AT+EURCFLT=0 
+2. Call ML_SetUnsolResponseFilter(0xFF) 
+ 
+Table 1-11. MIPC Keep alive interface description 
+Interface/Struct Description 
+ML interface: Plan to encapsulate ML layer API based on MIPC 
+interface. 
+struct keepaliveRequest { 
+keepaliveType type; 
+uint32_t sourcePort; 
+uint32_t desinationPort; 
+uint32_t cid; 
+char sourceAddress[68]; 
+char desinationAddress[68]; 
+} 
+struct keepaliveStatus{ 
+ACTIVE = 0, 
+INACTIVE, 
+PENDING 
+} 
+ML_StartKeepalive(keepaliveRequest * keepalive) 
+ML_StopKeepalive(int cid) 
+ML_InitKeepaliveStatusCb(ml_keepalive_evt_cb_t evt_cb 
+) 
+To keep Internet PDN/PDU session in connected mode 
+by sending a dummy packet without waking up AP 
+processor. 
+Flow： 
+ 
+1. AP calls ML_StartKeepalive. The callback 
+keepaliveStatus status is pending, indicating that it 
+is waiting for the AP to send the first UL packet. 
+2. After the MD receives the first UL packet sent by 
+the AP , the callback keepaliveStatus status is 
+active, indicating that the MD can send keep-alive 
+packets. 
+3. If an exception occurs, the callback 
+keepaliveStatus status is inactive when the 
+modem finally fails to receive the network keep-
+alive response. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0298.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 16 
+MT8676 Yocto T-Box 
+ User Manual 
+Confidential B 
+Interface/Struct Description 
+MIPC interface: 
+MIPC_DATA_KEEPALIVE_REQ/CNF 
+MIPC_DATA_KEEPALIVE_STATUS_IND  
+ 
+1.3 Frequently asked question/Troubleshoot 
+ SIM/CALL/SMS/Telephony Network Tips 
+1. How to turn off/on a specific network type, refer to “[FAQ17447] [NW] Turn off a specific network type”. 
+2. SIM test failure pre-debug: 
+(1) The initial value of IMEI is empty and needs to be burned before it can be obtained. 
+(2) If SIM recognition is abnormal, capture the test scene mtklog including the boot process to assist in further 
+analysis. 
+3. Network test failure pre-debug:  
+(1) Confirm that the platform has burned RF/IMEI, the antenna is correctly installed, and the SIM card is correctly 
+inserted and has no outstanding fees. 
+(2) If (1) still fails to attach network after confirmation, capture the test scene mtklog including the boot process to 
+assist in further analysis. 
+4. CALL/SMS test failure pre-debug: 
+(1) Use the following command to confirm whether the platform has successfully attached network. If not, solve the 
+network problem first. 
+adb shell /usr/bin/mlclient_test --gtest_filter=MLClientTest.ML_GetNetState 
+(2) If step (1) has been successfully attached to the network. Capture the test scene mtklog to assist in further 
+analysis. 
+ 
+ Data Tips 
+Modification of APN configuration file, refer to “[FAQ21414] MTK apns-conf.xml configuration guide”. 
+The configuration file used by T-Box is named apns-conf.xml, code path: src/telephonyware/3.1/libvendor-
+ril/apn/resource/apns-conf.xml, install path in the platform /system/etc/tele/apns-
+conf-.xml. 
+ 
+If you modify /system/etc/tele/apns-conf.xml directly, you need to delete apn.db and restart to take effect. 
+ 
+ Network Tips 
+1. Checking for successful network establishment: 
+(1) The network interface is up and the IP address exists, confirmed by the ifconfig command. 
+(2) Network IP rule &amp; IP route &amp; DNS settings, confirmed by the IP rule/IP route/dumpsys netd/dumpsys 
+dnsresolver commands. 
+2. Checking for network connectivity: 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0298.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 17 
+MT8676 Yocto T-Box 
+ User Manual 
+Confidential B 
+Manually ping a certain IP or URL to see if it can be pinged. 
+ 
+ IMS Tips 
+1. How to enable or disable IMS automatically when the device is powered on by default? 
+(1) The current system automatically enables IMS when the device is powered on by default. 
+(2) You can change whether IMS is supported by changing MTK_VOLTE_SUPPORT to yes or no in ProjectConfig.mk. 
+ 
+ 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-18"><h2>PDF物理页 18</h2><a href="materials/SRC0298.pdf#page=18" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 18 
+MT8676 Yocto T-Box 
+ User Manual 
+Confidential B 
+Exhibit 1 Terms and Conditions 
+Your access to and use of this document and the information contained herein (collectively this “Document”) is subject to your (including the corporation 
+or other legal entity you represent, collectively “You”) acceptance of the terms and conditions set forth below (“T&amp;C”).  By using, accessing or 
+downloading this Document, You are accepting the T&amp;C and agree to be bound by the T&amp;C.  If You don’t agree to the T&amp;C, You may not use this 
+Document and shall immediately destroy any copy thereof. 
+ 
+This Document contains information that is confidential and proprietary to MediaTek Inc. and/or its affiliates (collectively “MediaTek”) or its licensors 
+and is provided solely for Your internal use with MediaTek’s chipset(s) described in this Document and shall not be used for any other purposes (including 
+but not limited to identifying or providing evidence to support any potential patent infringement claim against MediaTek or any of MediaTek’s suppliers 
+and/or direct or indirect customers).  Unauthorized use or disclosure of the information contained herein is prohibited.  You agree to indemnify 
+MediaTek for any loss or damages suffered by MediaTek for Your unauthorized use or disclosure of this Document, in whole or in part. 
+ 
+MediaTek and its licensors retain titles and all ownership rights in and to this Document and no license (express or implied, by estoppels or otherwise) to 
+any intellectual propriety rights is granted hereunder.  This Document is subject to change without further notification.  MediaTek does not assume any 
+responsibility arising out of or in connection with any use of, or reliance on, this Document, and specifically disclaims any and all liability, including, 
+without limitation, consequential or incidental damages. 
+ 
+THIS DOCUMENT AND ANY OTHER MATERIALS OR TECHNICAL SUPPORT PROVIDED BY MEDIATEK IN CONNECTION WITH THIS DOCUMENT, IF ANY, ARE 
+PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE.  MEDIATEK SPECIFICALLY DISCLAIMS 
+ALL WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, COMPLETENESS OR ACCURACY AND ALL 
+WARRANTIES ARISING OUT OF TRADE USAGE OR OUT OF A COURSE OF DEALING OR COURSE OF PERFORMANCE.  MEDIATEK SHALL NOT BE RESPONSIBLE 
+FOR ANY MEDIATEK DELIVERABLES MADE TO MEET YOUR SPECIFICATIONS OR TO CONFORM TO A PARTICULAR STANDARD OR OPEN FORUM. 
+ 
+Without limiting the generality of the foregoing, MediaTek makes no warranty, representation or guarantee regarding the suitability of its products for 
+any particular purpose, nor does MediaTek assume any liability arising out of the application or use of any product, circuit or software.  You agree that 
+You are solely responsible for the designing, validating and testing Your product incorporating MediaTek’s product and ensure such product meets 
+applicable standards and any safety, security or other requirements. 
+ 
+The above T&amp;C and all acts in connection with the T&amp;C or this Document shall be governed, construed and interpreted in accordance with the laws of 
+Taiwan, without giving effect to the principles of conflicts of law. 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a><a href="#page-18">PDF物理页 18</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

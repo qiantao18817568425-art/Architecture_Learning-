@@ -1,0 +1,17 @@
+sequenceDiagram
+  participant CB as Client business
+  participant CP as Client Proxy
+  participant TR as transport/routing
+  participant SS as Service Stub
+  participant SB as Service business
+  SS->>TR: Offer instance/version
+  CP->>TR: Find + subscribe EventGroup
+  TR-->>CP: availability/subscription status
+  CB->>CP: method call
+  CP->>TR: serialize request
+  TR->>SS: transport request
+  SS->>SB: deserialize + dispatch
+  SB-->>SS: result/event
+  SS-->>TR: serialize response/event
+  TR-->>CP: transport response/notify
+  CP-->>CB: deserialize/E2E + callback

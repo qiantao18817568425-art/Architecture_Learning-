@@ -1,0 +1,32 @@
+%%{init: {"flowchart": {"nodeSpacing": 18, "rankSpacing": 8, "padding": 12}, "themeVariables": {"fontSize": "16px"}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph tbox["Guest / UOS Tbox"]
+direction TB
+subgraph layout_row_1[" "]
+direction LR
+subgraph layout_row_2[" "]
+direction TB
+t["Application / Tbox"]
+conn["Virtual conninfra"]
+t ~~~ conn
+end
+subgraph layout_row_3[" "]
+direction TB
+gps["GPS"]
+clk["Virtual CLK"]
+gps ~~~ clk
+end
+subgraph layout_row_4[" "]
+direction TB
+tel["Telephony Service"]
+ccci["Kernel & Drivers / ccci Driver"]
+tel ~~~ ccci
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent

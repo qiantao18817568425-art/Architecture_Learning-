@@ -1,0 +1,45 @@
+flowchart LR
+ subgraph entry["共同启动链：同一线变色表示阶段切换"]
+ lk2["SOS LK2"] --> tfa["TF-A"] --> neb["nebula"] --> kernel["SOS kernel<br/>start_kernel"] --> init["initramfs / execve /init"] --> root["挂载 Yocto_system.img 到 /sysroot<br/>switch_root → systemd"]
+ end
+ subgraph host["SOS 用户空间主线"]
+ boot["system.slice / bootop.service<br/>bootop.sh"] --> mod["systemd-modules-load.service<br/>10-kernel-modules.conf"] --> targets["local-fs / sysinit / multi-user targets"] --> cluster["Cluster 方向继续运行"]
+ end
+ root --> boot
+ subgraph vm["虚拟机相关并行路径"]
+ srv["nbl_vm_srv start"] --> srvrun["nbl_vm_srv Running"]
+ vmm["nbl_vmm start"] --> vmmrun["nbl_vmm Running"]
+ end
+ boot --> srv
+ srv --> vmm
+ subgraph android["Android 启动路径"]
+ alk2["Android LK2"] --> ak["Android kernel"] --> first["first stage init<br/>基础挂载 / 挂载 system / switch root"] --> second["execve /system/bin/init<br/>second stage init"] --> actions["early-init / init / late-init<br/>early-fs / fs / post-fs / late-fs"] --> post["post-fs-data<br/>wait_for_prop vendor.all.modules.ready 1"] --> shared["等待 virtiofsd<br/>挂载 /data/vendor/share/media"] --> late["early-boot / boot / nonencrypted"]
+ end
+ vmm --> alk2
+ subgraph loader["模块加载并行路径"]
+ start["modprobe Load_Module_START"] --> done["Load_Module_DONE"] --> ready["setprop vendor.all.modules.ready 1"]
+ end
+ second --> start
+ ready -. "满足等待条件" .-> post
+ subgraph share["Host 共享文件系统前置条件"]
+ data["userdata 检查与挂载<br/>按 unit / mount 日志核实"] --> virt["virtiofsd init"]
+ end
+ mod -. "图示依赖" .-> data
+ virt -. "后端就绪条件" .-> shared
+ subgraph framework["Android 框架分支"]
+ z["zygote-start"] --> ss["system_server start"] --> launcher["launcher start"]
+ end
+ shared --> z
+ late --> log["mobile_log_d 日志服务"]
+ classDef early fill:#dcecff,stroke:#2467bf,color:#102847
+ classDef firmware fill:#f0dbff,stroke:#a51cd0,color:#40134e
+ classDef sosKernel fill:#fff0d2,stroke:#d98200,color:#5c3500
+ classDef hostStage fill:#f8ddff,stroke:#b100c0,color:#42004a
+ classDef androidStage fill:#ffe2e2,stroke:#c52222,color:#650a0a
+ classDef waiting fill:#f6f1be,stroke:#8a8000,color:#454000
+ class lk2,ak,first early
+ class tfa,neb firmware
+ class kernel,init,root sosKernel
+ class boot,mod,targets,cluster,srv,srvrun,vmm,vmmrun hostStage
+ class second,actions,post,late,start,done,ready,z,ss,launcher,log androidStage
+ class data,virt,shared waiting

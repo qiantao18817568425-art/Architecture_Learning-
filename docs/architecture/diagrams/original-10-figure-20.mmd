@@ -1,0 +1,11 @@
+flowchart TD
+  A["属性不更新或回退"] --> B{"服务和属性可用?"}
+  B -- 否 --> B1["服务发现 / HAL / CanService"]
+  B -- 是 --> C{"缓存样本新鲜?"}
+  C -- 否 --> C1["源更新 / source age"]
+  C -- 是 --> D{"订阅仍绑定当前 Generation?"}
+  D -- 否 --> D1["新 Handle / re-subscribe"]
+  D -- 是 --> E{"回调队列正常?"}
+  E -- 否 --> E1["callback backlog / Binder"]
+  E -- 是 --> F{"应用消费和去重正确?"}
+  F -- 否 --> F1["线程、生命周期、旧值覆盖"]

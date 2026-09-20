@@ -1,0 +1,50 @@
+%%{init: {"flowchart": {"nodeSpacing": 18, "rankSpacing": 8, "padding": 12}, "themeVariables": {"fontSize": "16px"}}}%%
+flowchart TB
+%% Invisible links and blank row containers control placement only; they are not calls or dependencies.
+subgraph hal["HAL"]
+direction TB
+subgraph layout_row_1[" "]
+direction LR
+subgraph layout_row_2[" "]
+direction TB
+a120["Audio"]
+a123["Bluetooth"]
+a126["RIL"]
+a129["Camera"]
+a132["Lights"]
+a135["AudioControl"]
+a138["tbox"]
+a141["mbsensors"]
+a120 ~~~ a123 ~~~ a126 ~~~ a129 ~~~ a132 ~~~ a135 ~~~ a138 ~~~ a141
+end
+subgraph layout_row_3[" "]
+direction TB
+a121["Media"]
+a124["Power"]
+a127["DRM"]
+a130["Sensors"]
+a133["Location"]
+a136["radio"]
+a139["configstoreHAL"]
+a142["MBOS HAL"]
+a121 ~~~ a124 ~~~ a127 ~~~ a130 ~~~ a133 ~~~ a136 ~~~ a139 ~~~ a142
+end
+subgraph layout_row_4[" "]
+direction TB
+a122["Display"]
+a125["USB"]
+a128["BroadCastRadio"]
+a131["WIFI"]
+a134["BootCtrl"]
+a137["VehicleHAL"]
+a140["mbgnss"]
+a143["mblogd"]
+a122 ~~~ a125 ~~~ a128 ~~~ a131 ~~~ a134 ~~~ a137 ~~~ a140 ~~~ a143
+end
+layout_row_2 ~~~ layout_row_3 ~~~ layout_row_4
+end
+end
+style layout_row_1 fill:transparent,stroke:transparent
+style layout_row_2 fill:transparent,stroke:transparent
+style layout_row_3 fill:transparent,stroke:transparent
+style layout_row_4 fill:transparent,stroke:transparent

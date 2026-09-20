@@ -1,0 +1,988 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Yocto_USB_User_Manual_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Yocto_USB_User_Manual_V1.0.pdf</h1><p>SRC0275 · 原来源 ID S212 · PDF物理页 · 22 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MT8676软件资料/User Manual/Yocto/Chinese Version/MT8676_Yocto_USB_User_Manual_V1.0.pdf</p><p>SHA-256：<code>998ce13df79878658efbe1a84a3751e69d7ac328acb5939eb628fafc9ed8ca40</code></p><p>原文件大小：1,022,941 字节</p></details><div class="actions"><a class="button" href="materials/SRC0275.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Yocto_USB_User_Manual_V1.0.pdf 原 PDF" src="materials/SRC0275.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0275.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+版本号:  1.0 
+出版日期:  2024-08-12
+MT8676 Yocto USB 
+User Manual 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0275.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+版本记录 
+版本 日期 作者 描述 
+1.0 2024-08-12 王战勇 正式版 
+ 
+ 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0275.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+目录 
+版本记录 ··········································································································································································· 2 
+目录 ··················································································································································································· 3 
+图片目录 ··········································································································································································· 4 
+1 MTK USB ···································································································································································· 5 
+1.1 基本介绍 ·································································································································································· 5 
+1.2 MTK USB 概况 ·························································································································································· 5 
+1.3 MTK USB 内核配置 ·················································································································································· 6 
+ MTK USB 连接器（connector）的使用状况······························································································· 8 
+ MTK USB 配置内核通用 USB 连接器配置选项··························································································· 8 
+ MTK USB USBIF 兼容性测试补丁 ················································································································ 9 
+1.4 MT8676 xHCI USB 2.0 部分 USBIF 兼容性测试程序 ······························································································· 9 
+ 一些背景信息 ·············································································································································· 9 
+ 怎么使用 xHCI USB 2.0 工具集? ················································································································ 10 
+1.5 微调 xHCI 眼图（eye-pattern）质量的参数 ········································································································ 10 
+ 微调 Phy RG_USB20_VRT_VREF_SEL 参数 ································································································· 10 
+ 微调 Phy RG_USB20_TERM_VREF_SEL 参数 ····························································································· 11 
+ 微调 PHY RG_USB20_HSTX_SRCCTRL 参数 ································································································ 11 
+ 微调 PHY RG_USB20_PHY_REV 参数 ········································································································· 12 
+1.6 微调主模式 USB 2.0 规范眼图参数 ····················································································································· 13 
+ 怎么定位 sysfs hqa 的位置? ······················································································································ 13 
+ 把工作目录切换到 hqa 节点的目录 ········································································································· 13 
+ 调节眼图参数的节点文件 ························································································································· 13 
+ USBIF USB 2.0 信号兼容性测试工具集的节点 ························································································· 13 
+ 用来强制主机进入 USB 3.0 信号兼容性测试模式的节点 ······································································· 14 
+1.7 怎样理解主模式 USB 2.0 规范眼图交互命令 RG* or hqa 的 u2p, index 参数 ··················································· 14 
+ hqa ······························································································································································ 14 
+ RG* ······························································································································································ 16 
+ 不要忘记把眼图测试的出来的参数发回给 USB 维护的工程师 ···························································· 17 
+1.8 怎么调整从模式下 USBIF 电器特性兼容性测试的眼图参数？ ········································································· 18 
+ 从模式下眼图参数调节的 sysfs 节点位置 ······························································································· 18 
+ 从模式下眼图参数读取（二进制格式） ································································································· 18 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0275.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+ 从模式下眼图参数修改 ····························································································································· 19 
+ 不要忘记把眼图测试的出来的参数发回给 USB 维护的工程师 ···························································· 19 
+1.9 怎样理解 usb3hqa 命令行参数中的 u3p ············································································································· 19 
+ usb3hqa ······················································································································································ 19 
+ 推荐使用易于人类理解的命令方式进入 USB 3.0 Gen1 USBIF 电器特性兼容性测试模式 ··················· 19 
+ 以专家方式强制设置寄存器进入主机模式 USB 3.0 Gen1 USBIF 电器特性兼容性测试模式 ··············· 20 
+1.10 xHCI USB 2.0 USBIF 电器特性兼容性测试模式命令 ···························································································· 21 
+ 主机高速信号质量 (EL_2, EL_3, EL_6, EL_7) ····························································································· 21 
+ 主机控制器数据包参数 (EL_21, EL_22, EL_23, EL_25, EL_55) ·································································· 21 
+ 主机 CHIRP 时序 (EL_33, EL_34, EL_35) ····································································································· 21 
+ 主机的挂起/恢复时序 (EL_39, EL_41) ······································································································· 21 
+ Host Test J/K, SE0_NAK (EL_8, EL_9) ··········································································································· 21 
+ Drop Test ····················································································································································· 21 
+附件一 附加条款 ····························································································································································· 22 
+ 
+ 
+图片目录 
+图 1-1. MT8676 MTK USB HW 框图 ·········································································································································· 5 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0275.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+1 MTK USB 
+1.1 基本介绍 
+MTK USB 主机（Host）和从机（Device）最大支持到 USB 3.1 Gen1, 并且 USB 2.0 的从机模式可以支持 BC1.2 的协
+议。 
+• 主机 xHCI 支持 USB 3.0 Gen1 物理链路端口（Port）和 USB 2.0 物理链路端口（Port），最多能支持 32 个 USB
+端点（EndPonit）。 
+• 从机 MTU3 支持 8 对发/收（TX/RX） USB 端点端口，它们共享 8K 的 SRAM, 最多支持八个联发科数据传输队
+列通道。 
+ 
+1.2 MTK USB 概况 
+图 1-1 展示了 MTK 公版 USB 框图： 
+ 
+图 1-1. MT8676 MTK USB HW 框图 
+ 
+MT8676 只有一个 MTK USB 的硬件模块， 在联发科 SLT 演示板的名字叫 MT8676_P1V1_SMT2， 它习惯把 USB 2.0 和
+USB 3.0 分开来使用： 
+在 Type-C 端口接线： 规划用来和电脑连线， 扮演从机角色， 使用 ADB 调试程序。 
+在 Type-A 端口接线： 规划作为一个开放的端口， 扮演主机模式为用户接入各种 USB 设备。 
+ 
+无论如何， 只能保持一个端口上的物理连通性是好的，原因是演示板没有一个切换器来自动选择 Type-C 的接线还
+是 Type-A 的接线，只能保持一路的物理贯通，这样才能保证物理链路上的信号符合 USBIF 协会的要求。 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0275.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+• Type-C 端口： 
+这个端口只有 USB2.0 的接线，可以用来和 PC 连接，缺省设置成从机模式， 并且 TypeA 上插入任何设备都会对于
+这个端口有较大的影响。 SMT1 的演示版本目前仍然不支持 Type-C 的协议。 
+ 
+• Type-A 端口： 
+这个端口可以支持 USB 3.0 及以下规范的 USB 设备， 它可以支持全功能的 USB 3.0 规范。 缺省模式从机模式， 不
+得不用下面的命令来切换主机模式。 
+ 
+下面的命令可以阻止系统进入睡眠： 
+Su 
+echo lock &gt; /sys/power/wake_lock 
+ 
+主机（Host）模式： 
+echo 2 &gt;/sys/devices/platform/soc/11201000.usb0/mode 
+ 
+从机（Device）模式： 
+echo 3 &gt;/sys/devices/platform/soc/11201000.usb0/mode 
+ 
+空闲（None）模式： 
+echo 0 &gt;/sys/devices/platform/soc/11201000.usb0/mode 
+ 
+注解： 
+• 推荐使用下面的顺序来切换各种模式: --&gt;空闲模式-→主机模式 -→空闲模式-→从机模式-→… 
+ 
+1.3 MTK USB 内核配置  
+• MTU3 代码位置： 
+&lt;work project&gt;/kernel/kernel_device_modules-6.1/drivers/usb/mtu3 
+ 
+• MTU3 应该配置的内核选项： 
+CONFIG_DEVICE_MODULES_USB_MTU3=m 
+CONFIG_DEVICE_MODULES_USB_MTU3_DUAL_ROLE=y 
+ 
+• MTU3 相关的部分属性列表： 
+注解： 这里仅仅列出项目有用的信息， 如果不是专家，建议不要擅自去修改没有列出的属性值 。 
+– mediatek,u3p-dis-msk: 每个 Bit 表示一个口， 最低位 0 代表物理端口 1， 以此类推。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0275.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+– enable-manual-drd: 这个选项很少用到， 除非在只有 Type-A， 无法使用 Type-C 或者 MicroUSB 口的情形。 
+– usb-role-switch: 这个是 Linux kernel 开源社区主推的模式。 
+– extcon:  这个只是能使用，但已经弱化了，Linux kernel 开源社区不推荐这种方式。 
+ 
+• xHCI 代码位置： 
+&lt;work project&gt;/kernel/kernel_device_modules-6.1/drivers/misc/mediatek/usb_xhci  
+ 
+• xHCI 应该配置的内核选项： 
+CONFIG_DEVICE_MODULES_USB_XHCI_MTK=m 
+ 
+• xHCI 相关的部分属性列表： 
+注解： 这里仅仅列出项目有用的信息， 如果不是专家，建议不要擅自去修改没有列出的属性值 。 
+–  usb3-lpm-capable: 每个 Bit 表示一个口， 最低位 0 代表物理端口 1， 以此类推。 
+如果 xHCI 的 DTS 中的父亲节点是 MTU3, 这个属性的设置将会被忽略. 
+ 
+• xSPHY 代码位置： 
+&lt;work project&gt;/kernel/kernel_device_modules-6.1/drivers/phy/mediatek 
+ 
+• xSPHY 应该配置的内核选项： 
+CONFIG_DEVICE_MODULES_PHY_MTK_XSPHY=m 
+ 
+• xSPHY 相关的部分属性列表： 
+注解： 这里仅仅列出项目有用的信息， 如果不是专家，建议不要擅自去修改没有列出的属性值。 
+ 
+• 对于从机模式 USBIF 眼图参数 
+– mediatek,eye-src 
+– mediatek,eye-vrt 
+– mediatek,eye-term 
+– mediatek,rev6 
+ 
+• 对于主机模式 USBIF 眼图参数 
+– mediatek,eye-src-host 
+– mediatek,eye-vrt-host 
+– mediatek,eye-term-host 
+– mediatek,rev6-host 
+– mediatek,discth 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0275.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+ MTK USB 连接器（connector）的使用状况 
+SMT1 
+Po
+rt 
+TYPE A OTG TYPE C （RTQ7883） Jack Comment 
+I2C 
+(5th) 
+vBus 
+CTRL 
+Switcher Ena
+ble 
+Intr 
+vBus 
+Ctrl 
+vBus 
+Fault 
+I
+D 
+vBus
+Det 
+vBus 
+CTRL 
+S
+C
+L 
+S
+D
+A 
+P
+MI
+C 
+GP
+IO 
+Mux 
+Power 
+Mux 
+Sel 
+Ena
+ble 
+Type
+C Intr 
+Po
+rt0 
+Yes   Yes Choose One in Type-C and Type-
+A 
+      6   1
+6
+3 
+1
+6
+4 
+        98   Type
+C 
+Default Device with USB 2.0, and 
+Manual switch USB Role 
+                  101 102     Type
+A 
+Default Device with USB 2.0, and 
+Manual switch USB Role 
+                          Micro
+USB 
+  
+SMT2 
+Po
+rt 
+TYPE A OTG TYPE C （RTQ7883） Jack Comment 
+I2C (5 
+th) 
+vBus 
+CTRL 
+Switcher Ena
+ble 
+Type
+C Intr 
+vBus 
+Ctrl 
+vBus 
+Fault 
+I
+D 
+vBus
+Det 
+vBus 
+CTRL 
+S
+C
+L 
+S
+D
+A 
+P
+MI
+C 
+GP
+IO 
+Mux 
+Power 
+Mux 
+Sel 
+Ena
+ble 
+Type
+C Intr 
+Po
+rt0 
+Yes   Yes Choose One in Type-C and Type-
+A 
+      6   1
+6
+3 
+1
+6
+4 
+        98 48 Type
+C 
+  
+                  101 102     Type
+A 
+Obey Type-C Role 
+                          Micro
+USB 
+  
+ 
+ MTK USB 配置内核通用 USB 连接器配置选项 
+• USB CONN 代码位置：  
+&lt;work project&gt;/kernel/kernel_device_modules-6.1/drivers/misc/mediatek/extcon 
+ 
+• USB CONN 应该配置的内核选项： 
+CONFIG_DEVICE_MODULES_USB_CONN_GPIO=m 
+ 
+• USB CONN 相关的部分属性列表： 
+id-gpio 和 vbus-gpio 之前必须要出现一个， 最好是两个都出现。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0275.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+– id-gpio: 对应的到 USB ID 引脚。 See GPIO binding. 
+– vbus-gpio: 对应的到 USB VBUS pin. 
+– wakeup-source: GPIO used for wake-source. 
+ 
+ MTK USB USBIF 兼容性测试补丁 
+这些补丁只能挑选提交（cherry-pick）到你的项目, 你可以联系你的项目联发科产品经理获取这些补丁包。 
+ 
+https://gerrit.mediatek.inc/c/quark/kernel_device_modules-6.1/+/8792849 
+https://gerrit.mediatek.inc/c/quark/kernel_device_modules-6.1/+/8931041 
+https://gerrit.mediatek.inc/c/quark/kernel_device_modules-6.1/+/8931042 
+ 
+cd &lt;work project&gt;/kernel/kernel_device_modules-6.1/ 
+git apply &lt;braaa.patch&gt; 
+ 
+USBIF 兼容性测试补丁代码位置： 
+&lt;work project&gt;/kernel/kernel_device_modules-6.1/drivers/misc/mediatek/usb_xhci  
+&lt;work project&gt;/kernel/kernel_device_modules-6.1/drivers/usb/mtu3 
+&lt;work project&gt;/kernel/kernel_device_modules-6.1/drivers/phy/mediatek 
+ 
+USBIF 兼容性测试补丁应该配置的内核选项： 
+CONFIG_DEVICE_MODULES_USB_MTK_HQA_TEST=y 
+ 
+注解：  
+• 切换主机（host）模式端口， 用find/sys/devices -name hqa -type f 这条命令可以找到 hqa 属性 sysfs 节点 
+• 用 lsusb 可以列出你插在端口上的设备， 帮助你确认当前是否处于主机模式 
+ 
+1.4 MT8676 xHCI USB 2.0 部分 USBIF 兼容性测试程序 
+ 一些背景信息 
+MT8676 支持 1 个 USB 2.0 端口， USB 2.0 端口的偏移地址信息。 
+port        offset    bank 
+u2 port0    0x0000    MISC 
+            0x0100    FMREG 
+            0x0300    U2PHY_COM 
+u3 port0    0x0700    SPLLC 
+            0x0800    CHIP 
+            0x0900    U3PHYD 
+            0x0a00    U3PHYD_BANK2 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0275.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+            0x0b00    U3PHYA 
+            0x0c00    U3PHYA_DA 
+u2 port1    0x1000    MISC 
+            0x1100    FMREG 
+            0x1300    U2PHY_COM 
+u3 port1    0x1700    SPLLC 
+            0x1800    CHIP 
+            0x1900    U3PHYD 
+            0x1a00    U3PHYD_BANK2 
+            0x1b00    U3PHYA 
+            0x1c00    U3PHYA_DA 
+u2 port2    0x2000    MISC 
+            0x2100    FMREG 
+            0x2300    U2PHY_COM 
+ 
+ 怎么使用 xHCI USB 2.0 工具集? 
+CONFIG_DEVICE_MODULES_USB_MTK_HQA_TEST=y 
+CONFIG_DEBUG_FS=y 
+ 
+1.5 微调 xHCI 眼图（eye-pattern）质量的参数 
+  微调 Phy RG_USB20_VRT_VREF_SEL 参数  
+• VRT 参考电压选择 
+– Register:  
+– Bit field: 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0275.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+ 
+ 微调 Phy RG_USB20_TERM_VREF_SEL 参数 
+• HS_TX TERM 参考电压选择 
+– Register:  
+ 
+– Bit field: 
+ 
+ 微调 PHY RG_USB20_HSTX_SRCCTRL 参数 
+• 高速斜率控制 
+– Register: 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0275.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+              
+– Bit field: 
+ 
+ 
+ 微调 PHY RG_USB20_PHY_REV 参数 
+• 高速预失真控制 
+– Register: 
+ 
+– Bit field: 
+31:30 RG_USB20_PHY_REV:    pre-emphasis control 
+                                                     2b'00 means no drive 
+                                                     2b'01 means 1st gear 
+                                                     2b'10 means 2nd gear 
+                                                     2b'11 means 3rd gear 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0275.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+1.6 微调主模式 USB 2.0 规范眼图参数 
+ 怎么定位 sysfs hqa 的位置? 
+Su 
+dmesg -n 1 
+在/sys 目录下查找文件名为 hqa 的文件。 
+你将看到下面这些回显： 
+/sys/devices/platform/soc/11201000.usb0/11200000.xhci0/hqa 
+/sys/devices/platform/soc/11201000.usb0/11200000.xhci0 就是 sysfs hqa 的节点位置。 
+ 
+ 把工作目录切换到 hqa 节点的目录 
+cd /sys/devices/platform/soc/11201000.usb0/11200000.xhci0 
+ 
+ls -al 
+ 
+你应该关注以下 hqa 和 RG*文件之间的关系。 
+ 
+ 调节眼图参数的节点文件 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_CHGDT_EN 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_USB20_BGR_DIV 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_USB20_DISCTH 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_USB20_HSTX_SRCTRL 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_USB20_INTR_EN 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_USB20_PHY_REV 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_USB20_PLL_BW 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_USB20_REV4 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_USB20_SQTH 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_USB20_TERM_VREF_SEL 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 RG_USB20_VRT_VREF_SEL 
+ 
+ USBIF USB 2.0 信号兼容性测试工具集的节点 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 hqa 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0275.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+ 用来强制主机进入 USB 3.0 信号兼容性测试模式的节点 
+-rw-r--r-- 1 root root 4096 2024-03-02 09:11 usb3hqa 
+ 
+1.7 怎样理解主模式 USB 2.0 规范眼图交互命令 RG* or hqa 的 u2p, index 参
+数 
+ hqa 
+通过敲入cat hqa 可以获取在线命令帮助， 它提示了很多有用的信息。 
+ 
+echo -n &lt;item&gt; &lt;port-id&gt; &gt; hqa 
+ 
+通用格式： USB&lt;spec:20 or 30) Port&lt;port-id: n&gt; 
+ 
+&lt;item&gt; 红色的参数应该从下列红色的命令列表中选择其中一个： 
+test.j: Test_J 
+test.k: Test_K 
+test.se0: Test_SE0_NAK 
+test.packet: Test_PACKET 
+test.suspend: Port Suspend 
+test.resume: Port Resume 
+test.enumbus: Enumerate Bus 
+test.getdesc: Get Device Discriptor 
+test.debug: debug Port infor 
+pm.u1u2: Port U1,U2 
+ 
+&lt;port-id&gt; 根据下列命令行提示，筛选出合适的绿色的端口参数。 
+ 
+USB30 Port1: 0x0A0003C0 
+ 
+USB30 Port1 蓝色关键字 USB30 执行 USB 3.0 Gen1 规范, 它的端口号 port-id 为 1。 
+ 
+USB20 Port2: 0x00000E03 
+USB20 Port2 PORTMSC[31,28] 4b'0000: 0x00000000 
+ 
+USB20 Port2 蓝色关键字 USB20 执行 USB 2.0 规范, 它的端口号 port-id 为 2。 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0275.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+PORTMSC[31,28]能够回显模拟电器特性模式使能情况，每个位分别映射到 TEST_J, TEST_K, TEST_SE0_NAK 和 
+TEST_PACKET，对应 USBIF 兼容性电器特性的模拟测试选项。 
+在需要继续做数字（MAC）电器特性模式实验前， 不得不用重启系统的方法来清除掉 PORTMSC[31,28]。 
+ 
+注解： 
+• test.debug 不属于 USBIF 兼容性测试设计的参数， 而是专门用来测试兼容性测试的端口参数是否符合预期的
+端口参数，当你需要筛选出符合预期的端口参数时， test.debug 这个参数非常有用，特别是在你对芯片内的
+真实端口和参数不太清楚的情况下。 
+这个 test.debug 的回显信息输出的 log 是通过 printk 打印的， 请用下面的命令行参数形式来过滤出相关的信息。 
+ 
+dmesg |grep xhci 
+ 
+例如: 插入一个你想要做 USBIF 兼容性测试的端口，插入一个 USB 设备： 
+ 
+console:/sys/devices/platform/soc/11201000.usb0/11200000.xhci0 # cat hqa 
+info: 
+        echo -n item port-id &gt; hqa 
+port-id: based on the number of USB3 ports, e.g. 
+                xHCI with 1 u3p, 2 u2p: 1st u2p-id is 2(1+1), 2nd is 3 
+items: 
+        test.j: Test_J 
+        test.k: Test_K 
+        test.se0: Test_SE0_NAK 
+        test.packet: Test_PACKET 
+        test.suspend: Port Suspend 
+        test.resume: Port Resume 
+        test.enumbus: Enumerate Bus 
+test.getdesc: Get Device Descriptor 
+test.debug: debug Port information 
+        pm.u1u2: Port U1,U2 
+USB30 Port1: 0x00001203 
+Powered, connected, and enabled. Link: U0. PortSpeed: SuperSpeed Gen1x1. Change: Wake: 
+USB20 Port2: 0x0A0002A0 
+Powered, not connected, disabled link: RxDetect PortSpeed: UNKNOWN-Speed Change: Wake: WCE 
+WOE 
+USB20 Port2 PORTMSC[31,28] 4b'0000: 0x00000000 
+console:/sys/devices/platform/soc/11201000.usb0/11200000.xhci0 # echo -n test.debug 1 &gt;hqa 
+console:/sys/devices/platform/soc/11201000.usb0/11200000.xhci0 # dmesg |grep xhci 
+[  612.198919] sh: xhci-mtk 11200000.xhci0: [name:xhci_mtk_hcd_v2&amp;][0] test.debug 
+[  612.198966] sh: xhci-mtk 11200000.xhci0: [name:xhci_mtk_hcd_v2&amp;][1] 1 
+[  612.198990] sh: xhci-mtk 11200000.xhci0: [name:xhci_mtk_hcd_v2&amp;]mu3h t_debug_port test 
+port1 
+[  612.199016] sh: usb 2-1: [name:xhci_mtk_hcd_v2&amp;]configured 
+[  612.199035] sh: usb 2-1: [name:xhci_mtk_hcd_v2&amp;]New USB device found, idVendor=13fe, 
+idProduct=6300, bcdDevice= 1.00 
+[  612.199059] sh: usb 2-1: [name:xhci_mtk_hcd_v2&amp;]New USB device strings: Mfr=1, Product=2, 
+SerialNumber=3 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0275.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 16 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+[  612.199078] sh: usb 2-1: [name:xhci_mtk_hcd_v2&amp;]Product: USB DISK 3.0 
+[  612.199096] sh: usb 2-1: [name:xhci_mtk_hcd_v2&amp;]Manufacturer: 
+[  612.199111] sh: usb 2-1: [name:xhci_mtk_hcd_v2&amp;]SerialNumber: 0700378539191802 
+[  612.199128] sh: usb 2-1: [name:xhci_mtk_hcd_v2&amp;]D:  Ver= 3.20 Cls=00(&gt;ifc ) Sub=00 
+Prot=00 MxPS= 9 #Cfgs=  1 
+[  612.199155] sh: usb 2-1: [name:xhci_mtk_hcd_v2&amp;]P:  Vendor=13fe ProdID=6300 Rev= 1.00 
+ 
+ RG* 
+敲入下面这个命令 cat RG_USB20_TERM_VREF_SEL, 可以获取很多有用的信息。 
+ 
+echo -n u2p index binary_format_value &gt; RG_USB20_TERM_VREF_SEL 
+ 
+通用格式: USB&lt;spec:20 or 30&gt; Port&lt;u2p: n&gt; (Phy&lt;index: m&gt; enable) 
+ 
+USB20 Port2: 0x00000E03 
+USB20 Port2 (Phy0: enable): 0x11E40000 0x000004004 
+RG_CHGDT_EN            = 1b0 
+RG_USB20_BGR_DIV       = 2b10 
+RG_USB20_DISCTH        = 4b1001 
+RG_USB20_HSTX_SRCTRL   = 3b011 
+RG_USB20_INTR_EN       = 1b1 
+RG_USB20_PHY_REV       = 2b01 
+RG_USB20_PLL_BW        = 3b011 
+RG_USB20_REV4          = 1b0 
+RG_USB20_SQTH          = 4b0010 
+RG_USB20_TERM_VREF_SEL = 3b100 
+RG_USB20_VRT_VREF_SEL  = 3b100 
+USB20 Port2 (Phy0: enable) 蓝色关键字 USB20 执行 USB 2.0 规范, 它的端口号 u2p 为 2, 它的 index 为 0。 
+ 
+下面是一个演示案例： 
+对于 USB 2.0 规范， 调小 RG_USB20_VRT_VREF_SEL  = 3b100 参数, 然后： 
+usage:  
+=========current HQA setting check========= 
+USB30 Port1: 0x0A0002A0 
+USB20 Port2: 0x0A0002A0 
+USB20 Port2 (Phy0: enable): 0x11E40000 0x000004004 
+    RG_CHGDT_EN            = 1b0 
+        RG_USB20_BGR_DIV       = 2b10 
+        RG_USB20_DISCTH        = 4b1001 
+        RG_USB20_HSTX_SRCTRL   = 3b011 
+        RG_USB20_INTR_EN       = 1b1 
+        RG_USB20_PHY_REV       = 2b01 
+        RG_USB20_PLL_BW        = 3b011 
+        RG_USB20_REV4          = 1b0 
+        RG_USB20_SQTH          = 4b0010 
+        RG_USB20_TERM_VREF_SEL = 3b100 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0275.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 17 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+        RG_USB20_VRT_VREF_SEL  = 3b100 
+ 
+ RG_USB20_VRT_VREF_SEL usage: 
+   echo u2p index 3b011 &gt; RG_USB20_VRT_VREF_SEL 
+        parameter: u2p: 2 
+        parameter: index: 0 
+ e.g.: echo 2 0 3b101 &gt; RG_USB20_VRT_VREF_SEL 
+ 
+  port2 binding phy 0, tune 3b'010 as VRT_VREF value 
+ 
+注解： 
+14:12 RG_USB20_VRT_VREF_SEL 
+VRT reference voltage selection (share circuit) 
+000:700mV 
+001:720mV 
+010:740mV 
+011:760mV 
+100:770mV 
+101:780mV 
+110:800mV 
+111:820mV 
+ 
+ 不要忘记把眼图测试的出来的参数发回给 USB 维护的工程师 
+这些合适的眼图参数应该和眼图报告一起提供出来，需要更新到与测试平台向关联的项目*.dts 文件中。 
+ 
+&amp;u2port0 { 
+mediatek,eye-src-host = &lt;0x04&gt;; 
+mediatek,eye-vrt-host = &lt;0x04&gt;; 
+mediatek,eye-term-host = &lt;0x07&gt;; 
+mediatek,rev6-host = &lt;0x07&gt;;  
+status = “okay” 
+} 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-18"><h2>PDF物理页 18</h2><a href="materials/SRC0275.pdf#page=18" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 18 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+1.8 怎么调整从模式下 USBIF 电器特性兼容性测试的眼图参数？ 
+ 
+测试工具包下载: https://www.usb.org/document-library/xhsett 
+测试眼图手册下载: https://www.usb.org/sites/default/files/HSETT_Instruction_0_4_1.pdf 
+ 
+ 从模式下眼图参数调节的 sysfs 节点位置 
+console:/proc/mtk_usb/usb-phy0/u2_phy # ls -al 
+total 0 
+dr-xr-xr-x 8 root root 0 2024-03-28 13:20 . 
+dr-xr-xr-x 4 root root 0 2024-03-28 13:20 .. 
+-rw-r--r-- 1 root root 0 2024-03-28 13:20 discth 
+-rw-r--r-- 1 root root 0 2024-03-28 13:20 intr_ofs 
+-rw-r--r-- 1 root root 0 2024-03-28 13:20 phy_rev6 
+-rw-r--r-- 1 root root 0 2024-03-28 13:20 rx_sqth 
+-rw-r--r-- 1 root root 0 2024-03-28 13:20 term_sel 
+-rw-r--r-- 1 root root 0 2024-03-28 13:20 vrt_sel 
+ 
+ 
+ 从模式下眼图参数读取（二进制格式） 
+console:/proc/mtk_usb/usb-phy0/u2_phy # cat * 
+discth = 1001 
+intr_ofs = 0 
+intr_val = 100011 
+phy_rev6 = 01 
+rx_sqth = 0010 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-19"><h2>PDF物理页 19</h2><a href="materials/SRC0275.pdf#page=19" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 19 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+term_sel = 100 
+vrt_sel = 010 
+ 
+ 从模式下眼图参数修改 
+请使用二进输入格式前缀'0'的形式来修改参数。 
+例如：discth = 1001 表示当前这个 discth 的参数是十进制 9, 然后修改为十进制 10。 
+echo 01010 &gt; discth 
+ 
+ 不要忘记把眼图测试的出来的参数发回给 USB 维护的工程师 
+这些合适的眼图参数应该和眼图报告一起提供出来，需要更新到和测试平台向关联的项目*.dts 文件中。 
+&amp;u2port0 { 
+mediatek,eye-src = &lt;0x04&gt;; 
+mediatek,eye-vrt = &lt;0x04&gt;; 
+mediatek,eye-term = &lt;0x07&gt;; 
+mediatek,rev6 = &lt;0x07&gt;;  
+status = “okay” 
+} 
+ 
+1.9 怎样理解 usb3hqa 命令行参数中的 u3p 
+ usb3hqa 
+ 推荐使用易于人类理解的命令方式进入 USB 3.0 Gen1 USBIF 电器特性兼
+容性测试模式 
+通过敲入cat usb3hqa 可以获取在线命令帮助, 它提示了很多有用的信息。 
+ 
+echo -n item port-id &gt; usb3hqa 
+ 
+通用格式: USB&lt;spec:30) Port&lt;port-id: n&gt; 
+ 
+port-id chooses one suitable number within online help 
+ 
+USB30 Port1: 0x0A0003C0 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-20"><h2>PDF物理页 20</h2><a href="materials/SRC0275.pdf#page=20" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 20 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+USB30 Port1 蓝色关键字 USB30 执行  USB 3.0 规范, 它的端口号 port-id 为 1。 
+ 
+PORTPLS[8,5] 这几个位域可以用来检查是否已经在 USB 3.0 USBIF 电器特性兼容性测试模式，这些位值 U0,U1, U2 等
+等，在这里，如果执行了 usb3hqa 命令，0x0A 表示 “Compliance mode”。 
+ 
+注解： 
+• 键入下面命令：cat usb3hqa | grep Compliance 可以用来确认当前是否工作在 USB 3.0 USBIF 电器特性兼容性测试模
+式。 
+ 
+ 以专家方式强制设置寄存器进入主机模式 USB 3.0 Gen1 USBIF 电器特性
+兼容性测试模式 
+console:/sys/devices/platform/soc/11201000.usb0/11200000.xhci0 # cat reg 
+SSUSB register operation interface help info. 
+rx - read xhci  reg: offset [len] 
+rm - read mu3d  reg: offset [len] 
+ri - read ippc  reg: offset [len] 
+rp - read phy3  reg: offset [len] 
+ru - read phy2  reg: offset [len] 
+wx - write xhci reg: offset value 
+wm - write mu3d reg: offset value 
+wi - write ippc reg: offset value 
+wp - write phy3 reg: offset value 
+wu - write phy2 reg: offset value 
+sx - set xhci mac reg bits: offset bit_start mask value 
+sm - set mu3d mac reg bits: offset bit_start mask value 
+si - set ippc     reg bits: offset bit_start mask value 
+sp - set phy3     reg bits: offset bit_start mask value 
+su - set phy2     reg bits: offset bit_start mask value 
+px - print xhci mac reg bits: offset bit_start mask 
+pm - print mu3d mac reg bits: offset bit_start mask 
+pi - print ippc     reg bits: offset bit_start mask 
+pp - print phy3     reg bits: offset bit_start mask 
+pu - print phy2     reg bits: offset bit_start mask 
+ 
+ 
+注解： 
+• 除了 bit_star（DEC），其他数字应该是十六进制的 
+echo wx 0x420 0x10340 &gt; reg 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-21"><h2>PDF物理页 21</h2><a href="materials/SRC0275.pdf#page=21" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 21 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+1.10 xHCI USB 2.0 USBIF 电器特性兼容性测试模式命令 
+ 主机高速信号质量 (EL_2, EL_3, EL_6, EL_7) 
+CLI:  echo -n test.packet [port] &gt; hqa 
+ 
+ 主机控制器数据包参数 (EL_21, EL_22, EL_23, EL_25, EL_55) 
+CLI:  echo -n test.getdesc [port] &gt; hqa 
+ 
+ 主机 CHIRP 时序 (EL_33, EL_34, EL_35) 
+CLI:  echo –n test.enumbus [port] &gt; hqa 
+ 
+ 主机的挂起/恢复时序 (EL_39, EL_41) 
+CLI (suspend):  echo -n test.suspend [port] &gt; hqa 
+CLI (resume):   echo -n test.resume [port] &gt; hqa 
+ 
+ Host Test J/K, SE0_NAK (EL_8, EL_9) 
+CLI  (J): echo -n test.j [port] &gt; hqa 
+CLI  (K): echo -n test.k [port] &gt; hqa 
+CLI  (SE0): echo -n test.se0 [port] &gt; hqa 
+ 
+ Drop Test 
+CLI: none 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-22"><h2>PDF物理页 22</h2><a href="materials/SRC0275.pdf#page=22" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 22 
+MT8676 Yocto USB 
+User Manual 
+Confidential B 
+附件一 附加条款 
+您(或您所代表的公司或其他法律主体，以下合称「您」)是否得取得、下载与使用本文件及其相关信息皆应以您接受本附加条款为先决要件。
+您对于本文件之使用、取得或下载即表示您已接受本附加条款并同意受本附加条款之拘束。若您不同意受本附加条款之拘束，您将不得使用、
+取得或下载本文件并应立即删除或毁弃所有本文件之副本。 
+ 
+本文件含有联发科技股份有限公司及其关联公司（以下合称「联发科技」）或其授权人之机密信息及专有信息，仅供您为本文件所描述之联发
+科技芯片组作内部使用而不得用于其他任何目的（包括但不限于确认或提供支持任何对联发科技、其供货商及/或其直接或间接客户所提潜在
+专利侵权主张的证据）。禁止未经授权使用或揭露本文件及其中所含信息。您同意赔偿联发科技因您未经授权使用或揭露本文件及其中所含信
+息之一部或全部导致联发科技所受之任何损失或损害。 
+ 
+联发科技及其授权人保有本文件的所有权及组成所有权之各项权利且未针对任何知识产权授权（无论明示或默示、透过禁反言原则或其他方
+式）。联发科技得随时变更本文件内容而无须另行通知。联发科技无须承担与使用或信赖本文件相关或因使用或信赖本文件致生之任何责任，
+包括但不限于间接损害或附带损害赔偿责任。 
+ 
+本文件及联发科技所提供关于本文件之任何其他材料、信息或技术支持，均以现况交付为准，联发科技不负任何明示、默示、法定或其他形式
+之担保责任，特别是适销性、不侵权、针对特定用途之适用性、完整性或正确性之担保责任或任何由贸易惯例或交易、履行过程所生之担保责
+任。对于联发科技为符合您所提规格或遵循特定标准或标准组织的要求所作之交付物，联发科技亦不应承担任何责任。 
+ 
+于未对前述条款造成限制之情形下，联发科技不对其产品任何特定用途之适用性承担任何保证或担保责任，亦不承担任何因产品、电路或软件
+之应用或使用致生之赔偿责任。您同意您应单独承担关于整合您的产品与联发科技产品所涉及之设计、验证与测试之所有责任，并应确保前述
+整合产品符合相关标准及任何安全性要求或其他要件。 
+ 
+本附加条款及所有与本附加条款或本文件相关之行为应以台湾法律管辖、解释与阐明，不适用冲突法原则。 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a><a href="#page-18">PDF物理页 18</a><a href="#page-19">PDF物理页 19</a><a href="#page-20">PDF物理页 20</a><a href="#page-21">PDF物理页 21</a><a href="#page-22">PDF物理页 22</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

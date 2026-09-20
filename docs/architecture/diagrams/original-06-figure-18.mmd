@@ -1,0 +1,15 @@
+flowchart TD
+  A[start/write] --> B{Track accepted and advancing?}
+  B -- no --> B1[client/session/state]
+  B -- yes --> C{policy route/device correct?}
+  C -- no --> C1[focus/route/device availability]
+  C -- yes --> D{Flinger/HAL counters advance?}
+  D -- no --> D1[thread stall/underrun/HAL error]
+  D -- yes --> E{PCM and physical output valid?}
+  E -- no --> E1[driver/codec/amp/mute]
+  B1 --> R[stop old Track and route]
+  C1 --> R
+  D1 --> R
+  E1 --> R
+  R --> S[reselect route + recreate Track Generation]
+  S --> T[play identifiable tone + route readback]

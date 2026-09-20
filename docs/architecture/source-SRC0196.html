@@ -1,0 +1,871 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Android_OTA_User_Manual_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Android_OTA_User_Manual_V1.0.pdf</h1><p>SRC0196 · 原来源 ID S129 · PDF物理页 · 20 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MT8676软件资料/User Manual/Android/English Version/MT8676_Android_OTA_User_Manual_V1.0.pdf</p><p>SHA-256：<code>bcd7023dd6c3de223d5b104a2a770d8c267ee8e2d988122215f3654719fa138a</code></p><p>原文件大小：815,860 字节</p></details><div class="actions"><a class="button" href="materials/SRC0196.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Android_OTA_User_Manual_V1.0.pdf 原 PDF" src="materials/SRC0196.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0196.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version：  1.0 
+Release Date： 2024-08-12 
+ 
+ 
+MT8676 Android OTA User Manual 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0196.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8676 Android OTA 
+User Manual 
+ 
+Confidential B 
+Version History 
+Version Date Author Description 
+1.0 2024-08-12 Ming Ji Official release 
+ 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0196.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8676 Android OTA 
+User Manual 
+ 
+Confidential B 
+Table of Contents 
+Version History ····························································································································································· 2 
+Table of Contents ······························································································································································· 3 
+List of Figures ····································································································································································· 3 
+Lisf of Tables ······································································································································································ 4 
+1 OTA ············································································································································································ 5 
+1.1 Overview ·································································································································································· 5 
+1.1.1 Purpose ······················································································································································ 5 
+1.1.2 Who Should Read This Document ·············································································································· 5 
+1.1.3 How to Use This Manual ···························································································································· 5 
+1.2 References ································································································································································ 6 
+1.3 OTA Update Definitions ············································································································································ 6 
+1.4 OTA Abbreviations ···················································································································································· 7 
+1.5 Enable A/B System Updates ····································································································································· 7 
+1.6 Architecture Overview ············································································································································· 7 
+1.6.1 Preloader Boot Control Flow ······················································································································ 8 
+1.6.2 A/B System Partition Layout ······················································································································· 8 
+1.6.3 Ramdisk Location in A/B System Updates ·································································································· 9 
+1.6.4 Boot Control HAL and HIDL ······················································································································ 10 
+1.6.5 A/B System Updates Process ···················································································································· 12 
+1.6.6 Virtual A/B ················································································································································ 12 
+1.7 Guideline for Generating A/B OTA Package ············································································································ 13 
+1.7.1 Generate A/B OTA Update Package by Split Build 1.0 (LD1.0) Step by Step ············································· 13 
+1.7.2 Generate A/B OTA Update Package by Split Build 2.0 (LD2.0) Step by Step ············································· 15 
+1.8 A/B System Updates Limitations ···························································································································· 17 
+1.9 How to Use and Debug A/B System Updates ········································································································· 17 
+1.9.1 How to Use A/B Updates ·························································································································· 17 
+1.9.2 How to Debug A/B Updates ····················································································································· 18 
+1.10 Frequently Asked Questions··································································································································· 18 
+1.10.1 Does flashtool Need to Download Both A and B Images ········································································· 18 
+1.10.2 How to Know What Image is Running (A or B) ························································································· 18 
+1.10.3 Could A Partition Load B Partition (e.g., lk_a loads boot_b) ···································································· 19 
+1.10.4 What Partition Needs A/B ························································································································ 19 
+1.10.5 What’s Feature Option for A/B System ···································································································· 19 
+1.10.6 If Handset Ships without A/B, Could Handset Become A/B through OTA Update ··································· 19 
+1.10.7 Who Set boot_sucessfully Flag ················································································································· 19 
+Exhibit 1 Terms and Conditions ········································································································································ 20 
+ 
+ 
+List of Figures 
+Figure 1-1. Preloader boot control flow ····································································································································· 8 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0196.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8676 Android OTA 
+User Manual 
+ 
+Confidential B 
+Lisf of Tables 
+Table 1-1. Chapter overview ······················································································································································ 5 
+Table 1-2. Abbreviations ····························································································································································· 7 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0196.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8676 Android OTA 
+User Manual 
+ 
+Confidential B 
+1 OTA 
+1.1 Overview 
+The introduction of A/B System updates is as follows: 
+ 
+• It is a new Over-The-Air (OTA) feature alias Seamless Updates . 
+• No more bricks (can fall back to previous system image). 
+• Ensures that a workable booting system remains on the disk. 
+• OTA updates applied in the normal mode background. 
+ 
+ 
+ 
+1.1.1 Purpose 
+This document provides the user guidelines for the A/B System updates. It describes how to generate the OTA package on 
+the Android platform. This manual also elaborates the mechanism required to enable A/B System updates (Seamless 
+Updates) feature in MTK platform. 
+ 
+1.1.2 Who Should Read This Document 
+This document is primarily intended for: 
+• Engineers with technical knowledge of the OTA A/B System updates (Seamless Updates) 
+ 
+1.1.3 How to Use This Manual 
+This segment explains how information is distributed in this document and presents some cues and examples to simplify 
+finding and understanding information in this document. Table 1-1 presents an overview of the chapters and appendices in 
+this document. 
+ 
+Table 1-1. Chapter overview 
+# Chapter Contents 
+1 Introduction Describes the scope and layout of this document. 
+2 References Provides reference website or documents 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0196.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Android OTA 
+User Manual 
+ 
+Confidential B 
+# Chapter Contents 
+3 OTA Update Definitions Presents OTA update definitions 
+4 Abbreviations Lists OTA abbreviations 
+5 Enable A/B System Updates Shows how to enable A/B System updates in MediaTek platform 
+6 Architecture Overview Demonstrates A/B System updates architecture overview 
+7 Guideline for Generating A/B OTA Package Describes how to generate an incremental and full OTA package 
+8 A/B System Updates Limitations Describes A/B System updates limitations 
+9 How to Use and Debug A/B System 
+Updates 
+Explains how to use and debug A/B System updates 
+10 Frequently Asked Questions Lists frequently asked questions and answers  
+ 
+1.2 References 
+The following documents contain provisions which, through reference in this text, constitute provisions of the present 
+document. 
+ 
+[1] The Android OTA Package Tools: https://source.android.com/devices/tech/ota/tools.html 
+[2] A/B (Seamless) System updates:  
+https://source.android.com/devices/tech/ota/ab_updates 
+https://source.android.com/devices/tech/ota/inside_packages.html 
+[3] Implementing A/B Updates: https://source.android.com/devices/tech/ota/ab_implement  
+[4] Virtual A/B Updates: https://source.android.com/docs/core/ota/virtual_ab 
+[5] Configure ART: https://source.android.com/devices/tech/dalvik/configure  
+[6] Ramdisk storage location: https://source.android.com/docs/core/architecture/partitions/generic-boot 
+ 
+1.3 OTA Update Definitions 
+For the purposes of the present document, the following terms and definitions apply: 
+This chapter is included from [1]. 
+ 
+Full updates: A full update is one where the entire final state of the device (system, boot, and recovery partitions) is 
+contained in the package. As long as the device is capable of receiving the package and booting the recovery system, the 
+package can install the desired build regardless of the current state of the device. 
+ 
+Incremental updates: An incremental update contains a set of binary patches to be applied to the data already on the 
+device. This can result in considerably smaller update packages: 
+ 
+• Files that have not changed don't need to be included. 
+• Files that have changed are often very similar to their previous versions, so the package need only contain an 
+encoding of the differences between the two files. 
+ 
+Note:  You can install the incremental update package only on a device that has the old or source build used when constructing the 
+package. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0196.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8676 Android OTA 
+User Manual 
+ 
+Confidential B 
+Virtual A/B: Google introduces a new feature named Virtual A/B that can use COW device created by device mapper to 
+save super partition size. 
+ 
+1.4 OTA Abbreviations 
+Please note the abbreviations and their explanations provided in Table 1-2. They are used in many fundamental definitions 
+and explanations in this document and are specific to the information that this document contains.  
+ 
+Table 1-2. Abbreviations 
+Abbreviations Explanation 
+LK Little Kernel 
+OTA Over-The-Air 
+ 
+1.5 Enable A/B System Updates 
+Please set MTK_AB_OTA_UPDATER to yes in the following files (if MTK_AB_OTA_UPDATER does not exist in the 
+corresponding files, please add this configuration in the files): 
+ 
+• ProjectConfig.mk:  
+– device/mediatekprojects/&lt;project_name&gt;/ProjectConfig.mk 
+• Preloader: 
+– vendor/mediatek/proprietary/bootable/bootloader/preloader/custom/&lt;project_name&gt;/&lt;pr
+oject_name&gt;.mk 
+• SystemConfig.mk: 
+– device/mediatek/system/&lt;mssi_xxxx&gt; /SystemConfig.mk 
+ 
+If the project is using LK: 
+• LK: 
+– vendor/mediatek/proprietary/bootable/bootloader/lk/project/&lt;project_name&gt;.mk 
+ 
+If the project is using LK2: 
+• LK2: 
+– vendor/mediatek/proprietary/bootable/bootloader/lk2/project/&lt;project_name&gt;.mk 
+ 
+1.6 Architecture Overview 
+This section gives a brief description of the modules of the system and the relationship of the modules. 
+ 
+1. Preloader boot control flow 
+2. LK boot control flow 
+3. A/B System partition layout 
+4. Ramdisk location in A/B System updates 
+5. Boot control HAL and HIDL 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0196.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 Android OTA 
+User Manual 
+ 
+Confidential B 
+6. DM-verity for A/B System updates 
+7. Fastboot for A/B System updates 
+8. A/B system update process 
+ 
+1.6.1 Preloader Boot Control Flow 
+Read boot slot metadata Read misc 
+partition
+1. Mark slot as invalid
+2. Rollback to previous suffix
+Load next image and boot
+Start
+End
+Boot to normal 
+mode?
+boot_successfull
+y == 1
+Yes
+Ex: Recovery mode
+One or more 
+valid slot
+Yes
+No Goto Recovery mode
+retry_count &gt; 0 No
+Decrease retry_count
+Yes
+No
+Yes
+No
+Choose valid slot with 
+highest priority 
+ 
+Figure 1-1. Preloader boot control flow 
+ 
+1.6.2 A/B System Partition Layout 
+The partition layout for various types of systems is as follows: 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0196.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8676 Android OTA 
+User Manual 
+ 
+Confidential B 
+ 
+ 
+The partition layout differences of various systems are as follows: 
+ 
+• AB system no longer needs recovery and cache partitions. 
+• Starting from Android Q, Google has added a dynamic partitioning function to put system, vendor, product and other 
+partitions into super partitions. 
+• Starting from Android R, Google has added the virtual A/B function. During operation, the system will only save a 
+copy of the image information of super sub-partitions such as systems, vendor, and products, saving the storage 
+space occupied by super partitions. 
+ 
+1.6.3 Ramdisk Location in A/B System Updates 
+There are differences in the storage locations of ramdisk information in different Android versions. Please refer to Google 
+instructions for details: https://source.android.com/docs/core/architecture/partitions/generic-boot. 
+1. If the system Android version is smaller than Android R, the location of the ramdisk is as follows: 
+ 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0196.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8676 Android OTA 
+User Manual 
+ 
+Confidential B 
+2. If the system Android version is Android R or Android S, the location of the ramdisk is as follows: 
+ 
+ 
+3. Starting from Android T , the location of the ramdisk is as follows: 
+ 
+ 
+1.6.4 Boot Control HAL and HIDL 
+MediaTek uses AOSP default boot control HIDL interface to access boot control HAL 
+Source code path of bootctl is hardware/interfaces/boot 
+ 
+Boot control HAL for update_engine 
+• Android version &gt; = U 
+– Source code path of bootctl is vendor/mediatek/proprietary/hardware/bootctrl_service/  
+• Android version &gt; = R 
+– Source code path of bootctl is vendor/mediatek/proprietary/hardware/bootctrl/  
+ 
+Preloader (PL) and LK also have boot control API 
+• PL:  
+– vendor/mediatek/proprietary/bootable/bootloader/preloader/platform/common/bootctrl/ 
+• LK:  
+– vendor/mediatek/proprietary/bootable/bootloader/lk/platform/common/bootctrl/1.0 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0196.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8676 Android OTA 
+User Manual 
+ 
+Confidential B 
+ 
+When the device first boots, the preloader sets the default values for the launch control structure. 
+ 
+ 
+After device’s first OTA update, it will boot from B, because slot_B has higher priority than slot_A. 
+ 
+ 
+After the device is successfully booted from slot_B for the first time, the successful_boot of slot_B will be set to 1. 
+ 
+ 
+After the device is successfully booted from slot_B for the second time, the tries_remaining of slot_B will be set to 1. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0196.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8676 Android OTA 
+User Manual 
+ 
+Confidential B 
+ 
+1.6.5 A/B System Updates Process 
+• Update_engine: 
+– Executed by update_engine.rc 
+– Only responsible for update partition like role of recovery and updater 
+– Uses payload.bin which is in update.zip to update each partition 
+– Runs in little core and background 
+– Calls boot_control HAL/HIDL interface 
+– Runs a postinstall program from the new partition after writing all the unused slot partitions 
+ 
+Update_engine should NOT do: 
+– Modifies the partition table (Layout changed) 
+– Modifies the contents of partitions in the current slot 
+ 
+• Update_engine_client: 
+– Update_engine_client is for debug only, this process could get update status. 
+ 
+• Update_verifier: 
+– Update_verifier is executed by update_verifier.rc 
+– If the product supports verity, check whether verity mode is enforcing mode or not 
+– Mark boot successful flag when the platform boots up 
+ 
+1.6.6 Virtual A/B 
+• Virtual A/B is introduced in Android R that can use COW device to save super partition size. But after the update flow 
+is done, it needs another system reboot step to merge the complete super partition content. 
+• Virtual A/B is a GMS requirement on devices launching with Android 11 and higher. 
+• Limitation:  
+– Sideload update under recovery for incremental package is no longer supported.   
+– The following note is from Google VAB document and it depicts the detail of the limitation. 
+The userdata partition cannot be mounted under recovery if it is encrypted. Free Blocks within the userdata 
+partition cannot be determined, so we cannot allocate COW files on the userdata partition. Hence, we cannot 
+create new snapshots in recovery. Sideloading an incremental OTA on a Virtual A/B device in recovery is 
+impossible and unsupported.  
+ 
+• This feature is enabled by default, and it can be disabled by changing the build flow. 
+• In build/make/target/product/virtual_ab_ota.mk, PRODUCT_VIRTUAL_AB_OTA and its property are 
+assigned, so the virtual A/B OTA can be disabled by skipping this makefile and use legacy A/B update by removing the 
+following line in device/mediatek/system/common/device.mk and 
+device/mediatek/vendor/common/device.mk, and split build again. 
+$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk) 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0196.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8676 Android OTA 
+User Manual 
+ 
+Confidential B 
+1.7 Guideline for Generating A/B OTA Package 
+This section gives a description of a group of generating A/B System OTA package guideline. Starting with Android Q, MTK 
+only supports split build by default. Please select the corresponding build package method according to the build method 
+used by the project. 
+ 
+1.7.1 Generate A/B OTA Update Package by Split Build 1.0 (LD1.0) Step by Step 
+1.7.1.1 Full Build Project with Full otapackage.zip and targefiles.zip 
+1. Get split build 1.0 (LD1.0) command 
+• Execute the following command to obtain the complete split build command: 
+./vendor/mediatek/proprietary/scripts/releasetools/split_build_helper.py full_${PROJ_NAME}-
+${eng|userdebug|user} 
+ 
+For example: 
+• Input command 
+./vendor/mediatek/proprietary/scripts/releasetools/split_build_helper.py full_tb8786p1_64-
+userdebug 
+ 
+• Output command 
+source build/envsetup.sh &amp;&amp; export OUT_DIR=out_sys &amp;&amp; lunch sys_mssi_t_64_cn-userdebug &amp;&amp; 
+make sys_images 
+ 
+source build/envsetup.sh &amp;&amp; export OUT_DIR=out &amp;&amp; lunch vnd_tb8786p1_64-userdebug &amp;&amp; make 
+vnd_images krn_images 
+ 
+python out_sys/target/product/mssi_t_64_cn/images/split_build.py --system-dir 
+out_sys/target/product/mssi_t_64_cn/images --vendor-dir 
+out/target/product/tb8786p1_64/images --kernel-dir out/target/product/tb8786p1_64/images --
+output-dir out/target/product/tb8786p1_64/merged 
+ 
+These three commands represent: 
+• Build system 
+source build/envsetup.sh &amp;&amp; export OUT_DIR=out_sys &amp;&amp; lunch sys_mssi_t_64_cn-userdebug &amp;&amp; 
+make sys_images 
+ 
+• Build vendor and kernel 
+source build/envsetup.sh &amp;&amp; export OUT_DIR=out &amp;&amp; lunch vnd_tb8786p1_64-userdebug &amp;&amp; make 
+vnd_images krn_image 
+ 
+• Merge 
+python out_sys/target/product/mssi_t_64_cn/images/split_build.py  
+--system-dir out_sys/target/product/mssi_t_64_cn/images  
+--vendor-dir out/target/product/tb8786p1_64/images  
+--kernel-dir out/target/product/tb8786p1_64/images  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0196.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+MT8676 Android OTA 
+User Manual 
+ 
+Confidential B 
+--output-dir out/target/product/tb8786p1_64/merged 
+ 
+2. Build full otapckage.zip 
+If you need to build full otapackage.zip, please add the ‘--otapackage’ parameter to the merge command. 
+For example: 
+python out_sys/target/product/mssi_t_64_cn/images/split_build.py  
+--system-dir out_sys/target/product/mssi_t_64_cn/images  
+--vendor-dir out/target/product/tb8786p1_64/images  
+--kernel-dir out/target/product/tb8786p1_64/images  
+--output-dir out/target/product/tb8786p1_64/merged  
+--otapackage 
+ 
+OTA full package path: 
+E.g., out/target/product/${PROJ}/merged/otapacakge.zip 
+ 
+3. Build targetfiles.zip 
+If you need to build targetfiles.zip, please add the ‘--targetfiles’ parameter to the merge command. 
+For example: 
+python out_sys/target/product/mssi_t_64_cn/images/split_build.py  
+--system-dir out_sys/target/product/mssi_t_64_cn/images  
+--vendor-dir out/target/product/tb8786p1_64/images  
+--kernel-dir out/target/product/tb8786p1_64/images  
+--output-dir out/target/product/tb8786p1_64/merged  
+--targetfiles 
+ 
+Target package path: 
+E.g., out/target/product/${PROJ}/merged/ target_files.zip 
+ 
+1.7.1.2 Build Incremental Package 
+Define the current version as the Source version and the upgraded version as the Target version. Here are the steps to 
+follow: 
+1. Follow the instructions in Section 1.7.1.1 Full Build Project with Full otapackage.zip and targefiles.zip to perform a split 
+build and obtain the targetfiles.zip for both the Source version and the Target version. Make sure that the compilation 
+time of the Target version is later than that of the Source version. 
+2. Rename the targetfiles.zip of the Source version as “source.zip” and the targetfiles.zip of the Target version as 
+“target.zip”. 
+3. In the project compilation environment, execute the following commands sequentially:  
+ 
+Source &amp; Lunch:  
+source build/envsetup.sh &amp;&amp; export OUT_DIR=out_sys &amp;&amp; lunch sys_${SYS_RPOJ}-
+${eng|userdebug|user} 
+ 
+source build/envsetup.sh &amp;&amp; export OUT_DIR=out &amp;&amp; lunch vnd_${PROJ}-${SYS_PROJ}; 
+ 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0196.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+MT8676 Android OTA 
+User Manual 
+ 
+Confidential B 
+Centralize tools to out/host/linux-x86:  
+cp out_sys/host/linux-x86/* out/host/linux-x86/ -rf 
+ 
+cp out_sys/soong/host/linux-x86/* out/host/linux-x86/ -rf 
+ 
+cp out/soong/host/linux-x86/* out/host/linux-x86/ -rf 
+ 
+Build incremental package: 
+Android version ≤ Android T:  
+python3 build/tools/releasetools/ota_from_target_files --block -v -p out/host/linux-x86  -k 
+device/mediatek/common/security/releasekey -i source.zip target.zip delta.zip 
+ 
+Android version ≥ Android U: 
+./out/host/linux-x86/bin/ota_from_target_files -v -p out/host/linux-x86 -k 
+device/mediatek/common/security/releasekey -i source.zip target.zip delta.zip 
+ 
+If your project do not have releasekey, please delete “ -k device/mediatek/common/security/releasekey” in 
+command, which will use default key (test key). Or use -k to specify the key path used by your project. 
+ 
+• source.zip: The targetfiles.zip file for the Source version. 
+• target.zip: The targetfiles.zip file for the Target version. 
+• delta.zip: The incremental package that upgrades from the Source version to the Target version. 
+ 
+Note: The specific naming of targetfiles.zip and incremental package is not restricted, and customers can set their own names as per 
+their preference. 
+ 
+1.7.2 Generate A/B OTA Update Package by Split Build 2.0 (LD2.0) Step by Step 
+1.7.2.1 Full Build Project with Full otapackage.zip and targefiles.zip 
+1. Get split build 2.0 (LD2.0) command 
+Execute the following command to obtain the complete split build command: 
+./vendor/mediatek/proprietary/scripts/releasetools/split_build_helper.py full_${PROJ_NAME}-
+${eng|userdebug|user} 
+ 
+For example: 
+• Input command 
+./vendor/mediatek/proprietary/scripts/releasetools/split_build_helper.py full_ 
+auto8676p1_64_bsp-userdebug 
+ 
+• Output command 
+source build/envsetup.sh &amp;&amp; export OUT_DIR=out_sys &amp;&amp; lunch sys_mssi_auto_64_cn_armv82_car-
+userdebug &amp;&amp; make sys_images  
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0196.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 16 
+MT8676 Android OTA 
+User Manual 
+ 
+Confidential B 
+source build/envsetup.sh &amp;&amp; export OUT_DIR=out_hal &amp;&amp; lunch hal_mgvi_spm_64_armv82-userdebug 
+&amp;&amp; make hal_images 
+ 
+source build/envsetup.sh &amp;&amp; export OUT_DIR=out_krn &amp;&amp; lunch krn_mgk_64_k61-userdebug &amp;&amp; make 
+krn_images 
+ 
+source build/envsetup.sh &amp;&amp; export OUT_DIR=out &amp;&amp; lunch vext_auto8676p1_64_bsp-userdebug &amp;&amp; 
+make vext_images 
+ 
+python out_sys/target/product/mssi_spm_64_cn_armv82/images/split_build.py  
+--system-dir out_sys/target/product/mssi_spm_64_cn_armv82/images  
+--vendor-dir out_hal/target/product/mgvi_spm_64_armv82/images  
+--kernel-dir out_krn/target/product/mgk_64_k61/images  
+--vext-dir out/target/product/auto8676p1_64_bsp/images  
+--output-dir out/target/product/auto8676p1_64_bsp/merged 
+ 
+These five commands represent: 
+• Build system 
+source build/envsetup.sh &amp;&amp; export OUT_DIR=out_sys &amp;&amp; lunch sys_mssi_auto_64_cn_armv82_car-
+userdebug &amp;&amp; make sys_images  
+ 
+• Build hal 
+source build/envsetup.sh &amp;&amp; export OUT_DIR=out_hal &amp;&amp; lunch hal_mgvi_spm_64_armv82-userdebug 
+&amp;&amp; make hal_images 
+ 
+• Build kernel 
+source build/envsetup.sh &amp;&amp; export OUT_DIR=out_krn &amp;&amp; lunch krn_mgk_64_k61-userdebug &amp;&amp; make 
+krn_images 
+ 
+• Build vext 
+source build/envsetup.sh &amp;&amp; export OUT_DIR=out &amp;&amp; lunch vext_auto8676p1_64_bsp-userdebug &amp;&amp; 
+make vext_images 
+ 
+• Merge 
+python out_sys/target/product/mssi_t_64_cn/images/split_build.py  
+--system-dir out_sys/target/product/mssi_t_64_cn/images  
+--vendor-dir out/target/product/tb8786p1_64/images  
+ 
+2. Build full otapckage.zip 
+If you need to build full otapackage.zip, please add the ‘--otapackage’ parameter to the merge command. 
+For example: 
+python out_sys/target/product/mssi_spm_64_cn_armv82/images/split_build.py  
+--system-dir out_sys/target/product/mssi_spm_64_cn_armv82/images  
+--vendor-dir out_hal/target/product/mgvi_spm_64_armv82/images  
+--kernel-dir out_krn/target/product/mgk_64_k61/images  
+--vext-dir out/target/product/auto8676p1_64_bsp/images  
+--output-dir out/target/product/auto8676p1_64_bsp/merged  
+--otapackage 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0196.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 17 
+MT8676 Android OTA 
+User Manual 
+ 
+Confidential B 
+Ota full package path: 
+E.g., out/target/product/${PROJ}/merged/otapacakge.zip 
+ 
+3. Build targetfiles.zip 
+If you need to build targetfiles.zip, please add the ‘--targetfiles’ parameter to the merge command. 
+For example: 
+python out_sys/target/product/mssi_spm_64_cn_armv82/images/split_build.py  
+--system-dir out_sys/target/product/mssi_spm_64_cn_armv82/images  
+--vendor-dir out_hal/target/product/mgvi_spm_64_armv82/images  
+--kernel-dir out_krn/target/product/mgk_64_k61/images  
+--vext-dir out/target/product/auto8676p1_64_bsp/images  
+--output-dir out/target/product/auto8676p1_64_bsp/merged  
+--targetfiles 
+ 
+Target package path: 
+E.g., out/target/product/${PROJ}/merged/ target_files.zip 
+ 
+1.7.2.2 Build Incremental Package 
+Please refer to the steps in Section 1.7.1.2 Build Incremental Package to build an incremental package. 
+1.8 A/B System Updates Limitations 
+This section describes A/B system updates limitations.  
+This chapter is included from [2]. 
+ 
+• OTA does not support modifying the partition table and changing the partition layout. 
+• Modifying the partition content of the current slot is not supported. 
+• Mutual upgrade between non-AB and AB is not supported. 
+ 
+1.9 How to Use and Debug A/B System Updates 
+1.9.1 How to Use A/B Updates 
+• Normal mode:  
+– PC must install python  
+– Put update_device.py (system/update_engine/scripts/update_device.py) to adb folder 
+– Connect phone with PC via USB cable 
+– Python update_device.py update.zip in adb window 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-18"><h2>PDF物理页 18</h2><a href="materials/SRC0196.pdf#page=18" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 18 
+MT8676 Android OTA 
+User Manual 
+ 
+Confidential B 
+ 
+• Recovery mode:  
+– ADB sideload update (VAB only supports full OTA): 
+▪ adb reboot recovery 
+▪ choose “Apply update form ADB” on recovery UI 
+▪ adb sideload d:\update.zip 
+– SD card update: 
+▪ adb push update.zip /storage/F205-EFBE (/storage/F205-EFBE is SD card mount directory) 
+▪ adb reboot recovery 
+▪ choose “Apply update form SD card” on recovery UI 
+▪ go on choosing the update.zip fi 
+ 
+1.9.2 How to Debug A/B Updates 
+Log location 
+• Normal mode:  
+– Method one： 
+▪ mtklog\mobilelog\APLogxxx\main_log 
+▪ Search update_engine key word 
+– Method Two： 
+▪ adb pull data/misc/update_engine_log 
+▪ Search update_engine key word 
+• Recovery mode: 
+– Adb pull /tmp/recovery.log 
+ 
+Common error code 
+• All error code is in system/update_engine/common/error_code.h 
+ 
+1.10 Frequently Asked Questions 
+1.10.1 Does flashtool Need to Download Both A and B Images  
+• No, only the preloader partition needs to download the A and B images, and other partitions only download the A 
+images by default.  
+• After flashtool downloads image, platform only runs on A images. 
+• A image could OTA to B empty partition through incremental update package 
+ 
+1.10.2 How to Know What Image is Running (A or B) 
+• Check property ro.boot.slot_suffix (getprop ro.boot.slot_suffix) 
+• Check androidboot.slot_suffix in command line (/proc/cmdline) 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-19"><h2>PDF物理页 19</h2><a href="materials/SRC0196.pdf#page=19" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 19 
+MT8676 Android OTA 
+User Manual 
+ 
+Confidential B 
+1.10.3 Could A Partition Load B Partition (e.g., lk_a loads boot_b) 
+• No, suffix must be the same. It’s like dual system. 
+ 
+1.10.4 What Partition Needs A/B 
+• If partition needs OTA update, this partition must have both of A and B. 
+ 
+1.10.5 What’s Feature Option for A/B System 
+• MTK_AB_OTA_UPDATER 
+ 
+1.10.6 If Handset Ships without A/B, Could Handset Become A/B through OTA 
+Update 
+• No, AB and non-AB cannot upgrade each other. 
+ 
+1.10.7 Who Set boot_sucessfully Flag 
+• Update_verfier process will set boot_sucessfully flag. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-20"><h2>PDF物理页 20</h2><a href="materials/SRC0196.pdf#page=20" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 20 
+MT8676 Android OTA 
+User Manual 
+ 
+Confidential B 
+Exhibit 1 Terms and Conditions 
+Your access to and use of this document and the information contained herein (collectively this “Document”) is subject to your (including the corporation 
+or other legal entity you represent, collectively “You”) acceptance of the terms and conditions set forth below (“T&amp;C”).  By using, accessing or 
+downloading this Document, You are accepting the T&amp;C and agree to be bound by the T&amp;C.  If You don’t agree to the T&amp;C, You may not use this 
+Document and shall immediately destroy any copy thereof. 
+ 
+This Document contains information that is confidential and proprietary to MediaTek Inc. and/or its affiliates (collectively “MediaTek”) or its licensors 
+and is provided solely for Your internal use with MediaTek’s chipset(s) described in this Document and shall not be used for any other purposes (including 
+but not limited to identifying or providing evidence to support any potential patent infringement claim against MediaTek or any of MediaTek’s suppliers 
+and/or direct or indirect customers).  Unauthorized use or disclosure of the information contained herein is prohibited.  You agree to indemnify 
+MediaTek for any loss or damages suffered by MediaTek for Your unauthorized use or disclosure of this Document, in whole or in part. 
+ 
+MediaTek and its licensors retain titles and all ownership rights in and to this Document and no license (express or implied, by estoppels or otherwise) to 
+any intellectual propriety rights is granted hereunder.  This Document is subject to change without further notification.  MediaTek does not assume any 
+responsibility arising out of or in connection with any use of, or reliance on, this Document, and specifically disclaims any and all liability, including, 
+without limitation, consequential or incidental damages. 
+ 
+THIS DOCUMENT AND ANY OTHER MATERIALS OR TECHNICAL SUPPORT PROVIDED BY MEDIATEK IN CONNECTION WITH THIS DOCUMENT, IF ANY, ARE 
+PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE.  MEDIATEK SPECIFICALLY DISCLAIMS 
+ALL WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, COMPLETENESS OR ACCURACY AND ALL 
+WARRANTIES ARISING OUT OF TRADE USAGE OR OUT OF A COURSE OF DEALING OR COURSE OF PERFORMANCE.  MEDIATEK SHALL NOT BE RESPONSIBLE 
+FOR ANY MEDIATEK DELIVERABLES MADE TO MEET YOUR SPECIFICATIONS OR TO CONFORM TO A PARTICULAR STANDARD OR OPEN FORUM. 
+ 
+Without limiting the generality of the foregoing, MediaTek makes no warranty, representation or guarantee regarding the suitability of its products for 
+any particular purpose, nor does MediaTek assume any liability arising out of the application or use of any product, circuit or software.  You agree that 
+You are solely responsible for the designing, validating and testing Your product incorporating MediaTek’s product and ensure such product meets 
+applicable standards and any safety, security or other requirements. 
+ 
+The above T&amp;C and all acts in connection with the T&amp;C or this Document shall be governed, construed and interpreted in accordance with the laws of 
+Taiwan, without giving effect to the principles of conflicts of law. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a><a href="#page-18">PDF物理页 18</a><a href="#page-19">PDF物理页 19</a><a href="#page-20">PDF物理页 20</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

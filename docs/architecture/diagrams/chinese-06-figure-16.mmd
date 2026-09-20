@@ -1,0 +1,15 @@
+flowchart TD
+  A[configure/start] --> B{format and component accepted?}
+  B -- no --> B1[unsupported/configuration/resource]
+  B -- yes --> C{input timestamps advance?}
+  C -- no --> C1[upstream starvation]
+  C -- yes --> D{output and fence advance?}
+  D -- no --> D1[codec stall/error/output backpressure]
+  D -- yes --> E{Surface Generation valid?}
+  E -- no --> E1[stale output Surface]
+  B1 --> R[stop input and capture state]
+  C1 --> R
+  D1 --> R
+  E1 --> R
+  R --> S[flush/stop/release under valid state]
+  S --> T[new codec + new Surface + timestamp readback]

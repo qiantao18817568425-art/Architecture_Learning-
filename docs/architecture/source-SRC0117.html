@@ -1,0 +1,522 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>Auto_Camera_ISP8S_CDPHY_Eye_Scan_User_Guide_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>Auto_Camera_ISP8S_CDPHY_Eye_Scan_User_Guide_V1.0.pdf</h1><p>SRC0117 · 原来源 ID S046 · PDF物理页 · 15 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8668/MTK参考资料/MTK参考资料/Auto_Camera_ISP8S_CDPHY_Eye_Scan_User_Guide_V1.0.pdf</p><p>SHA-256：<code>6c11069e244f90d74172da48786a3b14a2bfcad4e445d7ab42d8689e912b0699</code></p><p>原文件大小：747,593 字节</p></details><div class="actions"><a class="button" href="materials/SRC0117.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="Auto_Camera_ISP8S_CDPHY_Eye_Scan_User_Guide_V1.0.pdf 原 PDF" src="materials/SRC0117.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0117.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Confidential A - Encrypted 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version:  1.0 
+Release date:  2025-12-01 
+Auto Camera ISP8S CDPHY Eye Scan  
+User Guide 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0117.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+Confidential A - Encrypted 
+Auto Camera ISP8S CDPHY Eye Scan  
+User Guide 
+Version History 
+Version Date Author Description 
+1.0 2025-12-01 Zhongyong Yu Official release 
+ 
+  
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0117.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+Confidential A - Encrypted 
+Auto Camera ISP8S CDPHY Eye Scan  
+User Guide 
+Table of Contents 
+Version History ·································································································································································· 2 
+Table of Contents ······························································································································································· 3 
+1 Script Execution Flow ················································································································································· 4 
+2 Environment Requirement ········································································································································· 5 
+3 How To Run EYE_SCAN Script ····································································································································· 6 
+3.1 File Path ···································································································································································· 6 
+3.2 Parameter of Script ·················································································································································· 6 
+3.2.1 Modify Sensor_idx &amp; Sensor_mode·············································································································· 7 
+3.2.2 Modify C-PHY or D-PHY Range ······················································································································ 7 
+3.3 Result Check ····························································································································································· 7 
+3.4 Example ···································································································································································· 8 
+4 ADB Command &amp; Register Information. ··················································································································· 11 
+4.1 How To Run EYE_SCAN Relative ADB Command ···································································································· 11 
+4.1.1 Index &amp; Streamon ······································································································································· 11 
+4.2 Command Name &amp; Value ······································································································································· 12 
+4.3 Example ·································································································································································· 14 
+Exhibit 1 Terms and Conditions ········································································································································ 15 
+ 
+  
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0117.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+Confidential A - Encrypted 
+Auto Camera ISP8S CDPHY Eye Scan  
+User Guide 
+1 Script Execution Flow 
+• Origin version 
+Note that the v.4 script would do “reboot” at the start and the end. 
+ 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0117.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+Confidential A - Encrypted 
+Auto Camera ISP8S CDPHY Eye Scan  
+User Guide 
+2 Environment Requirement 
+Android Debug Bridge (adb) &amp; Python3 environment are required. 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0117.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+Confidential A - Encrypted 
+Auto Camera ISP8S CDPHY Eye Scan  
+User Guide 
+3 How To Run EYE_SCAN Script 
+3.1 File Path 
+The path of EYE SCAN Python script is: 
+ 
+• Yocto:  
+src/multimedia/camera-hal/${IC}/mtkcam-core/hw/sensor/tool/eye_scan/ eye_scan_tool.py 
+ 
+• Android:  
+vendor/mediatek/proprietary/hardware/mtkcam-core/hw/sensor/tool/eye_scan/eye_scan_tool.py 
+ 
+3.2 Parameter of Script 
+• Script arguments 
+Arguments Default Meaning 
+sensor_idx 1 Sensor index of SenTest  
+• 1: Main cam  
+• 2: Sub cam  
+• 4: Main2 cam  
+• 8: Sub2 cam  
+• 16: Main3 cam 
+sensor_mode  0 
+Sensor mode 
+0: Preview 
+1: Capture 
+2: Video  ...  
+(Pixel rate of each mode would impact scanning result.) 
+CDR_DELAY_start  0 Setting scan range of CDR_DELAY 
+CDR_DELAY_end  31 - 
+EQ_OFFSET_start  -31 Setting scan range of EQ_OFFSET 
+EQ_OFFSET_end  31 - 
+delay_time  0 Time duration (seconds) between flush IRQ status after new 
+setting and check new IRQ status 
+serial 0123456789ABCDEF Serial number of device (phone) 
+ 
+• Run CMD 
+– Run with specified arguments 
+python eye_scan_tool.py --sensor_idx 1 --sensor_mode 1 --CDR_DELAY_start 0 --CDR_DELAY_end 
+31 --EQ_OFFSET_start -31 --EQ_OFFSET_end 31 --delay_time 0 --serial 0123456789ABCDE 
+ 
+– Run with default arguments 
+python eye_scan_tool.py 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0117.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+Confidential A - Encrypted 
+Auto Camera ISP8S CDPHY Eye Scan  
+User Guide 
+3.2.1 Modify Sensor_idx &amp; Sensor_mode  
+• Command: adb root &amp; adb shell sentest  
+ 
+ 
+ 
+• sensor_idx is set the same as SensorDevIdx. 
+• sensor_mode is set to what you want to scan (start from 0).  
+ 
+3.2.2 Modify C-PHY or D-PHY Range 
+• CDR_DELAY_start is set to 0 (iteration start from 0). 
+• C-PHY: CDR_DELAY_end is set to 31 (iteration range from CDR_DELAY_start to 31). 
+• D-PHY: CDR_DELAY_end is set to 254 (iteration range from CDR_DELAY_start to 254). 
+• CDR_OFFSET_start is set to -31 (iteration start from -31). 
+• CDR_OFFSET_start is set to 31 (iteration start from 31). 
+ 
+3.3 Result Check 
+You will get two csv files after scanning. In both files, x-axis --&gt; CDR_DELAY , y-axis --&gt; EQ_OFFSET. 
+ 
+• rg_val.csv: Store all csi_irq_status values. 
+• result.csv: Store all pass or not. For each cell, O means IRQ status is correct at such (CDR_DELAY , EQ_OFFSET) setting, 
+while X means IRQ status is failed. 
+  
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0117.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+Confidential A - Encrypted 
+Auto Camera ISP8S CDPHY Eye Scan  
+User Guide 
+3.4 Example 
+• Terminal log 
+– Origin version 
+ 
+ 
+ 
+– Scan during streaming on 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0117.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+Confidential A - Encrypted 
+Auto Camera ISP8S CDPHY Eye Scan  
+User Guide 
+ 
+ 
+• Result 
+– Sensor: IMX766 (C-PHY) 
+▪ Mode 0 
+▪ datarate (symbols per second) = (pixelrate * rawbit /16 * 7) / trio =  (462170000 * 10 /16 * 7) / 3 = 
+673997916.6666 
+▪ result.csv 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0117.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+Confidential A - Encrypted 
+Auto Camera ISP8S CDPHY Eye Scan  
+User Guide 
+ 
+ 
+– Sensor: IMX766 (C-PHY) 
+▪ mode 11 
+▪ datarate (symbols per second) = (pixelrate * rawbit /16 * 7) / trio =  (2122970000* 10 /16 * 7) / 3 = 
+3095997916.6666 
+▪ result.csv 
+ 
+ 
+– Sensor: S5KSP9 (D-PHY) 
+▪ mode 1 
+▪ datarate (bit per second) = (pixelrate * rawbit) / lane = (586000000 * 10)/4 = 1465000000 
+▪ result.csv 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0117.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+Confidential A - Encrypted 
+Auto Camera ISP8S CDPHY Eye Scan  
+User Guide 
+4 ADB Command &amp; Register Information. 
+The above Python script uses a sequence of ADB commands to read/write registers. 
+The details of the ADB command and registers are provided. 
+ 
+4.1 How To Run EYE_SCAN Relative ADB Command 
+adb shell &quot;echo EYE_SCAN dts_idx cmd_name val(option) &gt; ....../debug_ops; cat ....../debug_ops&quot; 
+ 
+The full path of debug_ops is different at DX-2 &amp; DX-3 &amp; DX-4. 
+ 
+• debug_ops path @ DX-2 
+– /sys/devices/platform/1a00e000.seninf_top/debug_ops 
+• debug_ops path @ DX-3 
+– /sys/devices/platform/soc/1a00e000.seninf-top/debug_ops 
+• debug_ops path @ DX-3 
+– /sys/devices/platform/soc/3a300000.seninf-top/seninf-top/debug_ops 
+ 
+4.1.1 Index &amp; Streamon 
+• dts_idx and sensor_idx 
+– The dts_idx is described in the device tree. 
+▪ 0: Main cam  
+▪ 1: Sub cam  
+▪ 2: Main2 cam  
+▪ 3: Sub2 cam  
+▪ 4: Main3 cam  
+– The relationship between dts_idx and sensor_idx (for SenTest): 
+sensor_idx = 2 &lt;&lt; dts_idx 
+• Before using ADB command to read/write registers on-line, such sensor should be streaming. 
+– It is recommended to use SenTest to stream on sensor before running EYE_SCAN relative ADB command (the 
+same as Python script). 
+– Command: adb root &amp; adb shell sentest_v4l2 sensor_idx sensor_mode 
+– For example, sensor_idx = 1, sensor_mode = 0. 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0117.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+Confidential A - Encrypted 
+Auto Camera ISP8S CDPHY Eye Scan  
+User Guide 
+ 
+4.2 Command Name &amp; Value 
+Notify that the full path of debug_ops is different at DX-2 &amp; DX-3. 
+ 
+After sending the ABD command, you would get a string beginning with [EYE_SCAN SUCCESS], which means such registers 
+have been written without any error. Otherwise, a string beginning with [EYE_SCAN FAIL] means there is something wrong 
+(e.g., the sensor is not streaming) 
+ 
+CMD Name Register Func. Purpose Value Range CMD 
+EQ_DG0_EN  CTLE L1 Improve the 
+quality of 
+MIPI signal 
+ {0x0, 0x1} echo EYE_SCAN dts_idx EQ_DG0_EN 0x1 &gt; 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops; cat 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops 
+GET_EQ_DG0_EN Not need echo EYE_SCAN dts_idx GET_EQ_DG0_EN  &gt; 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops; cat 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops 
+EQ_SR0  0~15 echo EYE_SCAN dts_idx EQ_SR0 val  &gt; 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops; cat 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops 
+GET_EQ_SR0 Not need echo EYE_SCAN dts_idx GET_EQ_SR0 &gt; 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops; cat 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops 
+EQ_DG1_EN  CTLE L2 {0x0, 0x1} echo EYE_SCAN dts_idx EQ_DG1_EN 0x1 &gt; 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops; cat 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops 
+GET_EQ_DG1_EN Not need echo EYE_SCAN dts_idx GET_EQ_DG1_EN &gt; 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops; cat 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0117.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+Confidential A - Encrypted 
+Auto Camera ISP8S CDPHY Eye Scan  
+User Guide 
+CMD Name Register Func. Purpose Value Range CMD 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops 
+EQ_SR1  0~15 echo EYE_SCAN dts_idx EQ_SR1 val  &gt; 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops; cat 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_op 
+GET_EQ_SR1 Not need echo EYE_SCAN dts_idx GET_EQ_SR1 &gt; 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops; cat 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops 
+EQ_BW  Buffer 
+bandwidth 
+{0x0, 0x1, 
+0x3} 
+echo EYE_SCAN dts_idx EQ_BW  val  &gt; 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops; cat 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops 
+GET_EQ_BW Not need echo EYE_SCAN dts_idx GET_EQ_BW &gt; 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops; cat 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops 
+FLUSH_CRC_STATUS  Check seninf 
+IRQ status 
+Eye scan Not need echo EYE_SCAN dts_idx FLUSH_CRC_STATUS 
+&gt; 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops; cat 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops 
+CDR_DELAY  Scan width of 
+eye 
+CPHY: 0~31  
+DPHY: 0~254 
+echo EYE_SCAN dts_idx CDR_DELAY val &gt; 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops; cat 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops 
+GET_CDR_DELAY Not need echo EYE_SCAN dts_idx GET_CDR_DELAY &gt; 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops; cat 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops 
+CDR_DELAY_DPHY_EN  Not need echo EYE_SCAN dts_idx 
+CDR_DELAY_DPHY_EN &gt; 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops; cat 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops 
+EQ_OFFSET Scan height of 
+eye 
+-31 ~ 31 echo EYE_SCAN dts_idx EQ_OFFSET val &gt; 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops; cat 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops 
+GET_EQ_OFFSET Scan height of 
+eye 
+Not need echo EYE_SCAN dts_idx GET_EQ_OFFSET  &gt; 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops; cat 
+/sys/devices/platform/soc/1a00e000.seninf-
+top/debug_ops 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0117.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+Confidential A - Encrypted 
+Auto Camera ISP8S CDPHY Eye Scan  
+User Guide 
+ 
+4.3 Example 
+• Terminal 1: Stream on sensor 
+ 
+ 
+• Terminal 2: Use EYE_SCAN ADB command 
+ 
+ 
+• Use EYE_SCAN ADB command before sensor is streamed on. 
+Note that you must stream on the sensor at least one time before using the ADB command for V4L2 link setup. 
+ 
+ 
+While the sensor is streamed off, the input parameter will be saved and only be written to register when the sensor is 
+streamed on next time. 
+Once the input parameter is written, it will be cleared. 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0117.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2025 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+Confidential A - Encrypted 
+Auto Camera ISP8S CDPHY Eye Scan  
+User Guide 
+Exhibit 1 Terms and Conditions 
+Your access to and use of this document and the information contained herein (collectively this “Document”) is subject to your (including the corporation 
+or other legal entity you represent, collectively “You”) acceptance of the terms and conditions set forth below (“T&amp;C”).  By using, accessing or 
+downloading this Document, You are accepting the T&amp;C and agree to be bound by the T&amp;C.  If You don’t agree to the T&amp;C, You may not use this 
+Document and shall immediately destroy any copy thereof. 
+ 
+This Document contains information that is confidential and proprietary to MediaTek Inc. and/or its affiliates (collectively “MediaTek”) or its licensors 
+and is provided solely for Your internal use with MediaTek’s chipset(s) described in this Document and shall not be used for any other purposes (including 
+but not limited to identifying or providing evidence to support any potential patent infringement claim against MediaTek or any of MediaTek’s suppliers 
+and/or direct or indirect customers).  Unauthorized use or disclosure of the information contained herein is prohibited.  You agree to indemnify 
+MediaTek for any loss or damages suffered by MediaTek for Your unauthorized use or disclosure of this Document, in whole or in part. 
+ 
+MediaTek and its licensors retain titles and all ownership rights in and to this Document and no license (express or implied, by estoppels or otherwise) to 
+any intellectual propriety rights is granted hereunder.  This Document is subject to change without further notification.  MediaTek does not assume any 
+responsibility arising out of or in connection with any use of, or reliance on, this Document, and specifically disclaims any and all liability, including, 
+without limitation, consequential or incidental damages. 
+ 
+THIS DOCUMENT AND ANY OTHER MATERIALS OR TECHNICAL SUPPORT PROVIDED BY MEDIATEK IN CONNECTION WITH THIS DOCUMENT, IF ANY, ARE 
+PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE.  MEDIATEK SPECIFICALLY DISCLAIMS 
+ALL WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, COMPLETENESS OR ACCURACY AND ALL 
+WARRANTIES ARISING OUT OF TRADE USAGE OR OUT OF A COURSE OF DEALING OR COURSE OF PERFORMANCE.  MEDIATEK SHALL NOT BE RESPONSIBLE 
+FOR ANY MEDIATEK DELIVERABLES MADE TO MEET YOUR SPECIFICATIONS OR TO CONFORM TO A PARTICULAR STANDARD OR OPEN FORUM. 
+ 
+Without limiting the generality of the foregoing, MediaTek makes no warranty, representation or guarantee regarding the suitability of its products for 
+any particular purpose, nor does MediaTek assume any liability arising out of the application or use of any product, circuit or software.  You agree that 
+You are solely responsible for the designing, validating and testing Your product incorporating MediaTek’s product and ensure such product meets 
+applicable standards and any safety, security or other requirements. 
+ 
+The above T&amp;C and all acts in connection with the T&amp;C or this Document shall be governed, construed and interpreted in accordance with the laws of 
+Taiwan, without giving effect to the principles of conflicts of law. 
+ 
+ 
+MediaTek Confidential
+ For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+MediaTek Confidential
+For ytliu@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

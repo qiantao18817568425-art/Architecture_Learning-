@@ -1,0 +1,2461 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Hypervisor_OTA_User_Manual_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Hypervisor_OTA_User_Manual_V1.0.pdf</h1><p>SRC0238 · 原来源 ID S173 · PDF物理页 · 55 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MT8676软件资料/User Manual/Hypervisor/English Version/MT8676_Hypervisor_OTA_User_Manual_V1.0.pdf</p><p>SHA-256：<code>521a9a0645921d9a6407e2f17f4d32c059cffdc2e88cb484958d808151cfbf8b</code></p><p>原文件大小：2,425,465 字节</p></details><div class="actions"><a class="button" href="materials/SRC0238.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Hypervisor_OTA_User_Manual_V1.0.pdf 原 PDF" src="materials/SRC0238.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0238.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version:  1.0 
+Release date:  2024-12-27
+MT8676 Hypervisor OTA User Manual 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0238.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+Version History 
+Version Date Author Description 
+1.0 2024-12-27 Ming Ji Official release 
+ 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0238.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+Table of Contents 
+Version History ·································································································································································· 2 
+Table of Contents ······························································································································································· 3 
+List of Figures ····································································································································································· 4 
+List of Tables ······································································································································································ 5 
+1 Hypervisor (L+L+A) OTA Solution Description············································································································· 6 
+2 Hypervisor OTA Abbreviation ····································································································································· 7 
+3 Overall Centralized Upgrade of Hypervisor (L+L+A) ···································································································· 8 
+3.1 Enable the Overall Centralized Upgrade Solution ···································································································· 8 
+3.2 Program Overview ···················································································································································· 8 
+ Basic Functionality ········································································································································ 8 
+3.3 Architecture/Process Overview ································································································································ 9 
+ Hypervisor (L+L+A) OTA Upgrade Architecture ····························································································· 9 
+ Hypervisor (L+L+A) otapackage Compilation Architecture ········································································· 10 
+3.4 How to Compile Hypervisor (L+L+A) OTA Package ································································································· 11 
+ Compile hypervisor_target_files.zip ··········································································································· 11 
+ Compile Hypervisor (L+L+A) Full Upgrade Package····················································································· 12 
+ Compile Hypervisor (L+L+A) Incremental Upgrade Package ······································································· 12 
+3.5 Analysis of Upgrade Package Structure ·················································································································· 13 
+3.6 How to Perform Hypervisor (L+L+A) OTA Upgrade ································································································· 14 
+ Full Package Upgrade (Normal Mode) ········································································································ 14 
+ Incremental Upgrade (Normal Mode) ········································································································ 15 
+3.7 How to Modify the Signature of the Upgrade Package ·························································································· 15 
+3.8 How to Remove/Add OTA Upgrade Partitions ········································································································ 16 
+ Source of OTA Upgrade Partition ················································································································ 16 
+ Remove OTA Upgrade Partition ·················································································································· 16 
+ Add OTA Upgrade Partition ························································································································· 18 
+3.9 Selection of Image Loading for AB system ············································································································· 21 
+ Boot Control Information Description ········································································································ 21 
+ Image Loading Selection Process ················································································································ 22 
+3.10 Manually Configure Boot Slot ································································································································ 22 
+3.11 System Rollback ······················································································································································ 22 
+ Basic Principles of System Rollback ············································································································· 23 
+ System Rollback Detection Process ············································································································· 24 
+ Changes in Boot Control Parameters for System Rollback ·········································································· 25 
+ System Rollback Test Cases ························································································································· 26 
+3.12 Power Outage Upgrade Protection ························································································································ 28 
+ Upgrade Status Information ························································································································ 28 
+ Resume Upgrade Inspection Process ·········································································································· 29 
+4 Partial Centralized Upgrade of Hypervisor (L+L+A) ··································································································· 31 
+4.1 Enable Partial Centralized Upgrade Scheme ·········································································································· 31 
+4.2 Program Overview ·················································································································································· 31 
+ Basic Functionality ······································································································································ 31 
+4.3 Architecture/Process Overview ······························································································································ 32 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0238.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+ Hypervisor (L+L+A) OTA Upgrade Architecture ··························································································· 32 
+ Hypervisor (L+L+A) Upgrade Package Compilation Architecture ································································ 33 
+4.4 How to Compile Hypervisor OTA Upgrade Package ······························································································· 35 
+ Compile Hypervisor Linux OS (L+L) OTA Upgrade Package ········································································· 35 
+ Compile the Hypervisor Android OS Upgrade Package ··············································································· 37 
+4.5 Analysis of Upgrade Package Structure ·················································································································· 38 
+4.6 How to Perform Hypervisor (L+L+A) OTA Upgrade ································································································· 38 
+ Full Package Upgrade (Normal Mode) ········································································································ 38 
+ Incremental Package Upgrade (Normal Mode) ··························································································· 39 
+4.7 How to Modify the Signature of the Hypervisor Linux OS (L+L) Upgrade Package ················································ 40 
+4.8 How to Remove/Add OTA Upgrade Partitions ········································································································ 41 
+ Source of OTA Upgrade Partition ················································································································ 41 
+ Remove OTA Upgrade Partition ·················································································································· 41 
+ OTA Upgrade Partition ································································································································ 42 
+4.9 Selection of Boot Slot ············································································································································· 45 
+ Boot Control Information Description ········································································································ 45 
+ Boot Slot Selection Mechanism ·················································································································· 47 
+4.10 Android Merge ······················································································································································· 48 
+4.11 System Rollback ······················································································································································ 49 
+ Basic Principles of System Rollback ············································································································· 49 
+ System Rollback Process ····························································································································· 50 
+ System Test Cases ······································································································································· 51 
+4.12 Power Outage Upgrade Protection ························································································································ 53 
+ Upgrade Status Information ························································································································ 53 
+ Resume Upgrade Inspection Process ·········································································································· 54 
+Attachment 1 Additional Terms ······································································································································· 55 
+ 
+List of Figures 
+Figure 3-1. Hypervisor (L+L+A) OTA update architecture ··········································································································· 9 
+Figure 3-2. Hypervisor (L+L+A) otapackage compilation architecture ····················································································· 10 
+Figure 3-3. Hypervisor (L+L+A) otapackage structure ·············································································································· 13 
+Figure 3-4. payload.bin composition structure ························································································································ 14 
+Figure 3-5. OTA upgrade partition source ································································································································ 16 
+Figure 3-6 Hypervisor (L+L+A) boot control parameters ·········································································································· 21 
+Figure 3-7. Hypervisor (L+L+A) image loading process ············································································································ 22 
+Figure 3-8. Yocto boot failure scenario after OTA upgrade ······································································································ 23 
+Figure 3-9. Android boot failure scenario after OTA upgrade ·································································································· 23 
+Figure 3-10. T-box boot failure scenario after OTA upgrade ···································································································· 24 
+Figure 3-11. Hypervisor (L+L+A) rollback detection process ···································································································· 24 
+Figure 3-12. Yocto &amp; Android &amp; T-box boot status ··················································································································· 25 
+Figure 3-13. Yocto &amp; Android &amp; T-box boot status ··················································································································· 25 
+Figure 3-14. Yocto &amp; Android &amp; T-box boot status ··················································································································· 26 
+Figure 3-15. Yocto &amp; Android &amp; T-box boot status ··················································································································· 26 
+Figure 3-16. Upgrade status information ································································································································· 29 
+Figure 3-17. Hypervisor resume update flow ··························································································································· 30 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0238.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+Figure 3-18. Hypervisor check resume update flow ················································································································· 30 
+Figure 4-1. Hypervisor (L+L+A) OTA update architecture ········································································································· 32 
+Figure 4-2. Hypervisor L+L (Yocto + T-box) compilation otapackage architecture ·································································· 33 
+Figure 4-3. Hypervisor Android compilation upgrade package architecture ··········································································· 34 
+Figure 4-4. OTA upgrade partition source ································································································································ 41 
+Figure 4-5. Hypervisor (L+L+A) boot control parameters ········································································································· 46 
+Figure 4-6. Hypervisor (L+L+A) boot slot selection mechanism ······························································································ 47 
+Figure 4-7. Android merge mechanism ···································································································································· 48 
+Figure 4-8. Yocto boot failure scenario after OTA upgrade ······································································································ 49 
+Figure 4-9. Android boot failure scenario after OTA upgrade ·································································································· 49 
+Figure 4-10. T-box boot failure scenario after OTA upgrade ···································································································· 50 
+Figure 4-11. Hypervisor rollback flow ······································································································································ 51 
+Figure 4-12. Upgrade status information ································································································································· 53 
+ 
+List of Tables 
+Table 2-1. Abbreviation ······························································································································································ 7 
+Table 3-1. otapackage component description ························································································································ 13 
+Table 3-2. payload.bin component description ························································································································ 14 
+Table 3-3. Hypervisor (L+L+A) boot control parameter description ························································································· 21 
+Table 3-4. Upgrade status information description ·················································································································· 29 
+Table 4-1. Boot control parameter description ························································································································ 46 
+Table 4-2. Upgrade status information description ·················································································································· 53 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0238.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+1 Hypervisor (L+L+A) OTA Solution Description 
+Note: L+L+A refers to Yocto (Linux OS) + T-box (Linux OS) + Android (Android OS) 
+ 
+For the OTA update of Hypervisor (L+L+A), MediaTek supports the following two update schemes: 
+• Solution 1: Overall centralized upgrade, which means Yocto serves as the Host OS to unify the upgrade of Yocto + T-
+box + Android. For detailed introduction, please refer to Chapter 3 Overall Centralized Upgrade of Hypervisor (L+L+A)  
+• Solution 2: Partial centralized upgrade, which means Yocto serves as the Host OS to uniformly upgrade Yocto + T-box, 
+while Android uses the Android Update Engine for separate upgrades. For detailed introduction, please refer to 
+Chapter 4 Partial Centralized Upgrade of Hypervisor (L+L+A). 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0238.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+2 Hypervisor OTA Abbreviation 
+Table 2-1. Abbreviation 
+Abbreviations Explanation 
+Bootctl Boot Control  
+A/B slot identification structure, stored in the misc partition 
+LK2 Little Kernel 2 
+Microkernel 
+OTA Over-The-Air 
+OTA download upgrade, a remote update technology 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0238.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+3 Overall Centralized Upgrade of Hypervisor (L+L+A)  
+This chapter primarily introduces the centralized upgrade scheme of Hypervisor (L+L+A) OTA Update, which includes: 1. 
+Configuration settings to enable this scheme; 2. Overview of the scheme architecture; 3. Compilation of upgrade packages; 
+4. System rollback procedures. This scheme is enabled by default in the public version. 
+ 
+3.1 Enable the Overall Centralized Upgrade Solution 
+If you need to enable the centralized upgrade solution, please set the following configurations: 
+1. Add SUPPORT_BOOTCTRL_V3 := yes in &lt;yocto_project_name&gt;.mk and &lt;tbox_project_name&gt;.mk in LK2 
+For example: 
+src/bsp/lk2/project/auto8676p1_64_hyp.mk 
+SUPPORT_BOOTCTRL_V3 := yes 
+src/bsp/lk2/project/auto8676p1_64_uos_tbox.mk 
+SUPPORT_BOOTCTRL_V3 := yes 
+ 
+2. Add SUPPORT_BOOTCTRL = &quot;3&quot; in the &lt; yocto_project_name &gt;.conf and &lt; tbox_project_name &gt;.conf in meta. 
+For example: 
+meta/meta-mediatek-mt8676-hyp/conf/machine/auto8676p1_64_hyp.conf 
+SUPPORT_BOOTCTRL = “3” 
+meta/meta-mediatek-mt8676-hyp/conf/machine /auto8676p1_64_uos_tbox.conf 
+SUPPORT_BOOTCTRL = “3” 
+ 
+Note: Please do not support different types of OTA upgrade schemes simultaneously in a single project.mk or project.conf. 
+ 
+3.2 Program Overview 
+ Basic Functionality 
+Hypervisor (L+L+A) overall centralized upgrade plan supports the following functions: 
+• Support seamless updates in the device background. 
+• Support system rollback to prevent the system from becoming inoperable after an upgrade failure. 
+• Support integrity and accuracy verification of the upgrade package. 
+• Support simultaneous upgrades of multiple OSs. 
+• Support full package upgrades and incremental upgrades. 
+• Support manual switching between A and B. 
+• Support power outage relay upgrades. 
+ 
+But it also has the following limitations: 
+• Updating the partition layout is not supported, the partition layout must remain consistent between versions before 
+and after the upgrade. Subsequent modifications to the partition layout cannot be made through OTA updates. 
+• Mutual upgrades between AB partitions and non-AB partitions are not supported. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0238.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+• The partition image that needs to be upgraded must be in xxx.img format, for example: boot.img, and other file 
+formats are not supported. 
+• The partition type that requires upgrading must be a read-only (RO) partition. 
+• Android Virtual AB is not supported. 
+• OS upgrades are not supported independently. 
+ 
+3.3 Architecture/Process Overview 
+ Hypervisor (L+L+A) OTA Upgrade Architecture 
+ 
+Figure 3-1. Hypervisor (L+L+A) OTA update architecture 
+ 
+Figure 3-1 describes the overall centralized upgrade solution architecture of the Hypervisor (L+L+A). The following 
+information can be obtained from the figure: 
+1. The Hypervisor (L+L+A) OTA upgrade package supports obtaining it from the OTA Server or local storage space. 
+MediaTek currently only supports OTA upgrades through local upgrade packages, downloading the upgrade package 
+from the OTA Server using the network needs to be implemented by the OEM. 
+2. Hypervisor OTA upgrade is completed entirely on Yocto OS (Host OS), and other Guest OSs (Android OS + T-box OS) do 
+not participate in the upgrade operation. 
+3. For example, completing the OTA upgrade through a local upgrade package, the general process of Hypervisor (L+L+A) 
+OTA upgrade is as follows: 
+1) Store the upgrade package in the local platform storage environment. 
+2) Execute OTA update script to call update_engine sideload to trigger the upgrade. 
+3) Use Package Security Verify to check the integrity and accuracy of the upgrade package. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0238.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+4) Use Partition Write to write the data in the upgrade package to the corresponding partition storage space 
+through the UFS Driver. 
+5) Use Partition Verify to perform accuracy verification on the data updated and written to the partition, ensuring 
+the accuracy of the actual written data. 
+6) Use Switch Next Boot Slot to set the next system boot slot, ensuring that the system boots from the updated slot 
+next time. 
+ 
+ Hypervisor (L+L+A) otapackage Compilation Architecture 
+ 
+Figure 3-2. Hypervisor (L+L+A) otapackage compilation architecture 
+ 
+Figure 3-2 describes the architecture of the Hypervisor (L+L+A) OTA overall centralized upgrade solution to compile the 
+upgrade package. The following information can be obtained from the figure: 
+1. Hypervisor (L+L+A) overall centralized upgrade only requires compiling one OTA upgrade package. 
+2. The Hypervisor (L+L+A) compilation upgrade package must be performed in the Hypervisor Android compilation 
+environment. 
+3. The general process for compiling the hypervisor upgrade package is as follows: 
+– Compile Hypervisor yocto_target_files.zip. 
+– Compile Hypervisor uos_tbox_target_files.zip. 
+– Compile Hypervisor Android target_files.zip. 
+– Merge yocto_target_files.zip, uos_tbox_target_files.zip, and targetfiles.zip into the final 
+hypervisor_target_files.zip. 
+– Compile the full upgrade package and incremental upgrade package using hypervisor_target_files.zip in the 
+Android build environment. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0238.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+Note: For detailed instructions on compiling the Hypervisor OTA upgrade package, please refer to Section 3.4 How to Compile Hypervisor 
+(L+L+A) OTA Package. 
+ 
+3.4 How to Compile Hypervisor (L+L+A) OTA Package 
+ Compile hypervisor_target_files.zip 
+1. Build yocto_target_files.zip 
+The target_files.zip of Yocto OS (Host OS) is compiled by Hypervisor_make_yocto_targetfiles.py, the script is located at: 
+meta/meta-mediatek-mt8676-hyp/recipes-devtools/ota-tools/files 
+ 
+During the Yocto OS compilation stage, the system will automatically execute this script for packaging, and the final 
+yocto_target_files.zip is located at: 
+build/tmp/deploy/images/&lt;project_name&gt;/yocto_target_files.zip 
+ 
+2. Build uos_tbox_target_files.zip 
+The target_files.zip of T-box OS (Guest OS) is generated by Hypervisor_make_uos_tbox_targetfiles.py, the script is located 
+at: 
+meta/meta-mediatek-mt8676-hyp/recipes-devtools/uos-tbox-ota-tools/files 
+ 
+During the T-box OS compilation stage, the system will automatically execute this script for packaging, and the final 
+uos_tbox_target_files.zip is located at: 
+build/tmp/deploy/images/&lt;project_name&gt;/uos_tbox_target_files.zip 
+ 
+3. Build Android target_files.zip 
+The target_files.zip of Android is automatically compiled during the build Android OS phase, and the final target_files.zip is 
+located at: 
+out/target/product/&lt;project name&gt;/merged/ target_files.zip 
+ 
+4. Build hypervisor_target_files.zip 
+hypervisor_target_files.zip needs to use the Hypervisor_3OS_merge_targetfiles.py script to merge yocto_target_files.zip, 
+uos_tbox_target_files.zip, and target_files.zip to produce it. Hypervisor_3OS_merge_targetfiles.py is located at: 
+device/mediateksample/&lt;project name&gt;/Hypervisor_3OS_merge_targetfiles.py 
+ 
+After obtaining yocto_target_files.zip, uos_tbox_target_files.zip, and target_files.zip, execute the following command in 
+the Android compilation environment to obtain hypervisor_target_files.zip: 
+python3 Hypervisor_3OS_merge_targetfiles.py &lt;parameter1&gt; &lt;parameter2&gt; &lt;parameter3&gt; 
+Note: 
+• Hypervisor_3OS_merge_targetfiles.py: A script to compile hypervisor_target_files.zip 
+• &lt;Parameter 1&gt;: the path of yocto_target_files.zip 
+• &lt;Parameter 2&gt;: The path of uos_tbox_target_files.zip 
+• &lt;Parameter 3&gt;: the path of target_files.zip 
+ 
+Output file: 
+A file named hypervisor_target_files.zip will be generated in the current directory. This is the target_files.zip package of 
+Hypervisor (L+L+A). 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0238.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+For example: 
+python3 device/mediateksample/auto8676p1_64_bsp_vm/Hypervisor_3OS_merge_targetfiles.py 
+3OS_target_files/yocto_target_files.zip 3OS_target_files/uos_tbox_target_files.zip 
+3OS_target_files/target_files.zip 
+ 
+ Compile Hypervisor (L+L+A) Full Upgrade Package 
+After compiling hypervisor_target_files.zip as referenced in Section 3.4.1 Compile hypervisor_target_files.zip , compile the 
+full upgrade package for Hypervisor (L+L+A) in the Android OS compilation environment. 
+Compilation instructions: 
+./out_sys/host/linux-x86/bin/ota_from_target_files -v --block -p out_sys/host/linux-x86 -k 
+build/make/target/product/security/testkey --skip_postinstall hypervisor_target_files.zip 
+otapackage_full.zip 
+Note: 
+• ota_from_target_files: Upgrade package compilation script 
+• build/make/target/product/security/testkey: The key path for signing the upgrade package, MediaTek defaults to using the testkey 
+provided by Google, your company can specify another key path using the -k parameter . To change the signing key of the upgrade 
+package, please refer to Section 3.7 How to Modify the Signature of the Upgrade Package. 
+• hypervisor_target_files.zip: Hypervisor (L+L+A) target files.zip 
+• otapackage_full.zip: The final generated Hypervisor full upgrade package, the package name can be freely specified. 
+• Ensure compilation of the upgrade package in the Hypervisor (L+L+A) Android OS environment. Execute “source” and “lunch” 
+before compiling the full upgrade package, failure to do so will result in a complete compilation failure. 
+ 
+ Compile Hypervisor (L+L+A) Incremental Upgrade Package 
+Prerequisites: 
+To compile the incremental upgrade package, prepare two copies of hypervisor_target_files.zip in advance: 1. The first 
+copy is for the source version of hypervisor_target_files.zip, named source_hypervisor_target_files.zip. 2. The second copy 
+is for the target version of hypervisor_target_files.zip, named target_hypervisor_target_files.zip. 
+ 
+Note: Please ensure that the base version load burned on the platform and the base version hypervisor_target_files.zip are obtained 
+from the same compilation; otherwise, it will lead to OTA incremental upgrade failure. 
+ 
+Compilation instructions: 
+./out_sys/host/linux-x86/bin/ota_from_target_files -v --block -p out_sys/host/linux-x86 -k 
+build/make/target/product/security/testkey --skip_postinstall -i 
+source_hypervisor_target_files.zip target_hypervisor_target_files.zip otapackage_delta.zip 
+Note: 
+• ota_from_target_files: Upgrade package compilation script 
+• build/make/target/product/security/testkey: The key path for signing the upgrade package, MediaTek defaults to using the testkey 
+provided by Google, your company can specify another key path using the -k parameter . To change the signing key of the upgrade 
+package, please refer to Section 3.7 How to Modify the Signature of the Upgrade Package. 
+• source_hypervisor_target_files.zip: Source version of hypervisor_target_files.zip 
+• target_hypervisor_target_files.zip: Target version of hypervisor_target_files.zip 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0238.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+• otapackage_delta.zip: The final generated Hypervisor (L+L+A) incremental upgrade package, the package name can be specified at 
+will. 
+• Ensure that the upgrade package is compiled in the Hypervisor Android build environment. Execute “source” and “lunch” before 
+compiling the full package; otherwise, incremental package compilation will fail. 
+ 
+3.5 Analysis of Upgrade Package Structure 
+Hypervisor (L+L+A) OTA upgrade package is a compressed zip file, and its main components are as follows: 
+ 
+Figure 3-3. Hypervisor (L+L+A) otapackage structure 
+ 
+The components of the Hypervisor (L+L+A) otapackage in Figure 3-3 are described in the following table: 
+ 
+Table 3-1. otapackage component description 
+Name Description 
+metadata Store the metadata information of the upgrade package, including the upgrade version, 
+upgrade type, etc. 
+metadata.pb Store the metadata information of the upgrade package, including the upgrade version, 
+upgrade type, etc. 
+otacert Upgrade package signature verification information 
+apex_info.pb Android apex module configuration information 
+care_map.pb System fingerprint information 
+payload.bin Upgrade image information 
+payload_properties.txt The size and hash information of payload.bin and metadata 
+ 
+As can be seen from Table 3-1, the system upgrade information is stored in payload.bin, and its composition structure is as 
+follows: 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0238.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+ 
+Figure 3-4. payload.bin composition structure 
+ 
+As can be seen from Figure 3-4, the main components of payload.bin are shown in Table 3-2:  
+ 
+Table 3-2. payload.bin component description 
+Name Description 
+Header 
+Magic Number Magic string “CrAU” identifying that this is an update payload. 
+Major Version Payload major version number. 
+Manifest Size Manifest size in bytes. 
+Manifest Signature Size Manifest signature blob size in bytes 
+protobuf Manifest The list of operations to be performed. 
+protobuf Manifest Signature The signatures of the first five fields. There could be multiple 
+signatures if the key has changed. 
+blobs [] Payload Data The list of binary blobs used by operations in the metadata. 
+signature Payload Signature The signature of the entire payload, except for the metadata 
+signature. There could be multiple signatures if the key has changed. 
+ 
+3.6 How to Perform Hypervisor (L+L+A) OTA Upgrade 
+ Full Package Upgrade (Normal Mode) 
+Test Environment: 
+1. The PC has a Python 3 environment 
+2. Flash base load in the DUT 
+3. Get OTA package 
+ 
+Testing Steps: 
+1. Device connection Yocto adb environment 
+2. Execute the upgrade script:  
+python3 hypervisor_update.py --file otapackage_delta.zip &gt; update.txt 2&gt;&amp;1 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0238.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+– hypervisor_update.py: Update script 
+– otapackage_delta.zip: OTA package, unlimited package name 
+– &gt; update.txt 2&gt;&amp;1: Store the upgrade log in update.txt in the current directory 
+ 
+Expected Results: 
+1. Update should be completed, and update.txt prints the following log: [INFO:update_attempter_android.cc(600)] 
+Update successfully applied, waiting to reboot. 
+2. The first restart after the upgrade should successfully enter the HomeScreen 
+3. Check whether setting-version has been updated 
+Note: If the test upgrade fails, please provide the update log and UART log in CR. 
+ 
+ Incremental Upgrade (Normal Mode) 
+Test Environment: 
+1. The PC has a Python 3 environment 
+2. Flash base load in DUT must be consistent with the base version provided to the OTA owner 
+3. Get the OTA package from the OTA owner 
+ 
+Testing Steps 
+1. Device connection Yocto ADB environment 
+2. Execute the upgrade script:  
+python3 hypervisor_update.py --file otapackage_delta.zip &gt; update.txt 2&gt;&amp;1 
+– hypervisor_update.py: Update script 
+– otapackage_delta.zip: OTA package, unlimited package name 
+– &gt; update.txt 2&gt;&amp;1: Store the upgrade log in update.txt in the current directory 
+ 
+Expected Results: 
+1. Update should be completed, and update.txt prints the following log: [INFO:update_attempter_android.cc(600)] 
+Update successfully applied, waiting to reboot. 
+2. The first restart after the upgrade should successfully enter the Home Screen 
+3. Check whether the setting version has been updated 
+Note: If the test upgrade fails, please provide the update log and UART log in CR. 
+ 
+3.7 How to Modify the Signature of the Upgrade Package 
+During the OTA upgrade process, two keys will be used: xxx.pk8 and xxx.x509.pem. The key in xxx.pk8 format is used to 
+sign the upgrade package during the compilation of the upgrade package, while the key in xxx.x509.pem format is used to 
+verify the upgrade package during the OTA upgrade process. 
+ 
+If you need to use a customized key, please follow the steps below: 
+1. Replace the specified path of the -k parameter in the compilation instructions of the upgrade package in Section 3.4.2 
+Compile Hypervisor (L+L+A) Full Upgrade Package and 3.4.3 Compile Hypervisor (L+L+A) Incremental Upgrade Package 
+with the actual paths of xxx.pk8 and xxx.x509.pem. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0238.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 16 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+2. Replace the actual xxx.x509.pem file in meta/meta-mediaTek/recipes-support/update-engine-sideload-u/files/ota/    
+otacerts.zip. 
+ 
+3.8 How to Remove/Add OTA Upgrade Partitions 
+ Source of OTA Upgrade Partition 
+ 
+Figure 3-5. OTA upgrade partition source 
+ 
+The confirmation steps for the OTA upgrade partition are as follows: 
+1. During the compilation stage, the information in the partition table is packaged and converted into 
+MTXXX_Android_scatter.txt, for example: MT6897_Android_scatter.txt. 
+2. Record the partitions in MT6897_Android_scatter.txtn where is_upgradable is true to ab_partitions.txt. 
+3. Package ab_partitions.txt into the target_files.zip of each OS. 
+4. When compiling the upgrade package, the partition images recorded in ab_partitions.txt are packaged into the 
+upgrade package. 
+Note: When checking the is_upgradable status of the partition, the is_upgradable of the _a partition will be prioritized. For example, 
+when the is_upgradable of the xxxx_a partition is true and the is_upgradable of xxx_b is false, the system will still record that partition 
+as an OTA upgrade partition. 
+ 
+ Remove OTA Upgrade Partition 
+Note: Reducing the OTA upgrade partition will only disable the OTA upgrade for specific AB partitions and will not change the disabled 
+AB upgrade partition to a single partition. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0238.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 17 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+Hypervisor (L+L+A) includes three different OS projects, and its image composition includes: Yocto partition image + 
+Android partition image + T-box partition image. Hypervisor (L+L+A) also includes two partition tables, one partition table 
+is located in the Yocto codebase, the partition table contains all partition information of Yocto + Android + T-box, and this 
+partition table is used during the compilation of Yocto and T-box; the other partition table is located in the Android 
+codebase, the partition table only contains Android partition information, and this partition table is only used during the 
+compilation of Android. 
+• Yocto &amp; T-box partition table: 
+meta/meta-mediatek-mt8676-hyp/recipes-
+bsp/ptgen/files/&lt;project_name&gt;/partition_table_emmc_hyp_ab.csv 
+ 
+• Android partition table: 
+device/mediateksample/&lt;project_name&gt;/partition_table_emmc_hyp_ab.csv 
+ 
+The following are the methods for reducing OTA upgrade partitions for each OS: 
+Yocto OS (Host OS) 
+Change the OTA_Update status from Y to N in the Yocto partition table to disable the OTA upgrade partition. 
+For example: 
+• Before modification: 
+preloader_a,Raw data,1024,EMMC_BOOT1,UFS_LU0,N,Y,bl2.img,Y,N,BOOTLOADERS,Y 
+preloader_b,Raw data,1024,EMMC_BOOT2,UFS_LU1,N,Y,bl2.img,Y,N,BOOTLOADERS,Y 
+ 
+• After modification: 
+preloader_a,Raw data,1024,EMMC_BOOT1,UFS_LU0,N,Y,bl2.img,N,N,BOOTLOADERS,Y 
+preloader_b,Raw data,1024,EMMC_BOOT2,UFS_LU1,N,Y,bl2.img,N,N,BOOTLOADERS,Y 
+ 
+Android OS (Guest OS) 
+Change the OTA_Update status from Y to N in the Yocto partition table for the OTA upgrade section. No modifications are 
+required for the Android partition table. 
+For example: 
+• Before modification: 
+init_boot_a,Raw data,8192,EMMC_USER,UFS_LU2,N,Y,init_boot.img,Y,N,AUTO,Y 
+init_boot_b,Raw data,8192,EMMC_USER,UFS_LU2,N,N,NONE,N,N,AUTO,Y 
+ 
+• After modification: 
+init_boot_a,Raw data,8192,EMMC_USER,UFS_LU2,N,Y,init_boot.img,N,N,AUTO,Y 
+init_boot_b,Raw data,8192,EMMC_USER,UFS_LU2,N,N,NONE,N,N,AUTO,Y 
+ 
+T-box OS (Guest OS) 
+Change the OTA_Update status from Y to N in the Tbox partition table for the section that requires disabling OTA upgrade. 
+For example: 
+• Before modification: 
+bl2-tbox_a,Raw data,1024,EMMC_USER,UFS_LU2,N,Y,bl2-tbox.img,Y,N,AUTO,Y 
+bl2-tbox_b,Raw data,1024,EMMC_USER,UFS_LU2,N,N,NONE,Y,N,AUTO,Y 
+ 
+• After modification: 
+bl2-tbox_a,Raw data,1024,EMMC_USER,UFS_LU2,N,Y,bl2-tbox.img,N,N,AUTO,Y 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-18"><h2>PDF物理页 18</h2><a href="materials/SRC0238.pdf#page=18" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 18 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+bl2-tbox_b,Raw data,1024,EMMC_USER,UFS_LU2,N,N,NONE,N,N,AUTO,Y 
+ 
+ Add OTA Upgrade Partition 
+The newly added OTA upgrade partition must meet the following prerequisites: 
+1. The partition must simultaneously contain &lt;partition_name&gt;_a &amp; &lt;partition_name&gt;_b, for example: boot_a &amp; 
+boot_b. 
+2. The partition must be a read-only partition. 
+3. The partition image format and image name must be &lt;partition_name&gt;.img, for example: boot.img. 
+ 
+3.8.3.1 Set the Existing AB Partition as the OTA Partition 
+The steps for each OS to set the existing AB partitions in the partition table as OTA partitions are as follows: 
+Yocto OS (Host OS) 
+Change the OTA_Update status from N to Y in the Yocto partition table for the OTA upgrade section. 
+For example: 
+• Before modification: 
+preloader_a,Raw data,1024,EMMC_BOOT1,UFS_LU0,N,Y,bl2.img,N,N,BOOTLOADERS,Y 
+preloader_b,Raw data,1024,EMMC_BOOT2,UFS_LU1,N,Y,bl2.img,N,N,BOOTLOADERS,Y 
+ 
+• After modification: 
+preloader_a,Raw data,1024,EMMC_BOOT1,UFS_LU0,N,Y,bl2.img,Y,N,BOOTLOADERS,Y 
+preloader_b,Raw data,1024,EMMC_BOOT2,UFS_LU1,N,Y,bl2.img,Y,N,BOOTLOADERS,Y 
+ 
+Android OS (Guest OS) 
+Change the OTA_Update status from N to Y in the Yocto partition table and Android partition table under the OTA upgrade 
+section. 
+For example: 
+• Before modification: 
+init_boot_a,Raw data,8192,EMMC_USER,UFS_LU2,N,Y,init_boot.img,N,N,AUTO,Y 
+init_boot_b,Raw data,8192,EMMC_USER,UFS_LU2,N,N,NONE,N,N,AUTO,Y 
+ 
+• After modification: 
+init_boot_a,Raw data,8192,EMMC_USER,UFS_LU2,N,Y,init_boot.img,Y,N,AUTO,Y 
+init_boot_b,Raw data,8192,EMMC_USER,UFS_LU2,N,N,NONE,Y,N,AUTO,Y 
+ 
+Add the new Android OTA partition name to the ignored_partitions in Hypervisor_make_yocto_targetfiles.py. This addition 
+allows skipping the partition during the compilation of yocto_target_files.zip, preventing errors related to non-existent 
+partition images during the compilation phase. 
+For example: 
+ignored_partitions = {'dtbo', 'boot', 'vendor_boot', 'init_boot', 'userdata', 'super', 
+'vbmeta', 'vbmeta_system', 'vbmeta_vendor', 'tee', 'bl2-tbox', 'boot_uos_tbox'}   &gt;&gt; Add the 
+newly added partitions to the list 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-19"><h2>PDF物理页 19</h2><a href="materials/SRC0238.pdf#page=19" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 19 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+T-box OS (Guest OS) 
+Change the OTA_Update status from N to Y in the T-box partition table for the section that requires disabling OTA upgrade. 
+For example: 
+• Before modification: 
+bl2-tbox_a,Raw data,1024,EMMC_USER,UFS_LU2,N,Y,bl2-tbox.img,N,N,AUTO,Y 
+bl2-tbox_b,Raw data,1024,EMMC_USER,UFS_LU2,N,N,NONE,N,N,AUTO,Y 
+ 
+• After modification: 
+bl2-tbox_a,Raw data,1024,EMMC_USER,UFS_LU2,N,Y,bl2-tbox.img,Y,N,AUTO,Y 
+bl2-tbox_b,Raw data,1024,EMMC_USER,UFS_LU2,N,N,NONE,Y,N,AUTO,Y 
+ 
+Add the new T-box OTA partition name to the ignored_partitions in Hypervisor_make_yocto_targetfiles.py. This addition 
+allows skipping the partition during the compilation of yocto_target_files.zip, preventing errors related to non-existent 
+partition images during the compilation phase. 
+For example: 
+ignored_partitions = {'dtbo', 'boot', 'vendor_boot', 'init_boot', 'userdata', 'super', 
+'vbmeta', 'vbmeta_system', 'vbmeta_vendor', 'tee', 'bl2-tbox', 'boot_uos_tbox'}   &gt;&gt; Add the 
+newly added partitions to the list 
+ 
+Add the new T-box OTA partition name within the partitions of Hypervisor_make_uos_tbox_targetfiles.py. Ensure that the 
+T-box compilation stage packages the partition image into uos_tbox_target_files.zip. 
+For example: 
+if __name__ == &quot;__main__&quot;: 
+    target_path = &quot;sos_tbox_images&quot; 
+    partitions = ['bl2-tbox', 'boot_uos_tbox']   &gt;&gt; Add the newly added partition to the 
+list 
+ 
+3.8.3.2 Add a Non-existent AB Partition as an OTA Partition 
+The steps to add the OTA partition for the AB partition that does not exist in the partition table of each OS are as follows: 
+Yocto OS (Host OS) 
+Add the corresponding AB partition in the Yocto partition table, and ensure that the partition image is 
+&lt;partition_name&gt;.img, taking the addition of the customer partition as an example: 
+• After modification (the partition size is set to 8MB): 
+customer_a,Raw data,8192 ,EMMC_USER,UFS_LU2,N,Y,customer.img,Y,N,AUTO,Y 
+customer_b,Raw data,8192,EMMC_USER,UFS_LU2,N,N,NONE,Y,N,AUTO,Y 
+ 
+After completing the partition addition, add logic to determine the AB partition during the boot loading phase of the 
+customer partition to ensure that the system loads into the correct partition. 
+ 
+Android OS (Guest OS) 
+Add the corresponding AB partitions in the Yocto partition table and Android partition table, and ensure that the partition 
+image is &lt;partition_name&gt;.img, taking the addition of the customer partition as an example: 
+• After modification (the partition size is set to 8MB): 
+customer_a,Raw data,8192 ,EMMC_USER,UFS_LU2,N,Y,customer.img,Y,N,AUTO,Y 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-20"><h2>PDF物理页 20</h2><a href="materials/SRC0238.pdf#page=20" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 20 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+customer_b,Raw data,8192,EMMC_USER,UFS_LU2,N,N,NONE,Y,N,AUTO,Y 
+ 
+Add the new Android OTA partition name to the ignored_partitions in Hypervisor_make_yocto_targetfiles.py. This addition 
+allows skipping the partition during the compilation of yocto_target_files.zip to prevent errors related to non-existent 
+partition images during the compilation phase. 
+For example: 
+ignored_partitions = {'dtbo', 'boot', 'vendor_boot', 'init_boot', 'userdata', 'super', 
+'vbmeta', 'vbmeta_system', 'vbmeta_vendor',  'customer', 'tee', 'bl2-tbox', 
+'boot_uos_tbox'}   &gt;&gt; Add the newly added partitions to the list 
+ 
+T-box OS (Guest OS) 
+Add the corresponding AB partition in the Yocto partition table, and ensure that the partition image is 
+&lt;partition_name&gt;.img, taking the addition of the customer partition as an example: 
+• After modification (the partition size is set to 8MB): 
+customer_a,Raw data,8192 ,EMMC_USER,UFS_LU2,N,Y,customer.img,Y,N,AUTO,Y 
+customer_b,Raw data,8192,EMMC_USER,UFS_LU2,N,N,NONE,Y,N,AUTO,Y 
+ 
+Add the new Android OTA partition name to the ignored_partitions in Hypervisor_make_yocto_targetfiles.py. This addition 
+allows skipping the partition during the compilation of yocto_target_files.zip, preventing errors related to non-existent 
+partition images during the compilation phase. 
+For example: 
+ignored_partitions = {'dtbo', 'boot', 'vendor_boot', 'init_boot', 'userdata', 'super', 
+'vbmeta', 'vbmeta_system', 'vbmeta_vendor',  'tee', 'bl2-tbox', 'boot_uos_tbox', 
+'customer'}   &gt;&gt; Add the newly added partitions to the list 
+ 
+Add the new T-box OTA partition name in the partitions of Hypervisor_make_uos_tbox_targetfiles.py. Ensure that the T-
+box compilation stage packages the partition image into uos_tbox_target_files.zip. 
+For example: 
+if __name__ == &quot;__main__&quot;: 
+    target_path = &quot;sos_tbox_images&quot; 
+    partitions = ['bl2-tbox', 'boot_uos_tbox', 'customer']   &gt;&gt;Add the newly added partition 
+to the list 
+ 
+Note: 
+1. When adding a non-existent AB partition as an OTA partition, please ensure that the newly added partition is mounted 
+as a read-only partition. 
+2. When adding a non-existent AB partition as an OTA partition, please ensure that the system can load and start 
+normally after the new partition is added, and then verify the OTA upgrade. 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-21"><h2>PDF物理页 21</h2><a href="materials/SRC0238.pdf#page=21" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 21 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+3.9 Selection of Image Loading for AB system 
+ Boot Control Information Description 
+The AB system contains two boot slots: slot_a and slot_b, each slot has its own independent boot control metadata. The 
+system boot will select to load the partition image of slot_a or slot_b based on the boot control information stored in the 
+misc partition, where the key information contained in the boot control is as follows: 
+ 
+Figure 3-6 Hypervisor (L+L+A) boot control parameters 
+ 
+The description of each boot control parameter in Figure 3-6 is shown in Table 3-3: 
+Table 3-3. Hypervisor (L+L+A) boot control parameter description 
+Name Description 
+priority 
+The boot priority of the slot, with a default initial value of 15, the system chooses to 
+boot from the slot with a higher priority; if the priorities are the same, it boot from 
+slot_a. 
+tries_remaining The current remaining reboot count for the slot android is 7 by default; when the value 
+is 0, it will trigger a system rollback. 
+successful_boot Android boot success flag, 1: boot successful, 0: boot failed 
+yocto_tries_remaining The remaining reboot count of the current slot yocto is 3 by default; when the value is 
+0, it will trigger a system rollback. 
+yocto_successful_boot Yocto boot success flag, 1: boot successful, 0: boot failed 
+tbox_tries_remaining The remaining restart count of the current slot T-box is 3 by default, and when the value 
+is 0, it will trigger a system rollback. 
+tbox_successful_boot T-box boot success flag, 1: boot successful, 0: boot failed 
+ 
+Note: Boot Control Source Code is located at: src/bsp/lk2/platform/mediatek/common/bootctrl/bootctrl_v3 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-22"><h2>PDF物理页 22</h2><a href="materials/SRC0238.pdf#page=22" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 22 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+ Image Loading Selection Process 
+ 
+Figure 3-7. Hypervisor (L+L+A) image loading process 
+ 
+The image loading process started by the AB system is shown in Figure 3-7: 
+① The system boot and enters the Boot ROM stage. 
+② Boot Rom will read the values of specific registers on UFS/EMMC to decide whether to load the preloader_a or 
+preloader_b partition image. 
+③ The system boot and enters the preloader stage. 
+④ The system reads the priority values of slot_a and slot_b in the Boot Control information. 
+⑤ When the priority value of slot_a is greater than or equal to the priority value of slot_b, the system determines that 
+the current boot slot is slot_a, and during the subsequent boot process, it will load the image in partition A; when the 
+priority value of slot_a is less than the priority value of slot_b, the system determines that the current boot slot is 
+slot_b, and during the subsequent boot process, it will load the image in partition B. 
+Note: The AB loading selection of the preloader partition is determined by the values of specific registers on UFS/eMMC, not by the slot 
+priority of boot control metadata. For detailed information, please consult the Boot ROM &amp; preloader owner . 
+ 
+3.10 Manually Configure Boot Slot 
+The Hypervisor (L+L+A) supports manual configuration of the boot slot using commands on the Yocto platform. 
+ 
+Prerequisites: 
+The system has successfully performed an OTA upgrade at least once, ensuring that the image information is available in 
+both partitions AB to avoid system boot failure after switching the boot slot. 
+ 
+Switching command: 
+Shell domain Set slot_a as the boot slot Set slot_b as the boot slot 
+Yocto shell update_engine_sideload --switch_slot=0 update_engine_sideload --switch_slot=1 
+ 
+3.11 System Rollback 
+This section mainly introduces how to roll back to the old version before the upgrade to prevent the device from becoming 
+bricked after the Hypervisor (L+L+A) OTA upgrade is completed and the system fails to boot from the new version for the 
+first time. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-23"><h2>PDF物理页 23</h2><a href="materials/SRC0238.pdf#page=23" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 23 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+ Basic Principles of System Rollback 
+Since the Hypervisor (L+L+A) Project involves multiple OS, the overall rollback plan adopted by MediaTek follows the 
+principles below: 
+• Linux OS (Yocto + T-box) &amp; Android OS overall rollback, that is, when any one OS fails to start from the new version for 
+the first time, all OSs must roll back to the old system startup to ensure that all OSs' AB startup slots are consistent. 
+• Only in the scenario where the first boot from the new system fails after a successful OTA upgrade will the rollback 
+mechanism be triggered; regular boot failures will not trigger the rollback mechanism. 
+ 
+Taking Yocto, T-box, and Android 3OS (L+L+A) OTA as an example, the system will have the following three rollback 
+scenarios: 
+Scenario 1: Yocto OS failed to boot from the new version 
+ 
+ 
+Figure 3-8. Yocto boot failure scenario after OTA upgrade 
+ 
+Figure 3-8 describes the version switching status of Yocto and Android after the Hypervisor (L+L+A) OTA upgrade, when 
+Yocto fails to start from the new version and triggers a rollback. The scenario is described as follows: 
+• Yocto, Android, and T-box all boot from version V1. 
+• The system executes an OTA upgrade to version V2 and sets version V2 as the version for the next startup. 
+• Yocto fails to start from version V2; at this time, Android and T-box have not yet started. 
+• Trigger rollback. Yocto, Android, and T-box switch to version V1 for startup. 
+ 
+Scenario 2: Android OS failed to boot from the new version 
+ 
+ 
+Figure 3-9. Android boot failure scenario after OTA upgrade 
+ 
+Figure 3-9 describes the version switching status of Yocto, Android, and T-box after the Hypervisor (L+L+A) is upgraded 
+from V1 -&gt; V2 OTA. When Yocto successfully boots from the new version V2 and Android fails to boot from the new version 
+V2, triggering a rollback, the scenario is described as follows: 
+• Yocto, Android, and T-box all start from version V1. 
+• The system executes an OTA upgrade to version V2 and sets version V2 as the version for the next startup. 
+• Yocto successfully boots from version V2, Android fails to boot from version V2, T-box boot status is unknown  
+• Trigger rollback. Yocto, Android, and T-box switch to V1 version for startup. 
+ 
+Scenario 3: T-box OS failed to start from the new version 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-24"><h2>PDF物理页 24</h2><a href="materials/SRC0238.pdf#page=24" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 24 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+ 
+Figure 3-10. T-box boot failure scenario after OTA upgrade 
+ 
+Figure 3-10 describes the version switching status of Yocto, Android, and T-box after the Hypervisor (L+L+A) is upgraded 
+from V1 -&gt; V2 OTA. When Yocto and Android successfully start from the new version V2, and T-box fails to start from the 
+new version, triggering a rollback, the scenario is described as follows: 
+• Yocto, Android, and T-box all start from version V1. 
+• The system executes an OTA upgrade to version V2 and sets version V2 as the version for the next startup. 
+• Yocto and Android successfully boot from version V2; T-box fails to boot from version V2. 
+• Trigger rollback. Yocto, Android, and T-box switch to V1 version for startup. 
+ 
+ System Rollback Detection Process 
+The system rollback detection process of the Hypervisor (L+L+A) is set in the LK2 stage of each OS. The detailed process is 
+shown in Figure 3-11: 
+ 
+ 
+Figure 3-11. Hypervisor (L+L+A) rollback detection process 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-25"><h2>PDF物理页 25</h2><a href="materials/SRC0238.pdf#page=25" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 25 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+ Changes in Boot Control Parameters for System Rollback 
+As shown in Figure 3-11, the essence of the system rollback mechanism is to repeatedly judge and adjust the Boot Control 
+information, and only by triggering repeated system restarts to reduce the tries_remaining value of a system to 0 can the 
+overall system rollback be triggered. The startup of Hypervisor (L+L+A) 3OS can be divided into the following four 
+scenarios: 
+Scenario 1: Yocto &amp; Android &amp; T-box all boot successfully (reboot after OTA upgrade) 
+ 
+Figure 3-12. Yocto &amp; Android &amp; T-box boot status 
+ 
+The changes in the boot control parameter values at each stage are as follows: 
+ 
+ 
+Scenario 2: Yocto &amp; Android boot successfully, T-box fails to boot (reboot after OTA upgrade) 
+ 
+Figure 3-13. Yocto &amp; Android &amp; T-box boot status 
+ 
+The changes in the boot control parameter values at each stage are as follows: 
+ 
+ 
+Scenario 3: Yocto &amp; T-box boot successfully, Android fails to boot (reboot after OTA upgrade) 
+slot a slot b slot a slot b slot a slot b slot a slot b slot a slot b
+priority 15 15 14 15 14 15 14 15 14 15
+yocto_tries_remaining 3 3 1 3 1 1 1 1 1 1
+yocto_successful_boot 1 0 1 0 1 1 1 1 1 1
+tries_remaining 7 7 1 7 1 7 1 1 1 1
+successful_boot 1 0 1 0 1 0 1 1 1 1
+tbox_tries_remaining 3 3 1 3 1 3 1 3 1 1
+tbox_successful_boot 1 0 1 0 1 0 1 0 1 1
+Tbox reboot
+successfully after
+OTA upgrade
+Android reboot
+successfully after
+OTA upgrade
+yocto
+android
+tbox
+Normal boot No reboot after OTA
+upgrade
+Yocto reboot
+successfully after
+OTA upgrade
+slot a slot b slot a slot b slot a slot b slot a slot b slot a slot b slot a slot b
+priority 15 15 14 15 14 15 14 15 14 15 15 14
+yocto_tries_remaining 3 3 1 3 1 1 1 1 1 1 1 0
+yocto_successful_boot 1 0 1 0 1 1 1 1 1 1 1 0
+tries_remaining 7 7 1 7 1 7 1 1 1 1 1 0
+successful_boot 1 0 1 0 1 0 1 1 1 1 1 0
+tbox_tries_remaining 3 3 1 3 1 3 1 3 1 0 1 0
+tbox_successful_boot 1 0 1 0 1 0 1 0 1 0 1 0
+yocto
+Tbox reboot fail after
+OTA upgrade
+Android reboot
+successfully after
+OTA upgrade
+android
+tbox
+Triggering system
+rollback
+Yocto reboot
+successfully after
+OTA upgrade
+Normal boot No reboot after OTA
+upgrade
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-26"><h2>PDF物理页 26</h2><a href="materials/SRC0238.pdf#page=26" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 26 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+ 
+Figure 3-14. Yocto &amp; Android &amp; T-box boot status 
+ 
+The changes in the boot control parameter values at each stage are as follows: 
+ 
+ 
+Scenario 4: Yocto boot failed, Android &amp; T-box have not boot yet (reboot after OTA upgrade) 
+ 
+Figure 3-15. Yocto &amp; Android &amp; T-box boot status 
+ 
+The changes in the boot control parameter values at each stage are as follows: 
+ 
+ 
+ System Rollback Test Cases 
+3.11.4.1 Yocto OS Boot Failed 
+Test Environment: 
+1. The PC has a Python 3 environment 
+2. Flash base load in the DUT 
+3. Get the OTA package from the OTA owner 
+ 
+Testing Steps: 
+slot a slot b slot a slot b slot a slot b slot a slot b slot a slot b slot a slot b
+priority 15 15 14 15 14 15 14 15 14 15 15 14
+yocto_tries_remaining 3 3 1 3 1 1 1 1 1 1 1 0
+yocto_successful_boot 1 0 1 0 1 1 1 1 1 1 1 0
+tries_remaining 7 7 1 7 1 7 1 7 1 0 1 0
+successful_boot 1 0 1 0 1 0 1 0 1 0 1 0
+tbox_tries_remaining 3 3 1 3 1 3 1 1 1 1 1 0
+tbox_successful_boot 1 0 1 0 1 0 1 1 1 1 1 0
+yocto
+android
+tbox
+Triggering system
+rollbackNormal boot No reboot after OTA
+upgrade
+Yocto reboot
+successfully after
+OTA upgrade
+Tbox reboot
+successfully after
+OTA upgrade
+Android reboot fail
+after OTA upgrade
+slot a slot b slot a slot b slot a slot b slot a slot b
+priority 15 15 14 15 14 15 15 14
+yocto_tries_remaining 3 3 1 3 1 0 1 0
+yocto_successful_boot 1 0 1 0 1 0 1 0
+tries_remaining 7 7 1 7 1 7 1 0
+successful_boot 1 0 1 0 1 0 1 0
+tbox_tries_remaining 3 3 1 3 1 3 1 0
+tbox_successful_boot 1 0 1 0 1 0 1 0
+android
+tbox
+yocto
+Triggering system
+rollbackNormal boot No reboot after OTA
+upgrade
+Yocto reboot fail
+after OTA upgrade
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-27"><h2>PDF物理页 27</h2><a href="materials/SRC0238.pdf#page=27" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 27 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+1. Device connection Yocto ADB environment 
+2. Execute the upgrade script:  
+python3 hypervisor_update.py --file otapackage_full.zip &gt; update.txt 2&gt;&amp;1 
+3. Check whether the upgrade has been completed successfully, update.txt contains:  
+[INFO:update_attempter_android.cc(600)] Update successfully applied, waiting to reboot. 
+4. Execute in the Yocto ADB environment: 
+– adb shell 
+– blockdev --setrw /dev/disk/by-partlabel/yocto-boot_b 
+– dd if=/dev/urandom of=/dev/disk/by-partlabel/yocto-boot_b bs=1M count=1 
+– reboot 
+Note: 
+• hypervisor_update.py: Update script 
+• otapackage_full.zip: OTA package, unlimited package name 
+• &gt; update.txt 2&gt;&amp;1: Store the upgrade log in update.txt in the current directory 
+ 
+Expected Results: 
+1. Update should be completed, and update.txt prints the following log: [INFO:update_attempter_android.cc(600)] 
+Update successfully applied, waiting to reboot. 
+2. The system triggers the rollback mechanism and boots to the Home Screen 
+3. Setting version should be the same as before the upgrade 
+Note: If the test upgrade fails, please provide the update log and UART log in CR 
+ 
+3.11.4.2 Android OS Boot Failed 
+Test Environment: 
+1. The PC has a Python 3 environment 
+2. Flash base load in the DUT 
+3. Get the OTA package from the OTA owner 
+ 
+Testing Steps 
+1. Device connection Yocto ADB environment 
+2. Execute the upgrade script:  
+python3 hypervisor_update.py --file otapackage_full.zip &gt; update.txt 2&gt;&amp;1 
+3. Check whether the upgrade has been completed successfully, update.txt contains:  
+[INFO:update_attempter_android.cc(600)] Update successfully applied, waiting to reboot. 
+4. Execute in the Yocto ADB environment: 
+– adb shell 
+– blockdev --setrw /dev/disk/by-partlabel/init_boot_b 
+– dd if=/dev/urandom of=/dev/disk/by-partlabel/init_boot_b bs=1M count=1 
+– reboot 
+Note: 
+• hypervisor_update.py: Update script 
+• otapackage_full.zip: OTA package, unlimited package name 
+• &gt; update.txt 2&gt;&amp;1: Store the upgrade log in update.txt in the current directory 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-28"><h2>PDF物理页 28</h2><a href="materials/SRC0238.pdf#page=28" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 28 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+Expected Results: 
+1. Update should be completed, and update.txt prints the following log: [INFO:update_attempter_android.cc(600)] 
+Update successfully applied, waiting to reboot. 
+2. The system triggers the rollback mechanism and boots to the Home Screen 
+3. Setting version should be the same as before the upgrade 
+Note: If the test upgrade fails, please provide the update log and UART log in CR. 
+ 
+3.11.4.3 T-box OS Boot Failed 
+Test Environment: 
+1. The PC has a Python 3 environment 
+2. Flash base load in the DUT 
+3. Get the OTA package from the OTA owner 
+ 
+Testing Steps: 
+1. Device connection Yocto ADB environment 
+2. Execute the upgrade script:  
+python3 hypervisor_update.py --file otapackage_full.zip &gt; update.txt 2&gt;&amp;1 
+3. Check whether the upgrade has been completed successfully, update.txt contains:  
+[INFO:update_attempter_android.cc(600)] Update successfully applied, waiting to reboot. 
+4. Execute in the Yocto ADB environment: 
+– adb shell 
+– blockdev --setrw /dev/disk/by-partlabel/boot_uos_tbox_b 
+– dd if=/dev/urandom of=/dev/disk/by-partlabel/boot_uos_tbox_b bs=1M count=1 
+– reboot 
+Note: 
+• hypervisor_update.py: Update script 
+• otapackage_full.zip: OTA package, unlimited package name 
+• &gt; update.txt 2&gt;&amp;1: Store the upgrade log in update.txt in the current directory 
+ 
+Expected Results: 
+1. Update should be completed, and update.txt prints the following log: [INFO:update_attempter_android.cc(600)] 
+Update successfully applied, waiting to reboot. 
+2. The system triggers the rollback mechanism and boots to the Home Screen 
+3. Setting version should be the same as before the upgrade 
+Note: If the test upgrade fails, please provide the update log and UART log in CR. 
+ 
+3.12 Power Outage Upgrade Protection 
+ Upgrade Status Information 
+Since the device may be interrupted due to abnormal power failure during the OTA upgrade process, in order to ensure 
+that the device can continue to complete the upgrade from the interruption point after power failure and restart during 
+the OTA upgrade process, the system needs to save the upgrade status information in real time. The Hypervisor (L+L+A) 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-29"><h2>PDF物理页 29</h2><a href="materials/SRC0238.pdf#page=29" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 29 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+overall centralized upgrade solution saves the upgrade status information in the data/misc/update_engine/prefs 
+directory of the yocto-userdata partition by default. The stored information is shown in Figure 3-16: 
+ 
+ 
+Figure 3-16. Upgrade status information  
+ 
+The description of each upgrade status information in the prefs directory is shown in Table 3-4: 
+ 
+Table 3-4. Upgrade status information description 
+Prefs name Prefs value Description 
+kPrefsUpdateStateNextOperation update-state-next-operation Record the next operation that needs to be 
+performed. 
+kPrefsUpdateCheckResponseHash update-check-response-hash Record the hash value of the last upgrade 
+package. 
+kPrefsResumedUpdateFailures resumed-update-failures 
+Record the number of times the upgrade is 
+interrupted. By default, an upgrade can be 
+interrupted a maximum of 10 times. If it exceeds 
+10 times, the system will force a complete re-
+upgrade. 
+kPrefsUpdateStateNextDataOffset update-state-next-data-offset 
+Record the offset address of the data 
+downloaded from the upgrade package next 
+time. 
+kPrefsUpdateStateSHA256Context update-state-sha-256-context Record the hash value of the upgrade status 
+information 
+kPrefsManifestMetadataSize manifest-metadata-size Record the size of metadata data 
+kPrefsManifestSignatureSize manifest-signature-size Record the size of the signature data 
+ 
+ Resume Upgrade Inspection Process 
+Before the OTA upgrade, the system will determine whether the current upgrade is a new update or a resume update. The 
+information for this detection comes from the data saved in the prefs directory. The detection process is shown in Figure 
+3-17: 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-30"><h2>PDF物理页 30</h2><a href="materials/SRC0238.pdf#page=30" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 30 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+ 
+Figure 3-17. Hypervisor resume update flow 
+ 
+The detailed process of checking whether the information stored in the prefs directory meets the resume upgrade 
+conditions is shown in Figure 3-18: 
+ 
+ 
+Figure 3-18. Hypervisor check resume update flow 
+ 
+As can be seen from Figure 3-18, only when the prefs information meets all the conditions will the system recognize this 
+upgrade as a resume update; if any of the conditions are not met, the system will restart the upgrade and clear the 
+previously saved upgrade status information. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-31"><h2>PDF物理页 31</h2><a href="materials/SRC0238.pdf#page=31" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 31 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+4 Partial Centralized Upgrade of Hypervisor (L+L+A) 
+This chapter primarily introduces the Hypervisor (L+L+A) OTA update centralized upgrade solution. It includes configuration 
+settings for enabling this solution, an overview of the solution architecture, upgrade package compilation, and system 
+rollback. This public version does not support the solution by default and is provided for customer reference only. 
+ 
+4.1 Enable Partial Centralized Upgrade Scheme 
+If you need to enable the centralized upgrade plan, please set the following configurations: 
+1. Add SUPPORT_BOOTCTRL_V1 := yes in &lt;yocto_project_name&gt;.mk and &lt;tbox_project_name&gt;.mk of LK2 
+For example: 
+src/bsp/lk2/project/auto8676p1_64_hyp_sos.mk 
+SUPPORT_BOOTCTRL_V1 := yes 
+src/bsp/lk2/project/auto8676p1_64_uos_tbox.mk 
+SUPPORT_BOOTCTRL_V1 := yes 
+ 
+2. Add SUPPORT_BOOTCTRL = &quot;1&quot; in the &lt; yocto_project_name &gt;.conf and &lt; tbox_project_name &gt;.conf in meta. 
+For example: 
+meta/meta-mediatek-mt8676-hyp/conf/machine/auto8676p1_64_hyp_sos.conf 
+SUPPORT_BOOTCTRL = “1” 
+meta/meta-mediatek-mt8676-hyp/conf/machine /auto8676p1_64_uos_tbox.conf 
+SUPPORT_BOOTCTRL = “1” 
+ 
+Note: Please do not support different types of OTA upgrade schemes simultaneously in a single project.mk or project.conf. 
+ 
+4.2 Program Overview 
+ Basic Functionality 
+Hypervisor (L+L+A) partial centralized upgrade plan supports the following functions: 
+• Support seamless updates in the device background. 
+• Support system rollback to prevent the system from becoming inoperable after an upgrade failure. 
+• Support integrity and accuracy verification of the upgrade package. 
+• Support Android &amp; Linux independent upgrades, i.e. Yocto upgrades Yocto and T-box, Android upgrades Android 
+• Support full package upgrades and incremental upgrades. 
+• Support Android Virtual AB. 
+• Support power outage relay upgrades. 
+ 
+But it also has the following limitations: 
+• Updating the partition layout is not supported; the partition layout must remain consistent between versions before 
+and after the upgrade. Subsequent modifications to the partition layout cannot be made through OTA updates. 
+• Mutual upgrades between AB partitions and non-AB partitions are not supported. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-32"><h2>PDF物理页 32</h2><a href="materials/SRC0238.pdf#page=32" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 32 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+• The partition image that needs to be upgraded must be in xxx.img format, for example: boot.img, and other file 
+formats are not supported. 
+• The partition type that requires upgrading must be a read-only (RO) partition. 
+• Manual switching between A and B is not supported. 
+• OS upgrades are not supported independently. 
+ 
+4.3 Architecture/Process Overview 
+ Hypervisor (L+L+A) OTA Upgrade Architecture 
+ 
+Figure 4-1. Hypervisor (L+L+A) OTA update architecture 
+ 
+Figure 4-1 describes the architecture of the centralized upgrade solution for the Hypervisor (L+L+A). The following 
+information can be obtained from the figure: 
+1. The Hypervisor (L+L+A) OTA upgrade package supports obtaining it from the OTA Server or local storage space. 
+MediaTek currently only supports OTA upgrades through local upgrade packages; downloading the upgrade package 
+from the OTA Server using the network needs to be implemented by the OEM. 
+2. Hypervisor (L+L+A) OTA upgrade is divided into two parts: Linux and Android. The upgrade of the Linux OS is 
+completed entirely on Yocto OS (Host OS), and T-box (Guest OS) does not participate in the upgrade operation; the 
+upgrade of Android OS (Guest OS) is completed by Android OS. The purpose of independent upgrades for Linux and 
+Android is to support Android Virtual AB (VAB) functionality. 
+3. Since the upgrades of Linux OS and Android OS are independent of each other, taking local upgrades as an example, 
+the general process of Hypervisor (L+L+A) OTA upgrades is as follows: 
+Linux OS upgrade: 
+1) Store the upgrade package in the local platform storage environment. 
+2) Execute OTA update script to call update_engine sideload to trigger the upgrade. 
+3) Use Package Security Verify to check the integrity and accuracy of the upgrade package. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-33"><h2>PDF物理页 33</h2><a href="materials/SRC0238.pdf#page=33" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 33 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+4) Use Partition Write to write the data in the upgrade package to the corresponding partition storage space 
+through the UFS Driver. 
+5) Use Partition Verify to perform accuracy verification on the data updated and written to the partition, ensuring 
+the accuracy of the actual written data. 
+6) Use Switch Next Boot Slot to set the next system boot slot, ensuring that the system boots from the updated slot 
+next time. 
+ 
+Android OS upgrade: 
+1) Store the upgrade package in the local platform storage environment. 
+2) Execute OTA update script to call android update_engine to trigger the upgrade. 
+3) Use Package Security Verify to check the integrity and accuracy of the upgrade package. 
+4) Use Partition Write to write the data in the upgrade package to the corresponding partition storage space 
+through the UFS Driver. 
+5) Use Partition Verify to perform accuracy verification on the data updated and written to the partition, ensuring 
+the accuracy of the actual written data. 
+6) Use Switch Next Boot Slot to set the next system boot slot, ensuring that the system boots from the updated slot 
+next time. 
+ 
+ Hypervisor (L+L+A) Upgrade Package Compilation Architecture 
+The Hypervisor (L+L+A) upgrade requires compiling two upgrade packages: one for upgrading L+L (Yocto + T-box) and 
+another for upgrading A (Android). The compilation of both upgrade packages must be completed in the Android 
+environment. 
+4.3.2.1 Compilation of the Hypervisor L+L (Yocto + T-box) otapackage 
+ 
+Figure 4-2. Hypervisor L+L (Yocto + T-box) compilation otapackage architecture 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-34"><h2>PDF物理页 34</h2><a href="materials/SRC0238.pdf#page=34" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 34 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+Figure 4-2 describes the architecture of the Hypervisor L+L (Yocto + T-box) OTA compilation upgrade package. The following 
+information can be obtained from the figure: 
+1. Each Linux OS generates a target_files.zip during the compilation stage, used to package the partition image files that 
+need to be upgraded for each OS. 
+2. In the Android OS compilation environment, a yocto_target_base.zip has been prepared in advance to ensure that the 
+final hypervisor_yocto_target_files.zip conforms to the directory structure of the input target_files.zip of the Android 
+native compilation script ota_form_target_files.py. 
+3. The upgrade package for Hypervisor L+L (Yocto + T-box) must be performed in the compilation environment of 
+Hypervisor Android, because it is necessary to use the relevant Android compilation tools. 
+4. The general process of compiling the upgrade package for Hypervisor L+L (Yocto + T-box) is as follows: 
+– Compile each Linux OS project to obtain the respective OS's target_files.zip 
+For example: yocto_target_files.zip (Yocto OS), uos_tbox_target_files.zip (T-box OS) 
+– Merge all Linux OS target_files.zip and yocto_target_base.zip into the final hypervisor_yocto_target_files.zip 
+– Use hypervisor_yocto_target_files.zip to compile and generate the full upgrade package and incremental upgrade 
+package of Linux OS in the Android compilation environment. 
+Note: For detailed instructions on compiling the Hypervisor L+L (Yocto + T-box) OTA upgrade package, please refer to Section 4.4.1 
+Compile Hypervisor Linux OS (L+L) OTA Upgrade Package. 
+ 
+4.3.2.2 Hypervisor Android Upgrade Package Compilation 
+ 
+Figure 4-3. Hypervisor Android compilation upgrade package architecture 
+ 
+Figure 4-3 describes the architecture of the Hypervisor Android OTA compilation upgrade package. The following 
+information can be obtained from the figure: 
+1. Android OS generates a target_files.zip during the compilation stage, which is used to package the partition images 
+that need to be upgraded for Android OS. 
+2. The general process for compiling the Hypervisor Android upgrade package is as follows: 
+– Compile the Android OS project to obtain the Android OS target_files.zip 
+For example: target_file.zip (Android OS) 
+– Use Android target_files.zip to compile and generate a full upgrade package and a incremental upgrade package 
+for the Android OS in the Android compilation environment. 
+Note: For detailed instructions on compiling the Hypervisor Android OTA upgrade package, please refer to Section 4.4.2 Compile the 
+Hypervisor Android OS Upgrade Package. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-35"><h2>PDF物理页 35</h2><a href="materials/SRC0238.pdf#page=35" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 35 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+4.4 How to Compile Hypervisor OTA Upgrade Package 
+ Compile Hypervisor Linux OS (L+L) OTA Upgrade Package 
+4.4.1.1 Compile Linux OS target_files.zip 
+1. Build Yocto OS target_files.zip 
+The target_files.zip of Yocto OS (Host OS) is generated by Hypervisor_make_yocto_targetfiles.py, the script is located at: 
+meta/meta-mediatek-mt8676-hyp/recipes-devtools/ota-tools/files 
+ 
+During the compilation stage of Yocto OS, the system will automatically execute this script for packaging, and the final 
+yocto_targetfile.zip is located at: 
+build/tmp/deploy/images/&lt;project_name&gt;/yocto_target_files.zip 
+ 
+2. Build T-box OS target_files.zip 
+The target_files.zip of Tbox OS (Guest OS) is generated by Hypervisor_make_uos_tbox_targetfiles.py, the script is located 
+at: 
+meta/meta-mediatek-mt8676-hyp/recipes-devtools/uos-tbox-ota-tools/files 
+ 
+During the compilation phase of T-box OS, the system will automatically execute this script for packaging, and the final 
+uos_tbox_target_files.zip is located at: 
+build/tmp/deploy/images/&lt;project_name&gt;/uos_tbox_target_files.zip 
+ 
+3. Build hypervisor_yocto_target_files.zip 
+After compiling to obtain Yocto OS target_files.zip and Tbox OS target_files.zip, please execute the following command in 
+the Android compilation environment: 
+python3 Hypervisor_yocto_merge_targetfiles.py &lt;parameter1&gt; &lt;parameter2&gt; &lt;parameter3&gt; 
+ 
+Note: 
+• Hypervisor_yocto_merge_targetfiles.py: Script to compile hypervisor_yocto_target_files.zip 
+• &lt;Parameter 1&gt;: The path of Yocto OS target_files.zip 
+• &lt;Parameter 2&gt;: The path of T-box OS target_files.zip 
+• &lt;Parameter 3&gt;: the path of yocto_target_base.zip 
+ 
+Output file: 
+A file named hypervisor_yocto_target_files.zip will be generated in the current directory. This file represents the final 
+target_files.zip package of the Linux OS. 
+For example: 
+python3 
+device/mediateksample/auto8676p1_64_bsp_vm_tbox/Hypervisor_yocto_merge_targetfiles.py 
+tbox_target_file/yocto_target_files.zip  
+tbox_target_file/uos_tbox_target_files.zip 
+device/mediateksample/auto8676p1_64_bsp_vm_tbox/yocto_target_base.zip              
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-36"><h2>PDF物理页 36</h2><a href="materials/SRC0238.pdf#page=36" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 36 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+4.4.1.2 Compile Linux OS OTA Upgrade Package 
+After compiling hypervisor_yocto_target_files.zip in Section 4.4.1.1 Compile Linux OS target_files.zip, you can compile the 
+upgrade package of Linux OS (L+L) in the compilation environment of Hypervisor Android OS. 
+ 
+1. Build full otapackage 
+Compilation instructions: 
+./out_sys/host/linux-x86/bin/ota_from_target_files -v --block -p out_sys/host/linux-x86 -k 
+build/make/target/product/security/testkey --skip_postinstall 
+hypervisor_yocto_target_files.zip otapackage_yocto_full.zip 
+Note: 
+• ota_from_target_files: Upgrade package compilation script 
+• build/make/target/product/security/testkey: The key path for signing the upgrade package, MediaTek defaults to using the testkey 
+provided by Google, your company can specify another key path, use the -k parameter to specify. 
+• hypervisor_yocto_target_files.zip:Hypervisor Linux OS (L+L) target_files.zip 
+• otapackage_yocto_full.zip: The final generated Hypervisor Linux OS (L+L) full upgrade package, the package name can be specified 
+arbitrarily. 
+• Ensure compilation of the upgrade package in the Hypervisor Android build environment. Execute “source” and “lunch” before 
+compiling the full package; otherwise, full package compilation will fail. 
+ 
+2. Build incremental otapackage 
+Prerequisites: 
+To compile the incremental package, prepare two copies of hypervisor_yocto_target_files.zip in advance: The first copy is 
+for the base version (source version) of hypervisor_yocto_target_files.zip, named 
+source_hypervisor_yocto_target_files.zip; The second copy is for the target version of hypervisor_yocto_target_files.zip, 
+named target_hypervisor_yocto_target_files.zip. 
+Note: Please ensure that the base version load burned on the platform and the base version hypervisor_yocto_target_files.zip are 
+obtained from the same compilation; otherwise, it will lead to OTA incremental upgrade failure. 
+ 
+Compilation instructions: 
+./out_sys/host/linux-x86/bin/ota_from_target_files -v --block -p out_sys/host/linux-x86 -k 
+build/make/target/product/security/testkey --skip_postinstall -i 
+source_hypervisor_yocto_target_files.zip target_hypervisor_yocto_target_files.zip 
+otapackage_yocto_delta.zip 
+Note: 
+• ota_from_target_files: Upgrade package compilation script 
+• build/make/target/product/security/testkey: The key path for signing the upgrade package, MediaTek defaults to using the testkey 
+provided by Google. Your company can specify another key path by using the -k parameter . 
+• source_hypervisor_yocto_target_files.zip:the source version of hypervisor_yocto_target_files.zip 
+• target_hypervisor_yocto_target_files.zip:target version of hypervisor_yocto_target_files.zip 
+• otapackage_yocto_delta.zip: The final generated Hypervisor Linux OS (L+L) incermental upgrade package, the package name can be 
+specified at will. 
+• Ensure that the upgrade package is compiled in the Hypervisor Android build environment. Execute “source” and “lunch” before 
+compiling the full package; otherwise, incremental package compilation will fail. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-37"><h2>PDF物理页 37</h2><a href="materials/SRC0238.pdf#page=37" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 37 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+ Compile the Hypervisor Android OS Upgrade Package 
+4.4.2.1 Compile Android OS target_files.zip 
+The target_files.zip of Android OS is automatically generated when compiling the Android project using split build, and it is 
+located at: 
+out/target/product/&lt;project_name&gt;/merged/target_files.zip 
+ 
+4.4.2.2 Compile the Android OS Upgrade Package 
+After compiling Android target_files.zip in Section 4.4.2.1 Compile Android OS target_files.zip, you can compile the Android 
+OS upgrade package in the Hypervisor Android OS compilation environment.  
+ 
+1. Build full otapackage 
+Compilation instructions: 
+./out_sys/host/linux-x86/bin/ota_from_target_files -v --block -p out_sys/host/linux-x86 
+target_files.zip otapackage_android_full.zip 
+Note: 
+• ota_from_target_files: Upgrade package compilation script 
+• target_files.zip:Hypervisor Android OS target_files.zip 
+• otapackage_android_full.zip: The final generated Hypervisor Android OS (L+L) full upgrade package, the package name can be 
+specified arbitrarily. 
+• Ensure compilation of the upgrade package in the Hypervisor Android build environment. Execute “source” and “lunch” before 
+compiling the full package to prevent compilation failure. 
+ 
+2. Build incremental otapackage 
+Prerequisites: 
+To compile the incremental package, prepare two copies of the Android OS target_files.zip in advance: The base version 
+(source version) target_files.zip, named source_target_files.zip; and the target version of target_files.zip, named 
+target_target_files.zip. 
+Note: Please ensure that the base version load burned on the platform and the base version target_files.zip are obtained from the same 
+compilation; otherwise, it will lead to OTA incremental upgrade failure. 
+ 
+Compilation instructions: 
+./out_sys/host/linux-x86/bin/ota_from_target_files -v --block -p out_sys/host/linux-x86 -i 
+source_target_files.zip target_target_files.zip otapackage_android_delta.zip 
+Note: 
+• ota_from_target_files: Upgrade package compilation script 
+• source_target_files.zip: Source version of Android target_files.zip 
+• target_target_files.zip: Target version of Android target_files.zip 
+• otapackage_android_delta.zip: The final generated Android OS incremental upgrade package, and the package name can be 
+specified arbitrarily. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-38"><h2>PDF物理页 38</h2><a href="materials/SRC0238.pdf#page=38" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 38 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+4.5 Analysis of Upgrade Package Structure 
+Please refer to the description in Section 3.5 Analysis of Upgrade Package Structure. 
+ 
+4.6 How to Perform Hypervisor (L+L+A) OTA Upgrade 
+ Full Package Upgrade (Normal Mode) 
+Test Environment: 
+1. The PC has a Python 3 environment 
+2. Flash base load in the DUT 
+3. Get OTA package (including Android OS package and Linux OS package) 
+ 
+Testing Steps: 
+Note: Please complete the Android OS upgrade first, and then perform the Linux OS upgrade to avoid system startup failure caused by 
+mismatched slots of each OS when the platform powers off and restarts after completing an OS upgrade. 
+Update Android OS: 
+1. The device connects to the adb environment, defaulting to connect to Android adb. 
+2. Execute the following command to connect to Yocto adb 
+─ adb forward tcp:7777 tcp:6666 
+─ adb connect 127.0.0.1:7777 
+3. Execute adb devices to check whether adb is connected successfully. The correct connection is as follows: 
+List of devices attached 
+0123456789ABCDEF        device               &gt;&gt; Android device 
+127.0.0.1:7777  device                               &gt;&gt; Yocto device 
+4. Execute the Android OS upgrade script: python3 hypervisor_android_update.py -s 0123456789ABCDEF -
+-file otapackage_android_full.zip &gt; update_android_full.txt 2&gt;&amp;1 
+– hypervisor_android_update.py: Android OS upgrade script 
+– 0123456789ABCDEF: Android OS device adb number 
+– otapackage_android_full.zip: Android OS OTA full upgrade package, no restrictions on the upgrade package name 
+– update_android_full.txt: Android OS Upgrade Log 
+ 
+Update Linux OS: 
+1. The device connects to the adb environment, defaulting to connect to Android adb. 
+2. Check whether Linux adb is connected; if not connected, please execute the following command to connect Yocto adb. 
+– adb forward tcp:7777 tcp:6666 
+– adb connect 127.0.0.1:7777 
+3. Execute adb devices to check whether adb is connected successfully. A correct connection is as follows: 
+List of devices attached 
+0123456789ABCDEF        device               &gt;&gt; Android device 
+127.0.0.1:7777  device                               &gt;&gt; Yocto device 
+4. Execute the Linux OS upgrade script: python3 hypervisor_yocto_update.py -s 127.0.0.1:7777 --file 
+otapackage_yocto_full.zip &gt; update_yocto_full.txt 2&gt;&amp;1 
+– hypervisor_yocto_update.py: Linux OS upgrade script 
+– 127.0.0.1:7777: Linux OS device adb number 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-39"><h2>PDF物理页 39</h2><a href="materials/SRC0238.pdf#page=39" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 39 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+– otapakcage_yocto_full.zip: Linux OS OTA full upgrade package, no restrictions on the upgrade package name 
+– update_yocto_full.txt: Linux OS Upgrade Log 
+5. When both Android OS and Linux OS have been upgraded, restart the device (execute reboot in the Yocto shell 
+environment) 
+ 
+Expected Results: 
+1. Android OS &amp; Linux OS have both been upgraded, and the upgrade success log is printed in update_android_full.txt: 
+[INFO:update_engine_client_android.cc(103)] onPayloadApplicationComplete(ErrorCode::kSuccess (0)) 
+The log of the successful upgrade printed in update_yocto_full.txt: [INFO:update_attempter_android.cc(600)] Update 
+successfully applied, waiting to reboot. 
+2. If the upgrade success log is not printed in update_android_full.txt, please execute adb -s 0123456789ABCDEF 
+pull data/misc/update_engine_log to capture the update_engine log for RD analysis. 
+3. If the upgrade is successful, please restart the device, and the first restart after the upgrade should successfully enter 
+the Home Screen. 
+4. Check whether the system version number has been updated after a successful restart. 
+Note: If the upgrade fails, please provide update_android_full.txt, update_engine_log and update_yocto_full.txt to the corresponding 
+OTA owner; if it is a reboot failure after the upgrade, please also provide a serial log of the reboot after the upgrade. 
+ 
+ Incremental Package Upgrade (Normal Mode) 
+Test Environment: 
+1. The PC has a Python 3 environment 
+2. Flash base load in the DUT 
+3. Get OTA package (including Android OS package and Linux OS package) 
+ 
+Testing Steps: 
+Note: Please complete the Android OS upgrade first, and then perform the Linux OS upgrade to avoid system startup failure caused by 
+mismatched slots of each OS when the platform powers off and restarts after completing an OS upgrade. 
+Update Android OS: 
+1. The device connects to the adb environment, defaulting to connect to Android adb. 
+2. Execute the following command to connect to Yocto adb 
+– adb forward tcp:7777 tcp:6666 
+– adb connect 127.0.0.1:7777 
+3. Execute adb devices to check whether adb is connected successfully. The correct connection is as follows: 
+List of devices attached 
+0123456789ABCDEF        device               &gt;&gt; Android device 
+127.0.0.1:7777  device                               &gt;&gt; Yocto device 
+4. Execute the Android OS upgrade script: python3 hypervisor_android_update.py -s 0123456789ABCDEF --
+file otapackage_android_delta.zip &gt; update_android_delta.txt 2&gt;&amp;1 
+– hypervisor_android_update.py: Android OS upgrade script 
+– 0123456789ABCDEF: Android OS device adb number 
+– otapackage_android_delta.zip: Android OS OTA full upgrade package, no restrictions on the upgrade package 
+name 
+– update_android_delta.txt: Android OS upgrade log 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-40"><h2>PDF物理页 40</h2><a href="materials/SRC0238.pdf#page=40" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 40 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+Update Linux OS: 
+1. The device connects to the adb environment, defaulting to connect to Android adb. 
+2. Check whether Linux adb is connected; if not connected, please execute the following command to connect yocto SOS 
+adb. 
+─ adb forward tcp:7777 tcp:6666 
+─ adb connect 127.0.0.1:7777 
+3. Execute adb devices to check whether adb is connected successfully. The correct connection is as follows: 
+List of devices attached 
+0123456789ABCDEF        device               &gt;&gt; Android device 
+127.0.0.1:7777  device                               &gt;&gt; Yocto device 
+4. Execute the Linux OS upgrade script: python3 hypervisor_yocto_update.py -s 127.0.0.1:7777 --file 
+otapackage_yocto_delta.zip &gt; update_yocto_delta.txt 2&gt;&amp;1 
+─ hypervisor_yocto_update.py: Linux OS upgrade script 
+─ 127.0.0.1:7777: Linux OS device adb number 
+─ otapakcage_yocto_delta.zip: Linux OS OTA full upgrade package, no restrictions on the upgrade package name 
+─ update_yocto_delta.txt: Linux OS Upgrade Log 
+5. When both Android OS and Linux OS have been upgraded, restart the device (execute reboot in the Yocto shell 
+environment) 
+ 
+Expected Results: 
+1. Android OS &amp; Linux OS have both been upgraded, and the upgrade success log is printed in update_android_delta.txt: 
+[INFO:update_engine_client_android.cc(103)] onPayloadApplicationComplete(ErrorCode::kSuccess (0)) 
+update_yocto_delta.txt prints the upgrade success log: [INFO:update_attempter_android.cc(600)] Update successfully 
+applied, waiting to reboot. 
+2. If the upgrade success log is not printed in update_android_full.txt, please execute adb -s 0123456789ABCDEF 
+pull data/misc/update_engine_log to capture the update_engine log for RD analysis. 
+3. If the upgrade is successful, please restart the device, and the first restart after the upgrade should successfully enter 
+the Home Screen. 
+4. Check whether the system version number has been updated after a successful restart. 
+Note: If the upgrade fails, please provide update_android_full.txt, update_engine_log and update_yocto_full.txt to the corresponding 
+OTA owner; if it is a failure after rebooting post-upgrade, please also provide a serial log of the reboot after the upgrade. 
+ 
+4.7 How to Modify the Signature of the Hypervisor Linux OS (L+L) Upgrade 
+Package 
+During the OTA upgrade process, two keys will be used: xxx.pk8 and xxx.x509.pem. The key in xxx.pk8 format is used to 
+sign the upgrade package during the compilation of the upgrade package, while the key in xxx.x509.pem format is used to 
+verify the upgrade package during the OTA upgrade process. 
+ 
+If you need to use a customized key, please follow the steps below: 
+1. Replace the specified path of the -k parameter in the upgrade package compilation instruction in Section 4.4.1.2 
+Compile Linux OS OTA Upgrade Package with the actual xxx.pk8 and xxx.x509.pem paths used. 
+2. Replace the actual xxx.x509.pem file in meta/meta-mediatek/recipes-support/update-engine-sideload-
+u/files/ota/ otacerts.zip. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-41"><h2>PDF物理页 41</h2><a href="materials/SRC0238.pdf#page=41" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 41 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+4.8 How to Remove/Add OTA Upgrade Partitions 
+ Source of OTA Upgrade Partition 
+ 
+Figure 4-4. OTA upgrade partition source 
+ 
+The confirmation steps for the OTA upgrade partition are as follows: 
+1. During the compilation phase, the information in the partition table is packaged and converted into 
+MTXXX_Android_scatter.txt, for example: MT6897_Android_scatter.txt. 
+2. Record the partitions in MT6897_Android_scatter.txtn where is_upgradable is true to ab_partitions.txt; 
+3. Package ab_partitions.txt into the target_files.zip of each OS. 
+4. When compiling the upgrade package, the partition images recorded in ab_partitions.txt are packaged into the 
+upgrade package. 
+Note: When checking the is_upgradable status of the partition, the is_upgradable of the _a partition will be prioritized. For example, 
+when the is_upgradable of xxxx_a partition is true and the is_upgradable of xxx_b is false, the system will still record that partition as an 
+OTA upgrade partition. 
+ 
+ Remove OTA Upgrade Partition 
+Note: Reducing the OTA upgrade partition will only disable the OTA upgrade for specific AB partitions and will not change the disabled 
+AB upgrade partition to a single partition. 
+The Hypervisor (L+L+A) includes three different OS projects, and its image composition includes: Yocto partition image + 
+Android partition image + T-box partition image. The Hypervisor (L+L+A) also includes two partition tables; one partition 
+table is located in the Yocto codebase, and the partition table contains all partition information for Yocto + Android + T-box. 
+This partition table is used during the compilation of Yocto and T-box stages; the other partition table is located in the 
+Android codebase, and the partition table only contains Android partition information. This partition table is only used 
+during the compilation of the Android stage. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-42"><h2>PDF物理页 42</h2><a href="materials/SRC0238.pdf#page=42" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 42 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+• Yocto &amp; T-box partition table: 
+meta/meta-mediatek-mt8676-hyp/recipes-
+bsp/ptgen/files/&lt;project_name&gt;/partition_table_emmc_hyp_ab.csv 
+ 
+• Android partition table: 
+device/mediateksample/&lt;project_name&gt;/partition_table_emmc_hyp_ab.csv 
+ 
+The following are the methods for reducing OTA upgrade partitions for each OS: 
+1. Yocto OS (Host OS) 
+Change the OTA_Update status from Y to N in the Yocto partition table to disable the OTA upgrade partition. 
+For example: 
+• Before modification: 
+preloader_a,Raw data,1024,EMMC_BOOT1,UFS_LU0,N,Y,bl2.img,Y,N,BOOTLOADERS,Y 
+preloader_b,Raw data,1024,EMMC_BOOT2,UFS_LU1,N,Y,bl2.img,Y,N,BOOTLOADERS,Y 
+ 
+• After modification: 
+preloader_a,Raw data,1024,EMMC_BOOT1,UFS_LU0,N,Y,bl2.img,N,N,BOOTLOADERS,Y 
+preloader_b,Raw data,1024,EMMC_BOOT2,UFS_LU1,N,Y,bl2.img,N,N,BOOTLOADERS,Y 
+ 
+2. Android OS (Guest OS) 
+Change the OTA_Update status in the Android &amp; Yocto partition table from Y to N to disable the OTA upgrade partition. 
+For example: 
+• Before modification: 
+init_boot_a,Raw data,8192,EMMC_USER,UFS_LU2,N,Y,init_boot.img,Y,N,AUTO,Y 
+init_boot_b,Raw data,8192,EMMC_USER,UFS_LU2,N,N,NONE,N,N,AUTO,Y 
+ 
+• After modification: 
+init_boot_a,Raw data,8192,EMMC_USER,UFS_LU2,N,Y,init_boot.img,N,N,AUTO,Y 
+init_boot_b,Raw data,8192,EMMC_USER,UFS_LU2,N,N,NONE,N,N,AUTO,Y 
+ 
+3. Tbox OS (Guest OS) 
+Change the OTA_Update status from Y to N in the Tbox partition table for the section that requires disabling OTA upgrade. 
+For example: 
+• Before modification: 
+bl2-tbox_a,Raw data,1024,EMMC_USER,UFS_LU2,N,Y,bl2-tbox.img,Y,N,AUTO,Y 
+bl2-tbox_b,Raw data,1024,EMMC_USER,UFS_LU2,N,N,NONE,Y,N,AUTO,Y 
+ 
+• After modification: 
+bl2-tbox_a,Raw data,1024,EMMC_USER,UFS_LU2,N,Y,bl2-tbox.img,N,N,AUTO,Y 
+bl2-tbox_b,Raw data,1024,EMMC_USER,UFS_LU2,N,N,NONE,N,N,AUTO,Y 
+ 
+ OTA Upgrade Partition 
+The newly added OTA upgrade partition must meet the following prerequisites: 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-43"><h2>PDF物理页 43</h2><a href="materials/SRC0238.pdf#page=43" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 43 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+1. The partition must simultaneously contain &lt;partition_name&gt;_a &amp; &lt;partition_name&gt;_b, for example: boot_a &amp; 
+boot_b. 
+2. The partition must be a read-only partition. 
+3. The partition image format and image name must be &lt;partition_name&gt;.img, for example: boot.img. 
+ 
+4.8.3.1 Set the Existing AB Partition as the OTA Partition 
+The steps for each OS to set the existing AB partitions in the partition table as OTA partitions are as follows: 
+ 
+1. Yocto OS (Host OS) 
+Change the OTA_Update status from N to Y in the Yocto partition table for the OTA upgrade section. 
+For example: 
+• Before modification: 
+preloader_a,Raw data,1024,EMMC_BOOT1,UFS_LU0,N,Y,bl2.img,N,N,BOOTLOADERS,Y 
+preloader_b,Raw data,1024,EMMC_BOOT2,UFS_LU1,N,Y,bl2.img,N,N,BOOTLOADERS,Y 
+ 
+• After modification: 
+preloader_a,Raw data,1024,EMMC_BOOT1,UFS_LU0,N,Y,bl2.img,Y,N,BOOTLOADERS,Y 
+preloader_b,Raw data,1024,EMMC_BOOT2,UFS_LU1,N,Y,bl2.img,Y,N,BOOTLOADERS,Y 
+ 
+2. Android OS (Guest OS) 
+Change the OTA_Update status from N to Y in the Yocto partition table and Android partition table under the OTA upgrade 
+section. 
+For example: 
+• Before modification: 
+init_boot_a,Raw data,8192,EMMC_USER,UFS_LU2,N,Y,init_boot.img,N,N,AUTO,Y 
+init_boot_b,Raw data,8192,EMMC_USER,UFS_LU2,N,N,NONE,N,N,AUTO,Y 
+ 
+• After modification: 
+init_boot_a,Raw data,8192,EMMC_USER,UFS_LU2,N,Y,init_boot.img,Y,N,AUTO,Y 
+init_boot_b,Raw data,8192,EMMC_USER,UFS_LU2,N,N,NONE,Y,N,AUTO,Y 
+ 
+Add the new Android OTA partition name to the ignored_partitions in Hypervisor_make_yocto_targetfiles.py. This addition 
+allows skipping the partition during the compilation of yocto_target_files.zip, preventing errors related to non-existent 
+partition images during the compilation phase. 
+For example: 
+ignored_partitions = {'dtbo', 'boot', 'vendor_boot', 'init_boot', 'userdata', 'super', 
+'vbmeta', 'vbmeta_system', 'vbmeta_vendor', 'tee', 'bl2-tbox', 'boot_uos_tbox'}   &gt;&gt; Add the 
+newly added partitions to the list 
+ 
+3. T-box OS (Guest OS) 
+Change the OTA_Update status from N to Y in the T-box partition table for the section that requires disabling OTA upgrade. 
+For example: 
+• Before modification: 
+bl2-tbox_a,Raw data,1024,EMMC_USER,UFS_LU2,N,Y,bl2-tbox.img,N,N,AUTO,Y 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-44"><h2>PDF物理页 44</h2><a href="materials/SRC0238.pdf#page=44" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 44 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+bl2-tbox_b,Raw data,1024,EMMC_USER,UFS_LU2,N,N,NONE,N,N,AUTO,Y 
+ 
+• After modification: 
+bl2-tbox_a,Raw data,1024,EMMC_USER,UFS_LU2,N,Y,bl2-tbox.img,Y,N,AUTO,Y 
+bl2-tbox_b,Raw data,1024,EMMC_USER,UFS_LU2,N,N,NONE,Y,N,AUTO,Y 
+ 
+Add the new T-box OTA partition name to the ignored_partitions in Hypervisor_make_yocto_targetfiles.py. This addition 
+allows skipping this partition during the compilation of yocto_target_files.zip to prevent errors related to non-existent 
+partition images during the compilation phase. 
+For example: 
+ignored_partitions = {'dtbo', 'boot', 'vendor_boot', 'init_boot', 'userdata', 'super', 
+'vbmeta', 'vbmeta_system', 'vbmeta_vendor', 'tee', 'bl2-tbox', 'boot_uos_tbox'}   &gt;&gt; Add the 
+newly added partitions to the list 
+ 
+Add the new T-box OTA partition name in the partitions of Hypervisor_make_uos_tbox_targetfiles.py. Ensure that the T-
+box compilation stage packages the partition image into uos_tbox_target_files.zip. 
+For example: 
+if __name__ == &quot;__main__&quot;: 
+    target_path = &quot;sos_tbox_images&quot; 
+    partitions = ['bl2-tbox', 'boot_uos_tbox']   &gt;&gt; Add the newly added partition to the 
+list 
+ 
+4.8.3.2 Add a Non-existent AB Partition as an OTA Partition 
+The steps to add the OTA partition for the AB partition that does not exist in the partition table of each OS are as follows: 
+ 
+1. Yocto OS (Host OS) 
+Add the corresponding AB partition in the Yocto partition table, and ensure that the partition image is 
+&lt;partition_name&gt;.img, taking the addition of the customer partition as an example: 
+• After modification (the partition size is set to 8MB): 
+customer_a,Raw data,8192 ,EMMC_USER,UFS_LU2,N,Y,customer.img,Y,N,AUTO,Y 
+customer_b,Raw data,8192,EMMC_USER,UFS_LU2,N,N,NONE,Y,N,AUTO,Y 
+ 
+After completing the partition addition, add logic to determine the AB partition during the boot loading phase of the 
+customer partition to ensure that the system loads into the correct partition. 
+ 
+2. Android OS (Guest OS) 
+Add the corresponding AB partitions in the Yocto partition table and Android partition table, and ensure that the partition 
+image is &lt;partition_name&gt;.img, taking the addition of the customer partition as an example: 
+• After modification (the partition size is set to 8MB): 
+customer_a,Raw data,8192 ,EMMC_USER,UFS_LU2,N,Y,customer.img,Y,N,AUTO,Y 
+customer_b,Raw data,8192,EMMC_USER,UFS_LU2,N,N,NONE,Y,N,AUTO,Y 
+ 
+Add the new Android OTA partition name to the ignored_partitions in  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-45"><h2>PDF物理页 45</h2><a href="materials/SRC0238.pdf#page=45" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 45 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+Hypervisor_make_yocto_targetfiles.py. This addition allows skipping the partition during the compilation of 
+yocto_target_files.zip, preventing errors related to non-existent partition images during the compilation phase. 
+For example: 
+ignored_partitions = {'dtbo', 'boot', 'vendor_boot', 'init_boot', 'userdata', 'super', 
+'vbmeta', 'vbmeta_system', 'vbmeta_vendor',  'customer', 'tee', 'bl2-tbox', 
+'boot_uos_tbox'}   &gt;&gt; Add the newly added partitions to the list 
+ 
+3. T-box OS (Guest OS) 
+Add the corresponding AB partition in the Yocto partition table, and ensure that the partition image is 
+&lt;partition_name&gt;.img, taking the addition of the customer partition as an example: 
+• After modification (the partition size is set to 8MB): 
+customer_a,Raw data,8192 ,EMMC_USER,UFS_LU2,N,Y,customer.img,Y,N,AUTO,Y 
+customer_b,Raw data,8192,EMMC_USER,UFS_LU2,N,N,NONE,Y,N,AUTO,Y 
+ 
+Add the new Android OTA partition name to the ignored_partitions in Hypervisor_make_yocto_targetfiles.py. This addition 
+allows skipping the partition during the compilation of yocto_target_files.zip, preventing errors related to non-existent 
+partition images during the compilation phase. 
+For example: 
+ignored_partitions = {'dtbo', 'boot', 'vendor_boot', 'init_boot', 'userdata', 'super', 
+'vbmeta', 'vbmeta_system', 'vbmeta_vendor',  'tee', 'bl2-tbox', 'boot_uos_tbox', 
+'customer'}   &gt;&gt; Add the newly added partitions to the list 
+ 
+Add the new T-box OTA partition name in the partitions of Hypervisor_make_uos_tbox_targetfiles.py. Ensure that the T-
+box compilation stage packages the partition image into uos_tbox_target_files.zip. 
+For example: 
+if __name__ == &quot;__main__&quot;: 
+    target_path = &quot;sos_tbox_images&quot; 
+    partitions = ['bl2-tbox', 'boot_uos_tbox', 'customer']   &gt;&gt;Add the newly added partition 
+to the list 
+ 
+Note: 
+1. When adding a non-existent AB partition as an OTA partition, please ensure that the newly added partition is mounted 
+as a read-only partition. 
+2. When adding a non-existent AB partition as an OTA partition, please ensure that the system can load and start 
+normally after the new partition is added, and then verify the OTA upgrade. 
+ 
+4.9 Selection of Boot Slot 
+ Boot Control Information Description 
+Due to the independent upgrades of Linux OS and Android OS in the Hypervisor (L+L+A) partial centralized upgrade 
+scheme, in order to facilitate the management of each OS’s boot slot, the boot control parameters of Hypervisor (L+L+A) 
+also include two independent copies, which are used to control the boot slot selection for Linux OS and Android OS 
+respectively. The storage locations and key information of each boot control parameter are as follows: 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-46"><h2>PDF物理页 46</h2><a href="materials/SRC0238.pdf#page=46" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 46 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+ 
+Figure 4-5. Hypervisor (L+L+A) boot control parameters 
+ 
+The description of each boot control parameter in Figure 4-5 is shown in Table 4-1:  
+ 
+Table 4-1. Boot control parameter description 
+System type Name Description 
+Android 
+priority 
+Indicates the priority of the Android UOS Slot, with an initial value of 
+15. The system defaults to selecting the slot with a higher priority to 
+start. 
+tries_remaining 
+Indicates the number of reboot attempts for the Android UOS 
+Android slot, the default value is 7, and 0 means that a rollback 
+needs to be triggered. 
+successful_boot Android UOS startup success flag, 1: Startup successful, 0: Startup 
+failed 
+Linux 
+priority Indicates the priority of the Linux Slot, with an initial value of 15. The 
+system defaults to selecting the slot with a higher priority to start. 
+sos_tries_remaining Indicates the number of reboot attempts for the Linux SOS slot, the 
+default value is 7, and 0 means that a rollback needs to be triggered. 
+sos_successful_boot Linux SOS startup success flag, 1: Startup successful, 0: Startup failed 
+uos_tbox_tries_remaining Indicates the number of restart times for the T-box UOS slot, the 
+default value is 7, and 0 means that a rollback needs to be triggered. 
+uos_tbox_successful_boot Linux T-box UOS startup success flag, 1: Success, 0: Failure 
+ 
+Note: Boot Control Source Code is located at: src/bsp/lk2/platform/mediatek/common/bootctrl/bootctrl_v1 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-47"><h2>PDF物理页 47</h2><a href="materials/SRC0238.pdf#page=47" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 47 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+ Boot Slot Selection Mechanism 
+Since Hypervisor (L+L+A) has two independent boot control information, in order to avoid inconsistent boot slots for Linux 
+OS and Android OS, Hypervisor (L+L+A) adds a boot slot selection mechanism in Linux SOS LK2 to ensure  that Linux OS and 
+Android OS always start from the same slot. The flow of the selection mechanism is shown in Figure 4-6: 
+ 
+ 
+Figure 4-6. Hypervisor (L+L+A) boot slot selection mechanism 
+ 
+The boot slot selection mechanism flow shown in Figure 4-6 is described as follows: 
+① Start Linux Host OS. 
+② Linux Host OS enters LK2 stage, checks whether the current boot slot of Linux OS and Android OS is consistent. 
+③ If the current boot slot of the Linux OS is consistent with that of the Android OS, then boot directly from that slot. 
+④ If the current boot slot of the Linux OS is inconsistent with that of the Android OS, then continue to check whether the 
+successful_boot of both the Linux Host OS and the Linux Guest OS under the current Linux OS boot slot are 1. 
+⑤ If the successful_boot of both the Linux Host OS and Linux Guest OS under the current Linux OS boot slot is 1, then 
+modify the priority of Android OS to be consistent with the Linux OS, set the boot region to be consistent with the 
+current Linux OS boot slot, and finally restart the Linux SOS to ensure that the Linux OS and Android OS boot slots are 
+consistent. 
+⑥ If the successful_boot of both the Linux Host OS and the Linux Guest OS under the current Linux OS boot slot is not 1, 
+then continue to check whether the successful_boot of the current Android OS is 1. 
+⑦ If the current Android OS’s successful_boot is 1, then modify the Linux OS's priority to be consistent with the Android 
+OS, set the boot region to be consistent with the current Android OS boot slot, and finally restart the Linux SOS to 
+ensure that the Linux OS and Android OS boot slots are consistent. 
+⑧ If all OS’s success_boot values are not 1, it is determined that the current boot slot is unavailable, and the system 
+startup fails. 
+Note: The source code related to Rollback is located at: src/bsp/lk2/platform/mediatek/common/bootctrl/bootctrl_v1 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-48"><h2>PDF物理页 48</h2><a href="materials/SRC0238.pdf#page=48" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 48 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+4.10 Android Merge  
+The Hypervisor (L+L+A) Android OS supports Virtual A/B. After the Android OS upgrade completes and successfully boots 
+from the new slot for the first time, the Android OS merges the new slot super partition image stored in either the super 
+partition or userdata partition to overwrite the old slot super partition.Image data indicates that only one available super 
+image of Android OS exists at this time. Therefore, before initiating the Android OS merge flow, ensure that all Linux OSs 
+(OS) and Android OSs (OS) have successfully started. This prevents scenarios where a failure in starting one OS after the 
+Android OS merge triggers the rollback mechanism, resulting in a failed rollback of the Android OS. 
+ 
+ 
+Figure 4-7. Android merge mechanism 
+ 
+Figure 4-7 describes the prerequisites for Android OS to start the merge. The process is as follows: 
+① Start Yocto OS, check whether Yocto OS has successfully booted, that is, whether sos_successful_boot has been set to 
+1. 
+② If sos_successful_boot is not set to 1 before the value of sos_tries_remaining decreases to 0, then Yocto OS is 
+determined to have failed to boot, triggering the rollback mechanism. 
+③ If Yocto OS starts successfully, the system will set sos_successful_boot to 1 and start Android OS and T-box OS. 
+④ If uos_tbox_successful_boot is not set to 1 before the value of uos_tbox_tries_remaining decreases to 0, then T-box 
+OS is deemed to have failed to start, triggering the rollback mechanism. 
+⑤ If successful_boot is not set to 1 before the tries_remaining value decreases to 0, then the Android OS is deemed to 
+have failed to boot, triggering the rollback mechanism. 
+⑥ If Android UOS starts successfully, the value of successful_boot is set to 1. At this time, Android UOS will monitor the 
+startup status of Yocto OS and Tbox OS. 
+⑦ If Yocto OS and T-box OS's successful_boot are both set to 1, which means boot is successful, Android OS will then 
+start the merge process. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-49"><h2>PDF物理页 49</h2><a href="materials/SRC0238.pdf#page=49" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 49 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+⑧ If both Yocto OS and T-box OS’s successful_boot are not 1, then Android OS will monitor in a loop. 
+ 
+4.11 System Rollback 
+This section primarily describes how the Hypervisor (L+L+A) handles system rollback to the previous version after an OTA 
+upgrade fails during the first boot from the new version, preventing device bricking. 
+ 
+ Basic Principles of System Rollback 
+Since the Hypervisor (L+L+A) Project involves multiple OSs, and the Android OS needs to support Virtual AB, the rollback 
+adopted by MediaTek follows the principles below: 
+• Linux OS &amp; Android OS overall rollback, that is, when any one OS fails to start from the first new version, all OSs must 
+roll back to the old system startup to ensure that all OSs’ AB slots are consistent. 
+• Only in the scenario where the first boot from the new system fails after a successful OTA upgrade will the rollback 
+mechanism be triggered; regular boot failures will not trigger the rollback mechanism. 
+ 
+Taking Yocto, T-box, and Android 3 OS (L+L+A) OTA as an example, the system will have the following three rollback 
+scenarios: 
+Scenario 1: Yocto OS failed to boot from the new version 
+ 
+ 
+Figure 4-8. Yocto boot failure scenario after OTA upgrade 
+ 
+Figure 4-8 describes the version switching status of Yocto, T-box, and Android after the Hypervisor (L+L+A) OTA upgrade 
+from V1 -&gt; V2 is completed. When Yocto OS fails to start from the new version V2 and triggers a rollback, the scenario is 
+described as follows: 
+• Yocto, Android, and T-box all start from version  V1. 
+• The system executes an OTA upgrade to version V2 and sets version V2 as the version for the next startup. 
+• Yocto fails to start from version V2; at this time, Android and T-box have not yet been initiated. 
+• Trigger rollback. Yocto, Android, and T-box switch to V1 version for startup. 
+ 
+Scenario 2: Android OS fails to boot from the new version 
+ 
+ 
+Figure 4-9. Android boot failure scenario after OTA upgrade 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-50"><h2>PDF物理页 50</h2><a href="materials/SRC0238.pdf#page=50" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 50 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+Figure 4-9 describes the version switching status of Yocto, Android, and T-box after the Hypervisor (L+L+A) is upgraded 
+from V1 -&gt; V2 OTA. When Yocto OS successfully boots from the new version V2 and Android OS fails to boot from the new 
+version V2, triggering a rollback, the scenario is described as follows: 
+• Yocto, Android, and T-box all start from version V1. 
+• The system executes an OTA upgrade to version V2 and sets version V2 as the next boot version. 
+• Yocto successfully started from version 2. Android failed to start from version 2. The T-box startup status is unknown. 
+• Trigger rollback. Yocto, Android, and T-box switch to V1 version for startup. 
+ 
+Scenario 3: T-box OS failed to boot from the new version 
+ 
+ 
+Figure 4-10. T-box boot failure scenario after OTA upgrade 
+ 
+Figure 4-10 describes the version switching status of Yocto, Android, and T-box after the Hypervisor (L+L+A) is upgraded 
+from V1 -&gt; V2 OTA. When Yocto OS and Android OS successfully boot from the new version V2, and T-box OS fails to boot 
+from the new version, triggering a rollback. The scenario is described as follows: 
+• Yocto, Android, and T-box all start from version V1. 
+• The system executes an OTA upgrade to version V2 and sets version V2 as the version for the next startup. 
+• Yocto and Android successfully boot from version V2; T-box fails to boot from version V2. 
+• Trigger rollback. Yocto, Android, and T-box switch to V1 version for startup. 
+ 
+ System Rollback Process 
+The system mechanism of Hypervisor (L+L+A) is set in the LK2 startup phase of each OS. The detailed process is shown in 
+Figure 4-11: 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-51"><h2>PDF物理页 51</h2><a href="materials/SRC0238.pdf#page=51" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 51 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+ 
+Figure 4-11. Hypervisor rollback flow 
+ 
+ System Test Cases 
+4.11.3.1 Yocto OS Boot Failed 
+Test Environment:  
+1. The PC has a Python 3 environment 
+2. Flash base load in the DUT 
+3. Get the OTA package from the OTA owner 
+ 
+Testing Steps: 
+1. Refer to Section 4.6 How to Perform Hypervisor (L+L+A) OTA Upgrade to execute the Hypervisor (L+L+A) OTA upgrade, 
+and do not restart the device after the upgrade. 
+2. Execute the following command in the Yocto OS shell environment: 
+─ adb -s 127.0.0.1:7777 shell 
+─ blockdev --setrw /dev/disk/by-partlabel/yocto-boot_b 
+─ dd if=/dev/urandom of=/dev/disk/by-partlabel/yocto-boot_b bs=1M count=1 
+─ reboot 
+ 
+Expected Results: 
+1. Yocto SOS system startup failed and triggered the rollback mechanism to successfully start from the pre-upgrade 
+system. 
+2. The system version number remains consistent with the version before the upgrade. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-52"><h2>PDF物理页 52</h2><a href="materials/SRC0238.pdf#page=52" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 52 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+4.11.3.2 Android OS Boot Failed 
+Test Environment: 
+1. The PC has a Python 3 environment 
+2. Flash base load in the DUT 
+3. Get the OTA package from the OTA owner 
+ 
+Testing Steps: 
+1. Refer to Section  4.6 How to Perform Hypervisor (L+L+A) OTA Upgrade to perform Hypervisor (L+L+A) OTA upgrade. Do 
+not reboot the device after the upgrade. 
+2. Execute the following command in the Android SOS environment: 
+─ adb -s 127.0.0.1:7777 shell 
+─ blockdev --setrw /dev/disk/by-partlabel/init_boot_b 
+─ dd if=/dev/urandom of=/dev/disk/by-partlabel/init_boot_b bs=1M count=1 
+─ reboot 
+ 
+Expected Results: 
+1. The Android UOS system failed to start and triggered the rollback mechanism to successfully start from the pre-
+upgrade system. 
+2. The system version number remains consistent with the version before the upgrade. 
+ 
+4.11.3.3 T-box OS Boot Failed 
+Test Environment: 
+1. The PC has a Python 3 environment 
+2. Flash base load in the DUT 
+3. Get the OTA package from the OTA owner 
+ 
+Testing Steps: 
+1. Refer to Section 4.6 How to Perform Hypervisor (L+L+A) OTA Upgrade to perform Hypervisor (L+L+A) OTA upgrade. Do 
+not reboot the device after the upgrade. 
+2. Execute the following command in the Android SOS environment: 
+─ adb -s 127.0.0.1:7777 shell 
+─ blockdev --setrw /dev/disk/by-partlabel/boot_uos_tbox_b 
+─ dd if=/dev/urandom of=/dev/disk/by-partlabel/ boot_uos_tbox_b bs=1M count=1 
+─ reboot 
+ 
+Expected Results: 
+1. T-box UOS system startup failed and triggered the rollback mechanism to successfully start from the pre-upgrade 
+system. 
+2. The system version number remains consistent with the version before the upgrade. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-53"><h2>PDF物理页 53</h2><a href="materials/SRC0238.pdf#page=53" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 53 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+4.12 Power Outage Upgrade Protection 
+Since the device may be interrupted by abnormal power failure during the OTA upgrade process, in order to ensure that 
+the device can continue to complete the upgrade from the interruption point after power failure and restart during the 
+OTA upgrade process, the system needs to save the upgrade status information in real time. The Linux OS upgrade status 
+information is stored in the data/misc/update_engine/prefs directory of the yocto-userdata partition of Yocto SOS 
+by default, and the Android OS upgrade status information is stored in the data/misc/update_engine/prefs directory 
+of the userdata partition of Android UOS by default. 
+ 
+ Upgrade Status Information 
+Hypervisor (L+L+A) Linux OS and Android OS have consistent upgrade status information saved during the OTA upgrade 
+process, mainly including the following information: 
+ 
+Figure 4-12. Upgrade status information 
+ 
+Table 4-2 describes the functions of each upgrade status information: 
+ 
+Table 4-2. Upgrade status information description 
+Prefs name Prefs value Description 
+kPrefsUpdateStateNextOperation update-state-next-operation Record the next operation that needs to be 
+performed. 
+kPrefsUpdateCheckResponseHash update-check-response-hash Record the hash value of the last upgrade 
+package. 
+kPrefsResumedUpdateFailures resumed-update-failures 
+Record the number of times the upgrade is 
+interrupted; by default, an upgrade can be 
+interrupted a maximum of 10 times. If it exceeds 
+10 times, the system will force a complete re-
+upgrade. 
+kPrefsUpdateStateNextDataOffset update-state-next-data-offset 
+Record the offset address of the data 
+downloaded from the upgrade package next 
+time. 
+kPrefsUpdateStateSHA256Context update-state-sha-256-context Record the hash value of the upgrade status 
+information 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-54"><h2>PDF物理页 54</h2><a href="materials/SRC0238.pdf#page=54" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 54 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+Prefs name Prefs value Description 
+kPrefsManifestMetadataSize manifest-metadata-size Record the size of metadata data 
+kPrefsManifestSignatureSize manifest-signature-size Record signature data size 
+ 
+ Resume Upgrade Inspection Process 
+Please refer to the description in Section 3.12.2 Resume Upgrade Inspection Process. 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-55"><h2>PDF物理页 55</h2><a href="materials/SRC0238.pdf#page=55" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 55 
+MT8676 Hypervisor OTA  
+User Manual 
+Confidential B 
+Attachment 1 Additional Terms 
+The acquisition, download, and use of this document and its related information by you (or your company or other legal entity collectively referred to as 
+&quot;you&quot;) are contingent upon your acceptance of these additional terms. The use, acquisition, or download of this document indicates acceptance of these 
+additional terms and agreement to be bound by them. If there is disagreement with being bound by these additional terms, do not use, acquire, or 
+download this document and immediately delete or destroy all copies of this document. 
+ 
+This document contains confidential and proprietary information of MediaTek Inc. and its affiliates (hereinafter collectively referred to as &quot;MediaTek&quot;) or 
+its authorized representatives. This information is intended solely for internal use related to the MediaTek chipset described in this document and must 
+not be used for any other purpose, including but not limited to confirming or providing evidence supporting any potential patent infringement claims 
+against MediaTek, its suppliers, and/or its direct or indirect customers. Unauthorized use or disclosure of this document and the information contained 
+herein is prohibited. Compensation shall be provided to MediaTek for any losses or damages incurred due to unauthorized use or disclosure of any part 
+or all of this document and the information contained herein. 
+ 
+MediaTek and its licensors retain all rights to ownership and composition of this document and do not grant any intellectual property rights (whether 
+express or implied, through estoppel or otherwise). MediaTek may change the content of this document at any time without prior notice. MediaTek 
+assumes no liability related to the use or reliance on this document or any consequences arising from such use or reliance, including but not limited to 
+indirect damages or incidental damages. 
+ 
+This document and any other materials, information, or technical support provided by MediaTek are delivered on an as-is basis. MediaTek assumes no 
+responsibility for any express, implied, statutory, or other forms of warranty, particularly regarding merchantability, non-infringement, suitability for a 
+particular purpose, completeness or accuracy of information, or any warranties arising from trade practices or transactions. MediaTek shall not be liable 
+for any deliverables made to meet specified requirements or comply with specific standards or standard organizations. 
+ 
+Without limiting the aforementioned terms, MediaTek does not assume any warranty or guarantee regarding the applicability of its products for any 
+specific purpose, nor does it bear any liability for damages arising from the application or use of products, circuits, or software. Responsibility for all 
+design, validation, and testing related to the integration of personal products with MediaTek products rests solely with the user. Ensure that the 
+integrated products comply with relevant standards and any safety requirements or other specifications. 
+ 
+This supplementary clause and all actions related to this supplementary clause or this document shall be governed, interpreted, and clarified by the laws 
+of Taiwan, without applying principles of conflict of laws. 
+ 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a><a href="#page-18">PDF物理页 18</a><a href="#page-19">PDF物理页 19</a><a href="#page-20">PDF物理页 20</a><a href="#page-21">PDF物理页 21</a><a href="#page-22">PDF物理页 22</a><a href="#page-23">PDF物理页 23</a><a href="#page-24">PDF物理页 24</a><a href="#page-25">PDF物理页 25</a><a href="#page-26">PDF物理页 26</a><a href="#page-27">PDF物理页 27</a><a href="#page-28">PDF物理页 28</a><a href="#page-29">PDF物理页 29</a><a href="#page-30">PDF物理页 30</a><a href="#page-31">PDF物理页 31</a><a href="#page-32">PDF物理页 32</a><a href="#page-33">PDF物理页 33</a><a href="#page-34">PDF物理页 34</a><a href="#page-35">PDF物理页 35</a><a href="#page-36">PDF物理页 36</a><a href="#page-37">PDF物理页 37</a><a href="#page-38">PDF物理页 38</a><a href="#page-39">PDF物理页 39</a><a href="#page-40">PDF物理页 40</a><a href="#page-41">PDF物理页 41</a><a href="#page-42">PDF物理页 42</a><a href="#page-43">PDF物理页 43</a><a href="#page-44">PDF物理页 44</a><a href="#page-45">PDF物理页 45</a><a href="#page-46">PDF物理页 46</a><a href="#page-47">PDF物理页 47</a><a href="#page-48">PDF物理页 48</a><a href="#page-49">PDF物理页 49</a><a href="#page-50">PDF物理页 50</a><a href="#page-51">PDF物理页 51</a><a href="#page-52">PDF物理页 52</a><a href="#page-53">PDF物理页 53</a><a href="#page-54">PDF物理页 54</a><a href="#page-55">PDF物理页 55</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

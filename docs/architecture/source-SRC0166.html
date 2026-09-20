@@ -1,0 +1,2582 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676_Android_SDK_User_Manual_V1.0.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>MT8676_Android_SDK_User_Manual_V1.0.pdf</h1><p>SRC0166 · 原来源 ID S099 · PDF物理页 · 60 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MT8676软件资料/User Manual/Android/Chinese Version/MT8676_Android_SDK_User_Manual_V1.0.pdf</p><p>SHA-256：<code>a34c5b731928dce574ec960712d18dc91be506a21182dec3ea84110db7997320</code></p><p>原文件大小：1,553,055 字节</p></details><div class="actions"><a class="button" href="materials/SRC0166.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="MT8676_Android_SDK_User_Manual_V1.0.pdf 原 PDF" src="materials/SRC0166.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0166.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential B 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version:  1.0 
+Release date:  2024-08-12
+MT8676 Android SDK User Manual 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0166.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+版本记录 
+版本 日期 作者 描述 
+1.0 2024-08-12 胡丹凤 正式版 
+ 
+  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0166.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+目录 
+版本记录 ··········································································································································································· 2 
+目录 ··················································································································································································· 3 
+图片目录 ··········································································································································································· 3 
+1 SDK ············································································································································································ 4 
+1.1 概述·········································································································································································· 4 
+1.1.1 简单介绍 ······················································································································································ 4 
+1.1.2 SDK 功能介绍 ··············································································································································· 4 
+1.1.3 注意事项 ······················································································································································ 4 
+1.2 架构/流程概述 ························································································································································ 4 
+1.2.1 内部结构图 ·················································································································································· 4 
+1.2.2 API 列表 ························································································································································ 5 
+1.3 配置/客制化指南 ·················································································································································· 55 
+1.3.1 主要功能介绍 ············································································································································ 55 
+1.3.2 碰撞检测特别说明 ···································································································································· 57 
+1.4 常见问题/故障排除 ·············································································································································· 58 
+1.4.1 SDK 常见问题 ············································································································································· 58 
+1.4.2 调试日志开关方法 ···································································································································· 59 
+附件一 附加条款 ···························································································································································· 60 
+ 
+ 
+ 
+图片目录 
+图 1-1. SDK 内部结构 ································································································································································ 5 
+图 1-2. SPM SDK 流程 ································································································································································ 5 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0166.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+1  SDK 
+1.1 概述 
+ 简单介绍 
+本章节主要介绍 MT8676 SDK 接口以及常见问题的处理方法。 
+ 
+SmartPlatform 是一个特殊的产品，MediaTek 为了降低客户 APK 的开发难度，实现更多客制化的需求，让开发者快
+速、方便地开发出好的应用，提供了 SmartPlatform 独有的一套 SDK 接口。 
+ 
+ SDK 功能介绍 
+SDK 提供 API 给客户调用，每个摄像头可以独立进行 preview、 capture、 record、 YUV callback (PictureSequence)。
+且支持多进程同时使用一个摄像头。 
+ 
+ 注意事项 
+• 考虑到同步和效率问题，SDK 中的回调是直接在 binder 线程中处理的，并未新开线程处理。 所以应用程序在
+收到回调之后，最好开启一个新线程来处理； 如果不另外开启新线程处理，请不要在回调中继续调用 SDK 接
+口（可能造成死锁）；也不要在回调中执行耗时较久的任务。 
+• 关于拍照流程，为了避免拍照延长和 preview/record 中断，目前拍照和 preview 已进行了绑定。如果要调整拍
+照的大小，需要在调用 setPreviewSurface 之前通过 setPictureSize 进行设定。 
+ 
+1.2 架构/流程概述 
+ 内部结构图 
+MT8676 SDK 内部结构如图 1-1 所示： 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0166.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+INTERNAL USE
+Confidential B
+Demo App
+SPM SDK
+SPM Service
+CarCamDeviceClient
+ Ipod Socket server
+CareventHandler
+Collision detection
+Sensor Service
+ Carevent
+Driver
+ Ipod
+Camera
+Device
+Record
+Mgr
+Camera
+Service
+Media
+Codec
+App Process
+SPM Service Process
+ 
+图 1-1. SDK 内部结构 
+ 
+MT8676 SDK 流程如图 1-2 所示： 
+INTERNAL USE
+Confidential B
+Start
+SmartPlatform
+Manager
+SpmCameraDevice
+setSurfaceDisplay
+CarCamDevice
+Client
+createSession
+submitRequest
+End
+ 
+图 1-2. SPM SDK 流程 
+ 
+ API 列表 
+1.2.2.1 SmartPlatformManager 
+描述： 
+SmartPlatform SDK 的主要接口类，单例模式。管理平台的摄像头 录制，碰撞检测，关机状态设置等。 
+引入（导入）SmartPlatformManager：   
+import com.mediatek.smartplatform.SmartPlatformManager; 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0166.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+实例化(创建)对象： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+ get() 
+函数：  
+public static SmartPlatformManager get() 
+返回值： 
+返回一个 SmartPlatformManager 实例。 
+细节： 
+SmartPlatformManager 是以单例的模式存在应用程序中，这意味着同一个应用程序在任何地方调用此方法得到的
+SmartPlatformManager 实例都是同一个。SmartPlatformManager 实例在该类被加载的时候就创建出来了，属于“饿
+汉式”。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+ 
+ isServiceAlive 
+函数：  
+public boolean isServiceAlive() 
+返回值： 
+APK 进程获取的 SmartPlatform service 和 Camera Service 是否可用。 
+细节： 
+• 如果 SmartPlatform Service 或者 Camera Service 还没有被注册到系统服务，或者注册失败，该接口会返回
+false，这意味着调用 SmartPlatformManager 对象的一些方法会出现异常。 所以应用程序需要先确保
+SmartPlatform Service 可用后，再调用相关接口。 
+• 这个接口会返回 false 的情况一般发生在 smartplatformserver 进程异常退出后，smartplatformserver 进程会重
+启，此时应用程序也会重启。但是可能因为应用程序比 smartplatformserver 进程先重启，这时 Smartplatform 
+Service 还没有就绪，所以应用程序此时调用相关接口就会发生空指针异常，导致应用程序退出。 
+• 针对上述的情况，建议针对应用程序做以下逻辑处理： 
+(1) 应用程序异常退出重启时，先判断 service 是否可用（只需要判断一次即可）。 
+(2) 如果不可用，需要延时等待 service 就绪。在 service 没有就绪之前，不要调用相关接口（比如
+openCameraDevice()）。 
+(3) Service 就绪后，按照正常的流程往下进行。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0166.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+示例： 
+      SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+      if (!mSmartPlatformManager.isServiceAlive()){ 
+         //可以延时等待后再去判断是否可用 
+      mHandler.sendEmptyMessageDelay(INIT_DELAY,500); 
+       } else{ 
+          //走正常的 初始化流程 
+       } 
+ 
+ getCameraIdList 
+函数：  
+public String[] getCameraIdList () 
+返回值： 
+返回当前平台连接的摄像头设备的列表，包含正在使用的摄像头 。 
+细节： 
+该函数返回的摄像头列表指的是平台当前实际连接到的摄像头。 
+与android.hardware.camera2.CameraManager 中 getCameraIdList 不同，该函数会返回在位（1）、不在位
+（0）、正在使用（-2）的摄像头，CameraManager 只会返回在位的摄像头，具体状态信息参考 getCameraStatus。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+String cameraList[] = mSmartPlatformManager.getCameraIdList(); 
+ 
+ getAvmCameraId 
+函数：  
+public String getAvmCameraId () 
+返回值： 
+返回当前平台连接的 AVM 摄像头设备的 ID 。 
+细节： 
+该函数得到的摄像头列表指的是平台当前实际连接到的 AVM camera ID。这些 camera ID 主要用于 CarcorderDemo 
+APK 调用，适用于 AVM DVR。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+String cameraId = mSmartPlatformManager.getAvmCameraId(); 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0166.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+ getCameraCharacteristics 
+函数：  
+public CameraCharacteristics getCameraCharacteristics(String cameraId) 
+参数： 
+cameraId 摄像头对应的标识 
+返回值： 
+数据类型为android.hardware.camera2.CameraCharacteristics。cameraId 对应摄像头的设备功能。 
+细节： 
+ cameraId 通过 getCameraIdList 获取此 API 与android.hardware.camera2.CameraManager 中
+getCameraCharacteristics 等同。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+String cameraList[] = mSmartPlatformManager.getCameraIdList(); 
+mSmartPlatformManager. getCameraCharacteristics(cameraList[0]); 
+ openCameraDevice 
+函数：  
+public SpmCameraDevice openCameraDevice(String cameraIdStr) 
+参数： 
+cameraIdStr 摄像头对应的标识 
+返回值： 
+返回一个 SpmCameraDevice 对象。 
+细节： 
+• 参数cameraIdStr 是摄像头对应的标识 ID，每个摄像头的 ID 值都不同，这个 ID  通过 getCameraIdList 获取。 
+• 同一个应用程序内每次使用同一个 ID 调用该函数得到的 CameraDevice 对象是一样的。对象只会在第一次调用
+时被创建。  
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+String ids[] = mSmartPlatformManager.getCameraIdList(); 
+SpmCameraDevice cameraDevice0= mSmartPlatformManager.openCameraDevice(ids[0]); 
+ 
+ openAvmCameraDevice 
+函数：  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0166.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+public SpmCameraDevice openCameraDevice() 
+返回值： 
+返回一个 SpmCameraDevice 对象。 
+细节： 
+同一个应用程序内每次调用该函数得到的 CameraDevice 对象是一样的。对象只会在第一次调用时被创建。  
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+SpmCameraDevice avmcameraDevice= mSmartPlatformManager.openAvmCameraDevice(); 
+ 
+ closeCameraDevice 
+函数：  
+public void closeCameraDevice(String cameraId) 
+参数： 
+cameraId  摄像头对应的标识 
+细节： 
+• 参数cameraId 是摄像头对应的标识 ID，每个摄像头的 ID 值都不同，这个 ID  通过 getCameraIdList 获取。如果
+不需要使用此 CameraDevice，应该调用此函数把它关掉，以便资源的释放和回收。 
+• 调用了此函数之后，之前通过 openCameraDevice 得到的所有引用将不再可用。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+String ids[] = mSmartPlatformManager.getCameraIdList(); 
+SpmCameraDevice cameraDevice0= mSmartPlatformManager.openCameraDevice(ids[0]); 
+mSmartPlatformManager.closeCameraDevice(ids[0]); 
+ 
+ closeAvmCameraDevice 
+函数：  
+public void closeAvmCameraDevice() 
+细节： 
+调用了此函数之后，之前通过 openAvmCameraDevice 得到的引用将不再可用。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+SpmCameraDevice avmcameraDevice0= mSmartPlatformManager.openAvmCameraDevice(); 
+mSmartPlatformManager.closeAvmCameraDevice(); 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0166.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+ addServiceDeathCallback 
+函数：  
+public void addServiceDeathCallback(ServiceDeathCallback callback) 
+参数： 
+callback  SmartPlatformServer 进程退出（死掉）时的回调 
+细节： 
+• ServiceDeathCallback  定义如下： 
+  public interface ServiceDeathCallback  { 
+     void onDeath(int arg1,String arg2); 
+  } 
+• 同一个 ServiceDeathCallback 被多次添加，只会存在一次回调。 
+• 该回调被触发意味着 SmartPlatformServer 进程已经死掉了，此时 SmartPlatform Service 相关服务此时不再可
+用，目前的机制是 SmartPlatformServer 死掉（异常被杀死）后会重新加载运行。应用程序需要重新获取服务，
+因为之前 SmartPlatformManager, SpmCameraDevice 对象都无法继续使用了。 
+示例： 
+      SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+      mSmartPlatformManager. addServiceDeathCallback ( 
+               new ServiceDeathCallback() { 
+                    public void onDeath(int arg1,String arg2){ 
+                      } 
+              }  
+       ); 
+ 
+ removeServiceDeathCallback 
+函数：  
+public void removeServiceDeathCallback (ServiceDeathCallback callback) 
+参数： 
+callback  SmartPlatformServer 进程退出（死掉）时的回调 
+细节： 
+移除注册的回调对象  
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+mSmartPlatformManager.removeServiceDeathCallback(callback); 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0166.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+ addCameraAvailableCallback 
+函数：  
+public void addCameraAvailableCallback(ServiceDeathCallback callback) 
+参数： 
+callback 返回摄像头状态的回调 
+细节： 
+• CameraAvailableCallback  定义如下： 
+  public interface CameraAvailableCallback  { 
+     void onAvailable (String cameraId, int status); 
+  } 
+• 同一个 CameraAvailableCallback 被多次添加，只会存在一次回调。 
+• 该回调被触发时意味着摄像头的新增或移除，被移除时可以做停止录制相关操作。 
+示例： 
+      SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+      mSmartPlatformManager. addCameraAvailableCallback ( 
+               new CameraAvailableCallback () { 
+                    public void onAvailable (String cameraId, int status){ 
+                      } 
+              }  
+       ); 
+ 
+ 
+ removeCameraAvailableCallback 
+函数：  
+public void removeCameraAvailableCallback (CameraAvailableCallback callback) 
+参数： 
+callback 返回摄像头状态的回调 
+细节： 
+移除注册的回调对象  
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+mSmartPlatformManager.removeCameraAvailableCallback(callback); 
+ getIpodProxy 
+函数：  
+public IpodProxy getIpodProxy() 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0166.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+返回值： 
+返回一个 IpodProxy 对象。 
+细节： 
+参考 IpodProxy 说明。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+IpodProxy mIpodProxy=mSmartPlatformManager.getIpodProxy(); 
+ 
+ getCollisionProxy 
+函数：  
+public CollisionProxy getCollisionProxy() 
+返回值： 
+返回一个 CollisionProxy 对象。 
+细节： 
+ 参考 CollisionProxy 说明。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+CollisionProxy mCollisionProxy=mSmartPlatformManager.getCollisionProxy(); 
+ 
+ getCarEventProxy 
+函数：  
+public CarEventProxy getCarEventProxy() 
+返回值： 
+返回一个 CarEventProxy 对象。 
+细节： 
+参考 CarEventProxy 说明。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+CarEventProxy mCarEventProxy=mSmartPlatformManager.getCarEventProxy(); 
+ 
+ getNumberOfCameras 
+函数：  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0166.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+public int getNumberOfCamera() 
+返回值： 
+返回可用的摄像头个数，包含在位、不在位、正在使用的摄像头。 
+细节： 
+参考 getCameraIdList 说明，实质上该方法返回的是 getCameraIdList 返回的数组大小。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+int cameraNumber = mSmartPlatformManager.getNumberOfCamera(); 
+ 
+ getCameraStatus 
+函数：  
+public int getCameraStatus(String cameraId) 
+返回值： 
+返回所要获取的cameraId 的状态。 
+细节： 
+状态含义如frameworks/av/camera/aidl/android/hardware/ICameraServiceListener.aidl: 
+// Device physically unplugged 
+const int STATUS_NOT_PRESENT = 0; // 不在位 
+// Device physically has been plugged in and the camera can be used exclusively 
+const int STATUS_PRESENT = 1; // 在位可用 
+// Device physically has been plugged in but it will not be connect-able until enumeration 
+is complete 
+const int STATUS_ENUMERATING = 2; // enumator provider 运行时camera 返回的状态， enumator 完成后
+会转到PRESENT 状态 
+// Camera is in use by another app and cannot be used exclusively 
+const int STATUS_NOT_AVAILABLE = -2; // 其他应用程序进程在使用，由于MediaTek SDK 支持多进程使用，所
+以是可用的 
+// Use to initialize variables only 
+const int STATUS_UNKNOWN = -1; //初始状态 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+int cameraStatus = mSmartPlatformManager.getCameraStatus(cameraId); 
+ 
+1.2.2.2 PreviewSource 
+引入（导入）PreviewSource：   
+import com.mediatek.smartplatform.PreviewSource; 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0166.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+对象说明： 
+用于区分多个预览 （preview），同一个摄像头设备可以进行多个预览操作。通常使用 GENERAL_CAMERA 或者
+PREVIEW_[0-4]进行区分。 
+ 
+1.2.2.3 RecordSource 
+引入（导入）RecordSource：   
+import com.mediatek.smartplatform.RecordSource; 
+对象说明： 
+用于区分录制（Record）的类型，同一个摄像头设备可以进行多路不同分辨率的录制。通常使用 GENERAL_CAMERA
+或者RECORD_[0-4]进行录制。如果是低分辨率录制，可以选择 GENERAL_CAMERA_SUB 或者 RECORD_EX_[0-4]。 
+ 
+1.2.2.4 PictureSequenceSource 
+引入（导入）PictureSequenceSource：   
+import com.mediatek.smartplatform.PictureSequenceSource; 
+对象说明： 
+用于区分 PictureSequenceSource 的类型，同一个摄像头设备可以获取多路不同分辨率的连续图片，通常使用
+GENERAL_CAMERA 获取 。 
+ 
+1.2.2.5 RecordConfiguration 
+引入（导入）RecordConfiguration：   
+import com.mediatek.smartplatform.RecordConfiguration; 
+实例化(创建)对象： 
+RecordConfiguration recordConfig= RecordConfiguration.get(recordSource); 
+ 
+ mCamcorderProfile 
+类别： android.media.CamcorderProfile 
+细节：录像视频文件的格式，帧率，视频画面大小等设定。 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0166.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+ mOutPutFilePath 
+类别：java.lang.String 
+细节：录像视频文件的保存路径 
+ 
+ mOutPutFileName 
+类别：java.lang.String 
+细节：录像视频文件的前缀 
+ 
+ mVideoCallback 
+类别：com.mediatek.smartplatform.SpmCameraDevice.VideoCallback 
+细节：录像视频相关事件发生时的回调 
+• VideoCallback 定义如下： 
+public interface VideoCallback { 
+public static final int VIDEO_EVNET_ADD_FILE_IN_GALLERY=0; 
+public static final int VIDEO_EVNET_DELETE_FILE_IN_GALLERY=1; 
+public static final int VIDEO_EVNET_SDCARD_FULL=2; 
+public static final int VIDEO_EVNET_RECORD_STATUS_START=3; 
+public static final int VIDEO_EVNET_RECORD_STATUS_STOP =4; 
+public static final int VIDEO_EVNET_RECORD_RECORDING_ERROR=5; 
+public static final int VIDEO_EVNET_RECORD_SDCARD_DAMAGED=6; 
+public static final int VIDEO_EVNET_LOWRES_KEYPOINT_START =7; 
+public static final int VIDEO_EVNET_LOWRES_KEYPOINT_STOP =8; 
+public static final int VIDEO_EVNET_KEYPOINT_START =9; 
+public static final int VIDEO_EVNET_KEYPOINT_STOP =10; 
+ 
+void onVideoTaken(int eventType, int cameraId, int recorderSource, String videoname, int 
+starTime, int endTime); 
+void onVideoTake(VideoInfo videoInfo); 
+void onVideoFrame(byte[] data,int dataType, int size, int cameraId, int recorderSource); 
+  } 
+• VideoInfo 是eventType, cameraId 等等的集合，后续不再使用多参数的 onVideoTaken。 
+• onVideoTaken 中[VideoInfo] eventType 含义如下： 
+– VIDEO_EVNET_ADD_FILE_IN_GALLERY 录像完成，并且视频文件被成功保存，通过 videoname 可以得到
+视频文件的路径。 
+– VIDEO_EVNET_DELETE_FILE_IN_GALLERY 视频文件被删除时，会收到此通知，一般发生在循环录制时，
+通过删除之前的视频文件释放空间。 
+– VIDEO_EVNET_SDCARD_FULL 录制视频的时候检测到 SD Card 已经满了。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0166.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 16 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+– VIDEO_EVNET_RECORD_RECORDING_ERROR 录制视频过程中发生了错误。 
+– VIDEO_EVNET_RECORD_SDCARD_DAMAGED 录制视频时检测到 SD Card 被损坏了，如果 SD Card 的写入速度
+小于某个阀值，也可能被认为损坏了。 
+– VIDEO_EVNET_LOWRES_KEYPOINT_START 低分辨率打点开始。 
+– VIDEO_EVNET_LOWRES_KEYPOINT_STOP 低分辨率打点结束。 
+– VIDEO_EVNET_KEYPOINT_START 打点开始。 
+– VIDEO_EVNET_KEYPOINT_STOP  打点结束。 
+• onVideoTaken 中[VideoInfo] starTime, int endTime  
+当收到VIDEO_EVNET_ADD_FILE_IN_GALLERY 的时候，表示视频文件录制的开始时间和结束时间。注意需设
+置 enableVideoWithTimeCallback(true)。 
+• onVideoFrame: 通过此接口可以接收每一帧视频数据。 
+– data：保存数据的缓冲区 
+– dataType：保留参数，可能被用来区分是高清还是标清数据。 
+– size：表示视频数据的大小，一般情况下小于 data 数组的大小，每次回调得到的视频数据大小可能不一
+样。 
+– cameraId:  返回当前视频数据的 cameraId。 
+– recoderType：返回当前视频数据的recorderType。 
+• recorderSource 与 startRecord 中的 recorderSource 相对应。 
+ 
+ mAudioCallback 
+类别：com.mediatek.smartplatform.SpmCameraDevice.AudioCallback 
+细节：音频数据的回调 
+• AudioCallback 定义如下： 
+   public interface AudioCallback { 
+     void onAudioFrame(byte[] data, int dataType, int size, int cameraId, int 
+recorderSource); 
+   } 
+• onAudioFrame: 通过此接口可以接收每一帧音频数据。 
+– data：保存数据的缓冲区 。 
+– dataType：保留参数。 
+– size：有效数据的大小，一般情况下小于 data 的大小。 
+– cameraId:  当前返回音频数据的cameraId。 
+• recorderSource: 当前返回音频数据的 recorderSource 与 startRecord 中的 recorderSource 相对应。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0166.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 17 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+ mRecordStatusCallback 
+类别：com.mediatek.smartplatform.SpmCameraDevice.RecordStatusCallback 
+细节：录像状态发生改变的回调 
+• RecordStatusCallbac 定义如下： 
+  public interface RecordStatusCallback{ 
+       public static fianl int RECORD_STATUS_START      = 0; 
+       public static fianl int RECORD_STATUS_STOP       = 1; 
+       public static fianl int RECORD_STATUS_RECORDING  = 2; 
+       void onRecordStatusChanged(int status,int cameraid,int recorderSource); 
+  } 
+• 当录像状态发生变化时会回调。 
+ 
+ mKeypointCallback 
+类别：com.mediatek.smartplatform.SpmCameraDevice.KeyPointCallback 
+细节：打点数据通知到应用程序时的回调 
+• KeypointCallback 定义如下： 
+  public interface KeypointCallback{ 
+void onKeypointFrame(byte[] data,int dataType,int size,String cameraId, int recorderSource); 
+  } 
+• onKeypointFrame: 通过此接口接收已编码的数据。 
+– data：保存数据的缓冲区，每次回调 onKeypointFrame 时，使用的都是同一个缓冲区。如果想要保存数
+据，需要重新拷贝，不然下一次会被覆盖。 
+– dataType：保留参数，可能被用来区分是高清还是标清数据。 
+– size：标示打点（keypoint）数据的大小，一般情况下小于 data 的大小， 这个数据大小一般是 128KB，包
+含视频和音频数据，格式为 ts。 
+ 
+ mVideoFrameMode 
+类别：int 
+细节：标识要怎么处理视频数据。 
+VideoFrameMode 的定义如下： 
+• VIDEO_FRAME_MODE_DISABLE  (0),//录制到文件 
+• VIDEO_FRAME_MODE_SOURCE   (1), //以h264 格式提供给应用程序 
+• VIDEO_FRAME_MODE_PACKET   (2), //以ts 格式提供给应用程序 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-18"><h2>PDF物理页 18</h2><a href="materials/SRC0166.pdf#page=18" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 18 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+• VIDEO_FRAME_MODE_ DUAL     (3); //以ts 格式录制到文件,同时提供给应用程序 
+ 
+ mAudioSource 
+类别：int 
+细节：标识音频的来源。参考android.media.Mediarecorder.AudioSource ,一般为CAMCORDER。 
+ 
+ mKeypoiintSpanLimit 
+类别：int 
+细节：最大的时间跨度，单位是秒。 
+• 如果当前打点视频文件的时间和前一个视频文件的时间超过设定 的最大时间跨度，就不再截取前一个视频文件
+作为打点保护视频。 
+• 此参数需要在startRecord 之前设置，参数是一个整数值，单位是秒。 
+• 如果应用程序不设置此参数，则默认的跨度时间是当前设置的录制文件时间长度。  
+ 
+ mRecordingMuteAudio 
+类别：boolean 
+细节：是否关闭麦克风 
+参数为 true 表示关闭麦克风，这样录出来的视频就没有声音了，参数为 false 表示打开。 
+ 
+ mVideoCbFrameRate 
+类别：int 
+细节：设置视频回调的帧率。 
+ 
+ mLockFilePath 
+类别：String 
+细节：保护视频文件的保存目录。 
+设置受保护的视频文件的保存目录，默认的路径是/sdcard/DCIM/camera/protect。 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-19"><h2>PDF物理页 19</h2><a href="materials/SRC0166.pdf#page=19" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 19 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+ mVideoRotateSize 
+类别：int 
+细节：录制文件的最大 size ，以字节（bytes）为单位计算。当录制文件达到 size，会存放在新的文件中。  
+ 
+ mVideoRotateDuration 
+类别：int 
+细节：设置保存的每个视频文件的时间长度，单位是毫秒。 
+ 
+ mEnableRecordStartRing 
+类别：boolean 
+细节：开关录制铃声 
+ 
+ mVideoBitRateMin 
+类别：int 
+细节：视频录制最小的比特率 
+设置视频文件的比特率范围，在录像的时候如果写文件的速度变慢，底层会降低 比特率；如果写得快，就会调高
+比特率。降低比特率是为了避免写文件太慢而导致缓冲区积压。即使写文件速度再慢，调整后的比特率也不会小
+于设置的最小值，同样提高的比特率也不会超过最大值。 
+ 
+ mVideoBitRateMax 
+类别：int 
+细节：视频录制最大的比特率 
+设置视频文件的比特率范围，在录像的时候如果写文件的速度变慢，底层会降低 比特率；如果写得快，就会调高
+比特率。降低比特率是为了避免写文件太慢而导致缓冲区积压。即使写文件速度再慢，调整后的比特率也不会小
+于设置的最小值，同样提高的比特率也不会超过最大值。 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-20"><h2>PDF物理页 20</h2><a href="materials/SRC0166.pdf#page=20" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 20 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+ mVideoCycleDeleteFileNum 
+类别：int 
+细节：循环删除的文件数量，当存储空间不够时删除的文件数量 。 
+ 
+ mReduceRecordingFps 
+类别：int 
+细节：降低视频录制的帧率百分比。 
+FULL: 100% 
+HALF: 50% 
+THIRTY_PERCENT: 30% 
+QUARTER: 25% 
+ 
+1.2.2.6 PictureConfiguration 
+引入（导入）PictureConfiguration：   
+import com.mediatek.smartplatform.PictureConfiguration; 
+实例化(创建)对象： 
+PictureConfiguration recordConfig= PictureConfiguration.get(recordSource); 
+ 
+ mImageCallback 
+建议直接使用 ImageDataCallback。 
+类别：com.mediatek.smartplatform.ImageReaderEx.ImageCallback; 
+细节：需要获取的图像的 YUV data 的回调。 
+ImageCallback { 
+int IMAGE_FORMAT_YUV_420_888 = ImageFormat.YUV_420_888; 
+int IMAGE_FORMAT_JPEG =ImageFormat.JPEG 
+int IMAGE_FORMAT_NV21 =ImageFormat.NV21 
+int IMAGE_DATA_RAW =0; 
+int IMAGE_DATE_FILE =1; 
+void onImageAvailable(String cameraId, int format, int status , byte[] data, String path) 
+} 
+imageFormat: 目前只支持 YUV_420_888 和 JPEG, NV21。  
+Datatype 可以为 file 或者 raw。 为 raw 会通过 calback 返回；为 file 则保存在 path 目录。保存为 file 一般用来进行
+测试。 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-21"><h2>PDF物理页 21</h2><a href="materials/SRC0166.pdf#page=21" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 21 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+ mImageDataCallback 
+类别：com.mediatek.smartplatform.SpmCameraDevice.ImageDataCallback; 
+细节：需要获取目标图像的 YUV DirectByteBuffer 的回调。 
+    ImageDataCallback { 
+        int IMAGE_FORMAT_YUV_420_888 = ImageFormat.YUV_420_888; 
+        int IMAGE_FORMAT_JPEG = ImageFormat.JPEG; 
+        int IMAGE_FORMAT_NV21 = ImageFormat.NV21; 
+        int IMAGE_FORMAT_YV12 = ImageFormat.YV12; 
+        int IMAGE_FORMAT_RGB_888 = PixelFormat.RGB_888; 
+        int IMAGE_FORMAT_YUY2 = ImageFormat.YUY2; 
+ 
+        int IMAGE_DATA_RAW = 0; 
+        int IMAGE_DATA_FILE = 1; 
+        int IMAGE_DATA_BUFFER = 2; 
+        int IMAGE_DATA_IMAGE = 3; 
+        void onImageAvailable(ImageDataCallbackInfo imageDataCallbackInfo); 
+} 
+imageFormat: 目前支持 YUV_420_888 和 JPEG,  NV21，YV12, RGB_888, YUY2 格式。 
+DataType 可以为 RAW，FILE，BUFFER 或者 IMAGE。  
+RAW：将数据放在一个 byte[] 中回调回来。 
+FILE：保存在平台，会删除旧文件，用于本地测试。 
+BUFFER：将数据放在一个 DirectByteBuffer 中返回给应用程序，减少复制次数。 
+IAMGE：将数据放在一个图像中返回给应用程序。 
+ 
+ mPath 
+类别：String 
+细节：需要获取的图像的保存路径 
+此参数目前没有使用。 
+ 
+ mImageFormat 
+类别：int 
+细节：所注册回调需要获取的图像格式，设置值为 ImageCallback 或 mImageDataCallback 中的 format 值，标识了回
+调获取的图像类型。 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-22"><h2>PDF物理页 22</h2><a href="materials/SRC0166.pdf#page=22" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 22 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+ mDateType 
+类别：int 
+细节：需要获取的图像的 data 类型，是 RAW，FILE，BUFFER，IMAGE 中的一种。 
+ 
+ mPicWidth 
+类别：int 
+细节：需要获取的图像的宽度 
+ 
+ mPicHeight 
+类别：int 
+细节：需要获取的图像的高度 
+ 
+ mJpegHwEnc 
+类别： Boolean 
+细节：是否使用硬件编码器将摄像头数据编码成 JPEG 格式，目前没有使用这个标志。 
+ 
+1.2.2.7 SpmCameraDevice 
+引入（导入）SpmCameraDevice：   
+import com.mediatek.smartplatform.SpmCameraDevice; 
+实例化(创建)对象： 
+SpmCameraDevice mCameraDevice =SmartPlatformManager.get().openCameraDevice(“0”); 
+ 
+ getState 
+函数：  
+public int getState() 
+返回值： 
+返回当前摄像头（Cameradevice）所处的状态。 
+细节： 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-23"><h2>PDF物理页 23</h2><a href="materials/SRC0166.pdf#page=23" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 23 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+1. 摄像头的状态 
+STATE_IDLE, STATE_PREVIEW_[0-4], STATE_RECOR_[0-4], …. 
+2. 状态的说明 
+各种状态是“或”的关系，比如返回 0X21，则说明此 CameraDevice 正处于STATE_PREVIEW_0 和 
+STATE_RECOR_0 状态。 
+3. 该接口返回的是底层保存的状态。 如果应用程序 1 在预览，应用程序 2 在录制;  若应用程序 1 异常退出，待应
+用程序 1 重新启动后，通过此接口获取的摄像头的当前状态依然是正在录制 。 
+示例： 
+SpmCameraDevice mCameraDevice = SmartPlatformManager.get().openCameraDevice(ids[0]); 
+int state=mCameraDevice.getState(); 
+ 
+ getCameraCharacteristics 
+函数：  
+public CameraCharacteristics getCameraCharacteristics() 
+返回值： 
+数据类型为android.hardware.camera2.CameraCharacteristics。当前摄像头的设备功能。 
+细节： 
+cameraId 通过 getCameraIdList 获取。 
+与android.hardware.camera2.CameraManager 中 getCameraCharacteristics 和 SmartPlatformManager 中
+getCameraCharacteristics 类似。通过此方法，可以获取摄像头的所有配置。 
+getParameters 中获取的参数也是通过 CameraCharacteristics 转换。 
+示例： 
+SpmCameraDevice mCameraDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+mCameraDevice. getCameraCharacteristics(); 
+ 
+ getParameters 
+函数：  
+public SpmParameters getParameters() 
+返回值： 
+SpmParameters 对象， SpmCameraDevice 参数的集合。 
+细节： 
+SpmCameraDevice 的参数信息可以通过 SpmParameters 得到并修改。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-24"><h2>PDF物理页 24</h2><a href="materials/SRC0166.pdf#page=24" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 24 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+SpmParameters 中的参数是通过 CameraCharacteristics 转换得到的。目前可能存在某些参数未转换，若需要则可再
+增加转换。 
+示例： 
+SpmCameraDevice mCameraDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+SpmParameters params=mCameraDevice.getParameters(); 
+ 
+ setParameters 
+函数：  
+public void setParameters(SpmParameters params) 
+参数： 
+params 需要设置的参数集合 
+细节： 
+当要修改 SpmCameraDevice 一些参数时，必须要调用这个接口才能生效。 
+示例： 
+SpmCameraDevice mCameraDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+SpmParameters params=mCameraDevice. getParameters ();  //先获取params 
+mCameraDevice.setParameters(params);       //修改之后再设置下去 
+ 
+ setADASCallback 
+函数：  
+public void setADASCallback(ADASCallback callback) 
+参数： 
+callback ADAS 的回调 
+细节： 
+ADASCallback 定义如下： 
+   public interface ADASCallback{ 
+        void onADASCallback(ADASInfo info); 
+   } 
+示例： 
+   SpmCameraDevice mCameraDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+   mCameraDevice.setADASCallback( 
+                  new setADASCallback(){ 
+                         public void onADASCallback(ADASInfo info){ 
+                              //TODO 
+                        } 
+                  } 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-25"><h2>PDF物理页 25</h2><a href="materials/SRC0166.pdf#page=25" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 25 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+    ); 
+ 
+ setPictureSize 
+函数：  
+public int setPictureSize(android.util.Size pictureSize) 
+参数： 
+pictureSize 图片大小 
+返回值： 
+返回 0 表示设置成功 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+mDevice. setPictureSize (1280*720); 
+ 
+ setPreviewSurface 
+函数：  
+public int setPreviewSurface(Surface surface, @PreviewSource.Format int previewSource) 
+参数： 
+surface 显示缓冲区的产生端 
+previewSource  预览源 
+返回值： 
+返回一个 boolean，表示设置是否成功。 
+细节： 
+参考frameworks\base\core\java\android\view\Surface.java 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+SurfaceView surfaceView=findViewById(R.id.surface_view); 
+SurfaceHolder holder=surfaceView.getHolder(); 
+mDevice.setPreviewSurface(Holder.getSurface(), PreviewSource.GENERAL_CAMERA); 
+ 
+ startPreview 
+函数：  
+public void startPreview() 
+细节： 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-26"><h2>PDF物理页 26</h2><a href="materials/SRC0166.pdf#page=26" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 26 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+显示摄像头预览画面，在调用此 API 前，必须先调用 setPreviewSurface()。 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+SurfaceView surfaceView=findViewById(R.id.surface_view); 
+SurfaceHolder holder=surfaceView.getHolder(); 
+mDevice.setPreviewSurface(Holder.getSurface(),PreviewSource.GENERAL_CAMERA); 
+mDevice.starPreview(); 
+ 
+ stopPreview 
+函数：  
+public void stopPreview() 
+细节： 
+停止显示摄像头预览画面。停止预览后需要调用 setPreviewSurface null。 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+mDevice.stopPreview(); 
+ 
+ startADAS 
+函数：  
+public void startADAS() 
+细节： 
+• 打开 ADAS 功能。 
+• 需要 setADASCallback 来接收 ADAS 的相关数据。 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+mDevice.startADAS(); 
+ stopADAS 
+函数：  
+public void stopADAS() 
+细节： 
+关闭 ADAS 功能。 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+mDevice.stopADAS(); 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-27"><h2>PDF物理页 27</h2><a href="materials/SRC0166.pdf#page=27" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 27 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+ startRecord 
+函数：  
+public int startRecord(@RecordSource.Format int recordSource, RecordConfiguration 
+recordConfig) 
+参数： 
+recordSource   录制的源 
+recordConfig   录制的设置 
+返回值： 
+返回一个整数值，表示启动录制是否成功，0 表示成功，否则失败。 
+细节： 
+参数设置见 RecordConfiguration 
+示例： 
+RecordConfiguration recordConfig= RecordConfiguration.get(recordSource); 
+recordConfig.setVideoCallback(mVideoCallback); 
+mCameraDevice.startrecord(RecordSource. GENERAL_CAMERA, recordConfig); 
+ 
+ stopRecord 
+函数：  
+public void stoptRecord(@RecordSource.Format int recordSource) 
+参数： 
+recordSource   录制的源 
+细节： 
+停止录制视频，和 startRecord()对应。 
+示例： 
+SpmCameraDevice Device = SmartPlatformManager.get().openCameraDevice(“0”); 
+mDevice.stoptRecord(); 
+ 
+ lockRecordingVideo 
+函数：  
+public void lockRecordingVideo(int duration,String protectedType, @RecordSource.Format int 
+recordSource) 
+参数： 
+duration 打点保护的时间长度 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-28"><h2>PDF物理页 28</h2><a href="materials/SRC0166.pdf#page=28" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 28 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+protectedType  打点保护类型,  为空串””或者“LowRes” 
+recordSource  录制的源 
+细节： 
+设置打点保护的时间长度时，系统会将当前时间点前后各 duration 长度的视频文件保护起来，所以打点保护的视
+频文件总长度为 2*duration 的时间长度。 
+第二个参数必须传入”LowRes”，底层会将打点视频文件转成 480P 并通知应用程序使用，应用程序需要通过
+KeypointCallback 来接收数据。 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+mDevice.lockRecordingVideo(20,”LowRes”,RecordSource.GENERAL_CAMERA); 
+ 
+ unlockRecordingVideo 
+函数：  
+public void unlockRecordingVideo(String filename,@RecordSource.Format int recordSource) 
+参数： 
+filename 受保护的文件路径 
+recordSource 录制的源 
+细节： 
+将某个受保护（protect）目录下的视频文件移到普通的目录下。 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+mDevice.unlockRecordingVideo(videofile, RecordSource.GENERAL_CAMERA ); 
+ 
+ setVideoRotateDuration 
+函数：  
+public void setVideoRotateDuration(int duration_ms,@RecordSource.Format int recordSource) 
+参数： 
+duration_ms 每个视频文件的时间长度，单位是毫秒 
+recordSource 录制的源 
+细节： 
+设置保存的每个视频文件的时间长度，需要在启动录像之后设置。如果需要在录像启动之前设置，需要通过
+RecordConfiguration 的 setVideoRotateDuration 来实现。设置的参数会在下一个录制的视频文件生效。  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-29"><h2>PDF物理页 29</h2><a href="materials/SRC0166.pdf#page=29" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 29 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+示例： 
+CameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0’); 
+mDevice.setVideoRotateDuration(60*1000, RecordSource.GENERAL_CAMERA); 
+ 
+ setVideoBitrateDyn 
+函数：  
+public void setVideoBitrateDyn(int bitrate,int bAdjust,@RecordSource.Format int 
+recordSource) 
+参数： 
+bitrate  视频比特率的值 
+bAdjust  保留参数，暂未使用 
+recordSource 录制的源 
+细节： 
+ 动态调整录制的码率，可以在录制过程中设置。 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+mCameraDevice.setVideoBitrateDyn(6*1000*1000, 0, RecordSource.GENERAL_CAMERA); 
+ 
+ setRecordingMuteAudio 
+函数：  
+public void setRecordingMuteAudio(boolean isMuteAudio, @RecordSource.Format int 
+recordSource) 
+参数： 
+isMuteAudio 是否关闭麦克风 
+recordSource  录制的源 
+细节： 
+参数为 true 表示关闭麦克风，这样录出来的视频就没有声音了，参数为 false 表示打开。 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+mDevice.setRecordingMuteAudio(false, RecordSource.GENERAL_CAMERA); 
+ 
+ setProtectRecording 
+函数：  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-30"><h2>PDF物理页 30</h2><a href="materials/SRC0166.pdf#page=30" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 30 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+public void setProtectRecording(boolean ismotiondetect,boolean  
+isrecordingstatus,int duration_ms, @RecordSource.Format int recordSource) 
+参数： 
+ismotiondetect 表示是否进行碰撞保护 
+isrecordingstatus 录制过程中碰撞，还是非录制状态下碰撞 
+duration_ms 碰撞保护的时间 
+recordSource 录制的源 
+细节： 
+该接口用于启动和关闭碰撞保护，第一个参数表示启动还是停止。  
+示例： 
+CameraDevice mCameraDevice = SmartPlatformManager.get().openCameraDevice(0); 
+mCameraDevice.setProtectRecording(true, true, 5*60*1000, RecordSource.GENERAL_CAMERA) 
+ 
+ flushCurRecFile 
+函数：  
+public void flushCurRecFile(@RecordSource.Format int recordSource) 
+参数： 
+recordSource 录制的源 
+细节： 
+Flush 当前录制文件，将缓存数据写入到磁盘中。 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+mDevice. flushCurRecFile (RecordSource.GENERAL_CAMERA); 
+ 
+ setLockFilePath 
+函数：  
+public void setLockFilePath(String path, @RecordSource.Format int recordSource) 
+参数： 
+path 保存视频文件的目录 
+recordSource 录制的源 
+细节： 
+设定打点视频文件的目录，默认的路径是/sdcard/DCIM/camera/protect/。该接口可在录制过程中打点之前进
+行调用。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-31"><h2>PDF物理页 31</h2><a href="materials/SRC0166.pdf#page=31" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 31 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+mDevice. setLockFilePath (“/sdcard/DCIM/camera/video”,RecordSource.GENERAL_CAMERA); 
+ 
+ setRecordingSdcardPath 
+函数：  
+public void setRecordingSdcardPath(String path, @RecordSource.Format int recordSource) 
+参数： 
+path 保存视频文件的目录 
+recordSource 录制的源 
+细节： 
+保存视频文件的目录，默认的路径是/sdcard/DCIM/camera。该接口可在录制过程中调用。 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+mDevice.setRecordingSdcardPath(“/sdcard/DCIM/camera/video”, RecordSource.GENERAL_CAMERA); 
+ 
+ enableShutterSound 
+函数：  
+public void enableShutterSound(boolean shutter) 
+参数： 
+shutter 是否打开快门声音 
+细节： 
+参数为 true 表示打开快门声音，false 表示关闭。 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+mDevice.enableShutterSound(false); 
+ 
+ enableRecordSound 
+函数：  
+public void enableRecordSound(boolean enable) 
+参数： 
+Enable 是否打开录制的提示声音 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-32"><h2>PDF物理页 32</h2><a href="materials/SRC0166.pdf#page=32" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 32 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+细节： 
+参数为 true 表示打开录制声音，false 表示关闭。 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+mDevice.enableRecordSound(false); 
+ 
+ setPictureSize 
+函数：  
+public void setPictureSize(android.util.Size PictureSize) 
+参数： 
+PictureSize 拍照图片的宽度和高度 
+细节： 
+用于设置拍照图片的大小，需要在 setPreviewSurface 前进行设置。 
+ 
+ takePicture 
+函数：  
+public void takePicture(String fileName,ShutterCallback  shutter, CamPictureCallback jpeg) 
+参数： 
+fileName: 拍照图片的保存名字（包含目录） 
+shutter: 快门提示音响起时的回调（暂时无效） 
+jpeg: 拍照过程中的回调 
+细节： 
+• ShutterCallback 定义如下： 
+  public interface ShutterCallback{ 
+        void onShutter(); 
+  } 
+• CamPictureCallback 定义如下： 
+   public interface CamPictureCallback{ 
+   public static final int PICTURE_TAKEN_FALL    = -1;//拍照失败 
+   public static final int PICTURE_TAKEN_SAVING  = 0;//正在存储 
+   public static final int PICTURE_TAKEN_SUCCESS = 1;//拍照成功 
+      void onPictureTaken(int status,String cameraId,String fileName); 
+  } 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-33"><h2>PDF物理页 33</h2><a href="materials/SRC0166.pdf#page=33" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 33 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+• onPictureTaken 中的 status 为拍照的状态：拍照失败，正在储存，拍照成功。cameraId 为摄像头标识，
+fileName 为拍照图片的保存名字。如果拍照失败，路径为空。此函数在拍照完成前、完成后，成功或失败都会
+被回调一次。 
+示例： 
+SpmCameraDevice mCameraDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+String fileName=”/sdcard/DCIM/photo/”+filename; 
+mCameraDevice.takePicture(fileName,shutter,jpeg); 
+ 
+ release 
+函数：  
+public boolean release() 
+细节： 
+注销该摄像头相关的 callback 和释放 listener。在 APK 退出时可调用此 API 来快速注销 callback 和释放 listener 以释
+放资源。 
+Return： 
+移除 listener 成功则返回 true，否则返回 false。 
+示例： 
+SpmCameraDevice mCameraDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+boolean isRemoveListener = mCameraDevice.release(); 
+ 
+ getCameraId 
+函数：  
+public String getCameraId() 
+返回值： 
+返回当前摄像头（SpmCameradevice）的 ID 值。 
+细节： 
+获取当前 SpmCameraDevice 对应的 camera ID。 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+String id=mDevice.getCameraId(); 
+ 
+ startPictureSequence 
+函数：  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-34"><h2>PDF物理页 34</h2><a href="materials/SRC0166.pdf#page=34" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 34 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+public void startPictureSequence(@PictureSequenceSource int source PictureConfiguration 
+config) 
+参数： 
+source: 获取连续图片的源 
+config: 获取连续图片的配置 
+细节： 
+此 API 用来连续获取图片。 其中 YUV data 可以用于 ADAS 或者其它算法分析。如果 image size 为 null，默认 image
+大小为 1280x720。 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+mDevice.startPictureSequence(source ,config); 
+ 
+ stopPictureSequence 
+函数：  
+public void stopPictureSequence(@PictureSequenceSource int source) 
+细节： 
+停止连续获取图片，和 startPictureSequence()对应。 
+示例： 
+CameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+mDevice. stopPictureSequence (source); 
+ 
+ enableShareBuffer 
+函数：  
+public void enableShareBuffer(@PictureSequenceSource int source, boolean enable) 
+参数： 
+source: 获取连续图片的源 
+enable: 是否开启 FD 回调 
+细节： 
+此 API 通过 FD 连续获取图片数据。 其中 YUV data 可以用于 ADAS 或者其它算法分析。 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+mDevice.startPictureSequence(source ,config); 
+mDevice. enableShareBuffer(source , true); 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-35"><h2>PDF物理页 35</h2><a href="materials/SRC0166.pdf#page=35" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 35 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+ updateRequest 
+函数：  
+public void updateRequst() 
+细节： 
+当更新 SpmParameters 后需要调用此函数使其生效。 
+ getCameraId 
+函数：  
+public String getCameraId() 
+细节： 
+获取当前 SpmCameraDevice 的 ID。 
+ 
+ setAeStatusCallback 
+函数：  
+public void setAeStatusCallback(AeStatusCallback callback) 
+参数： 
+callback  Ae 曝光值的回调 
+细节： 
+AeStatusCallback 定义如下： 
+   public interface AeStatusCallback { 
+        void onStatusCallback (int value); 
+        void onStatusCallbackArray (int[] value,int size); 
+   } 
+示例： 
+   SpmCameraDevice mCameraDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+   mCameraDevice. setAeStatusCallback ( 
+                  new AeStatusCallback (){ 
+                         public void onStatusCallback (int value){ 
+                              //TODO 
+                         } 
+                         public onStatusCallbackArray (int[] value,int size){ 
+                              //TODO 
+                         } 
+                  } 
+    ); 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-36"><h2>PDF物理页 36</h2><a href="materials/SRC0166.pdf#page=36" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 36 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+ setDropStreamFrame 
+函数：  
+public int setDropStreamFrame(int streamType, int streamSource, int streamPolicy)  
+参数： 
+streamType   YUV 0/record 1/preview 2 
+streamSource @PictureSequenceSource int source, @PreviewSource.Format int previewSource, 
+@RecordSource.Format int recordSource 
+streamPolicy   丢帧策略。 
+       如果 param == 0, 不丢帧; 
+       如果 param &gt; 0,  每隔多少帧丢一帧; 
+       如果 param &lt; 0,  每隔一帧丢多少帧。 
+返回值： 
+返回一个整数值，表示设置单路丢帧是否成功，0 表示成功，否则失败。 
+示例： 
+     mCameraDevice. setDropStreamFrame (1，RecordSource. GENERAL_CAMERA, 1); 
+     //preview 第0 路record 每隔1 帧丢1 帧 
+ 
+ updateVideoGPSInfo 
+函数：  
+public void updateVideoGPSInfo(int latitude10000,int longitude10000, @RecordSource.Format 
+int recordSource) 
+参数： 
+latitude10000   纬度*10000 
+longitude10000   经度 *10000 
+recordSource  录制的源 
+细节： 
+在录制过程中动态设置 GPS 位置信息，保存到 MP4 视频头文件信息中。 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+mDevice. updateVideoGPSInfo (3140000,2240000,RecordSource.GENERAL_CAMERA); 
+ 
+1.2.2.8 SpmParameters 
+引入（导入）参数：   
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-37"><h2>PDF物理页 37</h2><a href="materials/SRC0166.pdf#page=37" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 37 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+import com.mediatek.smartplatform.SpmCameraDevice.SpmParameters; 
+实例化(创建)对象： 
+SpmCameraDevice mDevice =SmartPlatformManager.get().openCameraDevice(“0”); 
+SpmParameters params=mDevice.getParameters(); 
+ enableWatermarkImage  
+函数：  
+public void enableWatermarkImage(boolean enable) 
+参数： 
+enable 是否添加图片水印 
+细节： 
+参数为 true 表示在拍照图片中添加水印，false 表示不添加。该接口控制 preview，recording 和 capture 的图片水
+印。 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+SpmParameters params=mDevice.getParameters(); 
+params.enableWatermarkImage(true); 
+mDevice.setParameters(params); 
+ 
+ setWatermarkImaArea  
+函数：  
+public void setWatermarkImgArea(int left, int top, int right, int bottom) 
+参数： 
+left 图片水印区域的 x 轴起始位置 
+top  图片水印区域的 y 轴起始位置 
+right 图片水印区域的 x 轴结束位置 
+bottom  图片水印区域的 y 轴结束位置 
+细节： 
+设置图片水印的区域，图片水印的宽度必须是 32 的整数倍，高度必须是 16 的整数倍，否则无法正常显示。图片
+的大小要和水印区域的大小一致。图片水印区域的起始位置和文字水印区域起始位置的计算方式一致，但是宽度
+和高度存在差别，通常将图片水印区域的宽度和高度设置成和图片大小一样即可。  
+示例： 
+params.setWatermarkImgArea(20,20,180,180); 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-38"><h2>PDF物理页 38</h2><a href="materials/SRC0166.pdf#page=38" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 38 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+ setWatermarkImagePath  
+函数：  
+public void setWatermarkImgPath(String path) 
+参数： 
+path 水印图片的路径 
+细节： 
+设置水印图片的路径，必须是完整的路径。 
+示例： 
+params.setWatermarkArea(“/sdcard/watermark.bmp”) 
+ 
+ enableWatermarkText  
+函数：  
+public void enablePictureWatermarkText(boolean enable) 
+参数： 
+enable 是否添加文字水印 
+细节： 
+参数为 true 表示添加水印，false 表示不添加。该接口控制 preview，recording 和 capture 等的文字水印接口。 
+示例： 
+SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+SpmParameters params=mDevice.getParameters(); 
+params.enableWatermarkText(true); 
+mCameraDevice.setParameters(params); 
+ 
+ setWatermarkTextArea  
+函数：  
+public void setWatermarkTextArea(int left, int top, int right, int bottom) 
+参数： 
+left 水印区域的 x 轴起始位置 
+top  水印区域的 y 轴起始位置 
+right 水印区域的 x 轴结束位置 
+bottom  水印区域的 y 轴结束位置 
+细节： 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-39"><h2>PDF物理页 39</h2><a href="materials/SRC0166.pdf#page=39" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 39 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+设置文字水印的区域，上述的四个参数对应的就是一个矩形区域，绘制的文字内容会在这个矩形区域 内。如果文
+字内容超过了这个区域，会被截掉，不能显示出来。这个区域最终对应到画面的位置怎么计算：  
+起始位置 x = left * 画面宽度/1000; 
+起始位置 y = top * 画面高度/1000; 
+矩形区域宽度 w = (right-left)* 画面宽度/1000; 
+矩形区域高度 h = (bottom-top)* 画面高度/1000; 
+示例： 
+params.setWatermarkArea(20,20,60,240); 
+ 
+ setWatermarkText  
+函数：  
+public void setWatermarkText(String text) 
+参数： 
+text 水印显示的文本 
+细节： 
+设置水印显示的文字内容。  
+示例： 
+params.setWatermarkText(“watermark”); 
+mCameraDevice.setParameters(params); 
+ 
+ setWatermarkTextSize  
+函数：  
+public void setWatermarkTextSize(float size) 
+参数： 
+size 水印文字的大小 
+细节： 
+设置水印文字的大小，文字水印的大小是按照画面高度的比例计算的，计算公式：文字实际大小 = size *画面高度
+/1000；单位是像素。所以文字水印的大小应与文字水印区域的高度相等，或略小于其高度，水印才能显示出来。 
+示例： 
+params.setWatermarkArea(20,20,60,240);  //矩形宽度是220，高度40 
+params.setWatermarkTextSize(40);  //文字水印大小应该设置成40 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-40"><h2>PDF物理页 40</h2><a href="materials/SRC0166.pdf#page=40" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 40 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+ setWatermarkTextColor  
+函数：  
+public void setWatermarkTextColor(int color) 
+参数： 
+color 水印文字的颜色，如果不设置，默认是红色。 
+细节： 
+设置水印的颜色，使用 ARGB 模式，可以通过设置android.graphics.Color 对象来构造颜色。 
+示例： 
+params.setWatermarkTextColor(Color.RED);  //显示为红色 
+ 
+ setWatermarkTextPosition  
+函数：  
+public void setWatermarkTextPosition(float x,float y) 
+参数： 
+x 相对应水印区域起始位置的横向偏移量 
+y  相对应水印区域起始位置的竖向偏移量 
+细节： 
+绘制出来的文字水印可以理解成一个矩形图片，偏移量指的是文字水印左下角相对于文字水印区域起始点的偏移
+量。通常情况下，将 y 的值和文字水印区域的高度设置成一样即可。 
+示例： 
+params.setWatermarkArea(20,20,60,240);  //矩形宽度是220，高度40 
+params.setWatermarkTextPosition(10,40); //y 值和矩形区域高度一致 
+ 
+ setWatermarkFontFile 
+函数：  
+public void setWatermarkFontFile(String file) 
+参数： 
+file  水印的字体文档 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-41"><h2>PDF物理页 41</h2><a href="materials/SRC0166.pdf#page=41" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 41 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+ setWatermarkTimeMs 
+函数：  
+public void setWatermarkTimeMs(boolean enable) 
+参数： 
+enable 是否开启时间水印 
+ 
+ set 
+函数：  
+public void set(CaptureRequest.Key&lt;T&gt; key, T value) 
+参数： 
+设置摄像头的请求参数，可以参考原生 CaptureRequest/CaptureResult/CameraCharacteristics 中的 key 进
+行设定。 
+细节： 
+此方法适用于对 Android 支持的参数进行设置。 
+ 
+1.2.2.9 IpodProxy 
+引入（导入）IpodProxy：   
+import com.mediatek.smartplatform.IpodProxy; 
+实例化(创建)对象： 
+IpodProxy proxy=SmartPlatformManager.get().getIpodProxy(); 
+或者IpodProxy proxy=IpodProxy.getInstance(SmartPlatformManager.get()); 
+建议使用第一种方式获取 IpodProxy 对象，IpodProxy 也是采用单例模式。 
+ 
+ doShutdown 
+函数：  
+public int doShutdown(String reason,boolean isShutdown) 
+参数： 
+reason  要关机的原因，目前可以设置为任意字符串。 
+isShutdown 是否要关机，true 表示关机，false 表示不关机 。 
+返回值： 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-42"><h2>PDF物理页 42</h2><a href="materials/SRC0166.pdf#page=42" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 42 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+该函数的执行结果。 
+细节： 
+• 此 API 用于设定进入 IPO 后是否要真正关机。当前按 power 键关机，系统并没有真正关机，而是进入 IPO/IPOH
+模式。当需要彻底关机时， 可以调用此 API 实现该功能。在 IPOD 进程未启动之前，如果调用了此 API 且将传
+入的 isShutdown 参数设置为 true，还可以再次调用此 API，并将第二个参数 isShutdown 设置为 false 以取消
+IPOD 关机。 
+• 需要注意的是参数 reason 不能包含有“=”或“;”这两个字符。 
+• 调用此 API 的返回值说明如下： 
+–  RESULT_SUCCESS 表示此 API 的参数已经成功传给 IPOD 进程去执行，这种情况一般发生在关机之后，并
+且 IPOD 进程已经运行。 
+–  RESULT_PARAMS_SAVED 表示此 API 的参数已经成功保存，等 IPOD 进程运行后会传给 IPOD 进程去执行。 
+–  RESULT_PARAMS_REPLACED 表示此 API 之前有调用过，此次传下来的参数覆盖之前的参数，也就是说最后
+一次传下来的参数会被传到 IPOD 那边执行。 
+–  RESULT _FAIL 表示调用此 API 调用失败了，失败的原因有很多，视具体情况而定。 
+–  RESULT_EXCEPTION 表示调用这个 API 的时候出现了异常，一般是 Smartplatform service 不存在了，
+也就是SmartPlatformServer 进程死掉了。 
+示例： 
+IpodProxy proxy= SmartPlatformManager.get().getIpodProxy(); 
+proxy. doShutdown(“test”,true);    //进入ipo 后，进行关机操作 
+ 
+ setRebootControl 
+函数：  
+public int setRebootControl(int flag) 
+参数： 
+flag  开启定时重启功能的标志，值为 0 或 1 
+返回值： 
+该函数的执行结果。 
+细节： 
+• 用于打开定时重启的功能，传入的 flag 参数为 1 时表示打开，参数为 0 时表示关闭。如果不调用
+setRebootTimeSlot 去设定重启时间，则会以上次设定的时间作为重启时间。  
+• 调用此 API 的返回值说明如下： 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-43"><h2>PDF物理页 43</h2><a href="materials/SRC0166.pdf#page=43" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 43 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+– RESULT_SUCCESS 表示此 API 的参数已经成功传给 IPOD 进程去执行，这种情况一般发生在关机之后，并且
+IPOD 进程已经运行。 
+– RESULT_PARAMS_SAVED 表示此 API 的参数已经成功保存，等 IPOD 进程运行后会传给 IPOD 进程去执行。 
+– RESULT_PARAMS_REPLACED 表示此 API 之前有调用过，此次传下来的参数覆盖之前的参数，也就是说最后
+一次传下来的参数会被传到 IPOD 那边执行。 
+– RESULT _FAIL 表示调用此 API 调用失败了，失败的原因有很多，视具体情况而定。 
+– RESULT_EXCEPTION 表示调用这个 API 的时候出现了异常，一般是 Carcorder Service 不存在了，也就是
+SmartPlatformServer 进程已经死掉了。 
+示例： 
+IpodProxy proxy= SmartPlatformManager.get().getIpodProxy(); 
+proxy. setRebootControl(1);    //打开定时重启功能 
+ 
+ setRebootTimeSlot 
+函数：  
+public int setRebootTimeSlot(int slotTime) 
+参数： 
+slotTime  重启的时间点，值的范围为 0 到 23  
+返回值： 
+该函数的执行结果。 
+细节： 
+• 此 API 用于设定重启的时间，参数是重启的时间点，范围在 0 到 23。要使当前的设置有效，需要调用
+setRebootControl 去打开定时重启功能。 
+• 调用此 API 的返回值说明如下： 
+– RESULT_SUCCESS 表示此 API 的参数已经成功传给 IPOD 进程去执行，这种情况一般发生在关机之后，并且
+IPOD 进程已经运行起来了。 
+– RESULT_PARAMS_SAVED 表示此 API 的参数已经成功保存，等 IPOD 进程运行起来后会传给 IPOD 进程去执
+行。 
+– RESULT_PARAMS_REPLACED 表示此 API 之前有调用过，此次传下来的参数覆盖之前的参数，也就是说最后
+一次传下来的参数会被传到 IPOD 那边执行。 
+– RESULT _FAIL 表示调用此 API 调用失败了，失败的原因有很多，视具体情况而定。 
+– RESULT_EXCEPTION 表示调用这个 API 的时候出现了异常，一般是 Smartplatform Service 不存在了，也就
+是 SmartPlatformServer 进程已经死掉了。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-44"><h2>PDF物理页 44</h2><a href="materials/SRC0166.pdf#page=44" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 44 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+示例： 
+IpodProxy proxy= SmartPlatformManager.get().getIpodProxy(); 
+proxy. setRebootControl(1);    //打开定时重启功能 
+proxy. setRebootTimeSlot (5); //设置凌晨5 点重启 
+ 
+ exitIpod 
+函数：  
+public int exitIpod(int reason) 
+参数： 
+reason 退出 IPOD 的原因 
+返回值： 
+该函数的执行结果。 
+细节： 
+• 在 IPO 模式下，调用这个 API 跟长按电源键开机是一样的功能，需要在 IPOD 进程运行起来之后，调用才有
+效。 
+• 调用此 API 的返回值说明如下： 
+– RESULT_SUCCESS 表示此 API 的参数已经成功传给 IPOD 进程去执行，这种情况一般发生在关机之后，并且
+IPOD 进程已经运行起来了。 
+– RESULT_PARAMS_SAVED 表示此 API 的参数已经成功保存，等 IPOD 进程运行起来后会传给 IPOD 进程去执
+行。 
+– RESULT_PARAMS_REPLACED 表示此 API 之前有调用过，此次传下来的参数覆盖之前的参数，也就是说最后
+一次传下来的参数会被传到 IPOD 那边执行。 
+– RESULT _FAIL 表示调用此 API 调用失败了，失败的原因有很多，视具体情况而定。 
+– RESULT_EXCEPTION 表示调用这个 API 的时候出现了异常，一般是 Carcorder Service 不存在了，也就是
+SmartPlatformServer 进程已经死掉了。 
+示例： 
+IpodProxy proxy= SmartPlatformManager.get().getIpodProxy(); 
+proxy. exitIpod(0);    //退出ipod，然后开机 
+ 
+1.2.2.10 CarEventProxy 
+引入（导入）CarEventProxy：   
+import com.mediatek.smartplatform.CarEventProxy; 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-45"><h2>PDF物理页 45</h2><a href="materials/SRC0166.pdf#page=45" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 45 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+实例化(创建)对象： 
+CarEventProxy proxy=SmartPlatformManager.get().getCarEventProxy(); 
+或者CarEventProxy proxy= CarEventProxy.getInstance(SmartPlatformManager.get()); 
+建议使用第一种方式获取 CarEventProxy 对象，CarEventProxy 也是采用单例模式。 
+目前由于硬件限制，只有 ACC on/off 的行为， 其它行为需根据硬件添加。 
+ 
+ addEngineChangedCallback 
+函数：  
+public void addEngineChangedCallback(EngineChangedCallback callback) 
+参数： 
+callback  车子发动机状态改变时的回调，与 ACC on/off 时对应。 
+同一回调对象，注册多次，只能保存一个。 
+细节： 
+• EngineChangedCallback 定义如下 
+  public interface EngineChangedCallback{ 
+      public static final int CAR_ENGINE_FLAMEOUT =0;    
+      public static final int CAR_ENGINE_WORKING = 1; 
+      void onEngineChanged(int status); 
+  } 
+• 车子发动机状态改变时会触发此回调，onEngineChanged 中的 status 表示发动机的状态。当该值为
+CAR_ENGINE_FLAMEOUT 时，表示发动机处于熄火状态，当该值为 CAR_ENGINE_WORKING 时，表示发动机处于
+工作状态。 
+• 这两个事件 CAR_ENGINE_WORKING/CAR_ENGINE_FLAMEOUT 对应的就是 ACC on/off 事件。 
+示例： 
+   CarEventProxy mCarEventProxy = SmartPlatformManager.get().getIpodProxy(); 
+   mCarEventProxy.addEngineChangedCallback( 
+         new EngineChangedCallback(){ 
+           public void onEngineChanged (int status){ 
+              //TODO 
+           } 
+         } 
+    ); 
+ 
+ removeEngineChangedCallback 
+函数：  
+public void removeEngineChangedCallback(EngineChangedCallback callback) 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-46"><h2>PDF物理页 46</h2><a href="materials/SRC0166.pdf#page=46" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 46 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+参数： 
+callback  车子发动机状态改变时的回调 
+细节： 
+移除注册的回调对象 。 
+示例： 
+CarEventProxy mCarEventProxy = SmartPlatformManager.get().getIpodProxy(); 
+mCarEventProxy.removeEngineChangedCallback(callback); 
+ 
+ queryCarEngineState 
+函数：  
+public int queryCarEngineState() 
+返回值： 
+当前发动机工作的状态 
+细节： 
+目前定义有三种状态： 
+• CAR_STATE_UNKNOWN 状态未知，一般是调用 API 发生异常才会出现这种情况； 
+• CAR_ENGINE_FLAMEOUT，表示发动机处于熄火状态； 
+• CAR_ENGINE_WORKING，表示发动机处于工作状态。 
+直接将Smartplatform Service 保存的发动机状态直接返回。 
+示例： 
+CarEventProxy mCarEventProxy = SmartPlatformManager.get().getIpodProxy(); 
+int state= mCarEventProxy.queryCarEngineState(); 
+ 
+ setDefaultAccOffBehavior 
+函数：  
+public void setDefaultAccOffBehavior(boolean enable) 
+参数： 
+enable 是否启用 ACC 的默认行为 
+细节： 
+• 默认的 ACC 行为是底层的驱动程序检测到 ACC 点火或者熄火时，会将这一事件通过广播的形式发送给 应用程
+序，应用程序只需要注册对应的广播就可以了。 
+– 点火事件广播: android.intent.action.ACTION_POWER_CONNECTED 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-47"><h2>PDF物理页 47</h2><a href="materials/SRC0166.pdf#page=47" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 47 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+– 熄火事件广播: android.intent.action.ACTION_POWER_DISCONNECTED 
+• 如果应用程序想通过回调的方式接收 ACC 点火或者熄火的事件，将参数值设为 false，同时通过
+addEngineChangedCallback 来注册对应的回调。 
+示例： 
+   CarEventProxy mCarEventProxy = SmartPlatformManager.get().getIpodProxy(); 
+   mCarEventProxy.addEngineChangedCallback( 
+         new EngineChangedCallback(){ 
+           public void onEngineChanged (int status){ 
+              //TODO 
+           } 
+         } 
+      ); 
+mCarEventProxy.setDefaultAccOffBehavior(false); 
+ 
+ addCarReverseCallback 
+函数：  
+public void addCarReverseCallback(CarReverseCallback callback) 
+参数： 
+callback  车子运动方向改变时的回调。 
+同一回调对象，注册多次，只能保存一个。 
+细节： 
+• CarReverseCallback 定义如下： 
+  public interface CarReverseCallback { 
+      public static final int CAR_STATUS_NORMAL = 0; 
+      public static final int CAR_STATUS_LEFT = 1; 
+      public static final int CAT_STATUS_RIGHT = 2; 
+      public static final int CAR_STATUS_REVERSE = 3; 
+ 
+      public static final int CAR_STATUS_SOURCE_AVM = 1; 
+      public static final int CAR_STATUS_SOURCE _GPIO = 2; 
+ 
+      void onReverse(int status, int source); 
+  } 
+• 当车子从左转/右转/倒车/前行中某一状态转换成另外不同的状态时触发此回调。触发此回调的来源有两个，
+GPIO 或者 AVM。两种触发方式都需要有硬件的支持。 
+示例： 
+   CarEventProxy mCarEventProxy = SmartPlatformManager.get().getIpodProxy(); 
+   mCarEventProxy.addCarReverseCallback( 
+         new CarReverseCallback(){ 
+           public void onReverse(int status, int source){ 
+              //TODO 
+           } 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-48"><h2>PDF物理页 48</h2><a href="materials/SRC0166.pdf#page=48" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 48 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+         } 
+    ); 
+ 
+ removeCarReverseCallback 
+函数：  
+public void removeCarReverseCallback(CarReverseCallback callback) 
+参数： 
+callback 车子运动状态发生变化时的回调 
+细节： 
+移除注册的回调对象。  
+示例： 
+CarEventProxy mCarEventProxy = SmartPlatformManager.get().getIpodProxy();   
+mCarEventProxy.removeCarReverseCallback(callback); 
+ 
+1.2.2.11 CollisionProxy 
+引入（导入）CollisionProxy：   
+import com.mediatek.smartplatform.CollisionProxy; 
+实例化(创建)对象： 
+CollisionProxy proxy=SmartPlatformManager.get().getCollisionProxy(); 
+或者CollisionProxy proxy= CollisionProxy.getInstance(SmartPlatformManager.get()); 
+建议使用第一种方式获取 CollisionProxy 对象，CollisionProxy 也是采用单例模式。 
+ 
+ addCollisionCallback 
+函数：  
+public void addCollisionCallback(CollisionCallback callback) 
+参数： 
+callback 平台检测到碰撞时的回调 
+细节： 
+• CollisionCallback 定义如下： 
+   public interface CollisionCallback{ 
+     public static final int COLLISION_UNRELIABLE =0;    
+     public static final int COLLISION_LOW=1; 
+     public static final int COLLISION_MEDIUM=2; 
+     public static final int COLLISION_HIGH=3;   
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-49"><h2>PDF物理页 49</h2><a href="materials/SRC0166.pdf#page=49" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 49 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+     void onCollision(int collision,int status); 
+  } 
+• 平台检测到碰撞时会触发此回调，onCollision 中的 collision 实际指的是碰撞的等级（灵敏度），目前分为三个
+等级 COLLISION_LOW ， COLLISION_MEDIUM ，COLLISION_HIGH 。status 为保留参数，一般为 0，如果修改了碰
+撞检测算法，则该值和 collision_detect()中的（*result）值相等。 
+• 同一个对象，只能注册一次，即使该对象被添加了多次，但最终只会保存一个回调对象，同样只需要调用一次
+removeCollisionCallback 就可以将该回调彻底移除。 
+示例： 
+      SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+   mSmartPlatformManager.addCollisionCallback( 
+         new CollisionCallback() { 
+           public void onCollision(int collision,int status){ 
+              //TODO 
+           } 
+         } 
+      ); 
+ 
+ removeCollisionCallback 
+函数：  
+public void removeCollisionCallback (CollisionCallback callback) 
+参数： 
+callback 平台检测到碰撞时的回调 
+细节： 
+移除注册的回调对象。值得注意的是，如果同一个回调对象，注册了多次，只要调用该函数一次就能完全移除。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+mSmartPlatformManager.removeCollisionCallback(callback); 
+ 
+ setSuspendCollision 
+函数：  
+public void setSuspendCollision(boolean fgEnabled) 
+参数： 
+fgEnabled 是否打开 Gsensor 检测碰撞的功能 
+细节： 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-50"><h2>PDF物理页 50</h2><a href="materials/SRC0166.pdf#page=50" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 50 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+• 通过这个 API 可以实现打开或关闭 Gsonse 检测碰撞的功能。参数为 true 表示打开，false 表示关闭。这个 API
+对应的功能是碰撞开机。默认情况下这个功能是打开的，可以通过 getSuspendCollision 查看是否有开启这个功
+能。 
+• 正常开机还是碰撞开机，可以通过开机时发出来的广播区分。  
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+//打开gsensor 检测碰撞的功能，即使在ipo 状态下，如果发生了碰撞就会开机 
+mSmartPlatformManager.setSuspendCollision(true); 
+ 
+ getSuspendCollision 
+函数：  
+public boolean getSuspendCollision() 
+返回值： 
+返回一个 boolean 值，表示是否打开 Gsensor Driver 检测碰撞。 
+细节： 
+如果返回值为 true 表示打开，返回值为 false 表示关闭。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+boolean isEnable=mSmartPlatformManager.getSuspendCollision(); 
+ 
+ setNormalCollision 
+函数：  
+public void setNormalCollision(boolean isEnabled) 
+参数： 
+isEnabled 是否打开 Carcorder 检测碰撞的功能 
+细节： 
+Carcorder 检测碰撞可以理解为 Carcorder 进程里面的一个功能模块，通过此接口可以控制这个功能的开关。只有打
+开了这个功能，在发生碰撞时，才能在 CollisionCallback 收到回调。Carcorder 检测碰撞和 Gsensor 检测碰撞属于不
+同的模块，关闭了 Gsensor 检测碰撞的功能，并不会影响到 Carcorder 检测碰撞的功能，同样关闭了 Carcorder 检
+测碰撞的功能，也不会影响 Gsensor 检测碰撞的功能，所以这两个功能互不影响。默认情况下这个功能是打开的，
+如果上一次有设置过，则继续使用上一次的设置。 
+示例： 
+   SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-51"><h2>PDF物理页 51</h2><a href="materials/SRC0166.pdf#page=51" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 51 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+   mSmartPlatformManager.addCollisionCallback( 
+        new CollisionCallback { 
+           public void onCollision(int collision,int status){ 
+          } 
+        } 
+       ); 
+   mSmartPlatformManager.setNormalCollision(true); 
+ 
+ getNormalCollision 
+函数：  
+public boolean getNormalCollision() 
+返回值： 
+返回一个 boolean 值，表示是否启用了 Carcorder 检测碰撞功能。 
+细节： 
+如果返回值为 true 表示打开，返回值为 false 表示关闭。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+boolean isEnable=mSmartPlatformManager.getNormalCollision(); 
+ 
+ setSuspendCollisionSensity 
+函数：  
+public void setSuspendCollisionSensity(int level) 
+参数： 
+level 碰撞的灵敏度 
+细节： 
+参数 level 代表灵敏度，也就是说当 Gsensor 的变化值超过某个阀值时，就认为发生了碰撞，这个阀值和 level
+是相对应的。目前定义了 COLLISION_LOW ，COLLISION_MEDIUM ，COLLISION_HIGH 三个等级。在不设置的情况
+下，默认是COLLISION_MEDIUM。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+mSmartPlatformManager.setSuspendCollisionSensity(CollisionCallback.COLLISION_HIGH);                           
+ 
+ getSuspendCollisionSensity 
+函数：  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-52"><h2>PDF物理页 52</h2><a href="materials/SRC0166.pdf#page=52" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 52 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+public int getSuspendCollisionSensity() 
+返回值： 
+返回一个整数值，表示驱动程序会检测到碰撞的灵敏度。 
+细节： 
+目前定义了COLLISION_LOW ，COLLISION_MEDIUM ，COLLISION_HIGH 三个等级。COLLISION_HIGH 最容易检测
+到碰撞，直观表现为设置成COLLISION_HIGH，可能轻轻碰撞平台，就会检测到碰撞。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+int level=mSmartPlatformManager.getDriverCollisionSensity(); 
+ 
+ setNormalCollisionSensity 
+函数：  
+public void setNormalCollisionSensity(int level) 
+参数： 
+level 碰撞的灵敏度 
+细节： 
+参数 level 代表灵敏度，也就是说 Gsensor 的变化值超过某个阀值时，就认为发生了碰撞，这个阀值和 level 是
+相对应的，目前定义了 COLLISION_LOW ，COLLISION_MEDIUM ，COLLISION_HIGH 三个等级。虽然这个函数和
+setSuspendCollisionSensity()很相似，但是它们是属于不同模块，互不影响。如果需要自定义碰撞的阀值，可以通过
+setCollisionThreshold 来完成。setCollisionThreshold()可以完全取代该接口，因为设置的灵敏度，到下面会转为对应
+的阀值，这和直接修改阀值的效果是一样的。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+mSmartPlatformManager.setNormalCollisionSensity(CollisionCallback.COLLISION_HIGH); 
+ 
+ getNormalCollisionSensity 
+函数：  
+public int getNormalCollisionSensity() 
+返回值： 
+返回一个整数值，表示 Carcorder 会检测到碰撞的灵敏度。 
+细节： 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-53"><h2>PDF物理页 53</h2><a href="materials/SRC0166.pdf#page=53" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 53 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+目前定义了COLLISION_LOW ，COLLISION_MEDIUM，COLLISION_HIGH 三个等级。COLLISION_HIGH 最容易检测到
+碰撞。直观表现为设置成COLLISION_HIGH，可能轻轻碰撞平台，就会检测到碰撞。如果使用 setCollisionThreshold
+来设置定义的碰撞阀值，那么此函数得到的返回值就是 setCollisionThreshold 设定的level 值。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+int level=mSmartPlatformManager.getNormalCollisionSensity(); 
+ 
+ setCollisionThreshold 
+函数：  
+public int setCollisionThreshold(float x,float y,float z,int level) 
+参数： 
+x Gsensor X 轴方向加速度的阀值 
+y Gsensor Y 轴方向加速度的阀值 
+z Gsensor Z 轴方向加速度的阀值 
+level 设置为此阀值代表的等级 
+返回值： 
+返回一个整数值，表示参数设置是否成功，0 表示成功，否则失败。 
+细节： 
+• 通过这个 API 可以自定义碰撞的阀值，分别是 Gsensor X，Y，Z 轴方向加速度的阀值。之前的碰撞检测算法是
+只要 Gsensor 某个方向的加速度值超过了对应的阀值，就认为是检测到碰撞了，现在的算法是如果 Gsensor 某
+个方向的加速度变化超过设置的阀值，就认为检测到碰撞。  
+• 第四个参数值 level 没有任何限定，可以是任意整数值，这个参数的作用类似一个标识，当检测到碰撞后，
+CollisionCallback.onCollision()中第一个参数就是设置的这个值。通过 getNormalCollisionSensity 也能得到该值。 
+• 该函数和 setNormalCollisionSensity()的作用是一样的，所以不需要两个接口都调用。如果两个接口都调用了，
+下面只会使用最后一个接口设置下去的参数，建议使用该接口。  
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+mSmartPlatformManager.setCollisionThreshold(5f,5f,5f,2); 
+ 
+ getCollisionThreshold 
+函数：  
+public float[] getCollisionThreshold()  
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-54"><h2>PDF物理页 54</h2><a href="materials/SRC0166.pdf#page=54" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 54 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+返回值： 
+返回设置的 Gsensor X，Y，Z 轴方向加速度的阀值 
+细节： 
+通过此 API 可以获取 setCollisionThreshold 设置的 Gsensor X，Y，Z 轴方向加速度的阀值。如果返回值为 null，表示
+在获取阀值的时候出现了异常。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+float[] f=mSmartPlatformManager.getCollisionThreshold(); 
+ 
+ setGsensorEventRate 
+函数：  
+public int setGsensorEventRate(int delayMs) 
+参数： 
+delayMs  Gsensor 数据上报时间间隔 
+返回值： 
+返回一个整数值，表示参数设置是否成功，0 表示成功，否则失败。 
+细节： 
+• 通过这个 API 可以设置 Gsensor 数据上报的时间间隔，单位是毫秒。例如设置为 10，意味着每隔 10 毫秒会收
+到一笔 Gsensor 数据，换算成频率就是 100Hz。 
+• 该接口只是调用 sensorservice 的设置接口，再由 sensorservice 设置到驱动程序端。传进去的值和实际设置到驱
+动程序的值不一定相等，因为这个值有范围限定。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+mSmartPlatformManager.setGsensorEventRate(10); 
+ 
+ getGsensorEventRate 
+函数：  
+public int getGsensorEventRate()  
+返回值： 
+返回设置下去的 Gsensor 数据上报时间间隔 
+细节： 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-55"><h2>PDF物理页 55</h2><a href="materials/SRC0166.pdf#page=55" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 55 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+该接口只是拿到上一次调用 setGsensorEventRate()传下来的值，而不是拿到驱动程序那边实际使用的值，目前没有
+办法拿到驱动程序使用的值。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+int rate=mSmartPlatformManager.getGsensorEventRate(); 
+ 
+ setIPOStandby 
+函数：  
+public void setIPOStandby(Boolean on)  
+参数： 
+On true 表示进入 IPO 待机状态，false 表示退出 IPO 待机状态。 
+细节： 
+NATIVE Collision 根据是否进入 IPO 待机状态，选择不同流程从而达到省电的目的。 
+示例： 
+SmartPlatformManager mSmartPlatformManager = SmartPlatformManager.get(); 
+mSmartPlatformManager.setIPOStandby (); 
+ 
+1.3 配置/客制化指南 
+Codebase 路径：vendor\mediatek\proprietary\frameworks\base\smartplatform\sdk 
+APK demo 路径：vendor\mediatek\proprietary\packages\apps\CarcorderMcamDemo 
+ 
+ 主要功能介绍 
+1.3.1.1 预览 
+开启预览： 
+     SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+     SurfaceView surfaceView=findViewById(R.id.surface_view); 
+     SurfaceHolder holder=surfaceView.getHolder(); 
+     mDevice.setPreviewSurface(Holder.getSurface(),PreviewSource.GENERAL_CAMERA); 
+     mDevice.starPreview(); 
+ 
+停止预览： 
+     SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-56"><h2>PDF物理页 56</h2><a href="materials/SRC0166.pdf#page=56" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 56 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+     mDevice.stopPreview(); 
+     mDevice.setPreviewSurface(null, PreviewSource.GENERAL_CAMERA); 
+ 
+1.3.1.2 拍照 
+     SpmCameraDevice mCameraDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+     String fileName=”/sdcard/DCIM/photo/”+filename; 
+     mCameraDevice.takePicture(fileName,shutter,jpeg); 
+1.3.1.3 录制 
+开启录制： 
+     RecordConfiguration recordConfig= RecordConfiguration.get(recordSource); 
+     recordConfig.setVideoCallback(mVideoCallback); 
+     mCameraDevice.startrecord(RecordSource. GENERAL_CAMERA, recordConfig); 
+ 
+停止录制： 
+     SpmCameraDevice Device = SmartPlatformManager.get().openCameraDevice(“0”); 
+     mDevice.stoptRecord(); 
+注：录制涉及到各种特性，例如子码流，主码流，打点保护等，在 DVR 文档中会详细介绍。 
+ 
+1.3.1.4 YUV Callback 
+SpmCameraDevice.ImageDataCallback mSequenceCallback = new SpmCameraDevice.ImageDataCallback 
+() { 
+       Public void onImageAvailable(ImageDataCallbackInfo imageDataCallbackInfo){ 
+      } 
+     } 
+ 
+     SpmCameraDevice mDevice = SmartPlatformManager.get().openCameraDevice(“0”); 
+     PictureConfiguration picConfig = PictureConfiguration.get(PictureSequenceSource. 
+GENERAL_CAMERA); 
+     picConfig.mImageDataCallback = mSequenceCallback; 
+     mDevice.startPictureSequence(source ,picConfig); 
+注：imageDataCallback 返回的是 data，如果需要 FD 回调，需要在startPictureSequence 通过
+enableShareBuffer 获取 FD。 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-57"><h2>PDF物理页 57</h2><a href="materials/SRC0166.pdf#page=57" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 57 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+ 碰撞检测特别说明 
+1.3.2.1 碰撞启动某个录制 APK 
+需求说明: 
+在开机状态下，当 Demo APK 退出后，通过注册回调的方式是无法收到 Carcorder Service 发送的碰撞通知。现在想
+要在 APK 退出后（没有运行）的情况下也能收到碰撞事件，目前是通过广播的形式将碰撞事件通知 APK。 
+ 
+实例代码: 
+1. 实现一个继承 BroadcastReceiver 的类。 
+ class CollisionBroadcastReceiver extends BroadcastReceiver{ 
+@Override 
+publicvoid onReceive(Context context, Intent intent)  
+         { 
+} 
+  } 
+2. 应该使用静态注册的方式，在 Manifest.xml 里面注册广播。 
+  &lt;receiverandroid:name=&quot;.CollisionBroadcastReceiver &quot;&gt; 
+     &lt;intent-filter&gt; 
+        &lt;action 
+          android:name=&quot;android.intent.action.GSENSOR_COLLISION&quot;/&gt; 
+    &lt;/intent-filter&gt; 
+  &lt;/receiver&gt; 
+ 
+1.3.2.2 碰撞检测算法开放与客制化 
+代码路径： 
+alps/frameworks/native/libs/smartplatform/libsmartplatformcollision/* 
+文件组成： 
+SmartPlatformCollision.h  SmartplatformCollision.cpp  Android.mk 
+接口定义： 
+下面两个函数的定义不能修改，函数名、参数和返回值都不能修改。  
+void collision_init(); 
+初始化函数：当 collide 运行起来，libsmartplatformcollision.so 加载完成后会调用一次此函数。仅会调用一
+次，用于变量的初始化。 
+void collision_detect(AsensorEvent value, const float* threshod, int size, int level, int* 
+result); 
+参数说明： 
+AsensorEvent value  封装传感器数据的结构体。 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-58"><h2>PDF物理页 58</h2><a href="materials/SRC0166.pdf#page=58" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 58 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+const float* threshod  x, y, z 阀值数组，和 setCollisionThreshold()设置的值一致。 
+int size   指定 threshod 数组的长度，目前定义的长度是 3。 
+int level   碰撞的等级，也是设置过的值。 
+int* result 额外的返回值，应用程序可以通过CollisionCallback.onCollision(int collision,int 
+status)获取，collision 和level 的值相等，status 和  *result 的值相等。 
+返回值说明: 
+如果返回 true，则认为检测到碰撞，会通过回调的方式通知应用程序，如果应用程序不注册回调，则会发出广
+播。 
+如果返回 false，则认为没有检测到碰撞，既不会回调，也不会发广播。 
+其他说明： 
+sensorservice 每送一次数据过来，就会调用一次 collision_detect 这个函数。 
+可以通过 setNormalCollision()设置是否启用这个功能。如果禁用了这个功能，即使有传感器数据传送过来，也不会
+回调collision_detect。 
+参考实例： 
+请参考SmartplatformCollision.h，SmartPlatformCollision.cpp 的实现方式。 
+ 
+1.4 常见问题/故障排除 
+ SDK 常见问题 
+1.4.1.1 调用 setpreviewSurface 顺序不对导致底层缓冲区卡住 
+如果先调用 setpreviewSurface null 再去调用 stop preview，会打印出如下日志： 
+BufferQueueProducer: [ImageReader-1280x720f32315659m5-15749-
+52](this:0x7a989dd000,id:52,api:4,p:544,c:-1) queueBuffer: BufferQueue has been abandoned 
+ 
+如果还未调用 stop preview 就销毁了 surface，会导致底层缓冲区卡住并报错。 
+ 
+1.4.1.2 拍照 takePicture 另开线程 
+有的 SD Card 保存图片慢，为了避免阻塞 APK，在调用 takePicture 时可另开线程来执行保存操作。 
+new Thread(() -&gt; { 
+         mDevice.takePicture(path, mShutterCallback, pictureCallback); 
+}).start(); 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-59"><h2>PDF物理页 59</h2><a href="materials/SRC0166.pdf#page=59" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 59 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+1.4.1.3 不能在回调中做耗时任务 
+考虑到同步和效率问题，SDK 中的回调是直接在 binder 线程中处理，并未新开线程处理， 所以应用程序在收到回
+调之后，最好是新开线程来处理； 如果未新开线程处理，不能继续在回调中调用 SDK 接口（可能造成死锁）；也
+不要在回调中做耗时较久的事情，这样容易造成 APK ANR。 
+ 
+ 调试日志开关方法 
+1.4.2.1 打开 SpmCameraDeviceImpl 调试日志的方法 
+adb shell setprop persist.vendor.log.spmsdk true; 
+adb reboot 
+ 
+1.4.2.2 关闭提前设定 Capture Surface 的方法 
+adb shell setprop persist.vendor.spm.presetpic false 
+adb reboot 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section><section class="source-page" id="page-60"><h2>PDF物理页 60</h2><a href="materials/SRC0166.pdf#page=60" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2024 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 60 
+MT8676 Android SDK 
+User Manual 
+Confidential B 
+附件一 附加条款 
+您(或您所代表的公司或其他法律主体，以下合称「您」)是否得取得、下载与使用本文件及其相关信息皆应以您接受本附加条款为先决要件。
+您对于本文件之使用、取得或下载即表示您已接受本附加条款并同意受本附加条款之拘束。若您不同意受本附加条款之拘束，您将不得使用、
+取得或下载本文件并应立即删除或毁弃所有本文件之副本。 
+ 
+本文件含有联发科技股份有限公司及其关联公司（以下合称「联发科技」）或其授权人之机密信息及专有信息，仅供您为本文件所描述之联发
+科技芯片组作内部使用而不得用于其他任何目的（包括但不限于确认或提供支持任何对联发科技、其供货商及/或其直接或间接客户所提潜在
+专利侵权主张的证据）。禁止未经授权使用或揭露本文件及其中所含信息。您同意赔偿联发科技因您未经授权使用或揭露本文件及其中所含信
+息之一部或全部导致联发科技所受之任何损失或损害。 
+ 
+联发科技及其授权人保有本文件的所有权及组成所有权之各项权利且未针对任何知识产权授权（无论明示或默示、透过禁反言原则或其他方
+式）。联发科技得随时变更本文件内容而无须另行通知。联发科技无须承担与使用或信赖本文件相关或因使用或信赖本文件致生之任何责任，
+包括但不限于间接损害或附带损害赔偿责任。 
+ 
+本文件及联发科技所提供关于本文件之任何其他材料、信息或技术支持，均以现况交付为准，联发科技不负任何明示、默示、法定或其他形式
+之担保责任，特别是适销性、不侵权、针对特定用途之适用性、完整性或正确性之担保责任或任何由贸易惯例或交易、履行过程所生之担保责
+任。对于联发科技为符合您所提规格或遵循特定标准或标准组织的要求所作之交付物，联发科技亦不应承担任何责任。 
+ 
+于未对前述条款造成限制之情形下，联发科技不对其产品任何特定用途之适用性承担任何保证或担保责任，亦不承担任何因产品、电路或软件
+之应用或使用致生之赔偿责任。您同意您应单独承担关于整合您的产品与联发科技产品所涉及之设计、验证与测试之所有责任，并应确保前述
+整合产品符合相关标准及任何安全性要求或其他要件。 
+ 
+本附加条款及所有与本附加条款或本文件相关之行为应以台湾法律管辖、解释与阐明，不适用冲突法原则。 
+ 
+ 
+ 
+ 
+ 
+MediaTek Confidential
+ For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+MediaTek Confidential
+For hlzhang@ pvetec.com Use Only
+Document Feedback</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a><a href="#page-18">PDF物理页 18</a><a href="#page-19">PDF物理页 19</a><a href="#page-20">PDF物理页 20</a><a href="#page-21">PDF物理页 21</a><a href="#page-22">PDF物理页 22</a><a href="#page-23">PDF物理页 23</a><a href="#page-24">PDF物理页 24</a><a href="#page-25">PDF物理页 25</a><a href="#page-26">PDF物理页 26</a><a href="#page-27">PDF物理页 27</a><a href="#page-28">PDF物理页 28</a><a href="#page-29">PDF物理页 29</a><a href="#page-30">PDF物理页 30</a><a href="#page-31">PDF物理页 31</a><a href="#page-32">PDF物理页 32</a><a href="#page-33">PDF物理页 33</a><a href="#page-34">PDF物理页 34</a><a href="#page-35">PDF物理页 35</a><a href="#page-36">PDF物理页 36</a><a href="#page-37">PDF物理页 37</a><a href="#page-38">PDF物理页 38</a><a href="#page-39">PDF物理页 39</a><a href="#page-40">PDF物理页 40</a><a href="#page-41">PDF物理页 41</a><a href="#page-42">PDF物理页 42</a><a href="#page-43">PDF物理页 43</a><a href="#page-44">PDF物理页 44</a><a href="#page-45">PDF物理页 45</a><a href="#page-46">PDF物理页 46</a><a href="#page-47">PDF物理页 47</a><a href="#page-48">PDF物理页 48</a><a href="#page-49">PDF物理页 49</a><a href="#page-50">PDF物理页 50</a><a href="#page-51">PDF物理页 51</a><a href="#page-52">PDF物理页 52</a><a href="#page-53">PDF物理页 53</a><a href="#page-54">PDF物理页 54</a><a href="#page-55">PDF物理页 55</a><a href="#page-56">PDF物理页 56</a><a href="#page-57">PDF物理页 57</a><a href="#page-58">PDF物理页 58</a><a href="#page-59">PDF物理页 59</a><a href="#page-60">PDF物理页 60</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>

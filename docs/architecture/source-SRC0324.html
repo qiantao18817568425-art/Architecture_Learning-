@@ -1,0 +1,2057 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>0007-000001-957 MT6685_DCXO_DataSheet_V1.4.pdf · 座舱架构实践</title><link rel="stylesheet" href="library.css?v=20260921-layout1"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><label class="source-search-toggle"><input id="search-sources" type="checkbox">同时搜索材料原文</label><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a><a  href="24.html">24 启动时序与并行依赖逐步解读</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="24.html">启动时序逐步解读</a><a href="diagrams.html">全部 Mermaid 图表</a><a href="sources.html">材料原文 · 逐页阅读</a><a href="import.html">ChatGPT 资料导入包</a><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / <a href="sources.html">材料原文</a></div><h1>0007-000001-957 MT6685_DCXO_DataSheet_V1.4.pdf</h1><p>SRC0324 · 原来源 ID S240 · PDF物理页 · 43 个阅读单元</p><p class="note">清点/提取，未作为本次核心结论直接引用。以下为来源内容，不是对当前项目实测结果的断言。</p><details><summary>版本与来源追溯</summary><p>8676/MTK8676硬件资料/0007-000001-957 MT6685_DCXO_DataSheet_V1.4.pdf</p><p>SHA-256：<code>11b9316f312a85d7ccc655d3ac0520331696bfa3b8e2dbf913fa2ac85e31a9a4</code></p><p>原文件大小：1,564,372 字节</p></details><div class="actions"><a class="button" href="materials/SRC0324.pdf" target="_blank" rel="noopener">打开完整 PDF（含全部图表） ↗</a><a class="button secondary" href="#source-text">阅读站内正文 ↓</a></div><details><summary>在本页展开原 PDF 查看图表</summary><iframe class="pdf-viewer" loading="lazy" title="0007-000001-957 MT6685_DCXO_DataSheet_V1.4.pdf 原 PDF" src="materials/SRC0324.pdf"></iframe><p>若浏览器不支持嵌入 PDF，请使用上方“打开完整 PDF”。下方文字仍可直接阅读。</p></details><article id="source-text"><section class="source-page" id="page-1"><h2>PDF物理页 1</h2><a href="materials/SRC0324.pdf#page=1" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved.  
+Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited. 
+Use of this document and any information contained therein is subject to the terms and conditions set forth in Exhibit 1. This document 
+is subject to change without notice. 
+Confidential A 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Version:  1.4 
+Release date:  2023-09-06 
+MT6685 Clock IC Datasheet 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-2"><h2>PDF物理页 2</h2><a href="materials/SRC0324.pdf#page=2" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 2 
+MT6685 Clock IC 
+Datasheet 
+Confidential A 
+Version History 
+Version Date Author Description 
+0.1 2021-05-05 Yunghsu Chen Initial draft 
+0.2 2021-05-21 Yunghsu Chen Modified AUXADC power and ground pins description. 
+0.3 2021-07-13 John Chiang Modified RTC accuracy and duty cycle. 
+0.4 2021-08-20 John Chiang 1. Modified RFCK1 10 kHz offset phase noise 
+2. Modified BBCK output impedance mapping table 
+0.5 2021-08-25 Chuck Chiu Modified power on/off sequence. 
+0.6 2021-11-05 John Chiang 
+1. Added 26 MHz clk phase noise spec. for RFCK1. 
+2. Added 52 MHz clk phase noise spec. for RFCK2. 
+3. Modified RG_XO_EXTBUF_BBCK1_RSEL code 
+description. 
+0.7 2021-11-29 Yunghsu Chen Updated POD. 
+0.8 2022-01-04 Yunghsu Chen 
+Joseph Cheng 
+1. Updated top marking. 
+2. Update BBCK_HD description. 
+0.9 2022-03-24 Yunghsu Chen 
+1. Updated thermal information. 
+2. Removed VRTC Vin min. voltage and modified 
+UVLO/DDLO description. 
+1.0 2022-04-11 
+Yunghsu Chen 
+Katy Chang 
+Chuck Chiou 
+1. First official release. 
+2. Updated die size information in Figure 1-1. 
+3. Updated DCXO description in 3.2.5. 
+4. Updated sequence figure. 
+5. Updated table in 2.5 (FAULTB, EN, RTC_INT). 
+1.1 2022-06-13 
+Chuck Chiou 
+Joseph Cheng 
+John Chiang 
+1. Updated VRTC power on waveform in Figure 3-2. 
+2. Added debug status register. 
+3. Added 10 Hz/100 Hz phase noise spec. for RFCK2/BBCK. 
+1.2 2022-09-22 Yunghsu Chen Updated top marking. 
+1.3 2023-03-13 Yunghsu Chen 
+1. Updated power on sequence note. 
+2. Updated operating current electrical characteristic in 
+Table 2-4. 
+1.4 2023-09-06 Yunghsu Chen Updated descriptions of Figure 3-2. MT6685HP/B power-
+on/off control sequence without XTAL by EN high. 
+    
+ 
+  
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-3"><h2>PDF物理页 3</h2><a href="materials/SRC0324.pdf#page=3" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 3 
+MT6685 Clock IC 
+Datasheet 
+Confidential A 
+Table of Contents 
+Version History ·································································································································································· 2 
+Table of Contents ······························································································································································· 3 
+List of Figures ····································································································································································· 4 
+List of Tables ······································································································································································ 4 
+1 Overview ··································································································································································· 5 
+1.1 Features ···································································································································································· 5 
+1.2 Applications ······························································································································································ 5 
+1.3 General Descriptions ················································································································································ 5 
+1.4 Ordering Information ··············································································································································· 6 
+1.5 Top Marking Definition ············································································································································· 6 
+2 Electrical Characteristics ············································································································································ 8 
+2.1 Absolute Maximum Ratings over Operating Free-Air Temperature Range ······························································ 8 
+2.2 Thermal Characteristics ············································································································································ 8 
+2.3 Pin Voltage Range ····················································································································································· 8 
+2.4 Recommended Operating Range ··························································································································· 10 
+2.5 Electrical Characteristics ········································································································································ 10 
+2.6 Regulator Output ··················································································································································· 12 
+2.6.1 Regulator Output (LDO) ······························································································································ 12 
+2.7 AUXADC ·································································································································································· 14 
+2.8 DCXO ······································································································································································ 14 
+2.8.1 Reference Output Buffer(s) Specifications ·································································································· 15 
+3 Functional Description ············································································································································· 19 
+3.1 General Description················································································································································ 19 
+3.2 Clock IC Functional Blocks ······································································································································ 19 
+3.2.1 Power-on/off Sequence ······························································································································ 20 
+3.2.2 Low Dropout Regulator (LDOs) and Application Reference ········································································ 22 
+3.2.3 AUXADC······················································································································································· 22 
+3.2.3.1 Block Description ·························································································································· 22 
+3.2.4 Real-Time Clock ··········································································································································· 23 
+3.2.5 DCXO ··························································································································································· 23 
+3.2.5.1 32 kHz RTC Removal Mode ··········································································································· 23 
+3.2.6 Interrupt and Watchdog ····························································································································· 24 
+3.2.6.1 Interrupt ········································································································································ 24 
+3.2.6.2 Watchdog Reset ···························································································································· 24 
+3.2.6.3 Booting Watchdog Reset ··············································································································· 24 
+3.2.7 SPMI Interface ············································································································································· 24 
+3.2.8 GPIO ···························································································································································· 26 
+3.2.8.1 GPIO List ········································································································································ 26 
+3.2.8.2 GPIO Specifications ······················································································································· 27 
+3.3 Register Table and Description ······························································································································· 27 
+4 Packaging ································································································································································· 41 
+4.1 Package Dimension ················································································································································ 41 
+Appendix ········································································································································································· 42 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-4"><h2>PDF物理页 4</h2><a href="materials/SRC0324.pdf#page=4" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 4 
+MT6685 Clock IC 
+Datasheet 
+Confidential A 
+Exhibit 1 Terms and Conditions ········································································································································ 43 
+ 
+ 
+List of Figures 
+Figure 1-1. MT6685 WLCSP 42 (2.2306*2.4958 mm) pin assignment (top view) ······································································ 6 
+Figure 3-1. MT6685 block diagram ·········································································································································· 19 
+Figure 3-2. MT6685HP/B power-on/off control sequence without XTAL by EN high ······························································· 21 
+Figure 4-1. Package dimension ················································································································································· 41 
+ 
+List of Tables 
+Table 1-1. MT6685 pin description············································································································································· 6 
+Table 2-1. Absolute maximum ratings ········································································································································ 8 
+Table 2-2. Pin voltage range ······················································································································································· 8 
+Table 2-3. Operation condition ················································································································································ 10 
+Table 2-4. General electrical specifications ······························································································································ 10 
+Table 2-5. Normal mode and voltage supplies ························································································································· 11 
+Table 2-6. VAUX18 specifications ············································································································································· 12 
+Table 2-7. DVDD18_DIG specifications ····································································································································· 13 
+Table 2-8. VXO_LDO specifications ··········································································································································· 13 
+Table 2-9. VRFCK1/VRFCK2_LDO specifications ······················································································································· 13 
+Table 2-10. VBBCK_LDO specifications ····································································································································· 13 
+Table 2-11. VRTC_LDO specifications ······································································································································· 13 
+Table 2-12. XOADC specifications ············································································································································· 14 
+Table 2-13. XO specifications ··················································································································································· 14 
+Table 2-14. Reference input buffer specifications (XTAL1, buffer mode) ················································································· 15 
+Table 2-15. RF clock output buffer specifications (RFCK1A, RFCK1B, 52 MHz) ········································································ 15 
+Table 2-16. RF clock output buffer specifications (RFCK1A, RFCK1B, 26 MHz) ········································································ 16 
+Table 2-17. RF Clock output buffer specifications (RFCK2A, RFCK2B, 52 MHz) ········································································ 16 
+Table 2-18. RF Clock output buffer specifications (RFCK2A, RFCK2B, 26 MHz) ········································································ 16 
+Table 2-19. BB clock output buffer specifications (BBCK1~5, 26 MHz) ···················································································· 17 
+Table 3-1. LDO types and brief specifications ·························································································································· 22 
+Table 3-2. Application and input range of XOADC channels ····································································································· 23 
+Table 3-3. MT6685 GPIO list ····················································································································································· 26 
+Table 3-4. MT6685 GPIO electrical characteristics ··················································································································· 27 
+ 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-5"><h2>PDF物理页 5</h2><a href="materials/SRC0324.pdf#page=5" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 5 
+MT6685 Clock IC 
+Datasheet 
+Confidential A 
+1 Overview 
+1.1 Features 
+• Handles 5G-Module baseband clock IC 
+• Input range: 2.6~5V 
+• 9 clock buffers and 4 input channels for ADC optimized for specific 5G-Module subsystems 
+• 32K-Crystal-less RTC oscillator for system timing, 1.8V clock buffer output  
+• SPMI interface 
+• Programmable under voltage lockout protection 
+• Watchdog reset 
+• Flexibility hardware clock IC reset function 
+• Power-on reset and start-up timer 
+• 42-pin WLCSP package 
+ 
+1.2 Applications 
+MT6685 is ideal for clock IC of 5G-Module and other portable systems. 
+ 
+1.3 General Descriptions 
+MT6685 is a clock IC system chip optimized for 5G-Module, containing nine clock buffers and four input channels for ADC 
+optimized for specific 5G-Module subsystems. 
+ 
+Sophisticated controls are available for power-up and the RTC alarm. MT6685 is optimized for maximum battery life, 
+allowing the RTC circuit to stay alive without a battery for several hours.  
+ 
+MT6685 adopts SPMI interface and one SRCLKEN control pins to control DCXO, LDOs, and various drivers; it provides 
+enhanced safety control and protocol for handshaking with baseband. 
+ 
+MT6685 is available in a 42-pin WLCSP package. The operating temperature ranges from -30°C to +85°C. 
+ 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-6"><h2>PDF物理页 6</h2><a href="materials/SRC0324.pdf#page=6" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 6 
+MT6685 Clock IC 
+Datasheet 
+Confidential A 
+1.4 Ordering Information 
+Order # Marking Temp. range Package 
+MT6685HP/B  -30 ~ +85°C WLCSP 42 pins 
+MT6685LP/B  -30 ~ +85°C WLCSP 42 pins 
+Note: H for 52M XTAL; L for 26M XTAL. 
+ 
+1.5 Top Marking Definition 
+  
+ 
+Pin assignments and descriptions:
+ 
+Figure 1-1. MT6685 WLCSP 42 (2.2306*2.4958 mm) pin assignment (top view) 
+ 
+Table 1-1. MT6685 pin description 
+Ball Symbol I/O Description 
+A1 VAUX18 PWR AUXADC power 
+A2 VRTC PWR RTC LDO output. Supply of RTC macro where backup battery can 
+be added. 
+A3 AUXADC_VIN4 I AUXADC input 
+A4 AUXADC_VIN2 I AUXADC input 
+A5 RTC_INT O RTC interrupt 
+A6 SDA I/O SPMI control interface 
+B1 AVSS18_AUXADC GND AUXADC ground 
+B2 AUXADC_VIN5 I External resistor 
+B3 AUXADC_VIN3 I AUXADC input 
+B4 FAULT_B O FAULTB indicator 
+42 1 2 3 4 5 6
+A VAUX18 VRTC AUXADC_VIN4 AUXADC_VIN2 RTC_INT SDA A
+B AVSS18_AUXADC AUXADC_VIN5 AUXADC_VIN3 FAULT_B RTC32K_1V8_F SCL B
+C VREF AVSS_VREF EN WDTRSTB_IN RTC32K_1V8_0 SRCLKENA0 C
+D DVDD18_DIG VBAT RFCK1B RFCK2B BBCK2 FSOURCE D
+E AUXADC_VIN1 DVDD18_IO RFCK1A RFCK2A BBCK1 BBCK5 E
+F XTAL2 AVSS_XO AVSS_RFCK1 AVSS_RFCK2 DGND BBCK4 F
+G XTAL1 VXO VRFCK1 VRFCK2 VBBCK BBCK3 G
+1 2 3 4 5 6
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-7"><h2>PDF物理页 7</h2><a href="materials/SRC0324.pdf#page=7" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 7 
+MT6685 Clock IC 
+Datasheet 
+Confidential A 
+Ball Symbol I/O Description 
+B5 RTC32K_1V8_F O VIO18 domain 32 kHz clock output 
+B6 SCL I SPMI control interface 
+C1 VREF O Bandgap reference voltage 
+C2 AVSS_VREF GND VDIG18 output voltage 
+C3 EN I Enable control, active high 
+(The operating voltage should be ≤ VSYS.) 
+C4 WDTRSTB_IN I Watchdog reset from AP 
+C5 RTC32K_1V8_0 O VIO18 domain 32 kHz clock output 
+C6 SRCLKENA0 I Source clock enable pin 0 
+D1 DVDD18_DIG PWR Digital power 
+D2 VBAT PWR VSYS supply input for internal block and UVLO detection 
+D3 RFCK1B O RFCK clock output 
+D4 RFCK2B O RFCK clock output 
+D5 BBCK2 O BBCK clock output 
+D6 FSOURCE PWR eFuse power source 
+E1 AUXADC_VIN1 I AUXADC input 
+E2 DVDD18_IO PWR Digital I/O power 
+E3 RFCK1A O RFCK clock output 
+E4 RFCK2A O RFCK clock output 
+E5 BBCK1 O BBCK clock output 
+E6 BBCK5 O BBCK clock output 
+F1 XTAL2 I/O XTAL input 2 
+F2 AVSS_XO GND Ground 
+F3 AVSS_RFCK1 GND Ground for RF clock buffer 
+F4 AVSS_RFCK2 GND Ground for RF clock buffer 
+F5 DGND GND Ground 
+F6 BBCK4 O BBCK clock output 
+G1 XTAL1 I/O XTAL input 1 
+G2 VXO PWR Power supply of XO 
+G3 VRFCK1 PWR Power supply of XO buffer 
+G4 VRFCK2 PWR Power supply of XO buffer 
+G5 VBBCK PWR Power supply of XO buffer 
+G6 BBCK3 O BBCK clock output 
+ 
+ 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-8"><h2>PDF物理页 8</h2><a href="materials/SRC0324.pdf#page=8" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 8 
+MT6685 Clock IC 
+Datasheet 
+Confidential A 
+2 Electrical Characteristics 
+2.1 Absolute Maximum Ratings over Operating Free-Air Temperature Range 
+Stresses beyond those listed in Table 2-1 might cause permanent damage to the device. These numbers are stress ratings 
+only, and functional operation of the device at these or any other conditions beyond those indicated in the operational 
+sections of specifications is not implied. Exposure to absolute maximum rating conditions for extended periods may affect 
+the device reliability. 
+ 
+Table 2-1. Absolute maximum ratings 
+Parameter Condition Min. Typical Max. Unit 
+Free-air temperature range  -40  85 °C 
+Storage temperature range  -65  150 °C 
+Battery pin input (1) Steady state -0.5  6 V 
+Transient (&lt; 10 ms) -0.5  7 V 
+Non-battery power pin (2) Steady state -0.5  3 V 
+Signal pins (3) Steady state -0.5  Vxx + 0.5 (3) V 
+ESD robustness HBM 2,000   V 
+Note: 
+1. VBAT -&gt; battery input pin 
+2. Non-battery power input -&gt; reference Table 1-1 (PWR pin but not connected with battery) 
+3. Vxx = Max. operation voltage (refer to Table 2-2) 
+ 
+2.2 Thermal Characteristics 
+Parameter Condition Min. Typical Max. Unit 
+Thermal resistance from 
+junction to ambient In free air  70.5  °C/W 
+Note: The device is mounted on a 4-metal-layer PCB and modeled per JEDEC51-7 condition. 
+ 
+2.3 Pin Voltage Range 
+The table below lists the operation range voltages for all MT6685 I/O pins. 
+ 
+Table 2-2. Pin voltage range 
+Symbol Voltage range Unit 
+VAUX18 0~1.98 V 
+VRTC 0~3.1 V 
+AUXADC_VIN4 0~1.98 V 
+AUXADC_VIN2 0~1.98 V 
+RTC_INT 0~5 V 
+SDA 0~1.98 V 
+AVSS18_AUXADC 0 V 
+AUXADC_VIN5 0~1.98 V 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-9"><h2>PDF物理页 9</h2><a href="materials/SRC0324.pdf#page=9" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 9 
+MT6685 Clock IC 
+Datasheet 
+Confidential A 
+Symbol Voltage range Unit 
+AUXADC_VIN3 0~1.98 V 
+FAULT_B 0~5 V 
+RTC32K_1V8_F 0~1.98 V 
+SCL 0~1.98 V 
+VREF 0~1.32 V 
+AVSS_VREF 0 V 
+EN 0~5 V 
+WDTRSTB_IN 0~1.98 V 
+RTC32K_1V8_0 0~1.98 V 
+SRCLKENA0 0~1.98 V 
+DVDD18_DIG 0~1.98 V 
+VBAT 0~5 V 
+RFCK1B 0~1.54 V 
+RFCK2B 0~1.54 V 
+BBCK2 0~1.32 V 
+FSOURCE 0~5 V 
+AUXADC_VIN1 0~1.98 V 
+DVDD18_IO 0~1.98 V 
+RFCK1A 0~1.54 V 
+RFCK2A 0~1.54 V 
+BBCK1 0~1.32 V 
+BBCK5 0~1.32 V 
+XTAL2 0~1.32 V 
+AVSS_XO 0 V 
+AVSS_RFCK1 0 V 
+AVSS_RFCK2 0 V 
+DGND 0 V 
+BBCK4 0~1.32 V 
+XTAL1 0~1.98 V 
+VXO 0~1.76 V 
+VRFCK1 0~1.54 V 
+VRFCK2 0~1.54 V 
+VBBCK 0~1.32 V 
+BBCK3 0~1.32 V 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-10"><h2>PDF物理页 10</h2><a href="materials/SRC0324.pdf#page=10" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 10 
+MT6685 Clock IC 
+Datasheet 
+Confidential A 
+2.4 Recommended Operating Range 
+Table 2-3. Operation condition 
+Parameter Condition Min. Typical Max. Unit 
+Ambient temperature (TA)  -30  85 °C 
+Junction temperature (TJ)  -30  125 °C 
+ Operating input voltage   3.05 (Note)  5 V 
+Note: This minimum input voltage still needs to check the detailed test conditions for each function in specification table. 
+ 
+2.5 Electrical Characteristics 
+• VBAT = 2.6~5V, minimum loads applied on all outputs, unless otherwise noted. 
+• Typical values are at TA = 25°C. 
+Table 2-4. General electrical specifications 
+Parameter Condition Min. Typical Max. Unit 
+Operation ground current 
+Normal mode1 VBAT = 4V, normal mode   307  uA 
+VIO18 = 1.8V, normal mode  18  mA 
+Standby mode2 
+VBAT = 4V, low-power mode  66  μA 
+VIO18= 1.8V, low-power 
+mode  277  μA 
+Power-down leakage current 
+mode3 
+VBAT = 4V, off mode 
+Temp = 25° C   88 uA 
+Under voltage lock-out (UVLO) 
+Under voltage falling threshold  2.45 2.5 2.55 V 
+Under voltage rising threshold  2.75 2.8 2.85 V 
+ EN 
+High voltage  0.9   V 
+Low voltage    0.4 V 
+Pull low resistor   2M  Ω 
+RTC_INT 
+Output high   VSYS-0.4   V 
+Output low     0.2 V 
+Control input voltage 
+Control input high (SPMI)   0.7*VIO   V 
+Control input low (SPMI)     0.3*VIO V 
+Control input high (SRCLKEN 
+related)   0.75*VIO   V 
+Control input low (SRCLKEN 
+related)     0.25*VIO V 
+1. Normal mode is the supply current from a main battery and VIO18 separately with MT6685W on. Clock with 20 pF load and regulator 
+outputs are unloaded. See Table 2-5 for more information. 
+2. Standby mode is the supply current from a main battery and VIO18 separately with MT6685W in standby mode. Clock with 20 pF load 
+and regulator outputs are unloaded. See Table 2-6 for more information. 
+3. Power-down leakage is the total supply current from a main battery with MT6685 off. 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-11"><h2>PDF物理页 11</h2><a href="materials/SRC0324.pdf#page=11" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 11 
+MT6685 Clock IC 
+Datasheet 
+Confidential A 
+Table 2-5. Normal mode and voltage supplies 
+Resource Mode Voltage supply 
+Regulator 
+VRTC ON VBAT 
+DVDD18_DIG ON VBAT 
+VAUX18 ON VBAT 
+VXO ON VIO18 
+VRFCK1 ON VIO18 
+VRFCK2 ON VIO18 
+VBBCK ON VIO18 
+Infrastructure 
+VREF ON VBAT 
+Clocking 
+RFCK1A ON VIO18 
+RFCK1B ON VIO18 
+RFCK2A ON VIO18 
+RFCK2B ON VIO18 
+BBCK1 ON VIO18 
+BBCK2 ON VIO18 
+BBCK3 ON VIO18 
+BBCK4 ON VIO18 
+BBCK5 ON VIO18 
+RTC32K_1V8_0 ON VIO18 
+RTC32K_1V8_F ON VIO18 
+ 
+Table 2-6. Standby mode and voltage supplies 
+Resource Mode Voltage supply 
+Regulator 
+VRTC ON VBAT 
+DVDD18_DIG ON VBAT 
+VAUX18 OFF VBAT 
+VXO ON VBAT 
+VRFCK1 OFF VIO18 
+VRFCK2 OFF VIO18 
+VBBCK OFF VIO18 
+Infrastructure 
+VREF ON VBAT 
+Clocking 
+RFCK1A OFF VIO18 
+RFCK1B OFF VIO18 
+RFCK2A OFF VIO18 
+RFCK2B OFF VIO18 
+BBCK1 OFF VIO18 
+BBCK2 OFF VIO18 
+BBCK3 OFF VIO18 
+BBCK4 OFF VIO18 
+BBCK5 OFF VIO18 
+RTC32K_1V8_0 ON VIO18 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-12"><h2>PDF物理页 12</h2><a href="materials/SRC0324.pdf#page=12" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 12 
+MT6685 Clock IC 
+Datasheet 
+Confidential A 
+Resource Mode Voltage supply 
+RTC32K_1V8_F ON VIO18 
+ 
+Table 2-7. Off mode and voltage supplies 
+Resource Mode Voltage supply 
+Regulator 
+VRTC ON VBAT 
+DVDD18_DIG ON VBAT 
+VAUX18 OFF VBAT 
+VXO OFF VBAT 
+VRFCK1 OFF VIO18 
+VRFCK2 OFF VIO18 
+VBBCK OFF VIO18 
+Infrastructure 
+VREF ON VBAT 
+Clocking 
+RFCK1A OFF VIO18 
+RFCK1B OFF VIO18 
+RFCK2A OFF VIO18 
+RFCK2B OFF VIO18 
+BBCK1 OFF VIO18 
+BBCK2 OFF VIO18 
+BBCK3 OFF VIO18 
+BBCK4 OFF VIO18 
+BBCK5 OFF VIO18 
+RTC32K_1V8_0 OFF VIO18 
+RTC32K_1V8_F OFF VIO18 
+ 
+2.6 Regulator Output 
+2.6.1 Regulator Output (LDO) 
+Table 2-6. VAUX18 specifications 
+Parameter Condition Min. Typical Max. Unit 
+Vin range  3 - 5 V 
+Vout  - 1.84 - V 
+Cout  - 1 - uF 
+Turn-on rise time To within 1% of final voltage - - 250 us 
+Quiescent current  - 52 - uA 
+Power-down current VEN = GND, shutdown - - 0.1 uA 
+ 
+  
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-13"><h2>PDF物理页 13</h2><a href="materials/SRC0324.pdf#page=13" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 13 
+MT6685 Clock IC 
+Datasheet 
+Confidential A 
+Table 2-7. DVDD18_DIG specifications 
+Parameter Condition Min. Typical Max. Unit 
+Vin range  2.5 4 5 V 
+Vout  - 1.8 - V 
+Cout  - 1 - uF 
+Turn-on rise time To within 1% of final voltage - - 300 us 
+Quiescent current  - 6 - uA 
+Power-down current VEN = GND, shutdown - - 0.1 uA 
+ 
+Table 2-8. VXO_LDO specifications 
+Parameter Condition Min. Typical Max. Unit 
+Vin range   1.8  V 
+Vout  - 1.6 - V 
+Cout  - 1 - uF 
+Turn-on rise time To within 1% of final voltage - - 300 us 
+Quiescent current  - 300 - uA 
+Power-down current VEN = GND, shutdown - - 0.1 uA 
+ 
+Table 2-9. VRFCK1/VRFCK2_LDO specifications 
+Parameter Condition Min. Typical Max. Unit 
+Vin range   1.8  V 
+Vout  - 1.4 - V 
+Cout  - 1 - uF 
+Turn-on rise time To within 1% of final voltage - - 300 us 
+Quiescent current  - 255 - uA 
+Power-down current VEN = GND, shutdown - - 0.1 uA 
+ 
+Table 2-10. VBBCK_LDO specifications 
+Parameter Condition Min. Typical Max. Unit 
+Vin range   1.8  V 
+Vout  - 1.2 - V 
+Cout  - 1 - uF 
+Turn-on rise time To within 1% of final voltage - - 300 us 
+Quiescent current  - 75 - uA 
+Power-down current VEN = GND, shutdown - - 0.1 uA 
+ 
+Table 2-11. VRTC_LDO specifications 
+Parameter Condition Min. Typical Max. Unit 
+Vin range  - 4 5 V 
+Vout  - 2.8 - V 
+Cout  - 22 - uF 
+Turn-on rise time To within 1% of final voltage - - 10 mS 
+Quiescent current  - 3.5 - uA 
+Power-down current VEN = GND, shutdown - - 0.5 uA 
+ 
+ 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-14"><h2>PDF物理页 14</h2><a href="materials/SRC0324.pdf#page=14" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 14 
+MT6685 Clock IC 
+Datasheet 
+Confidential A 
+2.7 AUXADC 
+Table 2-12. XOADC specifications 
+Parameter Condition Min. Typical Max. Unit 
+ADC reference voltage   - 1.84 - V 
+ADC resolution (LSB)   - 56.15 - uV 
+ADC absolute accuracy   - - 17.54 mV 
+AUXADC_VIN1-5 voltage 
+range Guaranteed 0.04 - 1.78 V 
+AUXADC_VIN1-5 input 
+impedance  10M    
+100 K pull-up error Trimmed value - ±1 - % 
+400 K pull-up error Trimmed value - ±1 - % 
+30 K pull-up error Trimmed value - ±1 - % 
+Pull-up temperature 
+coefficient   - ±200 - ppm/°C 
+ 
+2.8 DCXO 
+This clock IC integrates a core 26 MHz or 52 MHz XTAL oscillator (XO) and provides clock outputs for higher-level handsets. 
+The output clocks are divided into three groups. 
+ 
+• Low noise clock output for RF communication: RFCK1A and RFCK1B 
+• Low noise clock output supporting divided-by-2 for RF communication: RFCK2A and RFCK2B 
+• Low power clock output for baseband circuits: BBCK1~5 
+ 
+Table 2-13. XO specifications 
+Parameter Condition Title Min. Typical Max. Unit 
+Frequency Set by external crystal Fdcxo  26/52  MHz 
+Startup time VXO ready to Δfreq. &lt; 1 ppm Tstartup   3 ms 
+Supply voltage = VXO    1.6  V 
+Supply current 
+At LPM 
+At FPM 
+Measured form VXO   
+ 
+30/60 
+1.2/2.4 
+ 
+ 
+uA 
+mA 
+Accuracy 
+At FPM With calibrated CAPID  -5  5 ppm 
+Accuracy 
+At LPM   -100  100 ppm 
+ 
+The buffer mode is supported by driving AC input from the XTAL1 pin. The input buffer clock requirements are listed below. 
+ 
+  
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-15"><h2>PDF物理页 15</h2><a href="materials/SRC0324.pdf#page=15" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 15 
+MT6685 Clock IC 
+Datasheet 
+Confidential A 
+Table 2-14. Reference input buffer specifications (XTAL1, buffer mode) 
+Parameter Condition Min. Nom. Max. Unit 
+Input impedance - Rp Rp || Cp @26 MHz 30   kΩ 
+Input impedance - Cp Rp || Cp @26 MHz  2 3 pF 
+ 
+2.8.1 Reference Output Buffer(s) Specifications 
+Table 2-15. RF clock output buffer specifications (RFCK1A, RFCK1B, 52 MHz) 
+Test conditions: TSX = 52 MHz, 20 pF capacitive load for each buffer output 
+Parameter Condition Min. Typical Max. Unit 
+Output frequency   52  MHz 
+Output swing Set by VRFCK1 1.35 1.4 1.45 V 
+Duty cycle  47  53 % 
+Output impedance 
+1X 40 50 60 Ω 
+2X 25 30 35 Ω  
+3X 20 25 30 Ω 
+4X 12 15 18 Ω 
+ Phase noise 
+At 10 Hz  -77  dBc/Hz 
+At 100 Hz  -107  dBc/Hz 
+At 1 kHz  -136  dBc/Hz 
+At 10 kHz  -153  dBc/Hz 
+At 100 kHz  -160.5  dBc/Hz 
+At 1 MHz  -161  dBc/Hz 
+Supply current of each 
+clock Measured from VRFCK1  2.2  mA 
+ 
+RFCK1 measurement results: 
+ 
+ 
+  
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-16"><h2>PDF物理页 16</h2><a href="materials/SRC0324.pdf#page=16" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 16 
+MT6685 Clock IC 
+Datasheet 
+Confidential A 
+Table 2-16. RF clock output buffer specifications (RFCK1A, RFCK1B, 26 MHz) 
+Test conditions: TSX = 26 MHz, 20 pF capacitive load for each buffer output 
+Parameter Condition Min. Typical Max. Unit 
+Output frequency   26  MHz 
+Output swing Set by VRFCK1 1.35 1.4 1.45 V 
+Duty cycle  47  53 % 
+Output impedance 
+1X 40 50 60 Ω 
+2X 25 30 35 Ω  
+3X 20 25 30 Ω 
+4X 12 15 18 Ω 
+ Phase noise 
+At 10 Hz  -80  dBc/Hz 
+At 100 Hz  -110  dBc/Hz 
+At 1 kHz  -136  dBc/Hz 
+At 10 kHz  -150  dBc/Hz 
+At 100 kHz  -160.5  dBc/Hz 
+At 1 MHz  -161  dBc/Hz 
+Supply current of each 
+clock Measured from VRFCK1  1.3  mA 
+ 
+Table 2-17. RF Clock output buffer specifications (RFCK2A, RFCK2B, 52 MHz) 
+Test conditions: TSX = 52 MHz, 20 pF capacitive load for each buffer output 
+Parameter Condition Min. Typical Max. Unit 
+Output frequency   52  MHz 
+Output swing Set by VRFCK2 1.35 1.4 1.45 V 
+Duty cycle  47  53 % 
+Output impedance 
+1X 40 50 60 Ω 
+2X 25 30 35 Ω  
+3X 20 25 30 Ω 
+4X 12 15 18 Ω 
+Phase noise 
+At 10 Hz  -77  dBc/Hz 
+At 100 Hz  -107  dBc/Hz 
+At 1 kHz  -136  dBc/Hz 
+At 10 kHz  -153  dBc/Hz 
+At 100 kHz  -159.5  dBc/Hz 
+At 1 MHz  -160  dBc/Hz 
+Supply current of each 
+clock Measured from VRFCK2  2.2  mA 
+ 
+Table 2-18. RF Clock output buffer specifications (RFCK2A, RFCK2B, 26 MHz) 
+Test conditions: TSX = 26 MHz, 20 pF capacitive load for each buffer output 
+Parameter Condition Min. Typical Max. Unit 
+Output frequency   26  MHz 
+Output swing Set by VRFCK2 1.35 1.4 1.45 V 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-17"><h2>PDF物理页 17</h2><a href="materials/SRC0324.pdf#page=17" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 17 
+MT6685 Clock IC 
+Datasheet 
+Confidential A 
+Parameter Condition Min. Typical Max. Unit 
+Duty cycle  47  53 % 
+Output impedance 
+1X 40 50 60 Ω 
+2X 25 30 35 Ω  
+3X 20 25 30 Ω 
+4X 12 15 18 Ω 
+Phase noise 
+At 10 Hz  -80  dBc/Hz 
+At 100 Hz  -110  dBc/Hz 
+At 1 kHz  -142.5  dBc/Hz 
+At 10 kHz  -150.5  dBc/Hz 
+At 100 kHz  -157.5  dBc/Hz 
+At 1 MHz  -158  dBc/Hz 
+Supply current of each 
+clock Measured from VRFCK2  1.3  mA 
+ 
+RFCK2 measurement results: 
+ 
+ 
+Table 2-19. BB clock output buffer specifications (BBCK1~5, 26 MHz) 
+Parameter Condition Min. Typical Max. Unit 
+Output frequency   26  MHz 
+Output swing Set by VBBCK 1.15 1.2 1.25 V 
+Duty cycle  45  55 % 
+Output impedance 
+1X 50 60 70 Ω 
+2X 45 55 65 Ω  
+3X 40 50 60 Ω 
+4X 30 40 50 Ω 
+Phase noise 
+At 10 Hz  -80  dBc/Hz 
+At 100 Hz  -110  dBc/Hz 
+At 1 kHz  -130  dBc/Hz 
+At 10 kHz  -140  dBc/Hz 
+At 100 kHz  -150  dBc/Hz 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-18"><h2>PDF物理页 18</h2><a href="materials/SRC0324.pdf#page=18" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 18 
+MT6685 Clock IC 
+Datasheet 
+Confidential A 
+Parameter Condition Min. Typical Max. Unit 
+At 1 MHz  -150  dBc/Hz 
+RMS jitter Integrated BW: 1k ~ 13 MHz  2  ps 
+Supply current of each clock Measured from VBBCK  1  mA 
+ 
+BBCK measurement results: 
+  
+ 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-19"><h2>PDF物理页 19</h2><a href="materials/SRC0324.pdf#page=19" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 19 
+MT6685 Clock IC 
+Datasheet 
+Confidential A 
+3 Functional Description 
+3.1 General Description 
+MT6685 is a fully integrated standalone DCXO target for 5G-Module clock provider. The following is the block diagram of 
+MT6685 clock IC. 
+ 
+ 
+Figure 3-1. MT6685 block diagram 
+ 
+3.2 Clock IC Functional Blocks 
+MT6685 manages the clock supply of 5G-Module and other portable systems. MT6685 includes the following analog 
+functions. 
+ 
+• RFCK and BBCK: Provides low noise and low power clock output  
+• ADC: Provide 15-bit AUXADC for thermal/accessory detection monitor and measurement 
+• Controller: Generates power-on/off sequence, system reset and exceptional handling function 
+ 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-20"><h2>PDF物理页 20</h2><a href="materials/SRC0324.pdf#page=20" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+ 20 
+MT6685 Clock IC 
+Datasheet 
+Confidential A 
+More detailed descriptions of each sub-block are explained in the following sections. 
+ 
+3.2.1 Power-on/off Sequence 
+This clock IC handles the power-on and power-off of the system. If the VSYS voltage is neither in the UVLO state nor in the 
+thermal condition, there is only one method to power on the system. 
+ 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-21"><h2>PDF物理页 21</h2><a href="materials/SRC0324.pdf#page=21" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+21 
+Confidential A 
+ 
+Notes 
+1.  The timings are typical values; timing variation for T3/T4 is ±50%, for others are ±10%. 
+2. The start-up time of VRTC is on the condition of output R/C. It takes longer if you use output cap only for VRTC output for BOM reduction. 
+3. T11 and T12 are the normal off delay time with setting RG_SEQ_OFF = 1'b1 before system power off 
+4. VBAT, VREF, VIDG18, and VRTC ready time should follow the sequence but don’t care about the actual time. They should be ready before EN goes high. 
+Figure 3-2. MT6685HP/B power-on/off control sequence without XTAL by EN high 
+ 
+ MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-22"><h2>PDF物理页 22</h2><a href="materials/SRC0324.pdf#page=22" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+22 
+Confidential A 
+EN high (pulling the EN pin to high level) 
+Pulling EN high is a typical method to turn on the system. The system reset ends at the moment when all default-on 
+regulators are sequentially turned on. 
+ 
+Under-voltage lockout (UVLO) 
+The UVLO state in the clock IC prevents start-up if the initial voltage of the VSYS is below UVLO_VTH. The judgment is done 
+by VSYSSNS. It ensures that the system is powered on with the VSYS in good condition. The UVLO function is performed by 
+a hysteretic comparator which ensures smooth power-on sequence. In addition, when the VSYS voltage is getting lower, it 
+enters the UVLO state and the clock IC is turned off by itself, except for VRTC, to prevent further discharging. Once the 
+clock IC enters the UVLO state, it draws low quiescent current. VRTC still works until DDLO disables it. 
+ 
+Deep discharge lockout (DDLO) 
+The clock IC enters the deep discharge lockout (DDLO) state when the VSYS voltage drops below DDLO_VTH. In this state, 
+VRTC is shut down. Therefore, it draws very low quiescent current to prevent further discharging or even damage to the 
+cells. 
+ 
+3.2.2 Low Dropout Regulator (LDOs) and Application Reference 
+Table 3-1. LDO types and brief specifications 
+LDO name Controller power 
+domain 
+Input power 
+domain 
+Default 
+voltage (V) 
+Output 
+voltage (V) 
+Imax 
+(mA) Application 
+VBBCK DVDD18_IO DVDD18_IO ON (1.2) 1.2 10 CLOCK IC internal use 
+(DCXO) 
+VRFCK1/VRFCK2 DVDD18_IO DVDD18_IO ON (1.4) 1.4 10 CLOCK IC internal use 
+(DCXO) 
+VXO DVDD18_IO DVDD18_IO ON (1.6) 1.6 5 CLOCK IC internal use 
+(DCXO) 
+VAUX18 VBAT VBAT ON (1.84) 1.84 3 CLOCK IC internal use 
+(AUXADC) 
+VRTC28 VBAT VBAT ON (2.8) 2.8 2 CLOCK IC internal use 
+(RTC) 
+DVDD18_DIG VBAT VBAT ON (1.8) 1.8 10 CLOCK IC internal use 
+(Digital block) 
+ 
+3.2.3 AUXADC 
+3.2.3.1 Block Description 
+The auxiliary ADC includes the following functional blocks: 
+ 
+1. Analog multiplexer: Selects signal from one of the ADC inputs. Real-world messages to be monitored, e.g., 
+temperature, should be transferred to the voltage domain. 
+2. Pull-high resistor: Input voltage is defined by pull-high resistor and thermistor. 
+3. Input buffer: Isolates external nodes from internal resistance, and drives A/D converter 
+4. 15-bit A/D converter: Converts the multiplexed input signal to 15-bit digital data. 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-23"><h2>PDF物理页 23</h2><a href="materials/SRC0324.pdf#page=23" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+23 
+Confidential A 
+Table 3-2. Application and input range of XOADC channels 
+Channel Application Input range (V) 
+0 AUXADC_VIN1-4 0.04~1.78 
+0 AUXADC_VIN5 or ext. 100-k R 0.04~1.78 
+Others Internal use N/A 
+ 
+3.2.4 Real-Time Clock 
+The real-time clock (RTC) module provides time and data information. The clock is based on 32 kHz from DCXO or an 
+embedded 32 kHz oscillator. In addition to providing timing data, an alarm interrupt is generated and can be used to power 
+up the baseband core. Regulator interrupts corresponding to seconds, minutes, hours and days can be generated 
+whenever the time counter value reaches a maximum value (e.g., 59 for seconds and minutes, 23 for hours, etc.). The year 
+span up to 2,127 is supported. The maximum day-of-month values, which depend on the leap year condition, are stored in 
+the RTC block. 
+ 
+In MT6685, the RTC module only supports function without 32 kHz crystal. The RTC module has an embedded 32 kHz 
+oscillator to assist life-time extension after DCXO 32 kHz clock is off. 
+ 
+3.2.5 DCXO 
+MT6685 clock IC integrates a core 26 MHz or 52M XTAL oscillator (XO) and supports 32 kHz RTC-removal low power mode. 
+It also provides backward compatible (BCM) configurations for the previous solutions. There are four high performance 
+(1.4VPP) and five low power (1.2VPP) external clock buffers for the entire system and one internal buffer for audio. 
+ 
+The temperature sensing crystal with thermistor is connected between XTAL1 and XTAL2. 
+ 
+3.2.5.1 32 kHz RTC Removal Mode 
+In the low power mode, a 32 kHz clock is produced by a fractional-N divider (1st order sigma delta modulated) to replace 
+the traditional 32 kHz XTAL. The capacitance is minimized for significant current reduced. 
+ 
+Parameter Condition Min. Nom. Max. Unit 
+RTC32K_1V8_0 frequency Averaged value  32768  Hz 
+RTC32K_1V8_F frequency Averaged value  26M/800(Note)  Hz 
+XO LPM current 
+consumption 
+Low power mode 
+With all capacitors switched off and 
+auto-amplitude calibration on 
+ 60  μA 
+Duty cycle  45  55 % 
+Settling time    5 ms 
+Frequency variation 
+After system calibration  Same as DCXO  ppm 
+Over temperature -30°C to 85°C   15 ppm 
+Uncalibrated - total variation   200 ppm 
+Note: Reserve XO_DIG32K_FIXCK_SEL (default 1’b0) to select /800 (1’b0) or /792 (1’b1) 32K clock 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-24"><h2>PDF物理页 24</h2><a href="materials/SRC0324.pdf#page=24" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+24 
+Confidential A 
+3.2.6 Interrupt and Watchdog 
+3.2.6.1 Interrupt 
+See below for the interrupt list of the clock IC to inform BB IC: 
+ 
+1. LDO OC interrupt 
+The clock IC supports LDO OC interrupt generation. It is issued if any one of the LDOs has OC condition. 
+2. RTC interrupt 
+ 
+3.2.6.2 Watchdog Reset 
+WDTRSTB_IN is the watchdog reset from AP . The clock IC resets all modules to the initial state when receiving watchdog 
+reset from AP . 
+ 
+3.2.6.3 Booting Watchdog Reset 
+The clock IC implements a booting watchdog function to prevent AP from not booting up correctly. After all default on 
+powers are turned on, WDTRSTB_IN should be set high in a pre-determined time period, or the clock IC shuts down and 
+resets all modules to the initial state if EN goes low. All powers are re-powered on again if the power-on condition still 
+exists. 
+ 
+3.2.7 SPMI Interface 
+MT6685 uses a two-wire MIPI SPMI interface consisting of one clock and one data (SDATA and SCLK) to connect to the 
+main chip. This interface allows the main chip to write commands to and read status from the clock IC. 
+ 
+The SPMI slave provides access to the programmable functions and registers on the device. This protocol uses a two-wire 
+interface for bi-directional communications between ICs connected to the bus. The two interface lines are the serial data 
+line (SDATA) and the serial clock line (SCLK). Every device on the bus is assigned a unique address and acts as either a 
+master or slave depending on whether it generates or receives the serial clock SCLK. The SCLK and SDATA lines should each 
+have a pull-down resistor placed somewhere on the line and remain LOW even when the bus is idle. Note that the SCLK pin 
+is not used for serial bus data transfer. MT6685 supports SPMI speed up to 26 MHz. 
+ 
+• Access register in clock IC by MIPI SPMI protocol 
+• Supports MIPI SPMI v2.0 read/write command full set (9 commands). 
+• Supports MIPI SPMI v2.0 four power related command sets (reset/sleep/shutdown and wakeup). 
+• Supports MIPI SPMI v2.0 RCS feature, which allows SPMI slave to send write commands with interrupt information to 
+SPMI master and SPMI slave if the master supports RCS function. 
+ 
+MT6685 MIPI SPMI slave supports the following formats. 
+ 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-25"><h2>PDF物理页 25</h2><a href="materials/SRC0324.pdf#page=25" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+25 
+Confidential A 
+• Power related command 
+o Reset 
+o Sleep 
+o Shutdown 
+o Wakeup 
+• Register read/write command 
+o Register 0 write 
+o Register read/write 
+o Extended register read/write 
+o Extended register read/write long 
+• Slave issued RCS command 
+o Master write 
+o Extended register write 
+ 
+ 
+  
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-26"><h2>PDF物理页 26</h2><a href="materials/SRC0324.pdf#page=26" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+26 
+Confidential A 
+3.2.8 GPIO 
+3.2.8.1 GPIO List 
+Table 3-3. MT6685 GPIO list 
+ 
+ 
+ MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-27"><h2>PDF物理页 27</h2><a href="materials/SRC0324.pdf#page=27" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+27 
+Confidential A 
+3.2.8.2 GPIO Specifications 
+Table 3-4. MT6685 GPIO electrical characteristics 
+Parameter Description Min. Typical Max. Unit 
+Input 
+VIH Input logic high voltage 0.75*VIO   VIO + 0.3 V 
+VIL Input logic low voltage -0.3   0.25*VIO V 
+Rpu Input pull-up resistance 40 75 190 KΩ 
+Rpd Input pull-down resistance 40 75 190 KΩ 
+Output 
+VOH (DC) DC output logic high voltage 0.75*VIO     V 
+VOL (DC) DC output logic low voltage     0.25*VIO V 
+Leakage 
+IIN Input leakage current (any input 0V &lt; VIN &lt; 
+VDDIO) -5   5 uA 
+IOZ Tri-state output leakage current -5   5 uA 
+IIN Input leakage current (VIN = 3.3V/0V) for 
+floating nwell I/O -10   10 uA 
+IOZ Tri-state output leakage current for floating 
+nwell I/O -10   10 uA 
+ 
+3.3 Register Table and Description 
+Module name: MT6685_PMIC_Register_Mapping_(E1) Base address: (+0h) 
+Address Name Width Register Function 
+0000000C PONSTS 8 Power on Source Record Register 
+0000000D POFFSTS0 8 Power off Source Record Register 0 
+0000000E POFFSTS1 8 Power off Source Record Register 1 
+00000010 PSTSCTL 8 Power on/off Status Control 
+00000013 PG_SDN_STS0 8 Power Good Shutdown Status Register 0 
+00000014 OC_SDN_STS0 8 OC Shutdown Status Register 0 
+00000127 TOP_RST_MISC 8 Reset Control Misc 
+0000079A DCXO_EXTBUF1_CW0 8 DCXO External Buffer Control 1 
+0000079B DCXO_EXTBUF2_CW0 8 DCXO External Buffer Control 2 
+0000079C DCXO_EXTBUF3_CW0 8 DCXO External Buffer Control 3 
+0000079D DCXO_EXTBUF4_CW0 8 DCXO External Buffer Control 4 
+0000079E DCXO_EXTBUF5_CW0 8 DCXO External Buffer Control 5 
+0000079F DCXO_EXTBUF6_CW0 8 DCXO External Buffer Control 6 
+000007A0 DCXO_EXTBUF7_CW0 8 DCXO External Buffer Control 7 
+000007A1 DCXO_EXTBUF8_CW0 8 DCXO External Buffer Control 8 
+000007A2 DCXO_EXTBUF9_CW0 8 DCXO External Buffer Control 9 
+000007A3 DCXO_EXTBUF10_CW0 8 DCXO External Buffer Control 10 
+000007BC DCXO_32KDIV_CW1_L 8 DCXO 32KDIV Control Code Word 1 [7:0] 
+000007BD DCXO_32KDIV_CW1_H 8 DCXO 32KDIV Control Code Word 1 [15:8] 
+000007BE DCXO_32KDIV_CW2_L 8 DCXO 32KDIV Control Code Word 2 [7:0] 
+000007BF DCXO_32KDIV_CW2_H 8 DCXO 32KDIV Control Code Word 2 [15:8] 
+000007C0 DCXO_CDAC_CW1 8 DCXO CDAC Control Code Word 1 
+000007C2 DCXO_AAC_CW1 8 DCXO AAC Control Code Word 1 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-28"><h2>PDF物理页 28</h2><a href="materials/SRC0324.pdf#page=28" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+28 
+Confidential A 
+Address Name Width Register Function 
+000007F0 DCXO_AAC_ELR_0 8 DCXO AAC ELR 0 Register 
+00000A0C STRUP_ANA_CON4 8 STRUP Control Register 4 
+00001088 SDMADC_ADC0_L 8 SDMADC ADC Register 0 L Byte 
+00001089 SDMADC_ADC0_H 8 SDMADC ADC Register 0 H Byte 
+0000108A SDMADC_STA0 8 SDMADC_STA0 
+ 
+ 
+0000000C PONSTS  Power on Source Record Register 00000001 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name                STS_EN
+ON 
+Type                RO 
+Reset                1 
+ 
+Bit(s) Name Description 
+0 STS_ENON Power on for EN press 
+   
+ 
+0000000D POFFSTS0  Power off Source Record Register 0 00000000 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name         STS_PU
+PSRC    STS_PS
+OC 
+STS_PG
+FAIL 
+STS_UV
+LO_VSY
+S 
+STS_DD
+LO 
+Type         RO    RO RO RO RO 
+Reset         0    0 0 0 0 
+ 
+Bit(s) Name Description 
+7 STS_PUPSRC Power off for power on source missing 
+3 STS_PSOC Power off for default on regulator OC 
+2 STS_PGFAIL Power off for PWRGOOD failure 
+1 STS_UVLO_VSYS Power off for UVLO VSYS event 
+0 STS_DDLO Power off for DDLO event 
+   
+ 
+  
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-29"><h2>PDF物理页 29</h2><a href="materials/SRC0324.pdf#page=29" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+29 
+Confidential A 
+0000000E POFFSTS1  Power off Source Record Register 1 00000000 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name             
+STS_UV
+LO_VIO
+18 
+STS_EN
+OFF_SE
+Q 
+STS_EN
+OFF  
+Type             RO RO RO  
+Reset             0 0 0  
+ 
+Bit(s) Name Description 
+3 STS_UVLO_VIO18 Power off for UVLO VIO18 event 
+2 STS_ENOFF_SEQ Power off for EN sequence off 
+1 STS_ENOFF Power off for EN immediately off 
+   
+ 
+00000010 PSTSCTL  Power on/off Status Control 00000000 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name               
+RG_PO
+NSTS_C
+LR 
+RG_POF
+FSTS_CL
+R 
+Type               RW RW 
+Reset               0 0 
+ 
+Bit(s) Name Description 
+1 RG_PONSTS_CLR Clears PONSTS 
+0 RG_POFFSTS_CLR Clears POFFSTST and PG/OC status 
+   
+ 
+00000013 PG_SDN_STS0  Power Good Shutdown Status Register 0 0000007F 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name          
+STRUP_
+VAUX18
+_PG_ST
+ATUS 
+ 
+STRUP_
+VRFCK2
+_PG_ST
+ATUS 
+STRUP_
+VRFCK1
+_PG_ST
+ATUS 
+STRUP_
+VBBCK_
+PG_STA
+TUS 
+STRUP_
+VRTC28
+_PG_ST
+ATUS 
+ 
+Type          RO  RO RO RO RO  
+Reset          1  1 1 1 1  
+ 
+Bit(s) Name Description 
+6 STRUP_VAUX18_PG_STATUS Shutdown PG status (cleared by software) 
+  0: Power not good 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-30"><h2>PDF物理页 30</h2><a href="materials/SRC0324.pdf#page=30" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+30 
+Confidential A 
+Bit(s) Name Description 
+  1: Power good 
+4 STRUP_VRFCK2_PG_STATUS Shutdown PG status (cleared by software) 
+  0: Power not good 
+  1: Power good 
+3 STRUP_VRFCK1_PG_STATUS Shutdown PG status (cleared by software) 
+  0: Power not good 
+  1: Power good 
+2 STRUP_VBBCK_PG_STATUS Shutdown PG status (cleared by software) 
+  0: Power not good 
+  1: Power good 
+1 STRUP_VRTC28_PG_STATUS Shutdown PG status (cleared by software) 
+  0: Power not good 
+  1: Power good 
+   
+ 
+00000014 OC_SDN_STS0  OC Shutdown Status Register 0 00000000 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name          
+STRUP_
+VAUX18
+_OC_ST
+ATUS 
+ 
+STRUP_
+VRFCK2
+_OC_ST
+ATUS 
+STRUP_
+VRFCK1
+_OC_ST
+ATUS 
+STRUP_
+VBBCK_
+OC_STA
+TUS 
+STRUP_
+VRTC28
+_OC_ST
+ATUS 
+STRUP_
+VXO_O
+C_STAT
+US 
+Type          RO  RO RO RO RO RO 
+Reset          0  0 0 0 0 0 
+ 
+Bit(s) Name Description 
+6 STRUP_VAUX18_OC_STATUS Shutdown OC status (cleared by software) 
+  0: No OC 
+  1: OC occurs. 
+4 STRUP_VRFCK2_OC_STATUS Shutdown OC status (cleared by software) 
+  0: No OC 
+  1: OC occurs. 
+3 STRUP_VRFCK1_OC_STATUS Shutdown OC status (cleared by software) 
+  0: No OC 
+  1: OC occurs. 
+2 STRUP_VBBCK_OC_STATUS Shutdown OC status (cleared by software) 
+  0: No OC 
+  1: OC occurs. 
+1 STRUP_VRTC28_OC_STATUS Shutdown OC status (cleared by software) 
+  0: No OC 
+  1: OC occurs. 
+0 STRUP_VXO_OC_STATUS Shutdown OC status (cleared by software) 
+  0: No OC 
+  1: OC occurs. 
+   
+ 
+  
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-31"><h2>PDF物理页 31</h2><a href="materials/SRC0324.pdf#page=31" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+31 
+Confidential A 
+00000127 TOP_RST_MISC  Reset Control Misc 00000000 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name               
+RG_WD
+TRSTB_
+DEB 
+RG_WD
+TRSTB_
+EN 
+Type               RW RW 
+Reset               0 0 
+ 
+Bit(s) Name Description 
+1 RG_WDTRSTB_DEB Enables WDTRSTB debounce 
+  1'b0: No debounce 
+  1'b1: Add debounce 1.6 ms 
+0 RG_WDTRSTB_EN WDTRSTB (external watchdog) reset from AP 
+  1'b0: Disable 
+  1'b1: Enable 
+   
+ 
+0000079A DCXO_EXTBUF1_CW0  DCXO External Buffer Control 1 00000035 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name         RG_XO_EXTBUF_
+BBCK1_HD 
+RG_XO_EXTBUF_BBCK1_
+RSEL    
+Type         RW RW    
+Reset         0 0 1 1 0    
+ 
+Bit(s) Name Description 
+7:6 RG_XO_EXTBUF_BBCK1_HD Adjusts output driving strength 
+XO control signal of BBCK1 output driving strength 
+  00: Max. 
+  01: Large 
+  10: Small 
+  11: Min. 
+5:3 RG_XO_EXTBUF_BBCK1_RSEL Selects clock output impedance for impedance match 
+  100: 60 ohm 
+  101: 55 ohm 
+  110: 50 ohm 
+  111: 40 ohm 
+   
+ 
+  
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-32"><h2>PDF物理页 32</h2><a href="materials/SRC0324.pdf#page=32" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+32 
+Confidential A 
+0000079B DCXO_EXTBUF2_CW0  DCXO External Buffer Control 2 00000035 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name         RG_XO_EXTBUF
+_BBCK2_HD 
+RG_XO_EXTBUF_BBCK2_
+RSEL    
+Type         RW RW    
+Reset         0 0 1 1 0    
+ 
+Bit(s) Name Description 
+7:6 RG_XO_EXTBUF_BBCK2_HD Adjusts output driving strength 
+XO control signal of BBCK2 output driving strength 
+  00: Max. 
+  01: Large 
+  10: Small 
+  11: Min. 
+5:3 RG_XO_EXTBUF_BBCK2_RSEL Selects clock output impedance for impedance match 
+  100: 60 ohm 
+  101: 55 ohm 
+  110: 50 ohm 
+  111: 40 ohm 
+   
+ 
+0000079C DCXO_EXTBUF3_CW0  DCXO External Buffer Control 3 00000035 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name         RG_XO_EXTBUF
+_BBCK3_HD 
+RG_XO_EXTBUF_BBCK3_
+RSEL    
+Type         RW RW    
+Reset         0 0 1 1 0    
+ 
+Bit(s) Name Description 
+7:6 RG_XO_EXTBUF_BBCK3_HD Adjusts output driving strength 
+XO control signal of BBCK3 output driving strength 
+  00: Max. 
+  01: Large 
+  10: Small 
+  11: Min. 
+5:3 RG_XO_EXTBUF_BBCK3_RSEL Selects clock output impedance for impedance match 
+  100: 60 ohm 
+  101: 55 ohm 
+  110: 50 ohm 
+  111: 40 ohm 
+   
+ 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-33"><h2>PDF物理页 33</h2><a href="materials/SRC0324.pdf#page=33" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+33 
+Confidential A 
+0000079D DCXO_EXTBUF4_CW0  DCXO External Buffer Control 4 00000035 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name         RG_XO_EXTBUF
+_BBCK4_HD 
+RG_XO_EXTBUF_BBCK4_
+RSEL    
+Type         RW RW    
+Reset         0 0 1 1 0    
+ 
+Bit(s) Name Description 
+7:6 RG_XO_EXTBUF_BBCK4_HD Adjusts output driving strength 
+XO control signal of BBCK4 output driving strength 
+  00: Max. 
+  01: Large 
+  10: Small 
+  11: Min. 
+5:3 RG_XO_EXTBUF_BBCK4_RSEL Selects clock output impedance for impedance match 
+  100: 60 ohm 
+  101: 55 ohm 
+  110: 50 ohm 
+  111: 40 ohm 
+   
+ 
+0000079E DCXO_EXTBUF5_CW0  DCXO External Buffer Control 5 00000035 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name         RG_XO_EXTBUF
+_BBCK5_HD 
+RG_XO_EXTBUF_BBCK5_
+RSEL    
+Type         RW RW    
+Reset         0 0 1 1 0    
+ 
+Bit(s) Name Description 
+7:6 RG_XO_EXTBUF_BBCK5_HD Adjusts output driving strength 
+XO control signal of BBCK5 output driving strength 
+  00: Max. 
+  01: Large 
+  10: Small 
+  11: Min. 
+5:3 RG_XO_EXTBUF_BBCK5_RSEL Selects clock output impedance for impedance match 
+  100: 60 ohm 
+  101: 55 ohm 
+  110: 50 ohm 
+  111: 40 ohm 
+   
+ 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-34"><h2>PDF物理页 34</h2><a href="materials/SRC0324.pdf#page=34" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+34 
+Confidential A 
+0000079F DCXO_EXTBUF6_CW0  DCXO External Buffer Control 6 00000015 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name           RG_XO_EXTBUF_RFCK1A
+_RSEL    
+Type           RW    
+Reset           0 1 0    
+ 
+Bit(s) Name Description 
+5:3 RG_XO_EXTBUF_RFCK1A_RSEL Selects clock output impedance for impedance match 
+  000: 50 ohm 
+  001: 30 ohm 
+  010: 25 ohm 
+  011: 15 ohm 
+   
+ 
+000007A0 DCXO_EXTBUF7_CW0  DCXO External Buffer Control 7 00000015 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name           RG_XO_EXTBUF_RFCK1B
+_RSEL    
+Type           RW    
+Reset           0 1 0    
+ 
+Bit(s) Name Description 
+5:3 RG_XO_EXTBUF_RFCK1B_RSEL Selects clock output impedance for impedance match 
+  000: 50 ohm 
+  001: 30 ohm 
+  010: 25 ohm 
+  011: 15 ohm 
+   
+ 
+000007A1 DCXO_EXTBUF8_CW0  DCXO External Buffer Control 8 00000015 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name           RG_XO_EXTBUF_RFCK1C_
+RSEL    
+Type           RW    
+Reset           0 1 0    
+ 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-35"><h2>PDF物理页 35</h2><a href="materials/SRC0324.pdf#page=35" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+35 
+Confidential A 
+Bit(s) Name Description 
+5:3 RG_XO_EXTBUF_RFCK1C_RSEL Selects clock output impedance for impedance match 
+  000: 50 ohm 
+  001: 30 ohm 
+  010: 25 ohm 
+  011: 15 ohm 
+   
+ 
+000007A2 DCXO_EXTBUF9_CW0  DCXO External Buffer Control 9 00000015 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name           RG_XO_EXTBUF_RFCK2A
+_RSEL    
+Type           RW    
+Reset           0 1 0    
+ 
+Bit(s) Name Description 
+5:3 RG_XO_EXTBUF_RFCK2A_RSEL Selects clock output impedance for impedance match 
+  000: 50 ohm 
+  001: 30 ohm 
+  010: 25 ohm 
+  011: 15 ohm 
+   
+ 
+000007A3 DCXO_EXTBUF10_CW0  DCXO External Buffer Control 10 00000015 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name           RG_XO_EXTBUF_RFCK2B_
+RSEL    
+Type           RW    
+Reset           0 1 0    
+ 
+Bit(s) Name Description 
+5:3 RG_XO_EXTBUF_RFCK2B_RSEL Selects clock output impedance for impedance match 
+  000: 50 ohm 
+  001: 30 ohm 
+  010: 25 ohm 
+  011: 15 ohm 
+   
+ 
+  
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-36"><h2>PDF物理页 36</h2><a href="materials/SRC0324.pdf#page=36" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+36 
+Confidential A 
+000007BC DCXO_32KDIV_CW1_L  DCXO 32KDIV Control Code Word 1 [7:0] 00000040 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name         XO_32KDIV_NFRAC_FPM_L 
+Type         RW 
+Reset         0 1 0 0 0 0 0 0 
+ 
+Bit(s) Name Description 
+7:0 XO_32KDIV_NFRAC_FPM_L 32K divider fractional input during FPM 
+Clock = 26 MHz 
+   
+ 
+000007BD DCXO_32KDIV_CW1_H  DCXO 32KDIV Control Code Word 1 [15:8] 0000001D 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name          XO_32KDIV_NFRAC_FPM_H 
+Type          RW 
+Reset          0 0 1 1 1 0 1 
+ 
+Bit(s) Name Description 
+6:0 XO_32KDIV_NFRAC_FPM_H 32K divider fractional input during FPM 
+Clock = 26 MHz 
+   
+ 
+000007BE DCXO_32KDIV_CW2_L  DCXO 32KDIV Control Code Word 2 [7:0] 00000040 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name         XO_32KDIV_NFRAC_LPM_L 
+Type         RW 
+Reset         0 1 0 0 0 0 0 0 
+ 
+Bit(s) Name Description 
+7:0 XO_32KDIV_NFRAC_LPM_L 32K divider fractional input during LPM 
+Clock = 26 MHz 
+   
+ 
+  
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-37"><h2>PDF物理页 37</h2><a href="materials/SRC0324.pdf#page=37" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+37 
+Confidential A 
+000007BF DCXO_32KDIV_CW2_H  DCXO 32KDIV Control Code Word 2 [15:8] 0000001D 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name          XO_32KDIV_NFRAC_LPM_H 
+Type          RW 
+Reset          0 0 1 1 1 0 1 
+ 
+Bit(s) Name Description 
+6:0 XO_32KDIV_NFRAC_LPM_H 32K divider fractional input during LPM 
+Clock = 26 MHz 
+   
+ 
+000007C0 DCXO_CDAC_CW1  DCXO CDAC Control Code Word 1 00000088 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name         XO_CDAC_FPM 
+Type         RW 
+Reset         1 0 0 0 1 0 0 0 
+ 
+Bit(s) Name Description 
+7:0 XO_CDAC_FPM XO CDAC code (complement) during FPM 
+   
+ 
+000007C2 DCXO_AAC_CW1  DCXO AAC Control Code Word 1 0000000F 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name          
+XO_AAC
+_FPM_S
+WEN 
+XO_OSC
+_ISEL_F
+PM_MA
+N 
+XO_OSC_ISEL_FPM_M 
+Type          RW RW RW 
+Reset          0 0 0 1 1 1 1 
+ 
+Bit(s) Name Description 
+6 XO_AAC_FPM_SWEN 0: Disable 
+  1: Software triggers AAC during FPM. 
+5 XO_OSC_ISEL_FPM_MAN XO FPM ISEL enable manual mode 
+4:0 XO_OSC_ISEL_FPM_M XO core FPM current settings if XO_AAC_ISEL_MAN = 1 
+   
+ 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-38"><h2>PDF物理页 38</h2><a href="materials/SRC0324.pdf#page=38" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+38 
+Confidential A 
+000007F0 DCXO_AAC_ELR_0  DCXO AAC ELR 0 Register 00000008 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name           RG_XO_AAC_VSEL 
+Type           RW 
+Reset           0 0 1 0 0 0 
+ 
+Bit(s) Name Description 
+5:0 RG_XO_AAC_VSEL XO AAC peak-hold Vref if XO_AAC_CMP_MAN = 1 
+  4'b1111: 2.15V 
+  4'b1110: 2.1V 
+  4'b1101: 2.05V 
+  4'b1100: 2.0V 
+  4'b1011: 1.95V 
+  4'b1010: 1.9V 
+  4'b1001: 1.85V 
+  4'b1000: 1.8V 
+  4'b0111: 1.75V 
+  4'b0110: 1.7V 
+  4'b0101: 1.65V 
+  4'b0100: 1.6V 
+  4'b0011: 1.55V 
+  4'b0010: 1.5V 
+  4'b0001: 1.45V 
+  4'b0000: 1.4V 
+   
+ 
+00000A0C STRUP_ANA_CON4  STRUP Control Register 4 00000000 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name            RG_FAU
+LT_RST RGS_FAULT  
+Type            RW RO  
+Reset            0 0 0 0  
+ 
+Bit(s) Name Description 
+4 RG_FAULT_RST FAULT status reset 
+3:1 RGS_FAULT FAULT status 
+   
+ 
+  
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-39"><h2>PDF物理页 39</h2><a href="materials/SRC0324.pdf#page=39" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+39 
+Confidential A 
+00001088 SDMADC_ADC0_L  SDMADC ADC Register 0 L Byte 00000000 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name         SDMADC_ADC_OUT_CH0_L 
+Type         RO 
+Reset         0 0 0 0 0 0 0 0 
+ 
+Bit(s) Name Description 
+7:0 SDMADC_ADC_OUT_CH0_L SDMADC channel 0 output data 
+   
+ 
+00001089 SDMADC_ADC0_H  SDMADC ADC Register 0 H Byte 00000000 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name         
+SDMAD
+C_ADC_
+RDY_CH
+0 
+SDMADC_ADC_OUT_CH0_H 
+Type         RO RO 
+Reset         0 0 0 0 0 0 0 0 
+ 
+Bit(s) Name Description 
+7 SDMADC_ADC_RDY_CH0 SDMADC channel 0 output data ready 
+  0: SDMADC data are proceeding. 
+  1: SDMADC data are ready. 
+6:0 SDMADC_ADC_OUT_CH0_H SDMADC channel 0 output data 
+   
+ 
+0000108A SDMADC_STA0  SDMADC_STA0 00000000 
+Bit 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 
+Name                 
+Type                 
+Reset                 
+Bit 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+Name                
+SDMAD
+C_ADC_
+BUSY_I
+N_CH0 
+Type                RO 
+Reset                0 
+ 
+Bit(s) Name Description 
+0 SDMADC_ADC_BUSY_IN_CH0 SDMADC CH0 busy status 
+  0: Idle 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-40"><h2>PDF物理页 40</h2><a href="materials/SRC0324.pdf#page=40" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+40 
+Confidential A 
+Bit(s) Name Description 
+  1: Busy 
+   
+ 
+  
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-41"><h2>PDF物理页 41</h2><a href="materials/SRC0324.pdf#page=41" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+41 
+Confidential A 
+4 Packaging 
+4.1 Package Dimension 
+ 
+Figure 4-1. Package dimension 
+ 
+  
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-42"><h2>PDF物理页 42</h2><a href="materials/SRC0324.pdf#page=42" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+42 
+Confidential A 
+Appendix 
+ 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section><section class="source-page" id="page-43"><h2>PDF物理页 43</h2><a href="materials/SRC0324.pdf#page=43" target="_blank" rel="noopener">查看该页原始图表 ↗</a><pre class="source-text">MediaTek Proprietary and Confidential. © 2021 - 2023 MediaTek Inc. All rights reserved. Unauthorized reproduction or disclosure of this document, in whole or in part, is strictly prohibited.  
+MT6685 Clock IC 
+Datasheet 
+43 
+Confidential A 
+Exhibit 1 Terms and Conditions 
+Your access to and use of this document and the information contained herein (collectively this “Document”) is subject to your (including the corporation 
+or other legal entity you represent, collectively “You”) acceptance of the terms and conditions set forth below (“T&amp;C”).  By using, accessing or 
+downloading this Document, You are accepting the T&amp;C and agree to be bound by the T&amp;C.  If You don’t agree to the T&amp;C, You may not use this 
+Document and shall immediately destroy any copy thereof. 
+ 
+This Document contains information that is confidential and proprietary to MediaTek Inc. and/or its affiliates (collectively “MediaTek”) or its licensors 
+and is provided solely for Your internal use with MediaTek’s chipset(s) described in this Document and shall not be used for any other purposes (including 
+but not limited to identifying or providing evidence to support any potential patent infringement claim against MediaTek or any of MediaTek’s suppliers 
+and/or direct or indirect customers).  Unauthorized use or disclosure of the information contained herein is prohibited.  You agree to indemnify 
+MediaTek for any loss or damages suffered by MediaTek for Your unauthorized use or disclosure of this Document, in whole or in part. 
+ 
+MediaTek and its licensors retain titles and all ownership rights in and to this Document and no license (express or implied, by estoppels or otherwise) to 
+any intellectual propriety rights is granted hereunder.  This Document is subject to change without further notification.  MediaTek does not assume any 
+responsibility arising out of or in connection with any use of, or reliance on, this Document, and specifically disclaims any and all liability, including, 
+without limitation, consequential or incidental damages. 
+ 
+THIS DOCUMENT AND ANY OTHER MATERIALS OR TECHNICAL SUPPORT PROVIDED BY MEDIATEK IN CONNECTION WITH THIS DOCUMENT, IF ANY, ARE 
+PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE.  MEDIATEK SPECIFICALLY DISCLAIMS 
+ALL WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, COMPLETENESS OR ACCURACY AND ALL 
+WARRANTIES ARISING OUT OF TRADE USAGE OR OUT OF A COURSE OF DEALING OR COURSE OF PERFORMANCE.  MEDIATEK SHALL NOT BE RESPONSIBLE 
+FOR ANY MEDIATEK DELIVERABLES MADE TO MEET YOUR SPECIFICATIONS OR TO CONFORM TO A PARTICULAR STANDARD OR OPEN FORUM. 
+ 
+Without limiting the generality of the foregoing, MediaTek makes no warranty, representation or guarantee regarding the suitability of its products for 
+any particular purpose, nor does MediaTek assume any liability arising out of the application or use of any product, circuit or software.  You agree that 
+You are solely responsible for the designing, validating and testing Your product incorporating MediaTek’s product and ensure such product meets 
+applicable standards and any safety, security or other requirements. 
+ 
+The above T&amp;C and all acts in connection with the T&amp;C or this Document shall be governed, construed and interpreted in accordance with the laws of 
+Taiwan, without giving effect to the principles of conflicts of law. 
+ 
+MediaTek Confidential
+ For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only
+MediaTek Confidential
+For qhhuang@ pvetec.com Use Only</pre></section></article></main><aside class="toc"><details open><summary>本章目录</summary><a href="#page-1">PDF物理页 1</a><a href="#page-2">PDF物理页 2</a><a href="#page-3">PDF物理页 3</a><a href="#page-4">PDF物理页 4</a><a href="#page-5">PDF物理页 5</a><a href="#page-6">PDF物理页 6</a><a href="#page-7">PDF物理页 7</a><a href="#page-8">PDF物理页 8</a><a href="#page-9">PDF物理页 9</a><a href="#page-10">PDF物理页 10</a><a href="#page-11">PDF物理页 11</a><a href="#page-12">PDF物理页 12</a><a href="#page-13">PDF物理页 13</a><a href="#page-14">PDF物理页 14</a><a href="#page-15">PDF物理页 15</a><a href="#page-16">PDF物理页 16</a><a href="#page-17">PDF物理页 17</a><a href="#page-18">PDF物理页 18</a><a href="#page-19">PDF物理页 19</a><a href="#page-20">PDF物理页 20</a><a href="#page-21">PDF物理页 21</a><a href="#page-22">PDF物理页 22</a><a href="#page-23">PDF物理页 23</a><a href="#page-24">PDF物理页 24</a><a href="#page-25">PDF物理页 25</a><a href="#page-26">PDF物理页 26</a><a href="#page-27">PDF物理页 27</a><a href="#page-28">PDF物理页 28</a><a href="#page-29">PDF物理页 29</a><a href="#page-30">PDF物理页 30</a><a href="#page-31">PDF物理页 31</a><a href="#page-32">PDF物理页 32</a><a href="#page-33">PDF物理页 33</a><a href="#page-34">PDF物理页 34</a><a href="#page-35">PDF物理页 35</a><a href="#page-36">PDF物理页 36</a><a href="#page-37">PDF物理页 37</a><a href="#page-38">PDF物理页 38</a><a href="#page-39">PDF物理页 39</a><a href="#page-40">PDF物理页 40</a><a href="#page-41">PDF物理页 41</a><a href="#page-42">PDF物理页 42</a><a href="#page-43">PDF物理页 43</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="vendor/mermaid-10.9.5.min.js" defer></script><script src="library.js?v=20260921-layout1" defer></script></body></html>
