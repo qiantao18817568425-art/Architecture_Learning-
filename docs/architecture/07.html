@@ -1,0 +1,478 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>SOS-Yocto内部机制 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details open><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a aria-current="page" href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 07</div><div class="chapter-title"><p class="eyebrow">CHAPTER 07 · 中文版全文</p><h1>SOS-Yocto内部机制</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=07">并排对比两套正文 ↗</a><a class="button secondary" href="original-07.html">对照原版解释 ↗</a><button class="button" data-read="07" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>SOS/Yocto 在整机中做哪些实际工作？</h2><p>Yocto 是构建嵌入式 Linux 的工具体系；SOS 是该方案中的运行域角色。systemd 管服务生命周期，Weston 管显示合成，Camera/Audio/车辆服务承担各自交接。</p><ol><li><strong>怎么读：</strong>先看服务启动，再读 Weston 和硬件相关服务，最后把服务依赖与业务 ready 对照。</li><li><strong>项目练习：</strong>解释为什么 Weston 进程存活但没有画面：检查 surface、layer、screen、buffer 和输出条件。</li><li><strong>自检：</strong>服务启动完成与能够提供业务是否是同一个状态？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-6">Day 6</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#07-sosyocto-内部机制">07 SOS/Yocto 内部机制</a><a class="depth-2" href="#2026-09-20-校订sos-的硬件显示时间和安全职责">2026-09-20 校订：SOS 的硬件、显示、时间和安全职责</a><a class="depth-2" href="#71-启动与生命周期">7.1 启动与生命周期</a><a class="depth-3" href="#正常路径状态与方向">正常路径、状态与方向</a><a class="depth-3" href="#异常恢复观察与责任">异常/恢复、观察与责任</a><a class="depth-2" href="#72-westonwayland-显示">7.2 Weston/Wayland 显示</a><a class="depth-3" href="#正常路径与资源边界">正常路径与资源边界</a><a class="depth-2" href="#73-camera">7.3 Camera</a><a class="depth-3" href="#正常路径所有权与新鲜度">正常路径、所有权与新鲜度</a><a class="depth-2" href="#74-audio">7.4 Audio</a><a class="depth-3" href="#正常路径与控制数据分离">正常路径与控制/数据分离</a><a class="depth-2" href="#75-canservicevehicleif">7.5 CanService/VehicleIF</a><a class="depth-3" href="#状态正常链与命令反馈链">状态正常链与命令反馈链</a><a class="depth-2" href="#76-资源故障与恢复纪律">7.6 资源故障与恢复纪律</a><a class="depth-2" href="#77-资源所有权">7.7 资源所有权</a><a class="depth-2" href="#78-故障传播矩阵">7.8 故障传播矩阵</a><a class="depth-2" href="#79-模块映射">7.9 模块映射</a><a class="depth-2" href="#710-证据观察责任与待确认">7.10 证据、观察、责任与待确认</a></details><article id="chapter-text"><h1 id="07-sosyocto-内部机制">07 SOS/Yocto 内部机制</h1>
+<h2 id="2026-09-20-校订sos-的硬件显示时间和安全职责">2026-09-20 校订：SOS 的硬件、显示、时间和安全职责</h2>
+<p>MT8668 Camera 将控制 HW/driver 的部分放在 Yocto Host，由 LocalService 服务本地应用、RpcService 服务 Android；不要把 Camera Host 与全部业务 Host 混成一个进程。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页<small>〔本地来源〕</small></span> Proxy-Wayland 把 Android HWC 请求转成 Linux 侧 Wayland-client 调用，需同时查 RPC、buffer/fence 和 Weston 层级。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S028 · MT8668_Hypervisor_Multi_Display_Proxy-Wayland_User_Manual_CN_V1.0.pdf · PDF第5-7页<small>〔本地来源〕</small></span></p>
+<p>最新 Weston 材料提供 surface/layer/screen、IVI-shell 配置和重启依赖。进程存活不能证明输出可见；定位时保存 scene、buffer、DRM/GPU 和 client 断线证据。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U039 · weston介绍和应用.pdf · PDF第9-18页<small>〔本地来源〕</small></span></p>
+<p>新增三 OS 校时材料显示 SOS 接收 Android 时间后，经事件/udev/属性回调传给 TBox；联网 TBox 还可使用 NTP，主时间源和仲裁需另行确认。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U002 · 3OS time synchronization.pdf · PDF第1-2页<small>〔本地来源〕</small></span> SELinux 与 OP-TEE 分别关注访问控制和可信执行域，详见 <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E002 · Yocto SELinux Introduction(8676).pdf · PDF第4-9页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E008 · MTK86系列平台基于虚拟化op-tee使用手册.pdf · PDF第3-6页<small>〔本地来源〕</small></span> 与 <a href="23.html">23 章</a>。</p>
+<hr>
+<p>本章只解释 SOS/Yocto 域内的启动、显示、相机、音频和车辆服务机制，不写业务流程卡。
+图 2 确认 <code>Host(SOS YOCTO)</code> 的容器与其中标签；方框存在不证明私有进程、调用边、启动顺序或恢复策略。
+[可信度：架构图确认] [证据：original-diagram-02]</p>
+<p>Linux、systemd、Wayland、DRM/KMS、V4L2、GStreamer 与 ALSA 的下述行为是诊断模型。
+[可信度：标准机制推断] standard mechanism has no MT8676 evidence ID；method reference ≠ MT8676 implementation fact。</p>
+<h2 id="71-启动与生命周期">7.1 启动与生命周期</h2>
+<h3 id="正常路径状态与方向">正常路径、状态与方向</h3>
+<p>标准诊断顺序是 <code>Bootloader boundary</code> → <code>Kernel boundary</code> → <code>userspace boundary</code> →
+<code>systemd unit</code> → <code>lifecycle manager</code> → <code>service readiness</code> → <code>business readiness</code>。
+这是检查顺序，不是已证明的 MT8676 私有启动图。[可信度：标准机制推断]</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Yocto boot normal
+flowchart LR
+  BL[&quot;Bootloader boundary&quot;] --&gt; K[&quot;Kernel boundary&quot;] --&gt; U[&quot;userspace boundary&quot;]
+  U --&gt; SD[&quot;systemd unit&quot;] --&gt; LM[&quot;lifecycle manager&quot;] --&gt; SR[&quot;service readiness&quot;] --&gt; BR[&quot;business readiness&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% Yocto boot normal
+flowchart LR
+  BL[&quot;Bootloader boundary&quot;] --&gt; K[&quot;Kernel boundary&quot;] --&gt; U[&quot;userspace boundary&quot;]
+  U --&gt; SD[&quot;systemd unit&quot;] --&gt; LM[&quot;lifecycle manager&quot;] --&gt; SR[&quot;service readiness&quot;] --&gt; BR[&quot;business readiness&quot;]</code></pre></details></details><p><code>After=</code> ordering ≠ <code>Requires=</code> requirement；<code>After=</code> 只表达排序，<code>Requires=</code> 表达需求关系，二者都不证明业务可用。
+process alive ≠ service published ≠ client session ready ≠ callback registered ≠ fresh data ≠ business state correct。
+代际规则是：服务或依赖重建产生新 Generation，旧 client、旧 callback、旧 cache 必须隔离。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Yocto boot abnormal recovery
+flowchart LR
+  T[&quot;unit failure / watchdog / shutdown&quot;] --&gt; E[&quot;earliest failed unit or readiness gate&quot;]
+  E --&gt; D[&quot;dependents unavailable&quot;] --&gt; S[&quot;user symptom&quot;] --&gt; O[&quot;unit state + journal + resource counters&quot;]
+  O --&gt; C[&quot;stop admission; release resources&quot;] --&gt; R[&quot;restart dependency order&quot;] --&gt; G[&quot;new Generation&quot;] --&gt; V[&quot;readback + fresh result&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% Yocto boot abnormal recovery
+flowchart LR
+  T[&quot;unit failure / watchdog / shutdown&quot;] --&gt; E[&quot;earliest failed unit or readiness gate&quot;]
+  E --&gt; D[&quot;dependents unavailable&quot;] --&gt; S[&quot;user symptom&quot;] --&gt; O[&quot;unit state + journal + resource counters&quot;]
+  O --&gt; C[&quot;stop admission; release resources&quot;] --&gt; R[&quot;restart dependency order&quot;] --&gt; G[&quot;new Generation&quot;] --&gt; V[&quot;readback + fresh result&quot;]</code></pre></details></details><h3 id="异常恢复观察与责任">异常/恢复、观察与责任</h3>
+<p>看门狗超时、restart storm、依赖环、启动后假 Ready、旧 client 继续写入和关机逆序错误必须分开。
+恢复先停止新请求，再逆序撤销发布、断开 client、释放 FD/thread/queue，最后按新 Generation 重建并回读。
+观察 systemd unit 状态、依赖图、journal 时间线、重启计数、进程 FD/线程/队列趋势；日志缺失不证明阶段未发生。
+initial Owner 是首个状态转移或资源释放失败模块；escalation artifacts 包含 unit、启动日志、代际、依赖图和回读结果。</p>
+<h2 id="72-westonwayland-显示">7.2 Weston/Wayland 显示</h2>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>PVT 的 IVI-shell 资料使本节资源关系可以落到可观察对象：检查 surface 的 pid、帧计数、source/destination region、visibility、opacity、所属 layer；再查 layer 的 render order 和 screen/connector。客户端 commit、合成完成、DRM flip 和物理屏可见是四个观测位置。其工程的 gpu_server 初始化会依赖 Weston 的 EGL 环境，Weston 断线后还须处理 client 重建；不能只恢复守护进程而沿用旧 surface 身份。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U039 · weston介绍和应用.pdf · PDF第9-18页<small>〔本地来源〕</small></span></p>
+<h3 id="正常路径与资源边界">正常路径与资源边界</h3>
+<p>正常诊断链按 <code>client surface/buffer</code> → <code>Wayland protocol</code> → <code>Weston compositor</code> →
+<code>DRM/KMS atomic state</code> → <code>framebuffer</code> → <code>plane</code> → <code>CRTC</code> → <code>connector</code> →
+<code>display driver</code> → <code>physical output</code>。图 2 只确认 <code>Weston</code> 与 <code>Display</code> 位于 SOS/Yocto；逐跳链为标准机制。
+[可信度：架构图确认] [证据：original-diagram-02]</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Wayland normal
+flowchart LR
+  C[&quot;client surface/buffer&quot;] --&gt; W[&quot;Wayland protocol&quot;] --&gt; WC[&quot;Weston compositor&quot;]
+  WC --&gt; A[&quot;DRM/KMS atomic state&quot;] --&gt; FB[&quot;framebuffer&quot;] --&gt; P[&quot;plane&quot;] --&gt; R[&quot;CRTC&quot;] --&gt; N[&quot;connector&quot;] --&gt; D[&quot;display driver&quot;] --&gt; O[&quot;physical output&quot;]
+  O -. &quot;vblank/present observation&quot; .-&gt; C</pre><details><summary>查看原始图代码</summary><pre><code>%% Wayland normal
+flowchart LR
+  C[&quot;client surface/buffer&quot;] --&gt; W[&quot;Wayland protocol&quot;] --&gt; WC[&quot;Weston compositor&quot;]
+  WC --&gt; A[&quot;DRM/KMS atomic state&quot;] --&gt; FB[&quot;framebuffer&quot;] --&gt; P[&quot;plane&quot;] --&gt; R[&quot;CRTC&quot;] --&gt; N[&quot;connector&quot;] --&gt; D[&quot;display driver&quot;] --&gt; O[&quot;physical output&quot;]
+  O -. &quot;vblank/present observation&quot; .-&gt; C</code></pre></details></details><p>queue ≠ atomic commit ≠ vblank ≠ panel output。Fence signal 只证明对应同步点完成；present/vblank 也不能单独证明背光或面板出图。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Wayland abnormal recovery
+flowchart LR
+  T[&quot;stale buffer / fence wait / modeset reject&quot;] --&gt; B[&quot;first failed queue, commit or vblank&quot;]
+  B --&gt; W[&quot;Weston/DRM path stalls&quot;] --&gt; U[&quot;black/frozen output&quot;] --&gt; O[&quot;Wayland debug + DRM state + fence timeline&quot;]
+  O --&gt; C[&quot;drop stale Generation; release framebuffer/surface&quot;] --&gt; R[&quot;recreate output state&quot;] --&gt; V[&quot;new frame + vblank + visible check&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% Wayland abnormal recovery
+flowchart LR
+  T[&quot;stale buffer / fence wait / modeset reject&quot;] --&gt; B[&quot;first failed queue, commit or vblank&quot;]
+  B --&gt; W[&quot;Weston/DRM path stalls&quot;] --&gt; U[&quot;black/frozen output&quot;] --&gt; O[&quot;Wayland debug + DRM state + fence timeline&quot;]
+  O --&gt; C[&quot;drop stale Generation; release framebuffer/surface&quot;] --&gt; R[&quot;recreate output state&quot;] --&gt; V[&quot;new frame + vblank + visible check&quot;]</code></pre></details></details><p>观察点包括 client commit、buffer acquire/release、atomic commit 返回、vblank/page-flip、connector 状态和外部画面；每个命令字段依内核与权限而变。
+Owner 边界从最早失败输出划分：client、Weston、DRM/display driver 或物理输出；不可由“黑屏”直接归因。</p>
+<h2 id="73-camera">7.3 Camera</h2>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>MT8668 手册明确 Host 持有 Camera 硬件驱动/控制能力，LocalService 处理本地业务、RpcService 接收 Android 跨域调用；MT8676 手册给出 Host 在 Guest Camera 访问前就绪的要求。该顺序针对 Camera 依赖，不是全系统每个服务的绝对串行启动要求。原框内的 Camera/GStreamer/ISP 职责保留；如 AVM/DVR 共用输入，要另外核对是否共享物理输出 buffer、消费者读取次数和 P2/MML 竞争。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S145 · MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF第8页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md<small>〔本地来源〕</small></span></p>
+<h3 id="正常路径所有权与新鲜度">正常路径、所有权与新鲜度</h3>
+<p>图 2 确认 <code>Camera</code>、<code>Gstreamer</code> 与图像处理标签和容器；sensor/SerDes、实际 source、设备节点及拓扑待确认。
+[可信度：架构图确认] [证据：original-diagram-02]</p>
+<p>诊断链是 <code>source boundary</code> → <code>ISP</code> → <code>V4L2 buffer</code> → <code>Camera service</code> →
+<code>GStreamer elements/pads</code> → <code>surface consumer</code> → <code>display</code>。[可信度：标准机制推断]</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Camera normal
+flowchart LR
+  S[&quot;source boundary&quot;] --&gt; I[&quot;ISP&quot;] --&gt; V[&quot;V4L2 buffer&quot;] --&gt; CS[&quot;Camera service&quot;]
+  CS --&gt; G[&quot;GStreamer elements/pads&quot;] --&gt; Q[&quot;surface consumer&quot;] --&gt; D[&quot;display&quot;]
+  D -. &quot;frame timestamp/freshness&quot; .-&gt; CS</pre><details><summary>查看原始图代码</summary><pre><code>%% Camera normal
+flowchart LR
+  S[&quot;source boundary&quot;] --&gt; I[&quot;ISP&quot;] --&gt; V[&quot;V4L2 buffer&quot;] --&gt; CS[&quot;Camera service&quot;]
+  CS --&gt; G[&quot;GStreamer elements/pads&quot;] --&gt; Q[&quot;surface consumer&quot;] --&gt; D[&quot;display&quot;]
+  D -. &quot;frame timestamp/freshness&quot; .-&gt; CS</code></pre></details></details><p>V4L2 queue 的 creator/holder/consumer/releaser 分别由申请方、当前入队/出队方、处理方和 stream-off/close 路径确定；DMA、Fence 和 Surface 所有权不能靠地址猜测。
+GStreamer 的 element state、pad negotiation、bus message 与“画面新鲜”也是不同状态。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Camera abnormal recovery
+flowchart LR
+  T[&quot;source loss / queue backpressure / stale timestamp&quot;] --&gt; E[&quot;first missing frame or dequeue&quot;]
+  E --&gt; F[&quot;ISP/V4L2/service/pad direct failure&quot;] --&gt; U[&quot;no preview / frozen frame&quot;] --&gt; O[&quot;sequence + timestamp + queue + bus + fence&quot;]
+  O --&gt; C[&quot;stop; flush; stream-off; release DMA/surface&quot;] --&gt; R[&quot;restart new Generation&quot;] --&gt; V[&quot;fresh frame reaches display&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% Camera abnormal recovery
+flowchart LR
+  T[&quot;source loss / queue backpressure / stale timestamp&quot;] --&gt; E[&quot;first missing frame or dequeue&quot;]
+  E --&gt; F[&quot;ISP/V4L2/service/pad direct failure&quot;] --&gt; U[&quot;no preview / frozen frame&quot;] --&gt; O[&quot;sequence + timestamp + queue + bus + fence&quot;]
+  O --&gt; C[&quot;stop; flush; stream-off; release DMA/surface&quot;] --&gt; R[&quot;restart new Generation&quot;] --&gt; V[&quot;fresh frame reaches display&quot;]</code></pre></details></details><p>stop/flush/restart 必须保证旧 buffer 不跨代际回流。队列高水位可能是 backpressure，不等于 leak；只有稳定负载下 creator−releaser 差值持续增长且能定位 holder，才支持泄漏判断。
+观察限制：无错误日志不排除 silent stall；单帧时间戳不能证明连续新鲜。Owner 从 source、ISP/driver、Camera service、GStreamer 或 surface/display 的最早断点划分。</p>
+<h2 id="74-audio">7.4 Audio</h2>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>ALSA/AFE 层解释应落实到 FE/BE、MEMIF、DAI、采样时钟和 slot，不能只看声音业务名。8676/8668 培训中的 ADSP 上下行差异改变录音算法与回采参考部署，但不改变本章 AudioMgr→音频执行层的抽象边界。通话时 TBox Guest 的控制/语音路径还可能经 Host 虚拟后端和 CCCI，应与媒体 PCM 流分别取证。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S049 · MT8668_Audio_HW_Interface_User_Guide_V1.1.pdf · PDF第4-7页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S045 · Audio模块 8676 vs 8668.pdf · PDF第2-4页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S263 · MT8676 TBOX子系统架构设计.pdf · PDF第1-5页<small>〔本地来源〕</small></span></p>
+<h3 id="正常路径与控制数据分离">正常路径与控制/数据分离</h3>
+<p>图 2 确认 <code>AudioMgr</code> 和 <code>Audio</code> 标签位于 SOS/Yocto；没有直接证明 DSP、A2B、codec 或 amplifier 拓扑。
+[可信度：架构图确认] [证据：original-diagram-02]</p>
+<p>控制链和 PCM 数据链必须对齐：<code>AudioMgr control</code> → <code>route/focus/mute/gain</code> →
+<code>ALSA PCM</code> → <code>period/buffer</code> → <code>DSP/A2B boundary</code> → <code>amplifier/physical output boundary</code>。
+后两级的 MT8676 连接方式待原理图、route 配置和运行 trace 确认。[可信度：标准机制推断]</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Audio normal
+flowchart LR
+  M[&quot;AudioMgr control&quot;] --&gt; R[&quot;route/focus/mute/gain&quot;] --&gt; A[&quot;ALSA PCM&quot;] --&gt; P[&quot;period/buffer&quot;]
+  P --&gt; D[&quot;DSP/A2B boundary&quot;] --&gt; O[&quot;amplifier/physical output boundary&quot;]
+  O -. &quot;route/readback/audible feedback&quot; .-&gt; M</pre><details><summary>查看原始图代码</summary><pre><code>%% Audio normal
+flowchart LR
+  M[&quot;AudioMgr control&quot;] --&gt; R[&quot;route/focus/mute/gain&quot;] --&gt; A[&quot;ALSA PCM&quot;] --&gt; P[&quot;period/buffer&quot;]
+  P --&gt; D[&quot;DSP/A2B boundary&quot;] --&gt; O[&quot;amplifier/physical output boundary&quot;]
+  O -. &quot;route/readback/audible feedback&quot; .-&gt; M</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Audio abnormal recovery
+flowchart LR
+  T[&quot;route race / XRUN / clock drift&quot;] --&gt; E[&quot;first control or PCM discontinuity&quot;] --&gt; F[&quot;AudioMgr/ALSA/downstream boundary&quot;]
+  F --&gt; U[&quot;mute/noise/dropout&quot;] --&gt; O[&quot;route state + PCM status + XRUN + clock&quot;]
+  O --&gt; C[&quot;mute; drain/drop; close period/buffer owner&quot;] --&gt; R[&quot;reopen and restore route&quot;] --&gt; V[&quot;readback + continuous audible output&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% Audio abnormal recovery
+flowchart LR
+  T[&quot;route race / XRUN / clock drift&quot;] --&gt; E[&quot;first control or PCM discontinuity&quot;] --&gt; F[&quot;AudioMgr/ALSA/downstream boundary&quot;]
+  F --&gt; U[&quot;mute/noise/dropout&quot;] --&gt; O[&quot;route state + PCM status + XRUN + clock&quot;]
+  O --&gt; C[&quot;mute; drain/drop; close period/buffer owner&quot;] --&gt; R[&quot;reopen and restore route&quot;] --&gt; V[&quot;readback + continuous audible output&quot;]</code></pre></details></details><p>startup 先建立 route 与 buffer，再放音；shutdown 先静音/停止生产，再 drain/drop 和 close。XRUN 是供需失配证据，不自动等于驱动根因；clock/drift 需关联生产与消费时钟。
+Owner 边界为 AudioMgr 策略、ALSA/driver、DSP/A2B boundary 或 amplifier/physical output boundary；具体值和 policy 待确认。</p>
+<h2 id="75-canservicevehicleif">7.5 CanService/VehicleIF</h2>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>PVT 示例支持 MCU SPI/GPIO→mcu_ipc_service→property_service/FDBus→Android VHAL 的角色解释。它不证明原图 CanService/VehicleIF 与示例两个进程为同一部署实体。保留聚合架构后，具体实现表至少写明原始信号来源、解码者、缓存者、发布者、消费者、有效性与时间戳；重连后的首次事件不能自动认作完整当前状态。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S281 · vehicle方案.pdf · PDF第2-3页<small>〔本地来源〕</small></span></p>
+<h3 id="状态正常链与命令反馈链">状态正常链与命令反馈链</h3>
+<p>图 2 确认车辆服务与各消费者标签的位置，不证明它们共享进程或具体 topic。
+[可信度：架构图确认] [证据：original-diagram-02]</p>
+<p>状态链按 <code>CAN bus frame</code> → <code>decoded value</code> → <code>fresh cache</code> → <code>CanService</code> →
+<code>FDBus/SOME-IP</code> → <code>Cluster/ADAS/RVC consumer</code> → <code>consumed state</code> 检查。
+bus frame ≠ decoded value ≠ fresh cache ≠ published event ≠ consumed state。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Vehicle state normal
+flowchart LR
+  F[&quot;CAN bus frame&quot;] --&gt; D[&quot;decoded value&quot;] --&gt; C[&quot;fresh cache&quot;] --&gt; V[&quot;CanService&quot;]
+  V --&gt; M[&quot;FDBus/SOME-IP&quot;] --&gt; U[&quot;Cluster/ADAS/RVC consumer&quot;] --&gt; S[&quot;consumed state&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% Vehicle state normal
+flowchart LR
+  F[&quot;CAN bus frame&quot;] --&gt; D[&quot;decoded value&quot;] --&gt; C[&quot;fresh cache&quot;] --&gt; V[&quot;CanService&quot;]
+  V --&gt; M[&quot;FDBus/SOME-IP&quot;] --&gt; U[&quot;Cluster/ADAS/RVC consumer&quot;] --&gt; S[&quot;consumed state&quot;]</code></pre></details></details><table>
+<thead>
+<tr>
+<th>Claim ID</th>
+<th>Claim</th>
+<th>Confidence</th>
+<th>Evidence</th>
+<th>Support type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Y7-VEH-CHAIN</td>
+<td>Vehicle normal and feedback chains are diagnostic ordering, not proven private MT8676 call edges</td>
+<td>标准机制推断</td>
+<td>—</td>
+<td>standard mechanism</td>
+</tr>
+</tbody></table>
+<p>反向控制只表示诊断方向：consumer command → <code>FDBus/SOME-IP</code> → <code>VehicleIF/CanService</code> → encoded command → <code>CAN</code> output boundary；私有编码、端点和执行器反馈待 DBC/IDL/抓包确认。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Vehicle reverse feedback
+flowchart RL
+  C[&quot;consumer command&quot;] --&gt; M[&quot;FDBus/SOME-IP&quot;] --&gt; V[&quot;VehicleIF/CanService&quot;] --&gt; E[&quot;encoded command&quot;] --&gt; B[&quot;CAN output boundary&quot;]
+  B -. &quot;bus/actuator feedback&quot; .-&gt; V
+  V -. &quot;fresh published state&quot; .-&gt; C</pre><details><summary>查看原始图代码</summary><pre><code>%% Vehicle reverse feedback
+flowchart RL
+  C[&quot;consumer command&quot;] --&gt; M[&quot;FDBus/SOME-IP&quot;] --&gt; V[&quot;VehicleIF/CanService&quot;] --&gt; E[&quot;encoded command&quot;] --&gt; B[&quot;CAN output boundary&quot;]
+  B -. &quot;bus/actuator feedback&quot; .-&gt; V
+  V -. &quot;fresh published state&quot; .-&gt; C</code></pre></details></details><p>异常观察按 raw frame/周期、decode validity、cache timestamp/Generation、publish counters、consumer apply 和反馈逐层取证。恢复必须清理旧订阅和缓存，建立新会话，再以新鲜回读和 consumer state 验证。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Vehicle abnormal recovery
+flowchart LR
+  VT[&quot;frame/session/cache fault trigger&quot;] --&gt; VE[&quot;earliest raw/decode/freshness/publish break&quot;] --&gt; DF[&quot;direct decoder/CanService/VehicleIF failure&quot;]
+  DF --&gt; DP[&quot;downstream stale/absent state&quot;] --&gt; US[&quot;vehicle-state symptom&quot;] --&gt; OB[&quot;capture + validity + timestamp + counters&quot;]
+  OB --&gt; CL[&quot;clear stale cache/subscription&quot;] --&gt; RV[&quot;new session + fresh readback&quot;] --&gt; OW[&quot;vehicle-data Owner validates consumed state&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% Vehicle abnormal recovery
+flowchart LR
+  VT[&quot;frame/session/cache fault trigger&quot;] --&gt; VE[&quot;earliest raw/decode/freshness/publish break&quot;] --&gt; DF[&quot;direct decoder/CanService/VehicleIF failure&quot;]
+  DF --&gt; DP[&quot;downstream stale/absent state&quot;] --&gt; US[&quot;vehicle-state symptom&quot;] --&gt; OB[&quot;capture + validity + timestamp + counters&quot;]
+  OB --&gt; CL[&quot;clear stale cache/subscription&quot;] --&gt; RV[&quot;new session + fresh readback&quot;] --&gt; OW[&quot;vehicle-data Owner validates consumed state&quot;]</code></pre></details></details><table>
+<thead>
+<tr>
+<th>Claim ID</th>
+<th>Claim</th>
+<th>Confidence</th>
+<th>Evidence</th>
+<th>Support type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Y7-VEH-ABNORMAL</td>
+<td>Vehicle fault isolation and recovery sequence is a standard diagnostic model</td>
+<td>标准机制推断</td>
+<td>—</td>
+<td>standard mechanism</td>
+</tr>
+</tbody></table>
+<h2 id="76-资源故障与恢复纪律">7.6 资源故障与恢复纪律</h2>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Yocto resource abnormal
+flowchart LR
+  T[&quot;FD/socket/DMA/surface/buffer/thread/queue growth&quot;] --&gt; E[&quot;first creator-releaser asymmetry&quot;]
+  E --&gt; P[&quot;deadlock / backpressure / log saturation&quot;] --&gt; U[&quot;service stall or media symptom&quot;] --&gt; O[&quot;owner + trend + queue wait graph&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% Yocto resource abnormal
+flowchart LR
+  T[&quot;FD/socket/DMA/surface/buffer/thread/queue growth&quot;] --&gt; E[&quot;first creator-releaser asymmetry&quot;]
+  E --&gt; P[&quot;deadlock / backpressure / log saturation&quot;] --&gt; U[&quot;service stall or media symptom&quot;] --&gt; O[&quot;owner + trend + queue wait graph&quot;]</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Yocto resource recovery
+flowchart LR
+  O[&quot;stop admission&quot;] --&gt; Q[&quot;drain or cancel queue&quot;] --&gt; H[&quot;close holder&quot;] --&gt; R[&quot;release creator resources&quot;]
+  R --&gt; G[&quot;new Generation&quot;] --&gt; V[&quot;stable trend + functional readback&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% Yocto resource recovery
+flowchart LR
+  O[&quot;stop admission&quot;] --&gt; Q[&quot;drain or cancel queue&quot;] --&gt; H[&quot;close holder&quot;] --&gt; R[&quot;release creator resources&quot;]
+  R --&gt; G[&quot;new Generation&quot;] --&gt; V[&quot;stable trend + functional readback&quot;]</code></pre></details></details><p>资源故障包括 FD/socket/DMA/surface/buffer/thread/queue leak、deadlock、restart storm、dependency cycle 和 log saturation。
+清理由创建者定义、当前 holder 执行或由生命周期 owner 接管；强杀仅终止进程，不证明远端/内核资源已释放。</p>
+<h2 id="77-资源所有权">7.7 资源所有权</h2>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Creator</th>
+<th>Holder</th>
+<th>Consumer</th>
+<th>Releaser</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FD/socket</td>
+<td>打开设备或连接的一方</td>
+<td>当前进程/连接代际</td>
+<td>I/O 模块</td>
+<td>close、断连或进程清理 owner</td>
+</tr>
+<tr>
+<td>DMA buffer</td>
+<td>分配/导入方</td>
+<td>当前队列或映射方</td>
+<td>ISP/GPU/display/音频设备</td>
+<td>stream-off、unmap、close owner</td>
+</tr>
+<tr>
+<td>surface/buffer</td>
+<td>client/compositor 或媒体 producer</td>
+<td>queued/acquired 一方</td>
+<td>compositor/media consumer</td>
+<td>release/disconnect owner</td>
+</tr>
+<tr>
+<td>thread/queue</td>
+<td>服务或 pipeline 创建方</td>
+<td>调度器/队列实例</td>
+<td>callback/worker</td>
+<td>stop、join、drain/cancel owner</td>
+</tr>
+</tbody></table>
+<p>creator、holder、consumer、releaser 不必是同一模块；normal chain 与 reverse feedback/control chain 都要携带 lifecycle/readiness/freshness/Generation。
+queue/backpressure/overflow 必须记录容量口径、等待方和丢弃/阻塞策略，但 exact timeout/retry/threshold 与 exact recovery policy 均待证据确认。</p>
+<h2 id="78-故障传播矩阵">7.8 故障传播矩阵</h2>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>Earliest breakpoint</th>
+<th>Direct failed module</th>
+<th>Downstream propagation</th>
+<th>User symptom</th>
+<th>Detector/evidence</th>
+<th>Cleanup/recovery</th>
+<th>Post-recovery validation</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>unit/start failure</td>
+<td>首个 inactive/failed 或 readiness gate</td>
+<td>unit/lifecycle manager</td>
+<td>依赖服务不可用</td>
+<td>功能未起</td>
+<td>unit state、journal、Generation</td>
+<td>停止接入、逆序释放、重启</td>
+<td>新会话 GET/readback</td>
+<td>lifecycle Owner</td>
+</tr>
+<tr>
+<td>stale display buffer/fence</td>
+<td>首个未完成 queue/commit/vblank</td>
+<td>client/Weston/DRM</td>
+<td>帧不再 present</td>
+<td>黑屏/冻屏</td>
+<td>buffer/fence/atomic/vblank trace</td>
+<td>丢旧帧、重建 output</td>
+<td>新帧且物理观察</td>
+<td>display Owner</td>
+</tr>
+<tr>
+<td>camera source/queue fault</td>
+<td>首个缺帧/dequeue/pad 错误</td>
+<td>source/ISP/V4L2/service</td>
+<td>pipeline backpressure</td>
+<td>无预览/旧帧</td>
+<td>timestamp、queue、bus、fence</td>
+<td>stop/flush/release/restart</td>
+<td>新 Generation 鲜帧</td>
+<td>camera Owner</td>
+</tr>
+<tr>
+<td>audio route/XRUN/drift</td>
+<td>首个 route 或 PCM 断点</td>
+<td>AudioMgr/ALSA/boundary</td>
+<td>period 连续性破坏</td>
+<td>无声/爆音</td>
+<td>route、PCM、XRUN、clock</td>
+<td>静音、drain/drop、重开</td>
+<td>route 回读与连续输出</td>
+<td>audio Owner</td>
+</tr>
+<tr>
+<td>CAN decode/cache/session fault</td>
+<td>raw/decoded/cache/publish 首个差异</td>
+<td>decoder/CanService/VehicleIF</td>
+<td>consumer 收到旧值或无事件</td>
+<td>车辆状态错误</td>
+<td>抓包、validity、timestamp、counter</td>
+<td>清缓存、重连、重订阅</td>
+<td>fresh readback + consumed state</td>
+<td>vehicle-data Owner</td>
+</tr>
+</tbody></table>
+<p>earliest observable breakpoint 依 commands/logs/counters/traces 交叉确定；observation limit 必须随证据记录。
+initial Owner 接收最小复现，escalation artifacts 至少含时间线、Generation、资源 owner、最后正确输出和首个错误输入。</p>
+<h2 id="79-模块映射">7.9 模块映射</h2>
+<p>下表每个图 2 SOS occurrence 仅映射一次；容器行不被当作运行时节点。全部映射只证明图中归属。
+[可信度：架构图确认] [证据：original-diagram-02]</p>
+<table>
+<thead>
+<tr>
+<th>Occurrence</th>
+<th>图中标签</th>
+<th>Canonical landing</th>
+<th>Related references</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>d02-028</td>
+<td>Host(SOS YOCTO)</td>
+<td>§7.1 domain boundary</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-029</td>
+<td>Application</td>
+<td>§7.2 consumer boundary</td>
+<td>§7.3; §7.5</td>
+</tr>
+<tr>
+<td>d02-030</td>
+<td>AVM</td>
+<td>§7.3 Camera consumer</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-031</td>
+<td>Cluster</td>
+<td>§7.5 vehicle consumer</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-032</td>
+<td>DMS</td>
+<td>§7.3 source/consumer pending</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-033</td>
+<td>RVC</td>
+<td>§7.3 Camera consumer</td>
+<td>§7.5</td>
+</tr>
+<tr>
+<td>d02-034</td>
+<td>ADAS</td>
+<td>§7.5 vehicle consumer</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-035</td>
+<td>OS Runtime</td>
+<td>§7.1 runtime container</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-036</td>
+<td>Weston</td>
+<td>§7.2 compositor</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-037</td>
+<td>Camera</td>
+<td>§7.3 service</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-038</td>
+<td>Gstreamer</td>
+<td>§7.3 pipeline</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-039</td>
+<td>Infrastructure</td>
+<td>§7.1 container</td>
+<td>§7.5</td>
+</tr>
+<tr>
+<td>d02-040</td>
+<td>Lifecycle</td>
+<td>§7.1 lifecycle manager</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-041</td>
+<td>SOA/IPC</td>
+<td>§7.5 middleware boundary</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-042</td>
+<td>CanService</td>
+<td>§7.5 vehicle data</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-043</td>
+<td>VehicleIF</td>
+<td>§7.5 command/decode boundary</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-044</td>
+<td>AudioMgr</td>
+<td>§7.4 control</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-045</td>
+<td>LogMgr</td>
+<td>§7.6 observation/log saturation</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-046</td>
+<td>Drivers</td>
+<td>§7.2 driver boundary</td>
+<td>§7.3; §7.4; §7.5</td>
+</tr>
+<tr>
+<td>d02-047</td>
+<td>ISP</td>
+<td>§7.3 image processing</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-048</td>
+<td>Display</td>
+<td>§7.2 physical-output boundary</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-049</td>
+<td>Audio</td>
+<td>§7.4 driver/output boundary</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-050</td>
+<td>Ethernet</td>
+<td>§7.5 transport boundary</td>
+<td>none</td>
+</tr>
+</tbody></table>
+<h2 id="710-证据观察责任与待确认">7.10 证据、观察、责任与待确认</h2>
+<p>图 2 的 SOS 模块、容器和归属是直接证据；标准链不继承该图证据。运行时命令只观察当前快照，必须保存时间戳、版本、权限和失败返回。
+本章不采信 general problem-analysis documents 的产品断言；其他平台材料只能是方法参考。</p>
+<p>待补工件包括 unit 与依赖图、启动/关机时间线、Wayland/DRM state、V4L2/GStreamer pipeline、ALSA route/PCM、CAN DBC/抓包、FDBus/SOME-IP 配置和资源追踪。
+private process identity、private framing/channel <code>IDs</code>、exact timeout/retry/threshold、exact hardware topology、exact recovery policy 均待 MT8676 确认。</p>
+<hr>
+<p><a href="index.html">返回主题导航</a> · <a href="22.html">本次来源索引</a></p>
+</article><nav class="pager"><a href="06.html">← 上一步：Android内部机制与稳定性</a><a href="08.html">下一步：MCU内部机制 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#07-sosyocto-内部机制">07 SOS/Yocto 内部机制</a><a class="depth-2" href="#2026-09-20-校订sos-的硬件显示时间和安全职责">2026-09-20 校订：SOS 的硬件、显示、时间和安全职责</a><a class="depth-2" href="#71-启动与生命周期">7.1 启动与生命周期</a><a class="depth-3" href="#正常路径状态与方向">正常路径、状态与方向</a><a class="depth-3" href="#异常恢复观察与责任">异常/恢复、观察与责任</a><a class="depth-2" href="#72-westonwayland-显示">7.2 Weston/Wayland 显示</a><a class="depth-3" href="#正常路径与资源边界">正常路径与资源边界</a><a class="depth-2" href="#73-camera">7.3 Camera</a><a class="depth-3" href="#正常路径所有权与新鲜度">正常路径、所有权与新鲜度</a><a class="depth-2" href="#74-audio">7.4 Audio</a><a class="depth-3" href="#正常路径与控制数据分离">正常路径与控制/数据分离</a><a class="depth-2" href="#75-canservicevehicleif">7.5 CanService/VehicleIF</a><a class="depth-3" href="#状态正常链与命令反馈链">状态正常链与命令反馈链</a><a class="depth-2" href="#76-资源故障与恢复纪律">7.6 资源故障与恢复纪律</a><a class="depth-2" href="#77-资源所有权">7.7 资源所有权</a><a class="depth-2" href="#78-故障传播矩阵">7.8 故障传播矩阵</a><a class="depth-2" href="#79-模块映射">7.9 模块映射</a><a class="depth-2" href="#710-证据观察责任与待确认">7.10 证据、观察、责任与待确认</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>

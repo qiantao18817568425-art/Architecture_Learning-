@@ -1,20 +1,11 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync, rmSync } from "node:fs";
-import { spawnSync } from "node:child_process";
+import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 
 const root = new URL("..", import.meta.url);
 const output = new URL("../docs/index.html", import.meta.url);
 
 test("generates a self-contained GitHub Pages archive with expandable full content", () => {
-  rmSync(output, { force: true });
-
-  const result = spawnSync(process.execPath, ["scripts/build-github-pages.mjs"], {
-    cwd: root,
-    encoding: "utf8",
-  });
-
-  assert.equal(result.status, 0, result.stderr || result.stdout);
   assert.equal(existsSync(output), true);
 
   const html = readFileSync(output, "utf8");

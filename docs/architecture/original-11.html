@@ -1,0 +1,1452 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>显示相机与驾驶辅助业务流程 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details open><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a aria-current="page" href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 原版解释 / 11</div><div class="chapter-title"><p class="eyebrow">CHAPTER 11 · 原版解释全文</p><h1>显示相机与驾驶辅助业务流程</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=11">并排对比两套正文 ↗</a><a class="button secondary" href="11.html">对照中文版 ↗</a><button class="button" data-read="original-11" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 原版解释对照</p><h2>倒车影像怎样从信号走到屏幕？</h2><p>触发链决定何时显示，采集链生产图像，显示链消费图像。黑屏、旧帧和几何不正确是不同问题：有画面不代表内容新鲜，也不代表标定匹配。</p><ol><li><strong>怎么读：</strong>先看 RVC/AVM 主链，再看 Host/Guest 和显示的交接，最后读新增标定与恢复解释。</li><li><strong>项目练习：</strong>选一次 R 挡事件，串起挡位、启动请求、首个新帧、buffer/fence、送显和可见画面。</li><li><strong>自检：</strong>一个 present 事件是否足以证明用户看到正确环视画面？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-5">Day 5</a> <a href="../index.html#day-22">Day 22</a> <a href="../index.html#day-23">Day 23</a> <a href="../index.html#day-24">Day 24</a> <a href="../index.html#day-25">Day 25</a> <a href="../index.html#day-28">Day 28</a> <a href="../index.html#day-30">Day 30</a> <a href="../index.html#day-31">Day 31</a> <a href="../index.html#day-33">Day 33</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#第-11-章显示相机与驾驶辅助业务流程">第 11 章　显示、相机与驾驶辅助业务流程</a><a class="depth-2" href="#业务流程-flow-09">业务流程 FLOW-09</a><a class="depth-3" href="#cluster-启动取数合成和上屏">Cluster 启动、取数、合成和上屏</a><a class="depth-3" href="#触发目标与边界">触发、目标与边界</a><a class="depth-3" href="#正常链">正常链</a><a class="depth-3" href="#分层子链与方向">分层子链与方向</a><a class="depth-3" href="#资源生命周期">资源生命周期</a><a class="depth-3" href="#反馈闭环">反馈闭环</a><a class="depth-3" href="#异常分支">异常分支</a><a class="depth-3" href="#日志与诊断">日志与诊断</a><a class="depth-3" href="#责任域">责任域</a><a class="depth-3" href="#证据与置信度">证据与置信度</a><a class="depth-2" href="#业务流程-flow-10">业务流程 FLOW-10</a><a class="depth-3" href="#rvc-倒车影像">RVC 倒车影像</a><a class="depth-3" href="#触发目标与边界-1">触发、目标与边界</a><a class="depth-3" href="#正常链-1">正常链</a><a class="depth-3" href="#分层子链与方向-1">分层子链与方向</a><a class="depth-3" href="#资源生命周期-1">资源生命周期</a><a class="depth-3" href="#反馈闭环-1">反馈闭环</a><a class="depth-3" href="#异常分支-1">异常分支</a><a class="depth-3" href="#日志与诊断-1">日志与诊断</a><a class="depth-3" href="#责任域-1">责任域</a><a class="depth-3" href="#证据与置信度-1">证据与置信度</a><a class="depth-2" href="#业务流程-flow-11">业务流程 FLOW-11</a><a class="depth-3" href="#avm-环视">AVM 环视</a><a class="depth-3" href="#触发目标与边界-2">触发、目标与边界</a><a class="depth-3" href="#正常链-2">正常链</a><a class="depth-3" href="#分层子链与方向-2">分层子链与方向</a><a class="depth-3" href="#资源生命周期-2">资源生命周期</a><a class="depth-3" href="#反馈闭环-2">反馈闭环</a><a class="depth-3" href="#异常分支-2">异常分支</a><a class="depth-3" href="#日志与诊断-2">日志与诊断</a><a class="depth-3" href="#责任域-2">责任域</a><a class="depth-3" href="#证据与置信度-2">证据与置信度</a><a class="depth-2" href="#业务流程-flow-12">业务流程 FLOW-12</a><a class="depth-3" href="#dms-驾驶员监控">DMS 驾驶员监控</a><a class="depth-3" href="#触发目标与边界-3">触发、目标与边界</a><a class="depth-3" href="#正常链-3">正常链</a><a class="depth-3" href="#分层子链与方向-3">分层子链与方向</a><a class="depth-3" href="#资源生命周期-3">资源生命周期</a><a class="depth-3" href="#反馈闭环-3">反馈闭环</a><a class="depth-3" href="#异常分支-3">异常分支</a><a class="depth-3" href="#日志与诊断-3">日志与诊断</a><a class="depth-3" href="#责任域-3">责任域</a><a class="depth-3" href="#证据与置信度-3">证据与置信度</a><a class="depth-2" href="#t12tmt8668-camera-架构集成平台边界隔离">T12T/MT8668 Camera 架构集成（平台边界隔离）</a><a class="depth-2" href="#业务流程-flow-13">业务流程 FLOW-13</a><a class="depth-3" href="#adas-告警">ADAS 告警</a><a class="depth-3" href="#触发目标与边界-4">触发、目标与边界</a><a class="depth-3" href="#正常链-4">正常链</a><a class="depth-3" href="#分层子链与方向-4">分层子链与方向</a><a class="depth-3" href="#资源生命周期-4">资源生命周期</a><a class="depth-3" href="#反馈闭环-4">反馈闭环</a><a class="depth-3" href="#异常分支-4">异常分支</a><a class="depth-3" href="#日志与诊断-4">日志与诊断</a><a class="depth-3" href="#责任域-4">责任域</a><a class="depth-3" href="#证据与置信度-4">证据与置信度</a><a class="depth-2" href="#业务流程-flow-14">业务流程 FLOW-14</a><a class="depth-3" href="#行车记录仪与哨兵模式">行车记录仪与哨兵模式</a><a class="depth-3" href="#触发目标与边界-5">触发、目标与边界</a><a class="depth-3" href="#正常链-5">正常链</a><a class="depth-3" href="#分层子链与方向-5">分层子链与方向</a><a class="depth-3" href="#资源生命周期-5">资源生命周期</a><a class="depth-3" href="#反馈闭环-5">反馈闭环</a><a class="depth-3" href="#异常分支-5">异常分支</a><a class="depth-3" href="#日志与诊断-5">日志与诊断</a><a class="depth-3" href="#责任域-5">责任域</a><a class="depth-3" href="#证据与置信度-5">证据与置信度</a><a class="depth-2" href="#业务流程-flow-15">业务流程 FLOW-15</a><a class="depth-3" href="#android-渲染链">Android 渲染链</a><a class="depth-3" href="#触发目标与边界-6">触发、目标与边界</a><a class="depth-3" href="#正常链-6">正常链</a><a class="depth-3" href="#分层子链与方向-6">分层子链与方向</a><a class="depth-3" href="#资源生命周期-6">资源生命周期</a><a class="depth-3" href="#反馈闭环-6">反馈闭环</a><a class="depth-3" href="#异常分支-6">异常分支</a><a class="depth-3" href="#日志与诊断-6">日志与诊断</a><a class="depth-3" href="#责任域-6">责任域</a><a class="depth-3" href="#证据与置信度-6">证据与置信度</a><a class="depth-2" href="#业务流程-flow-16">业务流程 FLOW-16</a><a class="depth-3" href="#yocto-weston-显示链">Yocto Weston 显示链</a><a class="depth-3" href="#触发目标与边界-7">触发、目标与边界</a><a class="depth-3" href="#正常链-7">正常链</a><a class="depth-3" href="#分层子链与方向-7">分层子链与方向</a><a class="depth-3" href="#资源生命周期-7">资源生命周期</a><a class="depth-3" href="#反馈闭环-7">反馈闭环</a><a class="depth-3" href="#异常分支-7">异常分支</a><a class="depth-3" href="#日志与诊断-7">日志与诊断</a><a class="depth-3" href="#责任域-7">责任域</a><a class="depth-3" href="#证据与置信度-7">证据与置信度</a><a class="depth-2" href="#业务流程-flow-17">业务流程 FLOW-17</a><a class="depth-3" href="#androidsos-跨域显示">Android/SOS 跨域显示</a><a class="depth-3" href="#触发目标与边界-8">触发、目标与边界</a><a class="depth-3" href="#正常链-8">正常链</a><a class="depth-3" href="#分层子链与方向-8">分层子链与方向</a><a class="depth-3" href="#资源生命周期-8">资源生命周期</a><a class="depth-3" href="#反馈闭环-8">反馈闭环</a><a class="depth-3" href="#异常分支-8">异常分支</a><a class="depth-3" href="#日志与诊断-8">日志与诊断</a><a class="depth-3" href="#责任域-8">责任域</a><a class="depth-3" href="#证据与置信度-8">证据与置信度</a></details><article id="chapter-text"><h1 id="第-11-章显示相机与驾驶辅助业务流程">第 11 章　显示、相机与驾驶辅助业务流程</h1>
+<blockquote>
+<p>本章于 2026-09-20 按原架构补充正文解释；原图、模块/流程 ID 和分层保持原样。新证据的版本限定随段落标注。<a href="index.html">本轮更新说明</a>。</p>
+</blockquote>
+<p>本章覆盖 FLOW-09～17，从 Cluster、RVC、AVM、DMS、ADAS、记录仪到 Android/Weston/跨域显示。核心原则是把触发、源帧、Buffer 传输、合成、present、物理可见和 release 分开证明。</p>
+<p>所有流程都同时画正常方向和异常恢复方向，并用独立资源表记录 creator、holder、consumer 和 releaser。图中实线是诊断骨架，不是未经证据确认的私有调用拓扑。</p>
+<h2 id="业务流程-flow-09">业务流程 FLOW-09</h2>
+<h3 id="cluster-启动取数合成和上屏">Cluster 启动、取数、合成和上屏</h3>
+<h3 id="触发目标与边界">触发、目标与边界</h3>
+<p>Lifecycle 宣布 Cluster 所需依赖达到可用条件，或系统进入仪表冷启动/重建场景。目标是把进程启动、依赖可用、车辆数据首个有效快照、告警状态机资源加载、首帧合成和物理上屏拆成可单独证明的阶段。本卡使用库存流程作为诊断骨架，不把相邻模块、标准协议行为或候选进程关系提升为 MT8676 私有事实。</p>
+<p>[置信度：mixed] 原图或 MT8676 资料只直接支撑所列模块、标签、局部箭头和明确资料内容；完整端到端顺序、Buffer/音频资源合同和恢复步骤由标准机制与受控业务假设补充。具体设备、属性、流 ID、周期、线程、进程和阈值仍需项目配置及运行证据确认。</p>
+<h3 id="正常链">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  N0[&quot;Lifecycle&quot;]
+  N1[&quot;Cluster-process&quot;]
+  N0 --&gt; N1
+  N2[&quot;CanClient/Client&quot;]
+  N1 --&gt; N2
+  N3[&quot;initial-snapshot&quot;]
+  N2 --&gt; N3
+  N4[&quot;warning-state-machine&quot;]
+  N3 --&gt; N4
+  N5[&quot;Weston&quot;]
+  N4 --&gt; N5
+  N6[&quot;DRM/KMS&quot;]
+  N5 --&gt; N6
+  N7[&quot;physical-display&quot;]
+  N6 --&gt; N7</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N0[&quot;Lifecycle&quot;]
+  N1[&quot;Cluster-process&quot;]
+  N0 --&gt; N1
+  N2[&quot;CanClient/Client&quot;]
+  N1 --&gt; N2
+  N3[&quot;initial-snapshot&quot;]
+  N2 --&gt; N3
+  N4[&quot;warning-state-machine&quot;]
+  N3 --&gt; N4
+  N5[&quot;Weston&quot;]
+  N4 --&gt; N5
+  N6[&quot;DRM/KMS&quot;]
+  N5 --&gt; N6
+  N7[&quot;physical-display&quot;]
+  N6 --&gt; N7</code></pre></details></details><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。Lifecycle 启动成功不等于依赖 Ready；订阅成功不等于首帧数据有效；Cluster 生成模型不等于 Weston 已接收；PageFlip 完成也仍需物理屏观察。首帧必须关联数据 Generation、资源版本和显示提交。</p>
+<h3 id="分层子链与方向">分层子链与方向</h3>
+<p>控制平面负责触发、模式、焦点、路由或会话命令；数据平面负责 frame、buffer、PCM 或算法事件；策略平面负责状态机、优先级、合成或 focus/route 决策；物理输出平面负责屏、麦克风、DSP、功放或扬声器；反馈平面负责回读、callback、fence、首帧、最终状态或用户可见/可听结果。五个平面可以共享服务，但不能用其中一个平面的成功替代其他平面。</p>
+<p>对于显示类流程，trigger valid ≠ source frame available ≠ buffer transported ≠ composed ≠ presented ≠ physically visible。对于音频类流程，control accepted ≠ audio data flowing ≠ focus granted ≠ route active ≠ DSP/amplifier output audible。排障必须标明当前分析的是哪一个平面以及数据方向，避免把控制返回当作物理结果。</p>
+<h3 id="资源生命周期">资源生命周期</h3>
+<p>创建成功 ≠ 已交给消费者 ≠ 消费完成 ≠ 已释放。资源表中的创建者负责初始有效性，持有者负责引用和代际，消费者负责完成信号，释放者负责对称清理；服务重启时还要确认旧持有者不能访问新资源。</p>
+<table>
+<thead>
+<tr>
+<th>资源</th>
+<th>创建者</th>
+<th>持有者</th>
+<th>消费者</th>
+<th>释放者</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Cluster data Session</td>
+<td>Lifecycle/Cluster</td>
+<td>Cluster</td>
+<td>warning state machine</td>
+<td>Cluster shutdown</td>
+</tr>
+<tr>
+<td>Wayland Surface</td>
+<td>Cluster</td>
+<td>Cluster/Weston</td>
+<td>Weston</td>
+<td>Cluster disconnect</td>
+</tr>
+<tr>
+<td>DRM frame</td>
+<td>Weston</td>
+<td>display stack</td>
+<td>scanout</td>
+<td>pageflip release</td>
+</tr>
+</tbody></table>
+<p>资源诊断要记录资源身份、创建/连接时间、当前 holder、入队/出队或 track 状态、fence/callback、关闭顺序与未释放计数。Camera、GStreamer、Surface、MediaCodec、AudioTrack、AudioRecord、AEC、DSP route 和 call Session 不是可互换的“媒体资源”，每类都有自己的创建和释放边界。</p>
+<h3 id="反馈闭环">反馈闭环</h3>
+<p>反馈必须与原触发或请求相关，而不是只看时间接近。显示链优先使用首帧、frame callback、PageFlip/present fence 与物理观察；音频链使用 track/route、DSP/功放状态和物理有声；控制链使用权威回读或最终状态。反馈缺失时保留最后一个正确输出和第一个缺失输入。</p>
+<h3 id="异常分支">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[&quot;Cluster 启动、取数、合成和上屏异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
+  B -- 否 --&gt; B1[&quot;依赖服务未 Ready&quot;]
+  B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
+  C -- 否 --&gt; C1[&quot;首个订阅或快照缺失&quot;]
+  C -- 是 --&gt; D{&quot;策略、合成或路由正确?&quot;}
+  D -- 否 --&gt; D1[&quot;状态机或资源加载失败&quot;]
+  D -- 是 --&gt; E{&quot;物理输出与反馈闭环?&quot;}
+  E -- 否 --&gt; E1[&quot;Weston/PageFlip 不推进&quot;]
+  B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[&quot;Cluster 启动、取数、合成和上屏异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
+  B -- 否 --&gt; B1[&quot;依赖服务未 Ready&quot;]
+  B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
+  C -- 否 --&gt; C1[&quot;首个订阅或快照缺失&quot;]
+  C -- 是 --&gt; D{&quot;策略、合成或路由正确?&quot;}
+  D -- 否 --&gt; D1[&quot;状态机或资源加载失败&quot;]
+  D -- 是 --&gt; E{&quot;物理输出与反馈闭环?&quot;}
+  E -- 否 --&gt; E1[&quot;Weston/PageFlip 不推进&quot;]
+  B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R</code></pre></details></details><p>本流程的主要异常分支为：依赖服务未 Ready；首个订阅或快照缺失；状态机或资源加载失败；Weston/PageFlip 不推进。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
+<p>恢复路径：取得新服务句柄并重新订阅，获得本代初始快照，重建显示资源并等待新 PageFlip；旧回调和旧帧不得覆盖新状态。恢复后验证必须覆盖新 Generation/Session、资源重新创建、关键 callback/fence/readback、物理结果以及旧会话隔离。只看到进程存活、API 返回或日志停止报错均不足以宣布业务恢复。</p>
+<h3 id="日志与诊断">日志与诊断</h3>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>触发/源</td>
+<td>当前 Generation 的触发、源状态与时间推进</td>
+<td>依赖服务未 Ready</td>
+<td>源正确不证明下游消费</td>
+<td>源/触发所有者</td>
+</tr>
+<tr>
+<td>数据或 Buffer</td>
+<td>sequence、timestamp、buffer/track 状态连续</td>
+<td>首个订阅或快照缺失</td>
+<td>有数据不证明策略或合成正确</td>
+<td>Cluster-process</td>
+</tr>
+<tr>
+<td>策略/合成/路由</td>
+<td>最终决策、目标层或 route 与事件一致</td>
+<td>状态机或资源加载失败</td>
+<td>软件状态不证明物理输出</td>
+<td>Weston</td>
+</tr>
+<tr>
+<td>物理输出</td>
+<td>present、有声、可见或可回放结果可观察</td>
+<td>Weston/PageFlip 不推进</td>
+<td>截图/录音不能定位上游</td>
+<td>DRM/KMS</td>
+</tr>
+<tr>
+<td>反馈/释放</td>
+<td>回调、回读、fence 或最终状态与请求相关</td>
+<td>旧回调、资源未归还、代际污染</td>
+<td>恢复动作不证明根因</td>
+<td>会话/资源所有者</td>
+</tr>
+</tbody></table>
+<p>日志采集应使用同一事件窗口并保留单调时间、墙钟、Sequence、Generation、Request/Buffer/Session 身份。命令和日志名称只作为通用采集方法；在没有 MT8676 运行清单时，不把通用 tag、设备节点或接口参数写成平台固定值。</p>
+<h3 id="责任域">责任域</h3>
+<p>责任划分以最早断点为准：触发/源所有者证明输入；资源生产者证明创建和发布；中间服务证明当前代传输与策略；合成/音频策略证明最终决策；驱动与硬件证明物理输出；业务应用证明用户状态。跨团队升级材料至少包含软件版本、统一时间窗、触发/请求原文、各层输入输出、资源身份和 holder、回调/fence/readback、恢复动作及恢复后物理证据。</p>
+<h3 id="证据与置信度">证据与置信度</h3>
+<p>[置信度：mixed] 证据 ID 为 <code>original-diagram-02,original-diagram-03</code>。它们支撑可见架构元素或明确资料内容；本卡的完整诊断链和异常树属于受控组合。若接口描述、部署清单、状态机规格或运行 trace 与本卡不同，以项目证据为准并更新库存。</p>
+<h2 id="业务流程-flow-10">业务流程 FLOW-10</h2>
+<h3 id="rvc-倒车影像">RVC 倒车影像</h3>
+<h3 id="触发目标与边界-1">触发、目标与边界</h3>
+<p>倒挡触发或项目定义的 RVC 安全触发达到有效、新鲜且属于当前车辆状态。目标是在安全时限语义下区分倒挡状态、Camera 出帧、ISP 处理、RVC 管线、合成可见性、物理显示以及退出倒挡后的资源释放。本卡使用库存流程作为诊断骨架，不把相邻模块、标准协议行为或候选进程关系提升为 MT8676 私有事实。</p>
+<p>[置信度：mixed] 原图或 MT8676 资料只直接支撑所列模块、标签、局部箭头和明确资料内容；完整端到端顺序、Buffer/音频资源合同和恢复步骤由标准机制与受控业务假设补充。具体设备、属性、流 ID、周期、线程、进程和阈值仍需项目配置及运行证据确认。</p>
+<h3 id="正常链-1">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  N0[&quot;reverse-trigger&quot;]
+  N1[&quot;Camera/ISP&quot;]
+  N0 --&gt; N1
+  N2[&quot;RVC-pipeline&quot;]
+  N1 --&gt; N2
+  N3[&quot;GStreamer&quot;]
+  N2 --&gt; N3
+  N4[&quot;display-Surface&quot;]
+  N3 --&gt; N4
+  N5[&quot;Weston&quot;]
+  N4 --&gt; N5
+  N6[&quot;DRM/KMS&quot;]
+  N5 --&gt; N6
+  N7[&quot;physical-display&quot;]
+  N6 --&gt; N7</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N0[&quot;reverse-trigger&quot;]
+  N1[&quot;Camera/ISP&quot;]
+  N0 --&gt; N1
+  N2[&quot;RVC-pipeline&quot;]
+  N1 --&gt; N2
+  N3[&quot;GStreamer&quot;]
+  N2 --&gt; N3
+  N4[&quot;display-Surface&quot;]
+  N3 --&gt; N4
+  N5[&quot;Weston&quot;]
+  N4 --&gt; N5
+  N6[&quot;DRM/KMS&quot;]
+  N5 --&gt; N6
+  N7[&quot;physical-display&quot;]
+  N6 --&gt; N7</code></pre></details></details><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。倒挡 Topic 新鲜不等于 Camera 已出帧；Camera streaming 不等于 GStreamer pipeline 正在推进；source-no-frame、pipeline stop、层被遮挡和屏输出失败是四类不同断点。退出后必须验证资源释放。</p>
+<h3 id="分层子链与方向-1">分层子链与方向</h3>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>倒车请求通路与 Camera 像素通路在本流程汇合，但不要求先后完全串行。MT8676 手册的 Camera Host ready 是源侧前置，Android/Yocto 消费者再建立当前会话与 buffer；MT8668 手册则明确 RpcBinder/VSOCK 请求入口。首帧验收要定义最终输出点，应用收到 Result 不等于物理屏出现新鲜画面。各并行阶段按关键路径合成，不能把平均耗时简单相加。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S145 · MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF第8页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页<small>〔本地来源〕</small></span></p>
+<p>控制平面负责触发、模式、焦点、路由或会话命令；数据平面负责 frame、buffer、PCM 或算法事件；策略平面负责状态机、优先级、合成或 focus/route 决策；物理输出平面负责屏、麦克风、DSP、功放或扬声器；反馈平面负责回读、callback、fence、首帧、最终状态或用户可见/可听结果。五个平面可以共享服务，但不能用其中一个平面的成功替代其他平面。</p>
+<p>对于显示类流程，trigger valid ≠ source frame available ≠ buffer transported ≠ composed ≠ presented ≠ physically visible。对于音频类流程，control accepted ≠ audio data flowing ≠ focus granted ≠ route active ≠ DSP/amplifier output audible。排障必须标明当前分析的是哪一个平面以及数据方向，避免把控制返回当作物理结果。</p>
+<h3 id="资源生命周期-1">资源生命周期</h3>
+<p>创建成功 ≠ 已交给消费者 ≠ 消费完成 ≠ 已释放。资源表中的创建者负责初始有效性，持有者负责引用和代际，消费者负责完成信号，释放者负责对称清理；服务重启时还要确认旧持有者不能访问新资源。</p>
+<table>
+<thead>
+<tr>
+<th>资源</th>
+<th>创建者</th>
+<th>持有者</th>
+<th>消费者</th>
+<th>释放者</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Camera device</td>
+<td>RVC service</td>
+<td>camera service/ISP</td>
+<td>RVC pipeline</td>
+<td>RVC service</td>
+</tr>
+<tr>
+<td>GStreamer pipeline</td>
+<td>RVC service</td>
+<td>pipeline elements</td>
+<td>RVC renderer</td>
+<td>RVC service</td>
+</tr>
+<tr>
+<td>display Surface</td>
+<td>RVC renderer</td>
+<td>renderer/Weston</td>
+<td>Weston</td>
+<td>RVC renderer</td>
+</tr>
+</tbody></table>
+<p>资源诊断要记录资源身份、创建/连接时间、当前 holder、入队/出队或 track 状态、fence/callback、关闭顺序与未释放计数。Camera、GStreamer、Surface、MediaCodec、AudioTrack、AudioRecord、AEC、DSP route 和 call Session 不是可互换的“媒体资源”，每类都有自己的创建和释放边界。</p>
+<h3 id="反馈闭环-1">反馈闭环</h3>
+<p>反馈必须与原触发或请求相关，而不是只看时间接近。显示链优先使用首帧、frame callback、PageFlip/present fence 与物理观察；音频链使用 track/route、DSP/功放状态和物理有声；控制链使用权威回读或最终状态。反馈缺失时保留最后一个正确输出和第一个缺失输入。</p>
+<h3 id="异常分支-1">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[&quot;RVC 倒车影像异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
+  B -- 否 --&gt; B1[&quot;倒挡状态陈旧&quot;]
+  B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
+  C -- 否 --&gt; C1[&quot;Camera/ISP source-no-frame&quot;]
+  C -- 是 --&gt; D{&quot;策略、合成或路由正确?&quot;}
+  D -- 否 --&gt; D1[&quot;GStreamer pipeline stop&quot;]
+  D -- 是 --&gt; E{&quot;物理输出与反馈闭环?&quot;}
+  E -- 否 --&gt; E1[&quot;显示层不可见或资源未释放&quot;]
+  B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[&quot;RVC 倒车影像异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
+  B -- 否 --&gt; B1[&quot;倒挡状态陈旧&quot;]
+  B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
+  C -- 否 --&gt; C1[&quot;Camera/ISP source-no-frame&quot;]
+  C -- 是 --&gt; D{&quot;策略、合成或路由正确?&quot;}
+  D -- 否 --&gt; D1[&quot;GStreamer pipeline stop&quot;]
+  D -- 是 --&gt; E{&quot;物理输出与反馈闭环?&quot;}
+  E -- 否 --&gt; E1[&quot;显示层不可见或资源未释放&quot;]
+  B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R</code></pre></details></details><p>本流程的主要异常分支为：倒挡状态陈旧；Camera/ISP source-no-frame；GStreamer pipeline stop；显示层不可见或资源未释放。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
+<p>恢复路径：使用当前倒挡 Generation 重建 Camera 与 GStreamer，会话产生新帧并完成物理呈现；退出倒挡后释放 Surface、buffer 和设备占用。恢复后验证必须覆盖新 Generation/Session、资源重新创建、关键 callback/fence/readback、物理结果以及旧会话隔离。只看到进程存活、API 返回或日志停止报错均不足以宣布业务恢复。</p>
+<h3 id="日志与诊断-1">日志与诊断</h3>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>触发/源</td>
+<td>当前 Generation 的触发、源状态与时间推进</td>
+<td>倒挡状态陈旧</td>
+<td>源正确不证明下游消费</td>
+<td>源/触发所有者</td>
+</tr>
+<tr>
+<td>数据或 Buffer</td>
+<td>sequence、timestamp、buffer/track 状态连续</td>
+<td>Camera/ISP source-no-frame</td>
+<td>有数据不证明策略或合成正确</td>
+<td>Camera/ISP</td>
+</tr>
+<tr>
+<td>策略/合成/路由</td>
+<td>最终决策、目标层或 route 与事件一致</td>
+<td>GStreamer pipeline stop</td>
+<td>软件状态不证明物理输出</td>
+<td>Weston</td>
+</tr>
+<tr>
+<td>物理输出</td>
+<td>present、有声、可见或可回放结果可观察</td>
+<td>显示层不可见或资源未释放</td>
+<td>截图/录音不能定位上游</td>
+<td>DRM/KMS</td>
+</tr>
+<tr>
+<td>反馈/释放</td>
+<td>回调、回读、fence 或最终状态与请求相关</td>
+<td>旧回调、资源未归还、代际污染</td>
+<td>恢复动作不证明根因</td>
+<td>会话/资源所有者</td>
+</tr>
+</tbody></table>
+<p>日志采集应使用同一事件窗口并保留单调时间、墙钟、Sequence、Generation、Request/Buffer/Session 身份。命令和日志名称只作为通用采集方法；在没有 MT8676 运行清单时，不把通用 tag、设备节点或接口参数写成平台固定值。</p>
+<h3 id="责任域-1">责任域</h3>
+<p>责任划分以最早断点为准：触发/源所有者证明输入；资源生产者证明创建和发布；中间服务证明当前代传输与策略；合成/音频策略证明最终决策；驱动与硬件证明物理输出；业务应用证明用户状态。跨团队升级材料至少包含软件版本、统一时间窗、触发/请求原文、各层输入输出、资源身份和 holder、回调/fence/readback、恢复动作及恢复后物理证据。</p>
+<h3 id="证据与置信度-1">证据与置信度</h3>
+<p>[置信度：mixed] 证据 ID 为 <code>original-diagram-01,original-diagram-02</code>。它们支撑可见架构元素或明确资料内容；本卡的完整诊断链和异常树属于受控组合。若接口描述、部署清单、状态机规格或运行 trace 与本卡不同，以项目证据为准并更新库存。</p>
+<h2 id="业务流程-flow-11">业务流程 FLOW-11</h2>
+<h3 id="avm-环视">AVM 环视</h3>
+<h3 id="触发目标与边界-2">触发、目标与边界</h3>
+<p>低速环视按键、泊车/转向条件或自动策略触发当前 AVM 模式。目标是跟踪多路相机、同步、标定、拼接、GPU 合成和显示，避免用任一路有帧推断整个环视结果有效。本卡使用库存流程作为诊断骨架，不把相邻模块、标准协议行为或候选进程关系提升为 MT8676 私有事实。</p>
+<p>[置信度：mixed] 原图或 MT8676 资料只直接支撑所列模块、标签、局部箭头和明确资料内容；完整端到端顺序、Buffer/音频资源合同和恢复步骤由标准机制与受控业务假设补充。具体设备、属性、流 ID、周期、线程、进程和阈值仍需项目配置及运行证据确认。</p>
+<h3 id="正常链-2">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  N0[&quot;vehicle-trigger&quot;]
+  N1[&quot;multi-Camera/ISP&quot;]
+  N0 --&gt; N1
+  N2[&quot;frame-synchronizer&quot;]
+  N1 --&gt; N2
+  N3[&quot;calibration&quot;]
+  N2 --&gt; N3
+  N4[&quot;AVM-stitch&quot;]
+  N3 --&gt; N4
+  N5[&quot;GPU/compositor&quot;]
+  N4 --&gt; N5
+  N6[&quot;DRM/KMS&quot;]
+  N5 --&gt; N6
+  N7[&quot;physical-display&quot;]
+  N6 --&gt; N7</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N0[&quot;vehicle-trigger&quot;]
+  N1[&quot;multi-Camera/ISP&quot;]
+  N0 --&gt; N1
+  N2[&quot;frame-synchronizer&quot;]
+  N1 --&gt; N2
+  N3[&quot;calibration&quot;]
+  N2 --&gt; N3
+  N4[&quot;AVM-stitch&quot;]
+  N3 --&gt; N4
+  N5[&quot;GPU/compositor&quot;]
+  N4 --&gt; N5
+  N6[&quot;DRM/KMS&quot;]
+  N5 --&gt; N6
+  N7[&quot;physical-display&quot;]
+  N6 --&gt; N7</code></pre></details></details><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。camera streaming ≠ every camera synchronized ≠ calibrated stitch valid ≠ AVM frame presented。多路相机必须分别核对 sequence、timestamp、曝光/ISP 状态；标定版本和拼接输出需与本车配置匹配。</p>
+<h3 id="分层子链与方向-2">分层子链与方向</h3>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>新版 Day 33 为本流程补上“画面已到、标定集合有效、几何正确、用户可用”的不同判据。内参/畸变、车体外参、四摄拼接与色彩一致性各有验收对象；重投影误差只是局部证据，不能单独证明实车距离准确。更换摄像头、维修或 OTA 后，应核对相机身份、安装位置、算法/映射版本、标定文件哈希与当前激活集合。教学 CalGen/manifest 表可作为工程合同建议，但 MTK Camera/PVT 图尚未证实本项目已有这些精确字段或标定服务。[最新站点 Day 33](http[本地资料库路径] <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页<small>〔本地来源〕</small></span></p>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>环视需把物理相机数量、复合输入数量、P2 输出路数和消费者数分开。项目 Camera 材料的两路 3840×1536 复合输入可对应四个 1920×1536 方向；AVM 与 DVR 的需求不必产生七份独立物理 buffer。按 25fps/YUV422/无 padding，单方向一次 DDR 读或写为147.456MB/s；共享输出能减少写入，却不会自动取消各消费者读取。资料的 PQDIP 3+3 与 2+4 实例分配不一致，因此本流程不把任何一个调度图升级成冻结架构。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S297 · MT8668最终Camera架构与DDR解读.md<small>〔本地来源〕</small></span></p>
+<p>控制平面负责触发、模式、焦点、路由或会话命令；数据平面负责 frame、buffer、PCM 或算法事件；策略平面负责状态机、优先级、合成或 focus/route 决策；物理输出平面负责屏、麦克风、DSP、功放或扬声器；反馈平面负责回读、callback、fence、首帧、最终状态或用户可见/可听结果。五个平面可以共享服务，但不能用其中一个平面的成功替代其他平面。</p>
+<p>对于显示类流程，trigger valid ≠ source frame available ≠ buffer transported ≠ composed ≠ presented ≠ physically visible。对于音频类流程，control accepted ≠ audio data flowing ≠ focus granted ≠ route active ≠ DSP/amplifier output audible。排障必须标明当前分析的是哪一个平面以及数据方向，避免把控制返回当作物理结果。</p>
+<h3 id="资源生命周期-2">资源生命周期</h3>
+<p>创建成功 ≠ 已交给消费者 ≠ 消费完成 ≠ 已释放。资源表中的创建者负责初始有效性，持有者负责引用和代际，消费者负责完成信号，释放者负责对称清理；服务重启时还要确认旧持有者不能访问新资源。</p>
+<table>
+<thead>
+<tr>
+<th>资源</th>
+<th>创建者</th>
+<th>持有者</th>
+<th>消费者</th>
+<th>释放者</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>multi Camera buffers</td>
+<td>camera service</td>
+<td>ISP/synchronizer</td>
+<td>AVM stitch</td>
+<td>camera service</td>
+</tr>
+<tr>
+<td>calibration set</td>
+<td>configuration owner</td>
+<td>AVM algorithm</td>
+<td>stitch engine</td>
+<td>AVM shutdown</td>
+</tr>
+<tr>
+<td>stitched Surface</td>
+<td>AVM renderer</td>
+<td>GPU/compositor</td>
+<td>display</td>
+<td>AVM renderer</td>
+</tr>
+</tbody></table>
+<p>资源诊断要记录资源身份、创建/连接时间、当前 holder、入队/出队或 track 状态、fence/callback、关闭顺序与未释放计数。Camera、GStreamer、Surface、MediaCodec、AudioTrack、AudioRecord、AEC、DSP route 和 call Session 不是可互换的“媒体资源”，每类都有自己的创建和释放边界。</p>
+<h3 id="反馈闭环-2">反馈闭环</h3>
+<p>反馈必须与原触发或请求相关，而不是只看时间接近。显示链优先使用首帧、frame callback、PageFlip/present fence 与物理观察；音频链使用 track/route、DSP/功放状态和物理有声；控制链使用权威回读或最终状态。反馈缺失时保留最后一个正确输出和第一个缺失输入。</p>
+<h3 id="异常分支-2">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[&quot;AVM 环视异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
+  B -- 否 --&gt; B1[&quot;单路相机丢帧&quot;]
+  B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
+  C -- 否 --&gt; C1[&quot;多路同步窗口失配&quot;]
+  C -- 是 --&gt; D{&quot;策略、合成或路由正确?&quot;}
+  D -- 否 --&gt; D1[&quot;标定或拼接异常&quot;]
+  D -- 是 --&gt; E{&quot;物理输出与反馈闭环?&quot;}
+  E -- 否 --&gt; E1[&quot;GPU/Fence 或显示提交不推进&quot;]
+  B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[&quot;AVM 环视异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
+  B -- 否 --&gt; B1[&quot;单路相机丢帧&quot;]
+  B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
+  C -- 否 --&gt; C1[&quot;多路同步窗口失配&quot;]
+  C -- 是 --&gt; D{&quot;策略、合成或路由正确?&quot;}
+  D -- 否 --&gt; D1[&quot;标定或拼接异常&quot;]
+  D -- 是 --&gt; E{&quot;物理输出与反馈闭环?&quot;}
+  E -- 否 --&gt; E1[&quot;GPU/Fence 或显示提交不推进&quot;]
+  B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R</code></pre></details></details><p>本流程的主要异常分支为：单路相机丢帧；多路同步窗口失配；标定或拼接异常；GPU/Fence 或显示提交不推进。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
+<p>恢复路径：按本代模式重开缺失流，等待多路稳定同步，重新加载受控标定并产生新拼接帧；旧帧和旧标定缓存必须隔离。恢复后验证必须覆盖新 Generation/Session、资源重新创建、关键 callback/fence/readback、物理结果以及旧会话隔离。只看到进程存活、API 返回或日志停止报错均不足以宣布业务恢复。</p>
+<h3 id="日志与诊断-2">日志与诊断</h3>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>触发/源</td>
+<td>当前 Generation 的触发、源状态与时间推进</td>
+<td>单路相机丢帧</td>
+<td>源正确不证明下游消费</td>
+<td>源/触发所有者</td>
+</tr>
+<tr>
+<td>数据或 Buffer</td>
+<td>sequence、timestamp、buffer/track 状态连续</td>
+<td>多路同步窗口失配</td>
+<td>有数据不证明策略或合成正确</td>
+<td>multi-Camera/ISP</td>
+</tr>
+<tr>
+<td>策略/合成/路由</td>
+<td>最终决策、目标层或 route 与事件一致</td>
+<td>标定或拼接异常</td>
+<td>软件状态不证明物理输出</td>
+<td>GPU/compositor</td>
+</tr>
+<tr>
+<td>物理输出</td>
+<td>present、有声、可见或可回放结果可观察</td>
+<td>GPU/Fence 或显示提交不推进</td>
+<td>截图/录音不能定位上游</td>
+<td>DRM/KMS</td>
+</tr>
+<tr>
+<td>反馈/释放</td>
+<td>回调、回读、fence 或最终状态与请求相关</td>
+<td>旧回调、资源未归还、代际污染</td>
+<td>恢复动作不证明根因</td>
+<td>会话/资源所有者</td>
+</tr>
+</tbody></table>
+<p>日志采集应使用同一事件窗口并保留单调时间、墙钟、Sequence、Generation、Request/Buffer/Session 身份。命令和日志名称只作为通用采集方法；在没有 MT8676 运行清单时，不把通用 tag、设备节点或接口参数写成平台固定值。</p>
+<h3 id="责任域-2">责任域</h3>
+<p>责任划分以最早断点为准：触发/源所有者证明输入；资源生产者证明创建和发布；中间服务证明当前代传输与策略；合成/音频策略证明最终决策；驱动与硬件证明物理输出；业务应用证明用户状态。跨团队升级材料至少包含软件版本、统一时间窗、触发/请求原文、各层输入输出、资源身份和 holder、回调/fence/readback、恢复动作及恢复后物理证据。</p>
+<h3 id="证据与置信度-2">证据与置信度</h3>
+<p>[置信度：mixed] 证据 ID 为 <code>original-diagram-01,original-diagram-02</code>。它们支撑可见架构元素或明确资料内容；本卡的完整诊断链和异常树属于受控组合。若接口描述、部署清单、状态机规格或运行 trace 与本卡不同，以项目证据为准并更新库存。</p>
+<h2 id="业务流程-flow-12">业务流程 FLOW-12</h2>
+<h3 id="dms-驾驶员监控">DMS 驾驶员监控</h3>
+<h3 id="触发目标与边界-3">触发、目标与边界</h3>
+<p>DMS Camera/ISP 持续出帧且驾驶员监测策略在当前车辆条件下启用。目标是分离红外/驾驶员相机帧、算法推理、置信度与质量门限、告警策略、视觉/听觉反馈以及告警消退。本卡使用库存流程作为诊断骨架，不把相邻模块、标准协议行为或候选进程关系提升为 MT8676 私有事实。</p>
+<p>[置信度：mixed] 原图或 MT8676 资料只直接支撑所列模块、标签、局部箭头和明确资料内容；完整端到端顺序、Buffer/音频资源合同和恢复步骤由标准机制与受控业务假设补充。具体设备、属性、流 ID、周期、线程、进程和阈值仍需项目配置及运行证据确认。</p>
+<h3 id="正常链-3">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  N0[&quot;DMS-Camera/ISP&quot;]
+  N1[&quot;frame-preprocess&quot;]
+  N0 --&gt; N1
+  N2[&quot;DMS-algorithm&quot;]
+  N1 --&gt; N2
+  N3[&quot;confidence/quality&quot;]
+  N2 --&gt; N3
+  N4[&quot;warning-policy&quot;]
+  N3 --&gt; N4
+  N5[&quot;Cluster/HMI&quot;]
+  N4 --&gt; N5
+  N6[&quot;driver-feedback&quot;]
+  N5 --&gt; N6</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N0[&quot;DMS-Camera/ISP&quot;]
+  N1[&quot;frame-preprocess&quot;]
+  N0 --&gt; N1
+  N2[&quot;DMS-algorithm&quot;]
+  N1 --&gt; N2
+  N3[&quot;confidence/quality&quot;]
+  N2 --&gt; N3
+  N4[&quot;warning-policy&quot;]
+  N3 --&gt; N4
+  N5[&quot;Cluster/HMI&quot;]
+  N4 --&gt; N5
+  N6[&quot;driver-feedback&quot;]
+  N5 --&gt; N6</code></pre></details></details><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。DMS 算法输出不等于告警策略接受；告警状态不等于 Cluster 已渲染；视觉告警出现不等于听觉提示已输出。置信度、输入质量、车辆条件和抑制原因必须同代记录。</p>
+<h3 id="分层子链与方向-3">分层子链与方向</h3>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>DMS 框继续表示舱内感知消费者，不把所有 Camera Host 的硬件能力视为其独占资源。解释时分别记录传感器/ISP 产帧、图像可消费、算法处理、告警发布与 HMI 呈现；帧率正常但反复消费旧 buffer 仍可形成冻帧。MTK Host/Guest 手册可确认服务边界，DMS 实际部署域、模型和 NPU/GPU 路径仍须项目工程证据。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页<small>〔本地来源〕</small></span></p>
+<p>控制平面负责触发、模式、焦点、路由或会话命令；数据平面负责 frame、buffer、PCM 或算法事件；策略平面负责状态机、优先级、合成或 focus/route 决策；物理输出平面负责屏、麦克风、DSP、功放或扬声器；反馈平面负责回读、callback、fence、首帧、最终状态或用户可见/可听结果。五个平面可以共享服务，但不能用其中一个平面的成功替代其他平面。</p>
+<p>对于显示类流程，trigger valid ≠ source frame available ≠ buffer transported ≠ composed ≠ presented ≠ physically visible。对于音频类流程，control accepted ≠ audio data flowing ≠ focus granted ≠ route active ≠ DSP/amplifier output audible。排障必须标明当前分析的是哪一个平面以及数据方向，避免把控制返回当作物理结果。</p>
+<h3 id="资源生命周期-3">资源生命周期</h3>
+<p>创建成功 ≠ 已交给消费者 ≠ 消费完成 ≠ 已释放。资源表中的创建者负责初始有效性，持有者负责引用和代际，消费者负责完成信号，释放者负责对称清理；服务重启时还要确认旧持有者不能访问新资源。</p>
+<table>
+<thead>
+<tr>
+<th>资源</th>
+<th>创建者</th>
+<th>持有者</th>
+<th>消费者</th>
+<th>释放者</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DMS Camera buffer</td>
+<td>camera service</td>
+<td>ISP/DMS</td>
+<td>DMS algorithm</td>
+<td>camera service</td>
+</tr>
+<tr>
+<td>algorithm Session</td>
+<td>DMS service</td>
+<td>inference runtime</td>
+<td>warning policy</td>
+<td>DMS service</td>
+</tr>
+<tr>
+<td>warning resource</td>
+<td>warning policy</td>
+<td>Cluster/HMI</td>
+<td>driver</td>
+<td>policy clear</td>
+</tr>
+</tbody></table>
+<p>资源诊断要记录资源身份、创建/连接时间、当前 holder、入队/出队或 track 状态、fence/callback、关闭顺序与未释放计数。Camera、GStreamer、Surface、MediaCodec、AudioTrack、AudioRecord、AEC、DSP route 和 call Session 不是可互换的“媒体资源”，每类都有自己的创建和释放边界。</p>
+<h3 id="反馈闭环-3">反馈闭环</h3>
+<p>反馈必须与原触发或请求相关，而不是只看时间接近。显示链优先使用首帧、frame callback、PageFlip/present fence 与物理观察；音频链使用 track/route、DSP/功放状态和物理有声；控制链使用权威回读或最终状态。反馈缺失时保留最后一个正确输出和第一个缺失输入。</p>
+<h3 id="异常分支-3">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[&quot;DMS 驾驶员监控异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
+  B -- 否 --&gt; B1[&quot;DMS Camera 无帧&quot;]
+  B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
+  C -- 否 --&gt; C1[&quot;算法超时或质量不足&quot;]
+  C -- 是 --&gt; D{&quot;策略、合成或路由正确?&quot;}
+  D -- 否 --&gt; D1[&quot;告警 IPC/状态投递失败&quot;]
+  D -- 是 --&gt; E{&quot;物理输出与反馈闭环?&quot;}
+  E -- 否 --&gt; E1[&quot;策略抑制或 HMI 输出错误&quot;]
+  B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[&quot;DMS 驾驶员监控异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
+  B -- 否 --&gt; B1[&quot;DMS Camera 无帧&quot;]
+  B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
+  C -- 否 --&gt; C1[&quot;算法超时或质量不足&quot;]
+  C -- 是 --&gt; D{&quot;策略、合成或路由正确?&quot;}
+  D -- 否 --&gt; D1[&quot;告警 IPC/状态投递失败&quot;]
+  D -- 是 --&gt; E{&quot;物理输出与反馈闭环?&quot;}
+  E -- 否 --&gt; E1[&quot;策略抑制或 HMI 输出错误&quot;]
+  B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R</code></pre></details></details><p>本流程的主要异常分支为：DMS Camera 无帧；算法超时或质量不足；告警 IPC/状态投递失败；策略抑制或 HMI 输出错误。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
+<p>恢复路径：恢复新鲜相机帧和算法 Session，确认新推理序号、策略接受原因、视觉/听觉输出和消退条件，拒绝旧推理回调。恢复后验证必须覆盖新 Generation/Session、资源重新创建、关键 callback/fence/readback、物理结果以及旧会话隔离。只看到进程存活、API 返回或日志停止报错均不足以宣布业务恢复。</p>
+<h3 id="日志与诊断-3">日志与诊断</h3>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>触发/源</td>
+<td>当前 Generation 的触发、源状态与时间推进</td>
+<td>DMS Camera 无帧</td>
+<td>源正确不证明下游消费</td>
+<td>源/触发所有者</td>
+</tr>
+<tr>
+<td>数据或 Buffer</td>
+<td>sequence、timestamp、buffer/track 状态连续</td>
+<td>算法超时或质量不足</td>
+<td>有数据不证明策略或合成正确</td>
+<td>frame-preprocess</td>
+</tr>
+<tr>
+<td>策略/合成/路由</td>
+<td>最终决策、目标层或 route 与事件一致</td>
+<td>告警 IPC/状态投递失败</td>
+<td>软件状态不证明物理输出</td>
+<td>warning-policy</td>
+</tr>
+<tr>
+<td>物理输出</td>
+<td>present、有声、可见或可回放结果可观察</td>
+<td>策略抑制或 HMI 输出错误</td>
+<td>截图/录音不能定位上游</td>
+<td>Cluster/HMI</td>
+</tr>
+<tr>
+<td>反馈/释放</td>
+<td>回调、回读、fence 或最终状态与请求相关</td>
+<td>旧回调、资源未归还、代际污染</td>
+<td>恢复动作不证明根因</td>
+<td>会话/资源所有者</td>
+</tr>
+</tbody></table>
+<p>日志采集应使用同一事件窗口并保留单调时间、墙钟、Sequence、Generation、Request/Buffer/Session 身份。命令和日志名称只作为通用采集方法；在没有 MT8676 运行清单时，不把通用 tag、设备节点或接口参数写成平台固定值。</p>
+<h3 id="责任域-3">责任域</h3>
+<p>责任划分以最早断点为准：触发/源所有者证明输入；资源生产者证明创建和发布；中间服务证明当前代传输与策略；合成/音频策略证明最终决策；驱动与硬件证明物理输出；业务应用证明用户状态。跨团队升级材料至少包含软件版本、统一时间窗、触发/请求原文、各层输入输出、资源身份和 holder、回调/fence/readback、恢复动作及恢复后物理证据。</p>
+<h3 id="证据与置信度-3">证据与置信度</h3>
+<p>[置信度：mixed] 证据 ID 为 <code>original-diagram-02</code>。它们支撑可见架构元素或明确资料内容；本卡的完整诊断链和异常树属于受控组合。若接口描述、部署清单、状态机规格或运行 trace 与本卡不同，以项目证据为准并更新库存。</p>
+<h2 id="t12tmt8668-camera-架构集成平台边界隔离">T12T/MT8668 Camera 架构集成（平台边界隔离）</h2>
+<p>本手册的主平台是 MT8676；以下内容来自 T12T 已确认的 <strong>MT8668</strong> Camera 架构资料，作为
+项目叠加架构单独保存。它不反向证明 MT8676 的 CSI、HAL、DDR、SerDes 或虚拟化实现，两个
+平台的共同术语只能作为诊断方法，不能互相替代硬件事实。</p>
+<p>T12T 已确认的输入拓扑是四路环视 Camera 经域控侧 MAX96712 聚合：一路 CSI-2 C-PHY/3 trios
+给域控本地 SoC；另两路 CSI-2 D-PHY/2 Lane 经两颗 MAX96717，形成 <code>前+右</code>、<code>后+左</code> 两路
+GMSL2 6 Gbps 组合流；MT8668 接收侧 MAX96712 再将两路 <code>3840×1536</code> 组合图送至 MT8668
+CSI/P1。组合图的方向、ROI、格式、stride/padding、blanking、SOF 和时间戳对齐仍是接口冻结项。</p>
+<pre><code>Composite 0: Front + Right  (3840×1536)
+Composite 1: Rear  + Left   (3840×1536)
+CSI/P1 → Yocto Camera HAL Server/CameraTurboEngine → P2
+     → PQDIP: Right/Rear/Left 的 AVM + DVR 输出
+     → MML:   Front 的 AVM 输出
+Yocto AVM / Android DVR 通过各自消费路径取得结果</code></pre><p>控制面与数据面必须分开：倒挡/AVM 模式等车辆状态若由 CanService/FDBUS 或等价服务提供，
+其启动请求必须等待当前 Generation 的服务 READY 与有效快照；Sensor/SerDes/CSI/ISP/Buffer
+数据面仍独立证明首帧、sequence、timestamp、Buffer 所有权和 release。因而“FDBUS 未 READY”
+只能解释控制触发未被接收、排队或重放，不能替代 <code>Camera source-no-frame</code>、pipeline stop 或
+display layer 不可见的证据。</p>
+<p>DDR 设计优先级为共享物理输出 buffer，其次由 P2/PQDIP/MML 硬件拆图，避免 App/CPU memcpy；
+若声称在完整组合帧落 DDR 前完成流式拆分，必须由 MTK 明确支持。当前 25 fps、
+<code>1920×1536</code> 单方向图为 73.728 Mpixel/s；PQDIP 单实例三路约 221.184 Mpixel/s。该吞吐是
+T12T/MT8668 方案的估算输入，最终以 MTK/PVT 实测和实际格式/stride 为准。</p>
+<p>[置信度：T12T 资料确认 + 待实测] 来源为
+<code>Camera架构/MT8668最终Camera架构与DDR解读.md</code>；已确认拓扑与仍待 MTK/SerDes/应用冻结的
+参数在该源文档中分别标注。本节不改变 FLOW-09～17 的 MT8676 证据等级。</p>
+<h2 id="业务流程-flow-13">业务流程 FLOW-13</h2>
+<h3 id="adas-告警">ADAS 告警</h3>
+<h3 id="触发目标与边界-4">触发、目标与边界</h3>
+<p>ADAS ECU 或 SWC 发布碰撞、车道或辅助驾驶告警，并携带有效 E2E 与当前车辆代际。目标是把车辆告警源、CAN/E2E、跨域服务、优先级/抑制状态机、视觉图标、听觉提示和告警消退连成双输出闭环。本卡使用库存流程作为诊断骨架，不把相邻模块、标准协议行为或候选进程关系提升为 MT8676 私有事实。</p>
+<p>[置信度：mixed] 原图或 MT8676 资料只直接支撑所列模块、标签、局部箭头和明确资料内容；完整端到端顺序、Buffer/音频资源合同和恢复步骤由标准机制与受控业务假设补充。具体设备、属性、流 ID、周期、线程、进程和阈值仍需项目配置及运行证据确认。</p>
+<h3 id="正常链-4">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  N0[&quot;ADAS-ECU/SWC&quot;]
+  N1[&quot;CAN/E2E&quot;]
+  N0 --&gt; N1
+  N2[&quot;MCU/CanService&quot;]
+  N1 --&gt; N2
+  N3[&quot;warning-state-machine&quot;]
+  N2 --&gt; N3
+  N4[&quot;visual-warning&quot;]
+  N3 --&gt; N4
+  N5[&quot;audio-warning&quot;]
+  N4 --&gt; N5
+  N6[&quot;driver-observation&quot;]
+  N5 --&gt; N6</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N0[&quot;ADAS-ECU/SWC&quot;]
+  N1[&quot;CAN/E2E&quot;]
+  N0 --&gt; N1
+  N2[&quot;MCU/CanService&quot;]
+  N1 --&gt; N2
+  N3[&quot;warning-state-machine&quot;]
+  N2 --&gt; N3
+  N4[&quot;visual-warning&quot;]
+  N3 --&gt; N4
+  N5[&quot;audio-warning&quot;]
+  N4 --&gt; N5
+  N6[&quot;driver-observation&quot;]
+  N5 --&gt; N6</code></pre></details></details><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。ADAS 报文有效不等于告警状态机接受；算法输出 ≠ warning policy accepted ≠ visual warning rendered ≠ audible warning heard。视觉告警和听觉告警必须共享事件身份却分别验证输出。</p>
+<h3 id="分层子链与方向-4">分层子链与方向</h3>
+<p>控制平面负责触发、模式、焦点、路由或会话命令；数据平面负责 frame、buffer、PCM 或算法事件；策略平面负责状态机、优先级、合成或 focus/route 决策；物理输出平面负责屏、麦克风、DSP、功放或扬声器；反馈平面负责回读、callback、fence、首帧、最终状态或用户可见/可听结果。五个平面可以共享服务，但不能用其中一个平面的成功替代其他平面。</p>
+<p>对于显示类流程，trigger valid ≠ source frame available ≠ buffer transported ≠ composed ≠ presented ≠ physically visible。对于音频类流程，control accepted ≠ audio data flowing ≠ focus granted ≠ route active ≠ DSP/amplifier output audible。排障必须标明当前分析的是哪一个平面以及数据方向，避免把控制返回当作物理结果。</p>
+<h3 id="资源生命周期-4">资源生命周期</h3>
+<p>创建成功 ≠ 已交给消费者 ≠ 消费完成 ≠ 已释放。资源表中的创建者负责初始有效性，持有者负责引用和代际，消费者负责完成信号，释放者负责对称清理；服务重启时还要确认旧持有者不能访问新资源。</p>
+<table>
+<thead>
+<tr>
+<th>资源</th>
+<th>创建者</th>
+<th>持有者</th>
+<th>消费者</th>
+<th>释放者</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>warning event</td>
+<td>ADAS ECU/SWC</td>
+<td>MCU/CanService</td>
+<td>warning state machine</td>
+<td>event expiry</td>
+</tr>
+<tr>
+<td>visual warning Surface</td>
+<td>Cluster</td>
+<td>compositor</td>
+<td>display</td>
+<td>Cluster</td>
+</tr>
+<tr>
+<td>warning AudioTrack</td>
+<td>warning policy</td>
+<td>audio system</td>
+<td>DSP/speaker</td>
+<td>warning policy</td>
+</tr>
+</tbody></table>
+<p>资源诊断要记录资源身份、创建/连接时间、当前 holder、入队/出队或 track 状态、fence/callback、关闭顺序与未释放计数。Camera、GStreamer、Surface、MediaCodec、AudioTrack、AudioRecord、AEC、DSP route 和 call Session 不是可互换的“媒体资源”，每类都有自己的创建和释放边界。</p>
+<h3 id="反馈闭环-4">反馈闭环</h3>
+<p>反馈必须与原触发或请求相关，而不是只看时间接近。显示链优先使用首帧、frame callback、PageFlip/present fence 与物理观察；音频链使用 track/route、DSP/功放状态和物理有声；控制链使用权威回读或最终状态。反馈缺失时保留最后一个正确输出和第一个缺失输入。</p>
+<h3 id="异常分支-4">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[&quot;ADAS 告警异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
+  B -- 否 --&gt; B1[&quot;CAN/E2E 无效或陈旧&quot;]
+  B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
+  C -- 否 --&gt; C1[&quot;跨域 Topic/缓存过期&quot;]
+  C -- 是 --&gt; D{&quot;策略、合成或路由正确?&quot;}
+  D -- 否 --&gt; D1[&quot;优先级或抑制状态错误&quot;]
+  D -- 是 --&gt; E{&quot;物理输出与反馈闭环?&quot;}
+  E -- 否 --&gt; E1[&quot;音画输出不同步或物理输出失败&quot;]
+  B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[&quot;ADAS 告警异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
+  B -- 否 --&gt; B1[&quot;CAN/E2E 无效或陈旧&quot;]
+  B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
+  C -- 否 --&gt; C1[&quot;跨域 Topic/缓存过期&quot;]
+  C -- 是 --&gt; D{&quot;策略、合成或路由正确?&quot;}
+  D -- 否 --&gt; D1[&quot;优先级或抑制状态错误&quot;]
+  D -- 是 --&gt; E{&quot;物理输出与反馈闭环?&quot;}
+  E -- 否 --&gt; E1[&quot;音画输出不同步或物理输出失败&quot;]
+  B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R</code></pre></details></details><p>本流程的主要异常分支为：CAN/E2E 无效或陈旧；跨域 Topic/缓存过期；优先级或抑制状态错误；音画输出不同步或物理输出失败。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
+<p>恢复路径：接收新 Generation 的有效告警，重新计算优先级并分别验证图标和提示音；告警消退后确认两条输出均按策略退出。恢复后验证必须覆盖新 Generation/Session、资源重新创建、关键 callback/fence/readback、物理结果以及旧会话隔离。只看到进程存活、API 返回或日志停止报错均不足以宣布业务恢复。</p>
+<h3 id="日志与诊断-4">日志与诊断</h3>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>触发/源</td>
+<td>当前 Generation 的触发、源状态与时间推进</td>
+<td>CAN/E2E 无效或陈旧</td>
+<td>源正确不证明下游消费</td>
+<td>源/触发所有者</td>
+</tr>
+<tr>
+<td>数据或 Buffer</td>
+<td>sequence、timestamp、buffer/track 状态连续</td>
+<td>跨域 Topic/缓存过期</td>
+<td>有数据不证明策略或合成正确</td>
+<td>CAN/E2E</td>
+</tr>
+<tr>
+<td>策略/合成/路由</td>
+<td>最终决策、目标层或 route 与事件一致</td>
+<td>优先级或抑制状态错误</td>
+<td>软件状态不证明物理输出</td>
+<td>visual-warning</td>
+</tr>
+<tr>
+<td>物理输出</td>
+<td>present、有声、可见或可回放结果可观察</td>
+<td>音画输出不同步或物理输出失败</td>
+<td>截图/录音不能定位上游</td>
+<td>audio-warning</td>
+</tr>
+<tr>
+<td>反馈/释放</td>
+<td>回调、回读、fence 或最终状态与请求相关</td>
+<td>旧回调、资源未归还、代际污染</td>
+<td>恢复动作不证明根因</td>
+<td>会话/资源所有者</td>
+</tr>
+</tbody></table>
+<p>日志采集应使用同一事件窗口并保留单调时间、墙钟、Sequence、Generation、Request/Buffer/Session 身份。命令和日志名称只作为通用采集方法；在没有 MT8676 运行清单时，不把通用 tag、设备节点或接口参数写成平台固定值。</p>
+<h3 id="责任域-4">责任域</h3>
+<p>责任划分以最早断点为准：触发/源所有者证明输入；资源生产者证明创建和发布；中间服务证明当前代传输与策略；合成/音频策略证明最终决策；驱动与硬件证明物理输出；业务应用证明用户状态。跨团队升级材料至少包含软件版本、统一时间窗、触发/请求原文、各层输入输出、资源身份和 holder、回调/fence/readback、恢复动作及恢复后物理证据。</p>
+<h3 id="证据与置信度-4">证据与置信度</h3>
+<p>[置信度：mixed] 证据 ID 为 <code>original-diagram-01,original-diagram-02</code>。它们支撑可见架构元素或明确资料内容；本卡的完整诊断链和异常树属于受控组合。若接口描述、部署清单、状态机规格或运行 trace 与本卡不同，以项目证据为准并更新库存。</p>
+<h2 id="业务流程-flow-14">业务流程 FLOW-14</h2>
+<h3 id="行车记录仪与哨兵模式">行车记录仪与哨兵模式</h3>
+<h3 id="触发目标与边界-5">触发、目标与边界</h3>
+<p>点火、碰撞、哨兵事件或用户录制操作请求 Camera 采集并保存可检索媒体。目标是验证 Camera 到编码、封装、存储、索引和回放的持久化链，并明确循环录制、事件保护和退出释放的不同状态。本卡使用库存流程作为诊断骨架，不把相邻模块、标准协议行为或候选进程关系提升为 MT8676 私有事实。</p>
+<p>[置信度：mixed] 原图或 MT8676 资料只直接支撑所列模块、标签、局部箭头和明确资料内容；完整端到端顺序、Buffer/音频资源合同和恢复步骤由标准机制与受控业务假设补充。具体设备、属性、流 ID、周期、线程、进程和阈值仍需项目配置及运行证据确认。</p>
+<h3 id="正常链-5">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  N0[&quot;Camera&quot;]
+  N1[&quot;Camera-Service&quot;]
+  N0 --&gt; N1
+  N2[&quot;ImageReader/Surface&quot;]
+  N1 --&gt; N2
+  N3[&quot;MediaCodec&quot;]
+  N2 --&gt; N3
+  N4[&quot;container-writer&quot;]
+  N3 --&gt; N4
+  N5[&quot;storage&quot;]
+  N4 --&gt; N5
+  N6[&quot;media-index&quot;]
+  N5 --&gt; N6
+  N7[&quot;playback/thumbnail&quot;]
+  N6 --&gt; N7</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N0[&quot;Camera&quot;]
+  N1[&quot;Camera-Service&quot;]
+  N0 --&gt; N1
+  N2[&quot;ImageReader/Surface&quot;]
+  N1 --&gt; N2
+  N3[&quot;MediaCodec&quot;]
+  N2 --&gt; N3
+  N4[&quot;container-writer&quot;]
+  N3 --&gt; N4
+  N5[&quot;storage&quot;]
+  N4 --&gt; N5
+  N6[&quot;media-index&quot;]
+  N5 --&gt; N6
+  N7[&quot;playback/thumbnail&quot;]
+  N6 --&gt; N7</code></pre></details></details><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。Camera 有帧不等于 MediaCodec 正常编码；编码输出不等于文件已封装；文件存在不等于存储完整；索引可见不等于内容可回放。ImageReader buffer、MediaCodec output 和存储写入要独立观察。</p>
+<h3 id="分层子链与方向-5">分层子链与方向</h3>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>DVR/哨兵同时依赖 Camera 源、编码消费者、存储与电源状态。PVT 编解码材料中的队列/fence/编码实例可用于解释“源仍在出帧而文件不增长”的情况：中间可能是消费者阻塞、编码未回收或存储写入失败。项目模型中 AVM 4 次与 DVR 3 次读取应分别计入 DDR；共享输入/输出不等于零带宽。原业务流保留，实际帧率、编码码率和哨兵电源策略不由培训示例决定。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U047 · 软件开发培训-音视频解码常见问题及分析.pdf · PDF第6-10页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md<small>〔本地来源〕</small></span></p>
+<p>控制平面负责触发、模式、焦点、路由或会话命令；数据平面负责 frame、buffer、PCM 或算法事件；策略平面负责状态机、优先级、合成或 focus/route 决策；物理输出平面负责屏、麦克风、DSP、功放或扬声器；反馈平面负责回读、callback、fence、首帧、最终状态或用户可见/可听结果。五个平面可以共享服务，但不能用其中一个平面的成功替代其他平面。</p>
+<p>对于显示类流程，trigger valid ≠ source frame available ≠ buffer transported ≠ composed ≠ presented ≠ physically visible。对于音频类流程，control accepted ≠ audio data flowing ≠ focus granted ≠ route active ≠ DSP/amplifier output audible。排障必须标明当前分析的是哪一个平面以及数据方向，避免把控制返回当作物理结果。</p>
+<h3 id="资源生命周期-5">资源生命周期</h3>
+<p>创建成功 ≠ 已交给消费者 ≠ 消费完成 ≠ 已释放。资源表中的创建者负责初始有效性，持有者负责引用和代际，消费者负责完成信号，释放者负责对称清理；服务重启时还要确认旧持有者不能访问新资源。</p>
+<table>
+<thead>
+<tr>
+<th>资源</th>
+<th>创建者</th>
+<th>持有者</th>
+<th>消费者</th>
+<th>释放者</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Camera buffer</td>
+<td>camera service</td>
+<td>ImageReader</td>
+<td>MediaCodec</td>
+<td>ImageReader/camera</td>
+</tr>
+<tr>
+<td>MediaCodec Session</td>
+<td>recorder</td>
+<td>codec service</td>
+<td>container writer</td>
+<td>recorder</td>
+</tr>
+<tr>
+<td>media file</td>
+<td>container writer</td>
+<td>storage</td>
+<td>index/playback</td>
+<td>retention policy</td>
+</tr>
+</tbody></table>
+<p>资源诊断要记录资源身份、创建/连接时间、当前 holder、入队/出队或 track 状态、fence/callback、关闭顺序与未释放计数。Camera、GStreamer、Surface、MediaCodec、AudioTrack、AudioRecord、AEC、DSP route 和 call Session 不是可互换的“媒体资源”，每类都有自己的创建和释放边界。</p>
+<h3 id="反馈闭环-5">反馈闭环</h3>
+<p>反馈必须与原触发或请求相关，而不是只看时间接近。显示链优先使用首帧、frame callback、PageFlip/present fence 与物理观察；音频链使用 track/route、DSP/功放状态和物理有声；控制链使用权威回读或最终状态。反馈缺失时保留最后一个正确输出和第一个缺失输入。</p>
+<h3 id="异常分支-5">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[&quot;行车记录仪与哨兵模式异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
+  B -- 否 --&gt; B1[&quot;Camera/ImageReader buffer 不归还&quot;]
+  B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
+  C -- 否 --&gt; C1[&quot;MediaCodec 堵塞或输出 Surface 失效&quot;]
+  C -- 是 --&gt; D{&quot;策略、合成或路由正确?&quot;}
+  D -- 否 --&gt; D1[&quot;存储空间/写入失败&quot;]
+  D -- 是 --&gt; E{&quot;物理输出与反馈闭环?&quot;}
+  E -- 否 --&gt; E1[&quot;索引缺失或回放损坏&quot;]
+  B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[&quot;行车记录仪与哨兵模式异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
+  B -- 否 --&gt; B1[&quot;Camera/ImageReader buffer 不归还&quot;]
+  B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
+  C -- 否 --&gt; C1[&quot;MediaCodec 堵塞或输出 Surface 失效&quot;]
+  C -- 是 --&gt; D{&quot;策略、合成或路由正确?&quot;}
+  D -- 否 --&gt; D1[&quot;存储空间/写入失败&quot;]
+  D -- 是 --&gt; E{&quot;物理输出与反馈闭环?&quot;}
+  E -- 否 --&gt; E1[&quot;索引缺失或回放损坏&quot;]
+  B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R</code></pre></details></details><p>本流程的主要异常分支为：Camera/ImageReader buffer 不归还；MediaCodec 堵塞或输出 Surface 失效；存储空间/写入失败；索引缺失或回放损坏。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
+<p>恢复路径：重建 Camera 与 MediaCodec 资源，写入新文件并完成封装/同步，触发索引后进行独立回放；损坏文件不得冒充成功恢复。恢复后验证必须覆盖新 Generation/Session、资源重新创建、关键 callback/fence/readback、物理结果以及旧会话隔离。只看到进程存活、API 返回或日志停止报错均不足以宣布业务恢复。</p>
+<h3 id="日志与诊断-5">日志与诊断</h3>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>触发/源</td>
+<td>当前 Generation 的触发、源状态与时间推进</td>
+<td>Camera/ImageReader buffer 不归还</td>
+<td>源正确不证明下游消费</td>
+<td>源/触发所有者</td>
+</tr>
+<tr>
+<td>数据或 Buffer</td>
+<td>sequence、timestamp、buffer/track 状态连续</td>
+<td>MediaCodec 堵塞或输出 Surface 失效</td>
+<td>有数据不证明策略或合成正确</td>
+<td>Camera-Service</td>
+</tr>
+<tr>
+<td>策略/合成/路由</td>
+<td>最终决策、目标层或 route 与事件一致</td>
+<td>存储空间/写入失败</td>
+<td>软件状态不证明物理输出</td>
+<td>storage</td>
+</tr>
+<tr>
+<td>物理输出</td>
+<td>present、有声、可见或可回放结果可观察</td>
+<td>索引缺失或回放损坏</td>
+<td>截图/录音不能定位上游</td>
+<td>media-index</td>
+</tr>
+<tr>
+<td>反馈/释放</td>
+<td>回调、回读、fence 或最终状态与请求相关</td>
+<td>旧回调、资源未归还、代际污染</td>
+<td>恢复动作不证明根因</td>
+<td>会话/资源所有者</td>
+</tr>
+</tbody></table>
+<p>日志采集应使用同一事件窗口并保留单调时间、墙钟、Sequence、Generation、Request/Buffer/Session 身份。命令和日志名称只作为通用采集方法；在没有 MT8676 运行清单时，不把通用 tag、设备节点或接口参数写成平台固定值。</p>
+<h3 id="责任域-5">责任域</h3>
+<p>责任划分以最早断点为准：触发/源所有者证明输入；资源生产者证明创建和发布；中间服务证明当前代传输与策略；合成/音频策略证明最终决策；驱动与硬件证明物理输出；业务应用证明用户状态。跨团队升级材料至少包含软件版本、统一时间窗、触发/请求原文、各层输入输出、资源身份和 holder、回调/fence/readback、恢复动作及恢复后物理证据。</p>
+<h3 id="证据与置信度-5">证据与置信度</h3>
+<p>[置信度：mixed] 证据 ID 为 <code>original-diagram-01,original-diagram-02</code>。它们支撑可见架构元素或明确资料内容；本卡的完整诊断链和异常树属于受控组合。若接口描述、部署清单、状态机规格或运行 trace 与本卡不同，以项目证据为准并更新库存。</p>
+<h2 id="业务流程-flow-15">业务流程 FLOW-15</h2>
+<h3 id="android-渲染链">Android 渲染链</h3>
+<h3 id="触发目标与边界-6">触发、目标与边界</h3>
+<p>VSYNC 到达且 View invalidation 或 Surface transaction 产生待显示内容。目标是从应用调度、绘制、buffer 生产、合成、硬件合成、显示提交到物理面板逐层确认，同时跟踪 fence 和 buffer 所有权。本卡使用库存流程作为诊断骨架，不把相邻模块、标准协议行为或候选进程关系提升为 MT8676 私有事实。</p>
+<p>[置信度：mixed] 原图或 MT8676 资料只直接支撑所列模块、标签、局部箭头和明确资料内容；完整端到端顺序、Buffer/音频资源合同和恢复步骤由标准机制与受控业务假设补充。具体设备、属性、流 ID、周期、线程、进程和阈值仍需项目配置及运行证据确认。</p>
+<h3 id="正常链-6">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  N0[&quot;App/View&quot;]
+  N1[&quot;ViewRootImpl/Choreographer&quot;]
+  N0 --&gt; N1
+  N2[&quot;RenderThread/HWUI&quot;]
+  N1 --&gt; N2
+  N3[&quot;Surface/BufferQueue&quot;]
+  N2 --&gt; N3
+  N4[&quot;SurfaceFlinger&quot;]
+  N3 --&gt; N4
+  N5[&quot;HWC&quot;]
+  N4 --&gt; N5
+  N6[&quot;Display-HAL&quot;]
+  N5 --&gt; N6
+  N7[&quot;DRM/MDP&quot;]
+  N6 --&gt; N7
+  N8[&quot;physical-display&quot;]
+  N7 --&gt; N8</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N0[&quot;App/View&quot;]
+  N1[&quot;ViewRootImpl/Choreographer&quot;]
+  N0 --&gt; N1
+  N2[&quot;RenderThread/HWUI&quot;]
+  N1 --&gt; N2
+  N3[&quot;Surface/BufferQueue&quot;]
+  N2 --&gt; N3
+  N4[&quot;SurfaceFlinger&quot;]
+  N3 --&gt; N4
+  N5[&quot;HWC&quot;]
+  N4 --&gt; N5
+  N6[&quot;Display-HAL&quot;]
+  N5 --&gt; N6
+  N7[&quot;DRM/MDP&quot;]
+  N6 --&gt; N7
+  N8[&quot;physical-display&quot;]
+  N7 --&gt; N8</code></pre></details></details><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。buffer queued ≠ consumer acquired ≠ present fence signaled ≠ panel visible ≠ buffer released。BufferQueue 有可用 buffer 不等于 SurfaceFlinger 已 latch，HWC present 返回也不自动证明背光与面板可见。</p>
+<h3 id="分层子链与方向-6">分层子链与方向</h3>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>Android 渲染链中的 Window、Surface、BufferQueue、SF/HWC 和物理显示应保持不同身份。PVT 提醒 screenrecord、禁用硬件合成或 PQ bypass 会改变被测路径，它们只能作为对照实验；“截图正常”不能单独锁定 HWC 根因。关联同一帧的生产、queue/acquire、fence、present 与下游输出证据，再判断最早断点。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S285 · 显示问题common+sop.pdf · PDF第2-5页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U047 · 软件开发培训-音视频解码常见问题及分析.pdf · PDF第11页<small>〔本地来源〕</small></span></p>
+<p>控制平面负责触发、模式、焦点、路由或会话命令；数据平面负责 frame、buffer、PCM 或算法事件；策略平面负责状态机、优先级、合成或 focus/route 决策；物理输出平面负责屏、麦克风、DSP、功放或扬声器；反馈平面负责回读、callback、fence、首帧、最终状态或用户可见/可听结果。五个平面可以共享服务，但不能用其中一个平面的成功替代其他平面。</p>
+<p>对于显示类流程，trigger valid ≠ source frame available ≠ buffer transported ≠ composed ≠ presented ≠ physically visible。对于音频类流程，control accepted ≠ audio data flowing ≠ focus granted ≠ route active ≠ DSP/amplifier output audible。排障必须标明当前分析的是哪一个平面以及数据方向，避免把控制返回当作物理结果。</p>
+<h3 id="资源生命周期-6">资源生命周期</h3>
+<p>创建成功 ≠ 已交给消费者 ≠ 消费完成 ≠ 已释放。资源表中的创建者负责初始有效性，持有者负责引用和代际，消费者负责完成信号，释放者负责对称清理；服务重启时还要确认旧持有者不能访问新资源。</p>
+<table>
+<thead>
+<tr>
+<th>资源</th>
+<th>创建者</th>
+<th>持有者</th>
+<th>消费者</th>
+<th>释放者</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Surface</td>
+<td>App/Window</td>
+<td>App/SurfaceFlinger</td>
+<td>compositor</td>
+<td>App/Window</td>
+</tr>
+<tr>
+<td>BufferQueue/GraphicBuffer</td>
+<td>producer/allocator</td>
+<td>producer/consumer</td>
+<td>SurfaceFlinger/HWC</td>
+<td>queue owners</td>
+</tr>
+<tr>
+<td>present fence</td>
+<td>HWC/display</td>
+<td>framework/kernel</td>
+<td>producer/recycler</td>
+<td>fence close owner</td>
+</tr>
+</tbody></table>
+<p>资源诊断要记录资源身份、创建/连接时间、当前 holder、入队/出队或 track 状态、fence/callback、关闭顺序与未释放计数。Camera、GStreamer、Surface、MediaCodec、AudioTrack、AudioRecord、AEC、DSP route 和 call Session 不是可互换的“媒体资源”，每类都有自己的创建和释放边界。</p>
+<h3 id="反馈闭环-6">反馈闭环</h3>
+<p>反馈必须与原触发或请求相关，而不是只看时间接近。显示链优先使用首帧、frame callback、PageFlip/present fence 与物理观察；音频链使用 track/route、DSP/功放状态和物理有声；控制链使用权威回读或最终状态。反馈缺失时保留最后一个正确输出和第一个缺失输入。</p>
+<h3 id="异常分支-6">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[&quot;Android 渲染链异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
+  B -- 否 --&gt; B1[&quot;UI/RenderThread 不推进&quot;]
+  B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
+  C -- 否 --&gt; C1[&quot;BufferQueue dequeue/queue 堵塞&quot;]
+  C -- 是 --&gt; D{&quot;策略、合成或路由正确?&quot;}
+  D -- 否 --&gt; D1[&quot;Surface/GraphicBuffer 泄漏&quot;]
+  D -- 是 --&gt; E{&quot;物理输出与反馈闭环?&quot;}
+  E -- 否 --&gt; E1[&quot;HWC/DRM present fence 不推进&quot;]
+  B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[&quot;Android 渲染链异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
+  B -- 否 --&gt; B1[&quot;UI/RenderThread 不推进&quot;]
+  B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
+  C -- 否 --&gt; C1[&quot;BufferQueue dequeue/queue 堵塞&quot;]
+  C -- 是 --&gt; D{&quot;策略、合成或路由正确?&quot;}
+  D -- 否 --&gt; D1[&quot;Surface/GraphicBuffer 泄漏&quot;]
+  D -- 是 --&gt; E{&quot;物理输出与反馈闭环?&quot;}
+  E -- 否 --&gt; E1[&quot;HWC/DRM present fence 不推进&quot;]
+  B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R</code></pre></details></details><p>本流程的主要异常分支为：UI/RenderThread 不推进；BufferQueue dequeue/queue 堵塞；Surface/GraphicBuffer 泄漏；HWC/DRM present fence 不推进。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
+<p>恢复路径：重建本代 Surface/Layer 和 buffer 队列，产生新帧并看到 acquire/present/release fence 闭环，再用物理观察确认；旧 Layer 不得继续占用。恢复后验证必须覆盖新 Generation/Session、资源重新创建、关键 callback/fence/readback、物理结果以及旧会话隔离。只看到进程存活、API 返回或日志停止报错均不足以宣布业务恢复。</p>
+<h3 id="日志与诊断-6">日志与诊断</h3>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>触发/源</td>
+<td>当前 Generation 的触发、源状态与时间推进</td>
+<td>UI/RenderThread 不推进</td>
+<td>源正确不证明下游消费</td>
+<td>源/触发所有者</td>
+</tr>
+<tr>
+<td>数据或 Buffer</td>
+<td>sequence、timestamp、buffer/track 状态连续</td>
+<td>BufferQueue dequeue/queue 堵塞</td>
+<td>有数据不证明策略或合成正确</td>
+<td>ViewRootImpl/Choreographer</td>
+</tr>
+<tr>
+<td>策略/合成/路由</td>
+<td>最终决策、目标层或 route 与事件一致</td>
+<td>Surface/GraphicBuffer 泄漏</td>
+<td>软件状态不证明物理输出</td>
+<td>Display-HAL</td>
+</tr>
+<tr>
+<td>物理输出</td>
+<td>present、有声、可见或可回放结果可观察</td>
+<td>HWC/DRM present fence 不推进</td>
+<td>截图/录音不能定位上游</td>
+<td>DRM/MDP</td>
+</tr>
+<tr>
+<td>反馈/释放</td>
+<td>回调、回读、fence 或最终状态与请求相关</td>
+<td>旧回调、资源未归还、代际污染</td>
+<td>恢复动作不证明根因</td>
+<td>会话/资源所有者</td>
+</tr>
+</tbody></table>
+<p>日志采集应使用同一事件窗口并保留单调时间、墙钟、Sequence、Generation、Request/Buffer/Session 身份。命令和日志名称只作为通用采集方法；在没有 MT8676 运行清单时，不把通用 tag、设备节点或接口参数写成平台固定值。</p>
+<h3 id="责任域-6">责任域</h3>
+<p>责任划分以最早断点为准：触发/源所有者证明输入；资源生产者证明创建和发布；中间服务证明当前代传输与策略；合成/音频策略证明最终决策；驱动与硬件证明物理输出；业务应用证明用户状态。跨团队升级材料至少包含软件版本、统一时间窗、触发/请求原文、各层输入输出、资源身份和 holder、回调/fence/readback、恢复动作及恢复后物理证据。</p>
+<h3 id="证据与置信度-6">证据与置信度</h3>
+<p>[置信度：mixed] 证据 ID 为 <code>original-diagram-01</code>。它们支撑可见架构元素或明确资料内容；本卡的完整诊断链和异常树属于受控组合。若接口描述、部署清单、状态机规格或运行 trace 与本卡不同，以项目证据为准并更新库存。</p>
+<h2 id="业务流程-flow-16">业务流程 FLOW-16</h2>
+<h3 id="yocto-weston-显示链">Yocto Weston 显示链</h3>
+<h3 id="触发目标与边界-7">触发、目标与边界</h3>
+<p>SOS 客户端创建 Wayland Surface、提交新 buffer 并请求 frame callback。目标是把 Wayland 客户端提交、Weston 合成、DRM/KMS 原子提交、PageFlip/vblank 和 frame callback 分开观察。本卡使用库存流程作为诊断骨架，不把相邻模块、标准协议行为或候选进程关系提升为 MT8676 私有事实。</p>
+<p>[置信度：mixed] 原图或 MT8676 资料只直接支撑所列模块、标签、局部箭头和明确资料内容；完整端到端顺序、Buffer/音频资源合同和恢复步骤由标准机制与受控业务假设补充。具体设备、属性、流 ID、周期、线程、进程和阈值仍需项目配置及运行证据确认。</p>
+<h3 id="正常链-7">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  N0[&quot;SOS-App&quot;]
+  N1[&quot;Wayland-Surface&quot;]
+  N0 --&gt; N1
+  N2[&quot;buffer-commit&quot;]
+  N1 --&gt; N2
+  N3[&quot;Weston&quot;]
+  N2 --&gt; N3
+  N4[&quot;Display-Driver&quot;]
+  N3 --&gt; N4
+  N5[&quot;DRM/KMS&quot;]
+  N4 --&gt; N5
+  N6[&quot;PageFlip/vblank&quot;]
+  N5 --&gt; N6
+  N7[&quot;physical-display&quot;]
+  N6 --&gt; N7</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N0[&quot;SOS-App&quot;]
+  N1[&quot;Wayland-Surface&quot;]
+  N0 --&gt; N1
+  N2[&quot;buffer-commit&quot;]
+  N1 --&gt; N2
+  N3[&quot;Weston&quot;]
+  N2 --&gt; N3
+  N4[&quot;Display-Driver&quot;]
+  N3 --&gt; N4
+  N5[&quot;DRM/KMS&quot;]
+  N4 --&gt; N5
+  N6[&quot;PageFlip/vblank&quot;]
+  N5 --&gt; N6
+  N7[&quot;physical-display&quot;]
+  N6 --&gt; N7</code></pre></details></details><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。Wayland commit 不等于 Weston 已合成；Weston 合成不等于 DRM/KMS 提交成功；PageFlip 不等于面板和背光一定可见；frame callback 也不等于旧 DMA-BUF 已由所有消费者释放。</p>
+<h3 id="分层子链与方向-7">分层子链与方向</h3>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>PVT IVI-shell 说明 surface→layer→screen 的显示组织。黑屏可以来自未绑定正确 layer、visibility/opacity、裁剪矩形或 render order，也可以来自后续 GPU/DRM；因此先保存场景映射，再检查合成输出与物理链路。Weston 重启后 client 必须重新建立有效对象关系，不能以进程 PID 恢复就判定本流程完成。相关依赖按其工程 unit 和 client 实现验证。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U039 · weston介绍和应用.pdf · PDF第9-18页<small>〔本地来源〕</small></span></p>
+<p>控制平面负责触发、模式、焦点、路由或会话命令；数据平面负责 frame、buffer、PCM 或算法事件；策略平面负责状态机、优先级、合成或 focus/route 决策；物理输出平面负责屏、麦克风、DSP、功放或扬声器；反馈平面负责回读、callback、fence、首帧、最终状态或用户可见/可听结果。五个平面可以共享服务，但不能用其中一个平面的成功替代其他平面。</p>
+<p>对于显示类流程，trigger valid ≠ source frame available ≠ buffer transported ≠ composed ≠ presented ≠ physically visible。对于音频类流程，control accepted ≠ audio data flowing ≠ focus granted ≠ route active ≠ DSP/amplifier output audible。排障必须标明当前分析的是哪一个平面以及数据方向，避免把控制返回当作物理结果。</p>
+<h3 id="资源生命周期-7">资源生命周期</h3>
+<p>创建成功 ≠ 已交给消费者 ≠ 消费完成 ≠ 已释放。资源表中的创建者负责初始有效性，持有者负责引用和代际，消费者负责完成信号，释放者负责对称清理；服务重启时还要确认旧持有者不能访问新资源。</p>
+<table>
+<thead>
+<tr>
+<th>资源</th>
+<th>创建者</th>
+<th>持有者</th>
+<th>消费者</th>
+<th>释放者</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Wayland Surface</td>
+<td>SOS App</td>
+<td>client/Weston</td>
+<td>Weston</td>
+<td>SOS App</td>
+</tr>
+<tr>
+<td>DMA-BUF</td>
+<td>client/allocator</td>
+<td>client/Weston/DRM</td>
+<td>scanout</td>
+<td>last holder</td>
+</tr>
+<tr>
+<td>DRM framebuffer</td>
+<td>Weston/DRM</td>
+<td>kernel display</td>
+<td>scanout</td>
+<td>DRM owner</td>
+</tr>
+</tbody></table>
+<p>资源诊断要记录资源身份、创建/连接时间、当前 holder、入队/出队或 track 状态、fence/callback、关闭顺序与未释放计数。Camera、GStreamer、Surface、MediaCodec、AudioTrack、AudioRecord、AEC、DSP route 和 call Session 不是可互换的“媒体资源”，每类都有自己的创建和释放边界。</p>
+<h3 id="反馈闭环-7">反馈闭环</h3>
+<p>反馈必须与原触发或请求相关，而不是只看时间接近。显示链优先使用首帧、frame callback、PageFlip/present fence 与物理观察；音频链使用 track/route、DSP/功放状态和物理有声；控制链使用权威回读或最终状态。反馈缺失时保留最后一个正确输出和第一个缺失输入。</p>
+<h3 id="异常分支-7">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[&quot;Yocto Weston 显示链异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
+  B -- 否 --&gt; B1[&quot;Wayland client 未 commit&quot;]
+  B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
+  C -- 否 --&gt; C1[&quot;DMA-BUF/Fence 未就绪&quot;]
+  C -- 是 --&gt; D{&quot;策略、合成或路由正确?&quot;}
+  D -- 否 --&gt; D1[&quot;Weston compositor 不推进&quot;]
+  D -- 是 --&gt; E{&quot;物理输出与反馈闭环?&quot;}
+  E -- 否 --&gt; E1[&quot;DRM modeset/PageFlip 失败&quot;]
+  B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[&quot;Yocto Weston 显示链异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
+  B -- 否 --&gt; B1[&quot;Wayland client 未 commit&quot;]
+  B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
+  C -- 否 --&gt; C1[&quot;DMA-BUF/Fence 未就绪&quot;]
+  C -- 是 --&gt; D{&quot;策略、合成或路由正确?&quot;}
+  D -- 否 --&gt; D1[&quot;Weston compositor 不推进&quot;]
+  D -- 是 --&gt; E{&quot;物理输出与反馈闭环?&quot;}
+  E -- 否 --&gt; E1[&quot;DRM modeset/PageFlip 失败&quot;]
+  B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R</code></pre></details></details><p>本流程的主要异常分支为：Wayland client 未 commit；DMA-BUF/Fence 未就绪；Weston compositor 不推进；DRM modeset/PageFlip 失败。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
+<p>恢复路径：客户端使用新 Surface generation 提交新 buffer，Weston 完成合成并取得新 frame callback，DRM PageFlip 推进且物理显示验证通过。恢复后验证必须覆盖新 Generation/Session、资源重新创建、关键 callback/fence/readback、物理结果以及旧会话隔离。只看到进程存活、API 返回或日志停止报错均不足以宣布业务恢复。</p>
+<h3 id="日志与诊断-7">日志与诊断</h3>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>触发/源</td>
+<td>当前 Generation 的触发、源状态与时间推进</td>
+<td>Wayland client 未 commit</td>
+<td>源正确不证明下游消费</td>
+<td>源/触发所有者</td>
+</tr>
+<tr>
+<td>数据或 Buffer</td>
+<td>sequence、timestamp、buffer/track 状态连续</td>
+<td>DMA-BUF/Fence 未就绪</td>
+<td>有数据不证明策略或合成正确</td>
+<td>Wayland-Surface</td>
+</tr>
+<tr>
+<td>策略/合成/路由</td>
+<td>最终决策、目标层或 route 与事件一致</td>
+<td>Weston compositor 不推进</td>
+<td>软件状态不证明物理输出</td>
+<td>DRM/KMS</td>
+</tr>
+<tr>
+<td>物理输出</td>
+<td>present、有声、可见或可回放结果可观察</td>
+<td>DRM modeset/PageFlip 失败</td>
+<td>截图/录音不能定位上游</td>
+<td>PageFlip/vblank</td>
+</tr>
+<tr>
+<td>反馈/释放</td>
+<td>回调、回读、fence 或最终状态与请求相关</td>
+<td>旧回调、资源未归还、代际污染</td>
+<td>恢复动作不证明根因</td>
+<td>会话/资源所有者</td>
+</tr>
+</tbody></table>
+<p>日志采集应使用同一事件窗口并保留单调时间、墙钟、Sequence、Generation、Request/Buffer/Session 身份。命令和日志名称只作为通用采集方法；在没有 MT8676 运行清单时，不把通用 tag、设备节点或接口参数写成平台固定值。</p>
+<h3 id="责任域-7">责任域</h3>
+<p>责任划分以最早断点为准：触发/源所有者证明输入；资源生产者证明创建和发布；中间服务证明当前代传输与策略；合成/音频策略证明最终决策；驱动与硬件证明物理输出；业务应用证明用户状态。跨团队升级材料至少包含软件版本、统一时间窗、触发/请求原文、各层输入输出、资源身份和 holder、回调/fence/readback、恢复动作及恢复后物理证据。</p>
+<h3 id="证据与置信度-7">证据与置信度</h3>
+<p>[置信度：mixed] 证据 ID 为 <code>original-diagram-02</code>。它们支撑可见架构元素或明确资料内容；本卡的完整诊断链和异常树属于受控组合。若接口描述、部署清单、状态机规格或运行 trace 与本卡不同，以项目证据为准并更新库存。</p>
+<h2 id="业务流程-flow-17">业务流程 FLOW-17</h2>
+<h3 id="androidsos-跨域显示">Android/SOS 跨域显示</h3>
+<h3 id="触发目标与边界-8">触发、目标与边界</h3>
+<p>Android Guest 创建跨域 Surface 或 VirtualDisplay，并向虚拟显示前端提交本代 buffer。目标是连接 Guest producer、virtio 描述符、共享内存、Hypervisor 边界、Host Backend、Host 合成和显示，并验证 release 回传。本卡使用库存流程作为诊断骨架，不把相邻模块、标准协议行为或候选进程关系提升为 MT8676 私有事实。</p>
+<p>[置信度：mixed] 原图或 MT8676 资料只直接支撑所列模块、标签、局部箭头和明确资料内容；完整端到端顺序、Buffer/音频资源合同和恢复步骤由标准机制与受控业务假设补充。具体设备、属性、流 ID、周期、线程、进程和阈值仍需项目配置及运行证据确认。</p>
+<h3 id="正常链-8">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  N0[&quot;Guest-Surface/Buffer&quot;]
+  N1[&quot;virtual-display-frontend&quot;]
+  N0 --&gt; N1
+  N2[&quot;virtio-descriptor&quot;]
+  N1 --&gt; N2
+  N3[&quot;shared-memory&quot;]
+  N2 --&gt; N3
+  N4[&quot;Hypervisor&quot;]
+  N3 --&gt; N4
+  N5[&quot;Host-Backend&quot;]
+  N4 --&gt; N5
+  N6[&quot;host-compositor&quot;]
+  N5 --&gt; N6
+  N7[&quot;DRM/KMS&quot;]
+  N6 --&gt; N7
+  N8[&quot;physical-display&quot;]
+  N7 --&gt; N8</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N0[&quot;Guest-Surface/Buffer&quot;]
+  N1[&quot;virtual-display-frontend&quot;]
+  N0 --&gt; N1
+  N2[&quot;virtio-descriptor&quot;]
+  N1 --&gt; N2
+  N3[&quot;shared-memory&quot;]
+  N2 --&gt; N3
+  N4[&quot;Hypervisor&quot;]
+  N3 --&gt; N4
+  N5[&quot;Host-Backend&quot;]
+  N4 --&gt; N5
+  N6[&quot;host-compositor&quot;]
+  N5 --&gt; N6
+  N7[&quot;DRM/KMS&quot;]
+  N6 --&gt; N7
+  N8[&quot;physical-display&quot;]
+  N7 --&gt; N8</code></pre></details></details><p>正常链要求每一跳都能回答输入是什么、处理是否推进、输出是否属于当前 Generation/Session，以及下游是否真正消费。Guest queue 成功不等于 Host Backend 已 acquire；共享内存映射存在不等于 cache 可见性正确；Host present 不等于 Guest 已收到 release。VM 重建后 old Generation 描述符必须隔离。</p>
+<h3 id="分层子链与方向-8">分层子链与方向</h3>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>MT8668 Proxy-Wayland 手册把此类跨域链细化为 Android HWC→RpcBinder/VSOCK→Linux service→Wayland-client 接口。原流程仍作为抽象边界保留；本条是 MT8668 文档映射，不反推 MT8676 采用完全相同 ABI。跨域提交请求、导入 buffer、等待 fence、合成/扫描输出各自有生命周期，Guest 重启后旧显示/缓冲对象应按实现清理并重新绑定。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S028 · MT8668_Hypervisor_Multi_Display_Proxy-Wayland_User_Manual_CN_V1.0.pdf · PDF第5-7页<small>〔本地来源〕</small></span></p>
+<p>控制平面负责触发、模式、焦点、路由或会话命令；数据平面负责 frame、buffer、PCM 或算法事件；策略平面负责状态机、优先级、合成或 focus/route 决策；物理输出平面负责屏、麦克风、DSP、功放或扬声器；反馈平面负责回读、callback、fence、首帧、最终状态或用户可见/可听结果。五个平面可以共享服务，但不能用其中一个平面的成功替代其他平面。</p>
+<p>对于显示类流程，trigger valid ≠ source frame available ≠ buffer transported ≠ composed ≠ presented ≠ physically visible。对于音频类流程，control accepted ≠ audio data flowing ≠ focus granted ≠ route active ≠ DSP/amplifier output audible。排障必须标明当前分析的是哪一个平面以及数据方向，避免把控制返回当作物理结果。</p>
+<h3 id="资源生命周期-8">资源生命周期</h3>
+<p>创建成功 ≠ 已交给消费者 ≠ 消费完成 ≠ 已释放。资源表中的创建者负责初始有效性，持有者负责引用和代际，消费者负责完成信号，释放者负责对称清理；服务重启时还要确认旧持有者不能访问新资源。</p>
+<table>
+<thead>
+<tr>
+<th>资源</th>
+<th>创建者</th>
+<th>持有者</th>
+<th>消费者</th>
+<th>释放者</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Guest Surface</td>
+<td>Android producer</td>
+<td>Guest graphics</td>
+<td>virtual frontend</td>
+<td>Android producer</td>
+</tr>
+<tr>
+<td>virtio descriptor/shared memory</td>
+<td>Guest frontend</td>
+<td>Guest/Hypervisor/Host</td>
+<td>Host Backend</td>
+<td>both endpoints</td>
+</tr>
+<tr>
+<td>host display buffer</td>
+<td>Host Backend</td>
+<td>host compositor</td>
+<td>DRM</td>
+<td>Host Backend</td>
+</tr>
+</tbody></table>
+<p>资源诊断要记录资源身份、创建/连接时间、当前 holder、入队/出队或 track 状态、fence/callback、关闭顺序与未释放计数。Camera、GStreamer、Surface、MediaCodec、AudioTrack、AudioRecord、AEC、DSP route 和 call Session 不是可互换的“媒体资源”，每类都有自己的创建和释放边界。</p>
+<h3 id="反馈闭环-8">反馈闭环</h3>
+<p>反馈必须与原触发或请求相关，而不是只看时间接近。显示链优先使用首帧、frame callback、PageFlip/present fence 与物理观察；音频链使用 track/route、DSP/功放状态和物理有声；控制链使用权威回读或最终状态。反馈缺失时保留最后一个正确输出和第一个缺失输入。</p>
+<h3 id="异常分支-8">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[&quot;Android/SOS 跨域显示异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
+  B -- 否 --&gt; B1[&quot;Guest descriptor 枯竭&quot;]
+  B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
+  C -- 否 --&gt; C1[&quot;共享内存映射/可见性异常&quot;]
+  C -- 是 --&gt; D{&quot;策略、合成或路由正确?&quot;}
+  D -- 否 --&gt; D1[&quot;跨域 Fence 或 IRQ 丢失&quot;]
+  D -- 是 --&gt; E{&quot;物理输出与反馈闭环?&quot;}
+  E -- 否 --&gt; E1[&quot;VM 重建后 Backend 未重绑&quot;]
+  B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[&quot;Android/SOS 跨域显示异常&quot;] --&gt; B{&quot;触发与源状态有效?&quot;}
+  B -- 否 --&gt; B1[&quot;Guest descriptor 枯竭&quot;]
+  B -- 是 --&gt; C{&quot;数据/Buffer/音频流推进?&quot;}
+  C -- 否 --&gt; C1[&quot;共享内存映射/可见性异常&quot;]
+  C -- 是 --&gt; D{&quot;策略、合成或路由正确?&quot;}
+  D -- 否 --&gt; D1[&quot;跨域 Fence 或 IRQ 丢失&quot;]
+  D -- 是 --&gt; E{&quot;物理输出与反馈闭环?&quot;}
+  E -- 否 --&gt; E1[&quot;VM 重建后 Backend 未重绑&quot;]
+  B1 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R</code></pre></details></details><p>本流程的主要异常分支为：Guest descriptor 枯竭；共享内存映射/可见性异常；跨域 Fence 或 IRQ 丢失；VM 重建后 Backend 未重绑。最早断点是同一事件中第一处“上游输入正确且属于当前代、下游输出错误或缺失”的边界，不能用最后报警的模块代替。重启、重绑或重建资源只是恢复动作，不证明根因。</p>
+<p>恢复路径：建立新 frontend/backend Generation，重新映射共享内存并发布新描述符，Host 呈现后回传 release；确认旧 Generation 不再消费或释放新资源。恢复后验证必须覆盖新 Generation/Session、资源重新创建、关键 callback/fence/readback、物理结果以及旧会话隔离。只看到进程存活、API 返回或日志停止报错均不足以宣布业务恢复。</p>
+<h3 id="日志与诊断-8">日志与诊断</h3>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>触发/源</td>
+<td>当前 Generation 的触发、源状态与时间推进</td>
+<td>Guest descriptor 枯竭</td>
+<td>源正确不证明下游消费</td>
+<td>源/触发所有者</td>
+</tr>
+<tr>
+<td>数据或 Buffer</td>
+<td>sequence、timestamp、buffer/track 状态连续</td>
+<td>共享内存映射/可见性异常</td>
+<td>有数据不证明策略或合成正确</td>
+<td>virtual-display-frontend</td>
+</tr>
+<tr>
+<td>策略/合成/路由</td>
+<td>最终决策、目标层或 route 与事件一致</td>
+<td>跨域 Fence 或 IRQ 丢失</td>
+<td>软件状态不证明物理输出</td>
+<td>host-compositor</td>
+</tr>
+<tr>
+<td>物理输出</td>
+<td>present、有声、可见或可回放结果可观察</td>
+<td>VM 重建后 Backend 未重绑</td>
+<td>截图/录音不能定位上游</td>
+<td>DRM/KMS</td>
+</tr>
+<tr>
+<td>反馈/释放</td>
+<td>回调、回读、fence 或最终状态与请求相关</td>
+<td>旧回调、资源未归还、代际污染</td>
+<td>恢复动作不证明根因</td>
+<td>会话/资源所有者</td>
+</tr>
+</tbody></table>
+<p>日志采集应使用同一事件窗口并保留单调时间、墙钟、Sequence、Generation、Request/Buffer/Session 身份。命令和日志名称只作为通用采集方法；在没有 MT8676 运行清单时，不把通用 tag、设备节点或接口参数写成平台固定值。</p>
+<h3 id="责任域-8">责任域</h3>
+<p>责任划分以最早断点为准：触发/源所有者证明输入；资源生产者证明创建和发布；中间服务证明当前代传输与策略；合成/音频策略证明最终决策；驱动与硬件证明物理输出；业务应用证明用户状态。跨团队升级材料至少包含软件版本、统一时间窗、触发/请求原文、各层输入输出、资源身份和 holder、回调/fence/readback、恢复动作及恢复后物理证据。</p>
+<h3 id="证据与置信度-8">证据与置信度</h3>
+<p>[置信度：mixed] 证据 ID 为 <code>original-diagram-02</code>。它们支撑可见架构元素或明确资料内容；本卡的完整诊断链和异常树属于受控组合。若接口描述、部署清单、状态机规格或运行 trace 与本卡不同，以项目证据为准并更新库存。</p>
+</article><nav class="pager"><a href="10.html">← 上一步：车辆仪表与诊断业务流程</a><a href="12.html">下一步：音频与语音业务流程 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#第-11-章显示相机与驾驶辅助业务流程">第 11 章　显示、相机与驾驶辅助业务流程</a><a class="depth-2" href="#业务流程-flow-09">业务流程 FLOW-09</a><a class="depth-3" href="#cluster-启动取数合成和上屏">Cluster 启动、取数、合成和上屏</a><a class="depth-3" href="#触发目标与边界">触发、目标与边界</a><a class="depth-3" href="#正常链">正常链</a><a class="depth-3" href="#分层子链与方向">分层子链与方向</a><a class="depth-3" href="#资源生命周期">资源生命周期</a><a class="depth-3" href="#反馈闭环">反馈闭环</a><a class="depth-3" href="#异常分支">异常分支</a><a class="depth-3" href="#日志与诊断">日志与诊断</a><a class="depth-3" href="#责任域">责任域</a><a class="depth-3" href="#证据与置信度">证据与置信度</a><a class="depth-2" href="#业务流程-flow-10">业务流程 FLOW-10</a><a class="depth-3" href="#rvc-倒车影像">RVC 倒车影像</a><a class="depth-3" href="#触发目标与边界-1">触发、目标与边界</a><a class="depth-3" href="#正常链-1">正常链</a><a class="depth-3" href="#分层子链与方向-1">分层子链与方向</a><a class="depth-3" href="#资源生命周期-1">资源生命周期</a><a class="depth-3" href="#反馈闭环-1">反馈闭环</a><a class="depth-3" href="#异常分支-1">异常分支</a><a class="depth-3" href="#日志与诊断-1">日志与诊断</a><a class="depth-3" href="#责任域-1">责任域</a><a class="depth-3" href="#证据与置信度-1">证据与置信度</a><a class="depth-2" href="#业务流程-flow-11">业务流程 FLOW-11</a><a class="depth-3" href="#avm-环视">AVM 环视</a><a class="depth-3" href="#触发目标与边界-2">触发、目标与边界</a><a class="depth-3" href="#正常链-2">正常链</a><a class="depth-3" href="#分层子链与方向-2">分层子链与方向</a><a class="depth-3" href="#资源生命周期-2">资源生命周期</a><a class="depth-3" href="#反馈闭环-2">反馈闭环</a><a class="depth-3" href="#异常分支-2">异常分支</a><a class="depth-3" href="#日志与诊断-2">日志与诊断</a><a class="depth-3" href="#责任域-2">责任域</a><a class="depth-3" href="#证据与置信度-2">证据与置信度</a><a class="depth-2" href="#业务流程-flow-12">业务流程 FLOW-12</a><a class="depth-3" href="#dms-驾驶员监控">DMS 驾驶员监控</a><a class="depth-3" href="#触发目标与边界-3">触发、目标与边界</a><a class="depth-3" href="#正常链-3">正常链</a><a class="depth-3" href="#分层子链与方向-3">分层子链与方向</a><a class="depth-3" href="#资源生命周期-3">资源生命周期</a><a class="depth-3" href="#反馈闭环-3">反馈闭环</a><a class="depth-3" href="#异常分支-3">异常分支</a><a class="depth-3" href="#日志与诊断-3">日志与诊断</a><a class="depth-3" href="#责任域-3">责任域</a><a class="depth-3" href="#证据与置信度-3">证据与置信度</a><a class="depth-2" href="#t12tmt8668-camera-架构集成平台边界隔离">T12T/MT8668 Camera 架构集成（平台边界隔离）</a><a class="depth-2" href="#业务流程-flow-13">业务流程 FLOW-13</a><a class="depth-3" href="#adas-告警">ADAS 告警</a><a class="depth-3" href="#触发目标与边界-4">触发、目标与边界</a><a class="depth-3" href="#正常链-4">正常链</a><a class="depth-3" href="#分层子链与方向-4">分层子链与方向</a><a class="depth-3" href="#资源生命周期-4">资源生命周期</a><a class="depth-3" href="#反馈闭环-4">反馈闭环</a><a class="depth-3" href="#异常分支-4">异常分支</a><a class="depth-3" href="#日志与诊断-4">日志与诊断</a><a class="depth-3" href="#责任域-4">责任域</a><a class="depth-3" href="#证据与置信度-4">证据与置信度</a><a class="depth-2" href="#业务流程-flow-14">业务流程 FLOW-14</a><a class="depth-3" href="#行车记录仪与哨兵模式">行车记录仪与哨兵模式</a><a class="depth-3" href="#触发目标与边界-5">触发、目标与边界</a><a class="depth-3" href="#正常链-5">正常链</a><a class="depth-3" href="#分层子链与方向-5">分层子链与方向</a><a class="depth-3" href="#资源生命周期-5">资源生命周期</a><a class="depth-3" href="#反馈闭环-5">反馈闭环</a><a class="depth-3" href="#异常分支-5">异常分支</a><a class="depth-3" href="#日志与诊断-5">日志与诊断</a><a class="depth-3" href="#责任域-5">责任域</a><a class="depth-3" href="#证据与置信度-5">证据与置信度</a><a class="depth-2" href="#业务流程-flow-15">业务流程 FLOW-15</a><a class="depth-3" href="#android-渲染链">Android 渲染链</a><a class="depth-3" href="#触发目标与边界-6">触发、目标与边界</a><a class="depth-3" href="#正常链-6">正常链</a><a class="depth-3" href="#分层子链与方向-6">分层子链与方向</a><a class="depth-3" href="#资源生命周期-6">资源生命周期</a><a class="depth-3" href="#反馈闭环-6">反馈闭环</a><a class="depth-3" href="#异常分支-6">异常分支</a><a class="depth-3" href="#日志与诊断-6">日志与诊断</a><a class="depth-3" href="#责任域-6">责任域</a><a class="depth-3" href="#证据与置信度-6">证据与置信度</a><a class="depth-2" href="#业务流程-flow-16">业务流程 FLOW-16</a><a class="depth-3" href="#yocto-weston-显示链">Yocto Weston 显示链</a><a class="depth-3" href="#触发目标与边界-7">触发、目标与边界</a><a class="depth-3" href="#正常链-7">正常链</a><a class="depth-3" href="#分层子链与方向-7">分层子链与方向</a><a class="depth-3" href="#资源生命周期-7">资源生命周期</a><a class="depth-3" href="#反馈闭环-7">反馈闭环</a><a class="depth-3" href="#异常分支-7">异常分支</a><a class="depth-3" href="#日志与诊断-7">日志与诊断</a><a class="depth-3" href="#责任域-7">责任域</a><a class="depth-3" href="#证据与置信度-7">证据与置信度</a><a class="depth-2" href="#业务流程-flow-17">业务流程 FLOW-17</a><a class="depth-3" href="#androidsos-跨域显示">Android/SOS 跨域显示</a><a class="depth-3" href="#触发目标与边界-8">触发、目标与边界</a><a class="depth-3" href="#正常链-8">正常链</a><a class="depth-3" href="#分层子链与方向-8">分层子链与方向</a><a class="depth-3" href="#资源生命周期-8">资源生命周期</a><a class="depth-3" href="#反馈闭环-8">反馈闭环</a><a class="depth-3" href="#异常分支-8">异常分支</a><a class="depth-3" href="#日志与诊断-8">日志与诊断</a><a class="depth-3" href="#责任域-8">责任域</a><a class="depth-3" href="#证据与置信度-8">证据与置信度</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>

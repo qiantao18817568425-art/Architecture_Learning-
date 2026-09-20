@@ -1,0 +1,19 @@
+/* All content is server-rendered static HTML. Enhancements never hide the article. */
+const q=document.querySelector('#search'),state=document.querySelector('#search-state'),results=document.querySelector('#search-results');
+let indexPromise,queryId=0,timer;
+const load=()=>indexPromise||(indexPromise=fetch('search.json').then(r=>{if(!r.ok)throw Error('index');return r.json()}).catch(e=>{indexPromise=null;throw e}));
+q?.addEventListener('input',()=>{clearTimeout(timer);const ticket=++queryId;timer=setTimeout(async()=>{
+ const term=q.value.trim().toLocaleLowerCase();results.replaceChildren();if(!term){state.textContent='';return}state.textContent='正在搜索全文…';
+ try{const data=await load();if(ticket!==queryId)return;const words=term.split(/\s+/);const matches=data.filter(x=>words.every(w=>(x.title+' '+x.text).toLocaleLowerCase().includes(w))).sort((a,b)=>(b.title.toLocaleLowerCase().includes(term)?1:0)-(a.title.toLocaleLowerCase().includes(term)?1:0));state.textContent=matches.length?`找到 ${matches.length} 处，显示前 40 处`:'没有找到匹配内容，请换一个模块名或关键词。';
+ for(const hit of matches.slice(0,40)){const a=document.createElement('a');a.className='search-hit';a.href=hit.url;const title=document.createElement('strong');title.textContent=(hit.edition==='original'?'原版 · ':'中文版 · ')+hit.title;const p=document.createElement('p');const at=hit.text.toLocaleLowerCase().indexOf(words[0]);p.textContent=(at>30?'…':'')+hit.text.slice(Math.max(0,at-30),Math.max(0,at-30)+145)+'…';a.append(title,p);results.append(a)}
+ }catch{if(ticket===queryId)state.textContent='搜索索引暂时无法读取，可继续使用下方树状目录。'}
+},180)});
+if(matchMedia('(max-width:760px)').matches){const tree=document.querySelector('.nav-tree');if(tree)tree.open=false}
+document.querySelectorAll('[data-read]').forEach(button=>{const key='cockpit-read-'+button.dataset.read;const update=()=>{try{button.textContent=localStorage.getItem(key)?'已读 ✓（点击取消）':'标记已读'}catch{button.textContent='标记已读'}};update();button.addEventListener('click',()=>{try{localStorage.getItem(key)?localStorage.removeItem(key):localStorage.setItem(key,'1');update()}catch{button.textContent='此浏览器无法保存阅读标记'}})});
+let mermaidPromise;
+document.querySelectorAll('details.diagram').forEach(d=>d.addEventListener('toggle',async()=>{if(!d.open||d.dataset.rendered)return;const pre=d.querySelector('pre.mermaid');try{mermaidPromise ||= import('https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs').then(m=>{m.default.initialize({startOnLoad:false,securityLevel:'strict',theme:'neutral'});return m.default});const m=await mermaidPromise;await m.run({nodes:[pre],suppressErrors:true});d.dataset.rendered='1'}catch{const note=document.createElement('p');note.className='note';note.textContent='图形渲染暂不可用，保留原始图代码供阅读。';pre.before(note);d.dataset.rendered='1'}}));
+function reveal(){let id;try{id=decodeURIComponent(location.hash.slice(1))}catch{return}const target=document.getElementById(id);if(!target)return;for(let p=target.parentElement;p;p=p.parentElement)if(p.tagName==='DETAILS')p.open=true;target.scrollIntoView({block:'start'})}addEventListener('hashchange',reveal);if(location.hash)reveal();
+const params=new URLSearchParams(location.search);
+if(params.get('compare')==='1')document.body.classList.add('embedded-reading');
+const select=document.querySelector('#compare-chapter');
+if(select){document.body.classList.add('compare-page');const initial=params.get('chapter');if([...select.options].some(x=>x.value===initial))select.value=initial;const choose=()=>{const id=select.value;document.querySelector('#compare-left').src=id+'.html?compare=1';document.querySelector('#compare-right').src='original-'+id+'.html?compare=1';document.querySelector('#compare-left-link').href=id+'.html';document.querySelector('#compare-right-link').href='original-'+id+'.html';history.replaceState(null,'','?chapter='+id)};choose();select.addEventListener('change',choose)}

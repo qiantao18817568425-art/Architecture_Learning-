@@ -1,0 +1,996 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>前言 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details open><summary>第一阶段 · 看懂整机</summary><a aria-current="page" href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 原版解释 / 00</div><div class="chapter-title"><p class="eyebrow">CHAPTER 00 · 原版解释全文</p><h1>前言</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=00">并排对比两套正文 ↗</a><a class="button secondary" href="00.html">对照中文版 ↗</a><button class="button" data-read="original-00" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 原版解释对照</p><h2>如何判断一句架构说明是否可靠？</h2><p>先区分图示事实、版本手册、培训方案与项目实测。架构图能说明有这个框，却通常不能给出进程号、超时时间和生产配置。</p><ol><li><strong>怎么读：</strong>从范围和可信度表开始，再看章节导航；术语表按遇到的词查，不必先背完整张表。</li><li><strong>项目练习：</strong>选取 Camera 的一个结论，记录它来自图、MTK 手册还是 PVT 案例，并写下还缺哪一项项目证据。</li><li><strong>自检：</strong>图中有一个模块，是否就证明它在当前镜像中运行？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-1">Day 1</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#mt8676-智能座舱平台架构学习与业务流程完整说明">MT8676 智能座舱平台架构学习与业务流程完整说明</a><a class="depth-2" href="#00-本篇必备术语">0.0 本篇必备术语</a><a class="depth-2" href="#01-文档身份">0.1 文档身份</a><a class="depth-2" href="#02-读者与目标">0.2 读者与目标</a><a class="depth-2" href="#03-证据优先级与防污染规则">0.3 证据优先级与防污染规则</a><a class="depth-2" href="#04-五类可信度">0.4 五类可信度</a><a class="depth-2" href="#05-明确限制">0.5 明确限制</a><a class="depth-2" href="#06-章节导航">0.6 章节导航</a><a class="depth-2" href="#07-阅读约定">0.7 阅读约定</a></details><article id="chapter-text"><h1 id="mt8676-智能座舱平台架构学习与业务流程完整说明">MT8676 智能座舱平台架构学习与业务流程完整说明</h1>
+<blockquote>
+<p>本章于 2026-09-20 按原架构补充正文解释；原图、模块/流程 ID 和分层保持原样。新证据的版本限定随段落标注。<a href="index.html">本轮更新说明</a>。</p>
+</blockquote>
+<h2 id="00-本篇必备术语">0.0 本篇必备术语</h2>
+<p>本表位于章节导航和正文使用之前。受严格校验的术语统一采用
+“缩写或术语（英文全称/规范名，必要时附中文解释）”的缩写在前形式；不采用
+“英文全称（缩写）”作为首用定义。项目私有行为仍受后续可信度标记约束。</p>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>本手册中的定义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>API（Application Programming Interface，应用程序编程接口）</td>
+<td>软件能力的调用合同</td>
+</tr>
+<tr>
+<td>OS（Operating System，操作系统）</td>
+<td>管理硬件、进程和基础服务的软件层</td>
+</tr>
+<tr>
+<td>I/O（Input/Output，输入/输出）</td>
+<td>数据进入或离开处理单元的统称</td>
+</tr>
+<tr>
+<td>ID（Identifier，标识符）</td>
+<td>用于区分对象、请求、缓冲区或会话的值</td>
+</tr>
+<tr>
+<td>UI（User Interface，用户界面）</td>
+<td>用户查看信息和发出操作的交互层</td>
+</tr>
+<tr>
+<td>IPC（Inter-Process Communication，进程间通信）</td>
+<td>不同进程交换请求、响应或事件的机制</td>
+</tr>
+<tr>
+<td>IP（Internet Protocol，网际协议）</td>
+<td>分组网络的基础寻址与传输层协议</td>
+</tr>
+<tr>
+<td>ABI（Application Binary Interface，应用二进制接口）</td>
+<td>二进制之间的调用、布局和符号合同</td>
+</tr>
+<tr>
+<td>ELF（Executable and Linkable Format，可执行与可链接格式）</td>
+<td>Linux 可执行文件和共享库格式</td>
+</tr>
+<tr>
+<td>PID（Process Identifier，进程标识符）</td>
+<td>操作系统为进程分配的标识</td>
+</tr>
+<tr>
+<td>FD（File Descriptor，文件描述符）</td>
+<td>Linux 进程引用文件、Socket 或设备的句柄</td>
+</tr>
+<tr>
+<td>CPU（Central Processing Unit，中央处理器）</td>
+<td>执行指令和调度计算的处理单元</td>
+</tr>
+<tr>
+<td>IRQ（Interrupt Request，中断请求）</td>
+<td>设备向处理器请求中断处理的信号</td>
+</tr>
+<tr>
+<td>ISR（Interrupt Service Routine，中断服务例程）</td>
+<td>响应硬件中断的执行逻辑</td>
+</tr>
+<tr>
+<td>DMA（Direct Memory Access，直接内存访问）</td>
+<td>设备绕过 CPU 逐字节搬运的数据传输机制</td>
+</tr>
+<tr>
+<td>IOMMU（Input-Output Memory Management Unit，输入输出内存管理单元）</td>
+<td>设备地址转换与访问隔离单元</td>
+</tr>
+<tr>
+<td>FIFO（First In, First Out，先进先出）</td>
+<td>按进入顺序读取的数据队列</td>
+</tr>
+<tr>
+<td>MCU（Microcontroller Unit，微控制器单元）</td>
+<td>承载实时车辆软件和外设控制的控制器</td>
+</tr>
+<tr>
+<td>SoC（System on Chip，片上系统）</td>
+<td>集成处理器、内存和多种外设控制器的芯片</td>
+</tr>
+<tr>
+<td>ASIL（Automotive Safety Integrity Level，汽车安全完整性等级）</td>
+<td>汽车功能安全标准中表达安全完整性目标的等级概念；本手册不据此推定 MT8676 分配</td>
+</tr>
+<tr>
+<td>VM（Virtual Machine，虚拟机）</td>
+<td>由虚拟化层隔离出的运行域</td>
+</tr>
+<tr>
+<td>SDK（Software Development Kit，软件开发套件）</td>
+<td>接口、库、示例和集成资料的集合</td>
+</tr>
+<tr>
+<td>AAOS（Android Automotive Operating System，安卓汽车操作系统）</td>
+<td>面向汽车场景的 Android 系统形态</td>
+</tr>
+<tr>
+<td>AOSP（Android Open Source Project，安卓开源项目）</td>
+<td>Android 开源平台基础框架</td>
+</tr>
+<tr>
+<td>AUTOSAR（Automotive Open System Architecture，汽车开放系统架构）</td>
+<td>汽车电子软件分层与接口标准体系</td>
+</tr>
+<tr>
+<td>FBL（Flash Bootloader，刷写引导程序）</td>
+<td>MCU 侧负责启动和刷写相关能力的引导层</td>
+</tr>
+<tr>
+<td>MCAL（Microcontroller Abstraction Layer，微控制器抽象层）</td>
+<td>AUTOSAR 中面向 MCU 外设的抽象层</td>
+</tr>
+<tr>
+<td>BSW（Basic Software，基础软件）</td>
+<td>AUTOSAR 基础服务、抽象和驱动集合</td>
+</tr>
+<tr>
+<td>RTE（Runtime Environment，运行时环境）</td>
+<td>AUTOSAR 软件组件与基础软件间的接口层</td>
+</tr>
+<tr>
+<td>SWC（Software Component，软件组件）</td>
+<td>AUTOSAR 应用软件组件</td>
+</tr>
+<tr>
+<td>PDU（Protocol Data Unit，协议数据单元）</td>
+<td>某一协议层处理和传输的数据单元</td>
+</tr>
+<tr>
+<td>COM（AUTOSAR Communication，AUTOSAR 通信服务）</td>
+<td>把应用信号组织为 I-PDU，并与下层 PDU 路径衔接的 AUTOSAR 基础软件模块</td>
+</tr>
+<tr>
+<td>CRC（Cyclic Redundancy Check，循环冗余校验）</td>
+<td>检测传输或存储数据差错的校验值</td>
+</tr>
+<tr>
+<td>E2E（End-to-End Protection，端到端保护）</td>
+<td>使用计数器、CRC 和 Data ID 等检测重复、丢失或篡改</td>
+</tr>
+<tr>
+<td>HAL（Hardware Abstraction Layer，硬件抽象层）</td>
+<td>向上层隐藏硬件和驱动差异的接口层</td>
+</tr>
+<tr>
+<td>RPC（Remote Procedure Call，远程过程调用）</td>
+<td>跨进程或跨节点请求服务并接收结果的调用抽象，不等同于物理链路已通</td>
+</tr>
+<tr>
+<td>Binder（Android Binder IPC）</td>
+<td>Android 域内面向对象的 IPC/RPC 机制</td>
+</tr>
+<tr>
+<td>AIDL（Android Interface Definition Language，安卓接口定义语言）</td>
+<td>Android Binder 接口的描述语言</td>
+</tr>
+<tr>
+<td>HIDL（HAL Interface Definition Language，硬件抽象层接口定义语言）</td>
+<td>较早 Android HAL 接口的描述语言</td>
+</tr>
+<tr>
+<td>SPI（Serial Peripheral Interface，串行外设接口）</td>
+<td>同步串行物理接口</td>
+</tr>
+<tr>
+<td>CAN（Controller Area Network，控制器局域网）</td>
+<td>车辆控制器之间常用的总线通信协议</td>
+</tr>
+<tr>
+<td>DBC（CAN Database file format，CAN 数据库文件格式）</td>
+<td>描述 CAN 报文、信号和缩放关系的文件</td>
+</tr>
+<tr>
+<td>SOME/IP（Scalable Service-Oriented Middleware over IP，可扩展面向服务的 IP 中间件）</td>
+<td>车载以太网服务通信机制</td>
+</tr>
+<tr>
+<td>EventGroup（SOME/IP Event Group，事件组）</td>
+<td>SOME/IP 中用于组织和订阅事件的逻辑集合</td>
+</tr>
+<tr>
+<td>FDBus（Fast Distributed Bus，快速分布式总线）</td>
+<td>图中用于服务、主题和命名管理的消息总线</td>
+</tr>
+<tr>
+<td>FDBUS（FDBus diagram label，FDBus 图中大写标签）</td>
+<td>与图中原始大小写保持一致的 FDBus 标签</td>
+</tr>
+<tr>
+<td>IDL（Interface Definition Language，接口定义语言）</td>
+<td>描述跨进程或跨域接口合同的语言</td>
+</tr>
+<tr>
+<td>IPCL（Inter-Processor Communication Layer，处理器间通信层，项目命名）</td>
+<td>图中的跨处理器通信抽象</td>
+</tr>
+<tr>
+<td>AP（Application Processor，应用处理器）</td>
+<td>运行高层操作系统和应用的处理器域</td>
+</tr>
+<tr>
+<td>CCCI（Cross Core Communication Interface，跨核通信接口）</td>
+<td>MediaTek 平台 AP 与 Modem 通信的标准机制名称</td>
+</tr>
+<tr>
+<td>SOA（Service-Oriented Architecture，面向服务架构）</td>
+<td>以服务接口组织能力和交互的架构方式</td>
+</tr>
+<tr>
+<td>PA（Platform Adapter，平台适配器）</td>
+<td>把上层接口映射到下层平台能力的适配层</td>
+</tr>
+<tr>
+<td>UMDP（Unified Middleware Development Platform，统一中间件开发平台，资料命名）</td>
+<td>MT8676 中间件集成包</td>
+</tr>
+<tr>
+<td>TBox（Telematics Box，车载通信终端）</td>
+<td>承载蜂窝通信、定位和远程业务的域</td>
+</tr>
+<tr>
+<td>DM（Device Management，设备管理）</td>
+<td>SDK 中的设备管理业务族</td>
+</tr>
+<tr>
+<td>UP（UMDP service-up state label，UMDP 服务上线状态标签）</td>
+<td>冻结头文件中的服务上线事件状态</td>
+</tr>
+<tr>
+<td>DOWN（UMDP service-down state label，UMDP 服务下线状态标签）</td>
+<td>冻结头文件中的服务下线事件状态</td>
+</tr>
+<tr>
+<td>DI（原图 MCU 模块标签；英文全称待 MT8676 资料确认）</td>
+<td>仅确认原图标签，不猜测展开 <code>[可信度：待 MT8676 确认]</code></td>
+</tr>
+<tr>
+<td>FCM（原图 Service 标签；英文全称和进程身份待 MT8676 资料确认）</td>
+<td>仅确认原图服务标签 <code>[可信度：待 MT8676 确认]</code></td>
+</tr>
+<tr>
+<td>GNSS（Global Navigation Satellite System，全球导航卫星系统）</td>
+<td>卫星定位系统的统称</td>
+</tr>
+<tr>
+<td>GPS（Global Positioning System，全球定位系统）</td>
+<td>GNSS 的一种具体卫星定位系统</td>
+</tr>
+<tr>
+<td>SIM（Subscriber Identity Module，用户身份识别模块）</td>
+<td>蜂窝网络用户身份与鉴权载体</td>
+</tr>
+<tr>
+<td>SMS（Short Message Service，短消息服务）</td>
+<td>蜂窝网络短消息能力</td>
+</tr>
+<tr>
+<td>AT（Attention Command，调制解调器命令前缀）</td>
+<td>用于控制 Modem 的命令接口族</td>
+</tr>
+<tr>
+<td>URC（Unsolicited Result Code，主动上报结果码）</td>
+<td>Modem/AT 语境中由服务端异步上报的结果或状态通知</td>
+</tr>
+<tr>
+<td>ASR（Automatic Speech Recognition，自动语音识别）</td>
+<td>把语音转换为文本或意图的能力</td>
+</tr>
+<tr>
+<td>RVC（Rear View Camera，后视摄像系统）</td>
+<td>倒车时提供后方图像的业务</td>
+</tr>
+<tr>
+<td>AVM（Around View Monitor，环视监控系统）</td>
+<td>融合多路摄像头生成环视画面的业务</td>
+</tr>
+<tr>
+<td>DMS（Driver Monitoring System，驾驶员监测系统）</td>
+<td>监测驾驶员状态的业务</td>
+</tr>
+<tr>
+<td>ADAS（Advanced Driver Assistance System，高级驾驶辅助系统）</td>
+<td>感知并辅助驾驶决策的系统</td>
+</tr>
+<tr>
+<td>DSP（Digital Signal Processor，数字信号处理器）</td>
+<td>执行音频等实时信号算法的处理单元</td>
+</tr>
+<tr>
+<td>ECU（Electronic Control Unit，电子控制单元）</td>
+<td>车辆中的独立控制器</td>
+</tr>
+<tr>
+<td>IVI（In-Vehicle Infotainment，车载信息娱乐）</td>
+<td>座舱媒体、导航和交互业务域</td>
+</tr>
+<tr>
+<td>IMU（Inertial Measurement Unit，惯性测量单元）</td>
+<td>测量加速度和角速度的传感器组件</td>
+</tr>
+<tr>
+<td>ISP（Image Signal Processor，图像信号处理器）</td>
+<td>处理摄像头原始图像的硬件或模块</td>
+</tr>
+<tr>
+<td>NIC（Network Interface Controller，网络接口控制器）</td>
+<td>连接网络介质的控制器</td>
+</tr>
+<tr>
+<td>ANR（Application Not Responding，应用无响应）</td>
+<td>Android 判定应用主线程长期无响应的故障</td>
+</tr>
+<tr>
+<td>Surface（Android Surface）</td>
+<td>Android 图形缓冲生产目标或句柄</td>
+</tr>
+<tr>
+<td>BufferQueue（Android BufferQueue）</td>
+<td>图形 Buffer 生产者与消费者之间的队列</td>
+</tr>
+<tr>
+<td>GraphicBuffer（Android Graphic Buffer）</td>
+<td>可跨进程共享的图形缓冲对象</td>
+</tr>
+<tr>
+<td>Gralloc（Graphics Memory Allocator，图形内存分配器）</td>
+<td>Android 图形缓冲分配和映射接口</td>
+</tr>
+<tr>
+<td>SurfaceFlinger（Android SurfaceFlinger）</td>
+<td>Android 系统级图层合成服务</td>
+</tr>
+<tr>
+<td>SF（SurfaceFlinger shorthand，SurfaceFlinger 简写）</td>
+<td>日志或图表中的 SurfaceFlinger 简称</td>
+</tr>
+<tr>
+<td>HWC（Hardware Composer，硬件合成器）</td>
+<td>Android 硬件合成接口</td>
+</tr>
+<tr>
+<td>HWUI（Android Hardware-Accelerated UI，安卓硬件加速界面）</td>
+<td>Android UI 硬件加速渲染管线</td>
+</tr>
+<tr>
+<td>DRM（Direct Rendering Manager，直接渲染管理器）</td>
+<td>Linux 内核显示资源管理框架</td>
+</tr>
+<tr>
+<td>DRM/KMS（Direct Rendering Manager / Kernel Mode Setting，直接渲染管理/内核模式设置）</td>
+<td>Linux 显示资源和模式设置框架</td>
+</tr>
+<tr>
+<td>OpenGL（Open Graphics Library，开放图形库）</td>
+<td>跨平台图形渲染接口</td>
+</tr>
+<tr>
+<td>V4L2（Video4Linux2，Linux 第二版视频接口）</td>
+<td>Linux 摄像头和视频设备接口</td>
+</tr>
+<tr>
+<td>A2B（Automotive Audio Bus，汽车音频总线）</td>
+<td>车载音频传输机制；本手册仅把它作为待核验的标准边界</td>
+</tr>
+<tr>
+<td>ALSA（Advanced Linux Sound Architecture，高级 Linux 声音架构）</td>
+<td>Linux 音频驱动和用户接口体系</td>
+</tr>
+<tr>
+<td>PCM（Pulse-Code Modulation，脉冲编码调制）</td>
+<td>数字音频采样数据表示方式</td>
+</tr>
+<tr>
+<td>MDP（Media/Data Path，平台显示模块命名）</td>
+<td>图中的显示数据路径或硬件处理模块</td>
+</tr>
+<tr>
+<td>virtio（Virtual I/O，虚拟输入输出）</td>
+<td>Guest Frontend、virtqueue 与 Host Backend 的标准虚拟 I/O 模型</td>
+</tr>
+<tr>
+<td>Favalon SDK（Favalon Software Development Kit）</td>
+<td>MT8676 的 Client/Server API 软件开发套件</td>
+</tr>
+<tr>
+<td>DoIP（Diagnostics over Internet Protocol，基于 IP 的诊断）</td>
+<td>在 IP 网络上传输诊断消息的机制</td>
+</tr>
+<tr>
+<td>RIL（Radio Interface Layer，无线接口层）</td>
+<td>Android Telephony 与 Modem 能力之间的接口层</td>
+</tr>
+<tr>
+<td>UDS（Unified Diagnostic Services，统一诊断服务）</td>
+<td>车辆 ECU 诊断服务集合</td>
+</tr>
+<tr>
+<td>DTC（Diagnostic Trouble Code，诊断故障码）</td>
+<td>诊断逻辑记录和报告的故障代码</td>
+</tr>
+<tr>
+<td>CLK（Clock，时钟）</td>
+<td>图中虚拟时钟能力的缩写</td>
+</tr>
+<tr>
+<td>ADC（Analog-to-Digital Converter，模数转换器）</td>
+<td>把模拟量转换为数字采样值的硬件或接口</td>
+</tr>
+<tr>
+<td>DK（原图 CanService 限定标签；英文全称待 MT8676 资料确认）</td>
+<td>仅确认原图限定标签，不猜测展开 <code>[可信度：待 MT8676 确认]</code></td>
+</tr>
+<tr>
+<td>DNS（Domain Name System，域名系统）</td>
+<td>把域名解析为网络地址的系统</td>
+</tr>
+<tr>
+<td>GPIO（General-Purpose Input/Output，通用输入输出）</td>
+<td>软件控制或采样离散电平的通用管脚接口</td>
+</tr>
+<tr>
+<td>HCI（Host Controller Interface，主机控制器接口）</td>
+<td>主机协议栈与蓝牙控制器之间的标准接口</td>
+</tr>
+<tr>
+<td>NMEA（National Marine Electronics Association，国家海洋电子协会报文规范）</td>
+<td>GNSS 接收器常见的定位文本报文格式</td>
+</tr>
+<tr>
+<td>RSS（Resident Set Size，常驻内存集大小）</td>
+<td>进程当前驻留在物理内存中的页面规模</td>
+</tr>
+<tr>
+<td>RTC（Real-Time Clock，实时时钟）</td>
+<td>断电或低功耗状态下维持日历时间的时钟设备</td>
+</tr>
+<tr>
+<td>TCP（Transmission Control Protocol，传输控制协议）</td>
+<td>面向连接、可靠、有序的传输层协议</td>
+</tr>
+<tr>
+<td>UDP（User Datagram Protocol，用户数据报协议）</td>
+<td>无连接的数据报传输协议，不提供端到端可靠、有序交付保证</td>
+</tr>
+<tr>
+<td>UART（Universal Asynchronous Receiver/Transmitter，通用异步收发器）</td>
+<td>异步串行通信控制器或接口</td>
+</tr>
+<tr>
+<td>UID（User Identifier，用户标识符）</td>
+<td>Linux/Android 用于身份和权限判定的数值标识</td>
+</tr>
+<tr>
+<td>USB（Universal Serial Bus，通用串行总线）</td>
+<td>主机与外设之间的标准串行总线</td>
+</tr>
+<tr>
+<td>VFS（Virtual File System，虚拟文件系统）</td>
+<td>Linux 为不同文件系统提供统一路径、文件和挂载操作的抽象层</td>
+</tr>
+<tr>
+<td>XRUN（ALSA overrun/underrun condition，ALSA 过载或欠载）</td>
+<td>音频应用未能按时生产或消费 PCM 帧的故障状态</td>
+</tr>
+<tr>
+<td>ART（Android Runtime，Android 运行时）</td>
+<td>执行 Android 应用字节码、类加载、垃圾回收和运行时编译的环境</td>
+</tr>
+<tr>
+<td>CarPlay（Apple CarPlay）</td>
+<td>iPhone 与车载系统集成导航、通信和媒体能力的平台</td>
+</tr>
+<tr>
+<td>OpenGLES（OpenGL for Embedded Systems，嵌入式系统开放图形库）</td>
+<td>面向嵌入式设备的 OpenGL 图形渲染接口</td>
+</tr>
+<tr>
+<td>OpenMax（Open Media Acceleration，开放媒体加速）</td>
+<td>面向媒体编解码和处理组件的标准接口体系</td>
+</tr>
+<tr>
+<td>SQLite（SQLite database engine）</td>
+<td>进程内嵌的关系型数据库引擎</td>
+</tr>
+<tr>
+<td>SomeIp（原图 SOME/IP 标签变体）</td>
+<td>原图对 SOME/IP 通信机制使用的精确标签写法</td>
+</tr>
+<tr>
+<td>StageFright（Android Stagefright media framework）</td>
+<td>Android 原生媒体播放、解复用和编解码框架</td>
+</tr>
+<tr>
+<td>URI（Uniform Resource Identifier，统一资源标识符）</td>
+<td>标识内容、资源或接口目标的字符串</td>
+</tr>
+<tr>
+<td>iAP2（iPod Accessory Protocol 2，iPod 附件协议第二版）</td>
+<td>Apple 设备与附件之间的会话和数据通信协议</td>
+</tr>
+<tr>
+<td>AudioService（Android Audio Service）</td>
+<td>Android Framework 中协调音频控制与系统级状态的服务概念</td>
+</tr>
+<tr>
+<td>CameraDevice（Android CameraDevice API）</td>
+<td>表示已打开相机设备连接及其会话入口的标准 API 类型</td>
+</tr>
+<tr>
+<td>DeathRecipient（Binder DeathRecipient callback）</td>
+<td>Binder 远端对象死亡时通知客户端的回调接口</td>
+</tr>
+<tr>
+<td>DecorView（Android Window decor view）</td>
+<td>Android Window 中承载内容和系统装饰的顶层 View</td>
+</tr>
+<tr>
+<td>DisplayList（Display List，显示列表）</td>
+<td>记录可供渲染线程重放的绘制操作集合</td>
+</tr>
+<tr>
+<td>EGL（Khronos EGL graphics platform interface）</td>
+<td>图形 API 与原生窗口、显示和上下文之间的平台接口</td>
+</tr>
+<tr>
+<td>EventHub（Android Input EventHub）</td>
+<td>Android 输入系统读取并汇聚 Linux 输入设备事件的组件</td>
+</tr>
+<tr>
+<td>GC（Garbage Collection，垃圾回收）</td>
+<td>运行时识别并回收不可达托管对象的机制</td>
+</tr>
+<tr>
+<td>GL（Graphics Library，图形库）</td>
+<td>OpenGL 语境中图形接口或资源的常用简称</td>
+</tr>
+<tr>
+<td>GLES（OpenGL for Embedded Systems，嵌入式系统开放图形库）</td>
+<td>OpenGLES 的常用简称</td>
+</tr>
+<tr>
+<td>GPU（Graphics Processing Unit，图形处理器）</td>
+<td>执行图形、并行计算和部分合成工作的处理单元</td>
+</tr>
+<tr>
+<td>ImageReader（Android ImageReader API）</td>
+<td>以 Surface 为输入并允许应用获取图像 Buffer 的标准组件</td>
+</tr>
+<tr>
+<td>LMKD（Low Memory Killer Daemon，低内存终止守护进程）</td>
+<td>Android 在内存压力下参与选择和终止候选进程的守护进程</td>
+</tr>
+<tr>
+<td>MediaCodec（Android MediaCodec API）</td>
+<td>Android 访问媒体编解码组件与 Buffer/Surface 的标准接口</td>
+</tr>
+<tr>
+<td>MediaProjection（Android MediaProjection API）</td>
+<td>Android 授权屏幕内容捕获与投影会话的标准接口</td>
+</tr>
+<tr>
+<td>MediaServer（Android media native services grouping）</td>
+<td>Android 原生媒体服务或相关服务分组的架构标签</td>
+</tr>
+<tr>
+<td>PopupWindow（Android PopupWindow API）</td>
+<td>在既有 Window 上方展示临时内容的标准 UI 组件</td>
+</tr>
+<tr>
+<td>SurfaceTexture（Android SurfaceTexture）</td>
+<td>把 Surface producer 的 Buffer 作为图形纹理供消费者使用的组件</td>
+</tr>
+<tr>
+<td>SurfaceView（Android SurfaceView）</td>
+<td>在 View 层级中管理独立 Surface 内容的标准组件</td>
+</tr>
+<tr>
+<td>TextureView（Android TextureView）</td>
+<td>在普通 View 合成语义中显示 SurfaceTexture 内容的组件</td>
+</tr>
+<tr>
+<td>ViewRootImpl（Android ViewRootImpl）</td>
+<td>连接 View 树、Window 会话、输入和绘制调度的应用侧实现组件</td>
+</tr>
+<tr>
+<td>VirtualDisplay（Android VirtualDisplay API）</td>
+<td>把显示内容输出到调用者提供 Surface 的逻辑显示对象</td>
+</tr>
+<tr>
+<td>WMS（Window Manager Service，窗口管理服务）</td>
+<td>管理窗口 token、层级、布局、可见性、显示归属和输入焦点的系统服务</td>
+</tr>
+<tr>
+<td>AEC（Acoustic Echo Cancellation，声学回声消除）</td>
+<td>使用参考信号抑制扬声器回声进入麦克风采集的音频处理机制</td>
+</tr>
+<tr>
+<td>AudioFocus（Android Audio Focus，Android 音频焦点）</td>
+<td>多个音频客户端协调播放优先级、duck、暂停和恢复的策略机制</td>
+</tr>
+<tr>
+<td>AudioRecord（Android AudioRecord API）</td>
+<td>Android 应用从音频输入设备采集 PCM 数据的标准接口</td>
+</tr>
+<tr>
+<td>BT（Bluetooth，蓝牙）</td>
+<td>短距离无线通信技术在座舱蓝牙业务中的常用缩写</td>
+</tr>
+<tr>
+<td>BtPhone（original-diagram application label）</td>
+<td>原图 01 中的蓝牙电话应用标签；包名、进程和接口待项目证据确认</td>
+</tr>
+<tr>
+<td>HFP（Hands-Free Profile，免提配置文件）</td>
+<td>蓝牙电话控制与免提通话相关的标准 Profile</td>
+</tr>
+<tr>
+<td>KTV（Karaoke Television，卡拉歌唱业务）</td>
+<td>座舱点歌、麦克风采集、混音和播放业务的常用名称</td>
+</tr>
+<tr>
+<td>SCO（Synchronous Connection-Oriented link，同步面向连接链路）</td>
+<td>蓝牙语音传输使用的同步链路类别</td>
+</tr>
+<tr>
+<td>SpeechAgent（original-diagram application label）</td>
+<td>原图 01 中的语音代理应用标签；私有接口和进程身份待项目证据确认</td>
+</tr>
+<tr>
+<td>URL（Uniform Resource Locator，统一资源定位符）</td>
+<td>标识在线媒体或网络资源位置的标准字符串</td>
+</tr>
+<tr>
+<td>VSYNC（Vertical Synchronization，垂直同步）</td>
+<td>显示刷新节奏与帧调度相关的同步事件</td>
+</tr>
+<tr>
+<td>callId（Favalon Voice call identifier）</td>
+<td>Favalon Voice 资料中用于关联呼叫及状态回调的呼叫标识</td>
+</tr>
+<tr>
+<td>xCall（original-diagram application label）</td>
+<td>原图 03 TBOX-APP 中的呼叫相关标签；具体业务展开和绑定待证据确认</td>
+</tr>
+<tr>
+<td>AcSettings（Air-conditioning Settings，空调设置应用）</td>
+<td>原图 01 中的空调设置应用标签；具体属性、进程与车型控制合同待 MT8676 项目证据确认</td>
+</tr>
+<tr>
+<td>HMI（Human-Machine Interface，人机界面）</td>
+<td>驾驶员或乘员与座舱功能交互的显示、输入和反馈边界</td>
+</tr>
+<tr>
+<td>ANativeWindow（Android Native Window，Android 原生窗口接口）</td>
+<td>原生图形生产者连接 Surface/BufferQueue 的标准窗口接口概念</td>
+</tr>
+<tr>
+<td>ChangBaKTV（original-diagram application label，唱吧 KTV 应用标签）</td>
+<td>原图 01 中的 KTV 应用标签；包名和资源合同待项目证据确认</td>
+</tr>
+<tr>
+<td>MediaPlayer（Android Media Player，Android 媒体播放器）</td>
+<td>Android 播放媒体源并管理准备、播放和停止状态的标准组件概念</td>
+</tr>
+<tr>
+<td>SentryMode（original-diagram application label，哨兵模式应用标签）</td>
+<td>原图 01 中的哨兵模式应用标签；触发和录像策略待项目证据确认</td>
+</tr>
+<tr>
+<td>WindowLeaked（Android WindowLeaked exception，窗口泄漏异常）</td>
+<td>Android 检测到组件退出后仍持有窗口时报告的异常类别；不等同于 Surface Buffer 泄漏</td>
+</tr>
+<tr>
+<td>IR（Infrared，红外）</td>
+<td>不可见红外光谱及相关 Camera/照明能力的常用缩写</td>
+</tr>
+<tr>
+<td>SID（UDS Service Identifier，UDS 服务标识）</td>
+<td>UDS 请求和响应中用于标识诊断服务类别的字段</td>
+</tr>
+<tr>
+<td>ACC（Accessory/ignition power state，附件/点火电源状态）</td>
+<td>车辆电源状态机中用于触发座舱上电、休眠或唤醒决策的输入概念</td>
+</tr>
+<tr>
+<td>ACK（Acknowledgement，确认应答）</td>
+<td>接收方确认某请求、状态或阶段已处理的响应语义</td>
+</tr>
+<tr>
+<td>APN（Access Point Name，接入点名称）</td>
+<td>蜂窝数据业务选择分组数据网络和接入配置的名称</td>
+</tr>
+<tr>
+<td>DDS（Default Data Subscription，默认数据订阅）</td>
+<td>多 SIM 场景中承担默认蜂窝数据业务的订阅选择</td>
+</tr>
+<tr>
+<td>FactoryMode（original-diagram application label，工厂模式应用标签）</td>
+<td>原图 01 中用于产线、硬件自检或工厂诊断的应用标签；具体命令合同待项目证据确认</td>
+</tr>
+<tr>
+<td>FileManager（original-diagram application label，文件管理应用标签）</td>
+<td>原图 01 中负责浏览和操作文件资源的应用标签</td>
+</tr>
+<tr>
+<td>HiCar（Huawei HiCar，华为手机车机互联）</td>
+<td>手机与车载系统建立认证、控制、音频和投屏会话的互联方案</td>
+</tr>
+<tr>
+<td>IMEI（International Mobile Equipment Identity，国际移动设备识别码）</td>
+<td>蜂窝终端设备身份标识；读取权限与使用范围受产品策略约束</td>
+</tr>
+<tr>
+<td>MBLog（original-diagram system label）</td>
+<td>原图 01 中的日志相关系统标签；内部实现和持久化路径待项目证据确认</td>
+</tr>
+<tr>
+<td>MediaProvider（Android Media Provider，媒体内容提供者）</td>
+<td>Android 维护媒体元数据、索引并向应用提供内容查询的组件</td>
+</tr>
+<tr>
+<td>MediaScanner（Android Media Scanner，媒体扫描器）</td>
+<td>扫描存储媒体文件并更新媒体索引的机制或组件</td>
+</tr>
+<tr>
+<td>NotificationCenter（original-diagram application label，通知中心应用标签）</td>
+<td>原图 01 中聚合和展示通知的应用标签</td>
+</tr>
+<tr>
+<td>NotificationManager（Android Notification Manager，通知管理服务）</td>
+<td>Android 管理通知发布、通道和展示策略的系统服务概念</td>
+</tr>
+<tr>
+<td>OTA（Over-the-Air Update，空中下载升级）</td>
+<td>通过网络分发并安装软件更新、验证健康状态和必要时回滚的机制</td>
+</tr>
+<tr>
+<td>PLMN（Public Land Mobile Network，公共陆地移动网络）</td>
+<td>由国家码和网络码等标识的蜂窝运营网络</td>
+</tr>
+<tr>
+<td>SMSC（Short Message Service Center，短消息服务中心）</td>
+<td>存储、转发和投递 SMS 的网络侧服务中心</td>
+</tr>
+<tr>
+<td>STR（Start/Starter power state，启动电源状态标签）</td>
+<td>车辆启动相关电源输入；精确电平、枚举和时序需项目配置确认</td>
+</tr>
+<tr>
+<td>TSP（Telematics Service Provider，车联网服务提供平台）</td>
+<td>向车辆提供鉴权、远控、数据和运营服务的云端业务平台</td>
+</tr>
+<tr>
+<td>fb_powerMgr（UMDP power manager service identifier）</td>
+<td>UMDP 资料中的电源管理服务标识；进程关系和业务 Ready 语义由 unit/config 与运行证据分别确认</td>
+</tr>
+<tr>
+<td>messageRef（SMS message reference，短消息引用标识）</td>
+<td>SMS 发送流程中用于关联提交结果或状态报告的消息引用</td>
+</tr>
+<tr>
+<td>requestId（Request Identifier，请求标识）</td>
+<td>用于关联同步请求、响应、异步回调和超时后迟到响应的请求标识</td>
+</tr>
+</tbody></table>
+<p><code>terminology.json</code> 的 <code>first_use_scan</code> 是本表首用检查的权威候选规则和允许清单。
+扫描覆盖组装后的 00–16 正文与表格，排除 fenced code、inline code、网页标记注释和
+链接目标；非允许清单候选必须在 <code>terms</code> 中，并由 canonical validator 按本表的
+缩写在前形式确认。IPCL 私有语义、设备分配和具体服务绑定仍为
+<code>[可信度：待 MT8676 确认]</code>。</p>
+<h2 id="01-文档身份">0.1 文档身份</h2>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>本次更新的对象是现有架构的解释：保留原图分层、模块与流程 ID，用 MTK/PVT 文档解释每个框的职责、跨域边界和恢复条件。MT8668 作为平台对照，不将其硬件能力反向写入 MT8676 原图。用户新 MBOS 图提供组件展开和退役注释，但不证明具体量产分支；“有实现资料”与“本项目已启用”仍分别记录。</p>
+<ul>
+<li>目标平台：MT8676。</li>
+<li>基线一：Favalon SDK V1.0.166。[可信度：MT8676 资料确认] [证据：sdk-mt8676-guide]</li>
+<li>基线二：UMDP V1.0.226。[可信度：MT8676 资料确认] [证据：umdp-readme-v1-0-226-txt]</li>
+<li>内容形态：面向架构学习、业务链路复盘和故障分析的工程手册。</li>
+<li>维护原则：Markdown 是唯一内容源，图表、Word 和其他发布形式均由此生成。</li>
+</ul>
+<p><code>T29-8678</code> 仅是资料存储目录背景，不是本手册的目标平台、项目名称或芯片型号。
+本手册标题、结论和责任边界均以 <strong>MT8676</strong> 为对象。对于检索到的其他平台资料，
+只有在明确标为通用机制并经适用性复核后才可作为方法参考；明确标记为其他平台、
+尤其是排除的 MT8678 页面，不得写成 MT8676 事实。</p>
+<h2 id="02-读者与目标">0.2 读者与目标</h2>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>最新 GitHub Pages 的 Day 1/2 已按模板补建正文，适合用作本手册阅读前置：把功能入口、服务提供者、物理执行者、权威状态提供方和显示消费者分开。沿既有架构解释空调、倒车、导航播报等用户旅程时，给每个角色写清“拥有何种资源、确认哪一层完成、复位后向谁重新取状态”，不据教学示意重新划分当前项目的 ECU/OS。[最新站点 Day 1](http[本地资料库路径] [最新站点 Day 2](http[本地资料库路径]</p>
+<p>本手册服务三类读者：</p>
+<ol>
+<li>新工程师：建立从芯片、虚拟机、操作系统、中间件到应用的整体心智模型。</li>
+<li>架构评审人员：检查模块位置、资源所有者、上下游、依赖和恢复边界是否一致。</li>
+<li>故障分析人员：从用户现象反向定位到最早断点，区分业务错误、通信错误、
+资源错误、生命周期错误和底层硬件错误。</li>
+</ol>
+<p>学习完成后，读者应能回答：</p>
+<ul>
+<li>三张原始图分别在描述什么，为什么不能把方框的相邻关系当作调用关系；</li>
+<li>微控制器（Microcontroller Unit，MCU）与片上系统（System on Chip，SoC）
+分别承担什么责任；</li>
+<li>SOS/Yocto Host、UOS Android Guest、UOS TBox Guest 与 Nebula OS
+在整机中如何分域；</li>
+<li>一条命令、状态、事件或媒体缓冲区如何跨越生产者、序列化、通道、传输、
+路由和消费者；</li>
+<li>MT8676 Favalon SDK 与 UMDP 的 Client/Server、超时、回调、服务依赖和
+重启恢复如何分析；</li>
+<li>为什么“链路连通”“会话存活”“数据新鲜”“回调到达”和“业务正确”
+是五个不同的判断。</li>
+</ul>
+<h2 id="03-证据优先级与防污染规则">0.3 证据优先级与防污染规则</h2>
+<p>证据采用以下优先级：</p>
+<ol>
+<li>三张用户原始架构图，只证明图中方框、分组和显式箭头。[可信度：架构图确认]
+[证据：original-diagram-01] [证据：original-diagram-02]
+[证据：original-diagram-03]</li>
+<li>冻结的 MT8676 SDK、UMDP、头文件、示例、recipe、systemd unit 和配置，
+用于证明具体版本事实。[可信度：MT8676 资料确认]</li>
+<li>经适用性复核的项目日志、接口表、DBC、IDL 或源码，用于证明项目私有行为。</li>
+<li>Android、Linux、AUTOSAR 和虚拟化的标准机制，仅用于解释工作原理，
+不自动等同于本项目实现。</li>
+<li>缺少直接材料时，明确记录需要补取的工件，不以经验填空。</li>
+</ol>
+<p>防污染要求：</p>
+<ul>
+<li>不从其他车型或平台复制 Channel ID、Topic ID、超时值、重试次数或枚举值。</li>
+<li>不因名称相似就合并进程、服务、库、HAL 或协议端点。</li>
+<li>不从方框上下位置推导启动顺序、调用方向或资源所有权。</li>
+<li>不把 SDK 示例程序的循环、等待、重试或错误处理当成量产策略。</li>
+<li>不把历史案例的相关性写成当前平台根因。</li>
+</ul>
+<h2 id="04-五类可信度">0.4 五类可信度</h2>
+<table>
+<thead>
+<tr>
+<th>标记</th>
+<th>定义</th>
+<th>可据此下的结论</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>[可信度：架构图确认]</code></td>
+<td>三张图明确出现的名称、容器、层次或箭头</td>
+<td>“图中存在”“图中位于某域”“图中显示某种连接”</td>
+</tr>
+<tr>
+<td><code>[可信度：MT8676 资料确认]</code></td>
+<td>MT8676 SDK/UMDP 冻结资料直接支持</td>
+<td>“该版本提供某接口/文件/服务/依赖”</td>
+</tr>
+<tr>
+<td><code>[可信度：项目知识确认]</code></td>
+<td>经适用性复核的项目日志、接口或源码支持</td>
+<td>“当前项目实际采用某私有实现”</td>
+</tr>
+<tr>
+<td><code>[可信度：标准机制推断]</code></td>
+<td>Android/Linux/AUTOSAR/虚拟化通用工作方式</td>
+<td>“若采用该标准实现，通常经过这些阶段”</td>
+</tr>
+<tr>
+<td><code>[可信度：待 MT8676 确认]</code></td>
+<td>当前证据不足，需要指定工件确认</td>
+<td>不形成确定的私有实现或责任结论</td>
+</tr>
+</tbody></table>
+<p>正文将可信度标记放在相关结论附近，而不是只在章节末统一声明。直接证据使用
+“证据标记 + manifest-id”，其中 <code>manifest-id</code> 必须可在
+<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅"><code>evidence/manifest.json</code><small>〔本地来源〕</small></span> 中解析。一个段落涉及多项材料时，
+可并列多个证据 ID；标准机制推断若没有 MT8676 专属证据，不伪造证据 ID。</p>
+<h2 id="05-明确限制">0.5 明确限制</h2>
+<p>本手册不猜测 MBOS、Nebula OS、FCM Service 和 IPCL 的项目私有内部实现；
+不把演示程序等同于量产实现；不复制未经证据确认的通道号、主题号、超时值、
+重试次数、进程名或资源所有权。凡需要这些值才能做出结论的地方，使用
+<code>[可信度：待 MT8676 确认]</code>，并明确要求补取 IDL、DBC、服务配置、源码、
+抓包或带版本日志。</p>
+<p>“待确认”不是模糊占位，而是可执行的证据请求。例如：</p>
+<ul>
+<li>要确认某 Vehicle Property 的来源，应补取当前版本 property 配置与 DBC 映射；</li>
+<li>要确认 <code>modem_service</code> 与某 UMDP 进程的关系，应补取 TBox 启动清单、
+可执行文件哈希、服务注册名和运行时进程树；</li>
+<li>要确认虚拟显示 Buffer 的所有者，应补取虚拟设备配置、Host Backend 日志、
+IOMMU 映射和缓冲区生命周期追踪。</li>
+</ul>
+<h2 id="06-章节导航">0.6 章节导航</h2>
+<table>
+<thead>
+<tr>
+<th align="right">章</th>
+<th>名称</th>
+<th>主要问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">00</td>
+<td>前言、证据与可信度</td>
+<td>本手册相信什么、不相信什么</td>
+</tr>
+<tr>
+<td align="right">01</td>
+<td>三张图的阅读方法</td>
+<td>三种视图如何对应、箭头如何解释</td>
+</tr>
+<tr>
+<td align="right">02</td>
+<td>整机与虚拟化架构</td>
+<td>MCU、SoC、Host、Guest 与资源归属</td>
+</tr>
+<tr>
+<td align="right">03</td>
+<td>MT8676 SDK 与 UMDP</td>
+<td>Client/Server、服务、依赖与恢复</td>
+</tr>
+<tr>
+<td align="right">04</td>
+<td>三图模块字典</td>
+<td>每个方框的输入、处理、输出和上下游</td>
+</tr>
+<tr>
+<td align="right">05</td>
+<td>通信机制</td>
+<td>Binder、FDBus、SOME/IP、SPI、IPCL 等</td>
+</tr>
+<tr>
+<td align="right">06</td>
+<td>Android 内部、图形与稳定性</td>
+<td>生命周期、输入、渲染、Surface/Buffer、泄漏与内部资源</td>
+</tr>
+<tr>
+<td align="right">07</td>
+<td>SOS/Yocto 内部机制</td>
+<td>systemd、Weston、Camera、Audio 与车辆服务</td>
+</tr>
+<tr>
+<td align="right">08</td>
+<td>MCU 内部机制</td>
+<td>AUTOSAR 启动、调度、CAN、E2E、电源与诊断</td>
+</tr>
+<tr>
+<td align="right">09</td>
+<td>TBox/通信模组内部机制</td>
+<td>UMDP、Modem、Telephony、GNSS、电源和跨域通信</td>
+</tr>
+<tr>
+<td align="right">10</td>
+<td>车辆、仪表与诊断业务流程</td>
+<td>指示灯、车速、车门、空调、输入、属性、心跳和诊断</td>
+</tr>
+<tr>
+<td align="right">11</td>
+<td>显示、相机与驾驶辅助流程</td>
+<td>Cluster、RVC、AVM、DMS、ADAS、Android/Weston/跨域显示</td>
+</tr>
+<tr>
+<td align="right">12</td>
+<td>音频与语音流程</td>
+<td>媒体、导航、语音车控、电话、eCall、广播、KTV、DSP</td>
+</tr>
+<tr>
+<td align="right">13</td>
+<td>通信模组业务流程</td>
+<td>Data、Network、SIM、SMS 与远程业务</td>
+</tr>
+<tr>
+<td align="right">14</td>
+<td>生命周期业务流程</td>
+<td>启动、休眠、唤醒、关机、升级与恢复</td>
+</tr>
+<tr>
+<td align="right">15</td>
+<td>统一诊断手册</td>
+<td>最早断点、双链分析、责任矩阵与升级材料</td>
+</tr>
+<tr>
+<td align="right">16</td>
+<td>附录</td>
+<td>模块、流程、术语、证据与待确认索引</td>
+</tr>
+</tbody></table>
+<h2 id="07-阅读约定">0.7 阅读约定</h2>
+<p>模块名以反引号表示；协议或机制首次出现时给出英文全称与中文解释。图中原文拼写
+即使不规范也保持可追溯，并在术语表中给出规范名。<code>→</code> 表示本段讨论的主方向，
+<code>↔</code> 表示双向交换；它们不是对私有接口的额外承诺。</p>
+<p>后续章节遇到“上游/下游”时，必须先说明对象：命令链、状态链、媒体 Buffer 链或
+反馈链。没有对象的“上游”是无意义的，因为同一个服务在命令链中可能是下游，
+在状态回报链中又可能是上游。</p>
+</article><nav class="pager"><a href="index.html">← 学习首页</a><a href="01.html">下一步：三张架构图阅读指南 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#mt8676-智能座舱平台架构学习与业务流程完整说明">MT8676 智能座舱平台架构学习与业务流程完整说明</a><a class="depth-2" href="#00-本篇必备术语">0.0 本篇必备术语</a><a class="depth-2" href="#01-文档身份">0.1 文档身份</a><a class="depth-2" href="#02-读者与目标">0.2 读者与目标</a><a class="depth-2" href="#03-证据优先级与防污染规则">0.3 证据优先级与防污染规则</a><a class="depth-2" href="#04-五类可信度">0.4 五类可信度</a><a class="depth-2" href="#05-明确限制">0.5 明确限制</a><a class="depth-2" href="#06-章节导航">0.6 章节导航</a><a class="depth-2" href="#07-阅读约定">0.7 阅读约定</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>

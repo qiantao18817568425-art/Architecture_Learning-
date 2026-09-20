@@ -1,0 +1,1033 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>通信机制与异常诊断基础 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details open><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a aria-current="page" href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 原版解释 / 05</div><div class="chapter-title"><p class="eyebrow">CHAPTER 05 · 原版解释全文</p><h1>通信机制与异常诊断基础</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=05">并排对比两套正文 ↗</a><a class="button secondary" href="05.html">对照中文版 ↗</a><button class="button" data-read="original-05" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 原版解释对照</p><h2>为什么系统需要这么多通信方式？</h2><p>通信先看边界：进程间、OS 间、芯片间或整车网络。Binder、FDBus、VSOCK、SPI 等解决的问题不同；有承载不代表已经定义消息和业务完成。</p><ol><li><strong>怎么读：</strong>先读机制总览，再对照一条业务的发送方、通道、接收方；最后补请求标识、超时、重连和旧消息处理。</li><li><strong>项目练习：</strong>把同一次车辆属性更新分成 SPI 报文、SOS 解码、FDBus 发布、VHAL 更新四个观察点。</li><li><strong>自检：</strong>通道连通、收到报文、属性新鲜，这三件事为什么要分别验证？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-10">Day 10</a> <a href="../index.html#day-11">Day 11</a> <a href="../index.html#day-12">Day 12</a> <a href="../index.html#day-13">Day 13</a> <a href="../index.html#day-14">Day 14</a> <a href="../index.html#day-15">Day 15</a> <a href="../index.html#day-17">Day 17</a> <a href="../index.html#day-18">Day 18</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#05-通信机制与内部异常诊断基础">05 通信机制与内部异常诊断基础</a><a class="depth-2" href="#51-证据边界与通用链路">5.1 证据边界与通用链路</a><a class="depth-2" href="#52-五层状态链路通不等于业务正确">5.2 五层状态：链路通不等于业务正确</a><a class="depth-2" href="#53-android-ipc">5.3 Android IPC</a><a class="depth-3" href="#531-适用域与模块">5.3.1 适用域与模块</a><a class="depth-3" href="#532-正常路径">5.3.2 正常路径</a><a class="depth-3" href="#533-异常与恢复路径">5.3.3 异常与恢复路径</a><a class="depth-3" href="#534-会话就绪与新鲜度模型">5.3.4 会话、就绪与新鲜度模型</a><a class="depth-3" href="#535-队列背压与资源边界">5.3.5 队列、背压与资源边界</a><a class="depth-3" href="#536-故障症状与最早断点">5.3.6 故障症状与最早断点</a><a class="depth-3" href="#537-日志命令计数器与追踪">5.3.7 日志、命令、计数器与追踪</a><a class="depth-3" href="#538-责任边界与升级材料">5.3.8 责任边界与升级材料</a><a class="depth-3" href="#539-证据与可信度">5.3.9 证据与可信度</a><a class="depth-2" href="#54-fdbus">5.4 FDBus</a><a class="depth-3" href="#541-适用域与模块">5.4.1 适用域与模块</a><a class="depth-3" href="#542-正常路径">5.4.2 正常路径</a><a class="depth-3" href="#543-异常与恢复路径">5.4.3 异常与恢复路径</a><a class="depth-3" href="#544-会话就绪与新鲜度模型">5.4.4 会话、就绪与新鲜度模型</a><a class="depth-3" href="#545-队列背压与资源边界">5.4.5 队列、背压与资源边界</a><a class="depth-3" href="#546-故障症状与最早断点">5.4.6 故障症状与最早断点</a><a class="depth-3" href="#547-日志命令计数器与追踪">5.4.7 日志、命令、计数器与追踪</a><a class="depth-3" href="#548-责任边界与升级材料">5.4.8 责任边界与升级材料</a><a class="depth-3" href="#549-证据与可信度">5.4.9 证据与可信度</a><a class="depth-2" href="#55-someip-与-doip">5.5 SOME/IP 与 DoIP</a><a class="depth-3" href="#551-适用域与模块">5.5.1 适用域与模块</a><a class="depth-3" href="#552-正常路径">5.5.2 正常路径</a><a class="depth-3" href="#553-异常与恢复路径">5.5.3 异常与恢复路径</a><a class="depth-3" href="#554-会话就绪与新鲜度模型">5.5.4 会话、就绪与新鲜度模型</a><a class="depth-3" href="#555-队列背压与资源边界">5.5.5 队列、背压与资源边界</a><a class="depth-3" href="#556-故障症状与最早断点">5.5.6 故障症状与最早断点</a><a class="depth-3" href="#557-日志命令计数器与追踪">5.5.7 日志、命令、计数器与追踪</a><a class="depth-3" href="#558-责任边界与升级材料">5.5.8 责任边界与升级材料</a><a class="depth-3" href="#559-证据与可信度">5.5.9 证据与可信度</a><a class="depth-2" href="#56-spiipcl">5.6 SPI/IPCL</a><a class="depth-3" href="#561-适用域与模块">5.6.1 适用域与模块</a><a class="depth-3" href="#562-正常路径">5.6.2 正常路径</a><a class="depth-3" href="#563-异常与恢复路径">5.6.3 异常与恢复路径</a><a class="depth-3" href="#564-会话就绪与新鲜度模型">5.6.4 会话、就绪与新鲜度模型</a><a class="depth-3" href="#565-队列背压与资源边界">5.6.5 队列、背压与资源边界</a><a class="depth-3" href="#566-故障症状与最早断点">5.6.6 故障症状与最早断点</a><a class="depth-3" href="#567-日志命令计数器与追踪">5.6.7 日志、命令、计数器与追踪</a><a class="depth-3" href="#568-责任边界与升级材料">5.6.8 责任边界与升级材料</a><a class="depth-3" href="#569-证据与可信度">5.6.9 证据与可信度</a><a class="depth-2" href="#57-autosar-rtecome2e">5.7 AUTOSAR RTE/COM/E2E</a><a class="depth-3" href="#571-适用域与模块">5.7.1 适用域与模块</a><a class="depth-3" href="#572-正常路径">5.7.2 正常路径</a><a class="depth-3" href="#573-异常与恢复路径">5.7.3 异常与恢复路径</a><a class="depth-3" href="#574-会话就绪与新鲜度模型">5.7.4 会话、就绪与新鲜度模型</a><a class="depth-3" href="#575-队列背压与资源边界">5.7.5 队列、背压与资源边界</a><a class="depth-3" href="#576-故障症状与最早断点">5.7.6 故障症状与最早断点</a><a class="depth-3" href="#577-日志命令计数器与追踪">5.7.7 日志、命令、计数器与追踪</a><a class="depth-3" href="#578-责任边界与升级材料">5.7.8 责任边界与升级材料</a><a class="depth-3" href="#579-证据与可信度">5.7.9 证据与可信度</a><a class="depth-2" href="#58-virtio-与虚拟设备">5.8 virtio 与虚拟设备</a><a class="depth-3" href="#581-适用域与模块">5.8.1 适用域与模块</a><a class="depth-3" href="#582-正常路径">5.8.2 正常路径</a><a class="depth-3" href="#583-异常与恢复路径">5.8.3 异常与恢复路径</a><a class="depth-3" href="#584-会话就绪与新鲜度模型">5.8.4 会话、就绪与新鲜度模型</a><a class="depth-3" href="#585-队列背压与资源边界">5.8.5 队列、背压与资源边界</a><a class="depth-3" href="#586-故障症状与最早断点">5.8.6 故障症状与最早断点</a><a class="depth-3" href="#587-日志命令计数器与追踪">5.8.7 日志、命令、计数器与追踪</a><a class="depth-3" href="#588-责任边界与升级材料">5.8.8 责任边界与升级材料</a><a class="depth-3" href="#589-证据与可信度">5.8.9 证据与可信度</a><a class="depth-2" href="#59-mt8676-sdkumdp">5.9 MT8676 SDK/UMDP</a><a class="depth-3" href="#591-适用域与模块">5.9.1 适用域与模块</a><a class="depth-3" href="#592-正常路径">5.9.2 正常路径</a><a class="depth-3" href="#593-异常与恢复路径">5.9.3 异常与恢复路径</a><a class="depth-3" href="#594-会话就绪与新鲜度模型">5.9.4 会话、就绪与新鲜度模型</a><a class="depth-3" href="#595-队列背压与资源边界">5.9.5 队列、背压与资源边界</a><a class="depth-3" href="#596-故障症状与最早断点">5.9.6 故障症状与最早断点</a><a class="depth-3" href="#597-日志命令计数器与追踪">5.9.7 日志、命令、计数器与追踪</a><a class="depth-3" href="#598-责任边界与升级材料">5.9.8 责任边界与升级材料</a><a class="depth-3" href="#599-证据与可信度">5.9.9 证据与可信度</a><a class="depth-2" href="#510-跨机制交接与待补证据">5.10 跨机制交接与待补证据</a></details><article id="chapter-text"><h1 id="05-通信机制与内部异常诊断基础">05 通信机制与内部异常诊断基础</h1>
+<blockquote>
+<p>本章于 2026-09-20 按原架构补充正文解释；原图、模块/流程 ID 和分层保持原样。新证据的版本限定随段落标注。<a href="index.html">本轮更新说明</a>。</p>
+</blockquote>
+<h2 id="51-证据边界与通用链路">5.1 证据边界与通用链路</h2>
+<p>本章把后续业务流程共用的通信链拆成可观测、可恢复、可归责的机制层。图 1～图 3
+只确认协议标签、容器、模块位置和显式箭头。[可信度：架构图确认]
+[证据：original-diagram-01] [证据：original-diagram-02] [证据：original-diagram-03]
+服务发现、线程、队列、重连、订阅、帧字段和私有绑定，除非另有 MT8676 资料，分别
+标为标准推断或待确认；method-reference case 不得写成当前平台 root cause。
+任何候选 ID、timeout、retry、framing、队列或进程绑定不得写成 MT8676 当前私有合同；
+只有版本化接口、配置、源码或运行 trace 可以把对应项从待确认升级。</p>
+<p>统一链路是：</p>
+<p>Source → Producer → Serialize → Channel → Transport → Router → Consumer → Feedback</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  S[&quot;Source&quot;] --&gt; P[&quot;Producer&quot;]
+  P --&gt; Z[&quot;Serialize&quot;]
+  Z --&gt; C[&quot;Channel&quot;]
+  C --&gt; T[&quot;Transport&quot;]
+  T --&gt; R[&quot;Router&quot;]
+  R --&gt; U[&quot;Consumer&quot;]
+  U --&gt; F[&quot;Feedback&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  S[&quot;Source&quot;] --&gt; P[&quot;Producer&quot;]
+  P --&gt; Z[&quot;Serialize&quot;]
+  Z --&gt; C[&quot;Channel&quot;]
+  C --&gt; T[&quot;Transport&quot;]
+  T --&gt; R[&quot;Router&quot;]
+  R --&gt; U[&quot;Consumer&quot;]
+  U --&gt; F[&quot;Feedback&quot;]</code></pre></details></details><p>每跳都要记录 timestamp、Sequence、Generation、Request ID、Topic、Buffer/Fence ID
+或能等价关联的业务键；这些是诊断维度，不证明 MT8676 已实现同名字段。
+[可信度：标准机制推断] 字段宽度、编码、代际和私有日志位置均
+<code>[可信度：待 MT8676 确认]</code>。</p>
+<h2 id="52-五层状态链路通不等于业务正确">5.2 五层状态：链路通不等于业务正确</h2>
+<p>Physical Link Alive ≠ RPC Session Alive ≠ Target Data Fresh ≠ Callback Delivered ≠ Business State Correct</p>
+<table>
+<thead>
+<tr>
+<th>层次</th>
+<th>含义与成功判据</th>
+<th>成功后仍可能失败</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Physical Link Alive</td>
+<td>成功证据：载波、字节、帧、IRQ/DMA 或虚拟队列计数前进</td>
+<td>服务未注册</td>
+</tr>
+<tr>
+<td>RPC Session Alive</td>
+<td>成功证据：当前 Generation 的发现、连接、注册或最小请求/响应</td>
+<td>源数据不更新</td>
+</tr>
+<tr>
+<td>Target Data Fresh</td>
+<td>成功证据：timestamp/Sequence 前进且属于当前代际</td>
+<td>callback 队列堵塞</td>
+</tr>
+<tr>
+<td>Callback Delivered</td>
+<td>成功证据：发布、传输与 consumer 入口可关联</td>
+<td>状态机拒绝</td>
+</tr>
+<tr>
+<td>Business State Correct</td>
+<td>成功证据：源、缓存、显示/执行和回读一致</td>
+<td>后续竞态覆盖</td>
+</tr>
+</tbody></table>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">stateDiagram-v2
+  [*] --&gt; Link
+  Link --&gt; Session: discover/connect
+  Session --&gt; Fresh: sequence advances
+  Fresh --&gt; Callback: consumer entry
+  Callback --&gt; Correct: readback verified
+  Correct --&gt; Link: reset
+  Session --&gt; Link: session death
+  Callback --&gt; Fresh: state reject</pre><details><summary>查看原始图代码</summary><pre><code>stateDiagram-v2
+  [*] --&gt; Link
+  Link --&gt; Session: discover/connect
+  Session --&gt; Fresh: sequence advances
+  Fresh --&gt; Callback: consumer entry
+  Callback --&gt; Correct: readback verified
+  Correct --&gt; Link: reset
+  Session --&gt; Link: session death
+  Callback --&gt; Fresh: state reject</code></pre></details></details><p>网卡 Up、SPI 有字节、Socket connected、Binder Proxy 非空、进程 Active 或 callback
+日志出现，都不能单独证明最后一层。[可信度：标准机制推断] 恢复必须逐门验证，并提交
+同一时间轴、两端 PID/Generation、计数器、配置、最早断点和恢复回读。
+对受 systemd 管理的 SDK/UMDP 链还必须保持：systemd Active / New PID ≠ Service Ready ≠
+Client Handle Valid ≠ Subscription Restored ≠ Business Cache Rebuilt。[可信度：标准机制推断]</p>
+<h2 id="53-android-ipc">5.3 Android IPC</h2>
+<h3 id="531-适用域与模块">5.3.1 适用域与模块</h3>
+<p>图 1 的 Android Framework/JAVA Services 和图 3 的 Binder、Client HAL Proxy、
+Service HAL Proxy、Client Proxy、Service Stub 是直接标签。[可信度：架构图确认]
+[证据：original-diagram-01] [证据：original-diagram-03]
+标准模型包含 Binder Proxy/Stub、<code>ServiceManager</code>、Binder driver、server thread
+pool、AIDL、HIDL、Handler/Looper/message queue、<code>BroadcastReceiver</code>、
+<code>ContentProvider</code>、Unix/domain sockets、shared memory 与 Netlink。
+[可信度：标准机制推断] 私有 descriptor、transaction code、服务名和线程数
+<code>[可信度：待 MT8676 确认]</code>。</p>
+<h3 id="532-正常路径">5.3.2 正常路径</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+  participant A as App
+  participant P as Binder Proxy
+  participant D as Binder driver
+  participant S as Service Stub
+  participant Q as server thread pool
+  participant B as Business
+  A-&gt;&gt;P: synchronous / oneway
+  P-&gt;&gt;D: transaction
+  D-&gt;&gt;S: dispatch
+  S-&gt;&gt;Q: execute
+  Q-&gt;&gt;B: update/read
+  B--&gt;&gt;A: reply or callback</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  participant A as App
+  participant P as Binder Proxy
+  participant D as Binder driver
+  participant S as Service Stub
+  participant Q as server thread pool
+  participant B as Business
+  A-&gt;&gt;P: synchronous / oneway
+  P-&gt;&gt;D: transaction
+  D-&gt;&gt;S: dispatch
+  S-&gt;&gt;Q: execute
+  Q-&gt;&gt;B: update/read
+  B--&gt;&gt;A: reply or callback</code></pre></details></details><p>synchronous 占用调用方等待上下文；oneway 仅表示不等同步 reply，不表示服务已消费。
+[可信度：标准机制推断]</p>
+<h4 id="android-非-binder-ipc-诊断合同">Android 非 Binder IPC 诊断合同</h4>
+<p>下表是标准诊断模型，不代表 MT8676 已采用某个私有 endpoint、线程、权限或缓存策略。
+每一行都把正常投递、异常、观测和恢复责任闭合到新鲜状态，而不是只列机制名。
+[可信度：标准机制推断]</p>
+<table>
+<thead>
+<tr>
+<th>机制</th>
+<th>适用与正常路径</th>
+<th>异常边界</th>
+<th>观测点</th>
+<th>恢复、验证与责任</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Handler/Looper</td>
+<td>同进程异步切线程：post/enqueue → Looper dispatch → consumer</td>
+<td>queue stall、blocked looper、stale message</td>
+<td>queue latency/thread stack、enqueue/dispatch/consume 时间线</td>
+<td>移除或 retire old Generation，解除阻塞后重投当前状态并由 consumer 回读；producer/Looper/consumer 分段负责</td>
+</tr>
+<tr>
+<td><code>BroadcastReceiver</code></td>
+<td>系统或应用事件：sender → <code>AMS/dispatcher</code> → receiver</td>
+<td>未注册、permission/user scope 不匹配、队列延迟、receiver timeout 或消费失败</td>
+<td>注册状态、用户、权限、发送/调度/入口/完成时间</td>
+<td>re-register or resend current state，再验证 receiver 业务结果；sender、系统 dispatcher、receiver 分段负责</td>
+</tr>
+<tr>
+<td><code>ContentProvider</code></td>
+<td>结构化共享数据：resolver → Binder/provider → storage</td>
+<td>provider 未发布或死亡、权限拒绝、cursor/observer freshness 失效</td>
+<td>provider 发布、Binder 调用、查询耗时、cursor 版本、observer 通知与存储版本</td>
+<td>重新取得 provider，requery current state 并重建 observer；provider 前归 resolver/权限，之后归 provider/storage</td>
+</tr>
+<tr>
+<td>Unix/domain sockets</td>
+<td>本机字节流或报文：bind/listen → connect/session → read/write</td>
+<td>endpoint 缺失、peer death and buffer backpressure、半开 session</td>
+<td>socket 状态、peer identity、send/receive/drop/queue、两端 PID/Generation</td>
+<td>关闭旧 FD，reconnect a new session，握手并做 request/readback；监听端、transport、client 各自负责</td>
+</tr>
+<tr>
+<td>shared memory</td>
+<td>大块数据：FD/handle transfer → mapping → producer/consumer</td>
+<td>handle/映射泄露、ownership 冲突、fence/cache visibility 缺失、跨代际读写</td>
+<td>FD/map、buffer owner、fence、producer/consumer Sequence 与 Generation</td>
+<td>等待/校验 fence，unmap and retire old Generation，重新分配并以当前数据回读；分配者与当前 owner 负责</td>
+</tr>
+<tr>
+<td>Netlink</td>
+<td>内核事件：kernel producer → socket receive queue → userspace consumer</td>
+<td>family/permission mismatch、receive queue drop/Sequence gap、用户线程不消费</td>
+<td>family/group、权限、socket drop、Sequence、内核发送与用户入口计数</td>
+<td>重建订阅并 resync from authoritative state；内核 producer、socket owner、userspace consumer 分段负责</td>
+</tr>
+</tbody></table>
+<p>具体 receiver/provider 名、socket/Netlink family、shared-memory API、队列阈值和恢复所有者
+<code>[可信度：待 MT8676 确认]</code>。</p>
+<h3 id="533-异常与恢复路径">5.3.3 异常与恢复路径</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  C[&quot;call/register&quot;] --&gt; R{&quot;service registered?&quot;}
+  R -- no --&gt; N[&quot;service not registered&quot;]
+  R -- yes --&gt; T[&quot;transaction&quot;]
+  N --&gt; Y
+  T --&gt; D{&quot;process death?&quot;}
+  D -- yes --&gt; X[&quot;DeadObjectException / DeathRecipient&quot;]
+  D -- no --&gt; Q{&quot;capacity?&quot;}
+  Q -- no --&gt; F[&quot;FAILED_TRANSACTION / TransactionTooLargeException / thread-pool exhaustion&quot;]
+  Q -- yes --&gt; O{&quot;consumer updates?&quot;}
+  O -- no --&gt; B[&quot;callback invoked but consumer state machine does not consume/update&quot;]
+  O -- yes --&gt; V
+  X --&gt; Y[&quot;discover new service + re-register&quot;]
+  Y --&gt; G{&quot;old generation retired?&quot;}
+  G -- no --&gt; Z[&quot;reconnect obtains a new service but old callback/session remains stale&quot;]
+  G -- yes --&gt; V[&quot;readback + business verify&quot;]
+  F --&gt; W[&quot;drain/retire failed or stale work&quot;]
+  B --&gt; W
+  Z --&gt; W
+  W --&gt; V</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  C[&quot;call/register&quot;] --&gt; R{&quot;service registered?&quot;}
+  R -- no --&gt; N[&quot;service not registered&quot;]
+  R -- yes --&gt; T[&quot;transaction&quot;]
+  N --&gt; Y
+  T --&gt; D{&quot;process death?&quot;}
+  D -- yes --&gt; X[&quot;DeadObjectException / DeathRecipient&quot;]
+  D -- no --&gt; Q{&quot;capacity?&quot;}
+  Q -- no --&gt; F[&quot;FAILED_TRANSACTION / TransactionTooLargeException / thread-pool exhaustion&quot;]
+  Q -- yes --&gt; O{&quot;consumer updates?&quot;}
+  O -- no --&gt; B[&quot;callback invoked but consumer state machine does not consume/update&quot;]
+  O -- yes --&gt; V
+  X --&gt; Y[&quot;discover new service + re-register&quot;]
+  Y --&gt; G{&quot;old generation retired?&quot;}
+  G -- no --&gt; Z[&quot;reconnect obtains a new service but old callback/session remains stale&quot;]
+  G -- yes --&gt; V[&quot;readback + business verify&quot;]
+  F --&gt; W[&quot;drain/retire failed or stale work&quot;]
+  B --&gt; W
+  Z --&gt; W
+  W --&gt; V</code></pre></details></details><p>Required branches also include oneway backlog. <code>DeathRecipient</code> 只帮助感知死亡；恢复仍要
+获取新 Proxy、重新注册 callback、废弃旧 Generation 并回读。[可信度：标准机制推断]
+异常字符串、日志 tag 和自动恢复责任 <code>[可信度：待 MT8676 确认]</code>。</p>
+<h3 id="534-会话就绪与新鲜度模型">5.3.4 会话、就绪与新鲜度模型</h3>
+<p>Proxy 非空不等于 RPC 可用；transaction 成功不等于源新鲜；callback 到达不等于
+Handler/Looper 和业务状态机已消费。AIDL/HIDL 只描述接口/version 边界。
+[可信度：标准机制推断]</p>
+<h3 id="535-队列背压与资源边界">5.3.5 队列、背压与资源边界</h3>
+<p>观察 Binder buffer、oneway backlog、server thread pool、Handler/Looper queue 和
+共享内存所有权。<code>FAILED_TRANSACTION</code>、<code>TransactionTooLargeException</code> 与
+thread-pool exhaustion 是候选标准分支，不是 MT8676 已知根因。[可信度：标准机制推断]</p>
+<h3 id="536-故障症状与最早断点">5.3.6 故障症状与最早断点</h3>
+<p>找不到服务先查 <code>ServiceManager</code> 注册；死亡后持续失败查旧 Proxy；请求失败查 driver/
+大小/线程池；callback 有而 UI 不变查 consumer；重连后旧事件查 Generation。</p>
+<h3 id="537-日志命令计数器与追踪">5.3.7 日志、命令、计数器与追踪</h3>
+<p>收集 <code>dumpsys</code>、<code>service list</code>、进程/线程栈、transaction 失败计数、ANR、message queue
+延迟和 callback 入口计数。[可信度：标准机制推断] 具体节点与日志 tag 待确认。</p>
+<h3 id="538-责任边界与升级材料">5.3.8 责任边界与升级材料</h3>
+<p>注册归服务启动者；driver 前失败归 Client；Stub 后归 Server；callback 后归消费者。
+升级包含接口版本、注册表、两端线程栈、transaction 统计、复现和恢复回读。</p>
+<h3 id="539-证据与可信度">5.3.9 证据与可信度</h3>
+<p>原图只确认标签和位置。[可信度：架构图确认] [证据：original-diagram-03]
+内部行为为标准模型。[可信度：标准机制推断] 私有 ID、阈值、自动重连和进程绑定
+<code>[可信度：待 MT8676 确认]</code>。</p>
+<h2 id="54-fdbus">5.4 FDBus</h2>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>FDBus 的名字服务、连接、接口方法与业务数据有效性是不同阶段。新 MBOS 图明确 mb.os 的服务端角色及 ivi/cmd/diagnostics/can 客户端关系；PVT vehicle 图还给出各域名字服务和跨域承载示例。原图 FDBus 框保留，解释时应先定位具体端点，再查注册/连接、会话与订阅、消息/属性到达，最后核实当前有效业务状态。文中 D-Bus 与 FDBus 仍是不同概念，不因注释“dbus数据”自动合并。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">MBOS-20260920 · 盟博OS架构-用户提供-20260920.png<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S281 · vehicle方案.pdf · PDF第2-3页<small>〔本地来源〕</small></span></p>
+<h3 id="541-适用域与模块">5.4.1 适用域与模块</h3>
+<p>图 1 有 FDBUS；图 3 在 SOS、Android、TBox 分组画出 FDBus/name_server，但仅 SOS
+分组显示 host_server。
+[可信度：架构图确认] [证据：original-diagram-01] [证据：original-diagram-03]
+name server、host server、service registration/discovery、endpoint、session、
+request/reply、publish/subscribe、topic、callback、reconnect 和 generation 为标准
+诊断模型。[可信度：标准机制推断] 私有地址、Topic ID 和绑定待确认。</p>
+<h3 id="542-正常路径">5.4.2 正常路径</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+  participant S as Service endpoint
+  participant H as host server
+  participant N as name server
+  participant C as Client endpoint
+  participant A as Consumer
+  S-&gt;&gt;H: register service
+  H-&gt;&gt;N: publish availability
+  C-&gt;&gt;N: discover
+  N--&gt;&gt;C: endpoint/generation
+  C-&gt;&gt;S: session + request/subscribe
+  S--&gt;&gt;C: reply/publish topic
+  C--&gt;&gt;A: callback</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  participant S as Service endpoint
+  participant H as host server
+  participant N as name server
+  participant C as Client endpoint
+  participant A as Consumer
+  S-&gt;&gt;H: register service
+  H-&gt;&gt;N: publish availability
+  C-&gt;&gt;N: discover
+  N--&gt;&gt;C: endpoint/generation
+  C-&gt;&gt;S: session + request/subscribe
+  S--&gt;&gt;C: reply/publish topic
+  C--&gt;&gt;A: callback</code></pre></details></details><p>service registration/discovery 与 topic 行为是标准推断，不是原图的字段合同。
+[可信度：标准机制推断]</p>
+<h3 id="543-异常与恢复路径">5.4.3 异常与恢复路径</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  N[&quot;name server / host server&quot;] --&gt; A{&quot;registry reachable/healthy?&quot;}
+  A -- no --&gt; F[&quot;name_server/host_server unavailable&quot;]
+  A -- yes --&gt; U{&quot;registration unique?&quot;}
+  U -- no --&gt; D[&quot;duplicate service identity/owner conflict&quot;]
+  U -- yes --&gt; S[&quot;endpoint session&quot;]
+  S --&gt; R{&quot;subscriber registered?&quot;}
+  R -- no --&gt; RN[&quot;subscriber not registered&quot;]
+  R -- yes --&gt; C{&quot;callback queue drains?&quot;}
+  C -- no --&gt; Q[&quot;callback queue failures&quot;]
+  C -- yes --&gt; G{&quot;generation/freshness valid?&quot;}
+  G -- no --&gt; O[&quot;stale callback/session&quot;]
+  F --&gt; H[&quot;restore registry visibility&quot;]
+  D --&gt; J[&quot;reject duplicate + reconcile owner&quot;]
+  H --&gt; B[&quot;session rebuild&quot;]
+  J --&gt; B
+  RN --&gt; B
+  Q --&gt; B
+  O --&gt; B
+  B --&gt; V[&quot;re-subscribe + readback&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  N[&quot;name server / host server&quot;] --&gt; A{&quot;registry reachable/healthy?&quot;}
+  A -- no --&gt; F[&quot;name_server/host_server unavailable&quot;]
+  A -- yes --&gt; U{&quot;registration unique?&quot;}
+  U -- no --&gt; D[&quot;duplicate service identity/owner conflict&quot;]
+  U -- yes --&gt; S[&quot;endpoint session&quot;]
+  S --&gt; R{&quot;subscriber registered?&quot;}
+  R -- no --&gt; RN[&quot;subscriber not registered&quot;]
+  R -- yes --&gt; C{&quot;callback queue drains?&quot;}
+  C -- no --&gt; Q[&quot;callback queue failures&quot;]
+  C -- yes --&gt; G{&quot;generation/freshness valid?&quot;}
+  G -- no --&gt; O[&quot;stale callback/session&quot;]
+  F --&gt; H[&quot;restore registry visibility&quot;]
+  D --&gt; J[&quot;reject duplicate + reconcile owner&quot;]
+  H --&gt; B[&quot;session rebuild&quot;]
+  J --&gt; B
+  RN --&gt; B
+  Q --&gt; B
+  O --&gt; B
+  B --&gt; V[&quot;re-subscribe + readback&quot;]</code></pre></details></details><h3 id="544-会话就绪与新鲜度模型">5.4.4 会话、就绪与新鲜度模型</h3>
+<p>注册存在不等于 session；session 不等于 subscriber 已注册；callback 不等于 topic 数据
+新鲜。记录服务代际、session、topic、Sequence/timestamp 和 consumer version。</p>
+<h3 id="545-队列背压与资源边界">5.4.5 队列、背压与资源边界</h3>
+<p>观察 request、publish、transport、callback queue 的 enqueue/dequeue/drop/wait。
+队列深度、丢弃和 reconnect 退避 <code>[可信度：待 MT8676 确认]</code>。</p>
+<h3 id="546-故障症状与最早断点">5.4.6 故障症状与最早断点</h3>
+<p>发现失败查 name/host；发现成功无 reply 查 endpoint；reply 正常无事件查订阅；接收
+正常无更新查 callback queue/状态机；恢复后旧事件查 generation。</p>
+<h3 id="547-日志命令计数器与追踪">5.4.7 日志、命令、计数器与追踪</h3>
+<p>采集注册表、host/name 连接、endpoint/session、request/reply、topic subscribe/
+publish、callback 和队列计数。具体命令、服务名和 endpoint 待确认。</p>
+<h3 id="548-责任边界与升级材料">5.4.8 责任边界与升级材料</h3>
+<p>注册归 Service/host；发现归 name server/config；session 归两端/transport；订阅归
+Client；callback 后归 Consumer。升级包含注册表、Generation、session 时间线和回读。</p>
+<h3 id="549-证据与可信度">5.4.9 证据与可信度</h3>
+<p>方框与显式箭头是图事实。[可信度：架构图确认] [证据：original-diagram-03]
+discovery/topic/session 为标准推断。[可信度：标准机制推断] 私有端点、ID、payload、
+重连 <code>[可信度：待 MT8676 确认]</code>。</p>
+<h2 id="55-someip-与-doip">5.5 SOME/IP 与 DoIP</h2>
+<h3 id="551-适用域与模块">5.5.1 适用域与模块</h3>
+<p>图 3 有 Routing Manager、Clients(SOME/IP)、Client/Service、Proxy/Stub、SomeIp 和
+DoIP 标签。[可信度：架构图确认] [证据：original-diagram-03]
+Offer/Find、instance/version、request/response、Event/EventGroup、subscribe/notify、
+TCP/UDP、multicast、payload serialization 与 E2E 是标准模型。
+[可信度：标准机制推断] 私有 ID、端口、版本和 payload 待确认。</p>
+<p>DoIP is diagnostic-over-IP, not a generic SOME/IP service。DoIP 必须按诊断连接和 UDS
+语义单独分析。[可信度：标准机制推断]
+原图不证明 DoIP 必须经过 Routing Manager 或 CanService；具体路由、诊断会话与网关
+绑定 <code>[可信度：待 MT8676 确认]</code>。</p>
+<h3 id="552-正常路径">5.5.2 正常路径</h3>
+<h4 id="someip-端到端正常链">SOME/IP 端到端正常链</h4>
+<p>标准数据方向是：Client business → Client Proxy → serialize request → transport/routing →
+Service Stub → deserialize + dispatch → Service business → serialize response/event →
+Client Proxy: transport response/notify → Client business: deserialize/E2E + callback。
+[可信度：标准机制推断]</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+  participant CB as Client business
+  participant CP as Client Proxy
+  participant TR as transport/routing
+  participant SS as Service Stub
+  participant SB as Service business
+  SS-&gt;&gt;TR: Offer instance/version
+  CP-&gt;&gt;TR: Find + subscribe EventGroup
+  TR--&gt;&gt;CP: availability/subscription status
+  CB-&gt;&gt;CP: method call
+  CP-&gt;&gt;TR: serialize request
+  TR-&gt;&gt;SS: transport request
+  SS-&gt;&gt;SB: deserialize + dispatch
+  SB--&gt;&gt;SS: result/event
+  SS--&gt;&gt;TR: serialize response/event
+  TR--&gt;&gt;CP: transport response/notify
+  CP--&gt;&gt;CB: deserialize/E2E + callback</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  participant CB as Client business
+  participant CP as Client Proxy
+  participant TR as transport/routing
+  participant SS as Service Stub
+  participant SB as Service business
+  SS-&gt;&gt;TR: Offer instance/version
+  CP-&gt;&gt;TR: Find + subscribe EventGroup
+  TR--&gt;&gt;CP: availability/subscription status
+  CB-&gt;&gt;CP: method call
+  CP-&gt;&gt;TR: serialize request
+  TR-&gt;&gt;SS: transport request
+  SS-&gt;&gt;SB: deserialize + dispatch
+  SB--&gt;&gt;SS: result/event
+  SS--&gt;&gt;TR: serialize response/event
+  TR--&gt;&gt;CP: transport response/notify
+  CP--&gt;&gt;CB: deserialize/E2E + callback</code></pre></details></details><p>上图中的 transport/routing 是标准逻辑位置；数据面是否经过当前 Routing Manager、
+Proxy/Stub 的实际宿主和 IDL <code>[可信度：待 MT8676 确认]</code>。</p>
+<h4 id="doip-独立正常链">DoIP 独立正常链</h4>
+<p>DoIP 标准链独立表达为：Tester → IP/TCP → DoIP entity → routing activation/session →
+diagnostic target/gateway → UDS request/response → Tester 校验；它不借用 SOME/IP 的
+Offer/Find/EventGroup 语义。[可信度：标准机制推断]</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+  participant T as Tester
+  participant I as IP/TCP
+  participant E as DoIP entity
+  participant G as diagnostic target/gateway
+  T-&gt;&gt;I: connect
+  I-&gt;&gt;E: DoIP discovery/connect
+  T-&gt;&gt;E: routing activation/session
+  E-&gt;&gt;G: route UDS request
+  G--&gt;&gt;E: UDS response
+  E--&gt;&gt;T: correlated diagnostic response</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  participant T as Tester
+  participant I as IP/TCP
+  participant E as DoIP entity
+  participant G as diagnostic target/gateway
+  T-&gt;&gt;I: connect
+  I-&gt;&gt;E: DoIP discovery/connect
+  T-&gt;&gt;E: routing activation/session
+  E-&gt;&gt;G: route UDS request
+  G--&gt;&gt;E: UDS response
+  E--&gt;&gt;T: correlated diagnostic response</code></pre></details></details><h3 id="553-异常与恢复路径">5.5.3 异常与恢复路径</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  R[&quot;Routing Manager&quot;] --&gt; O{&quot;Offer/Find match?&quot;}
+  O -- no --&gt; M[&quot;offer/find mismatch or version mismatch&quot;]
+  O -- yes --&gt; T{&quot;transport/session?&quot;}
+  T -- invalid --&gt; C[&quot;TCP connected but application session invalid&quot;]
+  T -- loss --&gt; U[&quot;UDP loss&quot;]
+  T -- ready --&gt; S{&quot;subscription alive?&quot;}
+  S -- no --&gt; L[&quot;event subscription loss&quot;]
+  S -- yes --&gt; E{&quot;E2E accepts?&quot;}
+  E -- no --&gt; J[&quot;E2E rejection&quot;]
+  E -- yes --&gt; F{&quot;fresh?&quot;}
+  F -- no --&gt; N[&quot;stale notification&quot;]
+  F -- yes --&gt; B[&quot;business consume&quot;]
+  R --&gt;|routing-manager death| X[&quot;restart + Offer/Find + resubscribe&quot;]
+  X --&gt; V[&quot;new generation + verify state&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  R[&quot;Routing Manager&quot;] --&gt; O{&quot;Offer/Find match?&quot;}
+  O -- no --&gt; M[&quot;offer/find mismatch or version mismatch&quot;]
+  O -- yes --&gt; T{&quot;transport/session?&quot;}
+  T -- invalid --&gt; C[&quot;TCP connected but application session invalid&quot;]
+  T -- loss --&gt; U[&quot;UDP loss&quot;]
+  T -- ready --&gt; S{&quot;subscription alive?&quot;}
+  S -- no --&gt; L[&quot;event subscription loss&quot;]
+  S -- yes --&gt; E{&quot;E2E accepts?&quot;}
+  E -- no --&gt; J[&quot;E2E rejection&quot;]
+  E -- yes --&gt; F{&quot;fresh?&quot;}
+  F -- no --&gt; N[&quot;stale notification&quot;]
+  F -- yes --&gt; B[&quot;business consume&quot;]
+  R --&gt;|routing-manager death| X[&quot;restart + Offer/Find + resubscribe&quot;]
+  X --&gt; V[&quot;new generation + verify state&quot;]</code></pre></details></details><h4 id="doip-独立异常与恢复链">DoIP 独立异常与恢复链</h4>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  T[&quot;Tester&quot;] --&gt; L{&quot;IP/TCP alive?&quot;}
+  L -- no --&gt; P[&quot;repair link/connect&quot;]
+  L -- yes --&gt; A{&quot;routing activation/session accepted?&quot;}
+  A -- no --&gt; AR[&quot;routing activation rejected&quot;]
+  A -- yes --&gt; G{&quot;logical address/target match?&quot;}
+  G -- no --&gt; GM[&quot;logical address/target mismatch&quot;]
+  G -- yes --&gt; S{&quot;diagnostic session valid?&quot;}
+  S -- no --&gt; SI[&quot;TCP alive but diagnostic session invalid&quot;]
+  S -- yes --&gt; D{&quot;gateway downstream reachable?&quot;}
+  D -- no --&gt; DU[&quot;gateway downstream unreachable&quot;]
+  D -- yes --&gt; R{&quot;diagnostic response received?&quot;}
+  R -- no --&gt; TO[&quot;diagnostic response timeout&quot;]
+  R -- yes --&gt; C{&quot;DoIP header + UDS correlation valid?&quot;}
+  C -- no --&gt; CI[&quot;mismatched/stale response&quot;]
+  C -- yes --&gt; OK[&quot;diagnostic result consumed&quot;]
+  AR --&gt; X[&quot;close stale transport/session&quot;]
+  GM --&gt; X
+  SI --&gt; X
+  DU --&gt; X
+  TO --&gt; X
+  CI --&gt; X
+  P --&gt; N[&quot;reconnect IP/TCP&quot;]
+  X --&gt; N
+  N --&gt; RA[&quot;rebuild routing activation + diagnostic session&quot;]
+  RA --&gt; V[&quot;UDS readback + user-result verify&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  T[&quot;Tester&quot;] --&gt; L{&quot;IP/TCP alive?&quot;}
+  L -- no --&gt; P[&quot;repair link/connect&quot;]
+  L -- yes --&gt; A{&quot;routing activation/session accepted?&quot;}
+  A -- no --&gt; AR[&quot;routing activation rejected&quot;]
+  A -- yes --&gt; G{&quot;logical address/target match?&quot;}
+  G -- no --&gt; GM[&quot;logical address/target mismatch&quot;]
+  G -- yes --&gt; S{&quot;diagnostic session valid?&quot;}
+  S -- no --&gt; SI[&quot;TCP alive but diagnostic session invalid&quot;]
+  S -- yes --&gt; D{&quot;gateway downstream reachable?&quot;}
+  D -- no --&gt; DU[&quot;gateway downstream unreachable&quot;]
+  D -- yes --&gt; R{&quot;diagnostic response received?&quot;}
+  R -- no --&gt; TO[&quot;diagnostic response timeout&quot;]
+  R -- yes --&gt; C{&quot;DoIP header + UDS correlation valid?&quot;}
+  C -- no --&gt; CI[&quot;mismatched/stale response&quot;]
+  C -- yes --&gt; OK[&quot;diagnostic result consumed&quot;]
+  AR --&gt; X[&quot;close stale transport/session&quot;]
+  GM --&gt; X
+  SI --&gt; X
+  DU --&gt; X
+  TO --&gt; X
+  CI --&gt; X
+  P --&gt; N[&quot;reconnect IP/TCP&quot;]
+  X --&gt; N
+  N --&gt; RA[&quot;rebuild routing activation + diagnostic session&quot;]
+  RA --&gt; V[&quot;UDS readback + user-result verify&quot;]</code></pre></details></details><h4 id="doip-独立观测与责任边界">DoIP 独立观测与责任边界</h4>
+<p>按同一请求/响应时间线采集 pcap、TCP 状态、DoIP header、logical address、
+routing-activation result、UDS correlation、网关下游和 Tester 结果。链路/连接归网络，
+activation 与地址映射归 DoIP entity/config，目标不可达归网关/ECU，UDS 响应后归 Tester
+consumer。具体实体、逻辑地址、超时、路由和命令 <code>[可信度：待 MT8676 确认]</code>；诊断链
+不得强制绑定当前 Routing Manager 或 CanService。</p>
+<h3 id="554-会话就绪与新鲜度模型">5.5.4 会话、就绪与新鲜度模型</h3>
+<p>链路 Up、TCP connected、Offer visible、EventGroup subscribed、notify delivered 与业务
+状态正确逐层不同；availability 不等于 event freshness。[可信度：标准机制推断]
+DoIP 中 TCP connected、routing activation、diagnostic session、目标 ECU 可达、UDS
+响应匹配与诊断结果正确也必须逐层证明。[可信度：标准机制推断]</p>
+<h3 id="555-队列背压与资源边界">5.5.5 队列、背压与资源边界</h3>
+<p>观察 Routing Manager、TCP/UDP buffer、反序列化和 callback queue 的 offer/find、
+subscribe/ack、notify、drop 与 E2E reject；不写私有容量。</p>
+<h3 id="556-故障症状与最早断点">5.5.6 故障症状与最早断点</h3>
+<p>全不可用查链路/Router；单服务查 Offer/Find/version；request 正常无 event 查订阅；
+报文有无数据查 serialization/E2E；callback 有状态旧查 consumer。</p>
+<h3 id="557-日志命令计数器与追踪">5.5.7 日志、命令、计数器与追踪</h3>
+<p>采集 link/socket、Routing Manager、Offer/Find、availability、request/response、
+EventGroup、notify、TCP 重传、UDP drop、E2E accept/reject、Proxy/Stub callback。</p>
+<h3 id="558-责任边界与升级材料">5.5.8 责任边界与升级材料</h3>
+<p>链路归网络；发现/版本归服务配置与 Router；订阅归 Client；E2E 归两端 profile；
+callback 后归 Consumer。升级包含配置版本、抓包、路由日志、订阅时间线和回读。</p>
+<h3 id="559-证据与可信度">5.5.9 证据与可信度</h3>
+<p>标签和箭头为图事实。[可信度：架构图确认] [证据：original-diagram-03]
+Offer/Find/EventGroup/TCP/UDP/multicast 为标准推断。[可信度：标准机制推断]
+私有 ID、端口、timeout 和恢复 <code>[可信度：待 MT8676 确认]</code>。</p>
+<h2 id="56-spiipcl">5.6 SPI/IPCL</h2>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>物理 SPI 承载、IPCL 私有封装和上层车辆属性分属不同层。PVT vehicle 方案可用于说明 MCU→SOS 服务→Android VHAL 的交接，但未给出原图 IPCL 的完整帧头/CRC/重传规范。新增 EINT 资料要求区分 GPIO、EINT 与 virq；IRQ 到达只证明一次中断路径，不证明对应报文完整或属性新鲜。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S281 · vehicle方案.pdf · PDF第2-3页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E005 · EINT_IDH_Share.pdf · PDF第3-8页<small>〔本地来源〕</small></span></p>
+<h3 id="561-适用域与模块">5.6.1 适用域与模块</h3>
+<p>图 2 有 MCU SPI，图 3 有 MCU IPCL、TBox/SOS CanService、Vehicle Interface 和
+SPI/IPCL 显式路径。[可信度：架构图确认] [证据：original-diagram-02]
+[证据：original-diagram-03]</p>
+<h3 id="562-正常路径">5.6.2 正常路径</h3>
+<p>business message/state path：</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  S[&quot;SWC/service&quot;] --&gt; M[&quot;business message/state&quot;]
+  M --&gt; A[&quot;Vehicle Interface/adapter&quot;]
+  A --&gt; I[&quot;IPCL&quot;]
+  I --&gt; P[&quot;peer service&quot;]
+  P --&gt; C[&quot;consumer state&quot;]
+  C --&gt; F[&quot;feedback/readback&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  S[&quot;SWC/service&quot;] --&gt; M[&quot;business message/state&quot;]
+  M --&gt; A[&quot;Vehicle Interface/adapter&quot;]
+  A --&gt; I[&quot;IPCL&quot;]
+  I --&gt; P[&quot;peer service&quot;]
+  P --&gt; C[&quot;consumer state&quot;]
+  C --&gt; F[&quot;feedback/readback&quot;]</code></pre></details></details><p>physical byte/frame path：</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  P[&quot;header/payload&quot;] --&gt; F[&quot;frame + CRC + Sequence/Generation&quot;]
+  F --&gt; Q[&quot;queue + DMA/FIFO&quot;]
+  Q --&gt; S[&quot;SPI controller/wire&quot;]
+  S --&gt; R[&quot;RX DMA/FIFO + IRQ&quot;]
+  R --&gt; A[&quot;validate + reassembly&quot;]
+  A --&gt; C[&quot;callback&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  P[&quot;header/payload&quot;] --&gt; F[&quot;frame + CRC + Sequence/Generation&quot;]
+  F --&gt; Q[&quot;queue + DMA/FIFO&quot;]
+  Q --&gt; S[&quot;SPI controller/wire&quot;]
+  S --&gt; R[&quot;RX DMA/FIFO + IRQ&quot;]
+  R --&gt; A[&quot;validate + reassembly&quot;]
+  A --&gt; C[&quot;callback&quot;]</code></pre></details></details><p>frame、header/payload、CRC、Sequence/Generation、queue、DMA/FIFO、IRQ、callback、
+overflow、reassembly 和 retry 是标准/候选机制。[可信度：标准机制推断]
+<code>IPCL private framing and channel IDs are not proven</code>；Topic、payload、ACK/retry
+<code>[可信度：待 MT8676 确认]</code>。</p>
+<h3 id="563-异常与恢复路径">5.6.3 异常与恢复路径</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  E[&quot;enqueue&quot;] --&gt; Q{&quot;queue accepts?&quot;}
+  Q -- overflow --&gt; O[&quot;overflow/backpressure&quot;]
+  Q -- yes --&gt; D{&quot;DMA/FIFO advances?&quot;}
+  D -- no --&gt; S[&quot;stall&quot;]
+  D -- yes --&gt; W{&quot;bytes clocked?&quot;}
+  W -- no --&gt; P[&quot;physical/config/reset&quot;]
+  W -- yes --&gt; I{&quot;IRQ/reassembly?&quot;}
+  I -- no --&gt; M[&quot;missing IRQ/partial frame&quot;]
+  I -- yes --&gt; V{&quot;CRC/Sequence/Generation valid?&quot;}
+  V -- no --&gt; X[&quot;reject/stale&quot;]
+  V -- yes --&gt; C[&quot;callback + consume&quot;]
+  O --&gt; R[&quot;quiesce + clear owned queues&quot;]
+  P --&gt; R
+  M --&gt; R
+  X --&gt; G[&quot;resynchronize generation&quot;]
+  R --&gt; G
+  G --&gt; B[&quot;controlled message + readback&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  E[&quot;enqueue&quot;] --&gt; Q{&quot;queue accepts?&quot;}
+  Q -- overflow --&gt; O[&quot;overflow/backpressure&quot;]
+  Q -- yes --&gt; D{&quot;DMA/FIFO advances?&quot;}
+  D -- no --&gt; S[&quot;stall&quot;]
+  D -- yes --&gt; W{&quot;bytes clocked?&quot;}
+  W -- no --&gt; P[&quot;physical/config/reset&quot;]
+  W -- yes --&gt; I{&quot;IRQ/reassembly?&quot;}
+  I -- no --&gt; M[&quot;missing IRQ/partial frame&quot;]
+  I -- yes --&gt; V{&quot;CRC/Sequence/Generation valid?&quot;}
+  V -- no --&gt; X[&quot;reject/stale&quot;]
+  V -- yes --&gt; C[&quot;callback + consume&quot;]
+  O --&gt; R[&quot;quiesce + clear owned queues&quot;]
+  P --&gt; R
+  M --&gt; R
+  X --&gt; G[&quot;resynchronize generation&quot;]
+  R --&gt; G
+  G --&gt; B[&quot;controlled message + readback&quot;]</code></pre></details></details><h3 id="564-会话就绪与新鲜度模型">5.6.4 会话、就绪与新鲜度模型</h3>
+<p>有时钟/字节不等于帧有效；CRC 通过不等于 Sequence 新鲜；callback 不等于状态更新。
+IPCL session/Ready/Generation 字段待确认。</p>
+<h3 id="565-队列背压与资源边界">5.6.5 队列、背压与资源边界</h3>
+<p>检查 Producer、IPCL、DMA descriptor、FIFO、对端接收和 callback queue；统计 enqueue/
+dequeue、bytes/frames、overflow、CRC reject、gap、IRQ 与 consumer update。</p>
+<h3 id="566-故障症状与最早断点">5.6.6 故障症状与最早断点</h3>
+<p>无字节查 controller；有字节无帧查 reassembly；有帧 reject 查 CRC/Sequence；callback
+无更新查状态机；恢复后旧状态查队列清理/Generation。</p>
+<h3 id="567-日志命令计数器与追踪">5.6.7 日志、命令、计数器与追踪</h3>
+<p>两端同时采业务键、frame Sequence、CRC、DMA/FIFO、IRQ、SPI bytes、reassembly、
+callback。逻辑分析仪只证明波形，不证明业务。</p>
+<h3 id="568-责任边界与升级材料">5.6.8 责任边界与升级材料</h3>
+<p>未入队归 Producer；无 DMA 归本端驱动；线有字节无 IRQ 归物理/对端；reject 归帧合同；
+callback 后归 Consumer。升级包含两端日志、控制器、帧计数和回读。</p>
+<h3 id="569-证据与可信度">5.6.9 证据与可信度</h3>
+<p>SPI/IPCL 标签与边为图事实。[可信度：架构图确认] [证据：original-diagram-03]
+帧/DMA/FIFO/IRQ 为标准推断。[可信度：标准机制推断] 私有 framing、ID、timeout、
+retry 与 payload <code>[可信度：待 MT8676 确认]</code>。</p>
+<h2 id="57-autosar-rtecome2e">5.7 AUTOSAR RTE/COM/E2E</h2>
+<h3 id="571-适用域与模块">5.7.1 适用域与模块</h3>
+<p>图 2 有 SWCs、RTE、BSW、MCAL、CAN/SPI；图 3 有 DI/IVI SWC、Com、Vehicle Interface。
+[可信度：架构图确认] [证据：original-diagram-02] [证据：original-diagram-03]
+SWC Runnable、RTE Port、COM signal/PDU、<code>PduR</code>、<code>CanIf</code>、CAN driver/controller/transceiver、E2E counter/CRC/data ID/freshness 为标准模型。
+[可信度：标准机制推断] 图中 Com 与具体 AUTOSAR COM 配置的身份待确认。</p>
+<h3 id="572-正常路径">5.7.2 正常路径</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  B[&quot;CAN bus&quot;] --&gt; D[&quot;driver/controller/transceiver&quot;]
+  D --&gt; C[&quot;CanIf&quot;]
+  C --&gt; P[&quot;PduR&quot;]
+  P --&gt; M[&quot;COM signal/PDU&quot;]
+  M --&gt; E[&quot;E2E counter/CRC/data ID/freshness&quot;]
+  E --&gt; R[&quot;RTE Port / receive indication&quot;]
+  R --&gt; S[&quot;SWC Runnable&quot;]
+  S --&gt; A[&quot;application state update&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  B[&quot;CAN bus&quot;] --&gt; D[&quot;driver/controller/transceiver&quot;]
+  D --&gt; C[&quot;CanIf&quot;]
+  C --&gt; P[&quot;PduR&quot;]
+  P --&gt; M[&quot;COM signal/PDU&quot;]
+  M --&gt; E[&quot;E2E counter/CRC/data ID/freshness&quot;]
+  E --&gt; R[&quot;RTE Port / receive indication&quot;]
+  R --&gt; S[&quot;SWC Runnable&quot;]
+  S --&gt; A[&quot;application state update&quot;]</code></pre></details></details><h3 id="573-异常与恢复路径">5.7.3 异常与恢复路径</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  B[&quot;CAN bus has frames&quot;] --&gt; D{&quot;driver indication?&quot;}
+  D -- no --&gt; X[&quot;controller/filter&quot;]
+  D -- yes --&gt; P{&quot;PduR routes?&quot;}
+  P -- no --&gt; Y[&quot;routing&quot;]
+  P -- yes --&gt; C{&quot;COM signal updated?&quot;}
+  C -- no --&gt; Z[&quot;mapping&quot;]
+  C -- yes --&gt; E{&quot;E2E valid/fresh?&quot;}
+  E -- no --&gt; J[&quot;counter/CRC/data ID reject&quot;]
+  E -- yes --&gt; S{&quot;SWC consumed the new value?&quot;}
+  S -- no --&gt; K[&quot;RTE/Runnable/state machine&quot;]
+  S -- yes --&gt; O[&quot;business correct&quot;]
+  X --&gt; R[&quot;restore controller/config&quot;]
+  Y --&gt; R
+  Z --&gt; R
+  J --&gt; R
+  K --&gt; V[&quot;trigger/readback&quot;]
+  R --&gt; V</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  B[&quot;CAN bus has frames&quot;] --&gt; D{&quot;driver indication?&quot;}
+  D -- no --&gt; X[&quot;controller/filter&quot;]
+  D -- yes --&gt; P{&quot;PduR routes?&quot;}
+  P -- no --&gt; Y[&quot;routing&quot;]
+  P -- yes --&gt; C{&quot;COM signal updated?&quot;}
+  C -- no --&gt; Z[&quot;mapping&quot;]
+  C -- yes --&gt; E{&quot;E2E valid/fresh?&quot;}
+  E -- no --&gt; J[&quot;counter/CRC/data ID reject&quot;]
+  E -- yes --&gt; S{&quot;SWC consumed the new value?&quot;}
+  S -- no --&gt; K[&quot;RTE/Runnable/state machine&quot;]
+  S -- yes --&gt; O[&quot;business correct&quot;]
+  X --&gt; R[&quot;restore controller/config&quot;]
+  Y --&gt; R
+  Z --&gt; R
+  J --&gt; R
+  K --&gt; V[&quot;trigger/readback&quot;]
+  R --&gt; V</code></pre></details></details><p>CAN 有帧 ≠ COM 更新 ≠ RTE 新鲜 ≠ SWC 消费；这些是不同证据。
+timeout/substitution/invalidation 仅是标准候选；启用、替代值和合同
+<code>[可信度：待 MT8676 确认]</code>。</p>
+<h3 id="574-会话就绪与新鲜度模型">5.7.4 会话、就绪与新鲜度模型</h3>
+<p>CAN 无 RPC session；就绪拆为 controller、PDU route、COM update、E2E accept、Runnable
+consume。E2E 可检测部分重复/丢失/错配，业务 freshness 还需周期/age 合同。</p>
+<h3 id="575-队列背压与资源边界">5.7.5 队列、背压与资源边界</h3>
+<p>观察 mailbox/FIFO、driver、<code>PduR</code>、COM I-PDU buffer、RTE trigger、Runnable；不假定
+buffer 数量和 timeout。</p>
+<h3 id="576-故障症状与最早断点">5.7.6 故障症状与最早断点</h3>
+<p>无帧查 ECU/物理；有帧无 indication 查 controller；有 indication 无 COM 查 <code>PduR</code>；
+COM 更新被 reject 查 E2E；E2E 接受无业务查 RTE/SWC。</p>
+<h3 id="577-日志命令计数器与追踪">5.7.7 日志、命令、计数器与追踪</h3>
+<p>采 CAN 抓包、controller、receive indication、PDU route、COM update、E2E status、
+RTE read、Runnable 和状态。DBC/ARXML、COM/E2E 配置是升级材料。</p>
+<h3 id="578-责任边界与升级材料">5.7.8 责任边界与升级材料</h3>
+<p>总线归网络/ECU；driver 归 MCAL；<code>CanIf</code>/<code>PduR</code>/COM 归 BSW；E2E 归两端 profile；RTE 后归
+SWC。提交抓包、DBC/ARXML、映射、E2E 计数、任务 trace 与回读。</p>
+<h3 id="579-证据与可信度">5.7.9 证据与可信度</h3>
+<p>分层和标签为图事实。[可信度：架构图确认] [证据：original-diagram-02]
+AUTOSAR 行为为标准推断。[可信度：标准机制推断] PDU ID、profile、timeout、
+substitution/invalidation <code>[可信度：待 MT8676 确认]</code>。</p>
+<h2 id="58-virtio-与虚拟设备">5.8 virtio 与虚拟设备</h2>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>新版 Day 18 强化“通知—数据—队列—状态”四层分工：Mailbox/IPI 通知对端，共享内存保存载荷，Ring Buffer 管理条目，业务协议决定完成与恢复。核对本项目 virtio/IPCL 时只把它用作问题清单：缓存/内存序、序号、所有权、队列写满、对端复位后旧条目失效。不能把课程的 Mailbox/IPI 示意替换原有 MCU→SPI 通路，也不把示例 bootEpoch 字段宣称为当前 IDL。[最新站点 Day 18](http[本地资料库路径]</p>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>VSOCK 是基于 CID/port 的跨域 socket 接口，virtio-vsock 是相关承载的一种实现；它与 virtio-net/vmnet 的 IP 路由不是同一地址体系。PVT 文档的 VSOCKX 是谦川 Guest 间扩展，原生通道与扩展通道中的 CID=2 不应脱离地址族解释。连接建立后仍须自定义业务 ready、报文边界、请求关联和断线恢复；共享 descriptor 的完成也不自动等于消费者已使用数据。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U038 · Vsock api 文档v2.0.pdf · PDF第4-13页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S282 · vmnet配置说明.pdf · PDF第4-5页<small>〔本地来源〕</small></span></p>
+<h3 id="581-适用域与模块">5.8.1 适用域与模块</h3>
+<p>本节 virtio 仅为标准模型，不证明原图中任何设备采用 virtio。图 2 只确认
+Hypervisor、Host、Guest、Virtual conninfra，未逐设备标注 virtio。
+[可信度：架构图确认] [证据：original-diagram-02]
+frontend、Descriptor、Avail ring、Kick/doorbell、Host backend、Used ring、virtual IRQ、
+callback、buffer ownership、memory ordering 为标准 virtio 模型。
+[可信度：标准机制推断] 设备绑定、queue 和共享布局待确认。</p>
+<h3 id="582-正常路径">5.8.2 正常路径</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+  participant F as frontend
+  participant A as Avail ring
+  participant H as Host backend
+  participant U as Used ring
+  participant C as callback
+  F-&gt;&gt;F: fill Descriptor/buffer
+  F-&gt;&gt;F: release barrier: publish visibility
+  F-&gt;&gt;A: publish Avail
+  F-&gt;&gt;H: Kick/doorbell
+  H-&gt;&gt;A: acquire barrier: consume Avail
+  H-&gt;&gt;H: take buffer ownership
+  H-&gt;&gt;H: process
+  H-&gt;&gt;U: release barrier: publish Used
+  H--&gt;&gt;F: virtual IRQ
+  F-&gt;&gt;U: acquire barrier: consume Used
+  F-&gt;&gt;F: read completion + reclaim ownership
+  F--&gt;&gt;C: callback</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  participant F as frontend
+  participant A as Avail ring
+  participant H as Host backend
+  participant U as Used ring
+  participant C as callback
+  F-&gt;&gt;F: fill Descriptor/buffer
+  F-&gt;&gt;F: release barrier: publish visibility
+  F-&gt;&gt;A: publish Avail
+  F-&gt;&gt;H: Kick/doorbell
+  H-&gt;&gt;A: acquire barrier: consume Avail
+  H-&gt;&gt;H: take buffer ownership
+  H-&gt;&gt;H: process
+  H-&gt;&gt;U: release barrier: publish Used
+  H--&gt;&gt;F: virtual IRQ
+  F-&gt;&gt;U: acquire barrier: consume Used
+  F-&gt;&gt;F: read completion + reclaim ownership
+  F--&gt;&gt;C: callback</code></pre></details></details><p>标准 ownership/visibility 合同如下；barrier 代表先后与可见性约束，不指定某个私有 API。
+[可信度：标准机制推断]</p>
+<table>
+<thead>
+<tr>
+<th>Ownership 状态</th>
+<th>进入条件</th>
+<th>可读写者与离开证据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Frontend-owned</td>
+<td>free descriptor/buffer 已分配</td>
+<td>frontend 填写；内容先可见，再发布 Avail</td>
+</tr>
+<tr>
+<td>Backend-owned</td>
+<td>backend acquire 后消费 Avail</td>
+<td>backend 读取请求并写 completion；frontend 不得复用</td>
+</tr>
+<tr>
+<td>Frontend-reclaimable</td>
+<td>backend 写入先可见，再发布 Used</td>
+<td>frontend acquire 后才读 completion</td>
+</tr>
+<tr>
+<td>Reclaimed</td>
+<td>frontend 已读 completion 并回收</td>
+<td>可进入新 Generation 的 Frontend-owned</td>
+</tr>
+</tbody></table>
+<p>Avail 已前进且 Kick 已观察，但 backend 读取 payload 旧或不一致，优先检查 producer
+release/consumer acquire 与 cache visibility；Kick 计数不前进属于 missing kick/IRQ 的通知侧断点。Used 已前进但
+frontend completion 仍旧，优先检查 backend release/frontend acquire；Used 不前进更像
+backend stall 或 ownership 未转移。[可信度：标准机制推断]
+具体 barrier/API 名称、cache 一致性方式、ring layout 与 ownership 实现
+<code>[可信度：待 MT8676 确认]</code>。</p>
+<h3 id="583-异常与恢复路径">5.8.3 异常与恢复路径</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  F[&quot;frontend ready&quot;] --&gt; B{&quot;backend ready?&quot;}
+  B -- no --&gt; M[&quot;frontend/backend readiness mismatch&quot;]
+  B -- yes --&gt; D{&quot;Descriptor?&quot;}
+  D -- leak --&gt; L[&quot;descriptor leak&quot;]
+  D -- queue full --&gt; Q[&quot;queue full&quot;]
+  D -- yes --&gt; K{&quot;Kick observed?&quot;}
+  K -- no --&gt; X[&quot;missing kick&quot;]
+  K -- yes --&gt; P{&quot;Avail payload visible/consistent?&quot;}
+  P -- no --&gt; MV[&quot;missing barrier/cache visibility&quot;]
+  P -- yes --&gt; U{&quot;Used ring advances?&quot;}
+  U -- no --&gt; S[&quot;backend stall&quot;]
+  U -- yes --&gt; W{&quot;Used completion visible/current?&quot;}
+  W -- no --&gt; MV
+  W -- yes --&gt; I{&quot;virtual IRQ/callback?&quot;}
+  I -- no --&gt; XIRQ[&quot;missing IRQ&quot;]
+  I -- yes --&gt; O[&quot;reclaim + consume&quot;]
+  M --&gt; R[&quot;coordinated reset&quot;]
+  L --&gt; R
+  Q --&gt; R
+  X --&gt; R
+  XIRQ --&gt; R
+  MV --&gt; R
+  S --&gt; R
+  R --&gt; G[&quot;new shared-memory generation&quot;]
+  G --&gt; V[&quot;controlled I/O + visibility/ownership/readback verify&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  F[&quot;frontend ready&quot;] --&gt; B{&quot;backend ready?&quot;}
+  B -- no --&gt; M[&quot;frontend/backend readiness mismatch&quot;]
+  B -- yes --&gt; D{&quot;Descriptor?&quot;}
+  D -- leak --&gt; L[&quot;descriptor leak&quot;]
+  D -- queue full --&gt; Q[&quot;queue full&quot;]
+  D -- yes --&gt; K{&quot;Kick observed?&quot;}
+  K -- no --&gt; X[&quot;missing kick&quot;]
+  K -- yes --&gt; P{&quot;Avail payload visible/consistent?&quot;}
+  P -- no --&gt; MV[&quot;missing barrier/cache visibility&quot;]
+  P -- yes --&gt; U{&quot;Used ring advances?&quot;}
+  U -- no --&gt; S[&quot;backend stall&quot;]
+  U -- yes --&gt; W{&quot;Used completion visible/current?&quot;}
+  W -- no --&gt; MV
+  W -- yes --&gt; I{&quot;virtual IRQ/callback?&quot;}
+  I -- no --&gt; XIRQ[&quot;missing IRQ&quot;]
+  I -- yes --&gt; O[&quot;reclaim + consume&quot;]
+  M --&gt; R[&quot;coordinated reset&quot;]
+  L --&gt; R
+  Q --&gt; R
+  X --&gt; R
+  XIRQ --&gt; R
+  MV --&gt; R
+  S --&gt; R
+  R --&gt; G[&quot;new shared-memory generation&quot;]
+  G --&gt; V[&quot;controlled I/O + visibility/ownership/readback verify&quot;]</code></pre></details></details><p>VM reset 后旧 Descriptor/callback 不得跨代际继续；stale shared-memory generation
+必须隔离。[可信度：标准机制推断]</p>
+<h3 id="584-会话就绪与新鲜度模型">5.8.4 会话、就绪与新鲜度模型</h3>
+<p>VM 存活不等于两端 Ready；Kick 不等于完成；Used 前进不等于 IRQ 消费；callback 不等于
+当前 generation 数据。freshness 结合 buffer metadata 与业务 Sequence。</p>
+<h3 id="585-队列背压与资源边界">5.8.5 队列、背压与资源边界</h3>
+<p>观察 free/outstanding、avail/used、kick、IRQ、reclaim、drop、共享 buffer 和 backend
+queue；不写 MT8676 queue depth。</p>
+<h3 id="586-故障症状与最早断点">5.8.6 故障症状与最早断点</h3>
+<p>无 free 查 leak；Avail 前进 backend 不动查 Kick/Ready；backend 完成 Guest 不动查
+Used/IRQ；callback 数据旧查 generation；VM reset 后异常查 reset 合同。</p>
+<h3 id="587-日志命令计数器与追踪">5.8.7 日志、命令、计数器与追踪</h3>
+<p>采 VM lifecycle、两端 Ready、queue index、Descriptor、ownership、kick、backend
+complete、Used、IRQ、callback、reclaim 与 Hypervisor trace。</p>
+<h3 id="588-责任边界与升级材料">5.8.8 责任边界与升级材料</h3>
+<p>发布前归 frontend；Kick 后至 Used 归 backend；Used 后无 callback 归 IRQ；callback 后
+归 consumer；reset 资源归两端合同。提交两端 queue dump、generation 和计数。</p>
+<h3 id="589-证据与可信度">5.8.9 证据与可信度</h3>
+<p>Host/Guest 边界为图事实。[可信度：架构图确认] [证据：original-diagram-02]
+virtqueue 行为为标准推断。[可信度：标准机制推断] 设备、ring、IRQ、reset/generation
+<code>[可信度：待 MT8676 确认]</code>。</p>
+<h2 id="59-mt8676-sdkumdp">5.9 MT8676 SDK/UMDP</h2>
+<h3 id="591-适用域与模块">5.9.1 适用域与模块</h3>
+<p>图 3 确认 TBox modem_service/core communication/FDBus 标签，但不确认其与 UMDP
+进程身份映射。[可信度：架构图确认] [证据：original-diagram-03]
+指南确认 Client/Server、Socket、同步、超时、callback、GET/SET/REGISTER。
+[可信度：MT8676 资料确认] [证据：sdk-mt8676-guide]
+[证据：sdk-image-sdk-structural-diagram-png]
+V1.0.166 SDK 示例与 V1.0.226 UMDP 集成头文件是不同版本快照；前者的调用示例与后者
+的接口面不能互相升级为精确合同。[可信度：MT8676 资料确认]
+[证据：sdk-mt8676-guide] [证据：umdp-files-umdp-include-fibo-sdk-fibo-type-h]</p>
+<h3 id="592-正常路径">5.9.2 正常路径</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+  participant A as App
+  participant C as Favalon Client
+  participant S as SDK Server identity pending
+  participant L as Lower dependency
+  A-&gt;&gt;C: Client initialization
+  C-&gt;&gt;S: service availability
+  A-&gt;&gt;C: request/callback registration
+  C-&gt;&gt;S: serialize
+  S-&gt;&gt;L: operation
+  L--&gt;&gt;S: result/event
+  S--&gt;&gt;C: response/callback
+  C--&gt;&gt;A: delivery</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  participant A as App
+  participant C as Favalon Client
+  participant S as SDK Server identity pending
+  participant L as Lower dependency
+  A-&gt;&gt;C: Client initialization
+  C-&gt;&gt;S: service availability
+  A-&gt;&gt;C: request/callback registration
+  C-&gt;&gt;S: serialize
+  S-&gt;&gt;L: operation
+  L--&gt;&gt;S: result/event
+  S--&gt;&gt;C: response/callback
+  C--&gt;&gt;A: delivery</code></pre></details></details><p>同步图确认请求/返回和 timeout 概念。[可信度：MT8676 资料确认]
+[证据：sdk-image-sync-timing-diagram-png] timeout 值和 late response 策略待确认。</p>
+<h3 id="593-异常与恢复路径">5.9.3 异常与恢复路径</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  D[&quot;process exit or endpoint generation change confirmed&quot;] --&gt; S[&quot;supervisor decision&quot;]
+  S --&gt; M[&quot;new MainPID&quot;]
+  M --&gt; A{&quot;service availability?&quot;}
+  A -- no --&gt; U[&quot;inspect unit/lower dependency; keep fault open&quot;]
+  U --&gt; S
+  A -- yes --&gt; H[&quot;new Client Handle&quot;]
+  H --&gt; R[&quot;callback re-register&quot;]
+  R --&gt; G[&quot;GET current state&quot;]
+  G --&gt; B[&quot;Business cache rebuilt&quot;]
+  B --&gt; V[&quot;readback/user verify&quot;]
+  C[&quot;callback missing/session stale&quot;] --&gt; H
+  L[&quot;synchronous timeout / late response&quot;] --&gt; X[&quot;isolate old request&quot;]
+  X --&gt; G
+  Q[&quot;stale client/session/generation/business state&quot;] --&gt; G</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  D[&quot;process exit or endpoint generation change confirmed&quot;] --&gt; S[&quot;supervisor decision&quot;]
+  S --&gt; M[&quot;new MainPID&quot;]
+  M --&gt; A{&quot;service availability?&quot;}
+  A -- no --&gt; U[&quot;inspect unit/lower dependency; keep fault open&quot;]
+  U --&gt; S
+  A -- yes --&gt; H[&quot;new Client Handle&quot;]
+  H --&gt; R[&quot;callback re-register&quot;]
+  R --&gt; G[&quot;GET current state&quot;]
+  G --&gt; B[&quot;Business cache rebuilt&quot;]
+  B --&gt; V[&quot;readback/user verify&quot;]
+  C[&quot;callback missing/session stale&quot;] --&gt; H
+  L[&quot;synchronous timeout / late response&quot;] --&gt; X[&quot;isolate old request&quot;]
+  X --&gt; G
+  Q[&quot;stale client/session/generation/business state&quot;] --&gt; G</code></pre></details></details><p><code>Service DOWN</code> 只触发判定，不直接证明 process exit；service death/restart、supervisor
+拉起、服务可见、Client 恢复和业务恢复是不同阶段。上图是稳健恢复模型；哪个 supervisor
+执行、是否自动 reconnect/re-register <code>[可信度：待 MT8676 确认]</code>。</p>
+<h3 id="594-会话就绪与新鲜度模型">5.9.4 会话、就绪与新鲜度模型</h3>
+<p>Client initialization、service availability、Lower Ready、synchronous result、
+callback registration/delivery 和 business state 必须分层。Data/Voice 示例确认 init
+和 callback 用法。[可信度：MT8676 资料确认]
+[证据：sdk-example-data-test-data-test-c] [证据：sdk-example-voice-test-voice-test-c]
+callback thread、自动 reconnect/re-register、death cause <code>[可信度：待 MT8676 确认]</code>。
+V1.0.166 示例与 V1.0.226 <code>fibo_type.h</code> 可确认 <code>Service UP/DOWN</code> 语义存在，但
+<code>Service DOWN</code> 不等于进程 crash/restart，<code>Service UP</code> 不等于新 PID 已达到业务 Ready。
+[可信度：MT8676 资料确认] [证据：sdk-mt8676-guide]
+[证据：umdp-files-umdp-include-fibo-sdk-fibo-type-h]
+V1.0.226 <code>fibo_error.h</code> 存在 <code>E_FIBO_UMDP_NOT_READY</code>，只证明该版本定义此错误语义，
+不证明 V1.0.166 的精确值，也不揭示 Ready 判据。[可信度：MT8676 资料确认]
+[证据：umdp-files-umdp-include-fibo-sdk-fibo-error-h]</p>
+<h4 id="unitsupervisor-与-ready-证据矩阵">Unit、supervisor 与 Ready 证据矩阵</h4>
+<table>
+<thead>
+<tr>
+<th>证据面</th>
+<th>直接确认</th>
+<th>不等价边界与恢复用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>四个 systemd unit</td>
+<td><code>fb_modem.service</code>、<code>fb_audio.service</code>、<code>fb_powermgr.service</code>、<code>fb_logmgr.service</code> 均为 Type=simple、Restart=always</td>
+<td>只确认 unit 进程生命周期配置；不提供业务 Ready handshake，也不恢复 Client Handle/callback/cache</td>
+</tr>
+<tr>
+<td><code>umdpprocess.ini</code></td>
+<td>仅 fb_logMgr、fb_modemServices、<code>fb_powerMgr</code> 三个 section 为 ready=false；不含 audio</td>
+<td>表示该配置不要求 ready signal，不是业务已 Ready；与 systemd 的实际分工待确认</td>
+</tr>
+<tr>
+<td>V1.0.226 headers</td>
+<td><code>fibo_type.h</code> 有 Service UP/DOWN；<code>fibo_error.h</code> 有 <code>E_FIBO_UMDP_NOT_READY</code></td>
+<td>事件/错误存在不等于进程代际或 Ready 判据已知；不得与 V1.0.166 精确合同互换</td>
+</tr>
+<tr>
+<td>supervisor identity</td>
+<td>unit 与进程配置文件在归档中同时存在</td>
+<td>实际 supervisor/优先级/是否同时生效、谁决定 restart 和 MainPID <code>[可信度：待 MT8676 确认]</code></td>
+</tr>
+</tbody></table>
+<p>四个 unit 的 Type/simple 与 Restart 配置为直接资料事实。[可信度：MT8676 资料确认]
+[证据：umdp-files-fb-modem-service] [证据：umdp-files-fb-audio-service]
+[证据：umdp-files-fb-powermgr-service] [证据：umdp-files-fb-logmgr-service]
+三段 ready 配置为直接资料事实。[可信度：MT8676 资料确认]
+[证据：umdp-files-umdp-config-umdpprocess-ini]</p>
+<p>必须保持以下非等价关系：[可信度：标准机制推断]</p>
+<ul>
+<li>Type=simple ≠ business Ready</li>
+<li>Restart=always ≠ Client recovery</li>
+<li>ready=false ≠ business Ready</li>
+<li><code>E_FIBO_UMDP_NOT_READY</code> ≠ Ready criterion known</li>
+</ul>
+<p>因此恢复证据必须按 process exit → supervisor decision → new MainPID → service
+availability → new Client Handle → callback re-register → GET current state → Business cache
+rebuilt → readback/user verify 逐门提交，不能用前一门代替后一门。</p>
+<h3 id="595-队列背压与资源边界">5.9.5 队列、背压与资源边界</h3>
+<p>观察 Client wait、Socket、Server worker、Lower dependency、callback queue 的
+outstanding/response/timeout/late/callback。<code>fibo_data</code> reconnect 只直接支持数据呼叫
+家族，不可推广为全部 SDK。[可信度：MT8676 资料确认]
+[证据：umdp-files-umdp-include-fibo-sdk-fibo-data-h]</p>
+<h3 id="596-故障症状与最早断点">5.9.6 故障症状与最早断点</h3>
+<p>init 失败查 service/dependency；synchronous timeout 关联 request/Server/Lower/late；
+callback 丢失查 registration/session；重启后 GET 正常无 event 查 re-register；callback
+有状态旧查 Generation/consumer；日志无输出先查 mount/journald。</p>
+<h3 id="597-日志命令计数器与追踪">5.9.7 日志、命令、计数器与追踪</h3>
+<p>采 <code>systemctl status/show</code>、<code>journalctl -u</code>、进程树、Socket/FD、init/deinit、service
+UP/DOWN、request/response、callback、timeout/late、依赖与回读。</p>
+<p><code>fb_modem.service</code> Requires <code>mtktelephonyservice.service</code>，但无 After，也不证明业务
+Ready。[可信度：MT8676 资料确认] [证据：umdp-files-fb-modem-service]
+上述命令是通用诊断方法；具体权限、unit 名、Socket/FD 路径和日志目录必须按目标版本
+确认，不得据此反推私有合同。[可信度：标准机制推断]
+这直接确认 modem dependency；audio/power 和 log manager 的依赖边界必须分别读取，
+不能从 modem unit 推导彼此业务 Ready。[可信度：MT8676 资料确认]
+<code>fb_audio.service</code> 仅 After modem 且 Requires <code>sound.target</code>，不证明 modem
+availability/Ready。[可信度：MT8676 资料确认] [证据：umdp-files-fb-audio-service]
+Power 才对 modem 同时 After + Requires，仍不证明业务 Ready。
+[可信度：MT8676 资料确认] [证据：umdp-files-fb-powermgr-service]
+Log 对 <code>/var/run /data /run</code> 使用 <code>RequiresMountsFor</code>，对 journald 使用 After + Requires；
+不证明可写、持久化或业务 Ready。[可信度：MT8676 资料确认]
+[证据：umdp-files-fb-logmgr-service]</p>
+<h3 id="598-责任边界与升级材料">5.9.8 责任边界与升级材料</h3>
+<p>Client/Handle/重注册归调用方；Server/worker 归实际服务；拉起归 supervisor；telephony、
+sound、mount、journald 归依赖；callback 后归业务。提交版本、unit/config、两端
+PID/Generation、请求/callback 时间线、依赖、core/exit 和 GET/readback。</p>
+<p>flow-22、flow-26～flow-35、flow-40 的具体 SDK→进程/库链是 mixed hypothesis，不能
+写成 MT8676 当前调用链；需 ELF、进程映射、注册和 trace。
+[可信度：待 MT8676 确认]</p>
+<h3 id="599-证据与可信度">5.9.9 证据与可信度</h3>
+<p>SDK 同步/超时/callback 与 UMDP unit/config 为资料事实。
+[可信度：MT8676 资料确认] [证据：sdk-mt8676-guide]
+[证据：umdp-library-service-listing]
+<code>umdpprocess.ini</code> ready=false 仅确认 fb_logMgr、fb_modemServices、<code>fb_powerMgr</code> 三个
+section，不含 fb_audio，也不等于业务 Ready；其中 <code>fb_powerMgr</code> 只是配置中的精确标识符。[可信度：MT8676 资料确认]
+[证据：umdp-files-umdp-config-umdpprocess-ini]
+恢复分层为标准推断。[可信度：标准机制推断] FIBO SDK Server 不得推定为具体 UMDP
+process；timeout 值、late response、自动重连、callback thread 和库链
+<code>[可信度：待 MT8676 确认]</code>。</p>
+<h2 id="510-跨机制交接与待补证据">5.10 跨机制交接与待补证据</h2>
+<p>统一步骤：先建立 Source→Feedback 时间轴，再逐层证明 Physical、Session、Fresh、
+Callback、Business；在最早不前进处切责任，恢复后从新 Generation 回读。升级材料至少
+含软件/配置版本、原始日志、抓包/trace、两端 PID/Generation、队列计数、最早断点、
+恢复动作和用户结果。</p>
+<p>待补：Binder 服务/接口；FDBus endpoint/topic/session；SOME/IP Offer/Find、
+EventGroup/E2E；SPI/IPCL framing/channel/queue；AUTOSAR ARXML/DBC/COM/E2E；
+virtio device/ring/reset；SDK/UMDP Server/库/进程、timeout/late、自动重连与 callback
+thread。未取得这些证据前，不填写猜测的 ID、timeout、retry、queue depth、进程链或
+payload。</p>
+</article><nav class="pager"><a href="04.html">← 上一步：三图模块字典</a><a href="18.html">下一步：盟博OS架构与服务边界 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#05-通信机制与内部异常诊断基础">05 通信机制与内部异常诊断基础</a><a class="depth-2" href="#51-证据边界与通用链路">5.1 证据边界与通用链路</a><a class="depth-2" href="#52-五层状态链路通不等于业务正确">5.2 五层状态：链路通不等于业务正确</a><a class="depth-2" href="#53-android-ipc">5.3 Android IPC</a><a class="depth-3" href="#531-适用域与模块">5.3.1 适用域与模块</a><a class="depth-3" href="#532-正常路径">5.3.2 正常路径</a><a class="depth-3" href="#533-异常与恢复路径">5.3.3 异常与恢复路径</a><a class="depth-3" href="#534-会话就绪与新鲜度模型">5.3.4 会话、就绪与新鲜度模型</a><a class="depth-3" href="#535-队列背压与资源边界">5.3.5 队列、背压与资源边界</a><a class="depth-3" href="#536-故障症状与最早断点">5.3.6 故障症状与最早断点</a><a class="depth-3" href="#537-日志命令计数器与追踪">5.3.7 日志、命令、计数器与追踪</a><a class="depth-3" href="#538-责任边界与升级材料">5.3.8 责任边界与升级材料</a><a class="depth-3" href="#539-证据与可信度">5.3.9 证据与可信度</a><a class="depth-2" href="#54-fdbus">5.4 FDBus</a><a class="depth-3" href="#541-适用域与模块">5.4.1 适用域与模块</a><a class="depth-3" href="#542-正常路径">5.4.2 正常路径</a><a class="depth-3" href="#543-异常与恢复路径">5.4.3 异常与恢复路径</a><a class="depth-3" href="#544-会话就绪与新鲜度模型">5.4.4 会话、就绪与新鲜度模型</a><a class="depth-3" href="#545-队列背压与资源边界">5.4.5 队列、背压与资源边界</a><a class="depth-3" href="#546-故障症状与最早断点">5.4.6 故障症状与最早断点</a><a class="depth-3" href="#547-日志命令计数器与追踪">5.4.7 日志、命令、计数器与追踪</a><a class="depth-3" href="#548-责任边界与升级材料">5.4.8 责任边界与升级材料</a><a class="depth-3" href="#549-证据与可信度">5.4.9 证据与可信度</a><a class="depth-2" href="#55-someip-与-doip">5.5 SOME/IP 与 DoIP</a><a class="depth-3" href="#551-适用域与模块">5.5.1 适用域与模块</a><a class="depth-3" href="#552-正常路径">5.5.2 正常路径</a><a class="depth-3" href="#553-异常与恢复路径">5.5.3 异常与恢复路径</a><a class="depth-3" href="#554-会话就绪与新鲜度模型">5.5.4 会话、就绪与新鲜度模型</a><a class="depth-3" href="#555-队列背压与资源边界">5.5.5 队列、背压与资源边界</a><a class="depth-3" href="#556-故障症状与最早断点">5.5.6 故障症状与最早断点</a><a class="depth-3" href="#557-日志命令计数器与追踪">5.5.7 日志、命令、计数器与追踪</a><a class="depth-3" href="#558-责任边界与升级材料">5.5.8 责任边界与升级材料</a><a class="depth-3" href="#559-证据与可信度">5.5.9 证据与可信度</a><a class="depth-2" href="#56-spiipcl">5.6 SPI/IPCL</a><a class="depth-3" href="#561-适用域与模块">5.6.1 适用域与模块</a><a class="depth-3" href="#562-正常路径">5.6.2 正常路径</a><a class="depth-3" href="#563-异常与恢复路径">5.6.3 异常与恢复路径</a><a class="depth-3" href="#564-会话就绪与新鲜度模型">5.6.4 会话、就绪与新鲜度模型</a><a class="depth-3" href="#565-队列背压与资源边界">5.6.5 队列、背压与资源边界</a><a class="depth-3" href="#566-故障症状与最早断点">5.6.6 故障症状与最早断点</a><a class="depth-3" href="#567-日志命令计数器与追踪">5.6.7 日志、命令、计数器与追踪</a><a class="depth-3" href="#568-责任边界与升级材料">5.6.8 责任边界与升级材料</a><a class="depth-3" href="#569-证据与可信度">5.6.9 证据与可信度</a><a class="depth-2" href="#57-autosar-rtecome2e">5.7 AUTOSAR RTE/COM/E2E</a><a class="depth-3" href="#571-适用域与模块">5.7.1 适用域与模块</a><a class="depth-3" href="#572-正常路径">5.7.2 正常路径</a><a class="depth-3" href="#573-异常与恢复路径">5.7.3 异常与恢复路径</a><a class="depth-3" href="#574-会话就绪与新鲜度模型">5.7.4 会话、就绪与新鲜度模型</a><a class="depth-3" href="#575-队列背压与资源边界">5.7.5 队列、背压与资源边界</a><a class="depth-3" href="#576-故障症状与最早断点">5.7.6 故障症状与最早断点</a><a class="depth-3" href="#577-日志命令计数器与追踪">5.7.7 日志、命令、计数器与追踪</a><a class="depth-3" href="#578-责任边界与升级材料">5.7.8 责任边界与升级材料</a><a class="depth-3" href="#579-证据与可信度">5.7.9 证据与可信度</a><a class="depth-2" href="#58-virtio-与虚拟设备">5.8 virtio 与虚拟设备</a><a class="depth-3" href="#581-适用域与模块">5.8.1 适用域与模块</a><a class="depth-3" href="#582-正常路径">5.8.2 正常路径</a><a class="depth-3" href="#583-异常与恢复路径">5.8.3 异常与恢复路径</a><a class="depth-3" href="#584-会话就绪与新鲜度模型">5.8.4 会话、就绪与新鲜度模型</a><a class="depth-3" href="#585-队列背压与资源边界">5.8.5 队列、背压与资源边界</a><a class="depth-3" href="#586-故障症状与最早断点">5.8.6 故障症状与最早断点</a><a class="depth-3" href="#587-日志命令计数器与追踪">5.8.7 日志、命令、计数器与追踪</a><a class="depth-3" href="#588-责任边界与升级材料">5.8.8 责任边界与升级材料</a><a class="depth-3" href="#589-证据与可信度">5.8.9 证据与可信度</a><a class="depth-2" href="#59-mt8676-sdkumdp">5.9 MT8676 SDK/UMDP</a><a class="depth-3" href="#591-适用域与模块">5.9.1 适用域与模块</a><a class="depth-3" href="#592-正常路径">5.9.2 正常路径</a><a class="depth-3" href="#593-异常与恢复路径">5.9.3 异常与恢复路径</a><a class="depth-3" href="#594-会话就绪与新鲜度模型">5.9.4 会话、就绪与新鲜度模型</a><a class="depth-3" href="#595-队列背压与资源边界">5.9.5 队列、背压与资源边界</a><a class="depth-3" href="#596-故障症状与最早断点">5.9.6 故障症状与最早断点</a><a class="depth-3" href="#597-日志命令计数器与追踪">5.9.7 日志、命令、计数器与追踪</a><a class="depth-3" href="#598-责任边界与升级材料">5.9.8 责任边界与升级材料</a><a class="depth-3" href="#599-证据与可信度">5.9.9 证据与可信度</a><a class="depth-2" href="#510-跨机制交接与待补证据">5.10 跨机制交接与待补证据</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>

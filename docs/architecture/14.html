@@ -1,0 +1,1390 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>系统生命周期业务流程 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details open><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a aria-current="page" href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 14</div><div class="chapter-title"><p class="eyebrow">CHAPTER 14 · 中文版全文</p><h1>系统生命周期业务流程</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=14">并排对比两套正文 ↗</a><a class="button secondary" href="original-14.html">对照原版解释 ↗</a><button class="button" data-read="14" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>重启、休眠和升级为什么要重建状态？</h2><p>这些操作改变资源可用性和状态有效期。重连后收到的旧回调可能来自前一次启动；升级文件写完也不代表新版本已经激活并可用。</p><ol><li><strong>怎么读：</strong>按启动→运行→休眠/唤醒→升级/恢复阅读，对照每一阶段的前置条件、完成条件和回退。</li><li><strong>项目练习：</strong>列一个 Camera 服务复位后的核对表：新会话、配置集合、buffer 清理、首个新帧、标定质量。</li><li><strong>自检：</strong>文件校验通过、持久化完成、激活成功、业务可用是否可以合并？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-7">Day 7</a> <a href="../index.html#day-8">Day 8</a> <a href="../index.html#day-16">Day 16</a> <a href="../index.html#day-19">Day 19</a> <a href="../index.html#day-33">Day 33</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#14-mt8676-系统生命周期业务流程">14 MT8676 系统生命周期业务流程</a><a class="depth-2" href="#2026-09-20-校订多域门控集中升级与断电证据">2026-09-20 校订：多域门控、集中升级与断电证据</a><a class="depth-2" href="#业务流程-flow-37">业务流程 FLOW-37</a><a class="depth-3" href="#冷启动hypervisorvmhmi">冷启动、Hypervisor、VM、HMI</a><a class="depth-3" href="#触发目标与边界">触发、目标与边界</a><a class="depth-3" href="#正常链">正常链</a><a class="depth-3" href="#分层子链与方向">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环">反馈闭环</a><a class="depth-3" href="#异常分支">异常分支</a><a class="depth-3" href="#日志与诊断">日志与诊断</a><a class="depth-3" href="#责任域">责任域</a><a class="depth-3" href="#证据与置信度">证据与置信度</a><a class="depth-2" href="#业务流程-flow-38">业务流程 FLOW-38</a><a class="depth-3" href="#accstrsuspendresume">ACC、STR、Suspend、Resume</a><a class="depth-3" href="#触发目标与边界-1">触发、目标与边界</a><a class="depth-3" href="#正常链-1">正常链</a><a class="depth-3" href="#分层子链与方向-1">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-1">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-1">反馈闭环</a><a class="depth-3" href="#异常分支-1">异常分支</a><a class="depth-3" href="#日志与诊断-1">日志与诊断</a><a class="depth-3" href="#责任域-1">责任域</a><a class="depth-3" href="#证据与置信度-1">证据与置信度</a><a class="depth-2" href="#业务流程-flow-39">业务流程 FLOW-39</a><a class="depth-3" href="#otaab-slot升级重启">OTA、A/B Slot、升级重启</a><a class="depth-3" href="#触发目标与边界-2">触发、目标与边界</a><a class="depth-3" href="#正常链-2">正常链</a><a class="depth-3" href="#分层子链与方向-2">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-2">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-2">反馈闭环</a><a class="depth-3" href="#异常分支-2">异常分支</a><a class="depth-3" href="#日志与诊断-2">日志与诊断</a><a class="depth-3" href="#责任域-2">责任域</a><a class="depth-3" href="#证据与置信度-2">证据与置信度</a><a class="depth-2" href="#业务流程-flow-40">业务流程 FLOW-40</a><a class="depth-3" href="#umdp-服务启动死亡自动重启和-client-重连">UMDP 服务启动、死亡、自动重启和 Client 重连</a><a class="depth-3" href="#触发目标与边界-3">触发、目标与边界</a><a class="depth-3" href="#正常链-3">正常链</a><a class="depth-3" href="#分层子链与方向-3">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-3">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-3">反馈闭环</a><a class="depth-3" href="#异常分支-3">异常分支</a><a class="depth-3" href="#日志与诊断-3">日志与诊断</a><a class="depth-3" href="#责任域-3">责任域</a><a class="depth-3" href="#证据与置信度-3">证据与置信度</a><a class="depth-2" href="#业务流程-supp-vm-kill-destroy-recreate-bfb45ac">业务流程 supp-vm-kill-destroy-recreate-bfb45ac</a><a class="depth-3" href="#vm-killdestroyrecreate">VM kill/destroy/recreate</a><a class="depth-3" href="#触发目标与边界-4">触发、目标与边界</a><a class="depth-3" href="#正常链-4">正常链</a><a class="depth-3" href="#分层子链与方向-4">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-4">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-4">反馈闭环</a><a class="depth-3" href="#异常分支-4">异常分支</a><a class="depth-3" href="#日志与诊断-4">日志与诊断</a><a class="depth-3" href="#责任域-4">责任域</a><a class="depth-3" href="#证据与置信度-4">证据与置信度</a><a class="depth-2" href="#业务流程-supp-factorymode-315592c">业务流程 supp-factorymode-315592c</a><a class="depth-3" href="#factorymode-和硬件诊断">FactoryMode 和硬件诊断</a><a class="depth-3" href="#触发目标与边界-5">触发、目标与边界</a><a class="depth-3" href="#正常链-5">正常链</a><a class="depth-3" href="#分层子链与方向-5">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-5">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-5">反馈闭环</a><a class="depth-3" href="#异常分支-5">异常分支</a><a class="depth-3" href="#日志与诊断-5">日志与诊断</a><a class="depth-3" href="#责任域-5">责任域</a><a class="depth-3" href="#证据与置信度-5">证据与置信度</a></details><article id="chapter-text"><h1 id="14-mt8676-系统生命周期业务流程">14 MT8676 系统生命周期业务流程</h1>
+<h2 id="2026-09-20-校订多域门控集中升级与断电证据">2026-09-20 校订：多域门控、集中升级与断电证据</h2>
+<p>STR 按 Host 发起、Guest 完成、Host 再进入深度休眠的门控理解；息屏、Guest suspended 与整机低功耗是不同状态。GPIO/节点号码按平台/板级配置核实，不能照抄另一文档示例。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S265 · MT8676_Hypervisor_Suspend_Resume_Common_Flow.pdf · PDF第4-6页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S037 · MT8668_Hypervisor_Suspend_Resume_User_Manual_CN_V1.0.pdf · PDF第4-10页<small>〔本地来源〕</small></span></p>
+<p>MT8668 Hypervisor OTA LLA 文档描述集中升级：升级执行在 SOS，包构建合并 SOS、Yocto UOS、Android target files。该版本不支持 OS 单独升级、不支持 Android Virtual AB、不支持 OTA 更改分区布局；网络下载由 OEM 实现。因而新图中的多个 Update Client 不等于各 OS 可独立刷写。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S030 · MT8668_Hypervisor_OTA_LLA_User_Manual_CN_V1.0.pdf · PDF第8-10页<small>〔本地来源〕</small></span></p>
+<p>安全启动手册描述 BROM→LK2→后续镜像的校验，Hypervisor 校验 Guest LK2 的方法还依赖 Hypervisor 厂商；不能仅凭打开 TEE 判定整条信任链通过。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S035 · MT8668_Hypervisor_Secure_Boot_User_Manual_CN_V1.1.pdf · PDF第5-6页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E008 · MTK86系列平台基于虚拟化op-tee使用手册.pdf · PDF第3-6页<small>〔本地来源〕</small></span></p>
+<p>shutdown 时日志服务退出、DRAM pstore 丢失与块持久化要分别考虑。故障证据需覆盖关机前写入、卸载和下次启动读取，具体启用与容量按 BSP 验证。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S272 · MTK_Log_SOS_dump_uos_pstore.pdf · PDF第3页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S273 · MTK_Log_SOS_shutdown_pstore_dump_to_BLK.pdf · PDF第3页<small>〔本地来源〕</small></span> 生命周期恢复后还需重验时钟映射、服务会话和 buffer 新鲜度，见 <a href="20.html">20 章</a>。</p>
+<hr>
+<p>本章覆盖冷启动、ACC/STR Suspend/Resume、OTA A/B、UMDP 服务恢复，以及 VM 销毁重建和 FactoryMode 诊断编排。核心目标是区分启动、可用、Ready 和业务恢复。</p>
+<p>本章每张卡都从触发沿控制面和数据面追踪到最终消费，再沿反馈方向回到请求方；箭头表示诊断顺序，不声明原图未给出的物理直连。正常与异常图均是可执行的排查骨架，证据等级见每卡末尾。</p>
+<h2 id="业务流程-flow-37">业务流程 FLOW-37</h2>
+<h3 id="冷启动hypervisorvmhmi">冷启动、Hypervisor、VM、HMI</h3>
+<h3 id="触发目标与边界">触发、目标与边界</h3>
+<p>触发条件：上电/复位后 BootLoader 进入启动路径。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。冷启动按 BootLoader、Hypervisor、各 VM Ready 和 HMI 首帧分层；任一前级完成不自动证明后级已经恢复业务状态。</p>
+<p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
+<h3 id="正常链">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  N0[&quot;BootLoader/FBL&quot;]
+  N1[&quot;Hypervisor/Micro Kernel&quot;]
+  N0 --&gt; N1
+  N2[&quot;SOS/Android/TBox VM&quot;]
+  N1 --&gt; N2
+  N3[&quot;Kernel/systemd/AOSP&quot;]
+  N2 --&gt; N3
+  N4[&quot;服务依赖&quot;]
+  N3 --&gt; N4
+  N5[&quot;Launcher/Cluster/HMI Ready&quot;]
+  N4 --&gt; N5</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N0[&quot;BootLoader/FBL&quot;]
+  N1[&quot;Hypervisor/Micro Kernel&quot;]
+  N0 --&gt; N1
+  N2[&quot;SOS/Android/TBox VM&quot;]
+  N1 --&gt; N2
+  N3[&quot;Kernel/systemd/AOSP&quot;]
+  N2 --&gt; N3
+  N4[&quot;服务依赖&quot;]
+  N3 --&gt; N4
+  N5[&quot;Launcher/Cluster/HMI Ready&quot;]
+  N4 --&gt; N5</code></pre></details></details><p>正常链按当前 Generation 顺序推进：BootLoader/FBL&gt;Hypervisor/Micro Kernel&gt;SOS/Android/TBox VM&gt;Kernel/systemd/AOSP&gt;服务依赖&gt;Launcher/Cluster/HMI Ready。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+<h3 id="分层子链与方向">分层子链与方向</h3>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>保留原冷启动阶段图，用文档明确的局部依赖补解释：Camera Host需在Guest访问前就绪；Weston/client/GPU环境按其工程启动依赖检查；进程创建、服务发布、业务ready和真正首帧分别记录。MT8668 Secure Boot手册还将BROM、LK2和后续镜像校验区分，Hypervisor对Guest LK2的校验方法依厂商交付，不因系统能启动就自动完成全部信任链验收。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S145 · MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF第8页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U039 · weston介绍和应用.pdf · PDF第17-18页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S035 · MT8668_Hypervisor_Secure_Boot_User_Manual_CN_V1.1.pdf · PDF第5-6页<small>〔本地来源〕</small></span></p>
+<table>
+<thead>
+<tr>
+<th>子链</th>
+<th>方向</th>
+<th>输入</th>
+<th>处理</th>
+<th>输出</th>
+<th>不等价边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>触发控制链</td>
+<td>业务源 → Client/API</td>
+<td>条件、命令、配置</td>
+<td>校验新鲜度、权限和会话</td>
+<td>当前请求</td>
+<td>触发有效 ≠ API accepted</td>
+</tr>
+<tr>
+<td>Client/IPC 链</td>
+<td>Client → Proxy/transport → Service</td>
+<td>请求 ID、参数</td>
+<td>序列化、路由、反序列化</td>
+<td>服务端调用</td>
+<td>IPC 成功 ≠ 服务依赖 Ready</td>
+</tr>
+<tr>
+<td>服务/承载链</td>
+<td>Service → Platform Adapter/HAL/driver</td>
+<td>服务端请求</td>
+<td>状态机、硬件或网络操作</td>
+<td>数据、命令或资源</td>
+<td>服务返回 ≠ 硬件/网络完成</td>
+</tr>
+<tr>
+<td>消费链</td>
+<td>承载 → 最终消费者</td>
+<td>数据、事件、文件或帧</td>
+<td>业务状态机与呈现</td>
+<td>可观察业务结果</td>
+<td>软件状态 ≠ 物理/云端结果</td>
+</tr>
+<tr>
+<td>反馈链</td>
+<td>最终状态 → Service → Client</td>
+<td>回读、事件或 final callback</td>
+<td>关联请求与 Generation</td>
+<td>最终业务状态</td>
+<td>callback 到达 ≠ 状态属于当前会话</td>
+</tr>
+</tbody></table>
+<p>系统生命周期采用 Generation 隔离。dependency available ≠ service started ≠ service Ready ≠ business state restored：依赖可见、进程启动、服务可调用、句柄/订阅重建、初始快照刷新和 HMI/控制状态恢复必须分别证明。任何 restart、Resume、slot 切换或 VM recreate 都产生新 Generation，旧 callback、旧共享内存事件和旧缓存不能覆盖新代状态。</p>
+<h3 id="会话与资源生命周期">会话与资源生命周期</h3>
+<table>
+<thead>
+<tr>
+<th>资源/状态</th>
+<th>创建或权威方</th>
+<th>持有/传递方</th>
+<th>消费者</th>
+<th>释放或失效条件</th>
+<th>关键风险</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>业务 Generation</td>
+<td>BootLoader/FBL</td>
+<td>Kernel/systemd/AOSP</td>
+<td>Launcher/Cluster/HMI Ready</td>
+<td>新触发取代或业务退出</td>
+<td>新旧事件混用</td>
+</tr>
+<tr>
+<td>Client/Service Session</td>
+<td>请求方</td>
+<td>SDK、IPC 或服务端</td>
+<td>Kernel/systemd/AOSP</td>
+<td>deinit、服务死亡或重建</td>
+<td>旧 Handle 与旧回调</td>
+</tr>
+<tr>
+<td>请求与回调关联</td>
+<td>请求创建者</td>
+<td>传输与服务</td>
+<td>最终业务消费者</td>
+<td>final state 或超时后隔离</td>
+<td>late response 覆盖新状态</td>
+</tr>
+<tr>
+<td>缓存/初始快照</td>
+<td>权威源</td>
+<td>服务缓存</td>
+<td>App/HMI/控制策略</td>
+<td>新 GET、订阅或代际切换</td>
+<td>恢复后继续使用 last-good</td>
+</tr>
+<tr>
+<td>底层承载资源</td>
+<td>驱动/Modem/Hypervisor/硬件</td>
+<td>HAL、Platform Adapter 或后端</td>
+<td>业务服务</td>
+<td>stop、disconnect、VM destroy</td>
+<td>引用、描述符或路由泄漏</td>
+</tr>
+</tbody></table>
+<p>资源审计必须同时记录创建、转移、消费与释放。异常退出时先阻止新请求，再取消回调/订阅、停止数据面、释放底层资源，最后销毁 Client；恢复时按相反依赖方向创建新一代资源。只清理 Java/C++ 对象而不释放远端会话、Modem 承载、文件句柄、WakeLock、虚拟设备或驱动资源，会留下“表面恢复、后台仍占用”的隐患。</p>
+<h3 id="反馈闭环">反馈闭环</h3>
+<p>库存定义的反馈是：Hypervisor、各 VM、systemd/AOSP 服务和 HMI 分阶段发布 Ready，最终首帧确认。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
+<h3 id="异常分支">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
+  S -- 否 --&gt; F0[&quot;Boot/镜像校验失败&quot;]
+  S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
+  C -- 否 --&gt; F1[&quot;VM 未创建&quot;]
+  C -- 是 --&gt; D{&quot;数据、命令或资源持续推进?&quot;}
+  D -- 否 --&gt; F2[&quot;virtio 后端未就绪&quot;]
+  D -- 是 --&gt; B{&quot;业务反馈与最终状态一致?&quot;}
+  B -- 否 --&gt; F3[&quot;关键服务依赖或 HMI 首帧超时&quot;]
+  F0 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  F1 --&gt; R
+  F2 --&gt; R
+  F3 --&gt; R
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
+  S -- 否 --&gt; F0[&quot;Boot/镜像校验失败&quot;]
+  S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
+  C -- 否 --&gt; F1[&quot;VM 未创建&quot;]
+  C -- 是 --&gt; D{&quot;数据、命令或资源持续推进?&quot;}
+  D -- 否 --&gt; F2[&quot;virtio 后端未就绪&quot;]
+  D -- 是 --&gt; B{&quot;业务反馈与最终状态一致?&quot;}
+  B -- 否 --&gt; F3[&quot;关键服务依赖或 HMI 首帧超时&quot;]
+  F0 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  F1 --&gt; R
+  F2 --&gt; R
+  F3 --&gt; R
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：Boot/镜像校验失败；VM 未创建；virtio 后端未就绪；关键服务依赖或 HMI 首帧超时。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+<h3 id="日志与诊断">日志与诊断</h3>
+<p>库存建议日志：bootloader/Hypervisor console；VM lifecycle；systemd-analyze；logcat boot；Cluster/Launcher first frame。</p>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>源与触发</td>
+<td>当前 Generation、时间戳、有效位和触发条件一致</td>
+<td>Boot/镜像校验失败</td>
+<td>源正确不证明下游已消费</td>
+<td>源数据/触发所有者</td>
+</tr>
+<tr>
+<td>Client/API</td>
+<td>初始化、Handle、请求 ID 与回调注册属于当前会话</td>
+<td>VM 未创建</td>
+<td>API accepted 不证明服务和硬件完成</td>
+<td>App/SDK Client</td>
+</tr>
+<tr>
+<td>服务与承载</td>
+<td>服务端收到请求，数据/命令/序号持续推进</td>
+<td>virtio 后端未就绪</td>
+<td>服务日志不证明传输另一端已应用</td>
+<td>Service/Platform Adapter</td>
+</tr>
+<tr>
+<td>业务消费</td>
+<td>最终状态机、界面、文件、网络或车辆执行结果改变</td>
+<td>关键服务依赖或 HMI 首帧超时</td>
+<td>软件状态不等于物理或云端结果</td>
+<td>最终消费者</td>
+</tr>
+<tr>
+<td>反馈与释放</td>
+<td>回读、final callback、查询结果和资源计数闭合</td>
+<td>旧回调、重复事件或资源不归还</td>
+<td>restart 只证明恢复动作，不证明最初原因</td>
+<td>会话和资源所有者</td>
+</tr>
+</tbody></table>
+<ul>
+<li>最早断点：把源、Client、Service、承载、消费者和反馈的同一请求按关联 ID、Sequence、Generation、单调时间对齐，标出最后正常输出与第一个缺失输入。</li>
+<li>恢复后验证：用新 Client Handle 或新 Session 重新查询/订阅，验证最终业务结果、回读和释放计数；至少再触发一次状态变化，避免 last-good 缓存冒充恢复。</li>
+<li>升级材料：保留触发前后日志、进程/服务状态、当前句柄与订阅、抓包或驱动状态、资源计数、时间换算依据，以及可复现步骤。没有跨层关联信息时，不越级指定单一责任模块。</li>
+</ul>
+<h3 id="责任域">责任域</h3>
+<p>初始协同责任域：Boot/Hypervisor、SOS/Android/TBox OS、HMI 应用。源所有者证明输入是否产生；Client/SDK 团队证明调用和回调身份；Service/Platform Adapter 团队证明处理与下游调用；传输、驱动、Hypervisor、Modem 或硬件团队证明承载推进；最终消费者证明业务应用和反馈。责任切分依据“最早断点”，不是依据最后一个报警模块。</p>
+<h3 id="证据与置信度">证据与置信度</h3>
+<ul>
+<li>直接证据：<code>original-diagram-01, original-diagram-02</code> 支撑库存中列出的流程名称、相关资料、局部模块或配置。</li>
+<li>标准机制：Client/Service 生命周期、异步回调、状态查询、Generation 隔离、资源所有权和分层诊断用于解释常见实现，不自动成为项目私有实现事实。</li>
+<li>待确认：确切进程、线程、API 到服务绑定、私有超时/重试、缓存大小、网络参数、硬件通道与责任人，需结合目标软件版本及现场证据。</li>
+</ul>
+<h2 id="业务流程-flow-38">业务流程 FLOW-38</h2>
+<h3 id="accstrsuspendresume">ACC、STR、Suspend、Resume</h3>
+<h3 id="触发目标与边界-1">触发、目标与边界</h3>
+<p>触发条件：ACC 状态变化或 STR 条件满足。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。ACC/STR 触发后先冻结新业务、等待 suspend ACK，再进入 Suspend；Resume 后重建句柄、订阅和初始快照，旧 callback 必须隔离。</p>
+<p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
+<h3 id="正常链-1">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  N0[&quot;ACC/STR 信号&quot;]
+  N1[&quot;MCU 电源状态机&quot;]
+  N0 --&gt; N1
+  N2[&quot;Hypervisor/VM Lifecycle&quot;]
+  N1 --&gt; N2
+  N3[&quot;PowerManager/fb_powerMgr&quot;]
+  N2 --&gt; N3
+  N4[&quot;Suspend/Resume&quot;]
+  N3 --&gt; N4
+  N5[&quot;业务状态恢复&quot;]
+  N4 --&gt; N5</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N0[&quot;ACC/STR 信号&quot;]
+  N1[&quot;MCU 电源状态机&quot;]
+  N0 --&gt; N1
+  N2[&quot;Hypervisor/VM Lifecycle&quot;]
+  N1 --&gt; N2
+  N3[&quot;PowerManager/fb_powerMgr&quot;]
+  N2 --&gt; N3
+  N4[&quot;Suspend/Resume&quot;]
+  N3 --&gt; N4
+  N5[&quot;业务状态恢复&quot;]
+  N4 --&gt; N5</code></pre></details></details><p>正常链按当前 Generation 顺序推进：ACC/STR 信号&gt;MCU 电源状态机&gt;Hypervisor/VM Lifecycle&gt;PowerManager/fb_powerMgr&gt;Suspend/Resume&gt;业务状态恢复。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+<h3 id="分层子链与方向-1">分层子链与方向</h3>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>MTK STR文档为原流程提供总体门控：Host发起，Guest完成相应阶段之后Host再进入深度休眠。此处的“完成”应由各域状态与设备动作确认，不能用Android息屏替代。唤醒后重验当前连接、时间映射、订阅/属性和新buffer；GPIO号与电源客户端配置按板级/BSP核实，平台参考图只作对应版本示例。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S265 · MT8676_Hypervisor_Suspend_Resume_Common_Flow.pdf · PDF第4-6页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S037 · MT8668_Hypervisor_Suspend_Resume_User_Manual_CN_V1.0.pdf · PDF第4-10页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U002 · 3OS time synchronization.pdf · PDF第1-2页<small>〔本地来源〕</small></span></p>
+<table>
+<thead>
+<tr>
+<th>子链</th>
+<th>方向</th>
+<th>输入</th>
+<th>处理</th>
+<th>输出</th>
+<th>不等价边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>触发控制链</td>
+<td>业务源 → Client/API</td>
+<td>条件、命令、配置</td>
+<td>校验新鲜度、权限和会话</td>
+<td>当前请求</td>
+<td>触发有效 ≠ API accepted</td>
+</tr>
+<tr>
+<td>Client/IPC 链</td>
+<td>Client → Proxy/transport → Service</td>
+<td>请求 ID、参数</td>
+<td>序列化、路由、反序列化</td>
+<td>服务端调用</td>
+<td>IPC 成功 ≠ 服务依赖 Ready</td>
+</tr>
+<tr>
+<td>服务/承载链</td>
+<td>Service → Platform Adapter/HAL/driver</td>
+<td>服务端请求</td>
+<td>状态机、硬件或网络操作</td>
+<td>数据、命令或资源</td>
+<td>服务返回 ≠ 硬件/网络完成</td>
+</tr>
+<tr>
+<td>消费链</td>
+<td>承载 → 最终消费者</td>
+<td>数据、事件、文件或帧</td>
+<td>业务状态机与呈现</td>
+<td>可观察业务结果</td>
+<td>软件状态 ≠ 物理/云端结果</td>
+</tr>
+<tr>
+<td>反馈链</td>
+<td>最终状态 → Service → Client</td>
+<td>回读、事件或 final callback</td>
+<td>关联请求与 Generation</td>
+<td>最终业务状态</td>
+<td>callback 到达 ≠ 状态属于当前会话</td>
+</tr>
+</tbody></table>
+<p>系统生命周期采用 Generation 隔离。dependency available ≠ service started ≠ service Ready ≠ business state restored：依赖可见、进程启动、服务可调用、句柄/订阅重建、初始快照刷新和 HMI/控制状态恢复必须分别证明。任何 restart、Resume、slot 切换或 VM recreate 都产生新 Generation，旧 callback、旧共享内存事件和旧缓存不能覆盖新代状态。</p>
+<h3 id="会话与资源生命周期-1">会话与资源生命周期</h3>
+<table>
+<thead>
+<tr>
+<th>资源/状态</th>
+<th>创建或权威方</th>
+<th>持有/传递方</th>
+<th>消费者</th>
+<th>释放或失效条件</th>
+<th>关键风险</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>业务 Generation</td>
+<td>ACC/STR 信号</td>
+<td>PowerManager/fb_powerMgr</td>
+<td>业务状态恢复</td>
+<td>新触发取代或业务退出</td>
+<td>新旧事件混用</td>
+</tr>
+<tr>
+<td>Client/Service Session</td>
+<td>请求方</td>
+<td>SDK、IPC 或服务端</td>
+<td>PowerManager/fb_powerMgr</td>
+<td>deinit、服务死亡或重建</td>
+<td>旧 Handle 与旧回调</td>
+</tr>
+<tr>
+<td>请求与回调关联</td>
+<td>请求创建者</td>
+<td>传输与服务</td>
+<td>最终业务消费者</td>
+<td>final state 或超时后隔离</td>
+<td>late response 覆盖新状态</td>
+</tr>
+<tr>
+<td>缓存/初始快照</td>
+<td>权威源</td>
+<td>服务缓存</td>
+<td>App/HMI/控制策略</td>
+<td>新 GET、订阅或代际切换</td>
+<td>恢复后继续使用 last-good</td>
+</tr>
+<tr>
+<td>底层承载资源</td>
+<td>驱动/Modem/Hypervisor/硬件</td>
+<td>HAL、Platform Adapter 或后端</td>
+<td>业务服务</td>
+<td>stop、disconnect、VM destroy</td>
+<td>引用、描述符或路由泄漏</td>
+</tr>
+</tbody></table>
+<p>资源审计必须同时记录创建、转移、消费与释放。异常退出时先阻止新请求，再取消回调/订阅、停止数据面、释放底层资源，最后销毁 Client；恢复时按相反依赖方向创建新一代资源。只清理 Java/C++ 对象而不释放远端会话、Modem 承载、文件句柄、WakeLock、虚拟设备或驱动资源，会留下“表面恢复、后台仍占用”的隐患。</p>
+<h3 id="反馈闭环-1">反馈闭环</h3>
+<p>库存定义的反馈是：MCU/VM/Power 服务完成 suspend ACK，Resume 后 generation 更新且关键状态重订阅。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
+<h3 id="异常分支-1">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
+  S -- 否 --&gt; F0[&quot;ACC debounce 错误&quot;]
+  S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
+  C -- 否 --&gt; F1[&quot;WakeLock 阻塞&quot;]
+  C -- 是 --&gt; D{&quot;数据、命令或资源持续推进?&quot;}
+  D -- 否 --&gt; F2[&quot;VM suspend 超时&quot;]
+  D -- 是 --&gt; B{&quot;业务反馈与最终状态一致?&quot;}
+  B -- 否 --&gt; F3[&quot;Resume 后旧 callback/资源未重绑&quot;]
+  F0 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  F1 --&gt; R
+  F2 --&gt; R
+  F3 --&gt; R
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
+  S -- 否 --&gt; F0[&quot;ACC debounce 错误&quot;]
+  S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
+  C -- 否 --&gt; F1[&quot;WakeLock 阻塞&quot;]
+  C -- 是 --&gt; D{&quot;数据、命令或资源持续推进?&quot;}
+  D -- 否 --&gt; F2[&quot;VM suspend 超时&quot;]
+  D -- 是 --&gt; B{&quot;业务反馈与最终状态一致?&quot;}
+  B -- 否 --&gt; F3[&quot;Resume 后旧 callback/资源未重绑&quot;]
+  F0 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  F1 --&gt; R
+  F2 --&gt; R
+  F3 --&gt; R
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：ACC debounce 错误；WakeLock 阻塞；VM suspend 超时；Resume 后旧 callback/资源未重绑。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+<h3 id="日志与诊断-1">日志与诊断</h3>
+<p>库存建议日志：MCU power state；systemd suspend；dumpsys power；fb_powerMgr journal；VM generation。</p>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>源与触发</td>
+<td>当前 Generation、时间戳、有效位和触发条件一致</td>
+<td>ACC debounce 错误</td>
+<td>源正确不证明下游已消费</td>
+<td>源数据/触发所有者</td>
+</tr>
+<tr>
+<td>Client/API</td>
+<td>初始化、Handle、请求 ID 与回调注册属于当前会话</td>
+<td>WakeLock 阻塞</td>
+<td>API accepted 不证明服务和硬件完成</td>
+<td>App/SDK Client</td>
+</tr>
+<tr>
+<td>服务与承载</td>
+<td>服务端收到请求，数据/命令/序号持续推进</td>
+<td>VM suspend 超时</td>
+<td>服务日志不证明传输另一端已应用</td>
+<td>Service/Platform Adapter</td>
+</tr>
+<tr>
+<td>业务消费</td>
+<td>最终状态机、界面、文件、网络或车辆执行结果改变</td>
+<td>Resume 后旧 callback/资源未重绑</td>
+<td>软件状态不等于物理或云端结果</td>
+<td>最终消费者</td>
+</tr>
+<tr>
+<td>反馈与释放</td>
+<td>回读、final callback、查询结果和资源计数闭合</td>
+<td>旧回调、重复事件或资源不归还</td>
+<td>restart 只证明恢复动作，不证明最初原因</td>
+<td>会话和资源所有者</td>
+</tr>
+</tbody></table>
+<ul>
+<li>最早断点：把源、Client、Service、承载、消费者和反馈的同一请求按关联 ID、Sequence、Generation、单调时间对齐，标出最后正常输出与第一个缺失输入。</li>
+<li>恢复后验证：用新 Client Handle 或新 Session 重新查询/订阅，验证最终业务结果、回读和释放计数；至少再触发一次状态变化，避免 last-good 缓存冒充恢复。</li>
+<li>升级材料：保留触发前后日志、进程/服务状态、当前句柄与订阅、抓包或驱动状态、资源计数、时间换算依据，以及可复现步骤。没有跨层关联信息时，不越级指定单一责任模块。</li>
+</ul>
+<h3 id="责任域-1">责任域</h3>
+<p>初始协同责任域：MCU 电源域、Hypervisor/VM Lifecycle、Android/UMDP Power。源所有者证明输入是否产生；Client/SDK 团队证明调用和回调身份；Service/Platform Adapter 团队证明处理与下游调用；传输、驱动、Hypervisor、Modem 或硬件团队证明承载推进；最终消费者证明业务应用和反馈。责任切分依据“最早断点”，不是依据最后一个报警模块。</p>
+<h3 id="证据与置信度-1">证据与置信度</h3>
+<ul>
+<li>直接证据：<code>original-diagram-01, original-diagram-02, umdp-files-fb-powermgr-service</code> 支撑库存中列出的流程名称、相关资料、局部模块或配置。</li>
+<li>标准机制：Client/Service 生命周期、异步回调、状态查询、Generation 隔离、资源所有权和分层诊断用于解释常见实现，不自动成为项目私有实现事实。</li>
+<li>待确认：确切进程、线程、API 到服务绑定、私有超时/重试、缓存大小、网络参数、硬件通道与责任人，需结合目标软件版本及现场证据。</li>
+</ul>
+<h2 id="业务流程-flow-39">业务流程 FLOW-39</h2>
+<h3 id="otaab-slot升级重启">OTA、A/B Slot、升级重启</h3>
+<h3 id="触发目标与边界-2">触发、目标与边界</h3>
+<p>触发条件：OTA 包下载并通过签名/版本校验。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。OTA 按包签名校验、写入非活动 A/B Slot、切换启动目标、启动 health ACK 和必要时回滚闭环；写入完成不等于升级成功。</p>
+<p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
+<h3 id="正常链-2">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  N0[&quot;OTA/Update Engine&quot;]
+  N1[&quot;包校验&quot;]
+  N0 --&gt; N1
+  N2[&quot;BootCtrl/A-B Slot&quot;]
+  N1 --&gt; N2
+  N3[&quot;刷写&quot;]
+  N2 --&gt; N3
+  N4[&quot;重启/回滚&quot;]
+  N3 --&gt; N4
+  N5[&quot;版本确认&quot;]
+  N4 --&gt; N5</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N0[&quot;OTA/Update Engine&quot;]
+  N1[&quot;包校验&quot;]
+  N0 --&gt; N1
+  N2[&quot;BootCtrl/A-B Slot&quot;]
+  N1 --&gt; N2
+  N3[&quot;刷写&quot;]
+  N2 --&gt; N3
+  N4[&quot;重启/回滚&quot;]
+  N3 --&gt; N4
+  N5[&quot;版本确认&quot;]
+  N4 --&gt; N5</code></pre></details></details><p>正常链按当前 Generation 顺序推进：OTA/Update Engine&gt;包校验&gt;BootCtrl/A-B Slot&gt;刷写&gt;重启/回滚&gt;版本确认。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+<h3 id="分层子链与方向-2">分层子链与方向</h3>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>结合新版 Day 33，标定/算法配置的版本绑定和激活状态应纳入升级解释，但不改变本节集中升级架构。升级包写入成功不等于标定集合匹配，更不等于环视几何质量通过；建议分别记录校验、持久化、激活、图像质量与故障回退证据。具体文件名、签名/回滚实现和诊断编号须项目确认，不能复制教学平台示例。[最新站点 Day 33](http[本地资料库路径] <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S030 · MT8668_Hypervisor_OTA_LLA_User_Manual_CN_V1.0.pdf · PDF第8-10页<small>〔本地来源〕</small></span></p>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>本流程的A/B与升级抽象保留，MT8668 OTA LLA的具体实现须单列：在SOS集中执行升级，合并SOS、Yocto UOS、Android target files形成包；该文档版本不支持OS单独升级、Android Virtual AB和OTA更改分区布局，下载由OEM实现。MBOS多个Update Client表示业务端角色，不证明各OS可分别刷写。验证应覆盖镜像一致性、写入校验、下一启动slot与回退/断电场景。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S030 · MT8668_Hypervisor_OTA_LLA_User_Manual_CN_V1.0.pdf · PDF第8-10页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">MBOS-20260920 · 盟博OS架构-用户提供-20260920.png<small>〔本地来源〕</small></span></p>
+<table>
+<thead>
+<tr>
+<th>子链</th>
+<th>方向</th>
+<th>输入</th>
+<th>处理</th>
+<th>输出</th>
+<th>不等价边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>触发控制链</td>
+<td>业务源 → Client/API</td>
+<td>条件、命令、配置</td>
+<td>校验新鲜度、权限和会话</td>
+<td>当前请求</td>
+<td>触发有效 ≠ API accepted</td>
+</tr>
+<tr>
+<td>Client/IPC 链</td>
+<td>Client → Proxy/transport → Service</td>
+<td>请求 ID、参数</td>
+<td>序列化、路由、反序列化</td>
+<td>服务端调用</td>
+<td>IPC 成功 ≠ 服务依赖 Ready</td>
+</tr>
+<tr>
+<td>服务/承载链</td>
+<td>Service → Platform Adapter/HAL/driver</td>
+<td>服务端请求</td>
+<td>状态机、硬件或网络操作</td>
+<td>数据、命令或资源</td>
+<td>服务返回 ≠ 硬件/网络完成</td>
+</tr>
+<tr>
+<td>消费链</td>
+<td>承载 → 最终消费者</td>
+<td>数据、事件、文件或帧</td>
+<td>业务状态机与呈现</td>
+<td>可观察业务结果</td>
+<td>软件状态 ≠ 物理/云端结果</td>
+</tr>
+<tr>
+<td>反馈链</td>
+<td>最终状态 → Service → Client</td>
+<td>回读、事件或 final callback</td>
+<td>关联请求与 Generation</td>
+<td>最终业务状态</td>
+<td>callback 到达 ≠ 状态属于当前会话</td>
+</tr>
+</tbody></table>
+<p>系统生命周期采用 Generation 隔离。dependency available ≠ service started ≠ service Ready ≠ business state restored：依赖可见、进程启动、服务可调用、句柄/订阅重建、初始快照刷新和 HMI/控制状态恢复必须分别证明。任何 restart、Resume、slot 切换或 VM recreate 都产生新 Generation，旧 callback、旧共享内存事件和旧缓存不能覆盖新代状态。</p>
+<h3 id="会话与资源生命周期-2">会话与资源生命周期</h3>
+<table>
+<thead>
+<tr>
+<th>资源/状态</th>
+<th>创建或权威方</th>
+<th>持有/传递方</th>
+<th>消费者</th>
+<th>释放或失效条件</th>
+<th>关键风险</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>业务 Generation</td>
+<td>OTA/Update Engine</td>
+<td>刷写</td>
+<td>版本确认</td>
+<td>新触发取代或业务退出</td>
+<td>新旧事件混用</td>
+</tr>
+<tr>
+<td>Client/Service Session</td>
+<td>请求方</td>
+<td>SDK、IPC 或服务端</td>
+<td>刷写</td>
+<td>deinit、服务死亡或重建</td>
+<td>旧 Handle 与旧回调</td>
+</tr>
+<tr>
+<td>请求与回调关联</td>
+<td>请求创建者</td>
+<td>传输与服务</td>
+<td>最终业务消费者</td>
+<td>final state 或超时后隔离</td>
+<td>late response 覆盖新状态</td>
+</tr>
+<tr>
+<td>缓存/初始快照</td>
+<td>权威源</td>
+<td>服务缓存</td>
+<td>App/HMI/控制策略</td>
+<td>新 GET、订阅或代际切换</td>
+<td>恢复后继续使用 last-good</td>
+</tr>
+<tr>
+<td>底层承载资源</td>
+<td>驱动/Modem/Hypervisor/硬件</td>
+<td>HAL、Platform Adapter 或后端</td>
+<td>业务服务</td>
+<td>stop、disconnect、VM destroy</td>
+<td>引用、描述符或路由泄漏</td>
+</tr>
+</tbody></table>
+<p>资源审计必须同时记录创建、转移、消费与释放。异常退出时先阻止新请求，再取消回调/订阅、停止数据面、释放底层资源，最后销毁 Client；恢复时按相反依赖方向创建新一代资源。只清理 Java/C++ 对象而不释放远端会话、Modem 承载、文件句柄、WakeLock、虚拟设备或驱动资源，会留下“表面恢复、后台仍占用”的隐患。</p>
+<h3 id="反馈闭环-2">反馈闭环</h3>
+<p>库存定义的反馈是：update_engine 标记目标 Slot，BootCtrl 重启进入新 Slot 并以版本/health ACK 确认，失败则回滚。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
+<h3 id="异常分支-2">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
+  S -- 否 --&gt; F0[&quot;包校验/空间失败&quot;]
+  S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
+  C -- 否 --&gt; F1[&quot;写 Slot 中断&quot;]
+  C -- 是 --&gt; D{&quot;数据、命令或资源持续推进?&quot;}
+  D -- 否 --&gt; F2[&quot;BootCtrl 标记失败&quot;]
+  D -- 是 --&gt; B{&quot;业务反馈与最终状态一致?&quot;}
+  B -- 否 --&gt; F3[&quot;新 Slot 启动/health 失败触发回滚&quot;]
+  F0 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  F1 --&gt; R
+  F2 --&gt; R
+  F3 --&gt; R
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
+  S -- 否 --&gt; F0[&quot;包校验/空间失败&quot;]
+  S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
+  C -- 否 --&gt; F1[&quot;写 Slot 中断&quot;]
+  C -- 是 --&gt; D{&quot;数据、命令或资源持续推进?&quot;}
+  D -- 否 --&gt; F2[&quot;BootCtrl 标记失败&quot;]
+  D -- 是 --&gt; B{&quot;业务反馈与最终状态一致?&quot;}
+  B -- 否 --&gt; F3[&quot;新 Slot 启动/health 失败触发回滚&quot;]
+  F0 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  F1 --&gt; R
+  F2 --&gt; R
+  F3 --&gt; R
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：包校验/空间失败；写 Slot 中断；BootCtrl 标记失败；新 Slot 启动/health 失败触发回滚。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+<h3 id="日志与诊断-2">日志与诊断</h3>
+<p>库存建议日志：update_engine log；BootCtrl/boot_control HAL；Slot metadata；bootloader console；版本/回滚原因。</p>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>源与触发</td>
+<td>当前 Generation、时间戳、有效位和触发条件一致</td>
+<td>包校验/空间失败</td>
+<td>源正确不证明下游已消费</td>
+<td>源数据/触发所有者</td>
+</tr>
+<tr>
+<td>Client/API</td>
+<td>初始化、Handle、请求 ID 与回调注册属于当前会话</td>
+<td>写 Slot 中断</td>
+<td>API accepted 不证明服务和硬件完成</td>
+<td>App/SDK Client</td>
+</tr>
+<tr>
+<td>服务与承载</td>
+<td>服务端收到请求，数据/命令/序号持续推进</td>
+<td>BootCtrl 标记失败</td>
+<td>服务日志不证明传输另一端已应用</td>
+<td>Service/Platform Adapter</td>
+</tr>
+<tr>
+<td>业务消费</td>
+<td>最终状态机、界面、文件、网络或车辆执行结果改变</td>
+<td>新 Slot 启动/health 失败触发回滚</td>
+<td>软件状态不等于物理或云端结果</td>
+<td>最终消费者</td>
+</tr>
+<tr>
+<td>反馈与释放</td>
+<td>回读、final callback、查询结果和资源计数闭合</td>
+<td>旧回调、重复事件或资源不归还</td>
+<td>restart 只证明恢复动作，不证明最初原因</td>
+<td>会话和资源所有者</td>
+</tr>
+</tbody></table>
+<ul>
+<li>最早断点：把源、Client、Service、承载、消费者和反馈的同一请求按关联 ID、Sequence、Generation、单调时间对齐，标出最后正常输出与第一个缺失输入。</li>
+<li>恢复后验证：用新 Client Handle 或新 Session 重新查询/订阅，验证最终业务结果、回读和释放计数；至少再触发一次状态变化，避免 last-good 缓存冒充恢复。</li>
+<li>升级材料：保留触发前后日志、进程/服务状态、当前句柄与订阅、抓包或驱动状态、资源计数、时间换算依据，以及可复现步骤。没有跨层关联信息时，不越级指定单一责任模块。</li>
+</ul>
+<h3 id="责任域-2">责任域</h3>
+<p>初始协同责任域：OTA/Update Engine、BootCtrl/BootLoader、系统 health monitor。源所有者证明输入是否产生；Client/SDK 团队证明调用和回调身份；Service/Platform Adapter 团队证明处理与下游调用；传输、驱动、Hypervisor、Modem 或硬件团队证明承载推进；最终消费者证明业务应用和反馈。责任切分依据“最早断点”，不是依据最后一个报警模块。</p>
+<h3 id="证据与置信度-2">证据与置信度</h3>
+<ul>
+<li>直接证据：<code>original-diagram-01</code> 支撑库存中列出的流程名称、相关资料、局部模块或配置。</li>
+<li>标准机制：Client/Service 生命周期、异步回调、状态查询、Generation 隔离、资源所有权和分层诊断用于解释常见实现，不自动成为项目私有实现事实。</li>
+<li>待确认：确切进程、线程、API 到服务绑定、私有超时/重试、缓存大小、网络参数、硬件通道与责任人，需结合目标软件版本及现场证据。</li>
+</ul>
+<h2 id="业务流程-flow-40">业务流程 FLOW-40</h2>
+<h3 id="umdp-服务启动死亡自动重启和-client-重连">UMDP 服务启动、死亡、自动重启和 Client 重连</h3>
+<h3 id="触发目标与边界-3">触发、目标与边界</h3>
+<p>触发条件：systemd 启动 UMDP 或检测服务进程死亡。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。UMDP unit 的 Type=simple、Restart=always、ready=false 和 E_FIBO_UMDP_NOT_READY 分属不同证据；恢复必须创建新 Client Handle。</p>
+<p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
+<h3 id="正常链-3">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  N0[&quot;systemd/umdpprocess.ini&quot;]
+  N1[&quot;UMDP 服务&quot;]
+  N0 --&gt; N1
+  N2[&quot;Client Library&quot;]
+  N1 --&gt; N2
+  N3[&quot;服务死亡检测&quot;]
+  N2 --&gt; N3
+  N4[&quot;自动重启&quot;]
+  N3 --&gt; N4
+  N5[&quot;Client 重连/重新订阅&quot;]
+  N4 --&gt; N5
+  N6[&quot;状态恢复&quot;]
+  N5 --&gt; N6</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N0[&quot;systemd/umdpprocess.ini&quot;]
+  N1[&quot;UMDP 服务&quot;]
+  N0 --&gt; N1
+  N2[&quot;Client Library&quot;]
+  N1 --&gt; N2
+  N3[&quot;服务死亡检测&quot;]
+  N2 --&gt; N3
+  N4[&quot;自动重启&quot;]
+  N3 --&gt; N4
+  N5[&quot;Client 重连/重新订阅&quot;]
+  N4 --&gt; N5
+  N6[&quot;状态恢复&quot;]
+  N5 --&gt; N6</code></pre></details></details><p>正常链按当前 Generation 顺序推进：systemd/umdpprocess.ini&gt;UMDP 服务&gt;Client Library&gt;服务死亡检测&gt;自动重启&gt;Client 重连/重新订阅&gt;状态恢复。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+<h3 id="分层子链与方向-3">分层子链与方向</h3>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>UMDP服务自动拉起仍按本章既有systemd/fb_procMgr基线解释，不把PVT另一个服务端示例等同UMDP实现。重连应重新确认Modem或对应业务ready、回调订阅、状态回读和当前会话；自动重启只恢复进程，不证明调用合同已经重新成立。跨域依赖还需重验VSOCK端点或Host服务是否可用。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S075 · MT8668_Yocto_T-Box_User_Manual_CN_V1.0.pdf · PDF第5-7页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U038 · Vsock api 文档v2.0.pdf · PDF第11-13页<small>〔本地来源〕</small></span></p>
+<table>
+<thead>
+<tr>
+<th>子链</th>
+<th>方向</th>
+<th>输入</th>
+<th>处理</th>
+<th>输出</th>
+<th>不等价边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>触发控制链</td>
+<td>业务源 → Client/API</td>
+<td>条件、命令、配置</td>
+<td>校验新鲜度、权限和会话</td>
+<td>当前请求</td>
+<td>触发有效 ≠ API accepted</td>
+</tr>
+<tr>
+<td>Client/IPC 链</td>
+<td>Client → Proxy/transport → Service</td>
+<td>请求 ID、参数</td>
+<td>序列化、路由、反序列化</td>
+<td>服务端调用</td>
+<td>IPC 成功 ≠ 服务依赖 Ready</td>
+</tr>
+<tr>
+<td>服务/承载链</td>
+<td>Service → Platform Adapter/HAL/driver</td>
+<td>服务端请求</td>
+<td>状态机、硬件或网络操作</td>
+<td>数据、命令或资源</td>
+<td>服务返回 ≠ 硬件/网络完成</td>
+</tr>
+<tr>
+<td>消费链</td>
+<td>承载 → 最终消费者</td>
+<td>数据、事件、文件或帧</td>
+<td>业务状态机与呈现</td>
+<td>可观察业务结果</td>
+<td>软件状态 ≠ 物理/云端结果</td>
+</tr>
+<tr>
+<td>反馈链</td>
+<td>最终状态 → Service → Client</td>
+<td>回读、事件或 final callback</td>
+<td>关联请求与 Generation</td>
+<td>最终业务状态</td>
+<td>callback 到达 ≠ 状态属于当前会话</td>
+</tr>
+</tbody></table>
+<p>系统生命周期采用 Generation 隔离。dependency available ≠ service started ≠ service Ready ≠ business state restored：依赖可见、进程启动、服务可调用、句柄/订阅重建、初始快照刷新和 HMI/控制状态恢复必须分别证明。任何 restart、Resume、slot 切换或 VM recreate 都产生新 Generation，旧 callback、旧共享内存事件和旧缓存不能覆盖新代状态。</p>
+<h3 id="会话与资源生命周期-3">会话与资源生命周期</h3>
+<table>
+<thead>
+<tr>
+<th>资源/状态</th>
+<th>创建或权威方</th>
+<th>持有/传递方</th>
+<th>消费者</th>
+<th>释放或失效条件</th>
+<th>关键风险</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>业务 Generation</td>
+<td>systemd/umdpprocess.ini</td>
+<td>服务死亡检测</td>
+<td>状态恢复</td>
+<td>新触发取代或业务退出</td>
+<td>新旧事件混用</td>
+</tr>
+<tr>
+<td>Client/Service Session</td>
+<td>请求方</td>
+<td>SDK、IPC 或服务端</td>
+<td>服务死亡检测</td>
+<td>deinit、服务死亡或重建</td>
+<td>旧 Handle 与旧回调</td>
+</tr>
+<tr>
+<td>请求与回调关联</td>
+<td>请求创建者</td>
+<td>传输与服务</td>
+<td>最终业务消费者</td>
+<td>final state 或超时后隔离</td>
+<td>late response 覆盖新状态</td>
+</tr>
+<tr>
+<td>缓存/初始快照</td>
+<td>权威源</td>
+<td>服务缓存</td>
+<td>App/HMI/控制策略</td>
+<td>新 GET、订阅或代际切换</td>
+<td>恢复后继续使用 last-good</td>
+</tr>
+<tr>
+<td>底层承载资源</td>
+<td>驱动/Modem/Hypervisor/硬件</td>
+<td>HAL、Platform Adapter 或后端</td>
+<td>业务服务</td>
+<td>stop、disconnect、VM destroy</td>
+<td>引用、描述符或路由泄漏</td>
+</tr>
+</tbody></table>
+<p>资源审计必须同时记录创建、转移、消费与释放。异常退出时先阻止新请求，再取消回调/订阅、停止数据面、释放底层资源，最后销毁 Client；恢复时按相反依赖方向创建新一代资源。只清理 Java/C++ 对象而不释放远端会话、Modem 承载、文件句柄、WakeLock、虚拟设备或驱动资源，会留下“表面恢复、后台仍占用”的隐患。</p>
+<h3 id="反馈闭环-3">反馈闭环</h3>
+<p>库存定义的反馈是：systemd Restart 后 fb_modemServices 等重新 Ready，Client 以新 generation 重连/重注册 callback 并查询状态确认。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
+<h3 id="异常分支-3">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
+  S -- 否 --&gt; F0[&quot;依赖 mtktelephonyservice/sound/mount 未 Ready&quot;]
+  S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
+  C -- 否 --&gt; F1[&quot;Restart storm/CPU limit&quot;]
+  C -- 是 --&gt; D{&quot;数据、命令或资源持续推进?&quot;}
+  D -- 否 --&gt; F2[&quot;Client 保留旧 session&quot;]
+  D -- 是 --&gt; B{&quot;业务反馈与最终状态一致?&quot;}
+  B -- 否 --&gt; F3[&quot;重新订阅或状态恢复缺失&quot;]
+  F0 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  F1 --&gt; R
+  F2 --&gt; R
+  F3 --&gt; R
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
+  S -- 否 --&gt; F0[&quot;依赖 mtktelephonyservice/sound/mount 未 Ready&quot;]
+  S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
+  C -- 否 --&gt; F1[&quot;Restart storm/CPU limit&quot;]
+  C -- 是 --&gt; D{&quot;数据、命令或资源持续推进?&quot;}
+  D -- 否 --&gt; F2[&quot;Client 保留旧 session&quot;]
+  D -- 是 --&gt; B{&quot;业务反馈与最终状态一致?&quot;}
+  B -- 否 --&gt; F3[&quot;重新订阅或状态恢复缺失&quot;]
+  F0 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  F1 --&gt; R
+  F2 --&gt; R
+  F3 --&gt; R
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：依赖 mtktelephonyservice/sound/mount 未 Ready；Restart storm/CPU limit；Client 保留旧 session；重新订阅或状态恢复缺失。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+<h3 id="日志与诊断-3">日志与诊断</h3>
+<p>库存建议日志：systemctl status；systemctl show Restart； journalctl -u fb_modemServices；umdpprocess.ini；Client reconnect/generation。</p>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>源与触发</td>
+<td>当前 Generation、时间戳、有效位和触发条件一致</td>
+<td>依赖 mtktelephonyservice/sound/mount 未 Ready</td>
+<td>源正确不证明下游已消费</td>
+<td>源数据/触发所有者</td>
+</tr>
+<tr>
+<td>Client/API</td>
+<td>初始化、Handle、请求 ID 与回调注册属于当前会话</td>
+<td>Restart storm/CPU limit</td>
+<td>API accepted 不证明服务和硬件完成</td>
+<td>App/SDK Client</td>
+</tr>
+<tr>
+<td>服务与承载</td>
+<td>服务端收到请求，数据/命令/序号持续推进</td>
+<td>Client 保留旧 session</td>
+<td>服务日志不证明传输另一端已应用</td>
+<td>Service/Platform Adapter</td>
+</tr>
+<tr>
+<td>业务消费</td>
+<td>最终状态机、界面、文件、网络或车辆执行结果改变</td>
+<td>重新订阅或状态恢复缺失</td>
+<td>软件状态不等于物理或云端结果</td>
+<td>最终消费者</td>
+</tr>
+<tr>
+<td>反馈与释放</td>
+<td>回读、final callback、查询结果和资源计数闭合</td>
+<td>旧回调、重复事件或资源不归还</td>
+<td>restart 只证明恢复动作，不证明最初原因</td>
+<td>会话和资源所有者</td>
+</tr>
+</tbody></table>
+<ul>
+<li>最早断点：把源、Client、Service、承载、消费者和反馈的同一请求按关联 ID、Sequence、Generation、单调时间对齐，标出最后正常输出与第一个缺失输入。</li>
+<li>恢复后验证：用新 Client Handle 或新 Session 重新查询/订阅，验证最终业务结果、回读和释放计数；至少再触发一次状态变化，避免 last-good 缓存冒充恢复。</li>
+<li>升级材料：保留触发前后日志、进程/服务状态、当前句柄与订阅、抓包或驱动状态、资源计数、时间换算依据，以及可复现步骤。没有跨层关联信息时，不越级指定单一责任模块。</li>
+</ul>
+<h3 id="责任域-3">责任域</h3>
+<p>初始协同责任域：systemd/fb_procMgr、fb_modemServices/fb_audioServices/fb_powerMgr/fb_logMgr、Favalon Client。源所有者证明输入是否产生；Client/SDK 团队证明调用和回调身份；Service/Platform Adapter 团队证明处理与下游调用；传输、驱动、Hypervisor、Modem 或硬件团队证明承载推进；最终消费者证明业务应用和反馈。责任切分依据“最早断点”，不是依据最后一个报警模块。</p>
+<h3 id="证据与置信度-3">证据与置信度</h3>
+<ul>
+<li>直接证据：<code>umdp-files-umdp-config-umdpprocess-ini, umdp-files-fb-modem-service, umdp-files-fb-audio-service, umdp-files-fb-powermgr-service, umdp-files-fb-logmgr-service</code> 支撑库存中列出的流程名称、相关资料、局部模块或配置。</li>
+<li>标准机制：Client/Service 生命周期、异步回调、状态查询、Generation 隔离、资源所有权和分层诊断用于解释常见实现，不自动成为项目私有实现事实。</li>
+<li>待确认：确切进程、线程、API 到服务绑定、私有超时/重试、缓存大小、网络参数、硬件通道与责任人，需结合目标软件版本及现场证据。</li>
+</ul>
+<h2 id="业务流程-supp-vm-kill-destroy-recreate-bfb45ac">业务流程 supp-vm-kill-destroy-recreate-bfb45ac</h2>
+<h3 id="vm-killdestroyrecreate">VM kill/destroy/recreate</h3>
+<h3 id="触发目标与边界-4">触发、目标与边界</h3>
+<p>触发条件：Hypervisor health monitor 判定 Guest 无响应或测试命令触发重建。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。VM kill、destroy、recreate 是三个阶段；新 VM 要完成虚拟资源重绑、服务 Ready 和业务恢复，旧 Generation 的中断与共享内存事件必须拒绝。</p>
+<p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
+<h3 id="正常链-4">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  N0[&quot;故障检测&quot;]
+  N1[&quot;Nebula OS/Hypervisor&quot;]
+  N0 --&gt; N1
+  N2[&quot;VM kill/destroy&quot;]
+  N1 --&gt; N2
+  N3[&quot;VM recreate&quot;]
+  N2 --&gt; N3
+  N4[&quot;虚拟资源重绑&quot;]
+  N3 --&gt; N4
+  N5[&quot;业务状态恢复&quot;]
+  N4 --&gt; N5</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N0[&quot;故障检测&quot;]
+  N1[&quot;Nebula OS/Hypervisor&quot;]
+  N0 --&gt; N1
+  N2[&quot;VM kill/destroy&quot;]
+  N1 --&gt; N2
+  N3[&quot;VM recreate&quot;]
+  N2 --&gt; N3
+  N4[&quot;虚拟资源重绑&quot;]
+  N3 --&gt; N4
+  N5[&quot;业务状态恢复&quot;]
+  N4 --&gt; N5</code></pre></details></details><p>正常链按当前 Generation 顺序推进：故障检测&gt;Nebula OS/Hypervisor&gt;VM kill/destroy&gt;VM recreate&gt;虚拟资源重绑&gt;业务状态恢复。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+<h3 id="分层子链与方向-4">分层子链与方向</h3>
+<table>
+<thead>
+<tr>
+<th>子链</th>
+<th>方向</th>
+<th>输入</th>
+<th>处理</th>
+<th>输出</th>
+<th>不等价边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>触发控制链</td>
+<td>业务源 → Client/API</td>
+<td>条件、命令、配置</td>
+<td>校验新鲜度、权限和会话</td>
+<td>当前请求</td>
+<td>触发有效 ≠ API accepted</td>
+</tr>
+<tr>
+<td>Client/IPC 链</td>
+<td>Client → Proxy/transport → Service</td>
+<td>请求 ID、参数</td>
+<td>序列化、路由、反序列化</td>
+<td>服务端调用</td>
+<td>IPC 成功 ≠ 服务依赖 Ready</td>
+</tr>
+<tr>
+<td>服务/承载链</td>
+<td>Service → Platform Adapter/HAL/driver</td>
+<td>服务端请求</td>
+<td>状态机、硬件或网络操作</td>
+<td>数据、命令或资源</td>
+<td>服务返回 ≠ 硬件/网络完成</td>
+</tr>
+<tr>
+<td>消费链</td>
+<td>承载 → 最终消费者</td>
+<td>数据、事件、文件或帧</td>
+<td>业务状态机与呈现</td>
+<td>可观察业务结果</td>
+<td>软件状态 ≠ 物理/云端结果</td>
+</tr>
+<tr>
+<td>反馈链</td>
+<td>最终状态 → Service → Client</td>
+<td>回读、事件或 final callback</td>
+<td>关联请求与 Generation</td>
+<td>最终业务状态</td>
+<td>callback 到达 ≠ 状态属于当前会话</td>
+</tr>
+</tbody></table>
+<p>补充业务同样使用 Generation/Session 隔离：链路或进程恢复只是起点，必须重新建立资源、查询权威状态、验证最终消费，并释放旧代句柄、缓存和硬件占用。连接状态、服务可用状态和业务 Ready 状态不得互相替代。</p>
+<h3 id="会话与资源生命周期-4">会话与资源生命周期</h3>
+<table>
+<thead>
+<tr>
+<th>资源/状态</th>
+<th>创建或权威方</th>
+<th>持有/传递方</th>
+<th>消费者</th>
+<th>释放或失效条件</th>
+<th>关键风险</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>业务 Generation</td>
+<td>故障检测</td>
+<td>VM recreate</td>
+<td>业务状态恢复</td>
+<td>新触发取代或业务退出</td>
+<td>新旧事件混用</td>
+</tr>
+<tr>
+<td>Client/Service Session</td>
+<td>请求方</td>
+<td>SDK、IPC 或服务端</td>
+<td>VM recreate</td>
+<td>deinit、服务死亡或重建</td>
+<td>旧 Handle 与旧回调</td>
+</tr>
+<tr>
+<td>请求与回调关联</td>
+<td>请求创建者</td>
+<td>传输与服务</td>
+<td>最终业务消费者</td>
+<td>final state 或超时后隔离</td>
+<td>late response 覆盖新状态</td>
+</tr>
+<tr>
+<td>缓存/初始快照</td>
+<td>权威源</td>
+<td>服务缓存</td>
+<td>App/HMI/控制策略</td>
+<td>新 GET、订阅或代际切换</td>
+<td>恢复后继续使用 last-good</td>
+</tr>
+<tr>
+<td>底层承载资源</td>
+<td>驱动/Modem/Hypervisor/硬件</td>
+<td>HAL、Platform Adapter 或后端</td>
+<td>业务服务</td>
+<td>stop、disconnect、VM destroy</td>
+<td>引用、描述符或路由泄漏</td>
+</tr>
+</tbody></table>
+<p>资源审计必须同时记录创建、转移、消费与释放。异常退出时先阻止新请求，再取消回调/订阅、停止数据面、释放底层资源，最后销毁 Client；恢复时按相反依赖方向创建新一代资源。只清理 Java/C++ 对象而不释放远端会话、Modem 承载、文件句柄、WakeLock、虚拟设备或驱动资源，会留下“表面恢复、后台仍占用”的隐患。</p>
+<h3 id="反馈闭环-4">反馈闭环</h3>
+<p>库存定义的反馈是：旧 VM 资源全部回收，新 VM generation Ready，virtio/backend 和业务订阅重新绑定确认。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
+<h3 id="异常分支-4">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
+  S -- 否 --&gt; F0[&quot;VM kill 未完成&quot;]
+  S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
+  C -- 否 --&gt; F1[&quot;共享内存/DMA Buffer 残留&quot;]
+  C -- 是 --&gt; D{&quot;数据、命令或资源持续推进?&quot;}
+  D -- 否 --&gt; F2[&quot;virtio backend 旧 session&quot;]
+  D -- 是 --&gt; B{&quot;业务反馈与最终状态一致?&quot;}
+  B -- 否 --&gt; F3[&quot;应用状态未恢复&quot;]
+  F0 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  F1 --&gt; R
+  F2 --&gt; R
+  F3 --&gt; R
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
+  S -- 否 --&gt; F0[&quot;VM kill 未完成&quot;]
+  S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
+  C -- 否 --&gt; F1[&quot;共享内存/DMA Buffer 残留&quot;]
+  C -- 是 --&gt; D{&quot;数据、命令或资源持续推进?&quot;}
+  D -- 否 --&gt; F2[&quot;virtio backend 旧 session&quot;]
+  D -- 是 --&gt; B{&quot;业务反馈与最终状态一致?&quot;}
+  B -- 否 --&gt; F3[&quot;应用状态未恢复&quot;]
+  F0 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  F1 --&gt; R
+  F2 --&gt; R
+  F3 --&gt; R
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：VM kill 未完成；共享内存/DMA Buffer 残留；virtio backend 旧 session；应用状态未恢复。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+<h3 id="日志与诊断-4">日志与诊断</h3>
+<p>库存建议日志：Hypervisor/VM lifecycle；memory/IOMMU；virtqueue/backend；Guest boot；generation/rebind。</p>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>源与触发</td>
+<td>当前 Generation、时间戳、有效位和触发条件一致</td>
+<td>VM kill 未完成</td>
+<td>源正确不证明下游已消费</td>
+<td>源数据/触发所有者</td>
+</tr>
+<tr>
+<td>Client/API</td>
+<td>初始化、Handle、请求 ID 与回调注册属于当前会话</td>
+<td>共享内存/DMA Buffer 残留</td>
+<td>API accepted 不证明服务和硬件完成</td>
+<td>App/SDK Client</td>
+</tr>
+<tr>
+<td>服务与承载</td>
+<td>服务端收到请求，数据/命令/序号持续推进</td>
+<td>virtio backend 旧 session</td>
+<td>服务日志不证明传输另一端已应用</td>
+<td>Service/Platform Adapter</td>
+</tr>
+<tr>
+<td>业务消费</td>
+<td>最终状态机、界面、文件、网络或车辆执行结果改变</td>
+<td>应用状态未恢复</td>
+<td>软件状态不等于物理或云端结果</td>
+<td>最终消费者</td>
+</tr>
+<tr>
+<td>反馈与释放</td>
+<td>回读、final callback、查询结果和资源计数闭合</td>
+<td>旧回调、重复事件或资源不归还</td>
+<td>restart 只证明恢复动作，不证明最初原因</td>
+<td>会话和资源所有者</td>
+</tr>
+</tbody></table>
+<ul>
+<li>最早断点：把源、Client、Service、承载、消费者和反馈的同一请求按关联 ID、Sequence、Generation、单调时间对齐，标出最后正常输出与第一个缺失输入。</li>
+<li>恢复后验证：用新 Client Handle 或新 Session 重新查询/订阅，验证最终业务结果、回读和释放计数；至少再触发一次状态变化，避免 last-good 缓存冒充恢复。</li>
+<li>升级材料：保留触发前后日志、进程/服务状态、当前句柄与订阅、抓包或驱动状态、资源计数、时间换算依据，以及可复现步骤。没有跨层关联信息时，不越级指定单一责任模块。</li>
+</ul>
+<h3 id="责任域-4">责任域</h3>
+<p>初始协同责任域：Nebula OS/Hypervisor、Host backend、Guest OS/业务服务。源所有者证明输入是否产生；Client/SDK 团队证明调用和回调身份；Service/Platform Adapter 团队证明处理与下游调用；传输、驱动、Hypervisor、Modem 或硬件团队证明承载推进；最终消费者证明业务应用和反馈。责任切分依据“最早断点”，不是依据最后一个报警模块。</p>
+<h3 id="证据与置信度-4">证据与置信度</h3>
+<ul>
+<li>直接证据：<code>original-diagram-02</code> 支撑库存中列出的流程名称、相关资料、局部模块或配置。</li>
+<li>标准机制：Client/Service 生命周期、异步回调、状态查询、Generation 隔离、资源所有权和分层诊断用于解释常见实现，不自动成为项目私有实现事实。</li>
+<li>待确认：确切进程、线程、API 到服务绑定、私有超时/重试、缓存大小、网络参数、硬件通道与责任人，需结合目标软件版本及现场证据。</li>
+</ul>
+<h2 id="业务流程-supp-factorymode-315592c">业务流程 supp-factorymode-315592c</h2>
+<h3 id="factorymode-和硬件诊断">FactoryMode 和硬件诊断</h3>
+<h3 id="触发目标与边界-5">触发、目标与边界</h3>
+<p>触发条件：工厂模式进入或产线/售后发起硬件测试。目标是从“请求或事件产生”一直追踪到最终业务消费、反馈回读和资源释放，而不是在某个 API 返回、进程启动或链路 up 时提前宣布成功。FactoryMode 编排 DoIP/UDS 与硬件自检，区分测试命令、ECU 响应、座舱本地资源检查和测试报告持久化。</p>
+<p>[置信度：mixed] 证据直接确认的模块、接口、配置、图片序列或局部箭头，与标准机制推导的会话、异常恢复和观察方法严格分开。本卡不声明未见于证据的 MT8676 私有超时、重试次数、线程、属性、端口或 ID；具体部署与数值合同需要运行时配置、日志和抓包补证。</p>
+<h3 id="正常链-5">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  N0[&quot;FactoryMode&quot;]
+  N1[&quot;诊断 API/DoIP/UDS&quot;]
+  N0 --&gt; N1
+  N2[&quot;HAL/驱动&quot;]
+  N1 --&gt; N2
+  N3[&quot;硬件自检&quot;]
+  N2 --&gt; N3
+  N4[&quot;结果展示/记录&quot;]
+  N3 --&gt; N4</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  N0[&quot;FactoryMode&quot;]
+  N1[&quot;诊断 API/DoIP/UDS&quot;]
+  N0 --&gt; N1
+  N2[&quot;HAL/驱动&quot;]
+  N1 --&gt; N2
+  N3[&quot;硬件自检&quot;]
+  N2 --&gt; N3
+  N4[&quot;结果展示/记录&quot;]
+  N3 --&gt; N4</code></pre></details></details><p>正常链按当前 Generation 顺序推进：FactoryMode&gt;诊断 API/DoIP/UDS&gt;HAL/驱动&gt;硬件自检&gt;结果展示/记录。每一跳都要保留输入时间、序号或请求身份，并在下游形成可归因的输出；“上游有日志”只能证明上游执行，不能替代下游接收、应用和最终业务结果。</p>
+<h3 id="分层子链与方向-5">分层子链与方向</h3>
+<table>
+<thead>
+<tr>
+<th>子链</th>
+<th>方向</th>
+<th>输入</th>
+<th>处理</th>
+<th>输出</th>
+<th>不等价边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>触发控制链</td>
+<td>业务源 → Client/API</td>
+<td>条件、命令、配置</td>
+<td>校验新鲜度、权限和会话</td>
+<td>当前请求</td>
+<td>触发有效 ≠ API accepted</td>
+</tr>
+<tr>
+<td>Client/IPC 链</td>
+<td>Client → Proxy/transport → Service</td>
+<td>请求 ID、参数</td>
+<td>序列化、路由、反序列化</td>
+<td>服务端调用</td>
+<td>IPC 成功 ≠ 服务依赖 Ready</td>
+</tr>
+<tr>
+<td>服务/承载链</td>
+<td>Service → Platform Adapter/HAL/driver</td>
+<td>服务端请求</td>
+<td>状态机、硬件或网络操作</td>
+<td>数据、命令或资源</td>
+<td>服务返回 ≠ 硬件/网络完成</td>
+</tr>
+<tr>
+<td>消费链</td>
+<td>承载 → 最终消费者</td>
+<td>数据、事件、文件或帧</td>
+<td>业务状态机与呈现</td>
+<td>可观察业务结果</td>
+<td>软件状态 ≠ 物理/云端结果</td>
+</tr>
+<tr>
+<td>反馈链</td>
+<td>最终状态 → Service → Client</td>
+<td>回读、事件或 final callback</td>
+<td>关联请求与 Generation</td>
+<td>最终业务状态</td>
+<td>callback 到达 ≠ 状态属于当前会话</td>
+</tr>
+</tbody></table>
+<p>补充业务同样使用 Generation/Session 隔离：链路或进程恢复只是起点，必须重新建立资源、查询权威状态、验证最终消费，并释放旧代句柄、缓存和硬件占用。连接状态、服务可用状态和业务 Ready 状态不得互相替代。</p>
+<h3 id="会话与资源生命周期-5">会话与资源生命周期</h3>
+<table>
+<thead>
+<tr>
+<th>资源/状态</th>
+<th>创建或权威方</th>
+<th>持有/传递方</th>
+<th>消费者</th>
+<th>释放或失效条件</th>
+<th>关键风险</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>业务 Generation</td>
+<td>FactoryMode</td>
+<td>HAL/驱动</td>
+<td>结果展示/记录</td>
+<td>新触发取代或业务退出</td>
+<td>新旧事件混用</td>
+</tr>
+<tr>
+<td>Client/Service Session</td>
+<td>请求方</td>
+<td>SDK、IPC 或服务端</td>
+<td>HAL/驱动</td>
+<td>deinit、服务死亡或重建</td>
+<td>旧 Handle 与旧回调</td>
+</tr>
+<tr>
+<td>请求与回调关联</td>
+<td>请求创建者</td>
+<td>传输与服务</td>
+<td>最终业务消费者</td>
+<td>final state 或超时后隔离</td>
+<td>late response 覆盖新状态</td>
+</tr>
+<tr>
+<td>缓存/初始快照</td>
+<td>权威源</td>
+<td>服务缓存</td>
+<td>App/HMI/控制策略</td>
+<td>新 GET、订阅或代际切换</td>
+<td>恢复后继续使用 last-good</td>
+</tr>
+<tr>
+<td>底层承载资源</td>
+<td>驱动/Modem/Hypervisor/硬件</td>
+<td>HAL、Platform Adapter 或后端</td>
+<td>业务服务</td>
+<td>stop、disconnect、VM destroy</td>
+<td>引用、描述符或路由泄漏</td>
+</tr>
+</tbody></table>
+<p>资源审计必须同时记录创建、转移、消费与释放。异常退出时先阻止新请求，再取消回调/订阅、停止数据面、释放底层资源，最后销毁 Client；恢复时按相反依赖方向创建新一代资源。只清理 Java/C++ 对象而不释放远端会话、Modem 承载、文件句柄、WakeLock、虚拟设备或驱动资源，会留下“表面恢复、后台仍占用”的隐患。</p>
+<h3 id="反馈闭环-5">反馈闭环</h3>
+<p>库存定义的反馈是：每个 HAL/设备测试返回可追溯结果，DTC/报告保存并由界面确认。反馈闭环至少包含请求身份、服务端处理结果、最终消费者状态和一次权威查询/回读。若只有单向 event，则以事件 sequence、source age 和后续 GET/查询共同证明；若存在物理或云端执行，则还需该端可观察结果。恢复后验证不能只看错误消失，而要确认新请求成功、旧请求不再影响、资源计数稳定且状态能再次变化。</p>
+<h3 id="异常分支-5">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
+  S -- 否 --&gt; F0[&quot;FactoryMode 权限/模式失败&quot;]
+  S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
+  C -- 否 --&gt; F1[&quot;HAL/驱动设备占用&quot;]
+  C -- 是 --&gt; D{&quot;数据、命令或资源持续推进?&quot;}
+  D -- 否 --&gt; F2[&quot;UDS/DoIP 无响应&quot;]
+  D -- 是 --&gt; B{&quot;业务反馈与最终状态一致?&quot;}
+  B -- 否 --&gt; F3[&quot;结果未持久化&quot;]
+  F0 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  F1 --&gt; R
+  F2 --&gt; R
+  F3 --&gt; R
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  T[&quot;业务触发&quot;] --&gt; S{&quot;源数据新鲜且属于当前 Generation?&quot;}
+  S -- 否 --&gt; F0[&quot;FactoryMode 权限/模式失败&quot;]
+  S -- 是 --&gt; C{&quot;Client/Service 会话 Ready?&quot;}
+  C -- 否 --&gt; F1[&quot;HAL/驱动设备占用&quot;]
+  C -- 是 --&gt; D{&quot;数据、命令或资源持续推进?&quot;}
+  D -- 否 --&gt; F2[&quot;UDS/DoIP 无响应&quot;]
+  D -- 是 --&gt; B{&quot;业务反馈与最终状态一致?&quot;}
+  B -- 否 --&gt; F3[&quot;结果未持久化&quot;]
+  F0 --&gt; R[&quot;新 Generation/Session 恢复&quot;]
+  F1 --&gt; R
+  F2 --&gt; R
+  F3 --&gt; R
+  R --&gt; V[&quot;重新查询、回读并验证资源释放&quot;]</code></pre></details></details><p>主要故障候选为：FactoryMode 权限/模式失败；HAL/驱动设备占用；UDS/DoIP 无响应；结果未持久化。诊断从最早断点开始：先找最后一个仍属于当前 Generation 的正确输入，再找第一个缺失、陈旧、重复或无法关联的输出。异常传播可能使下游报 timeout、not ready、无数据或 UI 不更新，但这些检测点不是自动的初始原因。restart、重连或重试成功只证明恢复路径有效，不能单独证明最初故障位于被重启模块。</p>
+<h3 id="日志与诊断-5">日志与诊断</h3>
+<p>库存建议日志：FactoryMode log；HAL/driver self-test；DoIP/UDS trace；DTC/readback；测试报告。</p>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>源与触发</td>
+<td>当前 Generation、时间戳、有效位和触发条件一致</td>
+<td>FactoryMode 权限/模式失败</td>
+<td>源正确不证明下游已消费</td>
+<td>源数据/触发所有者</td>
+</tr>
+<tr>
+<td>Client/API</td>
+<td>初始化、Handle、请求 ID 与回调注册属于当前会话</td>
+<td>HAL/驱动设备占用</td>
+<td>API accepted 不证明服务和硬件完成</td>
+<td>App/SDK Client</td>
+</tr>
+<tr>
+<td>服务与承载</td>
+<td>服务端收到请求，数据/命令/序号持续推进</td>
+<td>UDS/DoIP 无响应</td>
+<td>服务日志不证明传输另一端已应用</td>
+<td>Service/Platform Adapter</td>
+</tr>
+<tr>
+<td>业务消费</td>
+<td>最终状态机、界面、文件、网络或车辆执行结果改变</td>
+<td>结果未持久化</td>
+<td>软件状态不等于物理或云端结果</td>
+<td>最终消费者</td>
+</tr>
+<tr>
+<td>反馈与释放</td>
+<td>回读、final callback、查询结果和资源计数闭合</td>
+<td>旧回调、重复事件或资源不归还</td>
+<td>restart 只证明恢复动作，不证明最初原因</td>
+<td>会话和资源所有者</td>
+</tr>
+</tbody></table>
+<ul>
+<li>最早断点：把源、Client、Service、承载、消费者和反馈的同一请求按关联 ID、Sequence、Generation、单调时间对齐，标出最后正常输出与第一个缺失输入。</li>
+<li>恢复后验证：用新 Client Handle 或新 Session 重新查询/订阅，验证最终业务结果、回读和释放计数；至少再触发一次状态变化，避免 last-good 缓存冒充恢复。</li>
+<li>升级材料：保留触发前后日志、进程/服务状态、当前句柄与订阅、抓包或驱动状态、资源计数、时间换算依据，以及可复现步骤。没有跨层关联信息时，不越级指定单一责任模块。</li>
+</ul>
+<h3 id="责任域-5">责任域</h3>
+<p>初始协同责任域：FactoryMode、HAL/Kernel/MCU 诊断、产线/售后工具。源所有者证明输入是否产生；Client/SDK 团队证明调用和回调身份；Service/Platform Adapter 团队证明处理与下游调用；传输、驱动、Hypervisor、Modem 或硬件团队证明承载推进；最终消费者证明业务应用和反馈。责任切分依据“最早断点”，不是依据最后一个报警模块。</p>
+<h3 id="证据与置信度-5">证据与置信度</h3>
+<ul>
+<li>直接证据：<code>original-diagram-01, original-diagram-03</code> 支撑库存中列出的流程名称、相关资料、局部模块或配置。</li>
+<li>标准机制：Client/Service 生命周期、异步回调、状态查询、Generation 隔离、资源所有权和分层诊断用于解释常见实现，不自动成为项目私有实现事实。</li>
+<li>待确认：确切进程、线程、API 到服务绑定、私有超时/重试、缓存大小、网络参数、硬件通道与责任人，需结合目标软件版本及现场证据。</li>
+</ul>
+<hr>
+<p><a href="index.html">返回主题导航</a> · <a href="22.html">本次来源索引</a></p>
+</article><nav class="pager"><a href="20.html">← 上一步：跨域通信时间同步与状态一致性</a><a href="15.html">下一步：统一诊断手册 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#14-mt8676-系统生命周期业务流程">14 MT8676 系统生命周期业务流程</a><a class="depth-2" href="#2026-09-20-校订多域门控集中升级与断电证据">2026-09-20 校订：多域门控、集中升级与断电证据</a><a class="depth-2" href="#业务流程-flow-37">业务流程 FLOW-37</a><a class="depth-3" href="#冷启动hypervisorvmhmi">冷启动、Hypervisor、VM、HMI</a><a class="depth-3" href="#触发目标与边界">触发、目标与边界</a><a class="depth-3" href="#正常链">正常链</a><a class="depth-3" href="#分层子链与方向">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环">反馈闭环</a><a class="depth-3" href="#异常分支">异常分支</a><a class="depth-3" href="#日志与诊断">日志与诊断</a><a class="depth-3" href="#责任域">责任域</a><a class="depth-3" href="#证据与置信度">证据与置信度</a><a class="depth-2" href="#业务流程-flow-38">业务流程 FLOW-38</a><a class="depth-3" href="#accstrsuspendresume">ACC、STR、Suspend、Resume</a><a class="depth-3" href="#触发目标与边界-1">触发、目标与边界</a><a class="depth-3" href="#正常链-1">正常链</a><a class="depth-3" href="#分层子链与方向-1">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-1">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-1">反馈闭环</a><a class="depth-3" href="#异常分支-1">异常分支</a><a class="depth-3" href="#日志与诊断-1">日志与诊断</a><a class="depth-3" href="#责任域-1">责任域</a><a class="depth-3" href="#证据与置信度-1">证据与置信度</a><a class="depth-2" href="#业务流程-flow-39">业务流程 FLOW-39</a><a class="depth-3" href="#otaab-slot升级重启">OTA、A/B Slot、升级重启</a><a class="depth-3" href="#触发目标与边界-2">触发、目标与边界</a><a class="depth-3" href="#正常链-2">正常链</a><a class="depth-3" href="#分层子链与方向-2">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-2">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-2">反馈闭环</a><a class="depth-3" href="#异常分支-2">异常分支</a><a class="depth-3" href="#日志与诊断-2">日志与诊断</a><a class="depth-3" href="#责任域-2">责任域</a><a class="depth-3" href="#证据与置信度-2">证据与置信度</a><a class="depth-2" href="#业务流程-flow-40">业务流程 FLOW-40</a><a class="depth-3" href="#umdp-服务启动死亡自动重启和-client-重连">UMDP 服务启动、死亡、自动重启和 Client 重连</a><a class="depth-3" href="#触发目标与边界-3">触发、目标与边界</a><a class="depth-3" href="#正常链-3">正常链</a><a class="depth-3" href="#分层子链与方向-3">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-3">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-3">反馈闭环</a><a class="depth-3" href="#异常分支-3">异常分支</a><a class="depth-3" href="#日志与诊断-3">日志与诊断</a><a class="depth-3" href="#责任域-3">责任域</a><a class="depth-3" href="#证据与置信度-3">证据与置信度</a><a class="depth-2" href="#业务流程-supp-vm-kill-destroy-recreate-bfb45ac">业务流程 supp-vm-kill-destroy-recreate-bfb45ac</a><a class="depth-3" href="#vm-killdestroyrecreate">VM kill/destroy/recreate</a><a class="depth-3" href="#触发目标与边界-4">触发、目标与边界</a><a class="depth-3" href="#正常链-4">正常链</a><a class="depth-3" href="#分层子链与方向-4">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-4">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-4">反馈闭环</a><a class="depth-3" href="#异常分支-4">异常分支</a><a class="depth-3" href="#日志与诊断-4">日志与诊断</a><a class="depth-3" href="#责任域-4">责任域</a><a class="depth-3" href="#证据与置信度-4">证据与置信度</a><a class="depth-2" href="#业务流程-supp-factorymode-315592c">业务流程 supp-factorymode-315592c</a><a class="depth-3" href="#factorymode-和硬件诊断">FactoryMode 和硬件诊断</a><a class="depth-3" href="#触发目标与边界-5">触发、目标与边界</a><a class="depth-3" href="#正常链-5">正常链</a><a class="depth-3" href="#分层子链与方向-5">分层子链与方向</a><a class="depth-3" href="#会话与资源生命周期-5">会话与资源生命周期</a><a class="depth-3" href="#反馈闭环-5">反馈闭环</a><a class="depth-3" href="#异常分支-5">异常分支</a><a class="depth-3" href="#日志与诊断-5">日志与诊断</a><a class="depth-3" href="#责任域-5">责任域</a><a class="depth-3" href="#证据与置信度-5">证据与置信度</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>

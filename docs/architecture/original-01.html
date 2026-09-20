@@ -1,0 +1,455 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>三张架构图阅读指南 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details open><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a aria-current="page" href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 原版解释 / 01</div><div class="chapter-title"><p class="eyebrow">CHAPTER 01 · 原版解释全文</p><h1>三张架构图阅读指南</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=01">并排对比两套正文 ↗</a><a class="button secondary" href="01.html">对照中文版 ↗</a><button class="button" data-read="original-01" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 原版解释对照</p><h2>三张图为何看起来不是同一套层级？</h2><p>分层图解释软件职责，部署图解释在哪里运行，通信图解释如何交接。它们是同一系统的不同观察角度。一个服务在图中出现两次不必然是两个实例。</p><ol><li><strong>怎么读：</strong>先看三张原图，再找同名模块；逐条写出箭头的方向、传递对象和两端角色，最后查模块字典。</li><li><strong>项目练习：</strong>以车辆状态显示为例，在三图中分别定位数据源、跨域通道和 Android 消费者。找不到的连接标为待确认。</li><li><strong>自检：</strong>你能区分部署位置、调用关系与数据流吗？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#01-三张架构图的阅读方法">01 三张架构图的阅读方法</a><a class="depth-2" href="#11-先确定视图再解释方框">1.1 先确定视图，再解释方框</a><a class="depth-2" href="#12-原始图">1.2 原始图</a><a class="depth-3" href="#图-1androidaaos-guest-内部分层图">图 1：Android/AAOS Guest 内部分层图</a><a class="depth-3" href="#图-2整机部署与资源归属图">图 2：整机部署与资源归属图</a><a class="depth-3" href="#图-3跨域通信与协议链路图">图 3：跨域通信与协议链路图</a><a class="depth-2" href="#13-六类方框与两类不是模块的元素">1.3 六类方框与两类“不是模块”的元素</a><a class="depth-2" href="#14-同名不等同身份要靠运行时证据">1.4 同名不等同：身份要靠运行时证据</a><a class="depth-2" href="#15-四种方向命令状态buffer-与反馈">1.5 四种方向：命令、状态、Buffer 与反馈</a><a class="depth-3" href="#命令方向">命令方向</a><a class="depth-3" href="#状态事件方向">状态/事件方向</a><a class="depth-3" href="#媒体-buffer-方向">媒体 Buffer 方向</a><a class="depth-3" href="#反馈确认方向">反馈/确认方向</a><a class="depth-2" href="#16-逻辑业务链与物理承载链">1.6 逻辑业务链与物理承载链</a><a class="depth-2" href="#17-统一链路模型">1.7 统一链路模型</a><a class="depth-2" href="#18-关联标识怎样把各域日志串成一条链">1.8 关联标识：怎样把各域日志串成一条链</a><a class="depth-2" href="#19-三图对应表">1.9 三图对应表</a><a class="depth-2" href="#110-系统上下文">1.10 系统上下文</a><a class="depth-2" href="#111-一次正确读图的最小步骤">1.11 一次正确读图的最小步骤</a><a class="depth-2" href="#112-阶段章节归属">1.12 阶段章节归属</a></details><article id="chapter-text"><h1 id="01-三张架构图的阅读方法">01 三张架构图的阅读方法</h1>
+<blockquote>
+<p>本章于 2026-09-20 按原架构补充正文解释；原图、模块/流程 ID 和分层保持原样。新证据的版本限定随段落标注。<a href="index.html">本轮更新说明</a>。</p>
+</blockquote>
+<h2 id="11-先确定视图再解释方框">1.1 先确定视图，再解释方框</h2>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>阅读原图时把“在哪一层”与“怎样执行”分开。层级和已有箭头继续按原图；PVT/MTK 用于解释箭头两端实际交接的请求、状态、buffer 和完成条件。例如 Camera 的框仍在原位置，新增解释说明 Yocto 硬件服务和 Android 客户端角色；不因存在两个 camerahalserver 就在总图新增一个 OS。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S145 · MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF第6-8页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页<small>〔本地来源〕</small></span></p>
+<p>三张图不是三套互相替代的架构，而是同一类座舱系统的三个观察角度：</p>
+<ul>
+<li>图 1 是 <strong>Android/AAOS Guest 内部分层视图</strong>：从应用、Framework、
+Android Runtime、库、硬件抽象层（Hardware Abstraction Layer，HAL）
+一直下沉到 Kernel 和 BootLoader。[可信度：架构图确认]
+[证据：original-diagram-01]</li>
+<li>图 2 是 <strong>整机部署与资源归属视图</strong>：把独立 MCU 与 SoC、Hypervisor、
+SOS/Yocto Host、UOS Android Guest、UOS TBox Guest 和 Nebula OS
+放在一张物理部署图中。[可信度：架构图确认] [证据：original-diagram-02]</li>
+<li>图 3 是 <strong>跨域通信与协议链路视图</strong>：强调 Binder、FDBus、SOME/IP、
+SPI、IPCL、RTE、Attach 和 API 等连接方式，以及 Cluster、CanService、
+CarService、VehicleHAL 与 TBox 通信模块的关系。[可信度：架构图确认]
+[证据：original-diagram-03]</li>
+</ul>
+<p>因此，读图顺序应是“这是什么视图”→“方框是什么种类”→“箭头代表什么数据”
+→“证据允许下什么结论”，而不是看到相邻方框就直接画调用链。</p>
+<h2 id="12-原始图">1.2 原始图</h2>
+<h3 id="图-1androidaaos-guest-内部分层图">图 1：Android/AAOS Guest 内部分层图</h3>
+<p><figure><a href="assets/08.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/08.jpg" alt="图1：Android/AAOS Guest 内部分层图"></a><figcaption>图1：Android/AAOS Guest 内部分层图 · 点击查看原图</figcaption></figure></p>
+<p>这张图回答“Android Guest 内部有哪些层和服务”。例如 Application 层出现
+Launcher、SystemUI、CarSettings、MediaCenter 等应用；Framework 中既有 Java
+Services，也有 Car Services、Native Services 和 System 组件；再往下是 Runtime、
+Infra、Libraries、External、HAL 与 Kernel。[可信度：架构图确认]
+[证据：original-diagram-01]</p>
+<p>它<strong>不直接回答</strong>某应用一定调用哪个服务、哪个进程拥有某设备、Binder 接口名是什么，
+也不说明每个方框都是独立进程。容器只证明“被归入该层/组”，不证明运行时拓扑。</p>
+<h3 id="图-2整机部署与资源归属图">图 2：整机部署与资源归属图</h3>
+<p><figure><a href="assets/09.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/09.jpg" alt="图2：整机部署与资源归属图"></a><figcaption>图2：整机部署与资源归属图 · 点击查看原图</figcaption></figure></p>
+<p>这张图把独立 MCU 与 SoC 分开；SoC 上方由 Hypervisor 承载多个域。SOS/Yocto
+区域被标为 Host，Android 与 TBox 被标为 Guest，Nebula OS 区域出现 UOS VM
+process、SOS VM process 和 Micro Kernel。[可信度：架构图确认]
+[证据：original-diagram-02]</p>
+<p>它适合回答“模块部署在哪个域”“物理驱动更接近 Host 还是 Guest”“故障可能被哪个
+虚拟机边界隔离”。但图中纵向位置仍不能自动转换为私有启动顺序；例如先启动哪个 VM、
+哪个服务发布 Ready，需要 Hypervisor 配置、systemd unit 和启动日志确认。</p>
+<h3 id="图-3跨域通信与协议链路图">图 3：跨域通信与协议链路图</h3>
+<p><figure><a href="assets/10.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/10.jpg" alt="图3：跨域通信与协议链路图"></a><figcaption>图3：跨域通信与协议链路图 · 点击查看原图</figcaption></figure></p>
+<p>这张图把协议作为图例放在顶部，并在域内画出 Client、Proxy、Stub、服务、守护进程
+和命名服务。它适合回答“这一段看起来使用什么通信机制”“哪一个方框像生产者或
+消费者”“跨域前后有哪些转换点”。[可信度：架构图确认] [证据：original-diagram-03]</p>
+<p>它不证明图例中的协议覆盖箭头一定与某版本实现完全一致，也不证明同名 <code>CanService</code>
+在各域就是同一个进程。协议图应与接口描述语言（Interface Definition Language，IDL）、
+服务发现配置、进程树和抓包互证。[可信度：待 MT8676 确认]</p>
+<h2 id="13-六类方框与两类不是模块的元素">1.3 六类方框与两类“不是模块”的元素</h2>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>如何识别</th>
+<th>它通常回答什么</th>
+<th>不应直接推导什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>容器/分组框</td>
+<td>大框包围多个小框</td>
+<td>归属域、层或逻辑分组</td>
+<td>独立进程、调用方向</td>
+</tr>
+<tr>
+<td>运行时模块</td>
+<td>服务、应用、进程名</td>
+<td>处理输入并产生输出</td>
+<td>仅凭名称确定私有实现</td>
+</tr>
+<tr>
+<td>Library</td>
+<td><code>Lib</code>、<code>Libraries</code>、<code>.so</code> 语义</td>
+<td>为进程提供可链接能力</td>
+<td>自己主动运行或拥有线程</td>
+</tr>
+<tr>
+<td>Service</td>
+<td><code>Service</code>、Manager、Server</td>
+<td>长生命周期能力或共享状态</td>
+<td>一定是单进程或 Binder 服务</td>
+</tr>
+<tr>
+<td>HAL</td>
+<td>位于 Framework/Driver 之间</td>
+<td>稳定上层接口与硬件适配</td>
+<td>一定直连物理设备</td>
+</tr>
+<tr>
+<td>Driver</td>
+<td>Kernel/Drivers 或具体驱动</td>
+<td>中断、DMA、寄存器、队列</td>
+<td>上层业务策略</td>
+</tr>
+<tr>
+<td>协议图例</td>
+<td>顶部带颜色的双向箭头</td>
+<td>解释某种连线语义</td>
+<td>可执行模块</td>
+</tr>
+<tr>
+<td>物理设备</td>
+<td>MCU、SoC、屏、Camera、Modem 等</td>
+<td>数据最终来源或执行对象</td>
+<td>等同于软件服务</td>
+</tr>
+</tbody></table>
+<p>协议本身不是进程；库本身也通常不是主动服务。一个服务可能链接多个库，一个 HAL
+可能通过虚拟设备而不是物理寄存器工作，一个驱动也可能只是 Guest Frontend。</p>
+<h2 id="14-同名不等同身份要靠运行时证据">1.4 同名不等同：身份要靠运行时证据</h2>
+<p>同一标签可能在不同抽象层重复出现：</p>
+<ul>
+<li>图 1 的 <code>CarService</code> 是 Android Car Services 分组中的平台能力；</li>
+<li>图 2 的 <code>CarService</code> 是 Android Guest 的一个部署块；</li>
+<li>图 3 的 <code>CarService</code> 位于 App 与 VehicleHAL 之间。</li>
+</ul>
+<p>这些出现项可以表示同一逻辑能力的不同视角，但不能仅凭名字宣布“同一进程、同一
+二进制、同一 Binder 对象”。身份确认需要多个相互独立的证据，例如包名/二进制名、
+进程号、服务注册名、接口版本和启动配置。[可信度：标准机制推断]</p>
+<p>同理，图 3 TBOX-APP 中的 <code>modem_service</code> 只是图中标签；冻结的 UMDP 包含
+<code>fb_modemServices</code> 是另一个 MT8676 资料事实。两者当前只可列为“可能有关联、需核验”，
+不能合并命名或断言等同。[可信度：架构图确认] [证据：original-diagram-03]
+[可信度：MT8676 资料确认] [证据：umdp-files-fb-modem-service]</p>
+<h2 id="15-四种方向命令状态buffer-与反馈">1.5 四种方向：命令、状态、Buffer 与反馈</h2>
+<h3 id="命令方向">命令方向</h3>
+<p>命令由意图发起方流向执行方。例如“空调设定 22 ℃”可能从 UI 向 CarService、
+VehicleHAL、跨域车辆服务、MCU 和执行器传播。命令链中的上游是更接近用户意图的一端，
+下游是更接近执行对象的一端。</p>
+<h3 id="状态事件方向">状态/事件方向</h3>
+<p>状态通常从信号源或监测方流向显示/策略消费者。例如车速从传感器、CAN、MCU、
+跨域服务向 Cluster 传播。此时 MCU 是上游，Cluster 是下游；方向恰好可能与控制命令相反。</p>
+<h3 id="媒体-buffer-方向">媒体 Buffer 方向</h3>
+<p>Camera、视频和显示传递的是有所有权和生命周期的 Buffer，而不是简单数值。上游生产
+Buffer，下游消费并归还；还需跟踪 Buffer ID、时间戳、Fence 和释放点。</p>
+<h3 id="反馈确认方向">反馈/确认方向</h3>
+<p>同步返回、异步完成事件、执行器回读和首帧上屏都属于反馈。收到“发送成功”只证明请求
+进入某层，不一定证明硬件执行或用户结果出现。诊断必须明确所需的最后一级确认。</p>
+<h2 id="16-逻辑业务链与物理承载链">1.6 逻辑业务链与物理承载链</h2>
+<p>逻辑业务链描述“意义如何变化”：</p>
+<pre><code>Source → Producer → Serialize → Channel → Transport
+→ Router → Consumer → State Machine → User Result</code></pre><p>物理承载链描述“比特或 Buffer 如何移动”：</p>
+<pre><code>Sender Buffer → Driver/DMA/FIFO → Controller → Physical/Virtual Link
+→ Peer Controller → Peer Driver → Receiver Buffer</code></pre><p>逻辑链可能复用同一条以太网或 SPI 物理链；物理链通不等于某 Topic 新鲜，也不等于
+订阅回调到达。反过来，业务状态错误也不一定是物理断链，可能是反序列化、路由、缓存、
+代际或状态机问题。</p>
+<h2 id="17-统一链路模型">1.7 统一链路模型</h2>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  SRC[&quot;Source\n信号源/用户意图&quot;] --&gt; PROD[&quot;Producer\n采集/生成&quot;]
+  PROD --&gt; SER[&quot;Serialize\n编码/封装&quot;]
+  SER --&gt; CH[&quot;Channel\n会话/主题&quot;]
+  CH --&gt; TR[&quot;Transport\nSPI/以太网/共享内存&quot;]
+  TR --&gt; RT[&quot;Router\n服务发现/分发&quot;]
+  RT --&gt; CON[&quot;Consumer\n缓存/业务逻辑&quot;]
+  CON --&gt; RES[&quot;User Result\n显示/声音/执行&quot;]
+  RES -. &quot;ACK/回读/首帧&quot; .-&gt; SRC</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  SRC[&quot;Source\n信号源/用户意图&quot;] --&gt; PROD[&quot;Producer\n采集/生成&quot;]
+  PROD --&gt; SER[&quot;Serialize\n编码/封装&quot;]
+  SER --&gt; CH[&quot;Channel\n会话/主题&quot;]
+  CH --&gt; TR[&quot;Transport\nSPI/以太网/共享内存&quot;]
+  TR --&gt; RT[&quot;Router\n服务发现/分发&quot;]
+  RT --&gt; CON[&quot;Consumer\n缓存/业务逻辑&quot;]
+  CON --&gt; RES[&quot;User Result\n显示/声音/执行&quot;]
+  RES -. &quot;ACK/回读/首帧&quot; .-&gt; SRC</code></pre></details></details><p>实线箭头表示本次业务数据的主方向；虚线箭头表示反馈闭环，不承诺具体反馈一定回到原始
+物理源。<code>Serialize</code> 到 <code>Channel</code> 的箭头意味着数据进入协议语义，<code>Channel</code> 到
+<code>Transport</code> 表示会话/主题依赖某种物理或虚拟承载；<code>Router</code> 到 <code>Consumer</code> 表示路由
+成功后仍需消费与状态机处理。该模型是诊断框架，不是 MT8676 私有接口图。
+[可信度：标准机制推断]</p>
+<h2 id="18-关联标识怎样把各域日志串成一条链">1.8 关联标识：怎样把各域日志串成一条链</h2>
+<table>
+<thead>
+<tr>
+<th>标识</th>
+<th>解决的问题</th>
+<th>使用方法</th>
+<th>常见陷阱</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Timestamp</td>
+<td>事件先后</td>
+<td>同时保留单调时钟与墙上时间</td>
+<td>域间时钟未同步</td>
+</tr>
+<tr>
+<td>Sequence</td>
+<td>是否丢包、乱序、重复</td>
+<td>生产者递增，消费者记录最后值</td>
+<td>重启后清零未标代际</td>
+</tr>
+<tr>
+<td>Generation</td>
+<td>属于哪次启动/会话</td>
+<td>VM、服务或 Client 重建时更新</td>
+<td>旧回调覆盖新状态</td>
+</tr>
+<tr>
+<td>Request ID</td>
+<td>请求与响应如何配对</td>
+<td>入口生成并跨层透传</td>
+<td>中间层重建 ID</td>
+</tr>
+<tr>
+<td>Topic/Property</td>
+<td>这是什么业务数据</td>
+<td>记录名称、版本和订阅状态</td>
+<td>只记录数字而无映射表</td>
+</tr>
+<tr>
+<td>Buffer ID</td>
+<td>哪个媒体缓冲区</td>
+<td>生产、入队、出队、归还均记录</td>
+<td>地址复用被误认为同一帧</td>
+</tr>
+<tr>
+<td>Fence ID</td>
+<td>生产/消费是否完成</td>
+<td>跟踪 signal、wait 和超时</td>
+<td>只看 Buffer 不看同步</td>
+</tr>
+</tbody></table>
+<p>本手册不发明私有 ID。若当前实现没有贯通的 Request ID，可先用“同一时间窗 +
+业务键 + Sequence + Generation”建立候选关联，再以抓包或插桩验证。
+[可信度：标准机制推断]</p>
+<h2 id="19-三图对应表">1.9 三图对应表</h2>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>图 1：Android 内部分层</th>
+<th>图 2：部署/归属</th>
+<th>图 3：通信/协议</th>
+<th>阅读结论</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MCU</td>
+<td>Kernel 外部未展开</td>
+<td>独立 MCU、SWC/RTE/MCAL</td>
+<td>DI、IVI、Vehicle Interface、IPCL</td>
+<td>安全/实时车辆域，与 SoC 分界</td>
+</tr>
+<tr>
+<td>Hypervisor</td>
+<td>未画</td>
+<td>SoC 上的虚拟化层</td>
+<td>以各域边界间接体现</td>
+<td>管理 VM 与虚拟资源</td>
+</tr>
+<tr>
+<td>SOS/Yocto</td>
+<td>Native/System 只局部对应</td>
+<td>Host(SOS YOCTO)</td>
+<td>SOS(Yocto)</td>
+<td>Host 服务、驱动与车辆/显示能力</td>
+</tr>
+<tr>
+<td>Android</td>
+<td>完整应用至 Kernel 栈</td>
+<td>Guest(UOS Android)</td>
+<td>UOS(Android)</td>
+<td>同一 Guest 的内部与外部视角</td>
+</tr>
+<tr>
+<td>TBox</td>
+<td><code>tbox</code> HAL/Tbox Service 等局部项</td>
+<td>Guest(UOS Tbox)</td>
+<td>UOS(TBox)/TBOX-APP</td>
+<td>通信模组业务域</td>
+</tr>
+<tr>
+<td>Nebula OS</td>
+<td>未画</td>
+<td>Micro Kernel、VM process</td>
+<td>未单独展开</td>
+<td>私有控制语义待证据确认</td>
+</tr>
+<tr>
+<td>CarService</td>
+<td>Car Services</td>
+<td>Android Guest 能力块</td>
+<td>App 与 VehicleHAL 之间</td>
+<td>逻辑对应可读，进程身份待确认</td>
+</tr>
+<tr>
+<td>VehicleHAL</td>
+<td>Android HAL</td>
+<td>Android HAL 块内</td>
+<td>CarService 下游</td>
+<td>车辆属性适配边界</td>
+</tr>
+<tr>
+<td>CanService</td>
+<td>Infra/系统中有相关项</td>
+<td>SOS Infrastructure</td>
+<td>SOS/MCU/TBox 路径均出现</td>
+<td>同名多 occurrence，不自动合并</td>
+</tr>
+<tr>
+<td>FDBus</td>
+<td>Infra 有 FDBUS</td>
+<td>SOA/IPC 可能承载之一</td>
+<td>name_server、host_server 与服务</td>
+<td>域内/跨进程消息总线视角</td>
+</tr>
+<tr>
+<td>SOME/IP</td>
+<td>Infra 有 vsomeip</td>
+<td>SOA/IPC</td>
+<td>Client、RoutingManager</td>
+<td>面向服务的以太网通信</td>
+</tr>
+<tr>
+<td>SPI</td>
+<td>Kernel Peripheral</td>
+<td>MCU MCAL、跨 MCU/SoC</td>
+<td>MCU↔SOS/TBox/IPCL</td>
+<td>物理串行承载</td>
+</tr>
+<tr>
+<td>IPCL</td>
+<td>图 1 未明确</td>
+<td>Virtual cominfra</td>
+<td>MCU 底部和跨域箭头</td>
+<td>私有细节待接口/源码确认</td>
+</tr>
+</tbody></table>
+<p>所有表格对应关系都受 occurrence 约束：它用于帮助导航，不是进程合并表。</p>
+<h2 id="110-系统上下文">1.10 系统上下文</h2>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TB
+  MCU[&quot;独立 MCU\nRTE/SWC/MCAL&quot;] &lt;--&gt;|&quot;SPI/IPCL/车辆消息&quot;| HV[&quot;SoC + Hypervisor&quot;]
+  HV --&gt; SOS[&quot;SOS/Yocto Host\n驱动/后端/车辆与显示服务&quot;]
+  HV --&gt; AND[&quot;UOS Android Guest\n应用/AOSP/CarService/HAL&quot;]
+  HV --&gt; TBOX[&quot;UOS TBox Guest\n通信模组业务&quot;]
+  HV --&gt; NEB[&quot;Nebula OS\nVM 管理相关方框&quot;]
+  SOS &lt;--&gt;|&quot;虚拟设备/IPC/以太网&quot;| AND
+  SOS &lt;--&gt;|&quot;虚拟通信/IPC（直接承载待确认）&quot;| TBOX
+  NEB -.-&gt;|&quot;VM process 控制语义待确认&quot;| SOS
+  NEB -.-&gt;|&quot;VM process 控制语义待确认&quot;| AND</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TB
+  MCU[&quot;独立 MCU\nRTE/SWC/MCAL&quot;] &lt;--&gt;|&quot;SPI/IPCL/车辆消息&quot;| HV[&quot;SoC + Hypervisor&quot;]
+  HV --&gt; SOS[&quot;SOS/Yocto Host\n驱动/后端/车辆与显示服务&quot;]
+  HV --&gt; AND[&quot;UOS Android Guest\n应用/AOSP/CarService/HAL&quot;]
+  HV --&gt; TBOX[&quot;UOS TBox Guest\n通信模组业务&quot;]
+  HV --&gt; NEB[&quot;Nebula OS\nVM 管理相关方框&quot;]
+  SOS &lt;--&gt;|&quot;虚拟设备/IPC/以太网&quot;| AND
+  SOS &lt;--&gt;|&quot;虚拟通信/IPC（直接承载待确认）&quot;| TBOX
+  NEB -.-&gt;|&quot;VM process 控制语义待确认&quot;| SOS
+  NEB -.-&gt;|&quot;VM process 控制语义待确认&quot;| AND</code></pre></details></details><p>MCU 与 Hypervisor 之间的双向箭头表示图中可见的跨芯片/跨域车辆通信方向，不限定
+具体 Topic。Hypervisor 指向各域的箭头表示“承载/隔离关系”，不是业务调用。SOS 与
+Android 的双向箭头表示可能存在虚拟设备或 IPC 数据交换；SOS 与 TBox 之间只表示
+概念上的虚拟通信需求，原图没有证明直接承载，需设备分配、Host Backend 或接口配置
+确认。[可信度：待 MT8676 确认] 虚线表示 Nebula OS 与 VM process 的私有控制细节
+没有被当前资料充分证明。[可信度：架构图确认]
+[证据：original-diagram-02] [证据：original-diagram-03]</p>
+<p>CCCI Driver 方框在图 2 中位于 TBox Guest 的 Kernel&amp;Drivers 区域；这条结论
+只描述图中的容器位置。[可信度：架构图确认] [证据：original-diagram-02]</p>
+<p>CCCI（Cross Core Communication Interface，跨核通信接口）在 MediaTek 平台的标准
+机制中通常用于应用处理器 AP 与 Modem 之间的通信；这是标准工作方式解释，不是图 2
+直接画出的端点关系。[可信度：标准机制推断]</p>
+<p>具体 MT8676 的 AP/Modem 端点、逻辑通道、消息格式以及是否存在 Host Backend 参与，
+必须由驱动配置、设备节点、通道表和运行追踪确认。[可信度：待 MT8676 确认]
+当前证据仍不把 CCCI 画成 SOS 与 TBox 的直接边。</p>
+<h2 id="111-一次正确读图的最小步骤">1.11 一次正确读图的最小步骤</h2>
+<ol>
+<li>写明用户可见结果和触发条件。</li>
+<li>选择图 2 找到部署域和可能的故障隔离边界。</li>
+<li>选择图 3 找到跨域协议、Proxy/Stub、路由和命名服务。</li>
+<li>选择图 1 下钻 Android 内部服务、HAL、驱动或渲染链。</li>
+<li>分别画逻辑链和物理承载链。</li>
+<li>为每一跳写输入、处理、输出、所有权和反馈。</li>
+<li>用 Timestamp、Sequence、Generation、Request ID 或 Buffer/Fence ID 关联日志。</li>
+<li>找到“最后一个正确输出”和“第一个错误/缺失输入”，再缩小到最小责任模块。</li>
+<li>对没有 IDL、配置或日志支持的私有关系标记 <code>[可信度：待 MT8676 确认]</code>。</li>
+</ol>
+<h2 id="112-阶段章节归属">1.12 阶段章节归属</h2>
+<p>为避免同一主题在相邻章节重复归属，后续学习按以下边界推进：</p>
+<table>
+<thead>
+<tr>
+<th align="right">章</th>
+<th>主域</th>
+<th>本章负责</th>
+<th>不重复承载</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">06</td>
+<td>Android 内部、图形与资源稳定性</td>
+<td>生命周期、输入、渲染、Surface/Buffer、泄漏、内部资源与通信异常</td>
+<td>不把 Yocto、MCU、TBox 的内部实现写成 Android 机制</td>
+</tr>
+<tr>
+<td align="right">07</td>
+<td>SOS/Yocto 内部机制</td>
+<td>systemd 生命周期、Weston/Wayland、Camera、Audio 与车辆服务</td>
+<td>不承载 MCU/TBox 内部实现或业务流程卡</td>
+</tr>
+<tr>
+<td align="right">08</td>
+<td>MCU 内部机制</td>
+<td>AUTOSAR 启动/调度、CAN/E2E、SPI/IPCL、电源安全与诊断</td>
+<td>不把标准链写成已证明的产品启动顺序</td>
+</tr>
+<tr>
+<td align="right">09</td>
+<td>TBox/通信模组内部机制</td>
+<td>Favalon SDK/UMDP、Modem/Telephony、机制族、唤醒、日志与跨边界通信</td>
+<td>不推断具体 SDK Server/UMDP 进程调用链</td>
+</tr>
+<tr>
+<td align="right">10</td>
+<td>车辆、仪表与诊断业务流程</td>
+<td>将前三图连接成八条可观测、可恢复、可升级的端到端业务链</td>
+<td>不把库存假设、标准机制或候选渲染分支写成 MT8676 私有事实</td>
+</tr>
+<tr>
+<td align="right">11</td>
+<td>显示、相机与驾驶辅助业务流程</td>
+<td>Cluster、RVC、AVM、DMS、ADAS、记录仪及三类显示链</td>
+<td>不把标准图形/相机机制写成 MT8676 私有部署合同</td>
+</tr>
+<tr>
+<td align="right">12</td>
+<td>音频与语音业务流程</td>
+<td>媒体、导航播报、语音车控、电话、广播、KTV、DSP 与物理输出</td>
+<td>不用控制返回替代音频数据、路由或物理有声</td>
+</tr>
+<tr>
+<td align="right">13</td>
+<td>MT8676 通信模组业务流程</td>
+<td>Data Call、Network、SIM、SMS、AT、GNSS、IMU、Power、Log 与远控</td>
+<td>不把 API 返回、进程存活或链路 up 当作业务 Ready</td>
+</tr>
+<tr>
+<td align="right">14</td>
+<td>系统生命周期业务流程</td>
+<td>冷启动、休眠/唤醒、OTA、服务重启、VM 重建与工厂诊断</td>
+<td>不把 started、Ready、状态恢复和资源重建相互等同</td>
+</tr>
+<tr>
+<td align="right">15</td>
+<td>统一诊断手册</td>
+<td>双链、最早断点、时间/身份关联、资源、责任矩阵和升级材料</td>
+<td>不用检测点、传播结果或 restart 替代直接故障证据</td>
+</tr>
+<tr>
+<td align="right">16</td>
+<td>全量附录与索引</td>
+<td>模块、流程、术语、证据和待确认事项的机器可追踪索引</td>
+<td>不由索引相邻关系新增调用边</td>
+</tr>
+</tbody></table>
+<p>第 07、08、09 章分别拥有 SOS/Yocto、MCU、TBox 域内机制；第 10～14 章引用这些机制构造车辆、显示、相机、驾驶辅助、音频、语音、通信模组和系统生命周期业务流程，并为每条流程保留证据等级、最早断点、资源所有权和恢复后验证。</p>
+</article><nav class="pager"><a href="00.html">← 上一步：前言</a><a href="02.html">下一步：整机与虚拟化架构 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#01-三张架构图的阅读方法">01 三张架构图的阅读方法</a><a class="depth-2" href="#11-先确定视图再解释方框">1.1 先确定视图，再解释方框</a><a class="depth-2" href="#12-原始图">1.2 原始图</a><a class="depth-3" href="#图-1androidaaos-guest-内部分层图">图 1：Android/AAOS Guest 内部分层图</a><a class="depth-3" href="#图-2整机部署与资源归属图">图 2：整机部署与资源归属图</a><a class="depth-3" href="#图-3跨域通信与协议链路图">图 3：跨域通信与协议链路图</a><a class="depth-2" href="#13-六类方框与两类不是模块的元素">1.3 六类方框与两类“不是模块”的元素</a><a class="depth-2" href="#14-同名不等同身份要靠运行时证据">1.4 同名不等同：身份要靠运行时证据</a><a class="depth-2" href="#15-四种方向命令状态buffer-与反馈">1.5 四种方向：命令、状态、Buffer 与反馈</a><a class="depth-3" href="#命令方向">命令方向</a><a class="depth-3" href="#状态事件方向">状态/事件方向</a><a class="depth-3" href="#媒体-buffer-方向">媒体 Buffer 方向</a><a class="depth-3" href="#反馈确认方向">反馈/确认方向</a><a class="depth-2" href="#16-逻辑业务链与物理承载链">1.6 逻辑业务链与物理承载链</a><a class="depth-2" href="#17-统一链路模型">1.7 统一链路模型</a><a class="depth-2" href="#18-关联标识怎样把各域日志串成一条链">1.8 关联标识：怎样把各域日志串成一条链</a><a class="depth-2" href="#19-三图对应表">1.9 三图对应表</a><a class="depth-2" href="#110-系统上下文">1.10 系统上下文</a><a class="depth-2" href="#111-一次正确读图的最小步骤">1.11 一次正确读图的最小步骤</a><a class="depth-2" href="#112-阶段章节归属">1.12 阶段章节归属</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>

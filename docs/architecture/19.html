@@ -1,0 +1,239 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>Camera跨域架构与DDR资源预算 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details open><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a aria-current="page" href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 19</div><div class="chapter-title"><p class="eyebrow">CHAPTER 19 · 中文版全文</p><h1>Camera跨域架构与DDR资源预算</h1><div class="actions"><button class="button" data-read="19" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>Camera 带宽预算为什么要写清假设？</h2><p>像素量、像素格式、帧率决定单次搬运的名义字节率；实际 DDR 流量还受读写次数、缩放、拷贝和并发影响。单链计算不是整机可用带宽承诺。</p><ol><li><strong>怎么读：</strong>先看跨域角色，再看双路合成帧与四方向拆分，最后对照 DDR 算式、PQDIP 分配冲突和标定。</li><li><strong>项目练习：</strong>用宽×高×字节每像素×帧率复算一条流，再增加一次读和一次写，标明 MB/s 的十进制口径。</li><li><strong>自检：</strong>为什么 3+3 与 2+4 的资料冲突必须保留而不能任选其一？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-21">Day 21</a> <a href="../index.html#day-28">Day 28</a> <a href="../index.html#day-29">Day 29</a> <a href="../index.html#day-30">Day 30</a> <a href="../index.html#day-31">Day 31</a> <a href="../index.html#day-32">Day 32</a> <a href="../index.html#day-33">Day 33</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#19-camera-跨域架构与-ddr-资源预算">19 Camera 跨域架构与 DDR 资源预算</a><a class="depth-2" href="#191-三个视图不能合并成一条未经验证的箭头">19.1 三个视图不能合并成一条未经验证的箭头</a><a class="depth-2" href="#192-mt8668-已有原始手册支持的跨域链">19.2 MT8668 已有原始手册支持的跨域链</a><a class="depth-2" href="#193-本项目-composite-输入基线">19.3 本项目 Composite 输入基线</a><a class="depth-2" href="#194-五种资源量的计算口径">19.4 五种资源量的计算口径</a><a class="depth-2" href="#195-可复核数值">19.5 可复核数值</a><a class="depth-2" href="#196-ddr-场景拆账">19.6 DDR 场景拆账</a><a class="depth-2" href="#197-本次发现并纠正的实例分配冲突">19.7 本次发现并纠正的实例分配冲突</a><a class="depth-2" href="#198-诊断入口与验收">19.8 诊断入口与验收</a><a class="depth-2" href="#199-最新-day-33标定有效性与恢复">19.9 最新 Day 33：标定有效性与恢复</a></details><article id="chapter-text"><h1 id="19-camera-跨域架构与-ddr-资源预算">19 Camera 跨域架构与 DDR 资源预算</h1>
+<blockquote>
+<p>平台机制分别引用 MT8676/MT8668 原始手册；3840×1536 是本地 Camera 项目总结的输入基线，不能推广成芯片固定规格。计算采用十进制 MB/GB，明确区分理论负载与实测结果。</p>
+</blockquote>
+<h2 id="191-三个视图不能合并成一条未经验证的箭头">19.1 三个视图不能合并成一条未经验证的箭头</h2>
+<table>
+<thead>
+<tr>
+<th>视图</th>
+<th>回答的问题</th>
+<th>主要证据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>物理采集</td>
+<td>Camera、SerDes、CSI 接在哪，VC/DT/lane 如何分配</td>
+<td>本地物理拓扑图及项目总结 <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S290 · camera-physical-topology-confirmed.jpg<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md<small>〔本地来源〕</small></span></td>
+</tr>
+<tr>
+<td>软件与跨域</td>
+<td>谁拥有硬件，Request/Result 由谁传，谁管理会话</td>
+<td>MT8668 Camera 手册 <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页<small>〔本地来源〕</small></span>，MT8676 <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S145 · MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF第4-8页<small>〔本地来源〕</small></span></td>
+</tr>
+<tr>
+<td>资源与呈现</td>
+<td>P1/P2/MML 读写多少，buffer 谁持有，哪一帧到屏</td>
+<td>项目预算 <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md<small>〔本地来源〕</small></span>、Display/Proxy-Wayland <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S021 · MT8668_Hypervisor_Display_User_Manual_CN_V1.0.pdf · PDF第5-7页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S028 · MT8668_Hypervisor_Multi_Display_Proxy-Wayland_User_Manual_CN_V1.0.pdf · PDF第5-7页<small>〔本地来源〕</small></span>；站点 Day 29/32 方法</td>
+</tr>
+</tbody></table>
+<p>本地两份 Camera 总结是项目二次资料。其“最终/已确认”措辞不替代原理图签核、会议信息和板端测量。本版沿用其中明确的场景参数，同时保留假设和内部冲突。</p>
+<h2 id="192-mt8668-已有原始手册支持的跨域链">19.2 MT8668 已有原始手册支持的跨域链</h2>
+<p>Android 的 APK→Java Framework→cameraserver→camerahalserver，其中 Guest camerahalserver 经 RpcBinder + VSOCK 将 Request 交给 Yocto Host。Host 管理 Camera HW、Driver 和软件控制，填写图像 buffer 后返回 Result。Host LocalService 服务 Yocto 本地 Gst/FastRvc，RpcService 服务 Android 远端；CameraTurboEngine 组织管线。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页<small>〔本地来源〕</small></span></p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  A[&quot;Android App / cameraserver&quot;] --&gt; G[&quot;Guest camerahalserver&quot;]
+  G &lt;--&gt;|&quot;Request / Result：RpcBinder + VSOCK&quot;| H[&quot;Yocto Host camerahalserver&quot;]
+  Y[&quot;Yocto Gst / FastRvc&quot;] &lt;--&gt;|&quot;Local Binder&quot;| H
+  H --&gt; T[&quot;CameraTurboEngine / Pipeline&quot;]
+  T --&gt; D[&quot;Camera Driver / P1 / P2&quot;]
+  C[&quot;Sensor / SerDes / CSI&quot;] --&gt; D
+  D --&gt; B[&quot;图像 Buffer&quot;]
+  B --&gt; O[&quot;AVM / DVR / 显示或编码消费者&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  A[&quot;Android App / cameraserver&quot;] --&gt; G[&quot;Guest camerahalserver&quot;]
+  G &lt;--&gt;|&quot;Request / Result：RpcBinder + VSOCK&quot;| H[&quot;Yocto Host camerahalserver&quot;]
+  Y[&quot;Yocto Gst / FastRvc&quot;] &lt;--&gt;|&quot;Local Binder&quot;| H
+  H --&gt; T[&quot;CameraTurboEngine / Pipeline&quot;]
+  T --&gt; D[&quot;Camera Driver / P1 / P2&quot;]
+  C[&quot;Sensor / SerDes / CSI&quot;] --&gt; D
+  D --&gt; B[&quot;图像 Buffer&quot;]
+  B --&gt; O[&quot;AVM / DVR / 显示或编码消费者&quot;]</code></pre></details></details><p>这是职责摘要，不把控制调用视为像素经过 CPU 的逐级搬运。RPC 可达、Result 返回、buffer 写完、fence 可消费和物理屏可见是不同完成点。“共享 buffer / 零拷贝”是需要配置与生命周期证据支持的资源方案；仅凭跨域机制名称不能断言整条链零拷贝。</p>
+<p>MT8676 V1.1 已明确 Host/Guest 各有 camerahalserver，Host 先启动，底层 MW/sensor/driver 在 Yocto。不要把这条依赖关系误写成 MT8676 所有子系统都必须串行启动；也不要把 MT8668 的 RpcBinder 实现反向认定为全部 8676 分支实现。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S145 · MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF第8页<small>〔本地来源〕</small></span></p>
+<h2 id="193-本项目-composite-输入基线">19.3 本项目 Composite 输入基线</h2>
+<p>本地项目材料描述：四方向相机→域控 MAX96712→两颗 MAX96717，分别形成前+右、后+左 GMSL2 组合流，下游 MAX96712/CSI 接收。每个方向 1920×1536，每个横向组合帧 3840×1536。图纸中的域控本地旁路和下游接收域名称应以原理图为准。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S290 · camera-physical-topology-confirmed.jpg<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S297 · MT8668最终Camera架构与DDR解读.md<small>〔本地来源〕</small></span></p>
+<p>逻辑 ROI 在“无额外边界像素，名称顺序等于内存顺序”的假设下为：</p>
+<table>
+<thead>
+<tr>
+<th>输入</th>
+<th>左半图</th>
+<th>右半图</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Composite 0</td>
+<td>前：x=0, y=0, w=1920, h=1536</td>
+<td>右：x=1920, y=0, w=1920, h=1536</td>
+</tr>
+<tr>
+<td>Composite 1</td>
+<td>后：x=0, y=0, w=1920, h=1536</td>
+<td>左：x=1920, y=0, w=1920, h=1536</td>
+</tr>
+</tbody></table>
+<p>正式接口必须核对 pixel order、UYVY/YUYV、stride、sizeimage、VC/DT、帧同步、SOF/曝光时刻及左右半帧是否同一时刻。文件名“最终”不能替代这些接口实值。</p>
+<h2 id="194-五种资源量的计算口径">19.4 五种资源量的计算口径</h2>
+<table>
+<thead>
+<tr>
+<th>量</th>
+<th>公式</th>
+<th>单位</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>像素吞吐</td>
+<td>W×H×fps×处理次数</td>
+<td>Mpixel/s</td>
+<td>用于与同口径 P2 实例能力比较</td>
+</tr>
+<tr>
+<td>图像有效载荷</td>
+<td>W×H×fps×bits_per_pixel</td>
+<td>bit/s</td>
+<td>不含链路编码、包头、blanking 等</td>
+</tr>
+<tr>
+<td>DDR 流量</td>
+<td>Σ(sizeimage×fps×读写次数)</td>
+<td>MB/s、GB/s</td>
+<td>每次实际 DDR 读和写分别计数</td>
+</tr>
+<tr>
+<td>常驻 Buffer</td>
+<td>Σ(sizeimage×buffer_count)</td>
+<td>MB、MiB</td>
+<td>不能用带宽数代替内存容量</td>
+</tr>
+<tr>
+<td>算法/编码负载</td>
+<td>实测 job、耗时、cycles、硬件计数器</td>
+<td>依处理单元定义</td>
+<td>不由“相机路数”单独决定</td>
+</tr>
+</tbody></table>
+<p>UYVY/YUYV packed YUV422 的本次场景按 2 byte/pixel，无 padding。实际计算优先使用驱动/HAL 返回的 <code>sizeimage</code>；多 plane 格式应累加各 plane 的实际大小。以下计算已用独立算式复核。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md<small>〔本地来源〕</small></span></p>
+<h2 id="195-可复核数值">19.5 可复核数值</h2>
+<p>设单方向一次 DDR 读或写为 S，两路 Composite 一次读或写为 P=4S。</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th align="right">25 fps</th>
+<th align="right">30 fps</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单方向像素率</td>
+<td align="right">73.728 Mpixel/s</td>
+<td align="right">88.4736 Mpixel/s</td>
+</tr>
+<tr>
+<td>单方向帧大小</td>
+<td align="right">5.89824 MB / 5.625 MiB</td>
+<td align="right">同左</td>
+</tr>
+<tr>
+<td>单方向一次读或写 S</td>
+<td align="right">147.456 MB/s</td>
+<td align="right">176.9472 MB/s</td>
+</tr>
+<tr>
+<td>两路 Composite 一次读或写 P</td>
+<td align="right">589.824 MB/s</td>
+<td align="right">707.7888 MB/s</td>
+</tr>
+<tr>
+<td>单 Composite 有效链路载荷</td>
+<td align="right">2.359296 Gbit/s</td>
+<td align="right">2.8311552 Gbit/s</td>
+</tr>
+<tr>
+<td>PQDIP 单实例三路输出</td>
+<td align="right">221.184 Mpixel/s</td>
+<td align="right">265.4208 Mpixel/s</td>
+</tr>
+<tr>
+<td>相对会议口径 250 Mpixel/s</td>
+<td align="right">88.4736%</td>
+<td align="right">106.16832%</td>
+</tr>
+</tbody></table>
+<p><code>250 Mpixel/s</code> 来自项目总结转述的会议口径，本次未发现可直接签核的 MTK capacity 保证。因此只能说明：<strong>若该口径成立且每实例均分三路，25 fps 在算术上低于边界，30 fps 高于边界</strong>；不能宣称 25 fps 已通过性能验证。</p>
+<h2 id="196-ddr-场景拆账">19.6 DDR 场景拆账</h2>
+<table>
+<thead>
+<tr>
+<th>场景及假设</th>
+<th>算式</th>
+<th align="right">25 fps</th>
+<th align="right">30 fps</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>两个 Composite 先写 DDR、P2 各读一次、写 7 个独立方向输出</td>
+<td>P + P + 7S = 15S</td>
+<td align="right">2.211840 GB/s</td>
+<td align="right">2.654208 GB/s</td>
+</tr>
+<tr>
+<td>上述生产侧再加 7 个消费者各读一次</td>
+<td>15S + 7S = 22S</td>
+<td align="right">3.244032 GB/s</td>
+<td align="right">3.8928384 GB/s</td>
+</tr>
+<tr>
+<td>输出去重，仅写四个物理方向 buffer</td>
+<td>P + P + 4S = 12S</td>
+<td align="right">1.769472 GB/s</td>
+<td align="right">2.1233664 GB/s</td>
+</tr>
+<tr>
+<td>四物理输出但 AVM 4 次、DVR 3 次各自读取</td>
+<td>12S + 7S = 19S</td>
+<td align="right">2.801664 GB/s</td>
+<td align="right">3.3619968 GB/s</td>
+</tr>
+</tbody></table>
+<p>共享输出相对 7 物理输出减少 3S 写流量，25 fps 为 442.368 MB/s。<strong>共享 buffer 不代表消费者的读取也消失</strong>。若 P2 为不同输出重复读取输入，需增加实际读放大；若发生格式转换、CPU memcpy、编码参考帧访问、AVM 拼接、GPU 合成、扫描输出或缓存回写，也要追加对应流量。</p>
+<p>这些值是所列路径的理想 payload 预算，不是整机 DDR 上限，也不是已经确认的 DDR 实测下界。Composite 是否先落 DDR、各硬件是否读一次、输出物理 buffer 是否去重，均会改变模型。</p>
+<h2 id="197-本次发现并纠正的实例分配冲突">19.7 本次发现并纠正的实例分配冲突</h2>
+<p>一份 Camera 总结图把 PQDIP0 画成右视 AVM/DVR 两路，PQDIP1 画成后/左 AVM/DVR 四路；同组正文和另一份计算采用每实例三路。按同样分辨率和 25 fps，四路实例需 294.912 Mpixel/s，已经超过“250”假设；这与 3+3 的 221.184 结论不同。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S297 · MT8668最终Camera架构与DDR解读.md<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md<small>〔本地来源〕</small></span></p>
+<p>因此本版不把任一图当作已冻结调度。建议在评审中提交：<code>stream→HW instance→输入buffer→ROI→输出buffer→fps→消费者</code> 的真实配置表。MML 也不能因为 Display 文档写有两套硬件，就推导 Camera 可独占两套：必须核对与显示的共享和仲裁。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S021 · MT8668_Hypervisor_Display_User_Manual_CN_V1.0.pdf · PDF第6-7页<small>〔本地来源〕</small></span></p>
+<h2 id="198-诊断入口与验收">19.8 诊断入口与验收</h2>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>第一分叉</th>
+<th>最小证据集</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>黑屏</td>
+<td>无源帧 / 有帧但不可消费 / 已消费但不可见</td>
+<td>同一 cameraId、requestId、generation 的源帧、P1、Result、buffer/fence、layer/display、物理屏证据</td>
+</tr>
+<tr>
+<td>冻帧</td>
+<td>源 sequence 停止 / 中间处理停滞 / 重复展示旧帧</td>
+<td>frameId + 内容新鲜度 + timestamp + 当前持有者，不能只看平均 FPS</td>
+</tr>
+<tr>
+<td>首帧慢</td>
+<td>仲裁、资源准备、源启流、处理、送显哪段超时</td>
+<td>同一时钟映射下各里程碑和尾部时延；并行阶段按关键路径核算</td>
+</tr>
+<tr>
+<td>带宽不足</td>
+<td>总流量升高 / 单实例吞吐受限 / DDR 仲裁或降频</td>
+<td>P2 实例负载、MML/GPU/Vcodec 并发、DDR counter、频率、温度、丢帧和队列深度</td>
+</tr>
+</tbody></table>
+<p>方法来自站点 Day 28—32，具体 MT8668 链路以本章原始手册替换通用示意。验收应包含 AVM+DVR+UI 并发、冷/热启动、STR、单流故障、Guest 重建及长稳。每次恢复以新 generation 的新鲜帧到达正确屏幕/编码消费者为准，不能只看进程重新启动。</p>
+<hr>
+<p><a href="index.html">返回主题导航</a> · <a href="22.html">来源与覆盖说明</a></p>
+<h2 id="199-最新-day-33标定有效性与恢复">19.9 最新 Day 33：标定有效性与恢复</h2>
+<p>最新 [Day 33](http[本地资料库路径] 把标定配置作为与图像采集并行的解释维度：相机内参/畸变、车体外参、四路投影/拼接与光度一致性分别有质量证据。帧已到达和物理可见不保证几何正确，低重投影误差也不单独证明实车距离准确。</p>
+<p>保持现有 Camera/PQDIP/MML 架构不变，评审时补一张配置绑定表：相机身份、安装位置、算法/映射版本、标定文件哈希、当前激活集合、兼容性检查与恢复代际。维修更换、OTA、文件损坏、单摄断开恢复后，分别验证当前集合有效、画面新鲜/正确、降级提示与几何质量。CalGen/manifest 是教学示例，本地资料尚未确认对应量产字段、阈值或独立服务。</p>
+</article><nav class="pager"><a href="13.html">← 上一步：通信模块业务流程</a><a href="17.html">下一步：MT8676与MT8668平台差异及迁移边界 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#19-camera-跨域架构与-ddr-资源预算">19 Camera 跨域架构与 DDR 资源预算</a><a class="depth-2" href="#191-三个视图不能合并成一条未经验证的箭头">19.1 三个视图不能合并成一条未经验证的箭头</a><a class="depth-2" href="#192-mt8668-已有原始手册支持的跨域链">19.2 MT8668 已有原始手册支持的跨域链</a><a class="depth-2" href="#193-本项目-composite-输入基线">19.3 本项目 Composite 输入基线</a><a class="depth-2" href="#194-五种资源量的计算口径">19.4 五种资源量的计算口径</a><a class="depth-2" href="#195-可复核数值">19.5 可复核数值</a><a class="depth-2" href="#196-ddr-场景拆账">19.6 DDR 场景拆账</a><a class="depth-2" href="#197-本次发现并纠正的实例分配冲突">19.7 本次发现并纠正的实例分配冲突</a><a class="depth-2" href="#198-诊断入口与验收">19.8 诊断入口与验收</a><a class="depth-2" href="#199-最新-day-33标定有效性与恢复">19.9 最新 Day 33：标定有效性与恢复</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>

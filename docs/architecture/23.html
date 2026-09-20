@@ -1,0 +1,156 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>PVT实战诊断与工程验证 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details open><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a aria-current="page" href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 23</div><div class="chapter-title"><p class="eyebrow">CHAPTER 23 · 中文版全文</p><h1>PVT实战诊断与工程验证</h1><div class="actions"><button class="button" data-read="23" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>怎样把培训案例变成项目中的验证方法？</h2><p>培训给出观察点和排查思路，命令、设备号、版本依赖要重新匹配项目。受控验证应先定义问题、证据和通过条件，再选择工具。</p><ol><li><strong>怎么读：</strong>按当前症状读 Weston/GPU、时间、内存、Camera/codec、日志或安全专题，不要一次执行所有示例。</li><li><strong>项目练习：</strong>为“解码有输出但显示停止”分开记录 producer、buffer/fence、sink、Weston 与物理输出。</li><li><strong>自检：</strong>队列满和 fence 等待能否单独证明解码器有错？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-4">Day 4</a> <a href="../index.html#day-8">Day 8</a> <a href="../index.html#day-16">Day 16</a> <a href="../index.html#day-21">Day 21</a> <a href="../index.html#day-24">Day 24</a> <a href="../index.html#day-25">Day 25</a> <a href="../index.html#day-27">Day 27</a> <a href="../index.html#day-32">Day 32</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#23-pvt-实战诊断与工程验证">23 PVT 实战诊断与工程验证</a><a class="depth-2" href="#231-从现象到证据不从一条日志直接跳到根因">23.1 从现象到证据，不从一条日志直接跳到根因</a><a class="depth-2" href="#232-weston把可见性合成和硬件输出分开">23.2 Weston：把可见性、合成和硬件输出分开</a><a class="depth-2" href="#233-gpu-虚拟化不是只改一个开关">23.3 GPU 虚拟化不是只改一个开关</a><a class="depth-2" href="#234-mtrace-与多域-cpu-分析">23.4 Mtrace 与多域 CPU 分析</a><a class="depth-2" href="#235-编解码材料的正确吸收与纠错">23.5 编解码材料的正确吸收与纠错</a><a class="depth-2" href="#236-低功耗与日志持久化">23.6 低功耗与日志持久化</a><a class="depth-2" href="#237-内存selinuxtee-与外部中断">23.7 内存、SELinux、TEE 与外部中断</a><a class="depth-2" href="#238-验证闭环模板">23.8 验证闭环模板</a><a class="depth-2" href="#239-最新-week-10camera-与-audio-的共同验证边界">23.9 最新 Week 10：Camera 与 Audio 的共同验证边界</a></details><article id="chapter-text"><h1 id="23-pvt-实战诊断与工程验证">23 PVT 实战诊断与工程验证</h1>
+<blockquote>
+<p>2026-09-20；覆盖本次更新的 PVT 技术分享目录。每个结论限定到对应案例/交付版本。本文归纳排查方法，不表示已经完成实机验证。</p>
+</blockquote>
+<h2 id="231-从现象到证据不从一条日志直接跳到根因">23.1 从现象到证据，不从一条日志直接跳到根因</h2>
+<p>统一记录 <code>平台/镜像、复现步骤、发生时间与时钟域、启动/休眠阶段、故障范围、首次异常、后续异常、恢复动作</code>。先保存现场，再选择最小改动的对照实验。Host、Android、TBox、Modem、MCU 日志必须用关联事件或时钟映射对齐。</p>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>第一组证据</th>
+<th>下一步分界</th>
+<th>不能直接下的结论</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>黑屏/画面停滞</td>
+<td>Camera 帧号/时间、SF/Weston 层状态、buffer/fence、DRM flip</td>
+<td>无输入、未合成、未送显、物理链路分别排查</td>
+<td>截图正常就一定是 HWC；屏录改变现象就已锁定根因</td>
+</tr>
+<tr>
+<td>system_server SWT</td>
+<td>watchdog 堆栈、AMS 锁、lmkd socket、CPU/sched</td>
+<td>等锁、阻塞 I/O、服务端高负载</td>
+<td>SWT 一定由应用或内存不足直接造成</td>
+</tr>
+<tr>
+<td>TBox 无网络</td>
+<td>SIM/注册/PDP/IP/路由/DNS/TSP 分层日志</td>
+<td>蜂窝接入、跨域转发、云业务</td>
+<td>TSP 未登录等于 Modem 无网；ESM_FAILURE 必然欠费</td>
+</tr>
+<tr>
+<td>休眠失败/漏电</td>
+<td>各 VM 电源状态、wakeup_sources 增量、IRQ、MCU 事件</td>
+<td>未进入 STR、被唤醒、外设未降电</td>
+<td>Android 息屏等于整机休眠</td>
+</tr>
+<tr>
+<td>编解码卡顿</td>
+<td>codec 实例、输入输出时间、fence、消费者、音频锚点</td>
+<td>解码吞吐或下游阻塞、同步等待</td>
+<td><code>pipelineFull</code> 单条日志就证明硬解码故障</td>
+</tr>
+<tr>
+<td>内存增长</td>
+<td>类别、PSS/RSS、dma-buf、内核 page、队列数量</td>
+<td>用户态堆、共享 buffer、页分配、缓存</td>
+<td>所有增长都可由 page_owner 定位</td>
+</tr>
+</tbody></table>
+<p>来源：<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S285 · 显示问题common+sop.pdf · PDF第2-5页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S261 · lmkd+引发的system_server+SWT.pdf · PDF第2-5页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S304 · modem log常见分析方法.pdf · PDF第1-3页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U047 · 软件开发培训-音视频解码常见问题及分析.pdf · PDF第6-11页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E003 · 使用page_owner定位内存泄露.pdf · PDF第3-8页<small>〔本地来源〕</small></span>；时间对齐见 <a href="20.html">20 章</a>。</p>
+<h2 id="232-weston把可见性合成和硬件输出分开">23.2 Weston：把可见性、合成和硬件输出分开</h2>
+<p>新增《weston介绍和应用》把 Wayland request/event、Weston renderer/backend/shell、IVI surface/layer/screen 分开介绍。对“进程活着但屏幕黑”的问题，应逐级确认：客户端提交了 buffer；surface 属于正确 layer；layer 属于正确 screen；source/destination region、visibility、opacity、render order 正确；合成/DRM 输出持续更新。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U039 · weston介绍和应用.pdf · PDF第4-14页<small>〔本地来源〕</small></span></p>
+<p>资料中的 <code>LayerManagerControl get surface/layer/screen</code> 可用于查看对象映射，但 ID、connector、配置路径均按当前工程核实。<code>surface_commit</code>、frame callback 与物理屏幕真正显示是不同观测点，不能把客户端回调自动等价为光学首帧。</p>
+<table>
+<thead>
+<tr>
+<th>证据层</th>
+<th>建议保存</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>服务</td>
+<td>Weston 服务状态、journal、启动参数、环境与 socket</td>
+<td>确认实例、协议、配置和启动失败</td>
+</tr>
+<tr>
+<td>场景图</td>
+<td>screen/layer/surface 属性与对应 pid</td>
+<td>确认图层归属、遮挡、尺寸与可见性</td>
+</tr>
+<tr>
+<td>Buffer</td>
+<td>客户端/屏幕 dump、帧计数、fence</td>
+<td>比较输入内容与合成输出</td>
+</tr>
+<tr>
+<td>硬件</td>
+<td>DRM active/flip、GPU 错误与恢复日志</td>
+<td>判断下游是否推进</td>
+</tr>
+<tr>
+<td>恢复</td>
+<td>client 断线、Weston/client 重建记录</td>
+<td>检验恢复后对象与当前会话重新绑定</td>
+</tr>
+</tbody></table>
+<p>PVT FAQ 描述其工程中 gpu_server 初始化依赖 Weston，pvtsoft_layer_surface 是 Weston client，服务重启涉及相关 client。只能作为该工程依赖线索；是否被 systemd 自动拉起仍需 unit 文件验证。材料中的“Weston 通过 GPU 合成”也不能推导所有帧、所有 renderer/backend 均必经 GPU。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U039 · weston介绍和应用.pdf · PDF第15-18页<small>〔本地来源〕</small></span></p>
+<h2 id="233-gpu-虚拟化不是只改一个开关">23.3 GPU 虚拟化不是只改一个开关</h2>
+<p>新增《全虚拟化和半虚拟化GPU差异》第 4 页明确比较<strong>该 8676 方案</strong>：全虚拟化配置下 SOS 与 Android 都可用 GPU；其半虚拟化配置下 SOS 不能用 GPU，依赖 GPU 的 SOS 应用需找替代路径或迁移。该结论不能改写成“所有半虚拟化系统都不允许 Host 使用 GPU”。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U042 · 全虚拟化和半虚拟化GPU差异.pdf · PDF第1-4页<small>〔本地来源〕</small></span></p>
+<p>迁移应列出实际消费者：Weston renderer、AVM 合成、DMS 算法、媒体后处理、HMI。确认每个消费者的域、API、驱动/库、共享资源、渲染输出及启动依赖，再验证 GPU reset、Guest 重启和并发负载。Display plane、Camera PQDIP/MML、GPU 是不同资源，不能统一按“有图形加速”计算容量。</p>
+<h2 id="234-mtrace-与多域-cpu-分析">23.4 Mtrace 与多域 CPU 分析</h2>
+<p>《Mtrace Tool 使用说明》V1.0（2026-06-18）将工具定位为 trace 抓取、转换、解析、归档的前端集成；Kdmips 侧重算力表格，Hyptrace 提供 atrace/ftrace/fulltrace 并可解析算力，Simpleperf 对应火焰图。该版本特别要求 Kdmips/Hyptrace 的三个设备在线，即使只关注一侧也不例外。此为工具版本约束，不是所有性能工具的通用限制。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U028 · Mtrace Tool 使用说明.docx<small>〔本地来源〕</small></span></p>
+<p>采样前先固定三域版本、ADB 连接与设备映射、负载场景、采样时长、CPU governor/频率、温度和 trace event 集合。对比时保留同样的事件配置和时间窗，并记录丢事件/缓冲区溢出情况。将 Hypervisor 的 vCPU 调度与 Guest 线程的运行/等待拆开，CPU 使用率下降也可能是等 I/O、等 fence 或没有获得 pCPU。</p>
+<p>PVT 软件开发培训计划列出 <code>irq_count、pcpu_attr、vcpu_exec_accum、vcpu_exit_reason</code> 等观察项，但计划目录不是实现说明或验收记录；只能用于学习/采集清单。T-Hyper 调度材料才是进一步解释调度配置的来源。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U046 · 汇报材料--软件开发培训.pptx<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S278 · T-Hyper+CPU+调度说明.pdf<small>〔本地来源〕</small></span></p>
+<p>建议对照结果使用：场景、版本、起止事件、各域负载、pCPU/vCPU 分配、主阻塞链、P50/P95/P99、丢帧/卡顿计数、温度、采样开销。数值阈值由项目要求确定，本次未凭文档给出性能达标结论。</p>
+<h2 id="235-编解码材料的正确吸收与纠错">23.5 编解码材料的正确吸收与纠错</h2>
+<p>新增音视频培训建议同时观察 codec 实例、输入/输出、SF/HWC/PQ、fence 和音频同步。沿“输入码流→解码→输出 buffer→消费者/显示→回收”的队列找最先停止推进的位置；不能只看某个队列后来积压。<code>pipelineFull</code>、<code>wait fence</code>、bufferpool 计数都是证据入口，需要频率、持续时间和上下游关联。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U047 · 软件开发培训-音视频解码常见问题及分析.pdf · PDF第6-10页<small>〔本地来源〕</small></span></p>
+<p>原材料存在需保留警惕的解释：<code>we&#39;re late dropping one timeUs 31583 ms after 13 frames</code> 被解释为“滞后 31.583 秒”。仅凭这行不能认定 timeUs 是迟到差值，它可能是媒体时间位置；应查看对应源码、字段语义及当前播放时钟计算真实 lateness。本版不继承该数值根因判断。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U047 · 软件开发培训-音视频解码常见问题及分析.pdf · PDF第9页<small>〔本地来源〕</small></span></p>
+<p>同样，材料中的 4K60/软解能力、固定 service call 编号、PQ bypass 属性、dump 路径和 <code>/proc</code> 节点，都需按平台和版本验证。开启 dump 会改变负载和存储；完整实验记录应包含开关、复现时间与恢复状态。本文只引用来源，不执行其中 root、setenforce、持久属性修改或脚本。</p>
+<h2 id="236-低功耗与日志持久化">23.6 低功耗与日志持久化</h2>
+<p>PVT STR 图强调 Host 等待 Guest 完成，排查首先确定卡在请求、准备、设备 suspend 还是实际进入低功耗。<code>wakeup_sources</code> 应比较同一列名在相邻采样中的增量，不能按某个内核截图机械使用“第 5 列”。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S262 · Low_power_debug_sop_v1.4.pdf · PDF第3-4页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S265 · MT8676_Hypervisor_Suspend_Resume_Common_Flow.pdf · PDF第4-6页<small>〔本地来源〕</small></span></p>
+<p>《SOS dump uos pstore》补充了 UOS 自身日志无法及时落盘时的 Host 取证路径；《SOS shutdown pstore dump to BLK》指出 shutdown 阶段日志服务可能先退出，DRAM ramoops 又无法抵抗完全断电，因此需要核实 pstore/blk 的配置、写入时机和卸载顺序。不能把“启用了 pstore”当成“任意断电都不会丢日志”。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S272 · MTK_Log_SOS_dump_uos_pstore.pdf · PDF第3页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S273 · MTK_Log_SOS_shutdown_pstore_dump_to_BLK.pdf · PDF第3页<small>〔本地来源〕</small></span></p>
+<p>expdb 培训通过 scatter 核对分区地址和大小，再读回分析；原文解析脚本处仍有 TODO，不代表已经提供完整可运行解析链。本次未运行压缩包中的工具/可执行文件。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E001 · expdb.pdf · PDF第1-3页<small>〔本地来源〕</small></span></p>
+<h2 id="237-内存selinuxtee-与外部中断">23.7 内存、SELinux、TEE 与外部中断</h2>
+<p><strong>内存。</strong> page_owner 需要相应内核配置和启动参数，定位页分配栈/生命周期，适用于内核页层面线索。它不自动解释所有用户态泄漏、dma-buf 归属或长期缓存，且会增加开销。先分类再选工具。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E003 · 使用page_owner定位内存泄露.pdf · PDF第3-8页<small>〔本地来源〕</small></span></p>
+<p><strong>SELinux。</strong> Yocto 培训覆盖 meta-selinux、策略模块、标签和域切换。先检查进程域、文件标签、avc denial、实际需要的操作，再形成最小策略；不把关闭 enforcing 或直接照抄 audit2allow 输出当修复。其版本与构建配置说明不能无条件移植到另一 BSP。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E002 · Yocto SELinux Introduction(8676).pdf · PDF第4-9页<small>〔本地来源〕</small></span></p>
+<p><strong>TEE。</strong> 新安全启动压缩包中的 OP-TEE 手册描述 L+L+A 与对应 OP-TEE VM 的请求/返回域映射，Hypervisor 在创建 VM 时调用 <code>OPTEE_SMC_VM_CREATED</code>。因此安全架构应同时记录 REE VM、TEE 实例、安全内存、CA/TA 与 tee-supplicant 边界。OP-TEE 虚拟化隔离与启动镜像验签是不同主题，不能互相充当完成证据；手册中 8668 的 4.7.0 路径与其他版本也须按分支核对。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E008 · MTK86系列平台基于虚拟化op-tee使用手册.pdf · PDF第3-6页<small>〔本地来源〕</small></span> 安全包另有旧 <code>.doc</code> 详细设计，本次仅登记，未成功解析全文，不据此宣称完成全部 Secure Boot 细节校订。</p>
+<p><strong>EINT。</strong> 新包说明外部中断与 GPIO、irqdomain、GIC 的关系。实际排查分别核对管脚编号、EINT 号、Linux virq、极性/触发方式、debounce 和唤醒配置。附带 FAQ13938 讨论的是 Android KK→L 时参数从 eint_num 到 gpio_pin 的历史差异；本版把它用作“编号语义不能混淆”的例子，不把旧 API 当成 8668/Android16 的配置指南。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E005 · EINT_IDH_Share.pdf · PDF第3-8页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E006 · FAQ13938.pdf · PDF第1-2页<small>〔本地来源〕</small></span></p>
+<h2 id="238-验证闭环模板">23.8 验证闭环模板</h2>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>填写内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>问题与基线</td>
+<td>现象、预期、平台/硬件/镜像/配置哈希</td>
+</tr>
+<tr>
+<td>跨域链路</td>
+<td>物理拥有者、调用方、数据通路、状态/时间来源</td>
+</tr>
+<tr>
+<td>证据</td>
+<td>文件、页码或日志行、时间基、关联 ID、正常/异常对照</td>
+</tr>
+<tr>
+<td>假设与反证</td>
+<td>当前假设、可证伪实验、尚不能排除的分支</td>
+</tr>
+<tr>
+<td>实验</td>
+<td>单一改动、观测点、影响、恢复方法</td>
+</tr>
+<tr>
+<td>结果</td>
+<td>是否复现、延迟/丢帧/状态、关联证据</td>
+</tr>
+<tr>
+<td>闭环</td>
+<td>根因、改动、冷启动/STR/重启/并发回归、Owner</td>
+</tr>
+</tbody></table>
+<p>“有文档”“有方案”“有实现”“有实测”分别记录。学习站点的案例和培训计划均可提供方法，但不能替代本项目日志、配置、源码与验证报告。</p>
+<hr>
+<p><a href="index.html">返回主题导航</a> · <a href="22.html">来源与覆盖说明</a></p>
+<h2 id="239-最新-week-10camera-与-audio-的共同验证边界">23.9 最新 Week 10：Camera 与 Audio 的共同验证边界</h2>
+<p>[最新站点](http[本地资料库路径] 的 Day 33、Day 34 与 Week 10 复盘补上两个检查：Camera 恢复后验证标定集合和几何质量；Audio 恢复后验证当前音源/音区的实际输出及导航结束后的媒体增益。Focus grant、PCM write、DSP counter、功放 ready 都只说明对应层。</p>
+<p>结合 PVT 工具取证时，应记录最后可观察端点；若没有声学测量，不把驱动计数写成“扬声器可听已验证”。同理不能把 SF/Weston present 直接写成整机屏端几何质量通过。站点模板检查 12/12 表示课程结构，不代表实机验证或学习掌握。</p>
+</article><nav class="pager"><a href="15.html">← 上一步：统一诊断手册</a><a href="16.html">下一步：全量附录与索引 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#23-pvt-实战诊断与工程验证">23 PVT 实战诊断与工程验证</a><a class="depth-2" href="#231-从现象到证据不从一条日志直接跳到根因">23.1 从现象到证据，不从一条日志直接跳到根因</a><a class="depth-2" href="#232-weston把可见性合成和硬件输出分开">23.2 Weston：把可见性、合成和硬件输出分开</a><a class="depth-2" href="#233-gpu-虚拟化不是只改一个开关">23.3 GPU 虚拟化不是只改一个开关</a><a class="depth-2" href="#234-mtrace-与多域-cpu-分析">23.4 Mtrace 与多域 CPU 分析</a><a class="depth-2" href="#235-编解码材料的正确吸收与纠错">23.5 编解码材料的正确吸收与纠错</a><a class="depth-2" href="#236-低功耗与日志持久化">23.6 低功耗与日志持久化</a><a class="depth-2" href="#237-内存selinuxtee-与外部中断">23.7 内存、SELinux、TEE 与外部中断</a><a class="depth-2" href="#238-验证闭环模板">23.8 验证闭环模板</a><a class="depth-2" href="#239-最新-week-10camera-与-audio-的共同验证边界">23.9 最新 Week 10：Camera 与 Audio 的共同验证边界</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>

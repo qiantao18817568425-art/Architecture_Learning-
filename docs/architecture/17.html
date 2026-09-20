@@ -1,0 +1,134 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676与MT8668平台差异及迁移边界 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details open><summary>第五阶段 · 比较平台与生命周期</summary><a aria-current="page" href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 17</div><div class="chapter-title"><p class="eyebrow">CHAPTER 17 · 中文版全文</p><h1>MT8676与MT8668平台差异及迁移边界</h1><div class="actions"><button class="button" data-read="17" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>相似架构迁移到另一平台时哪些要重核？</h2><p>上层框图相似不意味着底层管线、通道、设备资源与 SDK 相同。MT8668 的说明必须限定版本，不能反向覆盖 MT8676 的事实。</p><ol><li><strong>怎么读：</strong>按 Camera、Display、Audio、SDK、OTA 一行一行比较：共同职责、不同实现、迁移验证。</li><li><strong>项目练习：</strong>选 Audio，区分 AFE 总接口、TDM 下行通道和 ADSP 输入路径，禁止把不同口径数字直接比较。</li><li><strong>自检：</strong>什么样的证据才足以把迁移假设升级为项目结论？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-3">Day 3</a> <a href="../index.html#day-4">Day 4</a> <a href="../index.html#day-5">Day 5</a> <a href="../index.html#day-19">Day 19</a> <a href="../index.html#day-34">Day 34</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#17-mt8676-与-mt8668-平台差异及迁移边界">17 MT8676 与 MT8668 平台差异及迁移边界</a><a class="depth-2" href="#171-先冻结版本再讨论能力">17.1 先冻结版本，再讨论能力</a><a class="depth-2" href="#172-平台比较矩阵">17.2 平台比较矩阵</a><a class="depth-2" href="#173-audio-迁移不是复制配置文件">17.3 Audio 迁移不是复制配置文件</a><a class="depth-2" href="#174-文档间冲突必须显式保留">17.4 文档间冲突必须显式保留</a><a class="depth-2" href="#175-建议的迁移评审清单">17.5 建议的迁移评审清单</a><a class="depth-2" href="#176-ota-迁移的明确限制">17.6 OTA 迁移的明确限制</a></details><article id="chapter-text"><h1 id="17-mt8676-与-mt8668-平台差异及迁移边界">17 MT8676 与 MT8668 平台差异及迁移边界</h1>
+<blockquote>
+<p>修订日期：2026-09-20。本文比较本地资料版本，不代表所有芯片 SKU、SDK 分支或量产配置。页码统一采用 PDF 物理页序（从封面算第 1 页）。</p>
+</blockquote>
+<h2 id="171-先冻结版本再讨论能力">17.1 先冻结版本，再讨论能力</h2>
+<p>原 00—16 章来自 MT8676 架构图、Favalon SDK V1.0.166 与 UMDP V1.0.226。它们仍可用于理解该资料基线，但不能自动证明 MT8668 接口兼容。MT8668 General Introduction V1.1 给出的软件组合为 Android B（Android 16）、Yocto 5.0、Kernel 6.12；这是该文档的参考组合，项目实际版本仍须以镜像指纹、manifest、内核和 BSP 配置核实。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S023 · MT8668_Hypervisor_General_Introduction_CN_V1.1.pdf · PDF第4-6页<small>〔本地来源〕</small></span></p>
+<p>MT8668 System LLA V1.1 描述 Yocto SOS、Yocto UOS、Android 和 Thyp SDK，且给出三 OS 构建方式；Camera 手册的“两系统”视图只展开 Yocto Camera Host 与 Android Camera Guest，不能据此删除整机 TBox Guest。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S038 · MT8668_Hypervisor_System_LLA_User_Manual_CN_V1.1.pdf · PDF第5-9页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页<small>〔本地来源〕</small></span></p>
+<p>每个项目基线至少记录：<code>SoC/SKU、核心板型号、PCB版本、BSP/SDK tag、Android build fingerprint、Yocto image、Kernel、Hypervisor、固件、配置哈希、实测日期</code>。以下表中“可复用”指分析方法可复用，不表示二进制、配置和引脚直接兼容。</p>
+<h2 id="172-平台比较矩阵">17.2 平台比较矩阵</h2>
+<table>
+<thead>
+<tr>
+<th>领域</th>
+<th>MT8676 资料基线</th>
+<th>MT8668 资料基线</th>
+<th>迁移时必须检查</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>多 OS 部署</td>
+<td>PVT 描述 SOS Yocto + TBox Yocto + Android 的 L+L+A</td>
+<td>System LLA 仍有 L+L+A；Camera 章节只画参与相机业务的两个域</td>
+<td>VM 清单、Host/Guest、设备归属，不能由文件所在目录推断</td>
+</tr>
+<tr>
+<td>Camera</td>
+<td>Host/Guest 各有 camerahalserver，MW/sensor/driver 位于 Yocto；Host 先就绪</td>
+<td>明确 RpcBinder + VSOCK，Android Adaptor、Feature 层以及 Host LocalService/RpcService</td>
+<td>IPC/ABI、provider、request/result、buffer 导入与恢复</td>
+</tr>
+<tr>
+<td>Display</td>
+<td>V1.3 文档描述 3 条 10-bit pipe，16 个 OVL layer，DSI/DP 配置与约束</td>
+<td>Display 手册描述 MML + DISP、10 个硬件层（含 2 个专用安全检测层）、2 个 DSI 输出</td>
+<td>layer/plane 分配、DSI/SerDes、MML 竞争，不能沿用 8676 层数</td>
+</tr>
+<tr>
+<td>跨域显示</td>
+<td>保留本版 Hypervisor Display 路径和工程配置</td>
+<td>Proxy-Wayland：Android HWC → RpcBinder/VSOCK → Linux service → Wayland</td>
+<td>buffer handle 转换、fence、display identity、跨 VM 生命周期</td>
+</tr>
+<tr>
+<td>Audio 上下行</td>
+<td>对比培训图中 ADSP A 核输出、B 核输入有 8/16 ch 与倍频设计</td>
+<td>对比图为下行 32 ch、不需同样倍频；上行 AFE→HAL、绕过内部 ADSP</td>
+<td><code>audio_device.xml</code>、录音算法位置、回采参考、TDM slot/clock</td>
+</tr>
+<tr>
+<td>音频硬件总数</td>
+<td>按对应 8676 AFE/ADSP 资料核对</td>
+<td>AFE Guide 另列总输出 36 ch、总输入 48 ch 及引脚复用约束</td>
+<td>“32 ch TDM 通路”不等于“全部 AFE 接口总数”</td>
+</tr>
+<tr>
+<td>TBox</td>
+<td>SDK/UMDP 和 PVT TBox 分层，Modem ready 是关键前置条件</td>
+<td>T-Box Manual 列 ML API；除 ML_GetModemStat 外，API 正常工作依赖 modem ready</td>
+<td>API 签名、slot、服务版本、枚举，不能按同名认定兼容</td>
+</tr>
+<tr>
+<td>Suspend/Resume</td>
+<td>Host 发起，Guest 完成后 Host 才进入深度休眠</td>
+<td>8668 手册沿用此总体门控，具体 GPIO/节点以该分支为准</td>
+<td>wake source、power client、CPMS、各 VM 状态及退出证据</td>
+</tr>
+<tr>
+<td>OTA/安全启动</td>
+<td>沿用 8676 专属资料及交付镜像</td>
+<td>有独立 OTA LLA、Secure Boot、OP-TEE 文档</td>
+<td>多域镜像一致性、签名链、slot、断电恢复及回滚判据</td>
+</tr>
+</tbody></table>
+<p>来源：Camera <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S145 · MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF第4-8页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页<small>〔本地来源〕</small></span>；Display <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S147 · MT8676_Hypervisor_Display_User_Manual_V1.3.pdf · PDF第5-10页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S021 · MT8668_Hypervisor_Display_User_Manual_CN_V1.0.pdf · PDF第5-7页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S028 · MT8668_Hypervisor_Multi_Display_Proxy-Wayland_User_Manual_CN_V1.0.pdf · PDF第5-7页<small>〔本地来源〕</small></span>；Audio <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S045 · Audio模块 8676 vs 8668.pdf · PDF第2-4页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S049 · MT8668_Audio_HW_Interface_User_Guide_V1.1.pdf · PDF第6-7页<small>〔本地来源〕</small></span>；TBox <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S075 · MT8668_Yocto_T-Box_User_Manual_CN_V1.0.pdf · PDF第5-7页<small>〔本地来源〕</small></span>；电源 <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S265 · MT8676_Hypervisor_Suspend_Resume_Common_Flow.pdf · PDF第4-6页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S037 · MT8668_Hypervisor_Suspend_Resume_User_Manual_CN_V1.0.pdf · PDF第4-10页<small>〔本地来源〕</small></span>；安全与升级 <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S030 · MT8668_Hypervisor_OTA_LLA_User_Manual_CN_V1.0.pdf · PDF第8-10页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S035 · MT8668_Hypervisor_Secure_Boot_User_Manual_CN_V1.1.pdf · PDF第5-6页<small>〔本地来源〕</small></span>。</p>
+<h2 id="173-audio-迁移不是复制配置文件">17.3 Audio 迁移不是复制配置文件</h2>
+<p><code>Audio模块 8676 vs 8668</code> 的第 2 页强调物理通道和 ADSP 上行路径差异；第 3—4 页强调走 ADSP / bypass ADSP 的软件组织以及 AAOS 上层架构可延续。两者并不冲突：上层功能抽象相似，不代表硬件 routing、DSP 任务和输入算法部署相同。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S045 · Audio模块 8676 vs 8668.pdf · PDF第2-4页<small>〔本地来源〕</small></span></p>
+<p>建议按场景逐项核对：媒体、导航、提示音、语音采集、蓝牙 HFP、TBox 电话、eCall、KTV、外部 DSP/A2B。每个场景写清“源→处理→路由→物理端口→消费者”，并独立记录控制消息与 PCM 数据。PVT 公版音频规划图中的 bus 编号、外设型号和引脚只证明该图方案，不能直接替代项目接口表。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S052 · MT8668_Public_domain_audio_planning-202601-to-PVT.pdf · PDF第1页<small>〔本地来源〕</small></span></p>
+<p>迁移验收至少包含：单场景出声/采集，多场景抢占与混音，主副驾隔离，通话回声参考，采样率/位宽/TDM slot 对齐，DSP/Guest 复位后的恢复。未拿到新平台录音算法方案时，不能把 8676 ADSP B 核处理链原样放入 8668 图中。</p>
+<h2 id="174-文档间冲突必须显式保留">17.4 文档间冲突必须显式保留</h2>
+<table>
+<thead>
+<tr>
+<th>冲突或混淆</th>
+<th>当前证据</th>
+<th>本版处理</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P5B 文件名 v2.0，修订页有 V2.1</td>
+<td>PDF 第 2 页记录 2026-06-29 V2.1；文件名仍 v2.0</td>
+<td>同时保留文件名、内部版本和哈希，不改名掩盖差异</td>
+</tr>
+<tr>
+<td>MT8668 通用简介与 P5B 模组的 BT/GPU 数字不同</td>
+<td>General Introduction 的规格表与 P5B 产品规格表不同</td>
+<td>标记为不同文档/产品配置口径，不选择较高数字充当项目承诺</td>
+</tr>
+<tr>
+<td>8668 目录含 8676 文档</td>
+<td>DSI、Panel、Audio 倍频等文件标题明确写 MT8676</td>
+<td>按文档标题/内文定平台，目录只记来源位置</td>
+</tr>
+<tr>
+<td>“Camera 双系统”与“整机三系统”</td>
+<td>分别来自子系统手册与 System LLA</td>
+<td>视图范围不同，不视作硬件冲突</td>
+</tr>
+<tr>
+<td>PVT TBox 概述前/后端用词易混</td>
+<td>概述对物理驱动与 FE/BE 的写法不统一</td>
+<td>以实际物理拥有者、Guest FE、Host BE 分开描述；不全文照搬术语</td>
+</tr>
+<tr>
+<td>Camera PQDIP 实例分配不一致</td>
+<td>项目总结图一处画 2+4 路，计算正文按每实例 3 路</td>
+<td>本版仅使用明确标注的 3+3 计算场景，实际调度待配置确认</td>
+</tr>
+</tbody></table>
+<p>来源：<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S076 · P5B系列车规级模组产品规格书_v2.0_20260629.pdf · PDF第2-5页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S023 · MT8668_Hypervisor_General_Introduction_CN_V1.1.pdf · PDF第6页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S259 · Hypervisor Tbox(L+L+A)架构.pdf · PDF第1-2页<small>〔本地来源〕</small></span>；Camera 项目总结见 <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S296 · MT8668_Camera架构与DDR计算_最终可追溯版.md<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S297 · MT8668最终Camera架构与DDR解读.md<small>〔本地来源〕</small></span>。</p>
+<h2 id="175-建议的迁移评审清单">17.5 建议的迁移评审清单</h2>
+<ol>
+<li>冻结版本与硬件 SKU：芯片能力、核心板引出能力、项目实际启用能力分别记录。</li>
+<li>建立设备资源表：物理驱动所在域、虚拟化/直通方式、IRQ、共享内存、DMA/IOMMU 映射和恢复 Owner。</li>
+<li>建立接口差异表：进程名、服务端点、IDL/API、配置格式、消息版本、ready 条件、错误返回与回调。</li>
+<li>重算资源：Camera P1/P2、MML、GPU、Vcodec、DDR、音频采样/时钟、CPU 与热预算。</li>
+<li>回归生命周期：冷启动、STR、Guest/Host 服务重启、升级失败/断电、旧数据回收。</li>
+<li>用新镜像完成日志链验证；“功能偶尔可用”不能替代跨域一致性和恢复验证。</li>
+</ol>
+<p>这六项是本版归纳的工程评审方法，不是 MTK/PVT 已签核的交付要求。</p>
+<h2 id="176-ota-迁移的明确限制">17.6 OTA 迁移的明确限制</h2>
+<p>MT8668 OTA LLA 文档第 8—10 页限定集中升级由 SOS 执行，三个 OS 的 target files 合并构建一个包；该版本不支持 OS 单独升级、Android Virtual AB、通过 OTA 改变分区布局，网络下载由 OEM 自行实现。因此 MBOS 的多 Update Client 只证明多个业务入口，不能据此认定各 OS 独立升级已经支持。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S030 · MT8668_Hypervisor_OTA_LLA_User_Manual_CN_V1.0.pdf · PDF第8-10页<small>〔本地来源〕</small></span></p>
+<hr>
+<p><a href="index.html">返回主题导航</a> · <a href="22.html">来源与覆盖说明</a></p>
+</article><nav class="pager"><a href="19.html">← 上一步：Camera跨域架构与DDR资源预算</a><a href="20.html">下一步：跨域通信时间同步与状态一致性 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#17-mt8676-与-mt8668-平台差异及迁移边界">17 MT8676 与 MT8668 平台差异及迁移边界</a><a class="depth-2" href="#171-先冻结版本再讨论能力">17.1 先冻结版本，再讨论能力</a><a class="depth-2" href="#172-平台比较矩阵">17.2 平台比较矩阵</a><a class="depth-2" href="#173-audio-迁移不是复制配置文件">17.3 Audio 迁移不是复制配置文件</a><a class="depth-2" href="#174-文档间冲突必须显式保留">17.4 文档间冲突必须显式保留</a><a class="depth-2" href="#175-建议的迁移评审清单">17.5 建议的迁移评审清单</a><a class="depth-2" href="#176-ota-迁移的明确限制">17.6 OTA 迁移的明确限制</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>

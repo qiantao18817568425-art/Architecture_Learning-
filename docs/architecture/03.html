@@ -1,0 +1,829 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MT8676-SDK与UMDP · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details open><summary>第二阶段 · 理解模块与接口</summary><a aria-current="page" href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 03</div><div class="chapter-title"><p class="eyebrow">CHAPTER 03 · 中文版全文</p><h1>MT8676-SDK与UMDP</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=03">并排对比两套正文 ↗</a><a class="button secondary" href="original-03.html">对照原版解释 ↗</a><button class="button" data-read="03" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>SDK 的调用成功到底说明什么？</h2><p>SDK 是调用合同、库和例程的组合。Client 发出请求，Server 处理能力；连接建立、服务 ready、方法返回、业务生效是四个不同阶段。</p><ol><li><strong>怎么读：</strong>先读 Client/Server 原图，再看 GET/SET/REGISTER，选一个 API 对照输入、返回与依赖。</li><li><strong>项目练习：</strong>为一次 SET 列出请求、返回、回调/回读与超时观察点。未知的接口 ID 和阈值保留待确认。</li><li><strong>自检：</strong>为何 IPC 已连接时，Modem API 仍可能不可用？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-14">Day 14</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#03-mt8676-favalon-sdk-与-umdp">03 MT8676 Favalon SDK 与 UMDP</a><a class="depth-2" href="#2026-09-20-校订保留-sdk-基线新增-8668-迁移入口">2026-09-20 校订：保留 SDK 基线，新增 8668 迁移入口</a><a class="depth-2" href="#31-版本和证据边界">3.1 版本和证据边界</a><a class="depth-2" href="#32-favalon-sdk-在系统中的位置">3.2 Favalon SDK 在系统中的位置</a><a class="depth-2" href="#33-clientserver-结构和库服务边界">3.3 Client/Server 结构和库/服务边界</a><a class="depth-2" href="#34-api-家族两个版本快照分列">3.4 API 家族：两个版本快照分列</a><a class="depth-2" href="#35-getsetregister-三种语义">3.5 GET、SET、REGISTER 三种语义</a><a class="depth-3" href="#get">GET</a><a class="depth-3" href="#set">SET</a><a class="depth-3" href="#register">REGISTER</a><a class="depth-2" href="#36-client-生命周期">3.6 Client 生命周期</a><a class="depth-2" href="#37-成功的同步调用">3.7 成功的同步调用</a><a class="depth-2" href="#38-超时迟到响应和服务不可用">3.8 超时、迟到响应和服务不可用</a><a class="depth-2" href="#39-回调注册事件和服务重启">3.9 回调注册、事件和服务重启</a><a class="depth-2" href="#310-回调异常的四个层次">3.10 回调异常的四个层次</a><a class="depth-2" href="#311-umdp-的-yocto-集成">3.11 UMDP 的 Yocto 集成</a><a class="depth-2" href="#312-umdp-服务">3.12 UMDP 服务</a><a class="depth-2" href="#313-umdp-包内组件存在清单与绑定边界">3.13 UMDP 包内组件存在清单与绑定边界</a><a class="depth-2" href="#314-systemd-依赖和行为">3.14 systemd 依赖和行为</a><a class="depth-3" href="#fb_modemservice">fbmodem.service</a><a class="depth-3" href="#fb_audioservice">fbaudio.service</a><a class="depth-3" href="#fb_powermgrservice">fbpowermgr.service</a><a class="depth-3" href="#fb_logmgrservice">fblogmgr.service</a><a class="depth-2" href="#315-启动依赖图">3.15 启动依赖图</a><a class="depth-2" href="#316-umdpprocessini-语义">3.16 umdpprocess.ini 语义</a><a class="depth-2" href="#317-systemd-与-fb_procmgr-的边界">3.17 systemd 与 fbprocMgr 的边界</a><a class="depth-2" href="#318-服务死亡到业务恢复">3.18 服务死亡到业务恢复</a><a class="depth-2" href="#319-四种恢复不能混为一谈">3.19 四种“恢复”不能混为一谈</a><a class="depth-2" href="#320-失败模式与证据表">3.20 失败模式与证据表</a><a class="depth-2" href="#321-分层诊断步骤">3.21 分层诊断步骤</a><a class="depth-3" href="#第一步确认进程与依赖">第一步：确认进程与依赖</a><a class="depth-3" href="#第二步确认-clientserver-会话">第二步：确认 Client/Server 会话</a><a class="depth-3" href="#第三步确认请求响应或事件">第三步：确认请求/响应或事件</a><a class="depth-3" href="#第四步确认业务状态">第四步：确认业务状态</a><a class="depth-2" href="#322-示例代码的正确用法">3.22 示例代码的正确用法</a><a class="depth-2" href="#323-本章可确认与待确认清单">3.23 本章可确认与待确认清单</a></details><article id="chapter-text"><h1 id="03-mt8676-favalon-sdk-与-umdp">03 MT8676 Favalon SDK 与 UMDP</h1>
+<h2 id="2026-09-20-校订保留-sdk-基线新增-8668-迁移入口">2026-09-20 校订：保留 SDK 基线，新增 8668 迁移入口</h2>
+<p>本章 Favalon SDK V1.0.166 与 UMDP V1.0.226 的函数、枚举、超时、回调、服务配置仍按 MT8676 基线解释。MT8668 不能凭 API 同名认定兼容，应比较头文件、IDL、二进制 ABI、服务版本、配置和回调线程。</p>
+<p>MT8668 General Introduction V1.1 给出的组合为 Android B/16、Yocto 5.0、Kernel 6.12，这是文档参考组合。TBox API 手册强调除 ML_GetModemStat 外，其他 API 正常使用依赖 modem ready，不能将 socket 连接成功当作可调用状态。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S023 · MT8668_Hypervisor_General_Introduction_CN_V1.1.pdf · PDF第4-6页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S075 · MT8668_Yocto_T-Box_User_Manual_CN_V1.0.pdf · PDF第5-7页<small>〔本地来源〕</small></span></p>
+<p>新平台接入顺序建议为：冻结 BSP/SDK/镜像 → 确认服务启动/发现 → 查询 ready → 调用与回调关联 → 验证错误/超时 → 单域重启恢复。原有 SDK 源文件证据仍在 <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">旧版证据索引<small>〔本地来源〕</small></span>，<a href="17.html">17 章</a> 提供跨平台核对表。</p>
+<hr>
+<h2 id="31-版本和证据边界">3.1 版本和证据边界</h2>
+<p>本章的 Favalon 软件开发套件（Software Development Kit，SDK）基线为
+<strong>V1.0.166</strong>，UMDP 基线为 <strong>V1.0.226</strong>。SDK 指南明确写出 SDK 运行在
+Middleware 层、采用 Client/Server 架构，提供同步调用和回调两种方式，同步接口有
+超时处理，接口语义通常分为 GET、SET、REGISTER。[可信度：MT8676 资料确认]
+[证据：sdk-mt8676-guide]</p>
+<p>UMDP README 明确 <code>project: mt8676</code>、版本 <code>V1.0.226</code>，并说明合入
+<code>meta/poky/meta/recipes-core/fibo-umdp</code>；recipe、systemd unit、配置和归档清单
+进一步证明包内的服务、库和安装方式。[可信度：MT8676 资料确认]
+[证据：umdp-readme-v1-0-226-txt] [证据：umdp-fibo-umdp-bb]</p>
+<p>必须把两个版本快照分开阅读：V1.0.166 示例证明该 SDK 归档中的业务家族和调用用法；
+V1.0.226 UMDP 集成头文件证明 226 包的兼容性接口面。当前没有同版本头文件对照或
+兼容性声明，不能把 226 头文件当作 166 的精确 API 合同；两者精确接口一致性
+<code>[可信度：待 MT8676 确认]</code>，需版本化头文件、ABI/符号差异或供应商兼容性说明。</p>
+<p>本章只说明架构与生命周期，不制作逐函数参考手册。示例代码可以证明“API 如何被
+调用”，不能证明量产应用采用相同等待、重试、线程、错误处理或恢复策略。</p>
+<h2 id="32-favalon-sdk-在系统中的位置">3.2 Favalon SDK 在系统中的位置</h2>
+<p>SDK 指南把它定义为业务模块和上层应用之间的桥梁：上层调用 Client 侧 API，
+Client 把请求发到 Server，Server 转换和封装业务请求，再调用下层业务接口。
+[可信度：MT8676 资料确认] [证据：sdk-mt8676-guide]</p>
+<p><figure><a href="assets/04.png" target="_blank" rel="noopener"><img loading="lazy" src="assets/04.png" alt="SDK 总体架构原图"></a><figcaption>SDK 总体架构原图 · 点击查看原图</figcaption></figure></p>
+<p>原图能证明 Customer Application、FIBO SDK API、中间件、Common Services、
+System Lib/Common Lib、Post Interface、OS/Driver 与 Hardware/AP/Modem core
+处于分层关系。[可信度：MT8676 资料确认]
+[证据：sdk-image-sdk-architecture-diagram-png]</p>
+<p>原图不能证明每个彩色小框是独立进程，不能给出全部 <code>.so</code> 的加载关系，也不能证明
+某个业务 API 最终调用哪个私有驱动。具体映射仍需二进制依赖、服务注册和运行日志。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  APP[&quot;Upper Application&quot;] --&gt; API[&quot;Favalon SDK API&quot;]
+  API --&gt; CL[&quot;FIBO SDK Client&quot;]
+  CL &lt;--&gt;|&quot;Socket&quot;| SV[&quot;FIBO SDK Server&quot;]
+  SV --&gt; LOW[&quot;Lower Business Interface&quot;]
+  LOW -. &quot;result/event&quot; .-&gt; SV
+  SV -. &quot;response/callback&quot; .-&gt; CL
+  CL -. &quot;return/callback&quot; .-&gt; APP</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  APP[&quot;Upper Application&quot;] --&gt; API[&quot;Favalon SDK API&quot;]
+  API --&gt; CL[&quot;FIBO SDK Client&quot;]
+  CL &lt;--&gt;|&quot;Socket&quot;| SV[&quot;FIBO SDK Server&quot;]
+  SV --&gt; LOW[&quot;Lower Business Interface&quot;]
+  LOW -. &quot;result/event&quot; .-&gt; SV
+  SV -. &quot;response/callback&quot; .-&gt; CL
+  CL -. &quot;return/callback&quot; .-&gt; APP</code></pre></details></details><p>该图只重画 V1.0.166 SDK 指南确认的通用 Client/Server 结构：实线表示请求方向，
+虚线表示返回或回调；Client 与 Server 间的 <code>Socket</code> 来自结构图。这里的
+<code>FIBO SDK Server</code> 不与任何具体 <code>fb_*</code> 进程合并命名，也不声明某个 UMDP 库的加载
+或调用关系。[可信度：MT8676 资料确认]
+[证据：sdk-mt8676-guide] [证据：sdk-image-sdk-structural-diagram-png]</p>
+<h2 id="33-clientserver-结构和库服务边界">3.3 Client/Server 结构和库/服务边界</h2>
+<p><figure><a href="assets/05.png" target="_blank" rel="noopener"><img loading="lazy" src="assets/05.png" alt="SDK Client/Server 结构原图"></a><figcaption>SDK Client/Server 结构原图 · 点击查看原图</figcaption></figure></p>
+<p>结构图明确给出：</p>
+<ul>
+<li>左侧是 FIBO SDK API 入口；</li>
+<li><code>FIBO SDK Client 侧</code>负责处理调用请求；</li>
+<li>Client 与 <code>FIBO SDK Server 侧</code>之间标注 <code>Socket</code>；</li>
+<li>Server 侧处理并发送下层业务请求；</li>
+<li>右侧通过底层接口继续下行。</li>
+</ul>
+<p>[可信度：MT8676 资料确认] [证据：sdk-image-sdk-structural-diagram-png]</p>
+<p>这张图证明的是<strong>结构边界</strong>，不证明 Socket 类型、地址、协议字段、队列深度、线程数、
+认证方式或服务发现机制。诊断时应把 Client 进程、Client Library、Socket 会话、
+Server 进程和下层接口作为五个不同检查点。</p>
+<h2 id="34-api-家族两个版本快照分列">3.4 API 家族：两个版本快照分列</h2>
+<p>V1.0.166 示例可证明归档中存在对应家族及调用用法；V1.0.226 UMDP 集成头文件只证明
+226 包内兼容性接口面。表中的两列不可互相替代，精确签名、枚举、字段和超时的跨版本
+一致性 <code>[可信度：待 MT8676 确认]</code>。</p>
+<table>
+<thead>
+<tr>
+<th>家族</th>
+<th>处理对象（家族级）</th>
+<th>V1.0.166 示例证据</th>
+<th>V1.0.226 UMDP 集成头文件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AT</td>
+<td>AT 命令</td>
+<td>[证据：sdk-example-at-test-at-test-c]</td>
+<td>[证据：umdp-files-umdp-include-fibo-sdk-fibo-at-h]</td>
+</tr>
+<tr>
+<td>Audio</td>
+<td>模组/通话音频</td>
+<td>[证据：sdk-example-audio-test-audio-test-c]</td>
+<td>[证据：umdp-files-umdp-include-fibo-sdk-fibo-audio-h]</td>
+</tr>
+<tr>
+<td>Data</td>
+<td>数据调用</td>
+<td>[证据：sdk-example-data-test-data-test-c]</td>
+<td>[证据：umdp-files-umdp-include-fibo-sdk-fibo-data-h]</td>
+</tr>
+<tr>
+<td>Device Management</td>
+<td>设备管理</td>
+<td>[证据：sdk-example-dm-test-dm-test-c]</td>
+<td>[证据：umdp-files-umdp-include-fibo-sdk-fibo-dm-h]</td>
+</tr>
+<tr>
+<td>IMU</td>
+<td>惯性传感器</td>
+<td>[证据：sdk-example-imu-test-imu-test-c]</td>
+<td>[证据：umdp-files-umdp-include-fibo-sdk-fibo-imu-h]</td>
+</tr>
+<tr>
+<td>Location/GNSS</td>
+<td>定位</td>
+<td>[证据：sdk-example-gnss-test-gnss-test-c]</td>
+<td>[证据：umdp-files-umdp-include-fibo-sdk-fibo-location-h]</td>
+</tr>
+<tr>
+<td>Log</td>
+<td>日志</td>
+<td>[证据：sdk-example-log-test-log-test-c]</td>
+<td>[证据：umdp-files-umdp-include-fibo-sdk-fibo-log-h]</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>网络注册/状态</td>
+<td>[证据：sdk-example-nw-test-nw-test-c]</td>
+<td>[证据：umdp-files-umdp-include-fibo-sdk-fibo-nw-h]</td>
+</tr>
+<tr>
+<td>Power</td>
+<td>电源</td>
+<td>[证据：sdk-example-power-test-power-test-c]</td>
+<td>[证据：umdp-files-umdp-include-fibo-sdk-fibo-power-h]</td>
+</tr>
+<tr>
+<td>SIM</td>
+<td>卡状态与操作</td>
+<td>[证据：sdk-example-sim-test-sim-test-c]</td>
+<td>[证据：umdp-files-umdp-include-fibo-sdk-fibo-sim-h]</td>
+</tr>
+<tr>
+<td>SMS</td>
+<td>短信</td>
+<td>[证据：sdk-example-sms-test-sms-test-c]</td>
+<td>[证据：umdp-files-umdp-include-fibo-sdk-fibo-sms-h]</td>
+</tr>
+<tr>
+<td>Timer</td>
+<td>定时器</td>
+<td>[证据：sdk-example-timer-test-timer-test-c]</td>
+<td>[证据：umdp-files-umdp-include-fibo-sdk-fibo-timer-h]</td>
+</tr>
+<tr>
+<td>Voice/eCall</td>
+<td>语音/紧急呼叫</td>
+<td>[证据：sdk-example-voice-test-voice-test-c]</td>
+<td>[证据：umdp-files-umdp-include-fibo-sdk-fibo-voice-h]</td>
+</tr>
+<tr>
+<td>WakeLock</td>
+<td>唤醒锁</td>
+<td>[证据：sdk-example-wakelock-test-wakelock-test-c]</td>
+<td>[证据：umdp-files-umdp-include-fibo-sdk-fibo-wakelock-h]</td>
+</tr>
+<tr>
+<td>Wakeup</td>
+<td>唤醒</td>
+<td>[证据：sdk-example-wakeup-test-wakeup-test-c]</td>
+<td>[证据：umdp-files-umdp-include-fibo-sdk-fibo-wakeup-h]</td>
+</tr>
+</tbody></table>
+<p>家族名称和示例入口属于 V1.0.166 归档事实。[可信度：MT8676 资料确认] 226 头文件中的
+具体函数、结构体、枚举和注释只能作为 UMDP V1.0.226 集成快照，不写成 166 合同。
+服务归并和二进制绑定需版本化头文件、ABI 符号表、IDL、配置或运行追踪确认。</p>
+<h2 id="35-getsetregister-三种语义">3.5 GET、SET、REGISTER 三种语义</h2>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>GET/SET/REGISTER 的调用语义要叠加具体服务的 ready 条件。作为新平台对照，MT8668 TBox 手册要求除 ML_GetModemStat 外的接口依赖 modem ready；这不能直接替换原 Favalon API 名称，但解释了“IPC 已连接，业务调用仍失败”的分层原因。SET 的返回只按该 API 合同解释，若它仅表示接收成功，应另取状态回读/回调验证业务生效。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S075 · MT8668_Yocto_T-Box_User_Manual_CN_V1.0.pdf · PDF第5-7页<small>〔本地来源〕</small></span></p>
+<p>V1.0.166 指南直接确认接口服务通常分为 GET、SET、REGISTER，并确认设置、查询类接口
+为同步调用。[可信度：MT8676 资料确认] [证据：sdk-mt8676-guide]</p>
+<h3 id="get">GET</h3>
+<p>GET 在通用接口设计中表示查询状态或配置，调用方提交查询并接收结果。
+[可信度：标准机制推断] 结果来自 Server 缓存、实时下层查询还是其他来源，以及返回值
+的新鲜度保证，当前指南未定义；需 V1.0.166 版本化头文件、服务实现合同或带时间戳的
+运行追踪确认。[可信度：待 MT8676 确认]</p>
+<h3 id="set">SET</h3>
+<p>SET 在通用接口设计中表示请求修改配置或触发动作。[可信度：标准机制推断] 同步返回
+成功究竟代表 Client 接收、Server 受理、下层完成还是硬件生效，不能从指南推出；
+需当前接口合同、实现源码和执行回读确认。[可信度：待 MT8676 确认]</p>
+<h3 id="register">REGISTER</h3>
+<p>REGISTER 通常用于建立事件订阅或回调关系；服务重启后旧 Session/Handle 和注册是否
+继续有效属于实现合同。[可信度：标准机制推断] V1.0.166 的 Network、SIM、SMS、
+Data、Voice 和 Device Management 示例能证明这些归档示例存在 Client 初始化、
+服务事件回调或事件注册用法，不证明量产自动重连策略。
+[可信度：MT8676 资料确认]
+[证据：sdk-example-nw-test-nw-test-c] [证据：sdk-example-sim-test-sim-test-c]
+[证据：sdk-example-sms-test-sms-test-c] [证据：sdk-example-data-test-data-test-c]
+[证据：sdk-example-voice-test-voice-test-c] [证据：sdk-example-dm-test-dm-test-c]</p>
+<h2 id="36-client-生命周期">3.6 Client 生命周期</h2>
+<p>不同家族的函数命名并不完全一致，但架构生命周期可归纳为：</p>
+<ol>
+<li>进程启动并加载 Client Library；</li>
+<li>调用模块初始化或创建 Client/Handle；</li>
+<li>必要时注册服务事件回调和业务事件回调；</li>
+<li>执行 GET/SET 或异步请求；</li>
+<li>消费返回值、响应和事件；</li>
+<li>取消订阅、停止活动业务；</li>
+<li>deinit/release，使 Handle、回调和资源失效。</li>
+</ol>
+<p>Voice 示例展示 <code>fibo_voice_client_init</code>、Handle 使用、服务事件回调和
+<code>fibo_voice_client_deinit</code>；DM、Network、SMS、Data 等也采用类似结构。
+[可信度：MT8676 资料确认] [证据：sdk-example-voice-test-voice-test-c]
+[证据：sdk-example-dm-test-dm-test-c] [证据：sdk-example-nw-test-nw-test-c]</p>
+<p>“类似结构”不代表所有家族共享同一个 Handle 或释放函数。调用方必须按当前头文件
+管理每个家族资源，不能跨模块复用失效对象。</p>
+<h2 id="37-成功的同步调用">3.7 成功的同步调用</h2>
+<p><figure><a href="assets/06.png" target="_blank" rel="noopener"><img loading="lazy" src="assets/06.png" alt="SDK 同步调用时序原图"></a><figcaption>SDK 同步调用时序原图 · 点击查看原图</figcaption></figure></p>
+<p>原图证明上层调用进入 Client，Client 组织请求发给 Server，Server 调用底层接口，
+底层结果回到 Server，再经 Client 返回上层；图中还表现了同步等待和超时处理阶段。
+[可信度：MT8676 资料确认] [证据：sdk-image-sync-timing-diagram-png]</p>
+<p>它不证明所有接口使用同一个超时值，也不证明业务动作在返回时已经完成。具体接口的
+返回语义必须查当前版本头文件。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+  participant App as Upper Application
+  participant Client as Favalon Client
+  participant Server as SDK Server
+  participant Lower as Lower Platform
+  App-&gt;&gt;Client: GET/SET request
+  Client-&gt;&gt;Client: 校验参数/建立等待上下文
+  Client-&gt;&gt;Server: 序列化请求
+  Server-&gt;&gt;Lower: 转换并调用底层接口
+  Lower--&gt;&gt;Server: 执行结果/数据
+  Server--&gt;&gt;Client: response
+  Client-&gt;&gt;Client: 按请求上下文匹配并解除等待
+  Client--&gt;&gt;App: 返回值与输出参数</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  participant App as Upper Application
+  participant Client as Favalon Client
+  participant Server as SDK Server
+  participant Lower as Lower Platform
+  App-&gt;&gt;Client: GET/SET request
+  Client-&gt;&gt;Client: 校验参数/建立等待上下文
+  Client-&gt;&gt;Server: 序列化请求
+  Server-&gt;&gt;Lower: 转换并调用底层接口
+  Lower--&gt;&gt;Server: 执行结果/数据
+  Server--&gt;&gt;Client: response
+  Client-&gt;&gt;Client: 按请求上下文匹配并解除等待
+  Client--&gt;&gt;App: 返回值与输出参数</code></pre></details></details><p>请求下行箭头表示同步链的调用方向，虚线返回表示结果回传。Client 内部的“等待上下文”
+表示同步 API 需要配对响应，不代表已知其私有实现。成功条件至少包括请求发出、Server
+处理、响应配对和上层得到有效返回。[可信度：MT8676 资料确认]
+[证据：sdk-mt8676-guide]</p>
+<h2 id="38-超时迟到响应和服务不可用">3.8 超时、迟到响应和服务不可用</h2>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+  participant App as Upper Application
+  participant Client as Favalon Client
+  participant Server as SDK Server
+  participant Lower as Lower Platform
+  App-&gt;&gt;Client: 同步请求
+  alt Server 不可用/Socket 失败
+    Client--&gt;&gt;App: 连接或服务错误
+  else 请求已发送
+    Client-&gt;&gt;Server: request
+    Server-&gt;&gt;Lower: lower request
+    alt 期限内响应
+      Lower--&gt;&gt;Server: result
+      Server--&gt;&gt;Client: response
+      Client--&gt;&gt;App: success/error result
+    else 等待到期
+      Client--&gt;&gt;App: timeout
+      Lower--&gt;&gt;Server: late result
+      Server--&gt;&gt;Client: late response
+      Client-&gt;&gt;Client: 丢弃或隔离旧请求（策略待确认）
+    end
+  end</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  participant App as Upper Application
+  participant Client as Favalon Client
+  participant Server as SDK Server
+  participant Lower as Lower Platform
+  App-&gt;&gt;Client: 同步请求
+  alt Server 不可用/Socket 失败
+    Client--&gt;&gt;App: 连接或服务错误
+  else 请求已发送
+    Client-&gt;&gt;Server: request
+    Server-&gt;&gt;Lower: lower request
+    alt 期限内响应
+      Lower--&gt;&gt;Server: result
+      Server--&gt;&gt;Client: response
+      Client--&gt;&gt;App: success/error result
+    else 等待到期
+      Client--&gt;&gt;App: timeout
+      Lower--&gt;&gt;Server: late result
+      Server--&gt;&gt;Client: late response
+      Client-&gt;&gt;Client: 丢弃或隔离旧请求（策略待确认）
+    end
+  end</code></pre></details></details><p>外层 <code>alt</code> 区分“根本没有可用 Server”与“请求已进入链路但未按期返回”。迟到响应是否
+被 Client 丢弃、是否携带 Request ID、是否会触发其他回调，当前结构图没有说明，
+需要 Client 实现或带关联 ID 的日志确认。[可信度：待 MT8676 确认]</p>
+<p>同步超时只说明调用方没有在合同期限内得到匹配响应，不自动证明下层没有执行。对 SET
+或拨号类动作，超时后盲目重试可能造成重复操作；应先查询状态或用幂等/请求标识确认。
+[可信度：标准机制推断]</p>
+<h2 id="39-回调注册事件和服务重启">3.9 回调注册、事件和服务重启</h2>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+  participant App as Upper Application
+  participant Client as Favalon Client
+  participant Server as SDK Server
+  participant Supervisor as systemd/fb_procMgr
+  App-&gt;&gt;Client: init/create handle
+  App-&gt;&gt;Client: REGISTER callback/event
+  Client-&gt;&gt;Server: 建立订阅
+  Server--&gt;&gt;Client: event
+  Client--&gt;&gt;App: callback
+  Server-xServer: process death
+  Supervisor-&gt;&gt;Server: restart
+  Server--&gt;&gt;Client: 新服务实例 Ready
+  Client--&gt;&gt;App: service state event（若合同提供）
+  App-&gt;&gt;Client: 重建/确认 Handle
+  App-&gt;&gt;Client: 重新 REGISTER
+  Client-&gt;&gt;Server: 建立新代际订阅
+  Server--&gt;&gt;Client: new event
+  Client--&gt;&gt;App: callback with new generation</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  participant App as Upper Application
+  participant Client as Favalon Client
+  participant Server as SDK Server
+  participant Supervisor as systemd/fb_procMgr
+  App-&gt;&gt;Client: init/create handle
+  App-&gt;&gt;Client: REGISTER callback/event
+  Client-&gt;&gt;Server: 建立订阅
+  Server--&gt;&gt;Client: event
+  Client--&gt;&gt;App: callback
+  Server-xServer: process death
+  Supervisor-&gt;&gt;Server: restart
+  Server--&gt;&gt;Client: 新服务实例 Ready
+  Client--&gt;&gt;App: service state event（若合同提供）
+  App-&gt;&gt;Client: 重建/确认 Handle
+  App-&gt;&gt;Client: 重新 REGISTER
+  Client-&gt;&gt;Server: 建立新代际订阅
+  Server--&gt;&gt;Client: new event
+  Client--&gt;&gt;App: callback with new generation</code></pre></details></details><p>前四个箭头是正常注册与事件投递；进程死亡后，Supervisor 只负责拉起进程，不保证
+Client 对象、Socket、回调注册和业务缓存自动恢复。后半段的重建/重注册是稳健恢复
+模型，具体由 SDK 自动完成还是应用负责，需要版本合同和实测确认。
+[可信度：标准机制推断]</p>
+<h2 id="310-回调异常的四个层次">3.10 回调异常的四个层次</h2>
+<ol>
+<li><strong>未注册</strong>：Client 从未完成 REGISTER，Server 没有订阅关系。</li>
+<li><strong>注册失效</strong>：Server 或 Client 重启，旧 Session/Handle 已失效。</li>
+<li><strong>回调未投递</strong>：事件产生，但 IPC/队列/Client 线程未执行。</li>
+<li><strong>回调已到、业务未执行</strong>：上层线程阻塞、Generation 过滤错误或状态机拒绝。</li>
+</ol>
+<p>诊断不能只搜“callback 关键字”，而要同时证明事件源产生、Server 发布、Client 收到、
+应用回调入口和业务状态变化。服务事件回调的示例证明 API 用法，不证明量产一定自动
+重连。[可信度：MT8676 资料确认] [证据：sdk-example-data-test-data-test-c]
+[证据：sdk-example-voice-test-voice-test-c]</p>
+<h2 id="311-umdp-的-yocto-集成">3.11 UMDP 的 Yocto 集成</h2>
+<p>UMDP recipe 的 <code>SUMMARY</code>/<code>DESCRIPTION</code> 标识 UMDP SDK，<code>SRC_URI</code> 包含 <code>umdp/</code>
+以及四个 systemd unit；安装阶段把 <code>services/*</code>、<code>app/*</code> 放入 <code>/usr/bin</code>，
+把 <code>lib/*</code> 放入库目录，把配置安装到 <code>/etc/umdp</code>，把头文件安装到
+<code>include/fibo_sdk</code>，并为四个 unit 建立 <code>multi-user.target.wants</code> 链接。
+[可信度：MT8676 资料确认] [证据：umdp-fibo-umdp-bb]</p>
+<p>recipe 还声明 telephony AIDL interface、ALSA、audio mixer、gpshal 等包级构建/运行
+依赖；这只能确认 UMDP 包的集成上下文，不能证明某个服务或库对这些依赖的逐跳调用。
+[可信度：MT8676 资料确认] [证据：umdp-fibo-umdp-bb] 具体二进制绑定和调用关系
+<code>[可信度：待 MT8676 确认]</code>。</p>
+<h2 id="312-umdp-服务">3.12 UMDP 服务</h2>
+<table>
+<thead>
+<tr>
+<th>服务程序</th>
+<th>证据中的启动项/清单</th>
+<th>直接可确认事实</th>
+<th>当前不能确认</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>fb_modemServices</code></td>
+<td><code>/usr/bin/fb_modemServices</code></td>
+<td>Modem unit 的 ExecStart</td>
+<td>对应哪些 SDK API</td>
+</tr>
+<tr>
+<td><code>fb_audioServices</code></td>
+<td><code>/usr/bin/fb_audioServices</code></td>
+<td>Audio unit 的 ExecStart</td>
+<td>与 Android Audio 的调用边</td>
+</tr>
+<tr>
+<td><code>fb_powerMgr</code></td>
+<td><code>/usr/bin/fb_powerMgr</code></td>
+<td>Power unit 的 ExecStart</td>
+<td>私有电源状态机</td>
+</tr>
+<tr>
+<td><code>fb_logMgr</code></td>
+<td><code>/usr/bin/fb_logMgr</code></td>
+<td>Log unit 的 ExecStart</td>
+<td>私有日志策略</td>
+</tr>
+<tr>
+<td><code>fb_procMgr</code></td>
+<td>包内 services 清单</td>
+<td>包中存在该程序</td>
+<td>启动者、监督范围与配置加载</td>
+</tr>
+</tbody></table>
+<p>前四项由 unit 与归档清单共同证明，<code>fb_procMgr</code> 只由包内确定性清单证明。
+[可信度：MT8676 资料确认] [证据：umdp-files-fb-modem-service]
+[证据：umdp-files-fb-audio-service] [证据：umdp-files-fb-powermgr-service]
+[证据：umdp-files-fb-logmgr-service] [证据：umdp-library-service-listing]</p>
+<p>图 3 的 <code>modem_service</code> 与此处 <code>fb_modemServices</code> <strong>身份未确认</strong>。前者是通信图中的
+TBOX-APP 标签，后者是 UMDP V1.0.226 的可执行进程。若要确认关系，需取得 TBox
+进程树、启动配置、服务注册名、二进制哈希及调用日志。
+[可信度：待 MT8676 确认] [证据：original-diagram-03]
+[证据：umdp-files-fb-modem-service]</p>
+<h2 id="313-umdp-包内组件存在清单与绑定边界">3.13 UMDP 包内组件存在清单与绑定边界</h2>
+<p>V1.0.226 归档清单直接确认以下文件存在：</p>
+<ul>
+<li><code>libmt86mlclient.so</code>；</li>
+<li><code>libumdp.so</code>、<code>libumdp_common.so</code>；</li>
+<li><code>libumdp_dev.so</code>、<code>libumdp_imu.so</code>、<code>libumdp_location.so</code>、
+<code>libumdp_wakeup.so</code>；</li>
+<li><code>libumdp_pa_audio.so</code>、<code>libumdp_pa_dev.so</code>、<code>libumdp_pa_imu.so</code>、
+<code>libumdp_pa_location.so</code>、<code>libumdp_pa_modem.so</code>、
+<code>libumdp_pa_wakeup.so</code>；</li>
+<li><code>fb_modemServices</code>、<code>fb_audioServices</code>、<code>fb_powerMgr</code>、<code>fb_logMgr</code>、
+<code>fb_procMgr</code>。</li>
+</ul>
+<p>[可信度：MT8676 资料确认] [证据：umdp-library-service-listing]</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TB
+  subgraph Services[&quot;V1.0.226 服务程序：存在确认&quot;]
+    S1[&quot;fb_modemServices&quot;]
+    S2[&quot;fb_audioServices&quot;]
+    S3[&quot;fb_powerMgr&quot;]
+    S4[&quot;fb_logMgr&quot;]
+    S5[&quot;fb_procMgr&quot;]
+  end
+  subgraph Libraries[&quot;V1.0.226 库文件：存在确认&quot;]
+    L1[&quot;libmt86mlclient.so&quot;]
+    L2[&quot;libumdp.so / libumdp_common.so&quot;]
+    L3[&quot;libumdp_dev/imu/location/wakeup.so&quot;]
+    L4[&quot;libumdp_pa_*.so&quot;]
+  end</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TB
+  subgraph Services[&quot;V1.0.226 服务程序：存在确认&quot;]
+    S1[&quot;fb_modemServices&quot;]
+    S2[&quot;fb_audioServices&quot;]
+    S3[&quot;fb_powerMgr&quot;]
+    S4[&quot;fb_logMgr&quot;]
+    S5[&quot;fb_procMgr&quot;]
+  end
+  subgraph Libraries[&quot;V1.0.226 库文件：存在确认&quot;]
+    L1[&quot;libmt86mlclient.so&quot;]
+    L2[&quot;libumdp.so / libumdp_common.so&quot;]
+    L3[&quot;libumdp_dev/imu/location/wakeup.so&quot;]
+    L4[&quot;libumdp_pa_*.so&quot;]
+  end</code></pre></details></details><p>图中没有服务到库的箭头，表示 archive listing 只证明文件存在，不证明加载者、调用者
+或调用顺序。[可信度：MT8676 资料确认] [证据：umdp-library-service-listing]</p>
+<p>作为标准分层概念，可以用“Application → SDK Client → 具体服务端 → 领域能力/
+平台适配 → Lower Platform”组织诊断检查点。[可信度：标准机制推断] 这不是已确认的
+UMDP 二进制调用图；<strong>具体服务端/库绑定待 MT8676 确认</strong>，必须补取 ELF
+<code>DT_NEEDED</code>、导入/导出符号、进程内存映射、IDL、服务配置和运行追踪。
+[可信度：待 MT8676 确认]</p>
+<h2 id="314-systemd-依赖和行为">3.14 systemd 依赖和行为</h2>
+<h3 id="fb_modemservice"><code>fb_modem.service</code></h3>
+<ul>
+<li><code>Requires=mtktelephonyservice.service</code>：Modem 服务强依赖 Telephony 服务。</li>
+<li><code>After=local-fs.target remote-fs.target</code>：在本地/远程文件系统目标之后排序。</li>
+<li><code>Restart=always</code>：进程退出后由 systemd 重新拉起。</li>
+<li><code>Nice=-15</code>：配置了较高的调度优先级倾向。</li>
+</ul>
+<p>[可信度：MT8676 资料确认] [证据：umdp-files-fb-modem-service]</p>
+<h3 id="fb_audioservice"><code>fb_audio.service</code></h3>
+<ul>
+<li><code>After=fb_modem.service</code>：启动排序在 Modem unit 之后。</li>
+<li><code>Requires=sound.target</code>：依赖声音目标。</li>
+<li><code>Restart=always</code>、<code>Nice=-15</code>。</li>
+</ul>
+<p>注意 <code>After=fb_modem.service</code> 是排序，不等同于 <code>Requires=fb_modem.service</code>；
+本 unit 的强依赖项是 <code>sound.target</code>。[可信度：MT8676 资料确认]
+[证据：umdp-files-fb-audio-service]</p>
+<h3 id="fb_powermgrservice"><code>fb_powermgr.service</code></h3>
+<ul>
+<li><code>After=fb_modem.service</code> 且 <code>Requires=fb_modem.service</code>；</li>
+<li><code>Restart=always</code>、<code>Nice=-15</code>。</li>
+</ul>
+<p>因此 Modem unit 的启动/停止会影响 Power Manager 的依赖链。
+[可信度：MT8676 资料确认] [证据：umdp-files-fb-powermgr-service]</p>
+<h3 id="fb_logmgrservice"><code>fb_logmgr.service</code></h3>
+<ul>
+<li><code>RequiresMountsFor=/var/run /data /run</code>；</li>
+<li><code>After=local-fs.target remote-fs.target systemd-journald.socket</code>；</li>
+<li><code>Requires=systemd-journald.socket</code>；</li>
+<li><code>Restart=always</code>、<code>Nice=-15</code>。</li>
+</ul>
+<p>挂载或 journald 未满足时，Log Manager 的问题不能先归因于日志业务逻辑。
+[可信度：MT8676 资料确认] [证据：umdp-files-fb-logmgr-service]</p>
+<h2 id="315-启动依赖图">3.15 启动依赖图</h2>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  FS[&quot;local-fs.target\nremote-fs.target&quot;] --&gt; MODEM[&quot;fb_modem.service\nfb_modemServices&quot;]
+  TEL[&quot;mtktelephonyservice.service&quot;] ==&gt;|&quot;Requires&quot;| MODEM
+  MODEM --&gt;|&quot;After + Requires&quot;| POWER[&quot;fb_powermgr.service\nfb_powerMgr&quot;]
+  MODEM --&gt;|&quot;After（排序）&quot;| AUDIO[&quot;fb_audio.service\nfb_audioServices&quot;]
+  SOUND[&quot;sound.target&quot;] ==&gt;|&quot;Requires&quot;| AUDIO
+  MOUNT[&quot;/var/run /data /run&quot;] ==&gt;|&quot;RequiresMountsFor&quot;| LOG[&quot;fb_logmgr.service\nfb_logMgr&quot;]
+  JOURNAL[&quot;systemd-journald.socket&quot;] ==&gt;|&quot;After + Requires&quot;| LOG</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  FS[&quot;local-fs.target\nremote-fs.target&quot;] --&gt; MODEM[&quot;fb_modem.service\nfb_modemServices&quot;]
+  TEL[&quot;mtktelephonyservice.service&quot;] ==&gt;|&quot;Requires&quot;| MODEM
+  MODEM --&gt;|&quot;After + Requires&quot;| POWER[&quot;fb_powermgr.service\nfb_powerMgr&quot;]
+  MODEM --&gt;|&quot;After（排序）&quot;| AUDIO[&quot;fb_audio.service\nfb_audioServices&quot;]
+  SOUND[&quot;sound.target&quot;] ==&gt;|&quot;Requires&quot;| AUDIO
+  MOUNT[&quot;/var/run /data /run&quot;] ==&gt;|&quot;RequiresMountsFor&quot;| LOG[&quot;fb_logmgr.service\nfb_logMgr&quot;]
+  JOURNAL[&quot;systemd-journald.socket&quot;] ==&gt;|&quot;After + Requires&quot;| LOG</code></pre></details></details><p>粗箭头表示 <code>Requires</code>/<code>RequiresMountsFor</code> 强依赖，普通箭头表示 <code>After</code> 排序。Audio
+只对 <code>sound.target</code> 声明强依赖，对 Modem 声明排序；Power 同时对 Modem 声明排序
+和强依赖。这些关系直接来自 unit，不应被改写成业务 Ready 保证。
+[可信度：MT8676 资料确认] [证据：umdp-files-fb-modem-service]
+[证据：umdp-files-fb-audio-service] [证据：umdp-files-fb-powermgr-service]
+[证据：umdp-files-fb-logmgr-service]</p>
+<h2 id="316-umdpprocessini-语义">3.16 <code>umdpprocess.ini</code> 语义</h2>
+<p>配置头部注释定义：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>配置语义</th>
+<th>诊断问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>binary</code></td>
+<td>可执行文件路径</td>
+<td>路径、权限、哈希是否正确</td>
+</tr>
+<tr>
+<td><code>argument</code></td>
+<td>可执行文件参数</td>
+<td>参数是否缺失或版本不匹配</td>
+</tr>
+<tr>
+<td><code>type=restart</code></td>
+<td>死亡后重启</td>
+<td>是否形成重复重启</td>
+</tr>
+<tr>
+<td><code>type=oneshot</code></td>
+<td>只启动一次，退出后不再启动</td>
+<td>是否错误期望它常驻</td>
+</tr>
+<tr>
+<td><code>delay</code></td>
+<td>延时启动秒数</td>
+<td>依赖是否因延时尚未满足</td>
+</tr>
+<tr>
+<td><code>required</code></td>
+<td>等依赖程序启动后再启动</td>
+<td>依赖名称和 Ready 是否正确</td>
+</tr>
+<tr>
+<td><code>monitor</code></td>
+<td>监控依赖，依赖死亡时停止并等待恢复</td>
+<td>联动停止是否符合预期</td>
+</tr>
+<tr>
+<td><code>cpulimit</code></td>
+<td>限制进程最大 CPU 使用率</td>
+<td>限制是否造成处理不及时</td>
+</tr>
+<tr>
+<td><code>ready</code></td>
+<td>是否要求服务返回 Ready 信号</td>
+<td>进程存在是否等于 Ready</td>
+</tr>
+<tr>
+<td><code>priority</code></td>
+<td>启动优先级，值越小越高</td>
+<td>优先级竞争与顺序</td>
+</tr>
+<tr>
+<td><code>enable</code></td>
+<td>服务是否可用</td>
+<td>被禁用时不应继续等业务回调</td>
+</tr>
+</tbody></table>
+<p>[可信度：MT8676 资料确认] [证据：umdp-files-umdp-config-umdpprocess-ini]</p>
+<p>当前冻结配置实际列出 <code>fb_logMgr</code>、<code>fb_modemServices</code>、<code>fb_powerMgr</code> 三个 section，
+均使用 <code>type=restart</code>、<code>delay=0</code>、<code>cpulimit=10</code>、<code>ready=false</code>、
+<code>priority=1</code>、<code>enable=true</code>。[可信度：MT8676 资料确认]
+[证据：umdp-files-umdp-config-umdpprocess-ini]</p>
+<p>注释定义了 <code>argument</code>、<code>required</code>、<code>monitor</code> 等语义，不表示当前三个 section 已经
+配置这些字段。<code>enabled</code> 出现在注释，而实际键为 <code>enable</code>，正文以实际键名为准。</p>
+<h2 id="317-systemd-与-fb_procmgr-的边界">3.17 systemd 与 <code>fb_procMgr</code> 的边界</h2>
+<p>四个 systemd unit 都有 <code>Restart=always</code>；<code>umdpprocess.ini</code> 又描述一套进程监督
+语义，包内还包含 <code>fb_procMgr</code>。当前证据能确认这些组件同时存在，不能确认量产运行
+时由 systemd、<code>fb_procMgr</code> 还是二者分层负责每个进程的唯一监督。
+[可信度：待 MT8676 确认]</p>
+<p>确认方法：</p>
+<ol>
+<li>查看 <code>fb_procMgr</code> 的实际启动者和命令行；</li>
+<li>对照它加载的配置路径；</li>
+<li>使用 <code>systemctl status/show</code> 查看 unit MainPID 与 Restart 计数；</li>
+<li>制造受控服务退出，观察谁先记录死亡、谁执行拉起；</li>
+<li>用新 PID/Generation 验证 Client 是否重连。</li>
+</ol>
+<h2 id="318-服务死亡到业务恢复">3.18 服务死亡到业务恢复</h2>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+  participant Client as Application/Favalon Client
+  participant Service as UMDP Service
+  participant Sup as systemd/process supervisor
+  participant Dep as Lower Dependency
+  Client-&gt;&gt;Service: request/register
+  Service-&gt;&gt;Dep: lower operation
+  Service-xService: crash/exit
+  Client--&gt;&gt;Client: timeout/disconnect/service event
+  Sup-&gt;&gt;Sup: detect exit + apply restart policy
+  Sup-&gt;&gt;Dep: check dependency/order
+  Sup-&gt;&gt;Service: start new process
+  Service--&gt;&gt;Sup: process alive
+  Service-&gt;&gt;Dep: reconnect/reinitialize
+  Service--&gt;&gt;Client: service available/readiness evidence
+  Client-&gt;&gt;Client: discard old Handle/Session if invalid
+  Client-&gt;&gt;Service: reconnect + re-register callback
+  Client-&gt;&gt;Service: GET current business state
+  Service--&gt;&gt;Client: current state
+  Client--&gt;&gt;Client: publish recovered generation</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  participant Client as Application/Favalon Client
+  participant Service as UMDP Service
+  participant Sup as systemd/process supervisor
+  participant Dep as Lower Dependency
+  Client-&gt;&gt;Service: request/register
+  Service-&gt;&gt;Dep: lower operation
+  Service-xService: crash/exit
+  Client--&gt;&gt;Client: timeout/disconnect/service event
+  Sup-&gt;&gt;Sup: detect exit + apply restart policy
+  Sup-&gt;&gt;Dep: check dependency/order
+  Sup-&gt;&gt;Service: start new process
+  Service--&gt;&gt;Sup: process alive
+  Service-&gt;&gt;Dep: reconnect/reinitialize
+  Service--&gt;&gt;Client: service available/readiness evidence
+  Client-&gt;&gt;Client: discard old Handle/Session if invalid
+  Client-&gt;&gt;Service: reconnect + re-register callback
+  Client-&gt;&gt;Service: GET current business state
+  Service--&gt;&gt;Client: current state
+  Client--&gt;&gt;Client: publish recovered generation</code></pre></details></details><p><code>detect exit</code> 到 <code>start new process</code> 是监督层恢复；<code>process alive</code> 不等于依赖、SDK
+接口或业务 Ready。Client 必须区分旧 Handle/Session、回调注册与业务缓存，并通过
+重新查询当前状态完成恢复闭环。哪些步骤由 SDK 自动执行仍需实现确认。
+[可信度：标准机制推断]</p>
+<h2 id="319-四种恢复不能混为一谈">3.19 四种“恢复”不能混为一谈</h2>
+<table>
+<thead>
+<tr>
+<th>层次</th>
+<th>恢复对象</th>
+<th>成功证据</th>
+<th>仍可能失败</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>进程恢复</td>
+<td>Server 新 PID 存活</td>
+<td>systemd Active、无持续退出</td>
+<td>下层依赖未 Ready</td>
+</tr>
+<tr>
+<td>Client 对象恢复</td>
+<td>新连接/Handle 可调用</td>
+<td>init 成功、简单 GET 返回</td>
+<td>旧回调仍失效</td>
+</tr>
+<tr>
+<td>回调恢复</td>
+<td>订阅已在新 Session 建立</td>
+<td>注册成功、受控事件到达</td>
+<td>业务缓存仍旧</td>
+</tr>
+<tr>
+<td>业务状态恢复</td>
+<td>当前状态与用户结果一致</td>
+<td>GET/事件/显示或执行回读闭环</td>
+<td>后续代际竞争</td>
+</tr>
+</tbody></table>
+<p>“systemd 已重启”只覆盖第一行，不能作为整条业务恢复完成的证据。</p>
+<h2 id="320-失败模式与证据表">3.20 失败模式与证据表</h2>
+<table>
+<thead>
+<tr>
+<th>失败模式</th>
+<th>链路位置</th>
+<th>典型表现</th>
+<th>需要的证据</th>
+<th>首要责任边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>同步超时</td>
+<td>Client 等待响应</td>
+<td>API 返回 timeout</td>
+<td>请求/响应关联、Server/下层耗时</td>
+<td>最早未按期产出者</td>
+</tr>
+<tr>
+<td>迟到响应</td>
+<td>超时后仍返回</td>
+<td>旧结果污染新状态</td>
+<td>Request ID、Generation、丢弃日志</td>
+<td>Client 配对/隔离</td>
+</tr>
+<tr>
+<td>Callback 丢失</td>
+<td>Server→Client→App</td>
+<td>状态不更新</td>
+<td>事件源、发布、投递、入口、状态机</td>
+<td>最早缺失的一跳</td>
+</tr>
+<tr>
+<td>Service 死亡</td>
+<td>UMDP Server</td>
+<td>断连、请求失败</td>
+<td>core/exit、systemd、PID 代际</td>
+<td>服务或依赖</td>
+</tr>
+<tr>
+<td>依赖未 Ready</td>
+<td>Telephony/Sound/Mount/Journal</td>
+<td>进程起不来或功能不可用</td>
+<td>unit 依赖状态、下层日志</td>
+<td>依赖所有者</td>
+</tr>
+<tr>
+<td>重复重启</td>
+<td>监督层</td>
+<td>PID 反复变化</td>
+<td>Restart 计数、退出码、CPU/配置</td>
+<td>首个退出原因</td>
+</tr>
+<tr>
+<td>旧 Client/Session</td>
+<td>服务重启后</td>
+<td>调用持续失败或旧回调</td>
+<td>Handle、Socket、Generation</td>
+<td>Client 生命周期</td>
+</tr>
+<tr>
+<td>注册未恢复</td>
+<td>新服务已可用</td>
+<td>GET 正常、事件无回调</td>
+<td>REGISTER 结果、服务订阅表</td>
+<td>Client/Server 订阅</td>
+</tr>
+<tr>
+<td>业务缓存未恢复</td>
+<td>IPC 已恢复</td>
+<td>UI/策略仍旧</td>
+<td>恢复后 GET、缓存版本、用户结果</td>
+<td>业务状态机</td>
+</tr>
+<tr>
+<td>Log 服务不可用</td>
+<td>日志链</td>
+<td>无日志或落盘失败</td>
+<td>Mount、journald socket、fb_logMgr</td>
+<td>日志依赖链</td>
+</tr>
+</tbody></table>
+<h2 id="321-分层诊断步骤">3.21 分层诊断步骤</h2>
+<h3 id="第一步确认进程与依赖">第一步：确认进程与依赖</h3>
+<ul>
+<li><code>systemctl status</code>/<code>systemctl show</code> 检查 Active、MainPID、Restart 和依赖；</li>
+<li><code>journalctl -u</code> 检查首次退出原因与拉起时间；</li>
+<li>Modem 路径先确认 <code>mtktelephonyservice.service</code>；</li>
+<li>Audio 路径确认 <code>sound.target</code> 和 Modem 排序状态；</li>
+<li>Log 路径确认挂载与 <code>systemd-journald.socket</code>。</li>
+</ul>
+<p>命令是通用 Linux 诊断方式；具体权限、unit 名称和日志字段以目标系统为准。
+[可信度：标准机制推断]</p>
+<h3 id="第二步确认-clientserver-会话">第二步：确认 Client/Server 会话</h3>
+<p>记录 Client PID、Server PID、连接建立/断开、新旧 Generation、Handle 创建与释放。
+若 Server PID 已变化而 Client 仍使用旧 Handle，应优先检查重连与对象生命周期。</p>
+<h3 id="第三步确认请求响应或事件">第三步：确认请求/响应或事件</h3>
+<p>同步链至少关联 API 名、Request ID/候选时间窗、发送、Server 接收、下层调用、
+response 和返回值；异步链至少关联 REGISTER、事件源、Server 发布、Client 收到、
+Callback 入口和业务消费。</p>
+<h3 id="第四步确认业务状态">第四步：确认业务状态</h3>
+<p>恢复后执行安全的 GET 或读取状态事件，检查缓存版本和用户结果。不要以“Socket 已连”
+替代“状态正确”，也不要以“Callback 到达”替代“业务线程已处理”。</p>
+<h2 id="322-示例代码的正确用法">3.22 示例代码的正确用法</h2>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>新增 Vsock API 示例只用于说明 server/client 角色：其中有 svm_prot 拼写、变量不一致和 54 字节 buffer 配合 64 字节接收等问题，不能作为可运行生产例程复制。Vsock 属性案例调用 Android SetProperty/GetProperty，属于独立属性桥接实例，不是 Favalon/UMDP API 的替代实现。比较例程时分别标注平台、地址族、CID、port、消息长度、失败返回与断线清理。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U038 · Vsock api 文档v2.0.pdf · PDF第9-13页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E007 · vsock使用案例.pdf · PDF第3-4页<small>〔本地来源〕</small></span></p>
+<p>示例可用于回答：</p>
+<ul>
+<li>初始化函数和 Handle 参数如何组织；</li>
+<li>哪些家族提供服务事件回调；</li>
+<li>同步、异步函数在调用侧的基本形态；</li>
+<li>deinit 或释放函数何时出现。</li>
+</ul>
+<p>例如 Data 示例展示 Client 初始化、数据事件回调和异步调用入口；Network 示例展示
+Client Handle、事件注册、异步扫描和服务事件回调；Timer 示例展示初始化、启动和
+回调。[可信度：MT8676 资料确认] [证据：sdk-example-data-test-data-test-c]
+[证据：sdk-example-nw-test-nw-test-c] [证据：sdk-example-timer-test-timer-test-c]</p>
+<p>示例不能用于回答：</p>
+<ul>
+<li>量产应用重试几次、退避多久；</li>
+<li>服务重启后谁负责重连；</li>
+<li>回调在哪个业务线程执行；</li>
+<li>是否允许并发调用；</li>
+<li>超时后是否安全重试；</li>
+<li>业务 Ready 的最终判据。</li>
+</ul>
+<p>这些问题需要量产 Client 源码、接口合同和故障注入结果。</p>
+<h2 id="323-本章可确认与待确认清单">3.23 本章可确认与待确认清单</h2>
+<p><strong>MT8676 资料已确认：</strong></p>
+<ul>
+<li>SDK V1.0.166 位于 Middleware，采用 Client/Server；</li>
+<li>Client/Server 结构图标注 Socket；</li>
+<li>支持同步调用、超时处理、回调以及 GET/SET/REGISTER；</li>
+<li>V1.0.166 示例确认 15 个业务家族；V1.0.226 头文件仅确认 226 集成接口面；</li>
+<li>UMDP V1.0.226 的 Yocto recipe 位置、安装内容和主要依赖；</li>
+<li>五个包内服务程序、主要 UMDP/PA 库；</li>
+<li>四个 systemd unit 的依赖、排序、Restart 与 Nice；</li>
+<li><code>umdpprocess.ini</code> 的字段语义和当前三个 section 的配置。</li>
+</ul>
+<p><strong>待 MT8676 实现证据确认：</strong></p>
+<ul>
+<li>每个 API 家族到具体 Server 进程、领域库和 PA 库的精确映射；</li>
+<li>Client/Server Socket 的协议、地址、认证、线程和队列；</li>
+<li>超时后迟到响应的丢弃/隔离规则；</li>
+<li>Server 重启后 SDK 是否自动重连、Handle 是否自动更新；</li>
+<li>Callback 注册是否跨服务重启保存；</li>
+<li>systemd 与 <code>fb_procMgr</code> 的监督分工；</li>
+<li>TBOX-APP <code>modem_service</code> 与 <code>fb_modemServices</code> 的实际关系；</li>
+<li>量产 Client 的重试、退避、幂等、状态重建与 Ready 判据。</li>
+</ul>
+<hr>
+<p><a href="index.html">返回主题导航</a> · <a href="22.html">本次来源索引</a></p>
+</article><nav class="pager"><a href="02.html">← 上一步：整机与虚拟化架构</a><a href="04.html">下一步：三图模块字典 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#03-mt8676-favalon-sdk-与-umdp">03 MT8676 Favalon SDK 与 UMDP</a><a class="depth-2" href="#2026-09-20-校订保留-sdk-基线新增-8668-迁移入口">2026-09-20 校订：保留 SDK 基线，新增 8668 迁移入口</a><a class="depth-2" href="#31-版本和证据边界">3.1 版本和证据边界</a><a class="depth-2" href="#32-favalon-sdk-在系统中的位置">3.2 Favalon SDK 在系统中的位置</a><a class="depth-2" href="#33-clientserver-结构和库服务边界">3.3 Client/Server 结构和库/服务边界</a><a class="depth-2" href="#34-api-家族两个版本快照分列">3.4 API 家族：两个版本快照分列</a><a class="depth-2" href="#35-getsetregister-三种语义">3.5 GET、SET、REGISTER 三种语义</a><a class="depth-3" href="#get">GET</a><a class="depth-3" href="#set">SET</a><a class="depth-3" href="#register">REGISTER</a><a class="depth-2" href="#36-client-生命周期">3.6 Client 生命周期</a><a class="depth-2" href="#37-成功的同步调用">3.7 成功的同步调用</a><a class="depth-2" href="#38-超时迟到响应和服务不可用">3.8 超时、迟到响应和服务不可用</a><a class="depth-2" href="#39-回调注册事件和服务重启">3.9 回调注册、事件和服务重启</a><a class="depth-2" href="#310-回调异常的四个层次">3.10 回调异常的四个层次</a><a class="depth-2" href="#311-umdp-的-yocto-集成">3.11 UMDP 的 Yocto 集成</a><a class="depth-2" href="#312-umdp-服务">3.12 UMDP 服务</a><a class="depth-2" href="#313-umdp-包内组件存在清单与绑定边界">3.13 UMDP 包内组件存在清单与绑定边界</a><a class="depth-2" href="#314-systemd-依赖和行为">3.14 systemd 依赖和行为</a><a class="depth-3" href="#fb_modemservice">fbmodem.service</a><a class="depth-3" href="#fb_audioservice">fbaudio.service</a><a class="depth-3" href="#fb_powermgrservice">fbpowermgr.service</a><a class="depth-3" href="#fb_logmgrservice">fblogmgr.service</a><a class="depth-2" href="#315-启动依赖图">3.15 启动依赖图</a><a class="depth-2" href="#316-umdpprocessini-语义">3.16 umdpprocess.ini 语义</a><a class="depth-2" href="#317-systemd-与-fb_procmgr-的边界">3.17 systemd 与 fbprocMgr 的边界</a><a class="depth-2" href="#318-服务死亡到业务恢复">3.18 服务死亡到业务恢复</a><a class="depth-2" href="#319-四种恢复不能混为一谈">3.19 四种“恢复”不能混为一谈</a><a class="depth-2" href="#320-失败模式与证据表">3.20 失败模式与证据表</a><a class="depth-2" href="#321-分层诊断步骤">3.21 分层诊断步骤</a><a class="depth-3" href="#第一步确认进程与依赖">第一步：确认进程与依赖</a><a class="depth-3" href="#第二步确认-clientserver-会话">第二步：确认 Client/Server 会话</a><a class="depth-3" href="#第三步确认请求响应或事件">第三步：确认请求/响应或事件</a><a class="depth-3" href="#第四步确认业务状态">第四步：确认业务状态</a><a class="depth-2" href="#322-示例代码的正确用法">3.22 示例代码的正确用法</a><a class="depth-2" href="#323-本章可确认与待确认清单">3.23 本章可确认与待确认清单</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>

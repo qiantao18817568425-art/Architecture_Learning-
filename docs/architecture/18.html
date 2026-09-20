@@ -1,0 +1,219 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>盟博OS架构与服务边界 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details open><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a aria-current="page" href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 18</div><div class="chapter-title"><p class="eyebrow">CHAPTER 18 · 中文版全文</p><h1>盟博OS架构与服务边界</h1><div class="actions"><button class="button" data-read="18" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>怎样把盟博 OS 补图读回原架构？</h2><p>Manager/Service/HAL 是职责分组。用户图明确部分组件和端点，并标注诊断入口退役；删除某入口不代表整车诊断消失。</p><ol><li><strong>怎么读：</strong>先看原图，再读各容器、通信端点和退役注释，最后把它们映射到原模块字典。</li><li><strong>项目练习：</strong>对 mb.os 和各 IpcClient 分别写服务端/客户端角色；未有 IDL 的消息内容不猜测。</li><li><strong>自检：</strong>Qnx 名称、FDBus 端点名可以单独证明实际部署的 OS 吗？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-6">Day 6</a> <a href="../index.html#day-15">Day 15</a> <a href="../index.html#day-16">Day 16</a> <a href="../index.html#day-17">Day 17</a> <a href="../index.html#day-26">Day 26</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#18-盟博-os-架构与服务边界">18 盟博 OS 架构与服务边界</a><a class="depth-2" href="#181-这张图补充了什么">18.1 这张图补充了什么</a><a class="depth-2" href="#182-模块字典与当前状态">18.2 模块字典与当前状态</a><a class="depth-2" href="#183-hal-端点与配置核对表">18.3 HAL 端点与配置核对表</a><a class="depth-2" href="#184-建议的职责视图">18.4 建议的职责视图</a><a class="depth-2" href="#185-四条排障链">18.5 四条排障链</a><a class="depth-2" href="#186-需要补齐的五份工件">18.6 需要补齐的五份工件</a></details><article id="chapter-text"><h1 id="18-盟博-os-架构与服务边界">18 盟博 OS 架构与服务边界</h1>
+<blockquote>
+<p>证据：用户于 2026-09-20 提供的盟博 OS 架构图（MBOS-20260920）。图未提供代码版本或明确 SoC 标签；本章属于项目补充视图，不自动归属 MT8676 或 MT8668 的所有版本。</p>
+</blockquote>
+<p><figure><a href="assets/07.png" target="_blank" rel="noopener"><img loading="lazy" src="assets/07.png" alt="盟博OS用户原图"></a><figcaption>盟博OS用户原图 · 点击查看原图</figcaption></figure></p>
+<h2 id="181-这张图补充了什么">18.1 这张图补充了什么</h2>
+<p>原三张总图解释整机部署、Android 分层和跨域通信；新增图把 <code>MBOs</code>、<code>MBOsService</code>、<code>MBOS_Hal</code> 与 <code>configstore-service_hal</code> 展开。它证明框内组件、显式 Binder 连线及右侧注释，不证明每个方框都是一个进程，也不证明类名含 Qnx 就运行 QNX。</p>
+<p>原图绿色双向箭头的图例是 Binder，连接的是容器边界；框内具体 Manager 与 Service 的一一绑定仍需 AIDL/源码。右侧 FDBus 端点说明的是 HAL 内部客户端/服务端的通信角色，不能把绿色 Binder 箭头改写成跨 VM Binder 直通。</p>
+<h2 id="182-模块字典与当前状态">18.2 模块字典与当前状态</h2>
+<table>
+<thead>
+<tr>
+<th>层/容器</th>
+<th>图中模块</th>
+<th>图中能确认的职责或状态</th>
+<th>仍需版本证据的部分</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MBOs</td>
+<td>MBOSMonitorManager</td>
+<td>监控管理入口名称</td>
+<td>API、调用权限、采样及上报策略</td>
+</tr>
+<tr>
+<td>MBOs</td>
+<td>MBOSIpcManager</td>
+<td>IPC 管理入口名称</td>
+<td>消息 ID、线程/队列、超时重试</td>
+</tr>
+<tr>
+<td>MBOs</td>
+<td>MBWindowManager</td>
+<td>窗口管理入口名称</td>
+<td>与 Android WMS 的调用关系</td>
+</tr>
+<tr>
+<td>MBOs</td>
+<td>MBOSTBoxManager</td>
+<td>TBox 管理入口名称</td>
+<td>与 UMDP、Telephony、TBox Service 的绑定</td>
+</tr>
+<tr>
+<td>MBOs</td>
+<td>MBOSConfigstoreManager</td>
+<td>配置管理入口；MBOs 与 configstore 容器有 Binder 连线</td>
+<td>文件读取、缓存失效、更新权限和失败回退</td>
+</tr>
+<tr>
+<td>MBOs</td>
+<td>MBOSDiagnosticManager</td>
+<td>注释写“os层已弃用”</td>
+<td>被何接口替代、兼容壳是否保留</td>
+</tr>
+<tr>
+<td>MBOsService</td>
+<td>MonitorService</td>
+<td>含 Storage、Stability、Cpu、Mem、Bsp、Qnx 监控</td>
+<td>采样周期、阈值、上报和恢复策略</td>
+</tr>
+<tr>
+<td>MBOsService</td>
+<td>IpcService</td>
+<td>IPC 服务名称</td>
+<td>进程布局、AIDL 与 HAL 绑定</td>
+</tr>
+<tr>
+<td>MBOsService</td>
+<td>MBWindowManagerService</td>
+<td>注释写“主要包含三指手势监测”</td>
+<td>不据此认定其负责所有系统窗口管理</td>
+</tr>
+<tr>
+<td>MBOsService</td>
+<td>DiagnosticService</td>
+<td>注释写“已去掉对应服务”</td>
+<td>不再按本图把它画成在用诊断必经节点</td>
+</tr>
+<tr>
+<td>configstore-service_hal</td>
+<td>OfflineConfigStroe</td>
+<td>原图拼写；读取离线配置的相关节点</td>
+<td>类名应否纠正、解析格式、schema、热更新</td>
+</tr>
+<tr>
+<td>MBOS_Hal</td>
+<td>IpcServer / 多个 IpcClient / MonitorQnx / MonitorBsp</td>
+<td>见下表</td>
+<td>实际进程名、运行系统和各端点所有者</td>
+</tr>
+</tbody></table>
+<p><code>OfflineConfigStroe</code> 保留原图拼写以便检索；正文可解释为 OfflineConfigStore，但不能未经源码确认直接“修正”接口名。<code>MBOSDiagnosticManager/DiagnosticService</code> 的退役也不等于整机取消诊断；<code>MonitorQnx</code> 仍列出 <code>mb.diagnostics</code> 连接。</p>
+<h2 id="183-hal-端点与配置核对表">18.3 HAL 端点与配置核对表</h2>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>原图端点/路径</th>
+<th>原图说明</th>
+<th>使用边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>IpcServer</td>
+<td><code>mb.os</code></td>
+<td>FdbusService，处理 AVM、DVR、DMS、HMI 数据</td>
+<td>“数据”未说明为原始像素，不能据此画整帧视频经 FDBus 复制</td>
+</tr>
+<tr>
+<td>IpcClientHud</td>
+<td><code>mb.qnx.ivi_service</code></td>
+<td>FdbusClient，处理 IVI 数据</td>
+<td>qnx 是名称组成，实际部署域需查注册/启动配置</td>
+</tr>
+<tr>
+<td>IpcClientCmd</td>
+<td><code>mb.qnxcmd_service</code></td>
+<td>FdbusClient，与 Yocto 通信</td>
+<td>命令种类、权限、超时、幂等性未给出</td>
+</tr>
+<tr>
+<td>IpcClientUpdate / IpcClientDispUpdate</td>
+<td>注释说 android、yocto、display 三个独立 IpcClient</td>
+<td>用于升级</td>
+<td>框图只显式画出两个 Update 名称；第三个精确类名和三者映射待确认</td>
+</tr>
+<tr>
+<td>MonitorQnx</td>
+<td><code>sv[本地资料库路径]</code></td>
+<td>作为 FdbusClient 接收注释所称“dbus数据”</td>
+<td>此处措辞不能证明 FDBus 等同 D-Bus，载荷协议仍待 IDL</td>
+</tr>
+<tr>
+<td>MonitorQnx / CanClient</td>
+<td><code>mb.can</code></td>
+<td>接收 CAN 数据，如 MCU 主板温度、功放温度</td>
+<td>信号缩放、单位、采样新鲜度与 DBC 待确认</td>
+</tr>
+<tr>
+<td>MonitorBsp</td>
+<td><code>/proc/wlan_ssr_event</code></td>
+<td>SSR_PATH 监听入口</td>
+<td>节点语义、消费方式和异常恢复不能由路径推断</td>
+</tr>
+<tr>
+<td>MonitorBsp</td>
+<td><code>/proc/pcie_state</code></td>
+<td>PCIE_PATH 监听入口</td>
+<td>PCIe link 状态与业务恢复分开验收</td>
+</tr>
+<tr>
+<td>OfflineConfigStroe</td>
+<td><code>/mbconfig/config/mbconfigstore/offlineconfig.txt</code></td>
+<td>OFFLINE_CONFIG_FILE</td>
+<td>图示路径，不保证所有量产版本存在</td>
+</tr>
+</tbody></table>
+<h2 id="184-建议的职责视图">18.4 建议的职责视图</h2>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TB
+  M[&quot;MBOs：Manager API 集合&quot;] &lt;--&gt;|&quot;Binder（原图容器级连线）&quot;| S[&quot;MBOsService：Monitor / IPC / 手势监测&quot;]
+  M &lt;--&gt;|&quot;Binder&quot;| C[&quot;configstore-service_hal / OfflineConfigStroe&quot;]
+  S &lt;--&gt;|&quot;Binder&quot;| H[&quot;MBOS_Hal&quot;]
+  H --- F[&quot;FDBus 角色：mb.os / ivi / cmd / diagnostics&quot;]
+  H --- B[&quot;MonitorBsp：WLAN SSR / PCIe 节点&quot;]
+  H --- N[&quot;CanClient：mb.can&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TB
+  M[&quot;MBOs：Manager API 集合&quot;] &lt;--&gt;|&quot;Binder（原图容器级连线）&quot;| S[&quot;MBOsService：Monitor / IPC / 手势监测&quot;]
+  M &lt;--&gt;|&quot;Binder&quot;| C[&quot;configstore-service_hal / OfflineConfigStroe&quot;]
+  S &lt;--&gt;|&quot;Binder&quot;| H[&quot;MBOS_Hal&quot;]
+  H --- F[&quot;FDBus 角色：mb.os / ivi / cmd / diagnostics&quot;]
+  H --- B[&quot;MonitorBsp：WLAN SSR / PCIe 节点&quot;]
+  H --- N[&quot;CanClient：mb.can&quot;]</code></pre></details></details><p>图中无向线仅归纳 HAL 的能力集合；不增加原图未证明的调用顺序。已退役诊断节点不纳入在用主链。</p>
+<h2 id="185-四条排障链">18.5 四条排障链</h2>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>建议先收集的证据</th>
+<th>下一步判断</th>
+<th>避免的误判</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Manager 调用无返回</td>
+<td>调用方线程栈、Binder transaction、Service 存活及 HAL 返回</td>
+<td>卡在 Binder 等待、HAL 服务未 ready，还是 FDBus 请求未完成</td>
+<td>把所有 IPC 问题都归给跨 VM 网络</td>
+</tr>
+<tr>
+<td>AVM/DVR/DMS 状态不刷新</td>
+<td>mb.os 注册、订阅/重连、消息序号、业务时间戳</td>
+<td>控制/状态消息是否新鲜，实际图像链是否独立异常</td>
+<td>服务在线就认定画面已恢复</td>
+</tr>
+<tr>
+<td>温度监控冻结</td>
+<td>mb.can 数据时间、信号原值、MonitorQnx 消费/缓存</td>
+<td>上游未更新还是消费者持旧状态</td>
+<td>数值“正常”就忽略过期</td>
+</tr>
+<tr>
+<td>配置不生效</td>
+<td>文件版本/哈希、解析日志、Manager 缓存、使用方快照</td>
+<td>读取失败、schema 不符还是缓存未失效</td>
+<td>文件已写入就认定所有进程已应用</td>
+</tr>
+</tbody></table>
+<p>这些是由图归纳的取证方法，具体日志 Tag、采样周期、恢复动作尚未获源码证实。</p>
+<h2 id="186-需要补齐的五份工件">18.6 需要补齐的五份工件</h2>
+<ol>
+<li>当前分支 AIDL/IDL、接口版本与访问权限表。</li>
+<li>init/systemd 清单、进程树和 FDBus 注册快照。</li>
+<li>Manager→Service→HAL→远端的调用映射及线程模型。</li>
+<li>升级三个客户端的精确名称、目标域、状态机和回滚关系。</li>
+<li>退役接口替代关系，以及离线配置 schema/更新生效流程。</li>
+</ol>
+<p>本版已经将“图中确认”提升为可引用的结构事实；以上工件未齐全前，不把结构事实扩展成量产时序、恢复责任或精确超时。</p>
+<hr>
+<p><a href="index.html">返回主题导航</a> · <a href="22.html">来源与覆盖说明</a></p>
+</article><nav class="pager"><a href="05.html">← 上一步：通信机制与异常诊断基础</a><a href="06.html">下一步：Android内部机制与稳定性 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#18-盟博-os-架构与服务边界">18 盟博 OS 架构与服务边界</a><a class="depth-2" href="#181-这张图补充了什么">18.1 这张图补充了什么</a><a class="depth-2" href="#182-模块字典与当前状态">18.2 模块字典与当前状态</a><a class="depth-2" href="#183-hal-端点与配置核对表">18.3 HAL 端点与配置核对表</a><a class="depth-2" href="#184-建议的职责视图">18.4 建议的职责视图</a><a class="depth-2" href="#185-四条排障链">18.5 四条排障链</a><a class="depth-2" href="#186-需要补齐的五份工件">18.6 需要补齐的五份工件</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>

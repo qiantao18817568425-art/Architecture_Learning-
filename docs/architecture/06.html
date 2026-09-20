@@ -1,0 +1,1633 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>Android内部机制与稳定性 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details open><summary>第三阶段 · 走进各个运行域</summary><a aria-current="page" href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 06</div><div class="chapter-title"><p class="eyebrow">CHAPTER 06 · 中文版全文</p><h1>Android内部机制与稳定性</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=06">并排对比两套正文 ↗</a><a class="button secondary" href="original-06.html">对照原版解释 ↗</a><button class="button" data-read="06" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>Android 显示和稳定性为什么跨很多模块？</h2><p>App 提交工作后还需要系统服务、图形队列、合成和显示设备。ANR、Watchdog、低内存回收各有触发机制；它们是线索，不能单凭名字判断根因。</p><ol><li><strong>怎么读：</strong>先看进程/线程和生命周期，再跟一帧 BufferQueue→SurfaceFlinger→HWC，最后看资源与故障机制。</li><li><strong>项目练习：</strong>当 App 有日志却没有新画面时，分别列出 UI 更新、buffer 入队、合成、present 的证据。</li><li><strong>自检：</strong>屏幕仍刷新是否能证明相机帧也是新的？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-6">Day 6</a> <a href="../index.html#day-22">Day 22</a> <a href="../index.html#day-23">Day 23</a> <a href="../index.html#day-24">Day 24</a> <a href="../index.html#day-26">Day 26</a> <a href="../index.html#day-27">Day 27</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#06-android-内部机制图形资源与稳定性">06 Android 内部机制、图形资源与稳定性</a><a class="depth-2" href="#2026-09-20-校订android-异常必须连到跨域依赖">2026-09-20 校订：Android 异常必须连到跨域依赖</a><a class="depth-2" href="#61-生命周期窗口与输入">6.1 生命周期、窗口与输入</a><a class="depth-3" href="#611-生命周期和窗口正常路径">6.1.1 生命周期和窗口正常路径</a><a class="depth-3" href="#612-输入事件正常路径">6.1.2 输入事件正常路径</a><a class="depth-3" href="#613-生命周期窗口与输入异常传播恢复路径">6.1.3 生命周期、窗口与输入异常传播/恢复路径</a><a class="depth-2" href="#62-android-图像渲染">6.2 Android 图像渲染</a><a class="depth-3" href="#621-端到端正常路径">6.2.1 端到端正常路径</a><a class="depth-3" href="#622-帧的资源与观察模型">6.2.2 帧的资源与观察模型</a><a class="depth-3" href="#623-渲染异常传播恢复路径">6.2.3 渲染异常传播/恢复路径</a><a class="depth-2" href="#63-bufferqueuesurfacecontrol-与所有权">6.3 BufferQueue、SurfaceControl 与所有权</a><a class="depth-3" href="#631-正常所有权闭环">6.3.1 正常所有权闭环</a><a class="depth-3" href="#632-正常释放对称性">6.3.2 正常释放对称性</a><a class="depth-3" href="#633-异常传播与恢复">6.3.3 异常传播与恢复</a><a class="depth-2" href="#64-surface-与图形资源泄漏">6.4 Surface 与图形资源泄漏</a><a class="depth-3" href="#641-先定义泄漏证据">6.4.1 先定义“泄漏证据”</a><a class="depth-3" href="#642-正常图创建使用释放">6.4.2 正常图：创建—使用—释放</a><a class="depth-3" href="#643-异常传播恢复图">6.4.3 异常传播/恢复图</a><a class="depth-3" href="#644-十二类泄漏矩阵">6.4.4 十二类泄漏矩阵</a><a class="depth-3" href="#645-泄漏与积压如何区分">6.4.5 泄漏与积压如何区分</a><a class="depth-2" href="#65-黑屏冻屏花屏闪屏与卡顿">6.5 黑屏、冻屏、花屏、闪屏与卡顿</a><a class="depth-3" href="#651-五层正常显示链">6.5.1 五层正常显示链</a><a class="depth-3" href="#652-症状不能互换">6.5.2 症状不能互换</a><a class="depth-3" href="#653-异常传播恢复图">6.5.3 异常传播/恢复图</a><a class="depth-2" href="#66-android-内部资源与稳定性">6.6 Android 内部资源与稳定性</a><a class="depth-3" href="#661-camera">6.6.1 Camera</a><a class="depth-3" href="#662-mediacodec">6.6.2 MediaCodec</a><a class="depth-3" href="#663-audio">6.6.3 Audio</a><a class="depth-3" href="#664-内存与-lmkd">6.6.4 内存与 LMKD</a><a class="depth-3" href="#665-anr">6.6.5 ANR</a><a class="depth-3" href="#666-wakelock">6.6.6 WakeLock</a><a class="depth-3" href="#667-网络">6.6.7 网络</a><a class="depth-3" href="#668-usb">6.6.8 USB</a><a class="depth-3" href="#669-存储">6.6.9 存储</a><a class="depth-2" href="#67-android-内部通信异常">6.7 Android 内部通信异常</a><a class="depth-3" href="#671-正常状态链">6.7.1 正常状态链</a><a class="depth-3" href="#672-异常传播与恢复">6.7.2 异常传播与恢复</a><a class="depth-3" href="#673-八类异常与首个断点">6.7.3 八类异常与首个断点</a><a class="depth-2" href="#68-现场使用方法与证据边界">6.8 现场使用方法与证据边界</a><a class="depth-3" href="#681-一张统一排查表">6.8.1 一张统一排查表</a><a class="depth-3" href="#682-本章不能直接证明什么">6.8.2 本章不能直接证明什么</a><a class="depth-3" href="#683-最小闭环">6.8.3 最小闭环</a><a class="depth-2" href="#69-证据预审门禁与非等价关系">6.9 证据预审门禁与非等价关系</a><a class="depth-3" href="#691-生命周期到物理显示的状态不等式">6.9.1 生命周期到物理显示的状态不等式</a><a class="depth-3" href="#692-输入事件不等式">6.9.2 输入事件不等式</a><a class="depth-3" href="#693-三类-fence-不能互换">6.9.3 三类 Fence 不能互换</a><a class="depth-3" href="#694-windowsurfacelayerbuffer-与内存不等价">6.9.4 Window、Surface、Layer、Buffer 与内存不等价</a><a class="depth-3" href="#695-surfacecontrol-本地句柄与远端-layer">6.9.5 SurfaceControl 本地句柄与远端 Layer</a><a class="depth-3" href="#696-imagereader-三态和-maximages">6.9.6 ImageReader 三态和 maxImages</a><a class="depth-3" href="#697-mediacodec-五个独立资源面">6.9.7 MediaCodec 五个独立资源面</a><a class="depth-3" href="#698-virtualdisplaysurface-与-mediaprojection">6.9.8 VirtualDisplay、Surface 与 MediaProjection</a><a class="depth-3" href="#699-九类资源的-creatorholderconsumerreleaser-合同">6.9.9 九类资源的 creator—holder—consumer—releaser 合同</a><a class="depth-3" href="#6910-binder-服务与业务结果不等式">6.9.10 Binder 服务与业务结果不等式</a><a class="depth-3" href="#6911-android-版本和命令边界">6.9.11 Android 版本和命令边界</a></details><article id="chapter-text"><h1 id="06-android-内部机制图形资源与稳定性">06 Android 内部机制、图形资源与稳定性</h1>
+<h2 id="2026-09-20-校订android-异常必须连到跨域依赖">2026-09-20 校订：Android 异常必须连到跨域依赖</h2>
+<p>PVT 的 lmkd/system_server SWT 案例显示，AMS 的 updateOomAdjLocked 路径等待 lmkd socket，lmkd 高 CPU/epoll 异常会形成系统服务阻塞链。这个案例支持“从等待者追到持锁/服务端”的方法，不支持把所有 SWT 定性为 lmkd。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S261 · lmkd+引发的system_server+SWT.pdf · PDF第2-5页<small>〔本地来源〕</small></span></p>
+<p>内存排查先分用户堆、共享图形 buffer、内核页、缓存；page_owner 针对页分配线索，不能取代进程堆和 dma-buf 归属分析。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E003 · 使用page_owner定位内存泄露.pdf · PDF第3-8页<small>〔本地来源〕</small></span> 显示/媒体排查将 Surface/BufferQueue、codec、fence、SF/HWC、Weston/DRM 串起来，<code>pipelineFull</code> 和单次 wait fence 都不能独立确定根因。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U047 · 软件开发培训-音视频解码常见问题及分析.pdf · PDF第6-10页<small>〔本地来源〕</small></span></p>
+<p>多域性能对照使用同一负载、温度、频率和事件配置；Mtrace V1.0 的 Kdmips/Hyptrace 要求三设备在线。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U028 · Mtrace Tool 使用说明.docx<small>〔本地来源〕</small></span> 工程步骤与已发现的培训解释问题见 <a href="23.html">23 章</a>。</p>
+<hr>
+<p>本章回答的不是“Android 有哪些服务”，而是四个更适合现场定位的问题：请求从哪里来、资源当前归谁、哪一个边界最先偏离契约、恢复后怎样证明业务真的回来。图 1 确认 MT8676 架构中存在 Application、Framework/Java Services、Native Services、System、Runtime、Libraries、HAL、Kernel 等层，并能确认 <code>Surface Flinger</code>、<code>Input Flinger</code>、Window Manager、Display HAL、DRM、MDP、Camera、Audio 等标签存在。[可信度：架构图确认] [证据：original-diagram-01]</p>
+<p>但必须先锁定边界：<strong>图中方框存在 ≠ 已证明运行时调用关系</strong>。<code>ViewRootImpl</code>、<code>HWUI</code>、<code>BufferQueue</code>、<code>HWC</code> 等逐跳关系来自 AOSP 通用机制，不由图 1 的方框位置直接证明；<code>BLASTBufferQueue</code>、<code>SurfaceControl</code>、HWC AIDL/HIDL 与各类 <code>dumpsys</code> 字段还会随 Android 版本变化。[可信度：标准机制推断] MT8676 的 Android 版本、厂商修改、私有进程名、接口版本、阈值与日志关键字待 MT8676 确认。[可信度：待 MT8676 确认]</p>
+<h2 id="61-生命周期窗口与输入">6.1 生命周期、窗口与输入</h2>
+<h3 id="611-生命周期和窗口正常路径">6.1.1 生命周期和窗口正常路径</h3>
+<p>先按下列顺序理解第一条主链；这些英文标签也作为后续图中的稳定对照点：</p>
+<p><code>launch request</code> → <code>AMS/ATMS</code> → <code>process attach</code> → <code>Activity lifecycle</code> → <code>Window/DecorView</code> → <code>WMS</code> → <code>ViewRootImpl</code> → <code>visible + focused</code>。</p>
+<p>[可信度：标准机制推断] <code>AMS</code> 管进程与组件状态，<code>ATMS</code> 管任务、Activity 与显示区域，<code>WMS</code> 管窗口 token、层级、布局、可见性和输入焦点。它们在具体 Android 版本中可能同处系统服务进程，但逻辑职责仍要分开。Activity 的 <code>onResume</code> 只说明生命周期到达某状态，不等于窗口已经可见、有 Surface、获得焦点或已经成功出帧。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+  participant C as Caller/Launcher
+  participant A as AMS/ATMS
+  participant P as App process
+  participant L as Activity
+  participant W as WMS
+  participant V as ViewRootImpl
+  C-&gt;&gt;A: launch request
+  A-&gt;&gt;P: start or reuse + process attach
+  A-&gt;&gt;L: Activity lifecycle transaction
+  L-&gt;&gt;L: create Window/DecorView
+  L-&gt;&gt;W: add window + token/layout
+  W--&gt;&gt;V: relayout, Surface and focus state
+  V--&gt;&gt;L: visible + focused + traversal</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  participant C as Caller/Launcher
+  participant A as AMS/ATMS
+  participant P as App process
+  participant L as Activity
+  participant W as WMS
+  participant V as ViewRootImpl
+  C-&gt;&gt;A: launch request
+  A-&gt;&gt;P: start or reuse + process attach
+  A-&gt;&gt;L: Activity lifecycle transaction
+  L-&gt;&gt;L: create Window/DecorView
+  L-&gt;&gt;W: add window + token/layout
+  W--&gt;&gt;V: relayout, Surface and focus state
+  V--&gt;&gt;L: visible + focused + traversal</code></pre></details></details><table>
+<thead>
+<tr>
+<th>位置</th>
+<th>输入</th>
+<th>当前处理</th>
+<th>输出</th>
+<th>最早可证伪断点</th>
+<th>Owner 边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>AMS/ATMS</code></td>
+<td>启动意图、用户与显示上下文</td>
+<td>解析组件，选 Task，安排进程/生命周期</td>
+<td>进程启动或生命周期事务</td>
+<td>请求是否解析到目标组件/用户/显示</td>
+<td>Framework Activity/Task</td>
+</tr>
+<tr>
+<td>App 进程</td>
+<td>attach 和 lifecycle transaction</td>
+<td>创建组件，执行主线程回调</td>
+<td>Activity/Window 请求</td>
+<td>新进程是否完成 attach；主线程是否开始回调</td>
+<td>应用进程</td>
+</tr>
+<tr>
+<td><code>WMS</code></td>
+<td>token、布局、可见性、焦点请求</td>
+<td>验证 token，维护 Window 树和焦点</td>
+<td>relayout/Surface/焦点状态</td>
+<td>Window 是否进入正确 Display 的可见树</td>
+<td>Framework Window</td>
+</tr>
+<tr>
+<td><code>ViewRootImpl</code></td>
+<td>DecorView、窗口与 Surface 状态</td>
+<td>traversal、测量、布局、绘制和输入桥接</td>
+<td>draw/Buffer 生产请求</td>
+<td>traversal 是否被调度并完成</td>
+<td>应用 UI 根节点</td>
+</tr>
+</tbody></table>
+<h3 id="612-输入事件正常路径">6.1.2 输入事件正常路径</h3>
+<p>第二条主链的首个事件必须按顺序对齐：<code>input device/driver</code> → <code>EventHub</code> → <code>InputReader</code> → <code>InputDispatcher</code> → <code>focused Window/InputChannel</code> → <code>ViewRootImpl</code> → <code>View dispatch</code>。[可信度：标准机制推断] 图 1 能确认 Input Flinger、Input Manager 和 Window Manager 等模块标签，但不能单靠图示证明当前产品的进程拆分、线程名或版本实现。[可信度：架构图确认] [证据：original-diagram-01]</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+  participant D as input device/driver
+  participant E as EventHub
+  participant R as InputReader
+  participant I as InputDispatcher
+  participant C as focused Window/InputChannel
+  participant V as ViewRootImpl
+  participant U as View dispatch
+  D-&gt;&gt;E: raw input event
+  E-&gt;&gt;R: read event batch
+  R-&gt;&gt;I: normalized event
+  I-&gt;&gt;C: dispatch to focused target
+  C-&gt;&gt;V: receive on app channel
+  V-&gt;&gt;U: deliver to hierarchy
+  U--&gt;&gt;I: finish acknowledgement</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  participant D as input device/driver
+  participant E as EventHub
+  participant R as InputReader
+  participant I as InputDispatcher
+  participant C as focused Window/InputChannel
+  participant V as ViewRootImpl
+  participant U as View dispatch
+  D-&gt;&gt;E: raw input event
+  E-&gt;&gt;R: read event batch
+  R-&gt;&gt;I: normalized event
+  I-&gt;&gt;C: dispatch to focused target
+  C-&gt;&gt;V: receive on app channel
+  V-&gt;&gt;U: deliver to hierarchy
+  U--&gt;&gt;I: finish acknowledgement</code></pre></details></details><p><code>getevent</code> 能看到输入只说明内核输入层收到事件，<strong>getevent ≠ app consumed</strong>。还要继续证明 <code>InputReader</code> 产出了正确逻辑事件、<code>InputDispatcher</code> 选中了正确焦点窗口、目标 channel 可写、应用主线程真正消费并回传完成确认。[可信度：标准机制推断]</p>
+<h3 id="613-生命周期窗口与输入异常传播恢复路径">6.1.3 生命周期、窗口与输入异常传播/恢复路径</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[launch/input request] --&gt; B{process and lifecycle valid?}
+  B -- no --&gt; B1[process death, stale token or lifecycle stall]
+  B -- yes --&gt; C{window visible and focus correct?}
+  C -- no --&gt; C1[focus mismatch / hidden window / wrong display]
+  C -- yes --&gt; D{InputChannel alive and writable?}
+  D -- no --&gt; D1[channel death or queue/backpressure]
+  D -- yes --&gt; E{consumer dispatch timely?}
+  E -- no --&gt; E1[blocked consumer or main-thread stall]
+  E -- yes --&gt; F{event accepted?}
+  F -- no --&gt; F1[permission/injection rejection]
+  B1 --&gt; R[retire old token and Generation]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R
+  F1 --&gt; R
+  R --&gt; S[recreate process/window/channel]
+  S --&gt; T[restore visible + focus]
+  T --&gt; U[inject real user action and readback verify]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[launch/input request] --&gt; B{process and lifecycle valid?}
+  B -- no --&gt; B1[process death, stale token or lifecycle stall]
+  B -- yes --&gt; C{window visible and focus correct?}
+  C -- no --&gt; C1[focus mismatch / hidden window / wrong display]
+  C -- yes --&gt; D{InputChannel alive and writable?}
+  D -- no --&gt; D1[channel death or queue/backpressure]
+  D -- yes --&gt; E{consumer dispatch timely?}
+  E -- no --&gt; E1[blocked consumer or main-thread stall]
+  E -- yes --&gt; F{event accepted?}
+  F -- no --&gt; F1[permission/injection rejection]
+  B1 --&gt; R[retire old token and Generation]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R
+  F1 --&gt; R
+  R --&gt; S[recreate process/window/channel]
+  S --&gt; T[restore visible + focus]
+  T --&gt; U[inject real user action and readback verify]</code></pre></details></details><p>异常链不能只写“点击无响应”。<code>focus mismatch</code> 的责任边界在窗口/显示选择；<code>blocked consumer</code> 在应用主线程或目标消费者；<code>channel death</code> 要区分服务端未清理旧 channel 与客户端进程死亡；<code>permission/injection rejection</code> 属于输入策略或调用权限；<code>queue/backpressure</code> 则要比较入队、派发、完成确认的累计差值。</p>
+<p>最早可证伪断点是“原始输入是否被规范化为正确事件”，其后依次是目标焦点、channel 写入、应用接收和业务消费。Owner 边界以第一个偏离契约的位置为准。恢复后必须重新读取当前 Window/焦点/Display、确认 channel 属于新 <code>Generation</code>，再用真实操作完成 <code>readback verify</code>，不能把进程重启当成业务恢复。</p>
+<h2 id="62-android-图像渲染">6.2 Android 图像渲染</h2>
+<h3 id="621-端到端正常路径">6.2.1 端到端正常路径</h3>
+<p>完整方向链固定为：<code>App UI</code> → <code>Choreographer/VSYNC</code> → <code>ViewRootImpl</code> → <code>HWUI/RenderThread</code> → <code>Skia/OpenGL ES/Vulkan</code> → <code>EGL</code> → <code>ANativeWindow/Surface</code> → <code>BufferQueue</code> → <code>SurfaceFlinger</code> → <code>HWC</code> → <code>Display HAL</code> → <code>DRM/KMS/MDP</code> → <code>physical display</code>。[可信度：标准机制推断]</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  A[App UI] --&gt; B[Choreographer/VSYNC]
+  B --&gt; C[ViewRootImpl]
+  C --&gt; D[HWUI/RenderThread]
+  D --&gt; E[Skia/OpenGL ES/Vulkan]
+  E --&gt; F[EGL]
+  F --&gt; G[ANativeWindow/Surface]
+  G --&gt; H[BufferQueue]
+  H --&gt; I[SurfaceFlinger]
+  I --&gt; J[HWC]
+  J --&gt; K[Display HAL]
+  K --&gt; L[DRM/KMS/MDP]
+  L --&gt; M[physical display]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  A[App UI] --&gt; B[Choreographer/VSYNC]
+  B --&gt; C[ViewRootImpl]
+  C --&gt; D[HWUI/RenderThread]
+  D --&gt; E[Skia/OpenGL ES/Vulkan]
+  E --&gt; F[EGL]
+  F --&gt; G[ANativeWindow/Surface]
+  G --&gt; H[BufferQueue]
+  H --&gt; I[SurfaceFlinger]
+  I --&gt; J[HWC]
+  J --&gt; K[Display HAL]
+  K --&gt; L[DRM/KMS/MDP]
+  L --&gt; M[physical display]</code></pre></details></details><p><code>UI thread</code> 负责业务状态、View 树和 traversal；硬件加速时，绘制命令可交给 <code>RenderThread</code>，由 Skia 经 GPU 接口生成内容。生产者提交 Buffer 和 <code>acquire fence</code>；消费者等待写入完成后使用 Buffer，合成/扫描输出完成后通过 <code>release fence</code> 允许生产者复用。Fence 是“某次内存/硬件工作是否完成”的同步所有权，不是普通业务锁。[可信度：标准机制推断]</p>
+<p>图 1 确认 MT8676 分层中存在 Surface Flinger、Display HAL、DRM、MDP、OpenGL、Display 等标签。[可信度：架构图确认] [证据：original-diagram-01] 它不确认本产品究竟选用 GLES 还是 Vulkan、不确认每层直通或经过 Host 合成器，也不确认具体 HWC 接口代际。[可信度：待 MT8676 确认]</p>
+<h3 id="622-帧的资源与观察模型">6.2.2 帧的资源与观察模型</h3>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>输入/资源</th>
+<th>核心处理</th>
+<th>输出/交接</th>
+<th>主要观测</th>
+<th>Owner 边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>App/traversal</td>
+<td>View 树、脏区、业务状态</td>
+<td>measure/layout/draw</td>
+<td>DisplayList 或软件像素</td>
+<td>traversal、主线程栈、帧调度</td>
+<td>App UI</td>
+</tr>
+<tr>
+<td>Render</td>
+<td>绘制命令、纹理、目标 Buffer</td>
+<td>Skia/GPU 命令编码与执行</td>
+<td>已写 Buffer + acquire fence</td>
+<td><code>frame timeline</code>、GPU 完成、fence</td>
+<td>App graphics</td>
+</tr>
+<tr>
+<td>Queue</td>
+<td>slot 与 GraphicBuffer</td>
+<td>dequeue/queue、所有权转移</td>
+<td>可被消费者 acquire 的帧</td>
+<td>Buffer 状态、帧号、队列差值</td>
+<td>Producer/BufferQueue</td>
+</tr>
+<tr>
+<td>Compose</td>
+<td>Layer、事务、Buffer/Fence</td>
+<td>latch、裁剪、变换、合成决策</td>
+<td>HWC layer 或合成目标</td>
+<td>Layer 状态、latch、present</td>
+<td>SurfaceFlinger/HWC</td>
+</tr>
+<tr>
+<td>Display</td>
+<td>plane/mode/connector</td>
+<td>atomic commit、scanout、vblank</td>
+<td>电气/像素输出</td>
+<td>commit、vblank、链路/背光</td>
+<td>HAL/Kernel/Panel</td>
+</tr>
+</tbody></table>
+<h3 id="623-渲染异常传播恢复路径">6.2.3 渲染异常传播/恢复路径</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[UI state changed] --&gt; B{traversal/draw produced?}
+  B -- no --&gt; B1[UI thread blocked or invalidation lost]
+  B -- yes --&gt; C{Buffer queued with signaled fence?}
+  C -- no --&gt; C1[dequeue blocked, render fail, fence unsignaled]
+  C -- yes --&gt; D{SF acquired and latched new frame?}
+  D -- no --&gt; D1[stale Layer, transaction, consumer or backlog]
+  D -- yes --&gt; E{HWC validate/present completed?}
+  E -- no --&gt; E1[composition resource or HAL failure]
+  E -- yes --&gt; F{DRM commit/vblank and panel output?}
+  F -- no --&gt; F1[driver, connector, bridge, panel or backlight]
+  B1 --&gt; R[quiesce + capture ownership snapshot]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R
+  F1 --&gt; R
+  R --&gt; S[release old resources and recreate new Generation]
+  S --&gt; T[produce unique test frame]
+  T --&gt; U[verify latch, present, vblank and visible result]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[UI state changed] --&gt; B{traversal/draw produced?}
+  B -- no --&gt; B1[UI thread blocked or invalidation lost]
+  B -- yes --&gt; C{Buffer queued with signaled fence?}
+  C -- no --&gt; C1[dequeue blocked, render fail, fence unsignaled]
+  C -- yes --&gt; D{SF acquired and latched new frame?}
+  D -- no --&gt; D1[stale Layer, transaction, consumer or backlog]
+  D -- yes --&gt; E{HWC validate/present completed?}
+  E -- no --&gt; E1[composition resource or HAL failure]
+  E -- yes --&gt; F{DRM commit/vblank and panel output?}
+  F -- no --&gt; F1[driver, connector, bridge, panel or backlight]
+  B1 --&gt; R[quiesce + capture ownership snapshot]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R
+  F1 --&gt; R
+  R --&gt; S[release old resources and recreate new Generation]
+  S --&gt; T[produce unique test frame]
+  T --&gt; U[verify latch, present, vblank and visible result]</code></pre></details></details><p>两个否定式必须牢记：<code>queueBuffer</code> 成功只证明生产者完成提交，<strong>queue 成功 ≠ SF latch</strong>；HWC/DRM 返回 present 或 commit 成功也不能单独证明面板像素与背光正常，<strong>present 成功 ≠ 面板有图</strong>。[可信度：标准机制推断]</p>
+<p>最早可证伪断点是本次业务状态是否触发 traversal，之后按 queue、acquire/latch、validate/present、commit/vblank、panel/backlight 顺序查。Owner 边界分别为应用 UI、生产者/队列、SurfaceFlinger、HWC/HAL、Kernel/物理显示。恢复必须提交带可识别内容的新帧，并用同一 <code>Generation</code> 的 frame number、fence、present 与肉眼/摄像或屏幕采集结果闭环。</p>
+<h2 id="63-bufferqueuesurfacecontrol-与所有权">6.3 BufferQueue、SurfaceControl 与所有权</h2>
+<h3 id="631-正常所有权闭环">6.3.1 正常所有权闭环</h3>
+<p>一次完整循环固定为：<code>connect</code> → <code>dequeue</code> → <code>render</code> → <code>queue</code> → <code>acquire</code> → <code>fence wait</code> → <code>compose</code> → <code>release</code> → <code>producer reuse</code> → <code>disconnect</code>。[可信度：标准机制推断]</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+  participant P as Producer
+  participant Q as BufferQueue
+  participant C as Consumer/SF
+  P-&gt;&gt;Q: connect
+  P-&gt;&gt;Q: dequeue slot
+  P-&gt;&gt;P: render into buffer
+  P-&gt;&gt;Q: queue + acquire fence
+  C-&gt;&gt;Q: acquire
+  C-&gt;&gt;C: fence wait
+  C-&gt;&gt;C: compose/present
+  C-&gt;&gt;Q: release + release fence
+  Q--&gt;&gt;P: producer reuse
+  P-&gt;&gt;Q: disconnect</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  participant P as Producer
+  participant Q as BufferQueue
+  participant C as Consumer/SF
+  P-&gt;&gt;Q: connect
+  P-&gt;&gt;Q: dequeue slot
+  P-&gt;&gt;P: render into buffer
+  P-&gt;&gt;Q: queue + acquire fence
+  C-&gt;&gt;Q: acquire
+  C-&gt;&gt;C: fence wait
+  C-&gt;&gt;C: compose/present
+  C-&gt;&gt;Q: release + release fence
+  Q--&gt;&gt;P: producer reuse
+  P-&gt;&gt;Q: disconnect</code></pre></details></details><table>
+<thead>
+<tr>
+<th>状态</th>
+<th>谁拥有/可写</th>
+<th>允许动作</th>
+<th>禁止假设</th>
+<th>离开条件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Producer-owned</td>
+<td>生产者</td>
+<td>写入、取消或 queue</td>
+<td>消费者此时不能读取新内容</td>
+<td>queue/cancel</td>
+</tr>
+<tr>
+<td>Queued</td>
+<td>队列协调所有权</td>
+<td>等待消费者 acquire</td>
+<td>queue 返回不等于已经 latch</td>
+<td>acquire</td>
+</tr>
+<tr>
+<td>Consumer-owned</td>
+<td>消费者</td>
+<td>等 fence、读取、compose</td>
+<td>生产者不能覆盖</td>
+<td>release</td>
+</tr>
+<tr>
+<td>Released</td>
+<td>等待生产者回收</td>
+<td>携 release fence 返回 slot</td>
+<td>release fence 未完成不能复写</td>
+<td>producer reuse</td>
+</tr>
+<tr>
+<td>Disconnected</td>
+<td>无有效会话</td>
+<td>清理 slot、句柄与回调</td>
+<td>旧对象不可跨 Generation 复用</td>
+<td>新 connect</td>
+</tr>
+</tbody></table>
+<p><code>SurfaceControl.Transaction</code> 描述 Layer 的位置、裁剪、透明度、层级、显示归属、可见性或 Buffer 等原子变更；<code>apply</code> 只是把事务提交到合成系统，最终显示仍受 latch、合成、present 与物理链路约束。创建 <code>Layer</code> 必须有对称的 hide/detach、<code>remove</code>、Java/native 引用释放以及相关 Surface/Buffer 消费者退出。[可信度：标准机制推断]</p>
+<h3 id="632-正常释放对称性">6.3.2 正常释放对称性</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  A[create producer/consumer] --&gt; B[connect + create Layer]
+  B --&gt; C[dequeue/queue/acquire/release loops]
+  C --&gt; D[stop new work]
+  D --&gt; E[drain or cancel outstanding buffers]
+  E --&gt; F[disconnect producer/consumer]
+  F --&gt; G[remove Layer + apply transaction]
+  G --&gt; H[close/release wrappers and callbacks]
+  H --&gt; I[verify create count − release count returns to baseline]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  A[create producer/consumer] --&gt; B[connect + create Layer]
+  B --&gt; C[dequeue/queue/acquire/release loops]
+  C --&gt; D[stop new work]
+  D --&gt; E[drain or cancel outstanding buffers]
+  E --&gt; F[disconnect producer/consumer]
+  F --&gt; G[remove Layer + apply transaction]
+  G --&gt; H[close/release wrappers and callbacks]
+  H --&gt; I[verify create count − release count returns to baseline]</code></pre></details></details><p>这里的 <code>normal release symmetry</code> 是“谁创建、谁安排释放；谁持有、谁在生命周期结束时放弃引用；谁消费、谁归还 Buffer”。关闭 Java wrapper 而 native consumer 仍存活、移除 Layer 但 producer 仍连续出帧、进程死亡但远端 Binder/图层仍残留，都不是完整对称。</p>
+<h3 id="633-异常传播与恢复">6.3.3 异常传播与恢复</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">stateDiagram-v2
+  [*] --&gt; Connected
+  Connected --&gt; ProducerOwned: dequeue
+  ProducerOwned --&gt; Queued: queue
+  Queued --&gt; ConsumerOwned: acquire + fence ready
+  ConsumerOwned --&gt; Released: compose + release
+  Released --&gt; ProducerOwned: producer reuse
+  ProducerOwned --&gt; Stalled: fence timeout / no free slot
+  Queued --&gt; Stalled: consumer not acquiring
+  ConsumerOwned --&gt; Stalled: consumer not releasing
+  Stalled --&gt; Draining: stop producer + snapshot ownership
+  Draining --&gt; Disconnected: cancel/release/disconnect
+  Disconnected --&gt; Connected: recreate new Generation
+  Connected --&gt; Verified: unique frame + state readback</pre><details><summary>查看原始图代码</summary><pre><code>stateDiagram-v2
+  [*] --&gt; Connected
+  Connected --&gt; ProducerOwned: dequeue
+  ProducerOwned --&gt; Queued: queue
+  Queued --&gt; ConsumerOwned: acquire + fence ready
+  ConsumerOwned --&gt; Released: compose + release
+  Released --&gt; ProducerOwned: producer reuse
+  ProducerOwned --&gt; Stalled: fence timeout / no free slot
+  Queued --&gt; Stalled: consumer not acquiring
+  ConsumerOwned --&gt; Stalled: consumer not releasing
+  Stalled --&gt; Draining: stop producer + snapshot ownership
+  Draining --&gt; Disconnected: cancel/release/disconnect
+  Disconnected --&gt; Connected: recreate new Generation
+  Connected --&gt; Verified: unique frame + state readback</code></pre></details></details><p>异常定位要同时记录生产者/消费者 connect 状态、slot 状态、frame number、Buffer handle、acquire/release fence、Layer/Display 和 <code>Generation</code>。最早可证伪断点是“本轮 dequeue 获得的 slot 是否在合法所有权状态”。Owner 边界为创建 Surface 的上层、BufferQueue 协调层、实际消费者和 Layer 所属 Window/Display。恢复时先阻止旧生产者继续写，确定 outstanding Buffer 的归属，再按释放对称性清理；重新创建后必须验证旧回调/旧 Layer 不再活动。</p>
+<p>注意版本差异：<code>BLASTBufferQueue</code> 是否出现、<code>SurfaceControl</code> API 形态、HWC 是 AIDL 还是 HIDL、转储中的字段名称都不能写成 MT8676 固定合同。[可信度：待 MT8676 确认]</p>
+<h2 id="64-surface-与图形资源泄漏">6.4 Surface 与图形资源泄漏</h2>
+<h3 id="641-先定义泄漏证据">6.4.1 先定义“泄漏证据”</h3>
+<p><code>single high-water snapshot ≠ leak</code>。某一时刻 Surface 数、GraphicBuffer、Gralloc/GPU 内存或 Binder 对象较高，可能只是正常缓存、三缓冲、场景复杂度或瞬时积压。合格的泄漏判断至少同时满足：</p>
+<ol>
+<li>在 <code>stable workload</code>、相同页面与相同采样阶段下重复创建/退出；</li>
+<li>覆盖 <code>multiple Generations</code>，区分旧实例与新实例；</li>
+<li><code>create count − release count grows monotonically</code>，且回到空闲态仍不收敛；</li>
+<li>找到 <code>ownership/reference evidence</code>，能说明谁仍持有对象、Buffer、Layer、回调或 Binder 引用；</li>
+<li>排除消费者暂时背压、Fence 未完成、正常缓存和采样时间不一致。</li>
+</ol>
+<p>Surface 未 release、BufferQueue 积压、GraphicBuffer/Gralloc/GPU 增长、<code>WindowLeaked</code>、ImageReader 未 close、MediaCodec output Surface 残留、VirtualDisplay 未 release <strong>互不等同</strong>。它们可能相互影响，但必须分别证明对象、队列、内存和生命周期。[可信度：标准机制推断]</p>
+<h3 id="642-正常图创建使用释放">6.4.2 正常图：创建—使用—释放</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  A[Lifecycle owner creates resource] --&gt; B[wrapper obtains native handle]
+  B --&gt; C[producer/consumer connects]
+  C --&gt; D[use buffers/layers/callbacks]
+  D --&gt; E[stop incoming work]
+  E --&gt; F[drain/cancel outstanding work]
+  F --&gt; G[disconnect/release/close]
+  G --&gt; H[remove Layer and unregister callback]
+  H --&gt; I[reference and counters return to baseline]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  A[Lifecycle owner creates resource] --&gt; B[wrapper obtains native handle]
+  B --&gt; C[producer/consumer connects]
+  C --&gt; D[use buffers/layers/callbacks]
+  D --&gt; E[stop incoming work]
+  E --&gt; F[drain/cancel outstanding work]
+  F --&gt; G[disconnect/release/close]
+  G --&gt; H[remove Layer and unregister callback]
+  H --&gt; I[reference and counters return to baseline]</code></pre></details></details><h3 id="643-异常传播恢复图">6.4.3 异常传播/恢复图</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[owner lifecycle ends] --&gt; B{new work stopped?}
+  B -- no --&gt; B1[callback/task recreates references]
+  B -- yes --&gt; C{outstanding buffer/fence drained?}
+  C -- no --&gt; C1[queue backlog or consumer ownership]
+  C -- yes --&gt; D{consumer and Layer detached?}
+  D -- no --&gt; D1[native object/Layer survives wrapper]
+  D -- yes --&gt; E{all callbacks/Binder refs gone?}
+  E -- no --&gt; E1[remote death/stale callback/reference cycle]
+  B1 --&gt; F[snapshot creator-holder-consumer-releaser]
+  C1 --&gt; F
+  D1 --&gt; F
+  E1 --&gt; F
+  F --&gt; G[quiesce old Generation]
+  G --&gt; H[release in reverse dependency order]
+  H --&gt; I[repeat stable workload and verify convergence]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[owner lifecycle ends] --&gt; B{new work stopped?}
+  B -- no --&gt; B1[callback/task recreates references]
+  B -- yes --&gt; C{outstanding buffer/fence drained?}
+  C -- no --&gt; C1[queue backlog or consumer ownership]
+  C -- yes --&gt; D{consumer and Layer detached?}
+  D -- no --&gt; D1[native object/Layer survives wrapper]
+  D -- yes --&gt; E{all callbacks/Binder refs gone?}
+  E -- no --&gt; E1[remote death/stale callback/reference cycle]
+  B1 --&gt; F[snapshot creator-holder-consumer-releaser]
+  C1 --&gt; F
+  D1 --&gt; F
+  E1 --&gt; F
+  F --&gt; G[quiesce old Generation]
+  G --&gt; H[release in reverse dependency order]
+  H --&gt; I[repeat stable workload and verify convergence]</code></pre></details></details><h3 id="644-十二类泄漏矩阵">6.4.4 十二类泄漏矩阵</h3>
+<table>
+<thead>
+<tr>
+<th>泄漏类</th>
+<th>创建者</th>
+<th>常见持有者</th>
+<th>消费者</th>
+<th>应释放者</th>
+<th>正常释放</th>
+<th>异常表现</th>
+<th>证据/指标</th>
+<th>最早断点</th>
+<th>Owner/恢复</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Activity/Window</td>
+<td>Activity/WindowManager</td>
+<td>Activity、DecorView、ViewRootImpl</td>
+<td>WMS/Surface 合成链</td>
+<td>Activity/Window owner</td>
+<td>destroy/removeView、断开根视图和 Surface</td>
+<td>页面退出后 Window/Layer/Context 仍在，可能伴随 <code>WindowLeaked</code></td>
+<td>Activity/Window/Layer 代际、引用链、创建/移除累计</td>
+<td>生命周期结束后 Window 是否离开树</td>
+<td>App UI；停止回调、remove、销毁旧 Generation</td>
+</tr>
+<tr>
+<td>Dialog/Popup</td>
+<td>页面或 UI controller</td>
+<td>Dialog、PopupWindow、listener</td>
+<td>WMS/Input/Surface</td>
+<td>创建它的 controller</td>
+<td>dismiss 后释放 listener、Window 与 Context</td>
+<td>页面退出仍显示或持有旧 Activity</td>
+<td>Window token、listener、引用链、Layer</td>
+<td>dismiss 是否在 owner 销毁前发生</td>
+<td>App UI；幂等 dismiss 并回读窗口树</td>
+</tr>
+<tr>
+<td>SurfaceView</td>
+<td>View/SurfaceHolder</td>
+<td>ViewRootImpl、producer、native Surface</td>
+<td>SurfaceFlinger/视频或相机 producer</td>
+<td>View/holder 回调 owner</td>
+<td><code>surfaceDestroyed</code> 停产、断开 producer</td>
+<td>Surface 重建后旧 producer 继续写、Layer/Buffer 残留</td>
+<td>holder callback、producer connect、Layer、Buffer slot</td>
+<td>destroyed 后 producer 是否停止</td>
+<td>App/producer；停流、disconnect、重建</td>
+</tr>
+<tr>
+<td>TextureView/SurfaceTexture</td>
+<td>TextureView 或应用</td>
+<td>listener、SurfaceTexture、GL texture</td>
+<td>GL/Camera/Codec</td>
+<td>应用和 View 生命周期 owner</td>
+<td>停 producer，release Surface/SurfaceTexture</td>
+<td>listener 返回策略错误或旧纹理仍被 producer 持有</td>
+<td>SurfaceTexture attach 状态、GL texture、引用链</td>
+<td>销毁回调后 native consumer 是否仍连接</td>
+<td>App graphics；detach/release 并验证旧帧号停止</td>
+</tr>
+<tr>
+<td>ImageReader</td>
+<td>Camera/图像业务</td>
+<td>reader、Image、listener、Handler</td>
+<td>应用图像算法</td>
+<td>获取 Image 的消费者及 reader owner</td>
+<td>每个 Image close，reader close，注销 listener</td>
+<td>未 close 的 Image 占满可获取槽位，生产停滞</td>
+<td>acquired Image 数、队列、listener、Buffer handle</td>
+<td>acquire 与 Image close 是否一一对应</td>
+<td>Image consumer；close outstanding Image 后重建</td>
+</tr>
+<tr>
+<td>VirtualDisplay</td>
+<td>Display/投屏/录屏业务</td>
+<td>VirtualDisplay、Display token、Surface</td>
+<td>DisplayManager/SurfaceFlinger</td>
+<td>创建 VirtualDisplay 的业务</td>
+<td>stop producer、release VirtualDisplay 和 Surface</td>
+<td>逻辑显示、Layer、BufferQueue 在会话结束后残留</td>
+<td>display ID/Generation、Layer、Surface、回调</td>
+<td>会话结束后 Display 是否移除</td>
+<td>Display owner；release 并核对 display list</td>
+</tr>
+<tr>
+<td>MediaCodec</td>
+<td>播放/解码业务</td>
+<td>codec、output Surface、Buffer</td>
+<td>codec consumer/SurfaceFlinger</td>
+<td>codec session owner</td>
+<td>stop/flush 受控后 release codec 与 Surface</td>
+<td>codec 已换代但旧 output Surface/Buffer 仍存活</td>
+<td>codec state、output Buffer、Surface Generation、fence</td>
+<td>新旧 codec 是否共用失效 Surface</td>
+<td>Media owner；停输入、排空、release、重建</td>
+</tr>
+<tr>
+<td>Camera</td>
+<td>相机业务</td>
+<td>CameraDevice、Session、request target、Image</td>
+<td>Camera HAL/Surface consumer</td>
+<td>Camera session/device owner</td>
+<td><code>stopRepeating</code>、abort/close Session/Device/targets</td>
+<td>Session 关闭不全、旧 request target 持有 Surface</td>
+<td>device/session/request/target 代际、Buffer/Fence</td>
+<td>close 后是否还有旧 request/Buffer</td>
+<td>Camera owner/HAL；按 target→session→device 逆序释放</td>
+</tr>
+<tr>
+<td>OpenGL/EGL</td>
+<td>Render owner</td>
+<td>EGLDisplay/Context/Surface、texture/FBO</td>
+<td>GPU/窗口 Surface</td>
+<td>GL context owner</td>
+<td>停渲染，在正确 context 释放对象并销毁 EGL 资源</td>
+<td>Context/Surface/texture 跨页面累积或仍有 GPU 引用</td>
+<td>context/surface/texture 数、GPU/Gralloc、fence</td>
+<td>销毁是否发生在有效 context/thread</td>
+<td>App graphics/driver；停线程、解绑、逆序销毁</td>
+</tr>
+<tr>
+<td>SurfaceControl/Layer</td>
+<td>WMS/App transaction owner</td>
+<td>SurfaceControl、Transaction、parent Layer</td>
+<td>SurfaceFlinger/HWC</td>
+<td>Layer owner</td>
+<td>hide/detach、remove、apply、释放句柄</td>
+<td>不可见旧 Layer 或 parent 引用长期残留</td>
+<td>Layer tree、parent/child、transaction、handle</td>
+<td>owner 结束后 Layer 是否仍在树</td>
+<td>Window/Layer owner；remove+apply 并验证树</td>
+</tr>
+<tr>
+<td>Binder death</td>
+<td>跨进程服务/客户端</td>
+<td>death recipient、远端回调表、native proxy</td>
+<td>远端服务或客户端</td>
+<td>双方会话 owner</td>
+<td>unlink、注销回调、清理远端资源</td>
+<td>客户端死亡后远端 Surface/回调/Session 不清理</td>
+<td>PID/Generation、death 通知、回调表、Layer</td>
+<td>death 到达后 cleanup 是否执行</td>
+<td>IPC 两端；死亡清理并新会话重注册</td>
+</tr>
+<tr>
+<td>display hotplug/recreation race</td>
+<td>Display/WMS/应用</td>
+<td>旧 Display/Window/Surface、异步回调</td>
+<td>新旧显示链</td>
+<td>Display 会话 owner</td>
+<td>序列化 remove/add，退休旧 Generation</td>
+<td>热插拔/旋转/重建竞态导致双 Layer、孤儿 Surface</td>
+<td>hotplug 序列、Display/Layer Generation、事务顺序</td>
+<td>remove 完成前是否启动新 producer</td>
+<td>Display owner；串行化、拒绝旧回调、全链回读</td>
+</tr>
+</tbody></table>
+<p>以上矩阵中的诊断命令与转储字段只能当通用方法；MT8676 当前是否支持、字段叫什么、数值基线是多少，需要设备版本实测。[可信度：待 MT8676 确认]</p>
+<h3 id="645-泄漏与积压如何区分">6.4.5 泄漏与积压如何区分</h3>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>更像泄漏的证据</th>
+<th>更像积压/正常缓存的证据</th>
+<th>下一步</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Surface/Layer 数增长</td>
+<td>页面退出后旧 owner/Generation 仍可追溯</td>
+<td>场景稳定后回落或对象属于当前窗口</td>
+<td>查 Window/Layer owner 与 remove 事务</td>
+</tr>
+<tr>
+<td>BufferQueue slot 长期占用</td>
+<td>消费者退出后仍无人 release</td>
+<td>消费者仍活但处理慢，完成后归还</td>
+<td>对齐 dequeue/queue/acquire/release 累计</td>
+</tr>
+<tr>
+<td>GraphicBuffer/Gralloc 增长</td>
+<td>handle 属于已退休 producer/consumer</td>
+<td>活跃分辨率/缓存策略改变且可复用</td>
+<td>按 handle/size/owner/Generation 聚类</td>
+</tr>
+<tr>
+<td>GPU 内存增长</td>
+<td>context/texture 跨代际仍被引用</td>
+<td>驱动缓存可在压力下回收</td>
+<td>关联 EGL context、texture、fence 和进程</td>
+</tr>
+<tr>
+<td>Java heap 增长</td>
+<td>Activity/listener/reference chain 保留 native wrapper</td>
+<td>GC 后回落、native 资源无增长</td>
+<td>同时查 Java 引用与 native owner</td>
+</tr>
+</tbody></table>
+<p>最早可证伪断点是 owner 生命周期结束时“新工作是否停止”。Owner 边界由创建者、持有者、消费者、释放者四方共同决定，不能把所有图形增长都归给 SurfaceFlinger。恢复闭环要求旧 <code>Generation</code> 的 Layer/Buffer/回调停止增长，新会话可稳定重复进入退出，差值回到基线区间。</p>
+<h2 id="65-黑屏冻屏花屏闪屏与卡顿">6.5 黑屏、冻屏、花屏、闪屏与卡顿</h2>
+<h3 id="651-五层正常显示链">6.5.1 五层正常显示链</h3>
+<p>诊断顺序固定为：<code>content production</code> → <code>Buffer exchange</code> → <code>composition</code> → <code>display driver</code> → <code>physical link/panel</code>。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  A[content production: App draw] --&gt; B[Buffer exchange: dequeue/queue/acquire]
+  B --&gt; C[composition: latch/validate/present]
+  C --&gt; D[display driver: commit/vblank]
+  D --&gt; E[physical link/panel: bridge/backlight/pixels]
+  E --&gt; F[user sees new unique frame]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  A[content production: App draw] --&gt; B[Buffer exchange: dequeue/queue/acquire]
+  B --&gt; C[composition: latch/validate/present]
+  C --&gt; D[display driver: commit/vblank]
+  D --&gt; E[physical link/panel: bridge/backlight/pixels]
+  E --&gt; F[user sees new unique frame]</code></pre></details></details><p>图 1 对 Surface Flinger、Display HAL、DRM、MDP 与 Display 模块存在性提供直接支持。[可信度：架构图确认] [证据：original-diagram-01] 逐帧的 HWC validate/present、DRM/KMS commit/vblank 与面板时序是标准诊断模型，具体实现路径待 MT8676 运行证据确认。[可信度：标准机制推断]</p>
+<h3 id="652-症状不能互换">6.5.2 症状不能互换</h3>
+<table>
+<thead>
+<tr>
+<th>症状</th>
+<th>可见定义</th>
+<th>常见首查层</th>
+<th>关键区别</th>
+<th>核心证据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>黑屏</td>
+<td>整屏或目标区域无有效可见内容</td>
+<td>Layer 可见性、合成输出、模式/背光</td>
+<td>可能仍在稳定刷新黑色 Buffer</td>
+<td>unique test frame、Layer visible、latch、present fence、backlight</td>
+</tr>
+<tr>
+<td>冻屏</td>
+<td>停留在 <code>last good frame</code>，内容不再更新</td>
+<td>App draw、queue、latch</td>
+<td>面板仍显示旧帧，不等于无信号</td>
+<td>frame number、queue/latch/present 时间线是否停止</td>
+</tr>
+<tr>
+<td>花屏</td>
+<td>像素内容、格式、步幅、地址或同步异常</td>
+<td>Buffer 元数据、GPU/MDP、链路</td>
+<td>往往仍有更新但内容损坏</td>
+<td>format/stride/crop、handle、fence、错误计数</td>
+</tr>
+<tr>
+<td>闪屏</td>
+<td>黑/亮/旧新帧或模式反复切换</td>
+<td>Window/Layer 事务、hotplug、mode/backlight</td>
+<td>是间歇状态切换，不是持续黑屏</td>
+<td>transaction、hotplug、mode、backlight 时间线</td>
+</tr>
+<tr>
+<td>卡顿</td>
+<td>帧仍更新但间隔异常或连续丢帧</td>
+<td>UI/Render、队列背压、合成/调度</td>
+<td>吞吐或时延问题，不等于资源必然泄漏</td>
+<td>frame timeline、队列等待、CPU/GPU/fence 延迟</td>
+</tr>
+</tbody></table>
+<h3 id="653-异常传播恢复图">6.5.3 异常传播/恢复图</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[black/frozen/corrupt/flicker/jank] --&gt; B{App draw counter advances?}
+  B -- no --&gt; B1[App state/UI thread/invalidation]
+  B -- yes --&gt; C{dequeue and queueBuffer advance?}
+  C -- no --&gt; C1[producer/BufferQueue/fence]
+  C -- yes --&gt; D{SF acquire + latch advances and Layer visible?}
+  D -- no --&gt; D1[Layer/transaction/consumer]
+  D -- yes --&gt; E{HWC validate/present + present fence advances?}
+  E -- no --&gt; E1[composition/HAL resource]
+  E -- yes --&gt; F{DRM/KMS commit + vblank advances?}
+  F -- no --&gt; F1[kernel mode/plane/connector]
+  F -- yes --&gt; G{physical link, panel, backlight valid?}
+  G -- no --&gt; G1[bridge/SerDes/panel/power]
+  B1 --&gt; R[capture first divergent timestamp/counter]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R
+  F1 --&gt; R
+  G1 --&gt; R
+  R --&gt; S[recover only failed owner boundary]
+  S --&gt; T[display unique pattern and verify every downstream counter]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[black/frozen/corrupt/flicker/jank] --&gt; B{App draw counter advances?}
+  B -- no --&gt; B1[App state/UI thread/invalidation]
+  B -- yes --&gt; C{dequeue and queueBuffer advance?}
+  C -- no --&gt; C1[producer/BufferQueue/fence]
+  C -- yes --&gt; D{SF acquire + latch advances and Layer visible?}
+  D -- no --&gt; D1[Layer/transaction/consumer]
+  D -- yes --&gt; E{HWC validate/present + present fence advances?}
+  E -- no --&gt; E1[composition/HAL resource]
+  E -- yes --&gt; F{DRM/KMS commit + vblank advances?}
+  F -- no --&gt; F1[kernel mode/plane/connector]
+  F -- yes --&gt; G{physical link, panel, backlight valid?}
+  G -- no --&gt; G1[bridge/SerDes/panel/power]
+  B1 --&gt; R[capture first divergent timestamp/counter]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R
+  F1 --&gt; R
+  G1 --&gt; R
+  R --&gt; S[recover only failed owner boundary]
+  S --&gt; T[display unique pattern and verify every downstream counter]</code></pre></details></details><p>最早可证伪断点从 App draw 计数开始；若推进，才看 <code>dequeue</code>/<code>queueBuffer</code>；再看 SF acquire/latch、<code>Layer visible</code>；然后 HWC validate/present 与 <code>present fence</code>；再看 DRM/KMS commit、<code>vblank</code>、<code>hotplug</code>；最后看物理链路、panel 和背光。Owner 边界严格对应 App、BufferQueue、SurfaceFlinger、HWC/Display HAL、Kernel、硬件显示。</p>
+<p>正常日志中“底层无报错”不能排除上游没有新内容；反过来应用持续打印 draw 也不能证明帧已交给消费者。恢复后要用颜色/时间戳或帧号明确的测试图，同时验证上游内容、队列、latch、present、vblank 与实际可见结果属于同一代际。</p>
+<h2 id="66-android-内部资源与稳定性">6.6 Android 内部资源与稳定性</h2>
+<p>图 1 确认 MT8676 Android 分层包含 Camera Service、MediaServer、Audio Flinger、Audio Policy、Network Service、Storage Manager、USB Service 以及相应 HAL/Kernel 标签。[可信度：架构图确认] [证据：original-diagram-01] 以下九类链路按标准 Android 机制解释；模块存在不等于已确认具体进程、版本、参数或厂商实现。[可信度：标准机制推断]</p>
+<h3 id="661-camera">6.6.1 Camera</h3>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>MTK 文档解释了 Camera API 之下的跨域延伸：应用的 open/configure/capture 面向 Android 服务，硬件配置与请求执行依赖 Yocto Host；回到 Android 的 Result/buffer 仍需满足当前 stream/session 和 fence 条件。因而 Android 侧超时可能是 Host 未就绪、源端停帧、请求队列或消费者归还缓冲失败。保留本节原有 Android 对象关系，通过同一 cameraId/request/session 串联两域证据。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S145 · MT8676_Hypervisor_Camera_User_Manual_V1.1.pdf · PDF第6-8页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S019 · MT8668_Hypervisor_Camera_User_Manual_CN_V1.0.pdf · PDF第6-8页<small>〔本地来源〕</small></span></p>
+<p><strong>正常路径。</strong> App/AVM/RVC 发起 Camera 请求，经 Framework API、Camera service/provider、Camera HAL 和内核传感器/ISP，输出到预览 Surface、ImageReader 或编码器。图 1 确认 Camera Service、Camera HAL、Kernel Camera、AVM/RVC 标签存在。[可信度：架构图确认] [证据：original-diagram-01]</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  A[App/AVM/RVC request] --&gt; B[Camera API/service]
+  B --&gt; C[provider + Camera HAL]
+  C --&gt; D[sensor/ISP/driver]
+  D --&gt; E[capture buffer + fence]
+  E --&gt; F[preview Surface/ImageReader/Codec]
+  F --&gt; G[visible frame or algorithm result]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  A[App/AVM/RVC request] --&gt; B[Camera API/service]
+  B --&gt; C[provider + Camera HAL]
+  C --&gt; D[sensor/ISP/driver]
+  D --&gt; E[capture buffer + fence]
+  E --&gt; F[preview Surface/ImageReader/Codec]
+  F --&gt; G[visible frame or algorithm result]</code></pre></details></details><p><strong>异常传播/恢复路径。</strong></p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[open/configure/capture] --&gt; B{device + Session valid?}
+  B -- no --&gt; B1[service/device death or stale Session]
+  B -- yes --&gt; C{request reaches HAL and sensor?}
+  C -- no --&gt; C1[configuration/permission/provider]
+  C -- yes --&gt; D{buffer and fence returned?}
+  D -- no --&gt; D1[ISP/driver/target backpressure]
+  D -- yes --&gt; E{consumer releases frames?}
+  E -- no --&gt; E1[Image not closed or Surface stalled]
+  B1 --&gt; R[stop old Generation]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R
+  R --&gt; S[close targets, Session, Device in reverse order]
+  S --&gt; T[reopen + unique frame + metadata readback]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[open/configure/capture] --&gt; B{device + Session valid?}
+  B -- no --&gt; B1[service/device death or stale Session]
+  B -- yes --&gt; C{request reaches HAL and sensor?}
+  C -- no --&gt; C1[configuration/permission/provider]
+  C -- yes --&gt; D{buffer and fence returned?}
+  D -- no --&gt; D1[ISP/driver/target backpressure]
+  D -- yes --&gt; E{consumer releases frames?}
+  E -- no --&gt; E1[Image not closed or Surface stalled]
+  B1 --&gt; R[stop old Generation]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R
+  R --&gt; S[close targets, Session, Device in reverse order]
+  S --&gt; T[reopen + unique frame + metadata readback]</code></pre></details></details><p><strong>资源模型。</strong> CameraDevice 拥有 Session；Session 拥有 request 与 target 集合；每个 Image/Buffer 在 HAL、队列和消费者之间迁移所有权。不能把“预览无图”直接等同于 sensor 未出帧。</p>
+<p><strong>最早可证伪断点。</strong> open/configure 是否成功并产生当前代际 Session；随后是 request、HAL result、Buffer/Fence 和 consumer acquire/release。<strong>Owner 边界。</strong> App/Camera Framework/HAL/Kernel/target consumer 分段负责。<strong>回读验证。</strong> 恢复后核对新 device/session/request Generation、连续 frame number、关键 metadata 和实际预览内容。</p>
+<h3 id="662-mediacodec">6.6.2 MediaCodec</h3>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>PVT 编解码案例强调输入、硬解组件、输出 buffer、显示/音频消费者需合看。pipelineFull 可能只是管线积压提示，wait fence 说明对应同步点未推进，二者单独都不能锁定 Vcodec 根因。尤其日志中的媒体 timeUs 可能是播放位置，不能把 31583ms 直接算作“迟到31.583秒”；应核对该版本代码字段和播放锚点，再计算 lateness。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U047 · 软件开发培训-音视频解码常见问题及分析.pdf · PDF第6-10页<small>〔本地来源〕</small></span></p>
+<p><strong>正常路径。</strong> Extractor/业务输入压缩数据，Codec service/component 消费 input Buffer，硬件或软件解码，向 output Surface 或应用 output Buffer 输出。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  A[compressed stream] --&gt; B[extractor + timestamps]
+  B --&gt; C[MediaCodec input queue]
+  C --&gt; D[codec component]
+  D --&gt; E[decoded output + fence]
+  E --&gt; F[output Surface or app buffer]
+  F --&gt; G[render/consume + release]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  A[compressed stream] --&gt; B[extractor + timestamps]
+  B --&gt; C[MediaCodec input queue]
+  C --&gt; D[codec component]
+  D --&gt; E[decoded output + fence]
+  E --&gt; F[output Surface or app buffer]
+  F --&gt; G[render/consume + release]</code></pre></details></details><p><strong>异常传播/恢复路径。</strong></p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[configure/start] --&gt; B{format and component accepted?}
+  B -- no --&gt; B1[unsupported/configuration/resource]
+  B -- yes --&gt; C{input timestamps advance?}
+  C -- no --&gt; C1[upstream starvation]
+  C -- yes --&gt; D{output and fence advance?}
+  D -- no --&gt; D1[codec stall/error/output backpressure]
+  D -- yes --&gt; E{Surface Generation valid?}
+  E -- no --&gt; E1[stale output Surface]
+  B1 --&gt; R[stop input and capture state]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R
+  R --&gt; S[flush/stop/release under valid state]
+  S --&gt; T[new codec + new Surface + timestamp readback]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[configure/start] --&gt; B{format and component accepted?}
+  B -- no --&gt; B1[unsupported/configuration/resource]
+  B -- yes --&gt; C{input timestamps advance?}
+  C -- no --&gt; C1[upstream starvation]
+  C -- yes --&gt; D{output and fence advance?}
+  D -- no --&gt; D1[codec stall/error/output backpressure]
+  D -- yes --&gt; E{Surface Generation valid?}
+  E -- no --&gt; E1[stale output Surface]
+  B1 --&gt; R[stop input and capture state]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R
+  R --&gt; S[flush/stop/release under valid state]
+  S --&gt; T[new codec + new Surface + timestamp readback]</code></pre></details></details><p><strong>资源模型。</strong> Codec 状态机、input/output Buffer、native component、output Surface 和 timestamp 必须属于同一会话。<code>flush</code>、<code>stop</code>、<code>release</code> 的合法顺序随状态而定，不应在错误状态无限重试。</p>
+<p><strong>最早可证伪断点。</strong> 首个输入 Buffer 是否携正确格式与时间戳被接受。<strong>Owner 边界。</strong> 上游 demux、Codec Framework/component、Surface consumer 各自负责。<strong>回读验证。</strong> 用新会话首帧时间戳、连续输出计数、Surface frame number 和声音/画面结果证明恢复。</p>
+<h3 id="663-audio">6.6.3 Audio</h3>
+<p><strong>正常路径。</strong> App/Media 创建 Track，Audio policy 选择策略、设备与路由，AudioFlinger 混音/线程处理，经 Audio HAL、内核 PCM/Codec 输出到功放和扬声器。图 1 确认 AudioService、AudioFlinger、AudioPolicy、Audio HAL、ALSA、Codec 等标签存在。[可信度：架构图确认] [证据：original-diagram-01]</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  A[App samples + usage] --&gt; B[AudioTrack/Audio service]
+  B --&gt; C[Audio policy route]
+  C --&gt; D[AudioFlinger thread/mix]
+  D --&gt; E[Audio HAL]
+  E --&gt; F[ALSA/PCM/Codec]
+  F --&gt; G[amplifier/speaker]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  A[App samples + usage] --&gt; B[AudioTrack/Audio service]
+  B --&gt; C[Audio policy route]
+  C --&gt; D[AudioFlinger thread/mix]
+  D --&gt; E[Audio HAL]
+  E --&gt; F[ALSA/PCM/Codec]
+  F --&gt; G[amplifier/speaker]</code></pre></details></details><p><strong>异常传播/恢复路径。</strong></p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[start/write] --&gt; B{Track accepted and advancing?}
+  B -- no --&gt; B1[client/session/state]
+  B -- yes --&gt; C{policy route/device correct?}
+  C -- no --&gt; C1[focus/route/device availability]
+  C -- yes --&gt; D{Flinger/HAL counters advance?}
+  D -- no --&gt; D1[thread stall/underrun/HAL error]
+  D -- yes --&gt; E{PCM and physical output valid?}
+  E -- no --&gt; E1[driver/codec/amp/mute]
+  B1 --&gt; R[stop old Track and route]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R
+  R --&gt; S[reselect route + recreate Track Generation]
+  S --&gt; T[play identifiable tone + route readback]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[start/write] --&gt; B{Track accepted and advancing?}
+  B -- no --&gt; B1[client/session/state]
+  B -- yes --&gt; C{policy route/device correct?}
+  C -- no --&gt; C1[focus/route/device availability]
+  C -- yes --&gt; D{Flinger/HAL counters advance?}
+  D -- no --&gt; D1[thread stall/underrun/HAL error]
+  D -- yes --&gt; E{PCM and physical output valid?}
+  E -- no --&gt; E1[driver/codec/amp/mute]
+  B1 --&gt; R[stop old Track and route]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R
+  R --&gt; S[reselect route + recreate Track Generation]
+  S --&gt; T[play identifiable tone + route readback]</code></pre></details></details><p><strong>资源模型。</strong> Track、session、shared Buffer、mixer/output thread、route/device、volume/mute 和硬件时钟共同决定输出；write 成功不等于扬声器有声。</p>
+<p><strong>最早可证伪断点。</strong> Track frame position 是否推进。<strong>Owner 边界。</strong> App、Audio policy、AudioFlinger、HAL、Kernel/Codec/amp 分段。<strong>回读验证。</strong> 核对新 Track/session、route/device、frame position、HAL/PCM 计数并播放可识别音频。</p>
+<h3 id="664-内存与-lmkd">6.6.4 内存与 LMKD</h3>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>PVT 的 lmkd→system_server SWT 案例中，AMS updateOomAdjLocked 等待 lmkd socket，lmkd 高 CPU/epoll 路径异常形成系统阻塞。解释架构责任时应沿等待链找到首个不推进的服务，不能以最终 watchdog 对象为根因。若伴随内存增长，先分用户堆、图形共享 buffer 与内核页；page_owner 提供页分配栈，不能替代所有进程堆与 dma-buf 归属分析。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S261 · lmkd+引发的system_server+SWT.pdf · PDF第2-5页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E003 · 使用page_owner定位内存泄露.pdf · PDF第3-8页<small>〔本地来源〕</small></span></p>
+<p><strong>正常路径。</strong> 进程申请 Java/native/共享/图形内存，内核负责页与回收，系统按压力评估进程重要性，必要时由低内存策略释放缓存或终止候选进程。[可信度：标准机制推断]</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  A[allocation request] --&gt; B[Java/native/graphics allocator]
+  B --&gt; C[process mappings + shared buffers]
+  C --&gt; D[kernel pages/reclaim]
+  D --&gt; E[memory pressure accounting]
+  E --&gt; F[trim/reclaim or LMKD decision]
+  F --&gt; G[stable process or lifecycle restart]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  A[allocation request] --&gt; B[Java/native/graphics allocator]
+  B --&gt; C[process mappings + shared buffers]
+  C --&gt; D[kernel pages/reclaim]
+  D --&gt; E[memory pressure accounting]
+  E --&gt; F[trim/reclaim or LMKD decision]
+  F --&gt; G[stable process or lifecycle restart]</code></pre></details></details><p><strong>异常传播/恢复路径。</strong></p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[memory grows] --&gt; B{workload-scaled and releasable?}
+  B -- yes --&gt; B1[cache/high-water behavior]
+  B -- no --&gt; C{owner/reference identified?}
+  C -- no --&gt; C1[collect heap/native/graphics ownership]
+  C -- yes --&gt; D{pressure causes reclaim or kill?}
+  D -- kill --&gt; D1[LMKD/process death symptoms]
+  D -- stall --&gt; D2[reclaim thrash/latency/ANR risk]
+  B1 --&gt; R[return idle and resample]
+  C1 --&gt; R
+  D1 --&gt; R
+  D2 --&gt; R
+  R --&gt; S[release leak owner + retire Generation]
+  S --&gt; T[repeat workload + verify convergence]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[memory grows] --&gt; B{workload-scaled and releasable?}
+  B -- yes --&gt; B1[cache/high-water behavior]
+  B -- no --&gt; C{owner/reference identified?}
+  C -- no --&gt; C1[collect heap/native/graphics ownership]
+  C -- yes --&gt; D{pressure causes reclaim or kill?}
+  D -- kill --&gt; D1[LMKD/process death symptoms]
+  D -- stall --&gt; D2[reclaim thrash/latency/ANR risk]
+  B1 --&gt; R[return idle and resample]
+  C1 --&gt; R
+  D1 --&gt; R
+  D2 --&gt; R
+  R --&gt; S[release leak owner + retire Generation]
+  S --&gt; T[repeat workload + verify convergence]</code></pre></details></details><p><strong>资源模型。</strong> 必须拆分 Java heap、native heap、mmap/shared、GraphicBuffer/Gralloc、GPU、内核与文件缓存；进程 RSS/PSS 的单值不能替代所有权分析。</p>
+<p><strong>最早可证伪断点。</strong> 稳定负载结束后分配—释放差值是否收敛。<strong>Owner 边界。</strong> 分配调用者、native/graphics consumer、系统内存策略和内核回收分别负责。<strong>回读验证。</strong> 重复同一场景，比较多个 Generation 的曲线、owner 数量、回收/kill 时间线和业务恢复。</p>
+<h3 id="665-anr">6.6.5 ANR</h3>
+<p><strong>正常路径。</strong> 主线程 Looper 持续取消息、执行短任务、处理输入/生命周期/广播，Binder 工作线程按时返回，Watchdog/系统超时监督不触发。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  A[event or lifecycle request] --&gt; B[enqueue message]
+  B --&gt; C[main Looper dispatch]
+  C --&gt; D[bounded work or async handoff]
+  D --&gt; E[finish/acknowledge]
+  E --&gt; F[next message]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  A[event or lifecycle request] --&gt; B[enqueue message]
+  B --&gt; C[main Looper dispatch]
+  C --&gt; D[bounded work or async handoff]
+  D --&gt; E[finish/acknowledge]
+  E --&gt; F[next message]</code></pre></details></details><p><strong>异常传播/恢复路径。</strong></p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[response deadline missed] --&gt; B[capture ANR traces]
+  B --&gt; C{main thread state?}
+  C -- lock --&gt; C1[lock inversion/deadlock]
+  C -- binder --&gt; C2[synchronous remote wait]
+  C -- IO/CPU --&gt; C3[blocking IO or heavy compute]
+  C -- idle --&gt; C4[event not delivered/state mismatch]
+  C1 --&gt; R[remove blocking dependency]
+  C2 --&gt; R
+  C3 --&gt; R
+  C4 --&gt; R
+  R --&gt; S[restart only if state cannot recover]
+  S --&gt; T[replay event + latency/readback verification]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[response deadline missed] --&gt; B[capture ANR traces]
+  B --&gt; C{main thread state?}
+  C -- lock --&gt; C1[lock inversion/deadlock]
+  C -- binder --&gt; C2[synchronous remote wait]
+  C -- IO/CPU --&gt; C3[blocking IO or heavy compute]
+  C -- idle --&gt; C4[event not delivered/state mismatch]
+  C1 --&gt; R[remove blocking dependency]
+  C2 --&gt; R
+  C3 --&gt; R
+  C4 --&gt; R
+  R --&gt; S[restart only if state cannot recover]
+  S --&gt; T[replay event + latency/readback verification]</code></pre></details></details><p><strong>资源模型。</strong> 主线程时间、锁、Binder 同步等待、CPU、I/O 与消息队列是关键资源。ANR 是症状分类，不直接等同于 CPU 高、死锁或 Binder 故障。</p>
+<p><strong>最早可证伪断点。</strong> 触发事件是否入队，以及主线程从何时不再完成消息。<strong>Owner 边界。</strong> 事件发送方、App 主线程、锁 owner、远端服务和系统调度分别判断。<strong>回读验证。</strong> 修复后重复同一交互，验证消息延迟、完成确认和业务状态，而非仅看 ANR 弹窗消失。</p>
+<h3 id="666-wakelock">6.6.6 WakeLock</h3>
+<p><strong>正常路径。</strong> 业务在确需保持执行/设备唤醒时 acquire，工作完成或取消后在所有出口 release，电源管理重新允许休眠。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  A[bounded work starts] --&gt; B[acquire WakeLock with owner tag]
+  B --&gt; C[CPU/device remains available]
+  C --&gt; D[work completes/cancels/errors]
+  D --&gt; E[release on every path]
+  E --&gt; F[power state readback]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  A[bounded work starts] --&gt; B[acquire WakeLock with owner tag]
+  B --&gt; C[CPU/device remains available]
+  C --&gt; D[work completes/cancels/errors]
+  D --&gt; E[release on every path]
+  E --&gt; F[power state readback]</code></pre></details></details><p><strong>异常传播/恢复路径。</strong></p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[unexpected awake/power drain] --&gt; B{active owner still has work?}
+  B -- yes --&gt; B1[long operation or downstream stall]
+  B -- no --&gt; C{acquire/release balanced?}
+  C -- no --&gt; C1[missing release/reference]
+  C -- yes --&gt; D{different owner/tag active?}
+  D -- yes --&gt; D1[misattributed WakeLock]
+  B1 --&gt; R[cancel/complete downstream work]
+  C1 --&gt; R
+  D1 --&gt; R
+  R --&gt; S[release old token + prevent stale callback reacquire]
+  S --&gt; T[screen-off/suspend and business readback]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[unexpected awake/power drain] --&gt; B{active owner still has work?}
+  B -- yes --&gt; B1[long operation or downstream stall]
+  B -- no --&gt; C{acquire/release balanced?}
+  C -- no --&gt; C1[missing release/reference]
+  C -- yes --&gt; D{different owner/tag active?}
+  D -- yes --&gt; D1[misattributed WakeLock]
+  B1 --&gt; R[cancel/complete downstream work]
+  C1 --&gt; R
+  D1 --&gt; R
+  R --&gt; S[release old token + prevent stale callback reacquire]
+  S --&gt; T[screen-off/suspend and business readback]</code></pre></details></details><p><strong>资源模型。</strong> token、owner/tag、acquire/release 计数、超时策略、持有时段和关联业务共同构成证据；“设备未休眠”不等于某一个 WakeLock 泄漏。</p>
+<p><strong>最早可证伪断点。</strong> 业务结束事件后 token 是否仍由原 owner 持有。<strong>Owner 边界。</strong> 申请方负责对称释放，Power Manager 负责状态，阻塞的下游负责解释工作未结束。<strong>回读验证。</strong> 确认旧 token 不活跃、功耗状态可转换，唤醒后目标业务仍正确。</p>
+<h3 id="667-网络">6.6.7 网络</h3>
+<p><strong>正常路径。</strong> App 请求网络，经 Connectivity/Network service 选择能力与默认/绑定网络，socket 通过 Netd/策略、内核协议栈、网卡驱动到外部端点。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  A[App request/socket] --&gt; B[Connectivity selection]
+  B --&gt; C[policy/DNS/Netd]
+  C --&gt; D[kernel socket + TCP/UDP]
+  D --&gt; E[interface/driver/link]
+  E --&gt; F[peer service]
+  F --&gt; G[response + app state]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  A[App request/socket] --&gt; B[Connectivity selection]
+  B --&gt; C[policy/DNS/Netd]
+  C --&gt; D[kernel socket + TCP/UDP]
+  D --&gt; E[interface/driver/link]
+  E --&gt; F[peer service]
+  F --&gt; G[response + app state]</code></pre></details></details><p><strong>异常传播/恢复路径。</strong></p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[request fails/stale] --&gt; B{network selected and validated?}
+  B -- no --&gt; B1[capability/default/binding]
+  B -- yes --&gt; C{DNS/route/policy valid?}
+  C -- no --&gt; C1[name/route/firewall]
+  C -- yes --&gt; D{socket handshake/session alive?}
+  D -- no --&gt; D1[link/peer/session]
+  D -- yes --&gt; E{response consumed and fresh?}
+  E -- no --&gt; E1[queue/callback/business state]
+  B1 --&gt; R[retire old Network/session]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R
+  R --&gt; S[reselect + reconnect + resubscribe]
+  S --&gt; T[authoritative query + business readback]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[request fails/stale] --&gt; B{network selected and validated?}
+  B -- no --&gt; B1[capability/default/binding]
+  B -- yes --&gt; C{DNS/route/policy valid?}
+  C -- no --&gt; C1[name/route/firewall]
+  C -- yes --&gt; D{socket handshake/session alive?}
+  D -- no --&gt; D1[link/peer/session]
+  D -- yes --&gt; E{response consumed and fresh?}
+  E -- no --&gt; E1[queue/callback/business state]
+  B1 --&gt; R[retire old Network/session]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R
+  R --&gt; S[reselect + reconnect + resubscribe]
+  S --&gt; T[authoritative query + business readback]</code></pre></details></details><p><strong>资源模型。</strong> Network handle、interface、route、DNS、socket、session、subscription 和业务 cache 有不同生命周期；link up 不等于 RPC 会话或数据新鲜。</p>
+<p><strong>最早可证伪断点。</strong> 请求实际绑定的是哪一个 Network/interface。<strong>Owner 边界。</strong> App、Connectivity/Netd、Kernel/driver、外部服务、业务状态机。<strong>回读验证。</strong> 新 Network 与 socket Generation 下重新查询权威状态并验证用户结果。</p>
+<h3 id="668-usb">6.6.8 USB</h3>
+<p><strong>正常路径。</strong> 物理插入触发控制器/PHY 枚举，内核建立 device/interface/endpoint，Framework USB service 处理权限与角色，目标应用或协议服务打开 endpoint 交换数据。图 1 确认 USB Service、USB HAL 和 Kernel USB 标签存在。[可信度：架构图确认] [证据：original-diagram-01]</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  A[attach + power] --&gt; B[PHY/controller enumeration]
+  B --&gt; C[kernel device/interface/endpoint]
+  C --&gt; D[USB service permission/role]
+  D --&gt; E[app/protocol opens endpoint]
+  E --&gt; F[transfer + completion]
+  F --&gt; G[business consume]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  A[attach + power] --&gt; B[PHY/controller enumeration]
+  B --&gt; C[kernel device/interface/endpoint]
+  C --&gt; D[USB service permission/role]
+  D --&gt; E[app/protocol opens endpoint]
+  E --&gt; F[transfer + completion]
+  F --&gt; G[business consume]</code></pre></details></details><p><strong>异常传播/恢复路径。</strong></p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[device unavailable/data fail] --&gt; B{attach/enumeration completed?}
+  B -- no --&gt; B1[power/cable/PHY/controller]
+  B -- yes --&gt; C{role/configuration/permission valid?}
+  C -- no --&gt; C1[Framework policy]
+  C -- yes --&gt; D{endpoint transfer completes?}
+  D -- no --&gt; D1[driver/device/queue]
+  D -- yes --&gt; E{consumer parses and applies?}
+  E -- no --&gt; E1[protocol/business state]
+  B1 --&gt; R[close old descriptors]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R
+  R --&gt; S[detach/re-enumerate new Generation]
+  S --&gt; T[permission + transfer + content readback]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[device unavailable/data fail] --&gt; B{attach/enumeration completed?}
+  B -- no --&gt; B1[power/cable/PHY/controller]
+  B -- yes --&gt; C{role/configuration/permission valid?}
+  C -- no --&gt; C1[Framework policy]
+  C -- yes --&gt; D{endpoint transfer completes?}
+  D -- no --&gt; D1[driver/device/queue]
+  D -- yes --&gt; E{consumer parses and applies?}
+  E -- no --&gt; E1[protocol/business state]
+  B1 --&gt; R[close old descriptors]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R
+  R --&gt; S[detach/re-enumerate new Generation]
+  S --&gt; T[permission + transfer + content readback]</code></pre></details></details><p><strong>资源模型。</strong> device address、configuration、interface claim、endpoint/file descriptor、permission 与 attach Generation 必须一致；旧 descriptor 不能跨重枚举复用。</p>
+<p><strong>最早可证伪断点。</strong> attach 后是否完成枚举并得到当前 device identity。<strong>Owner 边界。</strong> 物理/控制器、Kernel、USB service、应用协议。<strong>回读验证。</strong> 核对新 identity、角色/权限、双向 transfer completion 和实际内容。</p>
+<h3 id="669-存储">6.6.9 存储</h3>
+<p><strong>正常路径。</strong> 块设备/闪存经驱动、文件系统和挂载进入 Vold/Storage 管理，应用通过 VFS/Framework API 打开、读写、同步和关闭。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  A[flash/block device] --&gt; B[driver + block IO]
+  B --&gt; C[filesystem check/mount]
+  C --&gt; D[Vold/Storage policy]
+  D --&gt; E[VFS/file API]
+  E --&gt; F[read/write/fsync/close]
+  F --&gt; G[durable data + app readback]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  A[flash/block device] --&gt; B[driver + block IO]
+  B --&gt; C[filesystem check/mount]
+  C --&gt; D[Vold/Storage policy]
+  D --&gt; E[VFS/file API]
+  E --&gt; F[read/write/fsync/close]
+  F --&gt; G[durable data + app readback]</code></pre></details></details><p><strong>异常传播/恢复路径。</strong></p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[IO error/missing/stale data] --&gt; B{device and mount present?}
+  B -- no --&gt; B1[media/driver/mount]
+  B -- yes --&gt; C{path/permission/quota valid?}
+  C -- no --&gt; C1[policy/user/storage scope]
+  C -- yes --&gt; D{write and fsync completed?}
+  D -- no --&gt; D1[space/IO/filesystem]
+  D -- yes --&gt; E{reader reopened current data?}
+  E -- no --&gt; E1[cache/version/atomicity]
+  B1 --&gt; R[quiesce writers + preserve evidence]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R
+  R --&gt; S[repair/remount or atomic rewrite]
+  S --&gt; T[reopen + checksum/content readback]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[IO error/missing/stale data] --&gt; B{device and mount present?}
+  B -- no --&gt; B1[media/driver/mount]
+  B -- yes --&gt; C{path/permission/quota valid?}
+  C -- no --&gt; C1[policy/user/storage scope]
+  C -- yes --&gt; D{write and fsync completed?}
+  D -- no --&gt; D1[space/IO/filesystem]
+  D -- yes --&gt; E{reader reopened current data?}
+  E -- no --&gt; E1[cache/version/atomicity]
+  B1 --&gt; R[quiesce writers + preserve evidence]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R
+  R --&gt; S[repair/remount or atomic rewrite]
+  S --&gt; T[reopen + checksum/content readback]</code></pre></details></details><p><strong>资源模型。</strong> mount namespace、user/storage scope、path、file descriptor、page cache、dirty data、filesystem transaction 和介质共同决定持久性；write 返回不等于断电后一定持久。</p>
+<p><strong>最早可证伪断点。</strong> 当前进程看到的 mount/path 是否对应目标存储。<strong>Owner 边界。</strong> App、Storage/Vold、filesystem/VFS、block driver、介质。<strong>回读验证。</strong> close/reopen 后校验内容、版本或校验值，并在要求的掉电语义下复核。</p>
+<h2 id="67-android-内部通信异常">6.7 Android 内部通信异常</h2>
+<h3 id="671-正常状态链">6.7.1 正常状态链</h3>
+<p>Android 内部调用至少要分成：服务发现/handle、传输调用、服务执行、回调投递、消费者状态应用和用户结果。核心不变量是：<code>transport success ≠ callback delivered ≠ business state applied</code>。[可信度：标准机制推断]</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+  participant C as Client state machine
+  participant P as Binder Proxy
+  participant D as Binder driver
+  participant S as Service Stub/worker
+  participant B as Service business
+  C-&gt;&gt;P: request with Request ID + Generation
+  P-&gt;&gt;D: transaction
+  D-&gt;&gt;S: dispatch
+  S-&gt;&gt;B: execute and update authoritative state
+  B--&gt;&gt;S: result/current version
+  S--&gt;&gt;C: reply or callback
+  C-&gt;&gt;C: validate Generation + apply state
+  C-&gt;&gt;B: authoritative state readback</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  participant C as Client state machine
+  participant P as Binder Proxy
+  participant D as Binder driver
+  participant S as Service Stub/worker
+  participant B as Service business
+  C-&gt;&gt;P: request with Request ID + Generation
+  P-&gt;&gt;D: transaction
+  D-&gt;&gt;S: dispatch
+  S-&gt;&gt;B: execute and update authoritative state
+  B--&gt;&gt;S: result/current version
+  S--&gt;&gt;C: reply or callback
+  C-&gt;&gt;C: validate Generation + apply state
+  C-&gt;&gt;B: authoritative state readback</code></pre></details></details><h3 id="672-异常传播与恢复">6.7.2 异常传播与恢复</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[request issued] --&gt; B{Binder call accepted?}
+  B -- no --&gt; B1[Binder call failure]
+  B -- blocked --&gt; B2[Binder call blocked / thread-pool starvation]
+  B -- yes --&gt; C{service Generation alive?}
+  C -- no --&gt; C1[service death]
+  C -- yes --&gt; D{reply/callback delivered?}
+  D -- no --&gt; D1[callback loss or queue backlog]
+  D -- yes --&gt; E{Generation and version current?}
+  E -- no --&gt; E1[Generation mismatch / stale callback]
+  E -- yes --&gt; F{consumer applied state?}
+  F -- no --&gt; F1[state divergence]
+  B1 --&gt; R[capture transaction result and identities]
+  B2 --&gt; R
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R
+  F1 --&gt; R
+  R --&gt; S[timeout policy stops indefinite wait]
+  S --&gt; T[reconnect new handle/session]
+  T --&gt; U[re-register callback/subscription]
+  U --&gt; V[authoritative state readback]
+  V --&gt; W[user-result verify]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[request issued] --&gt; B{Binder call accepted?}
+  B -- no --&gt; B1[Binder call failure]
+  B -- blocked --&gt; B2[Binder call blocked / thread-pool starvation]
+  B -- yes --&gt; C{service Generation alive?}
+  C -- no --&gt; C1[service death]
+  C -- yes --&gt; D{reply/callback delivered?}
+  D -- no --&gt; D1[callback loss or queue backlog]
+  D -- yes --&gt; E{Generation and version current?}
+  E -- no --&gt; E1[Generation mismatch / stale callback]
+  E -- yes --&gt; F{consumer applied state?}
+  F -- no --&gt; F1[state divergence]
+  B1 --&gt; R[capture transaction result and identities]
+  B2 --&gt; R
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R
+  F1 --&gt; R
+  R --&gt; S[timeout policy stops indefinite wait]
+  S --&gt; T[reconnect new handle/session]
+  T --&gt; U[re-register callback/subscription]
+  U --&gt; V[authoritative state readback]
+  V --&gt; W[user-result verify]</code></pre></details></details><h3 id="673-八类异常与首个断点">6.7.3 八类异常与首个断点</h3>
+<table>
+<thead>
+<tr>
+<th>异常</th>
+<th>不能据此推出</th>
+<th>最早可证伪断点</th>
+<th>关键证据</th>
+<th>Owner 边界</th>
+<th>恢复</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Binder call failure</code></td>
+<td>服务一定崩溃</td>
+<td>驱动是否接受 transaction</td>
+<td>返回码、handle、PID/Generation、payload size</td>
+<td>Client/driver/service</td>
+<td>重新发现服务，分类错误后决定重试</td>
+</tr>
+<tr>
+<td><code>Binder call blocked</code></td>
+<td>只是网络慢</td>
+<td>客户端卡在哪次同步调用</td>
+<td>双端线程栈、队列、锁、transaction 时间线</td>
+<td>调用方/服务线程池/锁 owner</td>
+<td>中止无限等待，去同步依赖或限流</td>
+</tr>
+<tr>
+<td><code>service death</code></td>
+<td>Client 自动恢复</td>
+<td>death 通知后清理是否执行</td>
+<td>death、旧 handle、服务新 PID/Generation</td>
+<td>服务与 Client 会话 owner</td>
+<td>reconnect、重注册、重建 cache</td>
+</tr>
+<tr>
+<td><code>callback loss</code></td>
+<td>服务未执行</td>
+<td>服务是否发出、驱动是否投递</td>
+<td>callback sequence、队列、线程状态</td>
+<td>服务发送/IPC/Client consumer</td>
+<td>补拉权威状态而非盲等回调</td>
+</tr>
+<tr>
+<td><code>state divergence</code></td>
+<td>IPC 一定失败</td>
+<td>Client 收到后是否应用当前版本</td>
+<td>authoritative/consumer version、状态机</td>
+<td>Client business consumer</td>
+<td>重建 cache 并验证 UI/业务</td>
+</tr>
+<tr>
+<td><code>queue backlog</code></td>
+<td>对象一定泄漏</td>
+<td>入队—完成累计差是否持续扩大</td>
+<td>enqueue/dequeue/complete、等待时间</td>
+<td>producer/queue/consumer</td>
+<td>背压、丢弃过期代际、恢复消费</td>
+</tr>
+<tr>
+<td><code>Generation mismatch</code></td>
+<td>新旧事件都可安全应用</td>
+<td>回调/session 是否属于当前 Generation</td>
+<td>handle、sequence、version、owner</td>
+<td>会话状态机</td>
+<td>拒绝 old callback/session，重新订阅</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td>下层绝对未执行或可安全重试</td>
+<td>服务端是否已经开始/提交副作用</td>
+<td>Request ID、服务执行、权威状态</td>
+<td>Client policy/service business</td>
+<td>先查状态，再按幂等合同决定动作</td>
+</tr>
+</tbody></table>
+<p>内部通信异常经常表现为“调用成功但界面没变”。此时要继续查回调是否到达、是否排在旧消息之后、消费者是否因代际或版本拒绝、状态机是否应用、UI 是否 invalidated。<code>old callback/session</code> 必须在重连时退休，否则新服务 handle 也可能继续使用旧 cache。</p>
+<p>最早可证伪断点是调用方拿到的 handle/session 是否仍属于当前服务 <code>Generation</code>，其次才是 transaction、执行、reply/callback 与业务消费。Owner 边界按 Client、Binder、Service worker、Service business、callback queue、Client state machine 分开。恢复闭环必须执行 <code>authoritative state readback</code> 并验证用户结果，单纯 <code>reconnect</code> 成功不算完成。</p>
+<h2 id="68-现场使用方法与证据边界">6.8 现场使用方法与证据边界</h2>
+<h3 id="681-一张统一排查表">6.8.1 一张统一排查表</h3>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>第一份证据</th>
+<th>第二份证据</th>
+<th>最早断点</th>
+<th>升级 Owner 前必须携带</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>点击无响应</td>
+<td>原始输入与时间戳</td>
+<td>焦点/channel/App dispatch</td>
+<td>EventHub→InputReader 首处不前进</td>
+<td>事件、焦点、窗口、线程、业务状态时间线</td>
+</tr>
+<tr>
+<td>黑屏/冻屏</td>
+<td>unique frame 与 App draw</td>
+<td>queue/latch/present/vblank</td>
+<td>第一处计数或时间戳不前进</td>
+<td>Layer、Buffer/Fence、显示提交、物理状态</td>
+</tr>
+<tr>
+<td>Surface 疑似泄漏</td>
+<td>多代际创建/释放差值</td>
+<td>owner/reference/Layer/Buffer</td>
+<td>owner 结束后仍产生新工作</td>
+<td>重现场景、曲线、对象 owner、释放路径</td>
+</tr>
+<tr>
+<td>相机无图</td>
+<td>Session/request/result</td>
+<td>Buffer/Fence/consumer</td>
+<td>当前 Session 是否接受 request</td>
+<td>device/session/target 代际和逐帧时间线</td>
+</tr>
+<tr>
+<td>音频无声</td>
+<td>Track frame position</td>
+<td>route/HAL/PCM/amp</td>
+<td>Track 是否推进</td>
+<td>session、route、计数、mute/amp 状态</td>
+</tr>
+<tr>
+<td>内部通信异常</td>
+<td>handle/Request ID/Generation</td>
+<td>双端执行与 callback/状态版本</td>
+<td>handle 是否当前且 transaction 被接受</td>
+<td>双端日志、线程栈、队列、权威回读</td>
+</tr>
+</tbody></table>
+<h3 id="682-本章不能直接证明什么">6.8.2 本章不能直接证明什么</h3>
+<ul>
+<li>图 1 只能确认模块/分层标签，不证明 <code>ViewRootImpl</code>、<code>HWUI</code>、<code>BufferQueue</code>、HWC 版本的完整逐跳链。[可信度：架构图确认] [证据：original-diagram-01]</li>
+<li>AOSP 标准机制可以用于建立诊断假设，但不能自动证明 MT8676 的线程、进程、接口版本、Buffer 数量、超时或恢复策略。[可信度：标准机制推断]</li>
+<li>来自 MT8678 对比资料、T29-8678 或其他项目的排障笔记，以及非 MT8676 的 Camera 文档，只能作为 method-reference；不得升级为 MT8676 事实。[可信度：待 MT8676 确认]</li>
+<li>命令输出和日志字段存在版本差异；应先确认命令可用、字段语义和采样时刻，再把它们用于断点证明。[可信度：待 MT8676 确认]</li>
+</ul>
+<p>术语与图标签也必须分开：图 1 直接出现 <code>AudioService</code> 与 <code>MediaServer</code> 标签，只能证明对应 occurrence 存在；正文对其 Android 标准职责的解释属于标准机制，不证明 MT8676 的类、进程拆分或服务版本。[可信度：架构图确认] [证据：original-diagram-01] <code>WMS</code> 是本文对标准 Window Manager Service 的缩写；图 1 的原始标签是 Window Manager，并未直接写出 <code>WMS</code>。两者的语义映射属于标准机制，具体实现仍待当前 build 证据确认。[可信度：标准机制推断]</p>
+<p>因此 terminology 中这些标准解释保持 method-reference 且不绑定 MT8676 图证据；图中 occurrence 的 Direct 事实由模块清单和相邻的 <code>original-diagram-01</code> 引用承载。</p>
+<h3 id="683-最小闭环">6.8.3 最小闭环</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  A[freeze scenario + Generation] --&gt; B[collect synchronized evidence]
+  B --&gt; C[find earliest divergent boundary]
+  C --&gt; D[identify creator/holder/consumer/releaser]
+  D --&gt; E[recover only failed ownership chain]
+  E --&gt; F[authoritative readback]
+  F --&gt; G[user-visible verification]
+  G --&gt; H{repeatable and convergent?}
+  H -- no --&gt; B
+  H -- yes --&gt; I[close with evidence package]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  A[freeze scenario + Generation] --&gt; B[collect synchronized evidence]
+  B --&gt; C[find earliest divergent boundary]
+  C --&gt; D[identify creator/holder/consumer/releaser]
+  D --&gt; E[recover only failed ownership chain]
+  E --&gt; F[authoritative readback]
+  F --&gt; G[user-visible verification]
+  G --&gt; H{repeatable and convergent?}
+  H -- no --&gt; B
+  H -- yes --&gt; I[close with evidence package]</code></pre></details></details><h2 id="69-证据预审门禁与非等价关系">6.9 证据预审门禁与非等价关系</h2>
+<p>本节把容易越级推断的结论集中锁定。它不是重复前文，而是现场复核时的拒绝条件：只要有人用左侧某个“成功”直接证明右侧全部成功，就应回到逐层证据。</p>
+<h3 id="691-生命周期到物理显示的状态不等式">6.9.1 生命周期到物理显示的状态不等式</h3>
+<pre><code>Activity Resumed ≠ Window Visible/Focused ≠ Surface Valid
+≠ Producer dequeueBuffer Succeeds
+≠ Producer queueBuffer Succeeds
+≠ SurfaceFlinger Acquires/Latches the Buffer
+≠ HWC validate/present Succeeds
+≠ DRM Commit/VBlank Advances
+≠ Physical Panel Shows the Intended Pixels</code></pre><p><code>onDestroy() is not guaranteed on process kill</code>：系统直接结束进程时，应用不能假设销毁回调一定有机会执行。因此必须区分并分别观察：</p>
+<p><code>Activity finish ≠ Activity onDestroy ≠ Window remove ≠ View detach ≠ Surface invalid ≠ producer disconnect ≠ Layer remove ≠ GraphicBuffer release</code>。</p>
+<p>Activity/Task 是任务和组件状态；process 是执行容器；Window 是 WMS 管理对象；ViewRootImpl 是应用 View 树与窗口/输入/绘制的桥；Surface 是 producer handle/连接；BufferQueue 是所有权协调；Layer 是合成端对象；display 是输出目标。任何一层结束都不能自动作为其他层清理完成的证据。[可信度：标准机制推断]</p>
+<h3 id="692-输入事件不等式">6.9.2 输入事件不等式</h3>
+<p>标准诊断链应包含 <code>evdev → EventHub → InputReader → InputDispatcher → target Window/InputChannel → ViewRootImpl → View/business handler</code>。[可信度：标准机制推断]</p>
+<pre><code>getevent Has Events ≠ EventHub/InputReader Parsed Them
+≠ InputDispatcher Selected the Intended Window
+≠ InputChannel Delivered Them
+≠ ViewRootImpl/View Consumed Them
+≠ Business State Changed</code></pre><p>因此输入问题必须携带同一事件的设备、event time、display、target Window/channel、dispatch/finish 和业务状态变化。只有 <code>getevent</code> 输出时，Owner 仍可能在解析、目标选择、应用线程或业务状态机。</p>
+<h3 id="693-三类-fence-不能互换">6.9.3 三类 Fence 不能互换</h3>
+<p><code>acquire fence ≠ release fence ≠ present fence</code>。</p>
+<table>
+<thead>
+<tr>
+<th>Fence</th>
+<th>谁产生/交给谁</th>
+<th>它证明什么</th>
+<th>它不证明什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>acquire fence</td>
+<td>producer 随 queued Buffer 交给 consumer</td>
+<td>producer 对该 Buffer 的写依赖完成后可安全读取</td>
+<td>consumer 已 latch、compose 或上屏</td>
+</tr>
+<tr>
+<td>release fence</td>
+<td>consumer 释放 Buffer 时交回 producer</td>
+<td>consumer 的旧读/显示依赖完成后可复用</td>
+<td>新内容已产生或用户已看到</td>
+</tr>
+<tr>
+<td>present fence</td>
+<td>合成/显示提交侧报告呈现时序</td>
+<td>当前显示提交到某个标准定义的完成阶段</td>
+<td>DRM/vblank、链路、panel/backlight 与光学内容必然正确</td>
+</tr>
+</tbody></table>
+<p>Fence 长期未 signal 是故障证据，但仍需关联 fence owner、提交工作和时间线；单条超时日志不能直接命名 GPU 为根因。</p>
+<h3 id="694-windowsurfacelayerbuffer-与内存不等价">6.9.4 Window、Surface、Layer、Buffer 与内存不等价</h3>
+<pre><code>WindowLeaked Warning ≠ Java Surface Leak
+≠ SurfaceControl/Remote Layer Leak
+≠ BufferQueue Backlog
+≠ GraphicBuffer/Gralloc Leak
+≠ GPU Driver Memory Leak</code></pre><p><code>WindowLeaked</code> 首先说明 Activity/Window 生命周期错误；它可能间接延长 Surface/Layer，但必须补取 producer connection、Layer tree、Buffer holder 才能升级结论。Surface 正常持有时也会因消费者变慢出现队列背压；反之 Surface wrapper 泄漏并不要求队列无限增长。Gralloc 共享 Buffer、GPU 驱动对象、dma-buf 和 RSS/PSS 也是不同口径。</p>
+<h3 id="695-surfacecontrol-本地句柄与远端-layer">6.9.5 SurfaceControl 本地句柄与远端 Layer</h3>
+<p><code>SurfaceControl.release releases a local reference ≠ remote Layer removed</code>。标准 API 语义是释放客户端对服务端 surface 的本地引用；当 parent tree 或其他引用仍存在时，远端 Layer 可能继续存活或显示。要证明删除，必须观察 reparent/remove Transaction 已提交、parent/child tree 不再包含目标 Layer、Buffer attachment 停止，并在稳定期复核。[可信度：标准机制推断]</p>
+<p>所以清理顺序应按“停止新事务/新帧 → detach/reparent/remove → apply → 观察服务端 Layer tree → 释放本地 handle”。只记录 Java <code>release()</code> 返回不能越级证明服务端对象立即消失。</p>
+<h3 id="696-imagereader-三态和-maximages">6.9.6 ImageReader 三态和 <code>maxImages</code></h3>
+<table>
+<thead>
+<tr>
+<th>状态</th>
+<th>含义</th>
+<th>holder</th>
+<th>正常转移</th>
+<th>错误结论</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>queued-not-acquired</code></td>
+<td>producer 已交付、客户端尚未 acquire</td>
+<td>reader queue</td>
+<td>acquire 或按策略丢弃</td>
+<td>有待取图就等于忘记 close</td>
+</tr>
+<tr>
+<td><code>acquired-not-closed</code></td>
+<td>客户端已取得 Image</td>
+<td>客户端 Image 引用</td>
+<td><code>Image.close()</code> 后归还</td>
+<td>所有队列停顿都由 HAL 导致</td>
+</tr>
+<tr>
+<td><code>free cache</code></td>
+<td>可复用 Buffer 暂留以减少分配</td>
+<td>reader/allocator cache</td>
+<td>后续复用或销毁时释放</td>
+<td>缓存数量就是泄漏数量</td>
+</tr>
+</tbody></table>
+<p><code>maxImages stall</code> 是“已 acquire 且未 close 的数量触达接口约束，后续 acquire/producer 可能受阻”的诊断分支；要用 Image identity、acquire/close 累计和 producer wait 证明，不能只看队列里存在图像。[可信度：标准机制推断]</p>
+<h3 id="697-mediacodec-五个独立资源面">6.9.7 MediaCodec 五个独立资源面</h3>
+<p><code>codec buffers ≠ input Surface ≠ output Surface</code>，还要进一步区分 codec instance/state 和上层 View/ImageReader consumer。</p>
+<table>
+<thead>
+<tr>
+<th>资源</th>
+<th>创建/持有</th>
+<th>终止动作</th>
+<th>不能推定</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>codec instance/state</td>
+<td>Media 业务创建，Codec Framework/component 持有</td>
+<td>合法状态下 flush/stop/release</td>
+<td>stop 已等同 release</td>
+</tr>
+<tr>
+<td>input Buffer</td>
+<td>codec 与上游共享 slot/ownership</td>
+<td>queue/cancel/EOS/flush</td>
+<td>callback 到达等于已编码/解码</td>
+</tr>
+<tr>
+<td>input Surface</td>
+<td>encoder 场景由调用者获得 producer Surface</td>
+<td>停 producer、断开并由调用者 release</td>
+<td>codec release 自动释放调用者持有 Surface</td>
+</tr>
+<tr>
+<td>output Buffer</td>
+<td>codec 产生并交应用或 render</td>
+<td>releaseOutputBuffer/render/drop</td>
+<td>release(render) 等于最终可见</td>
+</tr>
+<tr>
+<td>output Surface</td>
+<td>调用者提供，consumer 属于显示/Reader</td>
+<td>解绑/换代、停止 consumer、调用者 release</td>
+<td><code>setOutputSurface</code> 自动清理旧 owner</td>
+</tr>
+</tbody></table>
+<p><code>setOutputSurface</code>、输出丢帧/阻塞语义和可用 API 随版本变化；当前 Android 版本未确认前只把它们作为标准候选机制。[可信度：待 MT8676 确认]</p>
+<h3 id="698-virtualdisplaysurface-与-mediaprojection">6.9.8 VirtualDisplay、Surface 与 MediaProjection</h3>
+<p><code>VirtualDisplay.release ≠ caller-held Surface.release ≠ MediaProjection.stop</code>。三者相关但不能互相代替：VirtualDisplay 管逻辑显示生命周期；调用者提供并可能继续持有 Surface wrapper/producer handle；MediaProjection 管授权投影会话与 callback。[可信度：标准机制推断]</p>
+<p>正常结束需要停止新帧、按版本支持情况 detach/setSurface(null)、release VirtualDisplay、释放调用者仍持有的 Surface、停止或响应 MediaProjection 会话，并分别核对 display token、Surface reference/connection、projection callback 都属于已结束代际。官方“销毁 underlying display surface”语义不等于任意 caller-held Surface 与投影会话自动清理。</p>
+<h3 id="699-九类资源的-creatorholderconsumerreleaser-合同">6.9.9 九类资源的 creator—holder—consumer—releaser 合同</h3>
+<table>
+<thead>
+<tr>
+<th>主题</th>
+<th>creator</th>
+<th>holder</th>
+<th>consumer</th>
+<th>releaser</th>
+<th>回读验证</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Camera</td>
+<td>Camera 业务</td>
+<td>Device/Session/request/target</td>
+<td>HAL、Surface/ImageReader/Codec</td>
+<td>session owner + target consumer</td>
+<td>新代际 frame/result/画面</td>
+</tr>
+<tr>
+<td>MediaCodec</td>
+<td>Media 业务</td>
+<td>codec/component、input/output</td>
+<td>Surface 或应用</td>
+<td>codec owner 与 Surface caller 各自释放</td>
+<td>timestamp、frame、可见/可听结果</td>
+</tr>
+<tr>
+<td>Audio</td>
+<td>App/Media</td>
+<td>Track/session/route/thread</td>
+<td>HAL/PCM/Codec/amp</td>
+<td>Track owner、policy/HAL 生命周期</td>
+<td>frame position、route、可识别音</td>
+</tr>
+<tr>
+<td>Memory/LMKD</td>
+<td>分配调用者</td>
+<td>heap/map/Buffer/driver</td>
+<td>线程、GPU、Kernel</td>
+<td>owner/consumer 或进程生命周期</td>
+<td>同负载曲线收敛、业务重建</td>
+</tr>
+<tr>
+<td>ANR</td>
+<td>事件/任务 producer</td>
+<td>queue、main thread、lock/remote wait</td>
+<td>App handler/business</td>
+<td>task/lock/service owner</td>
+<td>消息时延、完成确认、状态结果</td>
+</tr>
+<tr>
+<td>WakeLock</td>
+<td>有界业务任务</td>
+<td>token/Power Manager/kernel blocker</td>
+<td>CPU/device work</td>
+<td>申请方所有出口</td>
+<td>token 清零、休眠/唤醒、业务正确</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>App/session</td>
+<td>Network/socket/subscription/cache</td>
+<td>peer 与业务 consumer</td>
+<td>session owner</td>
+<td>新 Network 查询权威状态</td>
+</tr>
+<tr>
+<td>USB</td>
+<td>attach/协议业务</td>
+<td>device/interface/endpoint/fd</td>
+<td>driver/device/app</td>
+<td>endpoint/fd owner</td>
+<td>新 identity 双向传输与内容</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>writer/app</td>
+<td>fd/cache/fs transaction/media</td>
+<td>reader/app</td>
+<td>fd/writer/filesystem</td>
+<td>reopen + content/version/checksum</td>
+</tr>
+</tbody></table>
+<h3 id="6910-binder-服务与业务结果不等式">6.9.10 Binder 服务与业务结果不等式</h3>
+<pre><code>Service Process Alive ≠ Binder Endpoint Ready
+≠ Session/Callback Current
+≠ Queue Drained
+≠ Business State Fresh
+≠ Frame/User Result Correct</code></pre><p>DeathRecipient 是死亡通知入口，不是自动恢复器。新服务进程出现后，Client 仍需重新发现 endpoint、建立新 session、重注册 callback/subscription、拒绝旧 Generation、读取权威状态并更新业务/UI。</p>
+<h3 id="6911-android-版本和命令边界">6.9.11 Android 版本和命令边界</h3>
+<p>必须先采集 build fingerprint、API level、framework/vendor revision、debuggable/SELinux 和 Composer/Gralloc 信息，再选择命令与字段。<code>command/dump fields depend on Android version, permission, SELinux and vendor implementation</code>。<code>dumpsys</code>、Perfetto、Winscope、DRM debugfs、dma-buf 或 GPU counter 均只是通用观测建议，不保证当前 MT8676 build 可用。[可信度：待 MT8676 确认]</p>
+<p>版本差异至少包括 Window/BLAST 提交路径、HWC legacy/HWC2/HIDL/AIDL、Gralloc allocator/mapper、HWUI/RenderEngine 的 GLES/Vulkan 后端、ImageReader API、MediaCodec Surface API、VirtualDisplay/MediaProjection 权限与 InputDispatcher/多显示焦点。缺少当前设备证据时，不得填入固定 Buffer 数、队列深度、超时、内存阈值、HAL 版本或私有服务名。</p>
+<hr>
+<p><a href="index.html">返回主题导航</a> · <a href="22.html">本次来源索引</a></p>
+</article><nav class="pager"><a href="18.html">← 上一步：盟博OS架构与服务边界</a><a href="07.html">下一步：SOS-Yocto内部机制 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#06-android-内部机制图形资源与稳定性">06 Android 内部机制、图形资源与稳定性</a><a class="depth-2" href="#2026-09-20-校订android-异常必须连到跨域依赖">2026-09-20 校订：Android 异常必须连到跨域依赖</a><a class="depth-2" href="#61-生命周期窗口与输入">6.1 生命周期、窗口与输入</a><a class="depth-3" href="#611-生命周期和窗口正常路径">6.1.1 生命周期和窗口正常路径</a><a class="depth-3" href="#612-输入事件正常路径">6.1.2 输入事件正常路径</a><a class="depth-3" href="#613-生命周期窗口与输入异常传播恢复路径">6.1.3 生命周期、窗口与输入异常传播/恢复路径</a><a class="depth-2" href="#62-android-图像渲染">6.2 Android 图像渲染</a><a class="depth-3" href="#621-端到端正常路径">6.2.1 端到端正常路径</a><a class="depth-3" href="#622-帧的资源与观察模型">6.2.2 帧的资源与观察模型</a><a class="depth-3" href="#623-渲染异常传播恢复路径">6.2.3 渲染异常传播/恢复路径</a><a class="depth-2" href="#63-bufferqueuesurfacecontrol-与所有权">6.3 BufferQueue、SurfaceControl 与所有权</a><a class="depth-3" href="#631-正常所有权闭环">6.3.1 正常所有权闭环</a><a class="depth-3" href="#632-正常释放对称性">6.3.2 正常释放对称性</a><a class="depth-3" href="#633-异常传播与恢复">6.3.3 异常传播与恢复</a><a class="depth-2" href="#64-surface-与图形资源泄漏">6.4 Surface 与图形资源泄漏</a><a class="depth-3" href="#641-先定义泄漏证据">6.4.1 先定义“泄漏证据”</a><a class="depth-3" href="#642-正常图创建使用释放">6.4.2 正常图：创建—使用—释放</a><a class="depth-3" href="#643-异常传播恢复图">6.4.3 异常传播/恢复图</a><a class="depth-3" href="#644-十二类泄漏矩阵">6.4.4 十二类泄漏矩阵</a><a class="depth-3" href="#645-泄漏与积压如何区分">6.4.5 泄漏与积压如何区分</a><a class="depth-2" href="#65-黑屏冻屏花屏闪屏与卡顿">6.5 黑屏、冻屏、花屏、闪屏与卡顿</a><a class="depth-3" href="#651-五层正常显示链">6.5.1 五层正常显示链</a><a class="depth-3" href="#652-症状不能互换">6.5.2 症状不能互换</a><a class="depth-3" href="#653-异常传播恢复图">6.5.3 异常传播/恢复图</a><a class="depth-2" href="#66-android-内部资源与稳定性">6.6 Android 内部资源与稳定性</a><a class="depth-3" href="#661-camera">6.6.1 Camera</a><a class="depth-3" href="#662-mediacodec">6.6.2 MediaCodec</a><a class="depth-3" href="#663-audio">6.6.3 Audio</a><a class="depth-3" href="#664-内存与-lmkd">6.6.4 内存与 LMKD</a><a class="depth-3" href="#665-anr">6.6.5 ANR</a><a class="depth-3" href="#666-wakelock">6.6.6 WakeLock</a><a class="depth-3" href="#667-网络">6.6.7 网络</a><a class="depth-3" href="#668-usb">6.6.8 USB</a><a class="depth-3" href="#669-存储">6.6.9 存储</a><a class="depth-2" href="#67-android-内部通信异常">6.7 Android 内部通信异常</a><a class="depth-3" href="#671-正常状态链">6.7.1 正常状态链</a><a class="depth-3" href="#672-异常传播与恢复">6.7.2 异常传播与恢复</a><a class="depth-3" href="#673-八类异常与首个断点">6.7.3 八类异常与首个断点</a><a class="depth-2" href="#68-现场使用方法与证据边界">6.8 现场使用方法与证据边界</a><a class="depth-3" href="#681-一张统一排查表">6.8.1 一张统一排查表</a><a class="depth-3" href="#682-本章不能直接证明什么">6.8.2 本章不能直接证明什么</a><a class="depth-3" href="#683-最小闭环">6.8.3 最小闭环</a><a class="depth-2" href="#69-证据预审门禁与非等价关系">6.9 证据预审门禁与非等价关系</a><a class="depth-3" href="#691-生命周期到物理显示的状态不等式">6.9.1 生命周期到物理显示的状态不等式</a><a class="depth-3" href="#692-输入事件不等式">6.9.2 输入事件不等式</a><a class="depth-3" href="#693-三类-fence-不能互换">6.9.3 三类 Fence 不能互换</a><a class="depth-3" href="#694-windowsurfacelayerbuffer-与内存不等价">6.9.4 Window、Surface、Layer、Buffer 与内存不等价</a><a class="depth-3" href="#695-surfacecontrol-本地句柄与远端-layer">6.9.5 SurfaceControl 本地句柄与远端 Layer</a><a class="depth-3" href="#696-imagereader-三态和-maximages">6.9.6 ImageReader 三态和 maxImages</a><a class="depth-3" href="#697-mediacodec-五个独立资源面">6.9.7 MediaCodec 五个独立资源面</a><a class="depth-3" href="#698-virtualdisplaysurface-与-mediaprojection">6.9.8 VirtualDisplay、Surface 与 MediaProjection</a><a class="depth-3" href="#699-九类资源的-creatorholderconsumerreleaser-合同">6.9.9 九类资源的 creator—holder—consumer—releaser 合同</a><a class="depth-3" href="#6910-binder-服务与业务结果不等式">6.9.10 Binder 服务与业务结果不等式</a><a class="depth-3" href="#6911-android-版本和命令边界">6.9.11 Android 版本和命令边界</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>

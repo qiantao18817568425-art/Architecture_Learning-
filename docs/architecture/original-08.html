@@ -1,0 +1,640 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>MCU内部机制 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details open><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a aria-current="page" href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 原版解释 / 08</div><div class="chapter-title"><p class="eyebrow">CHAPTER 08 · 原版解释全文</p><h1>MCU内部机制</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=08">并排对比两套正文 ↗</a><a class="button secondary" href="08.html">对照中文版 ↗</a><button class="button" data-read="original-08" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 原版解释对照</p><h2>MCU 与主 SoC 的分工怎样理解？</h2><p>MCU 接近车辆信号、实时控制和电源协同；具体分工由项目定义。中断告诉软件有事件，不保证对应报文完整、有效或已被上层使用。</p><ol><li><strong>怎么读：</strong>先看启动/调度，再沿 CAN 和 SPI 走到 SoC，最后看电源状态与诊断。</li><li><strong>项目练习：</strong>以挡位变化为例区分总线接收、MCU 解码、跨芯片发送和座舱消费；每一层保留有效性。</li><li><strong>自检：</strong>IRQ 到达后为什么还要检查报文长度、校验与时间戳？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-2">Day 2</a> <a href="../index.html#day-4">Day 4</a> <a href="../index.html#day-9">Day 9</a> <a href="../index.html#day-18">Day 18</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#08-mcu-内部机制">08 MCU 内部机制</a><a class="depth-2" href="#81-启动栈">8.1 启动栈</a><a class="depth-2" href="#82-调度">8.2 调度</a><a class="depth-2" href="#83-can-收发">8.3 CAN 收发</a><a class="depth-2" href="#84-e2e">8.4 E2E</a><a class="depth-2" href="#85-spiipcl">8.5 SPI/IPCL</a><a class="depth-2" href="#86-电源与安全">8.6 电源与安全</a><a class="depth-2" href="#87-诊断">8.7 诊断</a><a class="depth-2" href="#88-资源所有权">8.8 资源所有权</a><a class="depth-2" href="#89-故障传播矩阵">8.9 故障传播矩阵</a><a class="depth-2" href="#810-模块映射">8.10 模块映射</a><a class="depth-2" href="#811-证据观察责任与待确认">8.11 证据、观察、责任与待确认</a></details><article id="chapter-text"><h1 id="08-mcu-内部机制">08 MCU 内部机制</h1>
+<blockquote>
+<p>本章于 2026-09-20 按原架构补充正文解释；原图、模块/流程 ID 和分层保持原样。新证据的版本限定随段落标注。<a href="index.html">本轮更新说明</a>。</p>
+</blockquote>
+<p>图 2/3 确认 MCU 域的容器、标签和显式连线；不确认私有 Runnable、周期、优先级、ASIL、帧格式或精确启动序列。
+[可信度：架构图确认] [证据：original-diagram-02] [证据：original-diagram-03]
+AUTOSAR、CAN、UDS 与实时调度的说明是标准诊断模型。[可信度：标准机制推断]
+standard mechanism has no MT8676 evidence ID；method reference ≠ MT8676 implementation fact。</p>
+<h2 id="81-启动栈">8.1 启动栈</h2>
+<p>架构学习顺序为 <code>FBL</code> → <code>MCAL</code> → <code>BSW</code> → <code>OS</code> → <code>RTE</code> → <code>SWC</code>；architecture placement ≠ proven exact MT8676 startup order。
+FBL 交接、驱动初始化、基础服务、调度器、RTE 连接和 SWC 激活各是独立 gate。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% MCU boot normal
+flowchart LR
+ F[FBL] --&gt; M[MCAL] --&gt; B[BSW] --&gt; O[OS] --&gt; R[RTE] --&gt; S[SWC]
+ S -. &quot;health/readback&quot; .-&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>%% MCU boot normal
+flowchart LR
+ F[FBL] --&gt; M[MCAL] --&gt; B[BSW] --&gt; O[OS] --&gt; R[RTE] --&gt; S[SWC]
+ S -. &quot;health/readback&quot; .-&gt; R</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% MCU boot abnormal recovery
+flowchart LR
+ T[&quot;reset/brownout/init reject&quot;] --&gt; E[&quot;earliest incomplete gate&quot;] --&gt; F[&quot;direct startup layer&quot;] --&gt; D[&quot;dependent Runnable unavailable&quot;]
+ D --&gt; O[&quot;reset reason + init status&quot;] --&gt; C[&quot;quiesce outputs; cleanup&quot;] --&gt; R[&quot;controlled reset/new Generation&quot;] --&gt; V[&quot;health + state readback&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% MCU boot abnormal recovery
+flowchart LR
+ T[&quot;reset/brownout/init reject&quot;] --&gt; E[&quot;earliest incomplete gate&quot;] --&gt; F[&quot;direct startup layer&quot;] --&gt; D[&quot;dependent Runnable unavailable&quot;]
+ D --&gt; O[&quot;reset reason + init status&quot;] --&gt; C[&quot;quiesce outputs; cleanup&quot;] --&gt; R[&quot;controlled reset/new Generation&quot;] --&gt; V[&quot;health + state readback&quot;]</code></pre></details></details><p>异常必须区分 brownout、watchdog reset、启动失败和不完整 cleanup。观察 reset reason、各层 init 状态、任务激活和安全输出；Owner 是首个未完成初始化或交接的层。</p>
+<table>
+<thead>
+<tr>
+<th>Claim ID</th>
+<th>Claim</th>
+<th>Confidence</th>
+<th>Evidence</th>
+<th>Support type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>M8-BOOT-NORMAL</td>
+<td>FBL-to-SWC is a normal diagnostic ordering model, not exact MT8676 startup order</td>
+<td>标准机制推断</td>
+<td>—</td>
+<td>standard mechanism</td>
+</tr>
+<tr>
+<td>M8-BOOT-ABNORMAL</td>
+<td>Startup fault isolation and controlled recovery are standard diagnostic steps</td>
+<td>标准机制推断</td>
+<td>—</td>
+<td>standard mechanism</td>
+</tr>
+</tbody></table>
+<h2 id="82-调度">8.2 调度</h2>
+<p>调度链按 <code>ISR</code> → <code>OS Task</code> → <code>Runnable</code>，触发来自 event/alarm；priority、deadline、jitter、stack/CPU budget、lock/critical section 与 watchdog 相互影响但不等价。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Scheduling normal
+flowchart LR
+ I[ISR] --&gt; E[&quot;event/alarm&quot;] --&gt; T[&quot;OS Task&quot;] --&gt; R[Runnable] --&gt; O[&quot;RTE/COM output&quot;]
+ O -. &quot;deadline/health counter&quot; .-&gt; T</pre><details><summary>查看原始图代码</summary><pre><code>%% Scheduling normal
+flowchart LR
+ I[ISR] --&gt; E[&quot;event/alarm&quot;] --&gt; T[&quot;OS Task&quot;] --&gt; R[Runnable] --&gt; O[&quot;RTE/COM output&quot;]
+ O -. &quot;deadline/health counter&quot; .-&gt; T</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Scheduling abnormal recovery
+flowchart LR
+ T[&quot;interrupt storm/loss or long critical section&quot;] --&gt; E[&quot;first missed ISR/event/deadline&quot;] --&gt; F[&quot;ISR/Task/Runnable&quot;]
+ F --&gt; D[&quot;starvation/stale output&quot;] --&gt; O[&quot;trace + runtime + stack watermark&quot;] --&gt; C[&quot;bound admission; release lock&quot;] --&gt; R[&quot;safe/degraded or reset&quot;] --&gt; V[&quot;deadline and state validation&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% Scheduling abnormal recovery
+flowchart LR
+ T[&quot;interrupt storm/loss or long critical section&quot;] --&gt; E[&quot;first missed ISR/event/deadline&quot;] --&gt; F[&quot;ISR/Task/Runnable&quot;]
+ F --&gt; D[&quot;starvation/stale output&quot;] --&gt; O[&quot;trace + runtime + stack watermark&quot;] --&gt; C[&quot;bound admission; release lock&quot;] --&gt; R[&quot;safe/degraded or reset&quot;] --&gt; V[&quot;deadline and state validation&quot;]</code></pre></details></details><p>stack overflow、CPU 饥饿、priority inversion、deadlock 和 watchdog kick 缺失需用调度 trace、运行时间、stack watermark 和锁等待图区分。具体 task identity、period 和预算待配置/trace 确认。</p>
+<table>
+<thead>
+<tr>
+<th>Claim ID</th>
+<th>Claim</th>
+<th>Confidence</th>
+<th>Evidence</th>
+<th>Support type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>M8-SCHED-NORMAL</td>
+<td>ISR-to-Runnable ordering is a standard scheduling diagnostic model</td>
+<td>标准机制推断</td>
+<td>—</td>
+<td>standard mechanism</td>
+</tr>
+<tr>
+<td>M8-SCHED-ABNORMAL</td>
+<td>Missed-event isolation and safe recovery are standard diagnostic steps</td>
+<td>标准机制推断</td>
+<td>—</td>
+<td>standard mechanism</td>
+</tr>
+</tbody></table>
+<h2 id="83-can-收发">8.3 CAN 收发</h2>
+<p>接收链是 <code>transceiver/controller/driver</code> → <code>CanIf</code> → <code>PduR</code> → <code>COM</code> → <code>RTE Port</code> → <code>SWC Runnable</code>。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% CAN RX normal
+flowchart LR
+ P[&quot;transceiver/controller/driver&quot;] --&gt; I[CanIf] --&gt; D[PduR] --&gt; C[COM] --&gt; R[&quot;RTE Port&quot;] --&gt; S[&quot;SWC Runnable&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% CAN RX normal
+flowchart LR
+ P[&quot;transceiver/controller/driver&quot;] --&gt; I[CanIf] --&gt; D[PduR] --&gt; C[COM] --&gt; R[&quot;RTE Port&quot;] --&gt; S[&quot;SWC Runnable&quot;]</code></pre></details></details><p>反向控制/反馈链为 SWC Runnable → <code>RTE Port</code> → <code>COM</code> → <code>PduR</code> → <code>CanIf</code> → transceiver/controller/driver；发送成功不证明对端执行，必须等待 bus/actuator feedback。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% CAN TX feedback
+flowchart RL
+ S[&quot;SWC Runnable&quot;] --&gt; R[&quot;RTE Port&quot;] --&gt; C[COM] --&gt; P[PduR] --&gt; I[CanIf] --&gt; D[&quot;transceiver/controller/driver&quot;]
+ D -. &quot;bus/actuator feedback&quot; .-&gt; S</pre><details><summary>查看原始图代码</summary><pre><code>%% CAN TX feedback
+flowchart RL
+ S[&quot;SWC Runnable&quot;] --&gt; R[&quot;RTE Port&quot;] --&gt; C[COM] --&gt; P[PduR] --&gt; I[CanIf] --&gt; D[&quot;transceiver/controller/driver&quot;]
+ D -. &quot;bus/actuator feedback&quot; .-&gt; S</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% CAN abnormal recovery
+flowchart LR
+ T[&quot;bus loss/overflow/stale frame&quot;] --&gt; E[&quot;first driver/PDU/signal freshness break&quot;] --&gt; F[&quot;CanIf/PduR/COM/RTE/SWC&quot;]
+ F --&gt; U[&quot;stale or absent vehicle state&quot;] --&gt; O[&quot;bus trace + PDU counters + RTE validity&quot;] --&gt; C[&quot;discard invalid; reset queue&quot;] --&gt; V[&quot;fresh feedback&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% CAN abnormal recovery
+flowchart LR
+ T[&quot;bus loss/overflow/stale frame&quot;] --&gt; E[&quot;first driver/PDU/signal freshness break&quot;] --&gt; F[&quot;CanIf/PduR/COM/RTE/SWC&quot;]
+ F --&gt; U[&quot;stale or absent vehicle state&quot;] --&gt; O[&quot;bus trace + PDU counters + RTE validity&quot;] --&gt; C[&quot;discard invalid; reset queue&quot;] --&gt; V[&quot;fresh feedback&quot;]</code></pre></details></details><p>物理 frame、PDU 路由、signal unpack、RTE update 和 Runnable apply 分层取证；DBC、PDU ID、signal mapping、周期与队列策略待 MT8676 配置确认。</p>
+<table>
+<thead>
+<tr>
+<th>Claim ID</th>
+<th>Claim</th>
+<th>Confidence</th>
+<th>Evidence</th>
+<th>Support type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>M8-CAN-NORMAL</td>
+<td>CAN receive and transmit stacks are standard AUTOSAR diagnostic models</td>
+<td>标准机制推断</td>
+<td>—</td>
+<td>standard mechanism</td>
+</tr>
+<tr>
+<td>M8-CAN-ABNORMAL</td>
+<td>CAN fault isolation and queue recovery are standard diagnostic steps</td>
+<td>标准机制推断</td>
+<td>—</td>
+<td>standard mechanism</td>
+</tr>
+</tbody></table>
+<h2 id="84-e2e">8.4 E2E</h2>
+<p>标准 E2E 检查包含 Data ID、CRC、Sequence/Alive Counter、timeout/freshness、duplicate、jump；策略随后决定 invalid、substitution 与 degradation。
+CRC accepted ≠ data fresh ≠ business valid。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% E2E normal
+flowchart LR
+ D[&quot;Data ID&quot;] --&gt; C[CRC] --&gt; S[&quot;Sequence/Alive Counter&quot;] --&gt; F[&quot;timeout/freshness&quot;] --&gt; V[&quot;validity to consumer&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% E2E normal
+flowchart LR
+ D[&quot;Data ID&quot;] --&gt; C[CRC] --&gt; S[&quot;Sequence/Alive Counter&quot;] --&gt; F[&quot;timeout/freshness&quot;] --&gt; V[&quot;validity to consumer&quot;]</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% E2E abnormal recovery
+flowchart LR
+ T[&quot;CRC mismatch/duplicate/jump/timeout&quot;] --&gt; E[&quot;first E2E check rejection&quot;] --&gt; I[invalid] --&gt; S[substitution] --&gt; D[degradation]
+ D --&gt; O[&quot;counter + freshness evidence&quot;] --&gt; R[&quot;accept only coherent new sequence&quot;] --&gt; V[&quot;consumer readback&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% E2E abnormal recovery
+flowchart LR
+ T[&quot;CRC mismatch/duplicate/jump/timeout&quot;] --&gt; E[&quot;first E2E check rejection&quot;] --&gt; I[invalid] --&gt; S[substitution] --&gt; D[degradation]
+ D --&gt; O[&quot;counter + freshness evidence&quot;] --&gt; R[&quot;accept only coherent new sequence&quot;] --&gt; V[&quot;consumer readback&quot;]</code></pre></details></details><p>Data ID 值、CRC profile、counter width、超时、替代值和降级策略均待 ECU 配置确认，不从标准机制反推产品合同。</p>
+<table>
+<thead>
+<tr>
+<th>Claim ID</th>
+<th>Claim</th>
+<th>Confidence</th>
+<th>Evidence</th>
+<th>Support type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>M8-E2E-NORMAL</td>
+<td>CRC counter and freshness checks are a standard E2E diagnostic model</td>
+<td>标准机制推断</td>
+<td>—</td>
+<td>standard mechanism</td>
+</tr>
+<tr>
+<td>M8-E2E-ABNORMAL</td>
+<td>Rejection substitution and degradation are standard diagnostic branches</td>
+<td>标准机制推断</td>
+<td>—</td>
+<td>standard mechanism</td>
+</tr>
+</tbody></table>
+<h2 id="85-spiipcl">8.5 SPI/IPCL</h2>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>按 PVT vehicle 方案理解，SPI/GPIO 在 MCU 与 SOS 之间传送/通知，SOS 服务再把车辆数据转成跨域属性消息。中断、一次传输完成、报文校验通过、属性发布是不同完成层级。EINT 资料同时说明管脚号、EINT 与 Linux 中断号的区别；附带 Android KK/L debounce FAQ 只作历史编号案例，不将旧函数直接套到 MT8668 内核。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S281 · vehicle方案.pdf · PDF第2-3页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E005 · EINT_IDH_Share.pdf · PDF第3-8页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">E006 · FAQ13938.pdf · PDF第1-2页<small>〔本地来源〕</small></span></p>
+<p>物理链按 <code>physical byte</code> → <code>frame boundary</code> → <code>DMA/FIFO</code> → <code>IRQ</code> → <code>reassembly</code> → <code>business message</code> → <code>business state</code> 检查。
+physical byte/frame/DMA/FIFO/IRQ/reassembly ≠ business message/state。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% SPI physical normal
+flowchart LR
+ B[&quot;physical byte&quot;] --&gt; F[&quot;frame boundary&quot;] --&gt; D[&quot;DMA/FIFO&quot;] --&gt; I[IRQ] --&gt; R[reassembly] --&gt; M[&quot;business message&quot;] --&gt; S[&quot;business state&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% SPI physical normal
+flowchart LR
+ B[&quot;physical byte&quot;] --&gt; F[&quot;frame boundary&quot;] --&gt; D[&quot;DMA/FIFO&quot;] --&gt; I[IRQ] --&gt; R[reassembly] --&gt; M[&quot;business message&quot;] --&gt; S[&quot;business state&quot;]</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% SPI business feedback
+flowchart RL
+ S[&quot;business command/state&quot;] --&gt; M[&quot;serialize pending framing&quot;] --&gt; Q[&quot;TX queue&quot;] --&gt; P[&quot;SPI physical transfer&quot;]
+ P -. &quot;peer response/new sequence&quot; .-&gt; S</pre><details><summary>查看原始图代码</summary><pre><code>%% SPI business feedback
+flowchart RL
+ S[&quot;business command/state&quot;] --&gt; M[&quot;serialize pending framing&quot;] --&gt; Q[&quot;TX queue&quot;] --&gt; P[&quot;SPI physical transfer&quot;]
+ P -. &quot;peer response/new sequence&quot; .-&gt; S</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% SPI abnormal recovery
+flowchart LR
+ T[&quot;FIFO overflow/IRQ loss/partial frame&quot;] --&gt; E[&quot;first byte/frame/sequence gap&quot;] --&gt; F[&quot;driver/IPCL reassembly&quot;]
+ F --&gt; D[&quot;message loss/stale state&quot;] --&gt; O[&quot;DMA/FIFO/IRQ/sequence counters&quot;] --&gt; C[&quot;flush partial Generation&quot;] --&gt; R[&quot;resync&quot;] --&gt; V[&quot;fresh business readback&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% SPI abnormal recovery
+flowchart LR
+ T[&quot;FIFO overflow/IRQ loss/partial frame&quot;] --&gt; E[&quot;first byte/frame/sequence gap&quot;] --&gt; F[&quot;driver/IPCL reassembly&quot;]
+ F --&gt; D[&quot;message loss/stale state&quot;] --&gt; O[&quot;DMA/FIFO/IRQ/sequence counters&quot;] --&gt; C[&quot;flush partial Generation&quot;] --&gt; R[&quot;resync&quot;] --&gt; V[&quot;fresh business readback&quot;]</code></pre></details></details><p>private framing/channel <code>IDs</code>、端点、校验与重同步策略待接口/源码/抓包确认；不得从 flow inventory 的候选链升级为事实。</p>
+<table>
+<thead>
+<tr>
+<th>Claim ID</th>
+<th>Claim</th>
+<th>Confidence</th>
+<th>Evidence</th>
+<th>Support type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>M8-SPI-NORMAL</td>
+<td>Physical-byte to business-state layers are a diagnostic decomposition</td>
+<td>标准机制推断</td>
+<td>—</td>
+<td>standard mechanism</td>
+</tr>
+<tr>
+<td>M8-SPI-ABNORMAL</td>
+<td>Partial-frame isolation flush and resynchronization are standard diagnostic steps</td>
+<td>标准机制推断</td>
+<td>—</td>
+<td>standard mechanism</td>
+</tr>
+</tbody></table>
+<h2 id="86-电源与安全">8.6 电源与安全</h2>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>Host/Guest STR 图帮助解释 MCU 电源协同：MCU/外部信号触发的请求不等于 SoC 已安全进入低功耗，Host 需要等 Guest 完成相应阶段。记录请求来源、各域状态、设备动作和最终进入/退出证据；原图 MCU 电源职责不移动，GPIO 号码则只按本项目原理图/DTS/固件解释，不能从另一平台参考图继承。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S265 · MT8676_Hypervisor_Suspend_Resume_Common_Flow.pdf · PDF第4-6页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S037 · MT8668_Hypervisor_Suspend_Resume_User_Manual_CN_V1.0.pdf · PDF第4-10页<small>〔本地来源〕</small></span></p>
+<p>正常路径与异常/恢复如下。</p>
+<p>状态模型包含 ignition/ACC/STR、wakeup、run、sleep request、quiesce、sleep、resume；实际转换条件和 wiring 待确认。
+独立 MCU 可承担电源输入采样、输出保护、watchdog、reset reason、safe/degraded state 与 functional safety monitor，但不据此发明 ASIL 或 timing contract。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Power normal
+stateDiagram-v2
+ [*] --&gt; Wakeup
+ Wakeup --&gt; Run
+ Run --&gt; Quiesce: sleep request
+ Quiesce --&gt; Sleep
+ Sleep --&gt; Wakeup: ignition/ACC/STR or approved wake</pre><details><summary>查看原始图代码</summary><pre><code>%% Power normal
+stateDiagram-v2
+ [*] --&gt; Wakeup
+ Wakeup --&gt; Run
+ Run --&gt; Quiesce: sleep request
+ Quiesce --&gt; Sleep
+ Sleep --&gt; Wakeup: ignition/ACC/STR or approved wake</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Power abnormal recovery
+flowchart LR
+ T[&quot;brownout/watchdog/wake conflict&quot;] --&gt; E[&quot;first power-state or health mismatch&quot;] --&gt; F[&quot;power/safety monitor&quot;]
+ F --&gt; D[&quot;safe/degraded state&quot;] --&gt; O[&quot;reset reason + input/output snapshot&quot;] --&gt; C[&quot;quiesce hazardous output&quot;] --&gt; R[&quot;controlled reset&quot;] --&gt; V[&quot;state and output readback&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% Power abnormal recovery
+flowchart LR
+ T[&quot;brownout/watchdog/wake conflict&quot;] --&gt; E[&quot;first power-state or health mismatch&quot;] --&gt; F[&quot;power/safety monitor&quot;]
+ F --&gt; D[&quot;safe/degraded state&quot;] --&gt; O[&quot;reset reason + input/output snapshot&quot;] --&gt; C[&quot;quiesce hazardous output&quot;] --&gt; R[&quot;controlled reset&quot;] --&gt; V[&quot;state and output readback&quot;]</code></pre></details></details><p>诊断 ownership 与功能安全 monitoring ownership 要分开；安全 monitor 报警不自动证明被监控 SWC 是根因。</p>
+<table>
+<thead>
+<tr>
+<th>Claim ID</th>
+<th>Claim</th>
+<th>Confidence</th>
+<th>Evidence</th>
+<th>Support type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>M8-POWER-NORMAL</td>
+<td>Wake run quiesce and sleep states are a generic diagnostic state model</td>
+<td>标准机制推断</td>
+<td>—</td>
+<td>standard mechanism</td>
+</tr>
+<tr>
+<td>M8-POWER-ABNORMAL</td>
+<td>Power mismatch isolation and controlled reset are standard diagnostic steps</td>
+<td>标准机制推断</td>
+<td>—</td>
+<td>standard mechanism</td>
+</tr>
+</tbody></table>
+<h2 id="87-诊断">8.7 诊断</h2>
+<p>正常路径与异常/恢复如下。</p>
+<p>DTC 生成/存储链与 tester 会话链是两个独立合同；前者不借 DoIP/UDS 证明，后者也不把一次响应等同于 DTC 已生成。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% DTC generation storage
+flowchart LR
+  FM[&quot;fault monitor&quot;] --&gt; FQ[&quot;debounce/qualification&quot;] --&gt; DR[&quot;DTC record&quot;] --&gt; FF[&quot;freeze frame&quot;] --&gt; DS[&quot;diagnostic storage&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% DTC generation storage
+flowchart LR
+  FM[&quot;fault monitor&quot;] --&gt; FQ[&quot;debounce/qualification&quot;] --&gt; DR[&quot;DTC record&quot;] --&gt; FF[&quot;freeze frame&quot;] --&gt; DS[&quot;diagnostic storage&quot;]</code></pre></details></details><p>tester 请求/响应按 tester ↔ DoIP gateway boundary ↔ UDS service ↔ diagnostic storage 双向检查；DoIP 只承载诊断消息，不等同于 UDS 业务。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Diagnostic request response
+flowchart LR
+  TE[tester] --&gt; DG[&quot;DoIP gateway boundary&quot;] --&gt; US[&quot;UDS service&quot;] --&gt; DS[&quot;diagnostic storage&quot;]
+  DS --&gt; US --&gt; DG --&gt; TE</pre><details><summary>查看原始图代码</summary><pre><code>%% Diagnostic request response
+flowchart LR
+  TE[tester] --&gt; DG[&quot;DoIP gateway boundary&quot;] --&gt; US[&quot;UDS service&quot;] --&gt; DS[&quot;diagnostic storage&quot;]
+  DS --&gt; US --&gt; DG --&gt; TE</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Diagnostics abnormal recovery
+flowchart LR
+  T[&quot;DTC storage or UDS transport failure&quot;] --&gt; E[&quot;first monitor/store/service/gateway break&quot;] --&gt; U[&quot;tester symptom&quot;]
+  U --&gt; O[&quot;DTC status + freeze frame + UDS trace&quot;] --&gt; C[&quot;clear request if authorized&quot;] --&gt; R[&quot;repair/re-evaluate&quot;] --&gt; V[&quot;fault inactive + operation validated&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% Diagnostics abnormal recovery
+flowchart LR
+  T[&quot;DTC storage or UDS transport failure&quot;] --&gt; E[&quot;first monitor/store/service/gateway break&quot;] --&gt; U[&quot;tester symptom&quot;]
+  U --&gt; O[&quot;DTC status + freeze frame + UDS trace&quot;] --&gt; C[&quot;clear request if authorized&quot;] --&gt; R[&quot;repair/re-evaluate&quot;] --&gt; V[&quot;fault inactive + operation validated&quot;]</code></pre></details></details><p>DTC stored ≠ fault active ≠ clear accepted ≠ recovery validated。清除记录不是修复；freeze frame 与当前状态要分别保存。UDS service、security policy、DTC 编号和 DoIP gateway topology 待确认。</p>
+<table>
+<thead>
+<tr>
+<th>Claim ID</th>
+<th>Claim</th>
+<th>Confidence</th>
+<th>Evidence</th>
+<th>Support type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>M8-DIAG-NORMAL</td>
+<td>DTC generation/storage and tester request/response are separate standard diagnostic contracts</td>
+<td>标准机制推断</td>
+<td>—</td>
+<td>standard mechanism</td>
+</tr>
+<tr>
+<td>M8-DIAG-ABNORMAL</td>
+<td>Storage and transport breakpoints must remain non-conflated during recovery</td>
+<td>标准机制推断</td>
+<td>—</td>
+<td>standard mechanism</td>
+</tr>
+</tbody></table>
+<h2 id="88-资源所有权">8.8 资源所有权</h2>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Creator</th>
+<th>Holder</th>
+<th>Consumer</th>
+<th>Releaser</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ISR/Task stack</td>
+<td>OS/configuration</td>
+<td>当前 ISR/Task</td>
+<td>Runnable/handler</td>
+<td>OS reset/termination owner</td>
+</tr>
+<tr>
+<td>CAN PDU/buffer</td>
+<td>driver/COM configuration</td>
+<td>controller/CanIf/PduR/COM queue</td>
+<td>RTE/SWC</td>
+<td>completion/drop/reset owner</td>
+</tr>
+<tr>
+<td>SPI DMA/FIFO</td>
+<td>driver/IPCL</td>
+<td>DMA/FIFO/reassembly Generation</td>
+<td>message decoder</td>
+<td>transfer completion/flush owner</td>
+</tr>
+<tr>
+<td>diagnostic record</td>
+<td>monitor/DEM-like owner</td>
+<td>diagnostic storage</td>
+<td>UDS/service tool</td>
+<td>authorized clear/storage owner</td>
+</tr>
+</tbody></table>
+<p>normal chain 与 reverse feedback/control chain 都要记录 lifecycle/readiness/freshness/Generation。
+queue/backpressure/overflow、stack/buffer overflow、starvation、deadlock、interrupt storm/loss、不完整 cleanup 均以 creator/holder/consumer/releaser 归责。</p>
+<h2 id="89-故障传播矩阵">8.9 故障传播矩阵</h2>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>Earliest breakpoint</th>
+<th>Direct failed module</th>
+<th>Downstream propagation</th>
+<th>User symptom</th>
+<th>Detector/evidence</th>
+<th>Cleanup/recovery</th>
+<th>Post-recovery validation</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>boot/reset/brownout</td>
+<td>首个 init/交接 gate</td>
+<td>FBL/MCAL/BSW/OS/RTE/SWC</td>
+<td>Runnable 不可用</td>
+<td>车辆功能缺失</td>
+<td>reset reason、init trace</td>
+<td>quiesce、controlled reset</td>
+<td>health/state readback</td>
+<td>startup Owner</td>
+</tr>
+<tr>
+<td>scheduling overload/deadlock</td>
+<td>首个 ISR/event/deadline miss</td>
+<td>ISR/Task/Runnable/lock owner</td>
+<td>stale output/watchdog</td>
+<td>响应迟滞或复位</td>
+<td>trace、runtime、stack watermark</td>
+<td>限流、释放锁、安全态</td>
+<td>deadline 与输出验证</td>
+<td>scheduling Owner</td>
+</tr>
+<tr>
+<td>CAN queue/PDU fault</td>
+<td>首个 frame/PDU/signal gap</td>
+<td>driver/CanIf/PduR/COM</td>
+<td>RTE/SWC 旧值</td>
+<td>状态或控制错误</td>
+<td>bus/PDU/RTE counters</td>
+<td>丢无效、清队列、恢复</td>
+<td>fresh feedback</td>
+<td>communication Owner</td>
+</tr>
+<tr>
+<td>E2E rejection</td>
+<td>首个 CRC/counter/freshness reject</td>
+<td>E2E checker/config</td>
+<td>invalid/substitution/degradation</td>
+<td>功能降级</td>
+<td>Data ID/counter/freshness</td>
+<td>等待连贯新序列</td>
+<td>consumer readback</td>
+<td>E2E/data Owner</td>
+</tr>
+<tr>
+<td>SPI partial/IRQ loss</td>
+<td>首个 byte/frame/IRQ gap</td>
+<td>driver/IPCL</td>
+<td>message/state 缺失</td>
+<td>跨域功能异常</td>
+<td>DMA/FIFO/IRQ/sequence</td>
+<td>flush/resync Generation</td>
+<td>fresh state</td>
+<td>SPI/IPCL Owner</td>
+</tr>
+<tr>
+<td>diagnostic storage/service fault</td>
+<td>首个 monitor/store/UDS break</td>
+<td>diagnostic module/gateway</td>
+<td>DTC/response 缺失</td>
+<td>诊断不可用</td>
+<td>DTC、freeze frame、trace</td>
+<td>修复存储/会话</td>
+<td>re-read + operation</td>
+<td>diagnostics Owner</td>
+</tr>
+</tbody></table>
+<p>earliest observable breakpoint 由 commands/logs/counters/traces 共同定位；observation limit 包含 trace 开销、counter rollover 与复位丢失。
+initial Owner 提供 escalation artifacts：reset reason、调度 trace、bus 抓包、PDU/E2E 状态、Generation 和验证结果。</p>
+<h2 id="810-模块映射">8.10 模块映射</h2>
+<p>图 2/3 MCU occurrence 按行唯一映射；legend/container 不当作运行时调用节点。
+[可信度：架构图确认] [证据：original-diagram-02] [证据：original-diagram-03]</p>
+<table>
+<thead>
+<tr>
+<th>Occurrence</th>
+<th>图中标签</th>
+<th>Canonical landing</th>
+<th>Related references</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>d02-001</td>
+<td>MCU</td>
+<td>§8.1 domain boundary</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-002</td>
+<td>SWCs</td>
+<td>§8.1 container</td>
+<td>§8.2</td>
+</tr>
+<tr>
+<td>d02-003</td>
+<td>仪表应用</td>
+<td>§8.2 SWC/Runnable</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-004</td>
+<td>行车电脑</td>
+<td>§8.2 SWC/Runnable</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-005</td>
+<td>电源管理</td>
+<td>§8.6</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-006</td>
+<td>警示灯控制</td>
+<td>§8.2 scheduling</td>
+<td>§8.3</td>
+</tr>
+<tr>
+<td>d02-007</td>
+<td>ADAS应用</td>
+<td>§8.2 scheduling</td>
+<td>§8.3</td>
+</tr>
+<tr>
+<td>d02-008</td>
+<td>DSP控制</td>
+<td>§8.2 interface pending</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-009</td>
+<td>功能安全</td>
+<td>§8.6 monitor</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-010</td>
+<td>功能诊断</td>
+<td>§8.7</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-011</td>
+<td>RTE</td>
+<td>§8.1 startup layer</td>
+<td>§8.3</td>
+</tr>
+<tr>
+<td>d02-012</td>
+<td>E2E</td>
+<td>§8.4</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-013</td>
+<td>OS</td>
+<td>§8.1 startup layer</td>
+<td>§8.2</td>
+</tr>
+<tr>
+<td>d02-014</td>
+<td>BSW</td>
+<td>§8.1 startup layer</td>
+<td>§8.3</td>
+</tr>
+<tr>
+<td>d02-015</td>
+<td>MCAL</td>
+<td>§8.1 startup layer</td>
+<td>§8.3</td>
+</tr>
+<tr>
+<td>d02-016</td>
+<td>CAN</td>
+<td>§8.3</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-017</td>
+<td>SPI</td>
+<td>§8.5</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-018</td>
+<td>FBL</td>
+<td>§8.1</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-036</td>
+<td>MCU</td>
+<td>§8.1 domain boundary</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-037</td>
+<td>DI</td>
+<td>§8.3 interface pending</td>
+<td>§8.5</td>
+</tr>
+<tr>
+<td>d03-038</td>
+<td>SWC</td>
+<td>§8.1 container</td>
+<td>§8.2; §8.3</td>
+</tr>
+<tr>
+<td>d03-039</td>
+<td>IVI</td>
+<td>§8.3 logical container</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-040</td>
+<td>SWC (Network)</td>
+<td>§8.3</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-041</td>
+<td>SWC</td>
+<td>§8.3</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-042</td>
+<td>Com</td>
+<td>§8.3 COM</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-043</td>
+<td>Vehicle Interface</td>
+<td>§8.3</td>
+<td>§8.5</td>
+</tr>
+<tr>
+<td>d03-044</td>
+<td>feature1</td>
+<td>§8.10 pending semantics</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-045</td>
+<td>feature2</td>
+<td>§8.10 pending semantics</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-046</td>
+<td>IPCL</td>
+<td>§8.5</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-047</td>
+<td>SPI</td>
+<td>§8.5</td>
+<td>none</td>
+</tr>
+</tbody></table>
+<h2 id="811-证据观察责任与待确认">8.11 证据、观察、责任与待确认</h2>
+<p>图中标签/容器/显式箭头是架构图事实；标准 AUTOSAR 链、调度与 UDS 机制不继承图证据。
+method documents 仅作方法参考。private process identity、private framing/channel <code>IDs</code>、exact timeout/retry/threshold、exact hardware topology、exact recovery policy 均待确认。</p>
+<p>需补取 linker/map 与启动 trace、OS/RTE/COM/CanIf/PduR 配置、DBC、E2E profile、SPI/IPCL 接口与抓包、电源状态表、watchdog/reset reason、DTC/UDS/DoIP 配置。</p>
+</article><nav class="pager"><a href="07.html">← 上一步：SOS-Yocto内部机制</a><a href="09.html">下一步：TBox通信模组内部机制 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#08-mcu-内部机制">08 MCU 内部机制</a><a class="depth-2" href="#81-启动栈">8.1 启动栈</a><a class="depth-2" href="#82-调度">8.2 调度</a><a class="depth-2" href="#83-can-收发">8.3 CAN 收发</a><a class="depth-2" href="#84-e2e">8.4 E2E</a><a class="depth-2" href="#85-spiipcl">8.5 SPI/IPCL</a><a class="depth-2" href="#86-电源与安全">8.6 电源与安全</a><a class="depth-2" href="#87-诊断">8.7 诊断</a><a class="depth-2" href="#88-资源所有权">8.8 资源所有权</a><a class="depth-2" href="#89-故障传播矩阵">8.9 故障传播矩阵</a><a class="depth-2" href="#810-模块映射">8.10 模块映射</a><a class="depth-2" href="#811-证据观察责任与待确认">8.11 证据、观察、责任与待确认</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>

@@ -1,0 +1,949 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>车辆仪表与诊断业务流程 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details ><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a  href="09.html">09 TBox通信模组内部机制</a></details><details open><summary>第四阶段 · 跟随完整业务</summary><a aria-current="page" href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 10</div><div class="chapter-title"><p class="eyebrow">CHAPTER 10 · 中文版全文</p><h1>车辆仪表与诊断业务流程</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=10">并排对比两套正文 ↗</a><a class="button secondary" href="original-10.html">对照原版解释 ↗</a><button class="button" data-read="10" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>车辆信号如何变成屏幕状态和控制结果？</h2><p>信号上报与控制请求是两条方向不同的链。属性缓存能被读取并不说明它刚更新；SET 返回成功也不等于 ECU 已执行。</p><ol><li><strong>怎么读：</strong>先选车门/挡位等状态流程，再对照空调控制的正向命令和反向反馈。</li><li><strong>项目练习：</strong>为一次空调设定记录目标值、请求会话、ECU 反馈值、有效性和 UI 展示，防止旧反馈覆盖新请求。</li><li><strong>自检：</strong>应该由哪一层宣布车辆动作确实完成？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-2">Day 2</a> <a href="../index.html#day-9">Day 9</a> <a href="../index.html#day-10">Day 10</a> <a href="../index.html#day-11">Day 11</a> <a href="../index.html#day-12">Day 12</a> <a href="../index.html#day-15">Day 15</a> <a href="../index.html#day-26">Day 26</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#第-10-章车辆仪表指示灯与诊断业务流程">第 10 章　车辆、仪表、指示灯与诊断业务流程</a><a class="depth-2" href="#2026-09-20-校订车辆属性链与-mbos-诊断退役">2026-09-20 校订：车辆属性链与 MBOS 诊断退役</a><a class="depth-2" href="#业务流程-flow-01">业务流程 FLOW-01</a><a class="depth-3" href="#仪表指示灯">仪表指示灯</a><a class="depth-3" href="#触发目标与边界">触发、目标与边界</a><a class="depth-3" href="#正常链">正常链</a><a class="depth-3" href="#分层子链与方向">分层子链与方向</a><a class="depth-3" href="#反馈闭环">反馈闭环</a><a class="depth-3" href="#异常分支">异常分支</a><a class="depth-3" href="#日志与诊断">日志与诊断</a><a class="depth-3" href="#责任域">责任域</a><a class="depth-3" href="#证据与置信度">证据与置信度</a><a class="depth-2" href="#业务流程-flow-02">业务流程 FLOW-02</a><a class="depth-3" href="#车速发动机转速里程和行车电脑">车速、发动机转速、里程和行车电脑</a><a class="depth-3" href="#触发目标与边界-1">触发、目标与边界</a><a class="depth-3" href="#正常链-1">正常链</a><a class="depth-3" href="#分层子链与方向-1">分层子链与方向</a><a class="depth-3" href="#反馈闭环-1">反馈闭环</a><a class="depth-3" href="#异常分支-1">异常分支</a><a class="depth-3" href="#日志与诊断-1">日志与诊断</a><a class="depth-3" href="#责任域-1">责任域</a><a class="depth-3" href="#证据与置信度-1">证据与置信度</a><a class="depth-2" href="#业务流程-flow-03">业务流程 FLOW-03</a><a class="depth-3" href="#挡位车门灯光安全带">挡位、车门、灯光、安全带</a><a class="depth-3" href="#触发目标与边界-2">触发、目标与边界</a><a class="depth-3" href="#正常链-2">正常链</a><a class="depth-3" href="#分层子链与方向-2">分层子链与方向</a><a class="depth-3" href="#反馈闭环-2">反馈闭环</a><a class="depth-3" href="#异常分支-2">异常分支</a><a class="depth-3" href="#日志与诊断-2">日志与诊断</a><a class="depth-3" href="#责任域-2">责任域</a><a class="depth-3" href="#证据与置信度-2">证据与置信度</a><a class="depth-2" href="#业务流程-flow-04">业务流程 FLOW-04</a><a class="depth-3" href="#空调读取与控制">空调读取与控制</a><a class="depth-3" href="#触发目标与边界-3">触发、目标与边界</a><a class="depth-3" href="#正常链-3">正常链</a><a class="depth-3" href="#分层子链与方向-3">分层子链与方向</a><a class="depth-3" href="#反馈闭环-3">反馈闭环</a><a class="depth-3" href="#异常分支-3">异常分支</a><a class="depth-3" href="#日志与诊断-3">日志与诊断</a><a class="depth-3" href="#责任域-3">责任域</a><a class="depth-3" href="#证据与置信度-3">证据与置信度</a><a class="depth-2" href="#业务流程-flow-05">业务流程 FLOW-05</a><a class="depth-3" href="#方向盘按键旋钮和硬按键">方向盘按键、旋钮和硬按键</a><a class="depth-3" href="#触发目标与边界-4">触发、目标与边界</a><a class="depth-3" href="#正常链-4">正常链</a><a class="depth-3" href="#分层子链与方向-4">分层子链与方向</a><a class="depth-3" href="#反馈闭环-4">反馈闭环</a><a class="depth-3" href="#异常分支-4">异常分支</a><a class="depth-3" href="#日志与诊断-4">日志与诊断</a><a class="depth-3" href="#责任域-4">责任域</a><a class="depth-3" href="#证据与置信度-4">证据与置信度</a><a class="depth-2" href="#业务流程-flow-06">业务流程 FLOW-06</a><a class="depth-3" href="#vehicle-property-缓存订阅和新鲜度">Vehicle Property 缓存、订阅和新鲜度</a><a class="depth-3" href="#触发目标与边界-5">触发、目标与边界</a><a class="depth-3" href="#正常链-5">正常链</a><a class="depth-3" href="#分层子链与方向-5">分层子链与方向</a><a class="depth-3" href="#反馈闭环-5">反馈闭环</a><a class="depth-3" href="#异常分支-5">异常分支</a><a class="depth-3" href="#日志与诊断-5">日志与诊断</a><a class="depth-3" href="#责任域-5">责任域</a><a class="depth-3" href="#证据与置信度-5">证据与置信度</a><a class="depth-2" href="#业务流程-flow-07">业务流程 FLOW-07</a><a class="depth-3" href="#mcusoc-心跳">MCU/SoC 心跳</a><a class="depth-3" href="#触发目标与边界-6">触发、目标与边界</a><a class="depth-3" href="#正常链-6">正常链</a><a class="depth-3" href="#分层子链与方向-6">分层子链与方向</a><a class="depth-3" href="#反馈闭环-6">反馈闭环</a><a class="depth-3" href="#异常分支-6">异常分支</a><a class="depth-3" href="#日志与诊断-6">日志与诊断</a><a class="depth-3" href="#责任域-6">责任域</a><a class="depth-3" href="#证据与置信度-6">证据与置信度</a><a class="depth-2" href="#业务流程-flow-08">业务流程 FLOW-08</a><a class="depth-3" href="#dtcudsdoip">DTC、UDS、DoIP</a><a class="depth-3" href="#触发目标与边界-7">触发、目标与边界</a><a class="depth-3" href="#正常链-7">正常链</a><a class="depth-3" href="#分层子链与方向-7">分层子链与方向</a><a class="depth-3" href="#反馈闭环-7">反馈闭环</a><a class="depth-3" href="#异常分支-7">异常分支</a><a class="depth-3" href="#日志与诊断-7">日志与诊断</a><a class="depth-3" href="#责任域-7">责任域</a><a class="depth-3" href="#证据与置信度-7">证据与置信度</a></details><article id="chapter-text"><h1 id="第-10-章车辆仪表指示灯与诊断业务流程">第 10 章　车辆、仪表、指示灯与诊断业务流程</h1>
+<h2 id="2026-09-20-校订车辆属性链与-mbos-诊断退役">2026-09-20 校订：车辆属性链与 MBOS 诊断退役</h2>
+<p>PVT vehicle 参考图中的车辆信号路径是 MCU→SPI/GPIO→SOS mcu_ipc_service→FDBus→property_service→Android VHAL→AIDL→CarService→App；图中还有 TBox 服务及跨域名字服务。此链不自动证明所有量产属性均采用同一协议，也不证明与 MBOS 私有端点一一相同。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S281 · vehicle方案.pdf · PDF第2-3页<small>〔本地来源〕</small></span></p>
+<p>新 MBOS 图明确 MBOSDiagnosticManager 的 os 层已弃用、DiagnosticService 对应服务已去掉，MonitorQnx 仍连接 mb.diagnostics；所以只修正这两个节点的在用状态，不删除 UDS/DoIP/DTC 或 CarDiagnosticService 概念。完整服务表见 <a href="18.html">18 章</a>。</p>
+<p>结合站点 Day 14—16/26，车控验收需区分请求被接收、执行被接受、ECU 实际状态反馈和 UI 更新。建议用 requestId/session、属性值/时间戳/状态、超时与故障来源形成闭环；未见 IDL/DBC 前不填写猜测的信号 ID 或时间阈值。</p>
+<hr>
+<p>本章把前三张架构图中的“模块”连接成可诊断的业务链。链路库存来自 <code>flow-inventory.json</code>，属于<strong>受控业务假设</strong>：原图可以直接证明模块、容器、接口标签和少量显式箭头；信号名称、周期、超时、线程、进程、属性号以及车型配置仍须由本车软件清单、接口控制文档和运行日志确认。因此，图中的实线表示本章用于分析的正常方向，不自动等同于已经确认的 MT8676 私有部署合同。</p>
+<p>跨流程必须先守住五组不等式：</p>
+<ol>
+<li>CAN traffic ≠ decoded signal ≠ fresh cache ≠ subscriber delivery ≠ consumer state。</li>
+<li>SET accepted ≠ ECU executed ≠ status readback matched ≠ interface rendered。</li>
+<li>Key down ≠ complete key sequence ≠ correct focus route ≠ target app consumed。</li>
+<li>Heartbeat bytes ≠ valid E2E ≠ current Generation ≠ healthy peer ≠ safe business state。</li>
+<li>DoIP socket/routing availability ≠ UDS session/security accepted ≠ DTC operation completed ≠ response correlated。</li>
+</ol>
+<p>重启、重连、重新订阅只能说明“恢复动作发生”，不能直接说明根因或业务已经恢复。恢复验收至少要看新一代会话、状态回读、业务可见结果以及旧会话隔离。</p>
+<h2 id="业务流程-flow-01">业务流程 FLOW-01</h2>
+<h3 id="仪表指示灯">仪表指示灯</h3>
+<h3 id="触发目标与边界">触发、目标与边界</h3>
+<p>触发源可能是车身、动力、安全、充电或诊断 ECU 发布的车辆状态，也可能是 MCU 本地检测结果。目标不是“收到一帧 CAN”就结束，而是让驾驶员在仪表物理屏上看到与当前车辆状态一致、优先级正确、闪烁节奏正确的指示灯，并能区分无信号、无效值、陈旧值、业务抑制和渲染故障。</p>
+<p>[置信度：mixed] 原图 02、03 直接确认 MCU、CAN、RTE、SWC、SPI、IPCL、CanService、Cluster 等模块或标签；原图 01 说明 Android 图形栈存在 SurfaceFlinger，原图 02 说明 SOS/Yocto 侧存在 Weston 和 Cluster。具体车型的仪表最终走 Weston 还是 SurfaceFlinger、Cluster.CanClient 还是 VehicleHAL，仍需部署清单确认。下文的斜杠表示候选分支，不表示两个组件必然串行经过。</p>
+<h3 id="正常链">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  S[&quot;传感器或车辆 ECU&quot;] --&gt; C[&quot;CAN 总线&quot;]
+  C --&gt; M[&quot;MCU 接收与解码&quot;]
+  M --&gt; X[&quot;SPI / IPCL 跨域&quot;]
+  X --&gt; V[&quot;SoC 车辆信号服务&quot;]
+  V --&gt; B[&quot;仪表业务状态机&quot;]
+  B --&gt; R[&quot;Weston 或 SurfaceFlinger&quot;]
+  R --&gt; P[&quot;物理仪表屏&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  S[&quot;传感器或车辆 ECU&quot;] --&gt; C[&quot;CAN 总线&quot;]
+  C --&gt; M[&quot;MCU 接收与解码&quot;]
+  M --&gt; X[&quot;SPI / IPCL 跨域&quot;]
+  X --&gt; V[&quot;SoC 车辆信号服务&quot;]
+  V --&gt; B[&quot;仪表业务状态机&quot;]
+  B --&gt; R[&quot;Weston 或 SurfaceFlinger&quot;]
+  R --&gt; P[&quot;物理仪表屏&quot;]</code></pre></details></details><p>正常链应逐层回答：总线上有没有目标报文；MCU 是否按正确网络、报文和位定义解码；COM/RTE 是否把同一代数据交给目标 SWC；SPI/IPCL 是否完整传递负载、序号和有效性；CanService/FDBus 是否发布新鲜样本；Cluster 或 VehicleHAL 是否消费本次更新；状态机是否正确处理优先级、闪烁、互斥和抑制；合成器是否提交新帧；物理屏是否真的呈现。
+这条链必须持续满足：CAN traffic ≠ decoded signal ≠ fresh cache ≠ subscriber delivery ≠ consumer state。该不等式要求每一层都留下自己的成功证据，禁止从“总线上有流量”直接跳到“驾驶员看到正确图标”。</p>
+<h3 id="分层子链与方向">分层子链与方向</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  D[&quot;CAN Driver&quot;] --&gt; I[&quot;CAN Interface&quot;]
+  I --&gt; P[&quot;PDU Router / COM&quot;]
+  P --&gt; R[&quot;RTE&quot;]
+  R --&gt; S[&quot;指示灯相关 SWC&quot;]
+  S --&gt; A[&quot;序号、有效性与输出适配&quot;]
+  A --&gt; X[&quot;SPI / IPCL&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  D[&quot;CAN Driver&quot;] --&gt; I[&quot;CAN Interface&quot;]
+  I --&gt; P[&quot;PDU Router / COM&quot;]
+  P --&gt; R[&quot;RTE&quot;]
+  R --&gt; S[&quot;指示灯相关 SWC&quot;]
+  S --&gt; A[&quot;序号、有效性与输出适配&quot;]
+  A --&gt; X[&quot;SPI / IPCL&quot;]</code></pre></details></details><p>MCU 子链处理的是“报文到业务量”的转换：接收驱动提供帧，通信栈依据配置完成路由和解包，RTE 把信号送给 SWC，SWC 执行范围、枚举、去抖或状态组合，再由跨域适配层携带值、时间、新鲜度和 <code>Sequence</code>。看到接收中断不能证明 COM 已更新；看到 RTE runnable 执行也不能证明输出使用了本次输入。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  M[&quot;MCU 本代样本&quot;] --&gt; E[&quot;编码与 E2E 元数据&quot;]
+  E --&gt; T[&quot;SPI 传输&quot;]
+  T --&gt; I[&quot;IPCL 接收&quot;]
+  I --&gt; C[&quot;CanService&quot;]
+  C --&gt; F[&quot;FDBus 发布或本地客户&quot;]
+  F --&gt; U[&quot;Cluster / VehicleHAL&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  M[&quot;MCU 本代样本&quot;] --&gt; E[&quot;编码与 E2E 元数据&quot;]
+  E --&gt; T[&quot;SPI 传输&quot;]
+  T --&gt; I[&quot;IPCL 接收&quot;]
+  I --&gt; C[&quot;CanService&quot;]
+  C --&gt; F[&quot;FDBus 发布或本地客户&quot;]
+  F --&gt; U[&quot;Cluster / VehicleHAL&quot;]</code></pre></details></details><p>跨域链重点检查值、<code>Validity</code>、source age、序号和 Generation 是否属于同一代。SPI 有字节不等于 IPCL 成功组包；CanService 进程存活不等于新 Topic 已发布；订阅回调到达不等于业务线程已消费。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">stateDiagram-v2
+  [*] --&gt; Unknown
+  Unknown --&gt; Off: valid off
+  Unknown --&gt; Invalid: invalid or stale
+  Off --&gt; On: valid active
+  On --&gt; Flashing: flash condition
+  Flashing --&gt; On: steady condition
+  On --&gt; Suppressed: higher priority / mutual exclusion
+  Suppressed --&gt; On: suppression removed
+  Invalid --&gt; Degraded: invalid policy
+  Degraded --&gt; Off: fresh valid off
+  Degraded --&gt; On: fresh valid active</pre><details><summary>查看原始图代码</summary><pre><code>stateDiagram-v2
+  [*] --&gt; Unknown
+  Unknown --&gt; Off: valid off
+  Unknown --&gt; Invalid: invalid or stale
+  Off --&gt; On: valid active
+  On --&gt; Flashing: flash condition
+  Flashing --&gt; On: steady condition
+  On --&gt; Suppressed: higher priority / mutual exclusion
+  Suppressed --&gt; On: suppression removed
+  Invalid --&gt; Degraded: invalid policy
+  Degraded --&gt; Off: fresh valid off
+  Degraded --&gt; On: fresh valid active</code></pre></details></details><p>业务状态机不能把 <code>Invalid</code> 简化成 Off。默认图标、灰态、隐藏、常亮或降级提示属于产品策略；本章只要求策略显式、可观察且恢复时重新验证。优先级解决多个告警同时存在时谁覆盖谁，互斥解决不可同时呈现的组合，闪烁需要区分业务节奏生成与渲染掉帧。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  U[&quot;业务模型更新&quot;] --&gt; Q[&quot;UI 线程或渲染调度&quot;]
+  Q --&gt; L[&quot;图标 Layer / Surface&quot;]
+  L --&gt; C[&quot;合成器 latch / compose&quot;]
+  C --&gt; H[&quot;显示提交&quot;]
+  H --&gt; P[&quot;面板扫描与背光&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  U[&quot;业务模型更新&quot;] --&gt; Q[&quot;UI 线程或渲染调度&quot;]
+  Q --&gt; L[&quot;图标 Layer / Surface&quot;]
+  L --&gt; C[&quot;合成器 latch / compose&quot;]
+  C --&gt; H[&quot;显示提交&quot;]
+  H --&gt; P[&quot;面板扫描与背光&quot;]</code></pre></details></details><p>渲染子链与第 6 章的图形诊断一致：模型更新 ≠ 应用完成绘制 ≠ buffer queue 成功 ≠ 合成器 latch ≠ display present ≠ 面板有可见图像。SOS/Yocto Cluster 候选分支以 Weston 为合成边界，Android 仪表候选分支以 SurfaceFlinger 为合成边界；未取得部署证据前不把两者写成同一串行链。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+  participant ECU as Vehicle ECU
+  participant MCU as MCU COM/RTE/SWC
+  participant Link as SPI/IPCL
+  participant CS as CanService
+  participant CL as Cluster
+  participant DISP as Display
+  ECU-&gt;&gt;MCU: vehicle state + counter
+  MCU-&gt;&gt;Link: decoded value + validity + generation
+  Link-&gt;&gt;CS: received sample
+  CS-&gt;&gt;CL: publish / callback
+  CL-&gt;&gt;CL: priority + flash + mutual exclusion
+  CL-&gt;&gt;DISP: render and present
+  Note over MCU,DISP: compare source, receive, consume and present timestamps</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  participant ECU as Vehicle ECU
+  participant MCU as MCU COM/RTE/SWC
+  participant Link as SPI/IPCL
+  participant CS as CanService
+  participant CL as Cluster
+  participant DISP as Display
+  ECU-&gt;&gt;MCU: vehicle state + counter
+  MCU-&gt;&gt;Link: decoded value + validity + generation
+  Link-&gt;&gt;CS: received sample
+  CS-&gt;&gt;CL: publish / callback
+  CL-&gt;&gt;CL: priority + flash + mutual exclusion
+  CL-&gt;&gt;DISP: render and present
+  Note over MCU,DISP: compare source, receive, consume and present timestamps</code></pre></details></details><p>时序分析要把源时间、MCU 接收时间、跨域发送/接收时间、服务发布时间、业务消费时间和首帧呈现时间放在同一时间轴。若时钟基准不同，先做时钟对齐并保留误差范围，不能直接用两台处理器的墙钟相减。</p>
+<h3 id="反馈闭环">反馈闭环</h3>
+<p>反馈链不是把屏幕像素写回 ECU，而是从物理呈现、合成器帧统计、业务状态机最终状态以及源信号有效性建立证据闭环。屏幕截图可以证明最终结果，却不能定位上游；业务日志可以证明状态机决定，却不能证明物理屏呈现。二者需与源信号回读配对。</p>
+<h3 id="异常分支">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  F[&quot;指示灯错误或缺失&quot;] --&gt; A{&quot;CAN 有目标报文?&quot;}
+  A -- 否 --&gt; A1[&quot;查源 ECU / 网络&quot;]
+  A -- 是 --&gt; B{&quot;MCU 解码值与有效性正确?&quot;}
+  B -- 否 --&gt; B1[&quot;查数据库、COM/RTE/SWC&quot;]
+  B -- 是 --&gt; C{&quot;SPI/IPCL 同代到达?&quot;}
+  C -- 否 --&gt; C1[&quot;查序号、CRC、队列与会话&quot;]
+  C -- 是 --&gt; D{&quot;服务缓存新鲜且已投递?&quot;}
+  D -- 否 --&gt; D1[&quot;查 CanService/FDBus/订阅&quot;]
+  D -- 是 --&gt; E{&quot;状态机最终状态正确?&quot;}
+  E -- 否 --&gt; E1[&quot;查优先级、闪烁、互斥、抑制&quot;]
+  E -- 是 --&gt; G{&quot;合成与物理呈现正确?&quot;}
+  G -- 否 --&gt; G1[&quot;查应用绘制、合成、显示和面板&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  F[&quot;指示灯错误或缺失&quot;] --&gt; A{&quot;CAN 有目标报文?&quot;}
+  A -- 否 --&gt; A1[&quot;查源 ECU / 网络&quot;]
+  A -- 是 --&gt; B{&quot;MCU 解码值与有效性正确?&quot;}
+  B -- 否 --&gt; B1[&quot;查数据库、COM/RTE/SWC&quot;]
+  B -- 是 --&gt; C{&quot;SPI/IPCL 同代到达?&quot;}
+  C -- 否 --&gt; C1[&quot;查序号、CRC、队列与会话&quot;]
+  C -- 是 --&gt; D{&quot;服务缓存新鲜且已投递?&quot;}
+  D -- 否 --&gt; D1[&quot;查 CanService/FDBus/订阅&quot;]
+  D -- 是 --&gt; E{&quot;状态机最终状态正确?&quot;}
+  E -- 否 --&gt; E1[&quot;查优先级、闪烁、互斥、抑制&quot;]
+  E -- 是 --&gt; G{&quot;合成与物理呈现正确?&quot;}
+  G -- 否 --&gt; G1[&quot;查应用绘制、合成、显示和面板&quot;]</code></pre></details></details><p>最早断点原则：从源到屏逐层比较同一事件，第一处“输入正确、输出错误或缺失”的边界才是首要责任边界。恢复动作包括重新建立跨域会话、重新订阅、重建业务模型或渲染资源；恢复后验证必须确认新 Generation 的新鲜信号驱动正确最终状态，旧回调未覆盖新状态，物理屏结果与源状态一致。</p>
+<h3 id="日志与诊断">日志与诊断</h3>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CAN 源</td>
+<td>目标报文、计数和值持续变化</td>
+<td>报文缺失、值不合定义、计数停滞</td>
+<td>抓包不证明解码配置正确</td>
+<td>源 ECU/网络</td>
+</tr>
+<tr>
+<td>MCU 软件</td>
+<td>解码值、有效位、RTE 输入输出同代</td>
+<td>bit/enum 错、runnable 未输出</td>
+<td>runnable 日志不证明跨域发送</td>
+<td>MCU 通信/业务</td>
+</tr>
+<tr>
+<td>SPI/IPCL</td>
+<td>同一 Generation 的发送接收与序号连续</td>
+<td>CRC、序号、组包或会话异常</td>
+<td>有字节不证明业务值正确</td>
+<td>跨域通信</td>
+</tr>
+<tr>
+<td>服务与订阅</td>
+<td>新缓存、发布、回调、消费时间可关联</td>
+<td>stale cache、Topic 缺失、回调积压</td>
+<td>服务存活不证明 Ready</td>
+<td>车辆服务</td>
+</tr>
+<tr>
+<td>状态机</td>
+<td>最终状态、优先级和抑制原因明确</td>
+<td>Invalid 被当 Off、互斥错误</td>
+<td>决策正确不证明已显示</td>
+<td>Cluster/HMI</td>
+</tr>
+<tr>
+<td>渲染与屏</td>
+<td>新帧 latch/present，屏幕可见</td>
+<td>不绘制、未 latch、显示提交或面板异常</td>
+<td>screenshot 不定位上游</td>
+<td>图形/显示</td>
+</tr>
+</tbody></table>
+<p>可使用 CAN 抓包、MCU 结构化 trace、SPI/IPCL 序号日志、服务缓存 dump、订阅回调时间、Cluster 最终状态、合成器帧信息和物理屏录像。具体日志 tag、命令参数、信号 ID、周期和阈值必须由项目配置确认。</p>
+<h3 id="责任域">责任域</h3>
+<p>升级材料至少包括：统一事件时间窗、车型和软件版本、源报文原始值及定义、MCU 解码值与 <code>Validity</code>、跨域序号/Generation、服务缓存时间、订阅与消费时间、状态机最终值和原因、渲染帧时间、屏幕照片或录像。首包只报告最早断点及其上下游对照，不用“重启后好了”代替证据。</p>
+<h3 id="证据与置信度">证据与置信度</h3>
+<p>[置信度：mixed] 模块和接口标签由原图 02、03 支撑；完整业务顺序、状态机、渲染分支和异常恢复是标准机制与库存假设组合。最终部署、信号映射、图标规则和定时合同待项目证据确认。</p>
+<h2 id="业务流程-flow-02">业务流程 FLOW-02</h2>
+<h3 id="车速发动机转速里程和行车电脑">车速、发动机转速、里程和行车电脑</h3>
+<h3 id="触发目标与边界-1">触发、目标与边界</h3>
+<p>触发源是传感器或车辆 ECU 产生的车速、发动机转速、累计里程、瞬时/平均能耗等数据。目标是让 Cluster 或行车电脑显示正确单位、量程和新鲜度，并对累计量保持一致的里程持久化。本流程不假设某个具体信号 ID、采样周期或滤波参数。</p>
+<p>[置信度：mixed] MCU、CAN、RTE、SWC、SPI/IPCL、CanService 和 Cluster 来自原图 02、03；插值、单位换算、里程持久化和显示模型是通用业务机制，具体归属待软件设计确认。</p>
+<h3 id="正常链-1">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  S[&quot;传感器 / ECU&quot;] --&gt; C[&quot;CAN&quot;] --&gt; M[&quot;MCU RTE / SWC&quot;]
+  M --&gt; X[&quot;SPI / IPCL&quot;] --&gt; V[&quot;CanService&quot;]
+  V --&gt; T[&quot;Cluster / 行车电脑模型&quot;] --&gt; D[&quot;显示&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  S[&quot;传感器 / ECU&quot;] --&gt; C[&quot;CAN&quot;] --&gt; M[&quot;MCU RTE / SWC&quot;]
+  M --&gt; X[&quot;SPI / IPCL&quot;] --&gt; V[&quot;CanService&quot;]
+  V --&gt; T[&quot;Cluster / 行车电脑模型&quot;] --&gt; D[&quot;显示&quot;]</code></pre></details></details><p>动态量先完成物理量解码、范围和有效性检查，再进行必要的滤波或插值；显示层做单位换算与格式化。累计里程还需要区分源 ECU 的权威累计值、SoC 缓存值和本地持久化副本，不能把任一副本单独当作唯一真值。</p>
+<h3 id="分层子链与方向-1">分层子链与方向</h3>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>PVT vehicle 图解释了本流程里“MCU 数据到座舱属性”的实现角色：SPI/GPIO 接入 SOS mcu_ipc_service，经 property_service/FDBus 到 Android VHAL/CarService。原流程仍保留原节点，具体服务名仅作为该 PVT 方案的对照；车速/转速/里程的缩放、单位、超时有效性和累计规则须由 DBC/接口合同确认。缓存值可读与新报文已更新分别取证。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S281 · vehicle方案.pdf · PDF第2-3页<small>〔本地来源〕</small></span></p>
+<p>读取方向为源 ECU 到显示；配置方向仅在项目明确支持单位或页面设置时由 HMI 指向显示模型，不应反向修改车辆权威车速。车速和转速的平滑策略要保留原始值、处理值和呈现值三层，避免“指针平滑”被误诊为总线延迟。里程链需记录写入前值、写入后值、启动恢复值和源回读值。
+对车速和发动机转速，还应区分源采样、跨域样本、显示刷新与人眼观察四种频率；它们不必相同，但每次转换都应有明确的保持或插值规则。对平均能耗等行车电脑量，要保存计算窗口、输入缺失策略与清零事件；对累计里程，要区分正常写入、掉电边界、存储恢复和权威源重新同步。这样才能判断“短暂不动”是显示保持策略、输入陈旧，还是业务线程没有推进。</p>
+<p>同一画面若同时展示数字、指针和趋势值，还要分别记录各控件绑定的模型字段与最后刷新时间；一个控件更新不能证明其他控件已消费同一代样本。</p>
+<h3 id="反馈闭环-1">反馈闭环</h3>
+<p>反馈从显示值和模型时间戳返回到持久化/源回读，再验证 source age。动态量以同一事件窗口对比原始物理量、处理量和显示量；累计量以单调性、掉电前后连续性和权威源一致性构成闭环。</p>
+<h3 id="异常分支-1">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[&quot;数值错误、跳变或不更新&quot;] --&gt; B{&quot;源报文新鲜?&quot;}
+  B -- 否 --&gt; B1[&quot;网络或源 ECU&quot;]
+  B -- 是 --&gt; C{&quot;解码、比例和单位正确?&quot;}
+  C -- 否 --&gt; C1[&quot;数据库 / MCU 转换&quot;]
+  C -- 是 --&gt; D{&quot;跨域与缓存同代?&quot;}
+  D -- 否 --&gt; D1[&quot;SPI/IPCL / 服务缓存&quot;]
+  D -- 是 --&gt; E{&quot;滤波、插值和持久化正确?&quot;}
+  E -- 否 --&gt; E1[&quot;业务模型&quot;]
+  E -- 是 --&gt; F[&quot;渲染与显示链&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[&quot;数值错误、跳变或不更新&quot;] --&gt; B{&quot;源报文新鲜?&quot;}
+  B -- 否 --&gt; B1[&quot;网络或源 ECU&quot;]
+  B -- 是 --&gt; C{&quot;解码、比例和单位正确?&quot;}
+  C -- 否 --&gt; C1[&quot;数据库 / MCU 转换&quot;]
+  C -- 是 --&gt; D{&quot;跨域与缓存同代?&quot;}
+  D -- 否 --&gt; D1[&quot;SPI/IPCL / 服务缓存&quot;]
+  D -- 是 --&gt; E{&quot;滤波、插值和持久化正确?&quot;}
+  E -- 否 --&gt; E1[&quot;业务模型&quot;]
+  E -- 是 --&gt; F[&quot;渲染与显示链&quot;]</code></pre></details></details><p>常见分支包括字节序或比例错误、单位重复换算、陈旧缓存被重复显示、插值跨越无效区间、里程写入失败、掉电恢复使用旧副本以及 UI 卡住。恢复后验证要使用新输入跨越多个值域，确认模型时间戳推进、单位一致、累计量不倒退且旧缓存未回灌。</p>
+<h3 id="日志与诊断-1">日志与诊断</h3>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>源与 CAN</td>
+<td>原始值、计数、有效性连续</td>
+<td>缺帧、异常值、计数停滞</td>
+<td>原始值不含显示换算</td>
+<td>源 ECU/网络</td>
+</tr>
+<tr>
+<td>MCU 转换</td>
+<td>物理量和原始位可互算</td>
+<td>比例、偏移、字节序错误</td>
+<td>正确解码不证明跨域成功</td>
+<td>MCU 通信</td>
+</tr>
+<tr>
+<td>跨域与服务</td>
+<td>Generation、source age 连续</td>
+<td>丢样、旧缓存、乱序</td>
+<td>服务日志不证明 UI 消费</td>
+<td>跨域/车辆服务</td>
+</tr>
+<tr>
+<td>业务模型</td>
+<td>滤波、插值、单位换算可解释</td>
+<td>跳变、冻结、重复换算</td>
+<td>平滑会隐藏短时输入</td>
+<td>Cluster 业务</td>
+</tr>
+<tr>
+<td>持久化</td>
+<td>写入、读回、启动恢复一致</td>
+<td>倒退、回滚、损坏</td>
+<td>本地副本不一定是权威源</td>
+<td>存储/业务</td>
+</tr>
+<tr>
+<td>显示</td>
+<td>模型值与画面一致</td>
+<td>模型更新但画面不变</td>
+<td>视频不证明源数据正确</td>
+<td>图形/显示</td>
+</tr>
+</tbody></table>
+<p>最早断点是首个无法保持“原始值—物理量—模型值—显示值”可逆或可解释关系的层。具体滤波常数、写入策略和磨损均衡实现没有项目证据时不得固化。</p>
+<h3 id="责任域-1">责任域</h3>
+<p>升级材料包括原始报文、数据库版本、解码前后值、单位设置、跨域 Generation、服务 source age、模型处理前后值、持久化读写记录、启动前后里程和同步屏幕录像。恢复后验证报告必须说明动态量是否恢复、累计量是否保持连续以及旧副本是否被隔离。</p>
+<h3 id="证据与置信度-1">证据与置信度</h3>
+<p>[置信度：mixed] 原图支持域与模块连接边界，具体数据加工和持久化顺序属于受控假设；车型数据库和运行 trace 是最终裁决证据。</p>
+<h2 id="业务流程-flow-03">业务流程 FLOW-03</h2>
+<h3 id="挡位车门灯光安全带">挡位、车门、灯光、安全带</h3>
+<h3 id="触发目标与边界-2">触发、目标与边界</h3>
+<p>本流程处理车身 ECU 发布的离散状态。它们看似只是枚举，实际还包含有效位、未知态、组合态、去抖、优先级和互斥。例如车门开关可能和车速条件组合成告警，安全带状态可能与座椅占用组合，挡位显示必须防止旧值在跨域重连后回灌。</p>
+<p>[置信度：mixed] 原图确认车身状态可经 MCU、IPCL、Vehicle Property 或 Cluster 边界进入 HMI；具体枚举编码、去抖窗口和告警规则待车型定义确认。</p>
+<h3 id="正常链-2">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  B[&quot;车身 ECU&quot;] --&gt; C[&quot;CAN&quot;] --&gt; M[&quot;MCU SWC&quot;]
+  M --&gt; X[&quot;SPI / IPCL&quot;] --&gt; V[&quot;Vehicle Property / Cluster&quot;]
+  V --&gt; H[&quot;HMI 最终状态&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  B[&quot;车身 ECU&quot;] --&gt; C[&quot;CAN&quot;] --&gt; M[&quot;MCU SWC&quot;]
+  M --&gt; X[&quot;SPI / IPCL&quot;] --&gt; V[&quot;Vehicle Property / Cluster&quot;]
+  V --&gt; H[&quot;HMI 最终状态&quot;]</code></pre></details></details><p>正常链保持原始枚举、标准化枚举、有效位、源时间和 Generation 的关联。业务层只在输入有效且新鲜时改变最终状态；未知枚举要进入明确的 Unknown/Invalid 分支，不应默认映射成“关闭”或“正常”。</p>
+<h3 id="分层子链与方向-2">分层子链与方向</h3>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>挡位、车门、灯光、安全带虽可共用属性链路，其有效性和消费者完成条件不同。结合 PVT vehicle 架构，应追踪 MCU 原始值、SOS 解码/缓存、跨域发布、VHAL 更新和 UI/倒车策略消费的同一事件，而非只看到一端日志就宣告整链成功。MBOS 新图的 mb.can 提供 CAN 客户端角色线索，但不能直接当作本流程所有属性的唯一承载。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S281 · vehicle方案.pdf · PDF第2-3页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">MBOS-20260920 · 盟博OS架构-用户提供-20260920.png<small>〔本地来源〕</small></span></p>
+<p>读取方向由车身 ECU 到界面。若 HMI 支持灯光或门锁控制，则控制请求属于另一条命令链，必须有 ECU 状态回读才能闭环，不能用本流程的显示缓存冒充执行结果。去抖可发生在 ECU、MCU 或业务层，排障时要先确认唯一责任层，避免多层去抖造成响应过慢。
+对挡位要额外核对“原始挡位、有效挡位、过渡态和最终显示挡位”，防止换挡瞬间的过渡码被错误显示。对车门要保存每个门的独立位与车辆汇总状态，避免汇总正确掩盖单门映射错误。对灯光要区分驾驶员开关请求、车身 ECU 执行状态与仪表提示；对安全带要区分锁扣、座椅占用、告警条件和告警输出。四类业务虽共享链路，但各自的权威源和组合条件不同。</p>
+<p>诊断时应构造最小状态转换矩阵：初始状态、单一输入变化、预期标准化枚举、预期伴随告警、最终 HMI 资源和恢复状态。矩阵能揭示“单值正确、组合错误”与“组合正确、资源错误”的不同责任边界。
+矩阵执行时还需保留反向转换，确认打开与关闭、系上与解开、进入与退出挡位不会共享错误的单向缓存。</p>
+<h3 id="反馈闭环-2">反馈闭环</h3>
+<p>界面最终枚举与有效性回读后，再和 Vehicle Property/Cluster 缓存及车身源状态对比。闭环要验证显示值、颜色、图标和伴随告警是否来自同一 Generation，而不是只比对一个布尔值。</p>
+<h3 id="异常分支-2">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[&quot;离散状态错误&quot;] --&gt; B{&quot;原始枚举与有效位正确?&quot;}
+  B -- 否 --&gt; B1[&quot;源 ECU / 数据库&quot;]
+  B -- 是 --&gt; C{&quot;去抖后状态正确?&quot;}
+  C -- 否 --&gt; C1[&quot;MCU 或业务去抖责任层&quot;]
+  C -- 是 --&gt; D{&quot;跨域 Generation 新鲜?&quot;}
+  D -- 否 --&gt; D1[&quot;会话、缓存、乱序&quot;]
+  D -- 是 --&gt; E{&quot;互斥和组合规则正确?&quot;}
+  E -- 否 --&gt; E1[&quot;HMI 状态机&quot;]
+  E -- 是 --&gt; F[&quot;渲染链&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[&quot;离散状态错误&quot;] --&gt; B{&quot;原始枚举与有效位正确?&quot;}
+  B -- 否 --&gt; B1[&quot;源 ECU / 数据库&quot;]
+  B -- 是 --&gt; C{&quot;去抖后状态正确?&quot;}
+  C -- 否 --&gt; C1[&quot;MCU 或业务去抖责任层&quot;]
+  C -- 是 --&gt; D{&quot;跨域 Generation 新鲜?&quot;}
+  D -- 否 --&gt; D1[&quot;会话、缓存、乱序&quot;]
+  D -- 是 --&gt; E{&quot;互斥和组合规则正确?&quot;}
+  E -- 否 --&gt; E1[&quot;HMI 状态机&quot;]
+  E -- 是 --&gt; F[&quot;渲染链&quot;]</code></pre></details></details><p>异常包括枚举表错位、有效位未传播、Invalid 被当作关闭、去抖层叠、互斥规则错误、旧挡位覆盖新挡位以及状态正确但图标错误。恢复后验证需跨越至少一个状态切换，确认新 Generation 生效、旧回调被拒绝、组合告警与最终图标一致。</p>
+<h3 id="日志与诊断-2">日志与诊断</h3>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>车身源</td>
+<td>枚举和值域符合定义</td>
+<td>未知值、有效位异常</td>
+<td>抓包不说明 HMI 映射</td>
+<td>车身 ECU</td>
+</tr>
+<tr>
+<td>MCU SWC</td>
+<td>去抖前后状态与原因可见</td>
+<td>多层去抖、映射错误</td>
+<td>输出正确不证明传输</td>
+<td>MCU 业务</td>
+</tr>
+<tr>
+<td>跨域</td>
+<td>值、有效性、Generation 同代</td>
+<td>乱序、陈旧、旧会话回灌</td>
+<td>通道通不等于值正确</td>
+<td>跨域通信</td>
+</tr>
+<tr>
+<td>属性/Cluster</td>
+<td>最终枚举和 source age 正确</td>
+<td>缓存未刷新、组合错误</td>
+<td>缓存正确不证明界面消费</td>
+<td>车辆服务</td>
+</tr>
+<tr>
+<td>HMI</td>
+<td>图标、文本、颜色和伴随告警一致</td>
+<td>互斥、优先级或资源映射错</td>
+<td>screenshot 不含上游原因</td>
+<td>HMI/图形</td>
+</tr>
+</tbody></table>
+<p>最早断点要以同一个离散状态转换为锚点，保存转换前后值和时间。没有项目规则时不能推定 Unknown 的默认表现，也不能把一次抖动直接归因于物理开关。</p>
+<h3 id="责任域-2">责任域</h3>
+<p>升级材料包括原始枚举和值域定义、有效位、MCU 去抖前后 trace、跨域 Generation、属性缓存、最终状态机原因、资源 ID 对照和屏幕证据。恢复后验证应覆盖按下/释放或开/关两个方向，并说明旧状态隔离结果。</p>
+<h3 id="证据与置信度-2">证据与置信度</h3>
+<p>[置信度：mixed] 模块边界有图示依据；枚举、去抖、互斥和组合业务规则属于标准诊断模型，须由车型信号和 HMI 规格确认。</p>
+<h2 id="业务流程-flow-04">业务流程 FLOW-04</h2>
+<h3 id="空调读取与控制">空调读取与控制</h3>
+<h3 id="触发目标与边界-3">触发、目标与边界</h3>
+<p>空调业务必须分成读取方向、控制方向和状态回读三条链。用户看到当前温度或风量是读取；用户点击设置是控制请求；空调 ECU 随后发布的实际状态才是执行反馈。UI 本地立即变化只是一种交互策略，不能作为 ECU 已执行的证据。</p>
+<p>[置信度：mixed] AcSettings、CarService、VehicleHAL、CanService、IPCL、MCU 等模块由原图 01、03 支撑；命令属性、仲裁、超时和空调 ECU 反馈合同待项目接口定义确认。</p>
+<h3 id="正常链-3">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  U[&quot;AcSettings / HMI 请求&quot;] --&gt; C[&quot;CarService / VehicleHAL&quot;]
+  C --&gt; S[&quot;CanService&quot;] --&gt; X[&quot;SPI / IPCL&quot;]
+  X --&gt; M[&quot;MCU&quot;] --&gt; E[&quot;空调 ECU&quot;]
+  E --&gt; R[&quot;状态回读&quot;] --&gt; U</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  U[&quot;AcSettings / HMI 请求&quot;] --&gt; C[&quot;CarService / VehicleHAL&quot;]
+  C --&gt; S[&quot;CanService&quot;] --&gt; X[&quot;SPI / IPCL&quot;]
+  X --&gt; M[&quot;MCU&quot;] --&gt; E[&quot;空调 ECU&quot;]
+  E --&gt; R[&quot;状态回读&quot;] --&gt; U</code></pre></details></details><h3 id="分层子链与方向-3">分层子链与方向</h3>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>空调控制的“SET 成功”应按实际接口合同解释：命令进入服务、送到 MCU/ECU、执行完成、状态回读和 UI 更新是不同阶段。PVT 车辆架构可定位物理通道与属性桥接层，却未给出本车的空调方法/属性 ID 或超时。本节原正向控制和反向反馈拓扑保留，解释上增加请求会话、目标值、反馈值、有效性与时间戳对应，避免旧回调覆盖新请求。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S281 · vehicle方案.pdf · PDF第2-3页<small>〔本地来源〕</small></span></p>
+<p>控制方向：界面生成带请求身份和目标值的命令，经 CarService/VehicleHAL、CanService、跨域链和 MCU 发送到空调 ECU。读取方向：空调 ECU 的当前状态经相反数据方向进入缓存和订阅，界面从缓存初始化并通过回调更新。两条链可以共用服务和跨域通道，但请求成功、报文发送、ECU 执行和状态回读是不同状态。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+  participant UI as AcSettings
+  participant VS as Vehicle Service
+  participant MCU as MCU / bus
+  participant ECU as HVAC ECU
+  UI-&gt;&gt;VS: SET target value + request token
+  VS-&gt;&gt;MCU: command accepted for transport
+  MCU-&gt;&gt;ECU: bus command
+  ECU--&gt;&gt;MCU: authoritative status
+  MCU--&gt;&gt;VS: status + generation
+  VS--&gt;&gt;UI: callback / GET readback
+  Note over UI,ECU: accepted, executed, matched and rendered are separate states</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  participant UI as AcSettings
+  participant VS as Vehicle Service
+  participant MCU as MCU / bus
+  participant ECU as HVAC ECU
+  UI-&gt;&gt;VS: SET target value + request token
+  VS-&gt;&gt;MCU: command accepted for transport
+  MCU-&gt;&gt;ECU: bus command
+  ECU--&gt;&gt;MCU: authoritative status
+  MCU--&gt;&gt;VS: status + generation
+  VS--&gt;&gt;UI: callback / GET readback
+  Note over UI,ECU: accepted, executed, matched and rendered are separate states</code></pre></details></details><h3 id="反馈闭环-3">反馈闭环</h3>
+<p>SET accepted ≠ ECU executed ≠ status readback matched ≠ interface rendered。闭环使用请求目标、ECU 权威回读、同代缓存和界面最终呈现四个证据。若 ECU 因车辆条件拒绝命令，界面需要回退到权威回读并呈现可解释状态，而不是永久保留乐观值。</p>
+<h3 id="异常分支-3">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[&quot;控制无效或显示不一致&quot;] --&gt; B{&quot;请求到达车辆服务?&quot;}
+  B -- 否 --&gt; B1[&quot;HMI / Binder / 权限&quot;]
+  B -- 是 --&gt; C{&quot;命令跨域并上总线?&quot;}
+  C -- 否 --&gt; C1[&quot;CanService / SPI / IPCL / MCU&quot;]
+  C -- 是 --&gt; D{&quot;ECU 接受并改变状态?&quot;}
+  D -- 否 --&gt; D1[&quot;ECU 条件、仲裁或负反馈&quot;]
+  D -- 是 --&gt; E{&quot;状态回读匹配本次请求?&quot;}
+  E -- 否 --&gt; E1[&quot;回读、Generation、缓存&quot;]
+  E -- 是 --&gt; F[&quot;界面消费与渲染&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[&quot;控制无效或显示不一致&quot;] --&gt; B{&quot;请求到达车辆服务?&quot;}
+  B -- 否 --&gt; B1[&quot;HMI / Binder / 权限&quot;]
+  B -- 是 --&gt; C{&quot;命令跨域并上总线?&quot;}
+  C -- 否 --&gt; C1[&quot;CanService / SPI / IPCL / MCU&quot;]
+  C -- 是 --&gt; D{&quot;ECU 接受并改变状态?&quot;}
+  D -- 否 --&gt; D1[&quot;ECU 条件、仲裁或负反馈&quot;]
+  D -- 是 --&gt; E{&quot;状态回读匹配本次请求?&quot;}
+  E -- 否 --&gt; E1[&quot;回读、Generation、缓存&quot;]
+  E -- 是 --&gt; F[&quot;界面消费与渲染&quot;]</code></pre></details></details><p>异常包括服务拒绝、权限失败、跨域会话失效、命令丢失、ECU 条件不满足、后来的请求覆盖、旧状态回灌和 UI 乐观值未回退。恢复后验证要发起新请求，确认新请求身份、ECU 回读、缓存 Generation 和界面值一致；不得用进程重启成功替代业务闭环。</p>
+<h3 id="日志与诊断-3">日志与诊断</h3>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HMI 请求</td>
+<td>用户动作、目标值、请求身份</td>
+<td>无事件、重复事件、旧请求</td>
+<td>UI 接收不证明服务接受</td>
+<td>应用/HMI</td>
+</tr>
+<tr>
+<td>车辆服务</td>
+<td>权限、参数、路由结果明确</td>
+<td>reject、无目标服务</td>
+<td>accepted 不证明 ECU 执行</td>
+<td>CarService/VehicleHAL</td>
+</tr>
+<tr>
+<td>跨域与 MCU</td>
+<td>命令同代发送并入总线</td>
+<td>会话、队列、组包或发送错误</td>
+<td>总线发送不证明 ECU 接受</td>
+<td>通信/MCU</td>
+</tr>
+<tr>
+<td>空调 ECU</td>
+<td>权威状态发生预期变化</td>
+<td>条件拒绝、状态不变</td>
+<td>状态变化需关联请求</td>
+<td>空调 ECU</td>
+</tr>
+<tr>
+<td>回读缓存</td>
+<td>新状态、新 Generation、新鲜</td>
+<td>旧缓存、乱序、回调积压</td>
+<td>cache 正确不证明 UI 渲染</td>
+<td>车辆服务</td>
+</tr>
+<tr>
+<td>界面</td>
+<td>最终值与权威回读一致</td>
+<td>乐观值残留、渲染未更新</td>
+<td>screenshot 不证明请求路径</td>
+<td>HMI/图形</td>
+</tr>
+</tbody></table>
+<p>最早断点按请求身份沿控制链定位，再沿状态身份沿读取链返回。具体属性号、命令编码和超时没有项目证据时只作为待确认项。</p>
+<h3 id="责任域-3">责任域</h3>
+<p>升级材料包括用户动作录像、请求目标和身份、车辆服务返回、跨域发送记录、总线命令、ECU 状态回读、缓存 Generation、订阅回调和最终界面。恢复后验证必须包含一次新控制和一次独立 GET 回读，说明旧请求是否已隔离。</p>
+<h3 id="证据与置信度-3">证据与置信度</h3>
+<p>[置信度：mixed] 架构模块由原图支撑；完整控制与回读闭环是标准车辆属性机制模型，私有属性和车型仲裁待确认。</p>
+<h2 id="业务流程-flow-05">业务流程 FLOW-05</h2>
+<h3 id="方向盘按键旋钮和硬按键">方向盘按键、旋钮和硬按键</h3>
+<h3 id="触发目标与边界-4">触发、目标与边界</h3>
+<p>触发源可能是 GPIO、矩阵键、旋钮编码器或车身网络输入。目标是把物理动作转换成完整按键序列，经过 MCU、SPI/IPCL、Input Service 或 CarInput 路由到具有正确焦点的目标应用，再按业务需要产生声音、灯或屏幕反馈。</p>
+<p>[置信度：mixed] MCU、IPCL、Input Service、CarInput Service 和应用层由原图 01、03 支撑；具体硬件接线、按键码、焦点策略和反馈设备待项目配置确认。</p>
+<h3 id="正常链-4">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  H[&quot;硬件按键 / 旋钮&quot;] --&gt; M[&quot;MCU 输入与去抖&quot;]
+  M --&gt; X[&quot;SPI / IPCL&quot;] --&gt; I[&quot;Input / CarInput&quot;]
+  I --&gt; F[&quot;焦点与策略路由&quot;] --&gt; A[&quot;目标应用&quot;]
+  A --&gt; R[&quot;声音 / 灯 / 屏幕反馈&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  H[&quot;硬件按键 / 旋钮&quot;] --&gt; M[&quot;MCU 输入与去抖&quot;]
+  M --&gt; X[&quot;SPI / IPCL&quot;] --&gt; I[&quot;Input / CarInput&quot;]
+  I --&gt; F[&quot;焦点与策略路由&quot;] --&gt; A[&quot;目标应用&quot;]
+  A --&gt; R[&quot;声音 / 灯 / 屏幕反馈&quot;]</code></pre></details></details><h3 id="分层子链与方向-4">分层子链与方向</h3>
+<p>输入方向依次处理电平或网络事件、去抖、按下、释放、长按、重复和旋钮增量，再进入跨域消息与输入策略。焦点决定事件路由对象，系统策略还可能拦截电源、音量等全局键。反馈方向是目标应用或系统策略发起反馈请求，再由显示、音频或 MCU 输出到物理设备。</p>
+<p>Key down ≠ complete key sequence ≠ correct focus route ≠ target app consumed。只有 down 没有 up 会形成“卡键”；完整序列进入系统但焦点错误，会被另一个窗口消费；应用收到事件但业务线程阻塞，也不会产生功能结果。
+输入链还要区分事件时间与处理时间。物理边沿时间用于判断硬件与去抖，MCU 事件时间用于判断状态机，跨域接收时间用于判断链路，系统分发和应用消费时间用于判断焦点与线程阻塞。如果只看应用日志，早期重复或丢失会被误认为应用逻辑错误。</p>
+<p>旋钮不是简单的按键重复：需要保留方向、步数、加速策略和累计增量。一次快速旋转若在 MCU 合并、跨域队列或应用节流中丢步，应通过各层累计计数定位，而不是只比较首尾界面值。</p>
+<h3 id="反馈闭环-4">反馈闭环</h3>
+<p>闭环应把物理动作编号、MCU 事件、跨域序号、输入事件时间、焦点窗口、应用消费结果和物理反馈关联。声音或屏幕变化只能证明反馈链某部分完成，不能反推输入链每一层都正确。</p>
+<h3 id="异常分支-4">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[&quot;按键无效、重复或卡住&quot;] --&gt; B{&quot;物理边沿完整?&quot;}
+  B -- 否 --&gt; B1[&quot;硬件 / 去抖&quot;]
+  B -- 是 --&gt; C{&quot;按下释放长按序列正确?&quot;}
+  C -- 否 --&gt; C1[&quot;MCU 输入状态机&quot;]
+  C -- 是 --&gt; D{&quot;跨域事件同代且无重复?&quot;}
+  D -- 否 --&gt; D1[&quot;SPI/IPCL 会话与序号&quot;]
+  D -- 是 --&gt; E{&quot;焦点与策略路由正确?&quot;}
+  E -- 否 --&gt; E1[&quot;Input / CarInput / Window&quot;]
+  E -- 是 --&gt; F{&quot;目标应用已消费?&quot;}
+  F -- 否 --&gt; F1[&quot;应用线程与业务状态&quot;]
+  F -- 是 --&gt; G[&quot;反馈输出链&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[&quot;按键无效、重复或卡住&quot;] --&gt; B{&quot;物理边沿完整?&quot;}
+  B -- 否 --&gt; B1[&quot;硬件 / 去抖&quot;]
+  B -- 是 --&gt; C{&quot;按下释放长按序列正确?&quot;}
+  C -- 否 --&gt; C1[&quot;MCU 输入状态机&quot;]
+  C -- 是 --&gt; D{&quot;跨域事件同代且无重复?&quot;}
+  D -- 否 --&gt; D1[&quot;SPI/IPCL 会话与序号&quot;]
+  D -- 是 --&gt; E{&quot;焦点与策略路由正确?&quot;}
+  E -- 否 --&gt; E1[&quot;Input / CarInput / Window&quot;]
+  E -- 是 --&gt; F{&quot;目标应用已消费?&quot;}
+  F -- 否 --&gt; F1[&quot;应用线程与业务状态&quot;]
+  F -- 是 --&gt; G[&quot;反馈输出链&quot;]</code></pre></details></details><p>异常包括硬件抖动、释放丢失、长按计时重复、重连后旧事件重放、焦点漂移、系统策略拦截、应用无响应和反馈设备异常。恢复后验证需完成新的 down/up 序列，确认新 Generation、正确焦点、一次且仅一次消费和正确物理反馈。</p>
+<h3 id="日志与诊断-4">日志与诊断</h3>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>硬件</td>
+<td>电平/网络边沿与动作一致</td>
+<td>抖动、缺边沿、常按</td>
+<td>电平正常不证明解码正确</td>
+<td>硬件/MCU</td>
+</tr>
+<tr>
+<td>MCU 输入</td>
+<td>down/up/long/repeat 状态完整</td>
+<td>卡键、重复、去抖错误</td>
+<td>MCU 事件不证明跨域</td>
+<td>MCU 输入</td>
+</tr>
+<tr>
+<td>SPI/IPCL</td>
+<td>事件序号与 Generation 连续</td>
+<td>丢失、重复、旧会话重放</td>
+<td>通道正常不证明焦点</td>
+<td>跨域通信</td>
+</tr>
+<tr>
+<td>输入策略</td>
+<td>key code、焦点、拦截原因明确</td>
+<td>路由错、策略拦截异常</td>
+<td>dispatch 不证明消费</td>
+<td>Input/CarInput</td>
+</tr>
+<tr>
+<td>应用</td>
+<td>消费时间与业务动作可关联</td>
+<td>主线程阻塞、状态拒绝</td>
+<td>回调进入不等于功能完成</td>
+<td>目标应用</td>
+</tr>
+<tr>
+<td>反馈</td>
+<td>声/光/屏结果符合动作</td>
+<td>输出未发或设备无响应</td>
+<td>反馈成功不证明输入全链</td>
+<td>输出模块</td>
+</tr>
+</tbody></table>
+<p>最早断点要从同一物理动作的首个边沿开始，避免把不同次按键混在一起。按键码、去抖时间和长按门限必须由项目配置确认。</p>
+<h3 id="责任域-4">责任域</h3>
+<p>升级材料包括动作视频、硬件采样、MCU 输入状态、跨域序号、系统输入事件、焦点窗口、策略拦截原因、应用消费日志和反馈证据。恢复后验证应至少覆盖短按、释放和长按中的相关类型。</p>
+<h3 id="证据与置信度-4">证据与置信度</h3>
+<p>[置信度：mixed] 输入与车辆输入模块有图示依据；完整事件语义和焦点策略是标准机制，项目按键映射仍待确认。</p>
+<h2 id="业务流程-flow-06">业务流程 FLOW-06</h2>
+<h3 id="vehicle-property-缓存订阅和新鲜度">Vehicle Property 缓存、订阅和新鲜度</h3>
+<h3 id="触发目标与边界-5">触发、目标与边界</h3>
+<p>本流程解释车辆属性从 CanService/VehicleHAL 进入缓存、由 CarService 管理并通过 Binder 回调送到应用的过程。核心不是“有值”，而是值、状态、时间、source age、Generation 和订阅生命周期一致。</p>
+<p>[置信度：mixed] VehicleHAL、CarService、CanService、Binder 与应用边界由原图 01、03 支撑；缓存层级、回调线程和私有属性合同待项目实现确认。</p>
+<h3 id="正常链-5">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  V[&quot;VehicleHAL / CanService&quot;] --&gt; C[&quot;Property Cache&quot;]
+  C --&gt; S[&quot;CarService&quot;] --&gt; B[&quot;Binder Callback&quot;]
+  B --&gt; A[&quot;Application State&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  V[&quot;VehicleHAL / CanService&quot;] --&gt; C[&quot;Property Cache&quot;]
+  C --&gt; S[&quot;CarService&quot;] --&gt; B[&quot;Binder Callback&quot;]
+  B --&gt; A[&quot;Application State&quot;]</code></pre></details></details><p>初始化通常先注册服务、建立订阅，再用 <code>GET</code> 获得基线值；持续阶段由 <code>SUBSCRIBE</code> 更新。先收到回调还是先完成 GET 可能存在竞争，因此应用要按 Generation、源时间或明确策略去重，不能让较旧的初始化结果覆盖较新的事件。</p>
+<h3 id="分层子链与方向-5">分层子链与方向</h3>
+<p>写入方向若存在 SET，仍需走 FLOW-04 的命令—回读闭环；本流程聚焦读取。服务可用、属性可用、缓存有值、值新鲜、订阅存活、回调已投递、应用已消费是七个不同条件。Binder 成功返回只证明一次事务，不能证明后续 callback backlog 为零。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">stateDiagram-v2
+  [*] --&gt; Unavailable
+  Unavailable --&gt; Baseline: service up + GET
+  Baseline --&gt; Fresh: valid sample
+  Fresh --&gt; Stale: source age exceeded policy
+  Stale --&gt; Fresh: newer generation
+  Fresh --&gt; Disconnected: binder/service loss
+  Disconnected --&gt; Baseline: new handle + re-subscribe
+  Baseline --&gt; Fresh: readback validated</pre><details><summary>查看原始图代码</summary><pre><code>stateDiagram-v2
+  [*] --&gt; Unavailable
+  Unavailable --&gt; Baseline: service up + GET
+  Baseline --&gt; Fresh: valid sample
+  Fresh --&gt; Stale: source age exceeded policy
+  Stale --&gt; Fresh: newer generation
+  Fresh --&gt; Disconnected: binder/service loss
+  Disconnected --&gt; Baseline: new handle + re-subscribe
+  Baseline --&gt; Fresh: readback validated</code></pre></details></details><h3 id="反馈闭环-5">反馈闭环</h3>
+<p>应用状态通过独立 GET 回读，与 CarService 缓存、Generation 和 source age 对照。缓存命中不代表源端仍在更新；回调到达不代表 UI 已应用；UI 有值也可能只是旧缓存。闭环必须指明值的新鲜度来源和当前会话身份。</p>
+<h3 id="异常分支-5">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[&quot;属性不更新或回退&quot;] --&gt; B{&quot;服务和属性可用?&quot;}
+  B -- 否 --&gt; B1[&quot;服务发现 / HAL / CanService&quot;]
+  B -- 是 --&gt; C{&quot;缓存样本新鲜?&quot;}
+  C -- 否 --&gt; C1[&quot;源更新 / source age&quot;]
+  C -- 是 --&gt; D{&quot;订阅仍绑定当前 Generation?&quot;}
+  D -- 否 --&gt; D1[&quot;新 Handle / re-subscribe&quot;]
+  D -- 是 --&gt; E{&quot;回调队列正常?&quot;}
+  E -- 否 --&gt; E1[&quot;callback backlog / Binder&quot;]
+  E -- 是 --&gt; F{&quot;应用消费和去重正确?&quot;}
+  F -- 否 --&gt; F1[&quot;线程、生命周期、旧值覆盖&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[&quot;属性不更新或回退&quot;] --&gt; B{&quot;服务和属性可用?&quot;}
+  B -- 否 --&gt; B1[&quot;服务发现 / HAL / CanService&quot;]
+  B -- 是 --&gt; C{&quot;缓存样本新鲜?&quot;}
+  C -- 否 --&gt; C1[&quot;源更新 / source age&quot;]
+  C -- 是 --&gt; D{&quot;订阅仍绑定当前 Generation?&quot;}
+  D -- 否 --&gt; D1[&quot;新 Handle / re-subscribe&quot;]
+  D -- 是 --&gt; E{&quot;回调队列正常?&quot;}
+  E -- 否 --&gt; E1[&quot;callback backlog / Binder&quot;]
+  E -- 是 --&gt; F{&quot;应用消费和去重正确?&quot;}
+  F -- 否 --&gt; F1[&quot;线程、生命周期、旧值覆盖&quot;]</code></pre></details></details><p>异常包括服务进程存在但属性未 Ready、源停止更新、缓存永不失效、订阅丢失、Binder death、callback backlog、应用生命周期重建后重复订阅和旧 GET 覆盖新回调。恢复链为新服务句柄、新 Generation、重新订阅、GET 基线、缓存恢复、业务状态恢复和独立回读；各步不能合并成“重连成功”。</p>
+<h3 id="日志与诊断-5">日志与诊断</h3>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>源/HAL</td>
+<td>属性状态和值持续更新</td>
+<td>unavailable、时间不推进</td>
+<td>HAL 有值不证明 CarService 新鲜</td>
+<td>HAL/CanService</td>
+</tr>
+<tr>
+<td>缓存</td>
+<td>值、源时间、接收时间、Generation 一致</td>
+<td>stale、旧代覆盖</td>
+<td>cache hit 不证明源健康</td>
+<td>CarService</td>
+</tr>
+<tr>
+<td>订阅</td>
+<td>当前句柄注册成功并有事件</td>
+<td>订阅丢失、旧句柄</td>
+<td>注册成功不证明持续回调</td>
+<td>CarService/Binder</td>
+</tr>
+<tr>
+<td>回调</td>
+<td>入队、出队和队列年龄可见</td>
+<td>callback backlog、阻塞</td>
+<td>出队不证明业务应用</td>
+<td>Binder/应用</td>
+</tr>
+<tr>
+<td>应用</td>
+<td>生命周期、去重、最终状态正确</td>
+<td>重复注册、旧值覆盖</td>
+<td>UI 正确一次不证明持续健康</td>
+<td>应用</td>
+</tr>
+</tbody></table>
+<p>最早断点按“源样本—缓存—订阅—回调—消费”顺序定位。具体缓存失效阈值和回调线程模型在无源码与运行证据时保持待确认。</p>
+<h3 id="责任域-5">责任域</h3>
+<p>升级材料包括服务与属性可用状态、源/接收时间、Generation、缓存 dump、订阅句柄、Binder death、回调入出队时间、应用生命周期和独立 GET 回读。恢复后验证必须证明旧句柄事件被隔离且新值持续推进。</p>
+<h3 id="证据与置信度-5">证据与置信度</h3>
+<p>[置信度：mixed] 服务边界有原图依据；缓存、订阅和新鲜度的详细状态机是标准机制，私有实现待确认。</p>
+<h2 id="业务流程-flow-07">业务流程 FLOW-07</h2>
+<h3 id="mcusoc-心跳">MCU/SoC 心跳</h3>
+<h3 id="触发目标与边界-6">触发、目标与边界</h3>
+<p>心跳用于判断通信对端和关键任务是否持续推进。触发源是 MCU 周期任务或 SoC 监控任务产生的存活信息；目标是验证有效的 E2E、当前 Generation 和业务健康条件，在故障时进入可控降级或复位策略。</p>
+<p>[置信度：mixed] MCU、E2E、SPI/IPCL、SoC 和监控/诊断模块由原图 02、03 支撑；心跳负载、周期、门限、谁复位谁以及安全策略没有图示合同，必须由项目设计确认。</p>
+<h3 id="正常链-6">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart LR
+  T[&quot;MCU 关键任务&quot;] --&gt; E[&quot;E2E: Alive Counter + CRC&quot;]
+  E --&gt; X[&quot;SPI / IPCL&quot;] --&gt; M[&quot;SoC Monitor&quot;]
+  M --&gt; H[&quot;Healthy State&quot;]
+  H --&gt; P[&quot;持续监控 / 策略输出&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart LR
+  T[&quot;MCU 关键任务&quot;] --&gt; E[&quot;E2E: Alive Counter + CRC&quot;]
+  E --&gt; X[&quot;SPI / IPCL&quot;] --&gt; M[&quot;SoC Monitor&quot;]
+  M --&gt; H[&quot;Healthy State&quot;]
+  H --&gt; P[&quot;持续监控 / 策略输出&quot;]</code></pre></details></details><h3 id="分层子链与方向-6">分层子链与方向</h3>
+<p>发送侧应在关键任务真正推进后更新 Alive Counter，并对本代负载计算 CRC；传输侧保持帧和会话身份；接收侧检查 CRC、计数推进、最后接收时间、Generation 和业务依赖。仅由通信线程自动发包，可能掩盖业务任务已死的问题，因此“谁更新计数”必须明确。</p>
+<p>Heartbeat bytes ≠ valid E2E ≠ current Generation ≠ healthy peer ≠ safe business state。收到字节可能校验失败；校验通过可能来自旧会话；对端活着也可能关键业务未 Ready；业务健康也不自动等同于整车处于安全状态。
+健康判定还应区分通信健康、进程健康、关键任务健康和业务健康。通信线程持续发出合法心跳时，关键业务任务仍可能阻塞；对端进程重启后，通信恢复也可能早于车辆属性、音频或显示业务 Ready。因此健康状态最好携带可解释的子状态，而不是只有一个布尔值。</p>
+<p>若降级策略包含限制功能、切换默认值或请求复位，应分别记录检测者、动作执行者、受影响业务和退出条件，从而避免多方同时复位形成循环。</p>
+<h3 id="反馈闭环-6">反馈闭环</h3>
+<p>监控器将最后接收时间、序号推进和 peer Generation 与健康/降级状态关联。若系统有反向心跳，两方向必须独立评估，不能用 MCU→SoC 正常推导 SoC→MCU 正常。</p>
+<h3 id="异常分支-6">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[&quot;心跳异常&quot;] --&gt; B{&quot;有新字节?&quot;}
+  B -- 否 --&gt; B1[&quot;链路、调度或对端掉电&quot;]
+  B -- 是 --&gt; C{&quot;CRC 与长度有效?&quot;}
+  C -- 否 --&gt; C1[&quot;损坏或合同不一致&quot;]
+  C -- 是 --&gt; D{&quot;Alive Counter 推进?&quot;}
+  D -- 否 --&gt; D1[&quot;旧包重放或任务冻结&quot;]
+  D -- 是 --&gt; E{&quot;Generation 当前且业务 Ready?&quot;}
+  E -- 否 --&gt; E1[&quot;旧会话或部分启动&quot;]
+  E -- 是 --&gt; F[&quot;健康策略 / 误报码检查&quot;]
+  B1 --&gt; R[&quot;降级或复位策略&quot;]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[&quot;心跳异常&quot;] --&gt; B{&quot;有新字节?&quot;}
+  B -- 否 --&gt; B1[&quot;链路、调度或对端掉电&quot;]
+  B -- 是 --&gt; C{&quot;CRC 与长度有效?&quot;}
+  C -- 否 --&gt; C1[&quot;损坏或合同不一致&quot;]
+  C -- 是 --&gt; D{&quot;Alive Counter 推进?&quot;}
+  D -- 否 --&gt; D1[&quot;旧包重放或任务冻结&quot;]
+  D -- 是 --&gt; E{&quot;Generation 当前且业务 Ready?&quot;}
+  E -- 否 --&gt; E1[&quot;旧会话或部分启动&quot;]
+  E -- 是 --&gt; F[&quot;健康策略 / 误报码检查&quot;]
+  B1 --&gt; R[&quot;降级或复位策略&quot;]
+  C1 --&gt; R
+  D1 --&gt; R
+  E1 --&gt; R</code></pre></details></details><p>异常包括无包、CRC 错、Alive Counter 不推进、旧 Generation 重放、调度饥饿、对端重启、监控器自身阻塞和复位风暴。恢复后验证要观察新 Generation 的多个连续有效样本、关键业务 Ready、旧代包被拒绝以及健康状态从降级按策略退出。</p>
+<h3 id="日志与诊断-6">日志与诊断</h3>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>发送任务</td>
+<td>关键任务推进并更新计数</td>
+<td>线程活但计数不动</td>
+<td>发包日志不证明上链</td>
+<td>MCU/SoC 任务</td>
+</tr>
+<tr>
+<td>E2E</td>
+<td>长度、CRC、Alive Counter 有效</td>
+<td>校验错、重复、跳变</td>
+<td>E2E 正确不证明当前会话</td>
+<td>E2E/通信</td>
+</tr>
+<tr>
+<td>SPI/IPCL</td>
+<td>本代发送接收和队列正常</td>
+<td>链路断、积压、旧包</td>
+<td>有字节不证明 peer 健康</td>
+<td>跨域通信</td>
+</tr>
+<tr>
+<td>监控器</td>
+<td>最后接收时间和 Generation 推进</td>
+<td>误超时、监控线程阻塞</td>
+<td>monitor healthy 不证明业务 Ready</td>
+<td>系统监控</td>
+</tr>
+<tr>
+<td>业务策略</td>
+<td>降级、复位、恢复有原因和边界</td>
+<td>复位风暴、过早恢复</td>
+<td>动作发生不证明根因</td>
+<td>系统/安全策略</td>
+</tr>
+</tbody></table>
+<p>最早断点是第一个不满足“新字节—有效 E2E—计数推进—当前会话—业务 Ready”的层。周期、超时、连续次数和复位权限属于安全合同，本章不提供私有数值。</p>
+<h3 id="责任域-6">责任域</h3>
+<p>升级材料包括双端单调时钟、任务调度、原始心跳负载、CRC 结果、Alive Counter、最后接收时间、Generation、链路状态、健康状态转换、降级/复位原因和启动 Ready 时间。恢复后验证要证明新会话稳定且无复位循环。</p>
+<h3 id="证据与置信度-6">证据与置信度</h3>
+<p>[置信度：mixed] 域、E2E 与跨域边界有图示依据；心跳协议和安全动作是受控假设，需安全设计与运行 trace 共同确认。</p>
+<h2 id="业务流程-flow-08">业务流程 FLOW-08</h2>
+<h3 id="dtcudsdoip">DTC、UDS、DoIP</h3>
+<h3 id="触发目标与边界-7">触发、目标与边界</h3>
+<p>触发源是诊断测试仪或车内诊断主端发起的诊断请求。目标是通过 DoIP 路由到 UDS 服务或目标 ECU，执行 DTC 读取、清除或其他诊断操作，并把正响应或负响应与原始请求相关联。本流程明确把 DoIP 作为“基于 IP 的诊断承载”，不把它等同于通用 SOME/IP 业务通信。</p>
+<p>[置信度：mixed] 原图 03 直接显示 DoIP Master、RoutingManager、Clients(SOME/IP)、CanService、MCU 诊断等标签及部分箭头；DoIP 到具体 UDS 服务、诊断存储和 ECU 的完整路由是库存假设，需路由表、诊断规范和抓包确认。</p>
+<h3 id="正常链-7">正常链</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">sequenceDiagram
+  participant T as Tester / DoIP Master
+  participant R as DoIP Routing
+  participant U as UDS Service
+  participant D as Diagnostic Storage / ECU
+  T-&gt;&gt;R: connect and routing activation
+  R-&gt;&gt;U: diagnostic request + correlation
+  U-&gt;&gt;D: execute DTC operation
+  D--&gt;&gt;U: operation result
+  U--&gt;&gt;R: positive or negative response
+  R--&gt;&gt;T: correlated response</pre><details><summary>查看原始图代码</summary><pre><code>sequenceDiagram
+  participant T as Tester / DoIP Master
+  participant R as DoIP Routing
+  participant U as UDS Service
+  participant D as Diagnostic Storage / ECU
+  T-&gt;&gt;R: connect and routing activation
+  R-&gt;&gt;U: diagnostic request + correlation
+  U-&gt;&gt;D: execute DTC operation
+  D--&gt;&gt;U: operation result
+  U--&gt;&gt;R: positive or negative response
+  R--&gt;&gt;T: correlated response</code></pre></details></details><h3 id="分层子链与方向-7">分层子链与方向</h3>
+<p>网络层确认地址、连接和 DoIP 头；路由层完成路由激活和目标选择；UDS 层确认诊断会话、安全访问、服务参数和响应码；执行层访问诊断存储或通过 CAN 到目标 ECU；返回方向保留请求身份，区分正响应、负响应、响应等待和传输失败。</p>
+<p>DoIP socket/routing availability ≠ UDS session/security accepted ≠ DTC operation completed ≠ response correlated。端口可连接不代表路由激活；路由激活不代表诊断会话和安全访问满足；服务被接受不代表存储操作成功；收到响应不代表它属于本次请求。</p>
+<h3 id="反馈闭环-7">反馈闭环</h3>
+<p>反馈链从诊断存储或 ECU 的执行结果开始，经 UDS 响应、DoIP 路由返回测试仪。读取 DTC 时闭环是响应内容和目标 ECU/存储状态一致；清除 DTC 时还需重新读取验证，不以一次正响应单独证明记录已消失。</p>
+<h3 id="异常分支-7">异常分支</h3>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">flowchart TD
+  A[&quot;诊断失败或无响应&quot;] --&gt; B{&quot;网络与 DoIP 头有效?&quot;}
+  B -- 否 --&gt; B1[&quot;链路 / 地址 / 连接&quot;]
+  B -- 是 --&gt; C{&quot;路由激活与目标正确?&quot;}
+  C -- 否 --&gt; C1[&quot;DoIP routing&quot;]
+  C -- 是 --&gt; D{&quot;诊断会话和安全访问满足?&quot;}
+  D -- 否 --&gt; D1[&quot;UDS 负响应与前置条件&quot;]
+  D -- 是 --&gt; E{&quot;服务参数与执行成功?&quot;}
+  E -- 否 --&gt; E1[&quot;UDS 服务 / 存储 / 目标 ECU&quot;]
+  E -- 是 --&gt; F{&quot;响应与请求相关?&quot;}
+  F -- 否 --&gt; F1[&quot;并发请求、旧会话、超时后响应&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>flowchart TD
+  A[&quot;诊断失败或无响应&quot;] --&gt; B{&quot;网络与 DoIP 头有效?&quot;}
+  B -- 否 --&gt; B1[&quot;链路 / 地址 / 连接&quot;]
+  B -- 是 --&gt; C{&quot;路由激活与目标正确?&quot;}
+  C -- 否 --&gt; C1[&quot;DoIP routing&quot;]
+  C -- 是 --&gt; D{&quot;诊断会话和安全访问满足?&quot;}
+  D -- 否 --&gt; D1[&quot;UDS 负响应与前置条件&quot;]
+  D -- 是 --&gt; E{&quot;服务参数与执行成功?&quot;}
+  E -- 否 --&gt; E1[&quot;UDS 服务 / 存储 / 目标 ECU&quot;]
+  E -- 是 --&gt; F{&quot;响应与请求相关?&quot;}
+  F -- 否 --&gt; F1[&quot;并发请求、旧会话、超时后响应&quot;]</code></pre></details></details><p>异常包括连接失败、头部长度或类型错误、路由激活拒绝、目标不可达、会话不匹配、安全访问不满足、服务参数错误、存储失败、CAN 侧超时、负响应、晚到响应和旧会话响应污染。恢复后验证要建立新会话、重新满足前置条件、使用新请求身份、执行目标操作并通过独立读回确认；旧连接响应必须隔离。</p>
+<h3 id="日志与诊断-7">日志与诊断</h3>
+<table>
+<thead>
+<tr>
+<th>观察层</th>
+<th>成功证据</th>
+<th>失败证据</th>
+<th>证据限制</th>
+<th>初始责任方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>以太网/连接</td>
+<td>双向报文、连接状态和时序完整</td>
+<td>无包、重传、断连</td>
+<td>连接成功不证明 DoIP 语义</td>
+<td>网络/BSP</td>
+</tr>
+<tr>
+<td>DoIP</td>
+<td>头部、路由激活、目标和响应关联正确</td>
+<td>激活拒绝、目标不可达、格式错</td>
+<td>DoIP 正常不证明 UDS 前置条件</td>
+<td>DoIP 路由</td>
+</tr>
+<tr>
+<td>UDS</td>
+<td>会话、安全访问、服务和响应码明确</td>
+<td>负响应、参数或前置条件失败</td>
+<td>正响应不自动证明持久化结果</td>
+<td>诊断服务</td>
+</tr>
+<tr>
+<td>存储/ECU</td>
+<td>DTC 操作和读回一致</td>
+<td>写读失败、目标 ECU 无响应</td>
+<td>本地日志可能不是目标权威值</td>
+<td>诊断存储/ECU</td>
+</tr>
+<tr>
+<td>请求关联</td>
+<td>请求身份、响应和时间窗唯一</td>
+<td>晚到、串包、旧会话污染</td>
+<td>时间相近不等于同一请求</td>
+<td>诊断客户端/路由</td>
+</tr>
+</tbody></table>
+<p>可以使用接口抓包、DoIP 头字段、路由状态、UDS 请求/响应字节、诊断会话、安全访问状态、目标 ECU 报文和 DTC 存储日志。具体网络接口、地址、端口、服务标识和安全算法没有项目证据时使用占位参数，不写成 MT8676 固定事实。</p>
+<p>最早断点从网络双向性开始，依次到 DoIP、UDS 前置条件、服务执行和请求关联。看到 SOME/IP RoutingManager 标签不能证明 DoIP 必然通过同一实现；需用进程、配置和实际抓包补证。</p>
+<h3 id="责任域-7">责任域</h3>
+<p>升级材料包括测试仪版本、请求原文、单调时间、连接与路由激活结果、目标地址、UDS 会话和安全状态、正响应/负响应、目标 ECU 或存储执行日志、返回原文和请求关联标识。恢复后验证至少包含新会话中的操作与独立读回。</p>
+<h3 id="证据与置信度-7">证据与置信度</h3>
+<p>[置信度：mixed] 图 03 支撑诊断相关模块与可见边界；完整 DoIP—UDS—DTC 业务链为受控假设。标准协议语义不能替代本车路由表、诊断数据库和部署证据。</p>
+<hr>
+<p><a href="index.html">返回主题导航</a> · <a href="22.html">本次来源索引</a></p>
+</article><nav class="pager"><a href="09.html">← 上一步：TBox通信模组内部机制</a><a href="11.html">下一步：显示相机与驾驶辅助业务流程 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#第-10-章车辆仪表指示灯与诊断业务流程">第 10 章　车辆、仪表、指示灯与诊断业务流程</a><a class="depth-2" href="#2026-09-20-校订车辆属性链与-mbos-诊断退役">2026-09-20 校订：车辆属性链与 MBOS 诊断退役</a><a class="depth-2" href="#业务流程-flow-01">业务流程 FLOW-01</a><a class="depth-3" href="#仪表指示灯">仪表指示灯</a><a class="depth-3" href="#触发目标与边界">触发、目标与边界</a><a class="depth-3" href="#正常链">正常链</a><a class="depth-3" href="#分层子链与方向">分层子链与方向</a><a class="depth-3" href="#反馈闭环">反馈闭环</a><a class="depth-3" href="#异常分支">异常分支</a><a class="depth-3" href="#日志与诊断">日志与诊断</a><a class="depth-3" href="#责任域">责任域</a><a class="depth-3" href="#证据与置信度">证据与置信度</a><a class="depth-2" href="#业务流程-flow-02">业务流程 FLOW-02</a><a class="depth-3" href="#车速发动机转速里程和行车电脑">车速、发动机转速、里程和行车电脑</a><a class="depth-3" href="#触发目标与边界-1">触发、目标与边界</a><a class="depth-3" href="#正常链-1">正常链</a><a class="depth-3" href="#分层子链与方向-1">分层子链与方向</a><a class="depth-3" href="#反馈闭环-1">反馈闭环</a><a class="depth-3" href="#异常分支-1">异常分支</a><a class="depth-3" href="#日志与诊断-1">日志与诊断</a><a class="depth-3" href="#责任域-1">责任域</a><a class="depth-3" href="#证据与置信度-1">证据与置信度</a><a class="depth-2" href="#业务流程-flow-03">业务流程 FLOW-03</a><a class="depth-3" href="#挡位车门灯光安全带">挡位、车门、灯光、安全带</a><a class="depth-3" href="#触发目标与边界-2">触发、目标与边界</a><a class="depth-3" href="#正常链-2">正常链</a><a class="depth-3" href="#分层子链与方向-2">分层子链与方向</a><a class="depth-3" href="#反馈闭环-2">反馈闭环</a><a class="depth-3" href="#异常分支-2">异常分支</a><a class="depth-3" href="#日志与诊断-2">日志与诊断</a><a class="depth-3" href="#责任域-2">责任域</a><a class="depth-3" href="#证据与置信度-2">证据与置信度</a><a class="depth-2" href="#业务流程-flow-04">业务流程 FLOW-04</a><a class="depth-3" href="#空调读取与控制">空调读取与控制</a><a class="depth-3" href="#触发目标与边界-3">触发、目标与边界</a><a class="depth-3" href="#正常链-3">正常链</a><a class="depth-3" href="#分层子链与方向-3">分层子链与方向</a><a class="depth-3" href="#反馈闭环-3">反馈闭环</a><a class="depth-3" href="#异常分支-3">异常分支</a><a class="depth-3" href="#日志与诊断-3">日志与诊断</a><a class="depth-3" href="#责任域-3">责任域</a><a class="depth-3" href="#证据与置信度-3">证据与置信度</a><a class="depth-2" href="#业务流程-flow-05">业务流程 FLOW-05</a><a class="depth-3" href="#方向盘按键旋钮和硬按键">方向盘按键、旋钮和硬按键</a><a class="depth-3" href="#触发目标与边界-4">触发、目标与边界</a><a class="depth-3" href="#正常链-4">正常链</a><a class="depth-3" href="#分层子链与方向-4">分层子链与方向</a><a class="depth-3" href="#反馈闭环-4">反馈闭环</a><a class="depth-3" href="#异常分支-4">异常分支</a><a class="depth-3" href="#日志与诊断-4">日志与诊断</a><a class="depth-3" href="#责任域-4">责任域</a><a class="depth-3" href="#证据与置信度-4">证据与置信度</a><a class="depth-2" href="#业务流程-flow-06">业务流程 FLOW-06</a><a class="depth-3" href="#vehicle-property-缓存订阅和新鲜度">Vehicle Property 缓存、订阅和新鲜度</a><a class="depth-3" href="#触发目标与边界-5">触发、目标与边界</a><a class="depth-3" href="#正常链-5">正常链</a><a class="depth-3" href="#分层子链与方向-5">分层子链与方向</a><a class="depth-3" href="#反馈闭环-5">反馈闭环</a><a class="depth-3" href="#异常分支-5">异常分支</a><a class="depth-3" href="#日志与诊断-5">日志与诊断</a><a class="depth-3" href="#责任域-5">责任域</a><a class="depth-3" href="#证据与置信度-5">证据与置信度</a><a class="depth-2" href="#业务流程-flow-07">业务流程 FLOW-07</a><a class="depth-3" href="#mcusoc-心跳">MCU/SoC 心跳</a><a class="depth-3" href="#触发目标与边界-6">触发、目标与边界</a><a class="depth-3" href="#正常链-6">正常链</a><a class="depth-3" href="#分层子链与方向-6">分层子链与方向</a><a class="depth-3" href="#反馈闭环-6">反馈闭环</a><a class="depth-3" href="#异常分支-6">异常分支</a><a class="depth-3" href="#日志与诊断-6">日志与诊断</a><a class="depth-3" href="#责任域-6">责任域</a><a class="depth-3" href="#证据与置信度-6">证据与置信度</a><a class="depth-2" href="#业务流程-flow-08">业务流程 FLOW-08</a><a class="depth-3" href="#dtcudsdoip">DTC、UDS、DoIP</a><a class="depth-3" href="#触发目标与边界-7">触发、目标与边界</a><a class="depth-3" href="#正常链-7">正常链</a><a class="depth-3" href="#分层子链与方向-7">分层子链与方向</a><a class="depth-3" href="#反馈闭环-7">反馈闭环</a><a class="depth-3" href="#异常分支-7">异常分支</a><a class="depth-3" href="#日志与诊断-7">日志与诊断</a><a class="depth-3" href="#责任域-7">责任域</a><a class="depth-3" href="#证据与置信度-7">证据与置信度</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>

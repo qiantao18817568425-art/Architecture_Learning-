@@ -1,0 +1,823 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="真实项目架构学习：完整章节、树状目录、新手导读、MT8676/MT8668 对比和实践方法。"><title>TBox通信模组内部机制 · 座舱架构实践</title><link rel="stylesheet" href="library.css"></head><body><a class="skip" href="#main">跳到正文</a><header class="topbar"><a href="index.html" class="brand">座舱架构<span>项目实践知识库</span></a><nav><a href="index.html#learning-path">学习路线</a><a href="17.html">平台对比</a><a href="../index.html">课程档案 ↗</a></nav></header><div class="layout"><aside class="sidebar"><label for="search">全文搜索</label><input id="search" type="search" placeholder="Camera、MBOS、无声…" autocomplete="off"><div id="search-state" role="status"></div><div id="search-results"></div><details class="nav-tree" open><summary>树状目录 · 全部内容</summary><a class="home-link" href="index.html">学习首页</a><details ><summary>第一阶段 · 看懂整机</summary><a  href="00.html">00 前言</a><a  href="01.html">01 三张架构图阅读指南</a><a  href="02.html">02 整机与虚拟化架构</a></details><details ><summary>第二阶段 · 理解模块与接口</summary><a  href="03.html">03 MT8676-SDK与UMDP</a><a  href="04.html">04 三图模块字典</a><a  href="05.html">05 通信机制与异常诊断基础</a><a  href="18.html">18 盟博OS架构与服务边界</a></details><details open><summary>第三阶段 · 走进各个运行域</summary><a  href="06.html">06 Android内部机制与稳定性</a><a  href="07.html">07 SOS-Yocto内部机制</a><a  href="08.html">08 MCU内部机制</a><a aria-current="page" href="09.html">09 TBox通信模组内部机制</a></details><details ><summary>第四阶段 · 跟随完整业务</summary><a  href="10.html">10 车辆仪表与诊断业务流程</a><a  href="11.html">11 显示相机与驾驶辅助业务流程</a><a  href="12.html">12 音频与语音业务流程</a><a  href="13.html">13 通信模块业务流程</a><a  href="19.html">19 Camera跨域架构与DDR资源预算</a></details><details ><summary>第五阶段 · 比较平台与生命周期</summary><a  href="17.html">17 MT8676与MT8668平台差异及迁移边界</a><a  href="20.html">20 跨域通信时间同步与状态一致性</a><a  href="14.html">14 系统生命周期业务流程</a></details><details ><summary>第六阶段 · 用证据解决问题</summary><a  href="15.html">15 统一诊断手册</a><a  href="23.html">23 PVT实战诊断与工程验证</a><a  href="16.html">16 全量附录与索引</a><a  href="22.html">22 来源索引与覆盖说明</a><a  href="21.html">21 学习站点分类评估与知识库映射</a></details><details><summary>原版解释 · 17 章</summary><a href="original-00.html">00 前言</a><a href="original-01.html">01 三张架构图阅读指南</a><a href="original-02.html">02 整机与虚拟化架构</a><a href="original-03.html">03 MT8676-SDK与UMDP</a><a href="original-04.html">04 三图模块字典</a><a href="original-05.html">05 通信机制与异常诊断基础</a><a href="original-06.html">06 Android内部机制与稳定性</a><a href="original-07.html">07 SOS-Yocto内部机制</a><a href="original-08.html">08 MCU内部机制</a><a href="original-09.html">09 TBox通信模组内部机制</a><a href="original-10.html">10 车辆仪表与诊断业务流程</a><a href="original-11.html">11 显示相机与驾驶辅助业务流程</a><a href="original-12.html">12 音频与语音业务流程</a><a href="original-13.html">13 通信模块业务流程</a><a href="original-14.html">14 系统生命周期业务流程</a><a href="original-15.html">15 统一诊断手册</a><a href="original-16.html">16 全量附录与索引</a></details><a href="../index.html">Day / Week 学习档案 ↗</a></details></aside><main id="main"><div class="breadcrumb"><a href="index.html">知识库</a> / 中文版 / 09</div><div class="chapter-title"><p class="eyebrow">CHAPTER 09 · 中文版全文</p><h1>TBox通信模组内部机制</h1><div class="actions"><a class="button secondary" href="compare.html?chapter=09">并排对比两套正文 ↗</a><a class="button secondary" href="original-09.html">对照原版解释 ↗</a><button class="button" data-read="09" type="button">标记已读</button><a class="button secondary" href="#chapter-text">进入完整正文 ↓</a></div></div><section class="beginner" id="beginner-guide"><p class="eyebrow">新手导读 / 逐步学习</p><h2>TBox 为什么不能简单当作网络接口？</h2><p>TBox 涉及 Modem、SIM、网络注册、数据承载、语音、GNSS 和时间服务。应用无法登录可能发生在其中任一层，也可能已经超出蜂窝链路。</p><ol><li><strong>怎么读：</strong>先读分层，再分开看数据、通话、定位和日志；把 Modem ready 与业务 ready 区分。</li><li><strong>项目练习：</strong>把“无网”拆成 SIM、注册、数据会话、IP/DNS、TLS/TSP 登录，写出各层最小证据。</li><li><strong>自检：</strong>证书认证失败可以直接归因于 Modem 吗？</li></ol><p class="note">练习用于理解已有架构；示意推演不冒充当前项目实测。阅读全文时核对来源版本与可信度标记。</p></section><div class="related"><strong>关联课程</strong> <a href="../index.html#day-20">Day 20</a></div><details class="inline-toc"><summary>本章目录 · 展开选择小节</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#09-tbox通信模组内部机制">09 TBox/通信模组内部机制</a><a class="depth-2" href="#2026-09-20-校订tbox-域modem-与-sdk-状态分层">2026-09-20 校订：TBox 域、Modem 与 SDK 状态分层</a><a class="depth-2" href="#91-部署边界">9.1 部署边界</a><a class="depth-2" href="#92-favalon-sdk-与-umdp">9.2 Favalon SDK 与 UMDP</a><a class="depth-2" href="#93-supervisor-与-readiness">9.3 Supervisor 与 readiness</a><a class="depth-2" href="#94-modem-与-telephony">9.4 Modem 与 Telephony</a><a class="depth-2" href="#95-机制族">9.5 机制族</a><a class="depth-2" href="#96-rtc唤醒与-suspendresume">9.6 RTC、唤醒与 suspend/resume</a><a class="depth-2" href="#97-log-managermount-与-journald">9.7 Log manager、mount 与 journald</a><a class="depth-2" href="#98-跨边界路径">9.8 跨边界路径</a><a class="depth-2" href="#99-资源所有权">9.9 资源所有权</a><a class="depth-2" href="#910-故障传播矩阵">9.10 故障传播矩阵</a><a class="depth-2" href="#911-模块映射">9.11 模块映射</a><a class="depth-2" href="#912-证据观察责任与待确认">9.12 证据、观察、责任与待确认</a></details><article id="chapter-text"><h1 id="09-tbox通信模组内部机制">09 TBox/通信模组内部机制</h1>
+<h2 id="2026-09-20-校订tbox-域modem-与-sdk-状态分层">2026-09-20 校订：TBox 域、Modem 与 SDK 状态分层</h2>
+<p>LLA 中 TBox 是独立 Yocto UOS 角色，蜂窝 Modem、Guest 服务和 Android 网络消费者不能合并成单一“TBox 进程”。PVT TBox 设计包含 Guest FE、Host BE 与 CCCI/语音链路；排查电话需同时考虑控制和音频数据。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S263 · MT8676 TBOX子系统架构设计.pdf · PDF第1-5页<small>〔本地来源〕</small></span></p>
+<p>8668 TBox API 使用首先确认 modem ready；除 ML_GetModemStat 外，其他接口依赖该状态。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S075 · MT8668_Yocto_T-Box_User_Manual_CN_V1.0.pdf · PDF第5-7页<small>〔本地来源〕</small></span> 无网络按 SIM→注册→数据会话→IP/路由→DNS→业务服务检查，ESM 错误不能直接等同欠费。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S304 · modem log常见分析方法.pdf · PDF第1-3页<small>〔本地来源〕</small></span></p>
+<p>GNSS/网络时间还可能参与多域校时，新增 PVT 文档明确 TBox 联网时可由 systemd-timesyncd 校时；不能无条件指定 Android 为唯一主时钟。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U002 · 3OS time synchronization.pdf · PDF第2页<small>〔本地来源〕</small></span> 时间和服务恢复见 <a href="20.html">20 章</a>。</p>
+<hr>
+<p>本章解释 TBox 域内部机制族和边界，不创建端到端业务流程卡。图 2/3 只确认可见方框、容器和显式箭头。
+[可信度：架构图确认] [证据：original-diagram-02] [证据：original-diagram-03]</p>
+<h2 id="91-部署边界">9.1 部署边界</h2>
+<p>图中明确出现 <code>UOS(TBox)</code>、<code>TBOX-APP</code>、<code>communication (MCU)</code>、<code>core communication</code>、
+<code>FDBus name_server</code>、<code>CanService (DK CAN)</code>、<code>CCCI Driver</code>、<code>Virtual CLK</code>、<code>Virtual cominfra</code>、<code>GPS</code> 和 <code>Telephony Service</code>。
+[可信度：架构图确认] [证据：original-diagram-02] [证据：original-diagram-03]</p>
+<p>这些标签只说明部署/通信视图中的位置。<code>TBOX-APP</code> 是容器；<code>modem_service</code> 标签不自动等于 UMDP 的任何具体二进制或 SDK Server。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% TBox deployment boundary
+flowchart TB
+  subgraph D[&quot;diagram 2/3 visible deployment labels&quot;]
+    U[&quot;UOS(TBox)&quot;]
+    A[&quot;TBOX-APP&quot;]
+    M[&quot;communication (MCU) / core communication&quot;]
+    F[&quot;FDBus name_server / CanService (DK CAN)&quot;]
+    K[&quot;CCCI Driver / Virtual CLK / Virtual cominfra&quot;]
+    G[&quot;GPS / Telephony Service&quot;]
+  end</pre><details><summary>查看原始图代码</summary><pre><code>%% TBox deployment boundary
+flowchart TB
+  subgraph D[&quot;diagram 2/3 visible deployment labels&quot;]
+    U[&quot;UOS(TBox)&quot;]
+    A[&quot;TBOX-APP&quot;]
+    M[&quot;communication (MCU) / core communication&quot;]
+    F[&quot;FDBus name_server / CanService (DK CAN)&quot;]
+    K[&quot;CCCI Driver / Virtual CLK / Virtual cominfra&quot;]
+    G[&quot;GPS / Telephony Service&quot;]
+  end</code></pre></details></details><h2 id="92-favalon-sdk-与-umdp">9.2 Favalon SDK 与 UMDP</h2>
+<p>Favalon SDK V1.0.166 是 Client API、示例与说明资料的基线。[可信度：MT8676 资料确认] [证据：sdk-readme]
+UMDP V1.0.226 是 recipe、unit、配置、头文件与库清单的独立基线。[可信度：MT8676 资料确认] [证据：umdp-readme-v1-0-226-txt]</p>
+<p>两版本号不可拼成单一软件版本；headers/examples 证明接口形状或示例行为，configs/recipes/unit files 证明文件直接内容。
+file presence ≠ concrete process/library call chain。SDK Server、UMDP service、图中 <code>modem_service</code> 和 TBOX-APP wrapper 的映射待进程树、链接关系与调用 trace 确认。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% SDK UMDP layering
+flowchart LR
+  A[&quot;TBOX-APP caller&quot;] --&gt; S[&quot;Favalon SDK V1.0.166 interface&quot;] --&gt; B[&quot;service boundary pending&quot;] --&gt; U[&quot;UMDP V1.0.226 integration artifacts&quot;]
+  U -. &quot;no inferred concrete call chain&quot; .-&gt; A</pre><details><summary>查看原始图代码</summary><pre><code>%% SDK UMDP layering
+flowchart LR
+  A[&quot;TBOX-APP caller&quot;] --&gt; S[&quot;Favalon SDK V1.0.166 interface&quot;] --&gt; B[&quot;service boundary pending&quot;] --&gt; U[&quot;UMDP V1.0.226 integration artifacts&quot;]
+  U -. &quot;no inferred concrete call chain&quot; .-&gt; A</code></pre></details></details><p>standard mechanism has no MT8676 evidence ID；method reference ≠ MT8676 implementation fact。</p>
+<h2 id="93-supervisor-与-readiness">9.3 Supervisor 与 readiness</h2>
+<p><code>fibo_error.h</code> 定义 <code>E_FIBO_UMDP_NOT_READY</code>；它只证明该错误符号存在，不证明全部服务采用同一 readiness 状态机。[可信度：MT8676 资料确认] [证据：umdp-files-umdp-include-fibo-sdk-fibo-error-h]
+<code>umdpprocess.ini</code> has exactly three sections with <code>ready=false</code> (<code>fb_logMgr</code>、<code>fb_modemServices</code>、<code>fb_powerMgr</code>) and excludes audio；这只表示这些 section 不要求 ready signal。[可信度：MT8676 资料确认] [证据：umdp-files-umdp-config-umdpprocess-ini]
+unit 中可见的 <code>Type=simple</code>、<code>Restart=always</code> 只说明 supervisor 配置语义。[可信度：MT8676 资料确认] [证据：umdp-files-fb-modem-service]</p>
+<table>
+<thead>
+<tr>
+<th>Claim ID</th>
+<th>Claim</th>
+<th>Confidence</th>
+<th>Evidence</th>
+<th>Support type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T9-SUP-NOTREADY</td>
+<td>fibo_error.h defines E_FIBO_UMDP_NOT_READY</td>
+<td>MT8676 资料确认</td>
+<td>umdp-files-umdp-include-fibo-sdk-fibo-error-h</td>
+<td>header</td>
+</tr>
+<tr>
+<td>T9-SUP-READYFALSE</td>
+<td>umdpprocess.ini has exactly three sections with ready=false and excludes audio</td>
+<td>MT8676 资料确认</td>
+<td>umdp-files-umdp-config-umdpprocess-ini</td>
+<td>config</td>
+</tr>
+<tr>
+<td>T9-SUP-UNIT</td>
+<td>fb_modem.service declares Type=simple and Restart=always</td>
+<td>MT8676 资料确认</td>
+<td>umdp-files-fb-modem-service</td>
+<td>unit</td>
+</tr>
+</tbody></table>
+<p>正常恢复链是 <code>supervisor/process</code> → <code>service UP</code> → <code>new client Handle</code> →
+<code>callback re-registration</code> → <code>GET/readback</code> → <code>fresh cache</code> → <code>business state validation</code>。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% TBox supervisor normal
+flowchart LR
+  P[&quot;supervisor/process&quot;] --&gt; U[&quot;service UP&quot;] --&gt; H[&quot;new client Handle&quot;] --&gt; C[&quot;callback re-registration&quot;]
+  C --&gt; G[&quot;GET/readback&quot;] --&gt; F[&quot;fresh cache&quot;] --&gt; B[&quot;business state validation&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% TBox supervisor normal
+flowchart LR
+  P[&quot;supervisor/process&quot;] --&gt; U[&quot;service UP&quot;] --&gt; H[&quot;new client Handle&quot;] --&gt; C[&quot;callback re-registration&quot;]
+  C --&gt; G[&quot;GET/readback&quot;] --&gt; F[&quot;fresh cache&quot;] --&gt; B[&quot;business state validation&quot;]</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% TBox supervisor abnormal recovery
+flowchart LR
+  T[&quot;service DOWN / ready=false / process restart&quot;] --&gt; E[&quot;first supervisor/service/session break&quot;]
+  E --&gt; S[&quot;stale Handle/callback/cache&quot;] --&gt; U[&quot;business symptom&quot;] --&gt; O[&quot;unit + service event + API return + Generation&quot;]
+  O --&gt; C[&quot;close old Handle; unregister callback&quot;] --&gt; R[&quot;wait service UP; new Handle/register&quot;] --&gt; V[&quot;GET/readback + business validation&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% TBox supervisor abnormal recovery
+flowchart LR
+  T[&quot;service DOWN / ready=false / process restart&quot;] --&gt; E[&quot;first supervisor/service/session break&quot;]
+  E --&gt; S[&quot;stale Handle/callback/cache&quot;] --&gt; U[&quot;business symptom&quot;] --&gt; O[&quot;unit + service event + API return + Generation&quot;]
+  O --&gt; C[&quot;close old Handle; unregister callback&quot;] --&gt; R[&quot;wait service UP; new Handle/register&quot;] --&gt; V[&quot;GET/readback + business validation&quot;]</code></pre></details></details><p>unit active ≠ dependency available ≠ service UP ≠ client Handle valid ≠ callback registered ≠ fresh GET/readback ≠ business state correct。
+每次服务或 client 重建产生新 Generation；service DOWN 后旧回调即使到达也不得覆盖新状态。</p>
+<h2 id="94-modem-与-telephony">9.4 Modem 与 Telephony</h2>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>将 Modem ready、SIM 可用、注册成功、PDP/数据会话、IP/路由、DNS 和 TSP 登录分成层级。MT8668 API 手册的 ready 前置要求能解释“服务已起来但接口失败”，PVT 无网案例又表明证书/TSP 失败可以发生在蜂窝链路已经正常之后。ESM_FAILURE 与信号强弱只是线索，不能只凭一个码定为欠费或硬件故障。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S075 · MT8668_Yocto_T-Box_User_Manual_CN_V1.0.pdf · PDF第5-7页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S279 · tbox整车无网络案例分享.pdf · PDF第2页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S304 · modem log常见分析方法.pdf · PDF第1-3页<small>〔本地来源〕</small></span></p>
+<p>recipe/unit 集成中出现 <code>mtktelephonyservice.service</code>；对它的 <code>After=</code> 与 <code>Requires=</code> 必须按原字段分别解释。
+[可信度：MT8676 资料确认] [证据：umdp-fibo-umdp-bb]
+<code>After=</code> ≠ <code>Requires=</code> ≠ Modem ready ≠ Telephony ready ≠ business ready。process alive 也不等于业务 ready。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Telephony dependency
+flowchart LR
+  O[&quot;ordering: After=&quot;] --&gt; U[&quot;unit activation&quot;]
+  R[&quot;requirement: Requires=&quot;] --&gt; U
+  U --&gt; M[&quot;Modem readiness&quot;] --&gt; T[&quot;Telephony readiness&quot;] --&gt; B[&quot;business readiness&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% Telephony dependency
+flowchart LR
+  O[&quot;ordering: After=&quot;] --&gt; U[&quot;unit activation&quot;]
+  R[&quot;requirement: Requires=&quot;] --&gt; U
+  U --&gt; M[&quot;Modem readiness&quot;] --&gt; T[&quot;Telephony readiness&quot;] --&gt; B[&quot;business readiness&quot;]</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Telephony abnormal recovery
+flowchart LR
+  T[&quot;modem reset/unit restart/session loss&quot;] --&gt; E[&quot;first unit/service/Handle break&quot;] --&gt; F[&quot;telephony family unavailable&quot;]
+  F --&gt; O[&quot;unit state + service event + call/network state&quot;] --&gt; C[&quot;release call/audio/client resources&quot;] --&gt; R[&quot;new Generation + readback&quot;] --&gt; V[&quot;registered/call state validation&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% Telephony abnormal recovery
+flowchart LR
+  T[&quot;modem reset/unit restart/session loss&quot;] --&gt; E[&quot;first unit/service/Handle break&quot;] --&gt; F[&quot;telephony family unavailable&quot;]
+  F --&gt; O[&quot;unit state + service event + call/network state&quot;] --&gt; C[&quot;release call/audio/client resources&quot;] --&gt; R[&quot;new Generation + readback&quot;] --&gt; V[&quot;registered/call state validation&quot;]</code></pre></details></details><p>Modem 与 Telephony 的进程边界、IPC、RIL/CCCI 路径、设备节点和恢复策略待运行证据确认；不得把 unit 排序当作 Modem 已注册网络。</p>
+<h2 id="95-机制族">9.5 机制族</h2>
+<p>下表是域内机制族，不是 Task 8 业务 flow。冻结头文件仅证明 API family/类型存在，示例不证明量产循环、超时或重试策略。</p>
+<table>
+<thead>
+<tr>
+<th>机制族</th>
+<th>输入/处理/输出</th>
+<th>生命周期、异常与回读</th>
+<th>证据边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Data call</td>
+<td>profile/request → data service → bearer state</td>
+<td>init/deinit、service event、GET state</td>
+<td>header/example direct；policy pending</td>
+</tr>
+<tr>
+<td>Network registration/abnormal indication</td>
+<td>radio/network indication → cache/callback</td>
+<td>service UP/DOWN、fresh registration readback</td>
+<td>SDK guide direct；modem cause pending</td>
+</tr>
+<tr>
+<td>SIM</td>
+<td>SIM state/request → service → status</td>
+<td>Handle/callback/GET；card change invalidates cache</td>
+<td>header direct</td>
+</tr>
+<tr>
+<td>SMS</td>
+<td>message/request → service/store/network</td>
+<td>send/receive/store events and readback</td>
+<td>header direct</td>
+</tr>
+<tr>
+<td>AT</td>
+<td>command/request → modem boundary → response/URC</td>
+<td>serialize session; reject stale URC</td>
+<td>header direct；channel pending</td>
+</tr>
+<tr>
+<td>Voice/eCall</td>
+<td>call intent/event → voice service → call state</td>
+<td>call/audio resources released before reconnect</td>
+<td>voice API direct；eCall binding pending</td>
+</tr>
+<tr>
+<td>Audio</td>
+<td>route/gain/mute → audio service → device boundary</td>
+<td>route readback and audible validation</td>
+<td>UMDP unit/header direct</td>
+</tr>
+<tr>
+<td>DM</td>
+<td>device query/control → DM service → result</td>
+<td>service event plus authoritative GET</td>
+<td>SDK/headers direct</td>
+</tr>
+<tr>
+<td>GNSS</td>
+<td>start/config → location/<code>gnss_server</code> → fixes</td>
+<td>timestamp/freshness; stop/deinit</td>
+<td>location header direct；GPS wiring pending</td>
+</tr>
+<tr>
+<td>IMU</td>
+<td>start/config → sample indication</td>
+<td>sequence/timestamp; stop/release</td>
+<td>IMU header direct</td>
+</tr>
+<tr>
+<td>Power</td>
+<td>power request/state → power service</td>
+<td>suspend/resume Generation and readback</td>
+<td>power header/unit direct</td>
+</tr>
+<tr>
+<td>WakeLock/Wakeup</td>
+<td>acquire/release or wake registration</td>
+<td>owner symmetry; stale registration rejected</td>
+<td>headers direct；wiring/policy pending</td>
+</tr>
+<tr>
+<td>Log</td>
+<td>producer → log manager/journald/storage</td>
+<td>queue/backpressure/mount/write/persistence separated</td>
+<td>config/unit direct</td>
+</tr>
+<tr>
+<td>remote control</td>
+<td>remote request → business validation → command</td>
+<td>authorization/result readback pending</td>
+<td>diagram family boundary only</td>
+</tr>
+<tr>
+<td>health monitor</td>
+<td>service/resource health → degradation/recovery</td>
+<td>detector and recovery Owner separated</td>
+<td>diagram label only</td>
+</tr>
+<tr>
+<td>update</td>
+<td>package/control → validation/staging/activation</td>
+<td>rollback/verification policy pending</td>
+<td>diagram label only</td>
+</tr>
+<tr>
+<td>xcall</td>
+<td>emergency/assistance intent → call family</td>
+<td>call/audio/location feedback pending</td>
+<td>diagram label only</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Families</th>
+<th>Earliest breakpoint</th>
+<th>Observation limits</th>
+<th>Cleanup owner</th>
+<th>Escalation artifact</th>
+<th>Post-recovery validation</th>
+<th>Claim ID</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>data/network</td>
+<td>data call; registration; abnormal indication</td>
+<td>first API return or registration-state freshness break</td>
+<td>callback loss and modem-side causes need synchronized trace</td>
+<td>data/network client session owner</td>
+<td>API return; registration event; bearer readback; Generation</td>
+<td>new Handle plus fresh registration and bearer readback</td>
+<td>T9-FAM-DATA</td>
+</tr>
+<tr>
+<td>SIM/SMS/AT</td>
+<td>SIM; SMS; AT response and URC</td>
+<td>first card-state message-store or response-sequence break</td>
+<td>private AT channel and modem cause are not visible in headers</td>
+<td>family client that created Handle and callback</td>
+<td>request/response; URC sequence; SIM state; SMS store result</td>
+<td>new session plus authoritative SIM/SMS/AT readback</td>
+<td>T9-FAM-SIM</td>
+</tr>
+<tr>
+<td>voice/eCall/audio</td>
+<td>voice; emergency call; route/gain/mute</td>
+<td>first call-state or audio-route discontinuity</td>
+<td>eCall binding and physical audio topology need runtime evidence</td>
+<td>call owner releases call/audio/client resources</td>
+<td>call events; audio route; Handle; service Generation</td>
+<td>registered call state plus route readback and audible check</td>
+<td>T9-FAM-VOICE</td>
+</tr>
+<tr>
+<td>GNSS/IMU</td>
+<td>location fixes; inertial samples</td>
+<td>first missing sequence timestamp or stale sample</td>
+<td>GPS wiring sensor mounting and fusion policy are outside header evidence</td>
+<td>location or sensor subscription owner</td>
+<td>callback sequence; timestamp; fix/sample state</td>
+<td>new subscription plus monotonically fresh fix/sample</td>
+<td>T9-FAM-GNSS</td>
+</tr>
+<tr>
+<td>power/wake</td>
+<td>power state; WakeLock; wake registration</td>
+<td>first Generation wake-reason or owner-symmetry mismatch</td>
+<td>exact wake wiring priority and hold policy need power trace</td>
+<td>acquiring client and power lifecycle owner</td>
+<td>wake reason; token owner; suspend/resume Generation</td>
+<td>old token rejected plus state readback in new Generation</td>
+<td>T9-FAM-POWER</td>
+</tr>
+<tr>
+<td>log</td>
+<td>log producer; log manager; journal/storage</td>
+<td>first enqueue write flush or persistence failure</td>
+<td>saturation can hide the earliest event and clocks may be unsynchronized</td>
+<td>producer bounds queue; log/storage owner restores target</td>
+<td>queue rate; mount/write result; journal timeline</td>
+<td>bounded queue plus write/read persistence probe</td>
+<td>T9-FAM-LOG</td>
+</tr>
+<tr>
+<td>remote/update/health</td>
+<td>remote control; update; health monitor; DM; xcall</td>
+<td>first authorization staging health or result-readback break</td>
+<td>exact private policy process and rollback topology need requested artifacts</td>
+<td>initiating business owner and affected service owner</td>
+<td>request/result; package metadata; health event; rollback trace</td>
+<td>authoritative result readback plus health and rollback verification</td>
+<td>T9-FAM-REMOTE</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Claim ID</th>
+<th>Claim</th>
+<th>Confidence</th>
+<th>Evidence</th>
+<th>Support type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T9-FAM-DATA</td>
+<td>fibo_data.h declares the data API family</td>
+<td>MT8676 资料确认</td>
+<td>umdp-files-umdp-include-fibo-sdk-fibo-data-h</td>
+<td>header</td>
+</tr>
+<tr>
+<td>T9-FAM-NW</td>
+<td>fibo_nw.h declares the network API family</td>
+<td>MT8676 资料确认</td>
+<td>umdp-files-umdp-include-fibo-sdk-fibo-nw-h</td>
+<td>header</td>
+</tr>
+<tr>
+<td>T9-FAM-SIM</td>
+<td>fibo_sim.h declares the SIM API family</td>
+<td>MT8676 资料确认</td>
+<td>umdp-files-umdp-include-fibo-sdk-fibo-sim-h</td>
+<td>header</td>
+</tr>
+<tr>
+<td>T9-FAM-SMS</td>
+<td>fibo_sms.h declares the SMS API family</td>
+<td>MT8676 资料确认</td>
+<td>umdp-files-umdp-include-fibo-sdk-fibo-sms-h</td>
+<td>header</td>
+</tr>
+<tr>
+<td>T9-FAM-AT</td>
+<td>fibo_at.h declares the AT API family</td>
+<td>MT8676 资料确认</td>
+<td>umdp-files-umdp-include-fibo-sdk-fibo-at-h</td>
+<td>header</td>
+</tr>
+<tr>
+<td>T9-FAM-VOICE</td>
+<td>fibo_voice.h declares the voice API family</td>
+<td>MT8676 资料确认</td>
+<td>umdp-files-umdp-include-fibo-sdk-fibo-voice-h</td>
+<td>header</td>
+</tr>
+<tr>
+<td>T9-FAM-AUDIO</td>
+<td>fibo_audio.h declares the audio API family</td>
+<td>MT8676 资料确认</td>
+<td>umdp-files-umdp-include-fibo-sdk-fibo-audio-h</td>
+<td>header</td>
+</tr>
+<tr>
+<td>T9-FAM-DM</td>
+<td>fibo_dm.h declares the device-management API family</td>
+<td>MT8676 资料确认</td>
+<td>umdp-files-umdp-include-fibo-sdk-fibo-dm-h</td>
+<td>header</td>
+</tr>
+<tr>
+<td>T9-FAM-GNSS</td>
+<td>fibo_location.h declares the location API family</td>
+<td>MT8676 资料确认</td>
+<td>umdp-files-umdp-include-fibo-sdk-fibo-location-h</td>
+<td>header</td>
+</tr>
+<tr>
+<td>T9-FAM-IMU</td>
+<td>fibo_imu.h declares the IMU API family</td>
+<td>MT8676 资料确认</td>
+<td>umdp-files-umdp-include-fibo-sdk-fibo-imu-h</td>
+<td>header</td>
+</tr>
+<tr>
+<td>T9-FAM-POWER</td>
+<td>fibo_power.h declares the power API family</td>
+<td>MT8676 资料确认</td>
+<td>umdp-files-umdp-include-fibo-sdk-fibo-power-h</td>
+<td>header</td>
+</tr>
+<tr>
+<td>T9-FAM-WAKELOCK</td>
+<td>fibo_wakelock.h declares the WakeLock API family</td>
+<td>MT8676 资料确认</td>
+<td>umdp-files-umdp-include-fibo-sdk-fibo-wakelock-h</td>
+<td>header</td>
+</tr>
+<tr>
+<td>T9-FAM-WAKEUP</td>
+<td>fibo_wakeup.h declares the wakeup API family</td>
+<td>MT8676 资料确认</td>
+<td>umdp-files-umdp-include-fibo-sdk-fibo-wakeup-h</td>
+<td>header</td>
+</tr>
+<tr>
+<td>T9-FAM-LOG</td>
+<td>fb_logmgr.service confirms the log-manager unit</td>
+<td>MT8676 资料确认</td>
+<td>umdp-files-fb-logmgr-service</td>
+<td>unit</td>
+</tr>
+<tr>
+<td>T9-FAM-REMOTE</td>
+<td>remote/update/health runtime contracts require process policy and trace artifacts</td>
+<td>待 MT8676 确认</td>
+<td>—</td>
+<td>requested artifact</td>
+</tr>
+</tbody></table>
+<p>上表把每个直接接口族绑定到精确 header/unit；remote/update/health 的具体运行合同保留为待补工件，不继承 SDK guide 的宽泛证据。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% TBox family normal
+flowchart LR
+  R[&quot;family request/source&quot;] --&gt; H[&quot;valid Handle/session&quot;] --&gt; S[&quot;service/API family&quot;] --&gt; C[&quot;callback or GET&quot;] --&gt; B[&quot;fresh business cache&quot;]
+  B -. &quot;readback/result&quot; .-&gt; R</pre><details><summary>查看原始图代码</summary><pre><code>%% TBox family normal
+flowchart LR
+  R[&quot;family request/source&quot;] --&gt; H[&quot;valid Handle/session&quot;] --&gt; S[&quot;service/API family&quot;] --&gt; C[&quot;callback or GET&quot;] --&gt; B[&quot;fresh business cache&quot;]
+  B -. &quot;readback/result&quot; .-&gt; R</code></pre></details></details><details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% TBox family abnormal recovery
+flowchart LR
+  T[&quot;service/session/resource fault&quot;] --&gt; E[&quot;earliest family breakpoint&quot;] --&gt; U[&quot;family unavailable/stale&quot;] --&gt; O[&quot;API return + event + state&quot;]
+  O --&gt; C[&quot;release owner resources&quot;] --&gt; R[&quot;new session/register/readback&quot;] --&gt; V[&quot;business validation&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% TBox family abnormal recovery
+flowchart LR
+  T[&quot;service/session/resource fault&quot;] --&gt; E[&quot;earliest family breakpoint&quot;] --&gt; U[&quot;family unavailable/stale&quot;] --&gt; O[&quot;API return + event + state&quot;]
+  O --&gt; C[&quot;release owner resources&quot;] --&gt; R[&quot;new session/register/readback&quot;] --&gt; V[&quot;business validation&quot;]</code></pre></details></details><h2 id="96-rtc唤醒与-suspendresume">9.6 RTC、唤醒与 suspend/resume</h2>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>PVT 时间同步文档中 TBox 接收 SOS 发来的带时间属性并设置系统时间；联网时还可用 systemd-timesyncd/NTP。此处应解释为日历时钟的同步来源，而不是自动证明 RTC 精度或跨域单调时钟共源。STR、单域重启与网络恢复后分别检查源选择、是否发生时间跳变、映射是否失效，以及依赖时间的业务状态。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">U002 · 3OS time synchronization.pdf · PDF第1-2页<small>〔本地来源〕</small></span></p>
+<p>RTC、Modem 和 independent wake source 是不同边界；exact wake wiring/policy、优先级和保持时间待原理图、电源配置和 trace 确认。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Suspend resume generation
+stateDiagram-v2
+ [*] --&gt; Active
+ Active --&gt; Quiesce: suspend request
+ Quiesce --&gt; Suspended
+ Suspended --&gt; Resume: RTC/Modem/independent wake
+ Resume --&gt; Active: new Generation + state readback
+ Resume --&gt; Degraded: service/session restore failure</pre><details><summary>查看原始图代码</summary><pre><code>%% Suspend resume generation
+stateDiagram-v2
+ [*] --&gt; Active
+ Active --&gt; Quiesce: suspend request
+ Quiesce --&gt; Suspended
+ Suspended --&gt; Resume: RTC/Modem/independent wake
+ Resume --&gt; Active: new Generation + state readback
+ Resume --&gt; Degraded: service/session restore failure</code></pre></details></details><p>old session alive ≠ current Generation valid。resume 后必须重新判定 unit、service、Handle、callback、fresh GET 与 business state，不能复用 suspend 前缓存作为 Ready 证据。</p>
+<h2 id="97-log-managermount-与-journald">9.7 Log manager、mount 与 journald</h2>
+<p><strong>资料核对后的架构解释（2026-09-20）</strong></p>
+<p>日志职责覆盖采集、缓存、落盘与跨域导出。PVT 给出的 modemlogger 路径/模式受镜像和客户配置影响；Host 读取 UOS pstore 与 shutdown 写块路径又解决不同生命周期窗口的取证。不能把某个目录不存在解释成没有故障，也不能假定 DRAM 中的 ramoops 在完全断电后仍存在。<span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S305 · Tbox_Telephony_MD and mdlog SOP.pdf · PDF第2-4页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S272 · MTK_Log_SOS_dump_uos_pstore.pdf · PDF第3页<small>〔本地来源〕</small></span> <span class="local-source" title="原文件保存在本地项目资料库，按名称与页码查阅">S273 · MTK_Log_SOS_shutdown_pstore_dump_to_BLK.pdf · PDF第3页<small>〔本地来源〕</small></span></p>
+<p><code>fb_logmgr.service</code> 和 log manager 配置是冻结 UMDP 内容。[可信度：MT8676 资料确认] [证据：umdp-files-fb-logmgr-service]
+mount dependency present ≠ writable storage ≠ persistent log ≠ business readiness。</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% Log storage abnormal recovery
+flowchart LR
+  T[&quot;mount late/read-only/full or journal backlog&quot;] --&gt; E[&quot;first write/flush/persist failure&quot;] --&gt; Q[&quot;log/storage queue&quot;]
+  Q --&gt; U[&quot;missing/saturated evidence&quot;] --&gt; O[&quot;mount + write result + journal rate&quot;] --&gt; C[&quot;bound queue/rotate safely&quot;] --&gt; R[&quot;restore writable target&quot;] --&gt; V[&quot;write/read persistence probe&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% Log storage abnormal recovery
+flowchart LR
+  T[&quot;mount late/read-only/full or journal backlog&quot;] --&gt; E[&quot;first write/flush/persist failure&quot;] --&gt; Q[&quot;log/storage queue&quot;]
+  Q --&gt; U[&quot;missing/saturated evidence&quot;] --&gt; O[&quot;mount + write result + journal rate&quot;] --&gt; C[&quot;bound queue/rotate safely&quot;] --&gt; R[&quot;restore writable target&quot;] --&gt; V[&quot;write/read persistence probe&quot;]</code></pre></details></details><p>日志饱和可能反向拖慢业务线程；恢复应保留关键 fault timeline，不以无限重试扩大队列。挂载存在、可写、落盘、重启后持久和业务可用要逐级验证。</p>
+<h2 id="98-跨边界路径">9.8 跨边界路径</h2>
+<p>图 3 直接确认部署视图中可见 <code>TBOX-APP</code>、<code>communication (MCU)</code>、<code>CanService (DK CAN)</code>、<code>SPI</code> 与 <code>MCU</code> 标签；下图实线只表达这些标签属于同一可见部署视图，不表达逐跳调用。[可信度：架构图确认] [证据：original-diagram-03]</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% TBox MCU visible deployment
+flowchart TB
+  D[&quot;diagram 3 visible deployment&quot;] --&gt; B[&quot;TBOX-APP&quot;]
+  D --&gt; C[&quot;communication (MCU)&quot;]
+  D --&gt; S[&quot;CanService (DK CAN)&quot;]
+  D --&gt; I[&quot;SPI&quot;]
+  D --&gt; M[&quot;MCU&quot;]</pre><details><summary>查看原始图代码</summary><pre><code>%% TBox MCU visible deployment
+flowchart TB
+  D[&quot;diagram 3 visible deployment&quot;] --&gt; B[&quot;TBOX-APP&quot;]
+  D --&gt; C[&quot;communication (MCU)&quot;]
+  D --&gt; S[&quot;CanService (DK CAN)&quot;]
+  D --&gt; I[&quot;SPI&quot;]
+  D --&gt; M[&quot;MCU&quot;]</code></pre></details></details><p>TBox↔MCU 的业务 → communication → CanService → SPI/IPCL → MCU 及回程仅是待核候选，不能继承上述图证据；每条候选边均等待接口配置、路由表与双向抓包确认。[可信度：待 MT8676 确认]</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% TBox MCU boundary candidate
+flowchart LR
+  B[&quot;TBOX-APP business&quot;] -. &quot;[可信度：待 MT8676 确认]&quot; .-&gt; C[&quot;communication (MCU)&quot;]
+  C -. &quot;[可信度：待 MT8676 确认]&quot; .-&gt; S[&quot;CanService (DK CAN)&quot;]
+  S -. &quot;[可信度：待 MT8676 确认]&quot; .-&gt; I[&quot;SPI/IPCL boundary&quot;]
+  I -. &quot;[可信度：待 MT8676 确认]&quot; .-&gt; M[MCU]
+  M -. &quot;[可信度：待 MT8676 确认]&quot; .-&gt; B</pre><details><summary>查看原始图代码</summary><pre><code>%% TBox MCU boundary candidate
+flowchart LR
+  B[&quot;TBOX-APP business&quot;] -. &quot;[可信度：待 MT8676 确认]&quot; .-&gt; C[&quot;communication (MCU)&quot;]
+  C -. &quot;[可信度：待 MT8676 确认]&quot; .-&gt; S[&quot;CanService (DK CAN)&quot;]
+  S -. &quot;[可信度：待 MT8676 确认]&quot; .-&gt; I[&quot;SPI/IPCL boundary&quot;]
+  I -. &quot;[可信度：待 MT8676 确认]&quot; .-&gt; M[MCU]
+  M -. &quot;[可信度：待 MT8676 确认]&quot; .-&gt; B</code></pre></details></details><table>
+<thead>
+<tr>
+<th>Claim ID</th>
+<th>Claim</th>
+<th>Confidence</th>
+<th>Evidence</th>
+<th>Support type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T9-MCU-VISIBLE</td>
+<td>diagram 3 visibly places the five named labels in its deployment view</td>
+<td>架构图确认</td>
+<td>original-diagram-03</td>
+<td>containment</td>
+</tr>
+<tr>
+<td>T9-MCU-CAND</td>
+<td>the ordered TBox business-to-MCU request and feedback chain needs runtime confirmation</td>
+<td>待 MT8676 确认</td>
+<td>—</td>
+<td>requested artifact</td>
+</tr>
+</tbody></table>
+<p>TBox↔SoC 只在图/配置支持处讨论 SOME/IP、FDBus、Ethernet 或 virtio；下图逐跳关系是待核候选，当前证据不允许补造 endpoint、private ID 或固定拓扑。[可信度：待 MT8676 确认]</p>
+<details class="diagram"><summary>展开架构图（原图代码保留）</summary><pre class="mermaid">%% TBox SoC boundary candidate
+flowchart LR
+  B[&quot;TBOX-APP business&quot;] -. &quot;[可信度：待 MT8676 确认]&quot; .-&gt; C[&quot;core communication&quot;] -. &quot;[可信度：待 MT8676 确认]&quot; .-&gt; N[&quot;FDBus name_server / FDBus / SOME/IP boundary&quot;] -. &quot;[可信度：待 MT8676 确认]&quot; .-&gt; S[&quot;SoC consumer&quot;]
+  S -. &quot;[可信度：待 MT8676 确认]&quot; .-&gt; B
+  V[&quot;Ethernet/virtio applicability pending&quot;] -. &quot;[可信度：待 MT8676 确认]&quot; .-&gt; N</pre><details><summary>查看原始图代码</summary><pre><code>%% TBox SoC boundary candidate
+flowchart LR
+  B[&quot;TBOX-APP business&quot;] -. &quot;[可信度：待 MT8676 确认]&quot; .-&gt; C[&quot;core communication&quot;] -. &quot;[可信度：待 MT8676 确认]&quot; .-&gt; N[&quot;FDBus name_server / FDBus / SOME/IP boundary&quot;] -. &quot;[可信度：待 MT8676 确认]&quot; .-&gt; S[&quot;SoC consumer&quot;]
+  S -. &quot;[可信度：待 MT8676 确认]&quot; .-&gt; B
+  V[&quot;Ethernet/virtio applicability pending&quot;] -. &quot;[可信度：待 MT8676 确认]&quot; .-&gt; N</code></pre></details></details><p>物理 traffic ≠ decoded transport ≠ middleware delivery ≠ consumer update ≠ rendered/user-visible state ≠ feedback。</p>
+<h2 id="99-资源所有权">9.9 资源所有权</h2>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Creator</th>
+<th>Holder</th>
+<th>Consumer</th>
+<th>Releaser</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>client Handle/session</td>
+<td>SDK client init/connect</td>
+<td>当前 Generation client</td>
+<td>API family caller</td>
+<td>deinit/disconnect/death cleanup owner</td>
+</tr>
+<tr>
+<td>callback registration</td>
+<td>client registration call</td>
+<td>client/service subscription state</td>
+<td>business event consumer</td>
+<td>unregister/deinit/service-death owner</td>
+</tr>
+<tr>
+<td>WakeLock</td>
+<td>requesting client/service</td>
+<td>power manager record + caller token</td>
+<td>protected operation</td>
+<td>matching release/death cleanup owner</td>
+</tr>
+<tr>
+<td>log/storage queue</td>
+<td>logger/log manager</td>
+<td>memory queue/journal/storage writer</td>
+<td>diagnostics/collector</td>
+<td>flush/drop/rotate/unmount owner</td>
+</tr>
+</tbody></table>
+<p>normal chain 与 reverse feedback/control chain 必须携带 lifecycle/readiness/freshness/Generation。
+queue/backpressure/overflow 需记录 producer、holder、drop/block 与 cleanup；exact timeout/retry/threshold、exact recovery policy 均待确认。</p>
+<h2 id="910-故障传播矩阵">9.10 故障传播矩阵</h2>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>Earliest breakpoint</th>
+<th>Direct failed module</th>
+<th>Downstream propagation</th>
+<th>User symptom</th>
+<th>Detector/evidence</th>
+<th>Cleanup/recovery</th>
+<th>Post-recovery validation</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>supervisor/service DOWN</td>
+<td>首个 unit/service event</td>
+<td>supervisor/service</td>
+<td>Handle/callback/cache stale</td>
+<td>通信功能不可用</td>
+<td>unit、service event、API return</td>
+<td>close/unregister/new Generation</td>
+<td>GET/readback/business validation</td>
+<td>service Owner</td>
+</tr>
+<tr>
+<td>Modem/Telephony not ready</td>
+<td>首个 modem/telephony readiness gate</td>
+<td>modem/telephony boundary</td>
+<td>data/call/SMS family blocked</td>
+<td>无网/无呼叫</td>
+<td>state/event/registration/call trace</td>
+<td>release sessions/resources</td>
+<td>fresh network/call readback</td>
+<td>modem/telephony Owner</td>
+</tr>
+<tr>
+<td>suspend/resume stale session</td>
+<td>首个 Generation mismatch</td>
+<td>lifecycle/client owner</td>
+<td>callback updates wrong cache</td>
+<td>恢复后状态错误</td>
+<td>wake reason、Generation、Handle</td>
+<td>reject old; recreate/register</td>
+<td>fresh GET + result</td>
+<td>power/lifecycle Owner</td>
+</tr>
+<tr>
+<td>log mount/write/backpressure</td>
+<td>首个 write/flush failure</td>
+<td>log manager/storage</td>
+<td>evidence loss or thread stall</td>
+<td>日志缺失/业务卡顿</td>
+<td>mount/write/journal/queue</td>
+<td>bound queue、restore target</td>
+<td>persistence probe</td>
+<td>log/storage Owner</td>
+</tr>
+<tr>
+<td>SPI/IPCL or middleware fault</td>
+<td>首个 physical/decoded/delivery gap</td>
+<td>communication/core communication</td>
+<td>consumer old/no state</td>
+<td>远程/车辆功能异常</td>
+<td>capture、sequence、routing、callback</td>
+<td>flush/reconnect/resubscribe</td>
+<td>fresh feedback</td>
+<td>boundary Owner</td>
+</tr>
+</tbody></table>
+<p>earliest observable breakpoint 用 commands/logs/counters/traces 确定；observation limit 包括日志丢失、时钟未同步和采样盲区。
+initial Owner 保留 escalation artifacts：unit/config/version、service event、Generation、API return、跨边界抓包、资源 owner 和回读结果。</p>
+<h2 id="911-模块映射">9.11 模块映射</h2>
+<p>图 2/3 TBox occurrence 唯一映射如下；容器与 runtime 标签不混淆。
+[可信度：架构图确认] [证据：original-diagram-02] [证据：original-diagram-03]</p>
+<table>
+<thead>
+<tr>
+<th>Occurrence</th>
+<th>图中标签</th>
+<th>Canonical landing</th>
+<th>Related references</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>d02-019</td>
+<td>Guest(UOS Tbox)</td>
+<td>§9.1 domain container</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-020</td>
+<td>Application</td>
+<td>§9.1 application container</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-021</td>
+<td>Tbox</td>
+<td>§9.1 multi-role label</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-022</td>
+<td>GPS</td>
+<td>§9.5 GNSS boundary</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-023</td>
+<td>Telephony Service</td>
+<td>§9.4</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-024</td>
+<td>Virtual cominfra</td>
+<td>§9.1 visible deployment</td>
+<td>§9.8</td>
+</tr>
+<tr>
+<td>d02-025</td>
+<td>Virtual CLK</td>
+<td>§9.1 visible deployment</td>
+<td>§9.6</td>
+</tr>
+<tr>
+<td>d02-026</td>
+<td>Kernel&amp; Drivers</td>
+<td>§9.1 driver container</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d02-027</td>
+<td>CCCI Driver</td>
+<td>§9.1 visible deployment</td>
+<td>§9.4</td>
+</tr>
+<tr>
+<td>d03-048</td>
+<td>UOS(TBox)</td>
+<td>§9.1 domain container</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-049</td>
+<td>TBOX-APP</td>
+<td>§9.1 application container</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-050</td>
+<td>update</td>
+<td>§9.5 remote/update/health group</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-051</td>
+<td>xcall</td>
+<td>§9.5 voice/eCall/audio group</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-052</td>
+<td>health_monitor</td>
+<td>§9.5 remote/update/health group</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-053</td>
+<td>modem_service</td>
+<td>§9.4 process mapping pending</td>
+<td>§9.1</td>
+</tr>
+<tr>
+<td>d03-054</td>
+<td>syslog</td>
+<td>§9.7</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-055</td>
+<td>dynamic</td>
+<td>§9.5 semantics pending</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-056</td>
+<td>business</td>
+<td>§9.5 semantics pending</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-057</td>
+<td>gnss_server</td>
+<td>§9.5 GNSS/IMU group</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-058</td>
+<td>communication (MCU)</td>
+<td>§9.8 visible label</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-059</td>
+<td>core communication</td>
+<td>§9.8 SoC boundary</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-060</td>
+<td>CanService (DK CAN)</td>
+<td>§9.8 visible label</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-061</td>
+<td>FDBus</td>
+<td>§9.8 SoC boundary</td>
+<td>none</td>
+</tr>
+<tr>
+<td>d03-062</td>
+<td>FDBus name_server</td>
+<td>§9.1 visible deployment</td>
+<td>§9.8</td>
+</tr>
+<tr>
+<td>d03-063</td>
+<td>SPI</td>
+<td>§9.8 visible label</td>
+<td>none</td>
+</tr>
+</tbody></table>
+<h2 id="912-证据观察责任与待确认">9.12 证据、观察、责任与待确认</h2>
+<p>SDK/UMDP 文件只证明直接内容，不证明 concrete runtime call chain；图只证明 occurrence 与显式连线。
+general problem-analysis documents 是方法参考。private process identity、private framing/channel <code>IDs</code>、exact timeout/retry/threshold、exact wake wiring/policy、exact hardware topology、exact recovery policy 均待 MT8676 确认。</p>
+<p>待补工件：TBox 进程树/二进制哈希/链接关系、unit 完整依赖、服务注册与 UP/DOWN trace、Handle/callback/GET 日志、Modem/Telephony 状态、CCCI/设备节点、SPI/IPCL/FDBus/SOME-IP 配置与抓包、电源 wake trace、mount/journald/storage evidence。</p>
+<hr>
+<p><a href="index.html">返回主题导航</a> · <a href="22.html">本次来源索引</a></p>
+</article><nav class="pager"><a href="08.html">← 上一步：MCU内部机制</a><a href="10.html">下一步：车辆仪表与诊断业务流程 →</a></nav></main><aside class="toc"><details open><summary>本章目录</summary><a href="#beginner-guide">新手导读</a><a class="depth-1" href="#09-tbox通信模组内部机制">09 TBox/通信模组内部机制</a><a class="depth-2" href="#2026-09-20-校订tbox-域modem-与-sdk-状态分层">2026-09-20 校订：TBox 域、Modem 与 SDK 状态分层</a><a class="depth-2" href="#91-部署边界">9.1 部署边界</a><a class="depth-2" href="#92-favalon-sdk-与-umdp">9.2 Favalon SDK 与 UMDP</a><a class="depth-2" href="#93-supervisor-与-readiness">9.3 Supervisor 与 readiness</a><a class="depth-2" href="#94-modem-与-telephony">9.4 Modem 与 Telephony</a><a class="depth-2" href="#95-机制族">9.5 机制族</a><a class="depth-2" href="#96-rtc唤醒与-suspendresume">9.6 RTC、唤醒与 suspend/resume</a><a class="depth-2" href="#97-log-managermount-与-journald">9.7 Log manager、mount 与 journald</a><a class="depth-2" href="#98-跨边界路径">9.8 跨边界路径</a><a class="depth-2" href="#99-资源所有权">9.9 资源所有权</a><a class="depth-2" href="#910-故障传播矩阵">9.10 故障传播矩阵</a><a class="depth-2" href="#911-模块映射">9.11 模块映射</a><a class="depth-2" href="#912-证据观察责任与待确认">9.12 证据、观察、责任与待确认</a></details></aside></div><footer>资料更新 2026-09-20 · 平台事实、项目证据与教学练习分别记录。阅读标记只保存在本浏览器，不代表已掌握或实机通过。</footer><script src="library.js" defer></script></body></html>
