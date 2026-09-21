@@ -30,7 +30,7 @@ GitHub 文件页面用于查看或下载资料，不等同于运行后的网页�
 
 围绕“模块在哪里运行、负责什么、如何通信、怎样验证业务完成”组织项目材料。包含整机与虚拟化、Android、SOS / Yocto、MCU、TBox、车辆服务、显示与 Camera、音频、通信、启动与休眠唤醒、升级和诊断等主题。
 
-提供 25 个中文版章节、17 个原版对照章节、六阶段学习路线、树状目录、全文检索和并排对比。
+提供 25 个中文版章节、六阶段学习路线、树状目录、全文检索和并排对比。
 
 推荐先按六阶段路线建立整机认识，再按模块或业务链路查阅；分析问题时结合来源材料、日志和验证记录判断，区分资料事实、教学推演与实机结论。
 
@@ -44,24 +44,3 @@ GitHub 文件页面用于查看或下载资料，不等同于运行后的网页�
 
 推荐按 Day 顺序持续学习，结合 Week 内容复盘；需要理解专题在项目中的具体实现时，再打开“座舱架构实践”查阅相应模块与链路。
 
-## 如何分别打开两个网页
-
-下载或克隆本私有仓库后，安装 Python，在仓库根目录执行：
-
-```sh
-python -m http.server 8766 --bind 127.0.0.1 --directory docs
-```
-
-保持服务运行，即可分别点击上表两个网页地址，也可在两个浏览器标签页中同时阅读。Windows 用户可在 PowerShell 中运行 `./scripts/Start-PrivatePreview.ps1` 启动同一服务。服务仅监听本机，请保留 `--bind 127.0.0.1`；阅读结束后按 Ctrl+C 停止。
-
-## 内容维护与构建
-
-构建：安装 Node.js 后执行 npm install，再执行 npm run build 和 npm test。链接核验使用 python scripts/verify-links.py。
-
-正文来自 content/architecture.json，入门导读来自 content/beginner-guides.mjs；content/course-archive.html 保存已核对的 50 条课程。docs 为生成的静态发布目录。更新课程时先更新课程快照再构建，避免使用历史课程源覆盖新内容。
-
-架构章节 489 处图表由 248 份不同 Mermaid 源码生成，8 类图片图表已按源图重绘，原图片保留对照。Android 分层与整机部署图提供总览、分区及完整图，支持大屏阅读和清晰字号。370 个去重来源提供逐页文字、原件或明确的覆盖状态；841 处引用指向站内材料页。downloads 提供可导入 ChatGPT 项目的文字与 Mermaid 资料包。空文件、旧版 DOC 和损坏图片不假称已完整提取。
-
-正文、原始材料、搜索索引、Mermaid 源码及下载包均按私有资料管理。请勿发布到公开仓库、公开 Pages、公开构建产物或无鉴权的文件直链。后续线上阅读需另行配置真正的访问鉴权；隐藏菜单、robots.txt 或前端密码框不构成访问限制。
-
-新增来源数据位于 content/sources，图片重绘源码位于 content/diagrams。构建后以 scripts/verify-links.py 检查本地链接。Mermaid 10.9.5 已固定并随站点分发，其许可位于 docs/architecture/vendor/mermaid-LICENSE.txt。
