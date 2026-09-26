@@ -1,0 +1,43 @@
+name: 提交学习答卷
+description: 提交 Day 或 Week 的文字答案、图表、图片及文件附件
+title: "[答卷][课程编号] 学习答卷"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请从课程末尾的“上传／提交答卷”进入，课程编号会自动填好。
+        答卷、附件和批改记录公开可见。不要上传公司机密、个人隐私或凭据。
+        点击底部 Submit new issue 才会保存。每日 20:00 优先扫描新答卷并批改，再安排课程。
+        补交请在同一答卷下评论，以 **[补交]** 开头，不必反复新建答卷。
+  - type: input
+    id: lesson
+    attributes:
+      label: 课程编号
+      description: 保留自动填入的编号，例如 day-1、week-entry-1、week-11-saturday。
+      placeholder: day-1
+    validations:
+      required: true
+  - type: input
+    id: course
+    attributes:
+      label: 课程链接
+      description: 保留课程页面链接，便于按原题批改。
+    validations:
+      required: true
+  - type: textarea
+    id: answers
+    attributes:
+      label: 答卷正文与附件
+      description: 按题号填写；可拖入或选择图片、PDF、Word、Markdown 等 GitHub 支持的附件。仅附件作答时注明题号和附件名称。
+      placeholder: |
+        第1题：我的回答……
+        第2题：我的回答……
+        图与附件：拖入文件，等待上传完成后再提交。
+        未完成的题目：……
+    validations:
+      required: true
+  - type: textarea
+    id: questions
+    attributes:
+      label: 疑问与需要重点反馈的部分
+      placeholder: 哪个状态、链路或证据还不理解？可留空。

@@ -1,0 +1,11 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {recordAnswerReview} from './answer-queue.mjs';
+const root=resolve(fileURLToPath(new URL('..',import.meta.url)));
+const arg=process.argv.indexOf('--input');
+if(arg<0||!process.argv[arg+1])throw new Error('Use --input <review.json>');
+const path=resolve(root,'content/submissions.json');
+const result=recordAnswerReview(JSON.parse(readFileSync(path,'utf8')),JSON.parse(readFileSync(resolve(process.argv[arg+1]),'utf8')),root);
+writeFileSync(path,JSON.stringify(result,null,2)+'\n');
+console.log('Review recorded; rebuild courses and publish answer, feedback and index together.');

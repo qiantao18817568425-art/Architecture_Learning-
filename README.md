@@ -8,6 +8,7 @@
 | --- | --- | --- |
 | **1、座舱架构实践** | [打开座舱架构实践](https://qiantao18817568425-art.github.io/Architecture_Learning-/architecture/index.html) | 项目架构、模块职责、业务链路及工程问题分析。 |
 | **2、座舱架构学习** | [打开座舱架构学习](https://qiantao18817568425-art.github.io/Architecture_Learning-/) | 每天的专题课程与学习任务，以及每周专题学习和复盘。 |
+| **3、答卷提交与批改** | [打开答卷中心](https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html) | 每课上传文字或附件、查看答卷、补交和批改记录。 |
 
 仓库已转为公开，GitHub Pages 已启用，发布目录为 `main` 分支的 `docs`。两个网站现已公开发布，手机、其他电脑及任何读者均可直接阅读，无需 GitHub 登录或接受协作者邀请。
 
@@ -27,10 +28,16 @@
 
 - **每天专题（Day）**：按专题阅读课程正文、参考文章与视频，完成对应任务和练习。
 - **每周专题与复盘（Week）**：回顾当周主题，梳理知识关联、问题和学习总结。
-- **当前归档（2026-09-26）**：Day 1—37 与 16 条周复盘，共 53 条 Day / Week 档案。最新为 [Day 37：Audio IV](https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-37.html)。
+- **当前归档（2026-09-26）**：Day 1—37 材料与 17 条周复盘，共 54 条档案。今日为 [Week 11 周六音频巩固](https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/week-11-saturday.html)；[Day 37：Audio IV](https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-37.html) 为 9 月 28 日周一预备材料，正式安排进度仍到 Day 36。
 
-每天北京时间 20:00 按学习台账继续准备课程、复盘和 GitHub 同步，直至结业。目标、每日节奏、作答评审和结业门槛见 [学习总控](LEARNING_CONTROL.md)。材料已发布不等于学习者已经掌握；Day 34—37 当前均待作答评审。
+每天北京时间 20:00 按学习台账继续准备课程、复盘和 GitHub 同步，直至结业。目标、每日节奏、作答评审和结业门槛见 [学习总控](LEARNING_CONTROL.md)。材料已发布不等于学习者已经掌握；Day 34—36 待作答评审，Day 37 尚未正式安排。星期优先：周一至周四推进新课，周五反思总结，周六巩固与综合题，周日综合复盘和方案整合；周五至周日不推进普通 Day。
 
 课程维护：既有 Day 1—36 正文保存在 `content/course-archive.html`，新增课程在 `content/lessons/`，发布与评审状态在 `content/learning-progress.json`。运行 `npm run build:courses` 生成归档与独立课页，运行 `npm run test:courses` 检查正文保留、锚点及重复构建；完整知识库构建也会调用同一课程生成器。
 
 推荐按 Day 顺序持续学习，结合 Week 内容复盘；需要理解专题在项目中的具体实现时，再打开“座舱架构实践”查阅相应模块与链路。
+
+## 提交答卷
+
+每个历史与新增 Day / Week 正文末尾都有“上传／提交答卷”。登录 GitHub 后填写文字或拖入附件，点击 Submit new issue 即保存到 GitHub。每天 20:00 **先扫描新答卷并批改，再按星期安排任务**；没有新答卷直接继续。编辑原答卷或在原答卷下用 `[补交]` 开头评论会重新批改，旧版本保留。
+
+答卷、附件与批改公开可见。附件原件保存在 GitHub 附件服务；每日将正文、补交、附件链接和批改同步归档到仓库。详细操作与异常处理见 [答卷使用说明](ANSWER_WORKFLOW.md)。定时执行依赖本机 Codex 保持运行。
