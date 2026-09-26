@@ -13,12 +13,13 @@ test('all 25 Chinese and 17 original chapters have full text and beginner guides
   assert.equal((body.match(/<h[1-6] id=/g)||[]).length,sourceHeadings.length,`all headings present: ${item.edition} ${item.id}`);
  }
 });
-test('course archive preserves all 50 articles and adds stable destinations',()=>{
+test('course archive preserves legacy articles and adds new courses with stable destinations',()=>{
  const before=read('content/course-archive.html'),after=read('docs/index.html');
  const articles=s=>s.replace(/\r/g,'').match(/<article>[\s\S]*?<\/article>/g);
- assert.ok(JSON.stringify(articles(after))===JSON.stringify(articles(before)),'all course articles preserved');assert.equal(articles(after).length,50);
- for(let n=1;n<=34;n++)assert.ok(after.includes(`id="day-${n}"`));
- assert.ok(after.includes('architecture/index.html'));assert.ok(after.includes('按主题学习'));
+ const progress=JSON.parse(read('content/learning-progress.json'));
+ assert.deepEqual(articles(after).slice(0,articles(before).length),articles(before),'all legacy articles preserved');assert.equal(articles(after).length,articles(before).length+progress.lessons.length);
+ for(let n=1;n<=JSON.parse(read('content/learning-progress.json')).lastPublishedDay;n++)assert.ok(after.includes(`id="day-${n}"`));
+ assert.ok(after.includes('architecture/index.html'));assert.ok(after.includes('完整架构实践知识库'));
 });
 test('curriculum offers progression, comparisons, examples and full text search',()=>{
  const home=read('docs/architecture/index.html');

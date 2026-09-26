@@ -27,7 +27,10 @@
 
 - **每天专题（Day）**：按专题阅读课程正文、参考文章与视频，完成对应任务和练习。
 - **每周专题与复盘（Week）**：回顾当周主题，梳理知识关联、问题和学习总结。
-- **当前归档**：Day 1—34 与 16 条周复盘，共 50 条 Day / Week 档案；后续以页面实际内容为准。
+- **当前归档（2026-09-26）**：Day 1—37 与 16 条周复盘，共 53 条 Day / Week 档案。最新为 [Day 37：Audio IV](https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-37.html)。
+
+每天北京时间 20:00 按学习台账继续准备课程、复盘和 GitHub 同步，直至结业。目标、每日节奏、作答评审和结业门槛见 [学习总控](LEARNING_CONTROL.md)。材料已发布不等于学习者已经掌握；Day 34—37 当前均待作答评审。
+
+课程维护：既有 Day 1—36 正文保存在 `content/course-archive.html`，新增课程在 `content/lessons/`，发布与评审状态在 `content/learning-progress.json`。运行 `npm run build:courses` 生成归档与独立课页，运行 `npm run test:courses` 检查正文保留、锚点及重复构建；完整知识库构建也会调用同一课程生成器。
 
 推荐按 Day 顺序持续学习，结合 Week 内容复盘；需要理解专题在项目中的具体实现时，再打开“座舱架构实践”查阅相应模块与链路。
-
