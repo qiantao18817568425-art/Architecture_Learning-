@@ -28,9 +28,9 @@
 
 - **每天专题（Day）**：按专题阅读课程正文、参考文章与视频，完成对应任务和练习。
 - **每周专题与复盘（Week）**：回顾当周主题，梳理知识关联、问题和学习总结。
-- **当前归档（2026-09-27）**：Day 1—37 材料与 18 条周复盘，共 55 条档案。今日为 [Week 11 周日音频证据链、恢复方案与测试整合](https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/week-11-sunday.html)；[Day 37：Audio IV](https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-37.html) 为 9 月 28 日周一预备材料，正式安排进度仍到 Day 36。
+- **当前归档（2026-09-29）**：Day 1—37 材料与 18 条周复盘，共 55 条档案。今日（周二、Week 12）正式安排已有的 [Day 37：Audio IV](https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-37.html)。9 月 28 日未见正式安排记录，顺延至今日，不补造记录、不跳课；正式安排进度至 Day 37。
 
-每天北京时间 20:00 按学习台账继续准备课程、复盘和 GitHub 同步，直至结业。目标、每日节奏、作答评审和结业门槛见 [学习总控](LEARNING_CONTROL.md)。材料已发布不等于学习者已经掌握；Day 34—36 待作答评审，Day 37 尚未正式安排。星期优先：周一至周四推进新课，周五反思总结，周六巩固与综合题，周日综合复盘和方案整合；周五至周日不推进普通 Day。
+每天北京时间 20:00 按学习台账继续准备课程、复盘和 GitHub 同步，直至结业。目标、每日节奏、作答评审和结业门槛见 [学习总控](LEARNING_CONTROL.md)。材料已发布不等于学习者已经掌握；Day 34—37 待作答评审。星期优先：周一至周四推进新课，周五反思总结，周六巩固与综合题，周日综合复盘和方案整合；周五至周日不推进普通 Day。
 
 课程维护：既有 Day 1—36 正文保存在 `content/course-archive.html`，新增课程在 `content/lessons/`，发布与评审状态在 `content/learning-progress.json`。运行 `npm run build:courses` 生成归档与独立课页，运行 `npm run test:courses` 检查正文保留、锚点及重复构建；完整知识库构建也会调用同一课程生成器。
 
