@@ -1,0 +1,501 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Day 41 - Hypervisor / VM Reset I：故障域与设备状态重建</title><style>
+    :root { color-scheme: light; font-family: "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif; color: #18212f; background: #f6f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.75; }
+    a { color: #075fbd; overflow-wrap: anywhere; }
+    code { background: #edf1f6; border-radius: 3px; padding: .08rem .28rem; }
+    pre { overflow: auto; background: #111827; color: #e5e7eb; padding: 1rem; border-radius: 6px; white-space: pre-wrap; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
+    header { border-left: 5px solid #db5a2a; padding: 12px 20px; margin-bottom: 28px; background: #fff; }
+    h1, h2, h3, h4, h5, h6 { line-height: 1.35; margin: 1.35em 0 .5em; }
+    h1 { margin: 0; font-size: 2rem; }
+    .lede { max-width: 840px; margin: .5rem 0 0; color: #4b5563; }
+    .metrics { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 26px; }
+    .metric { background: #e6eff8; border: 1px solid #bfd5ea; padding: 6px 12px; border-radius: 4px; color: #174a76; }
+    .metric strong { font-size: 1.15rem; }
+    .guide { background: #fff; border-top: 2px solid #1d8093; padding: 18px 22px; margin: 24px 0; }
+    .guide ol { margin-bottom: 0; }
+    .lesson { background: #fff; border: 1px solid #d8dee8; margin: 10px 0; }
+    summary { cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 18px; }
+    summary::-webkit-details-marker { color: #db5a2a; }
+    .lesson-title { font-weight: 700; font-size: 1.05rem; }
+    .lesson-meta { color: #52606d; font-size: .86rem; white-space: nowrap; }
+    .lesson-body { border-top: 1px solid #d8dee8; padding: 4px 22px 24px; }
+    .archive-note { color: #52606d; font-size: .92rem; border-left: 3px solid #1d8093; padding-left: 10px; }
+    .format-audit { border: 1px solid #b8d5cf; background: #f4fbf8; padding: 16px; margin: 18px 0; border-radius: 6px; }
+    .format-audit h3 { margin-top: 0; }
+    .format-audit ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+    .format-audit li { border: 1px solid #d8dee8; background: #fff; border-radius: 5px; padding: 8px; font-size: .9rem; }
+    .format-audit span { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+    .format-audit .present span { background: #dbece8; color: #126458; }
+    .format-audit .missing span { background: #f4e3cb; color: #8a4604; }
+    article h2 { font-size: 1.35rem; }
+    article h3 { font-size: 1.15rem; }
+    article h4, article h5 { font-size: 1rem; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    blockquote { margin: 1rem 0; padding: .45rem 1rem; border-left: 3px solid #1d8093; background: #f4f8fb; color: #435467; }
+    table { border-collapse: collapse; width: 100%; min-width: 32rem; font-size: .94rem; }
+    th, td { border: 1px solid #d8dee8; padding: .55rem .7rem; text-align: left; vertical-align: top; }
+    th { background: #edf4f9; }
+    .mermaid { background: #fff; color: #18212f; border: 1px solid #d8dee8; }
+    footer { margin-top: 32px; color: #52606d; font-size: .9rem; }
+    @media (max-width: 640px) { main { padding: 16px 12px 36px; } h1 { font-size: 1.55rem; } summary { align-items: flex-start; } .lesson-body { padding: 2px 14px 18px; } .format-audit ul { grid-template-columns: 1fr; } }
+  </style><style>.answer-panel{margin:22px 0;padding:18px;border:1px solid #9ab8d8;border-left:5px solid #1763a3;border-radius:8px;background:#f2f7fc}.answer-panel h3{margin-top:0}.answer-submit,.answer-view{display:inline-block;padding:10px 14px;margin:4px 8px 4px 0;border-radius:6px;background:#12578f;color:#fff;text-decoration:none}.answer-view{background:#e0ecf6;color:#153e61}.answer-panel a:focus-visible{outline:3px solid #db5a2a;outline-offset:3px}.answer-panel code{overflow-wrap:anywhere}.answer-list{padding:0;list-style:none}.answer-list li{margin:12px 0;padding:16px;background:#fff;border:1px solid #d8dee8;border-radius:6px}body{font-family:system-ui,'Microsoft YaHei',sans-serif;line-height:1.75;color:#18212f;background:#f6f8fb}main{max-width:1180px;margin:auto;padding:24px}a{overflow-wrap:anywhere}</style></head><body><main><nav><a href="../index.html#day-41">课程档案</a> · <a href="../architecture/index.html">项目架构实践</a></nav><article><h1>Day 41 — Hypervisor / VM Reset I：故障域与设备状态重建</h1>
+<p>学习日期：2026-10-08，星期四，Asia/Shanghai；Week 13。能力阶段：第二阶段“系统链路与问题分析”。目标：L3 证据排障，尝试 L4 VM 恢复契约设计。总用时约 60 分钟，附录可选。</p>
+<p>10月7日远端没有正式课程记录，本课按真实当天和实际进度安排 Day 41，不补造昨日发布，也不跳到 Day 42。执行前已完整扫描所有状态的答卷 Issue 及评论，无新答卷；Day 34—41 仍待真实作答验证。</p>
+<h2>1. 资料、版本与教学边界</h2>
+<p>本课承接 <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-38.html">Day 38 状态与恢复</a>、<a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-39.html">Day 39 恢复依赖与预算</a> 和 <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-40.html">Day 40 显示首帧证据</a>，把“重启后恢复”拆成两个可评审问题：<strong>到底哪一层失效</strong>，以及<strong>新 VM 如何重新获得可信设备状态</strong>。</p>
+<p>官方资料核验日期：2026-10-08。</p>
+<ul>
+<li><a href="https://source.android.com/docs/automotive/virtualization">Android Automotive Virtualization</a>：AAOS 可以作为 Guest VM 与其他车载 OS 共同运行；本车是否采用同样方案仍须核对。</li>
+<li><a href="https://source.android.com/docs/core/virtualization/architecture">AOSP AVF architecture</a>：解释 Hypervisor、VMM、vCPU、虚拟设备后端和 virtqueue 的职责边界。AVF 是参考实现，不能直接当成本项目实现。</li>
+<li><a href="https://docs.oasis-open.org/virtio/virtio/v1.3/virtio-v1.3.html">OASIS Virtio 1.3</a>：设备状态归零表示 device reset 完成；此后必须重新初始化，且在重新初始化前设备不能继续与队列交互。DEVICE_NEEDS_RESET 出现时，在途请求是否完成不能靠猜测。</li>
+<li><a href="https://docs.kernel.org/driver-api/virtio/virtio.html">Linux Kernel virtio documentation</a>：用于复核 Guest driver、virtqueue 与设备配置接口的通用关系。</li>
+</ul>
+<p><strong>当前没有本车车型、SoC、硬件阶段、Hypervisor/VMM版本、VM配置、virtio设备清单、设备直通/共享策略、TEE字典或实机日志。</strong> 下文拓扑与日志均为教学构造；VMID、队列编号、reset reason、watchdog阈值、设备所有权和时限全部待项目确认。</p>
+<p>本课已读取 T12T 优化版全部21项技能入口并逐项检查。深入使用通用三入口、虚拟化/TEE、稳定性复位、跨域消息和 TPM 首轮分责；显示、启动、电源用于验证恢复结果与触发边界。附录记录其余专项的适用性。</p>
+<h2>2. 一小时主线与回顾</h2>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>学习任务</th>
+<th>输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0—10分钟</td>
+<td>回顾4题</td>
+<td>重启层级和完成语义短答</td>
+</tr>
+<tr>
+<td>10—30分钟</td>
+<td>两个核心概念</td>
+<td>故障域表、设备重建契约</td>
+</tr>
+<tr>
+<td>30—50分钟</td>
+<td>工程案例</td>
+<td>一条双时间线和竞争假设</td>
+</tr>
+<tr>
+<td>50—60分钟</td>
+<td>可复用产物</td>
+<td>《VM恢复与设备重建检查表 V1》</td>
+</tr>
+</tbody></table>
+<p>回顾题：</p>
+<ol>
+<li>PID变化、Guest boot ID变化、VM generation变化分别能证明哪一层重建？</li>
+<li>VM create成功、Guest boot completed、目标业务恢复之间还缺哪些里程碑？</li>
+<li>为什么 VM destroy 之后出现的 GPU、Display 或 Camera 告警默认先放入 cleanup 槽？</li>
+<li>一个旧 requestId 在 VM 重建后到达，接收方至少要校验哪些代际字段？</li>
+</ol>
+<h2>3. 核心概念一：先判故障域，再谈根因</h2>
+<p>“Android重启了”常把多个故障域混在一起。架构师应先回答：<strong>谁停止、谁连续、谁被重新创建</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>直接证据</th>
+<th>保持连续的对象</th>
+<th>仍不能推出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>L1 App/服务</td>
+<td>fatal、退出和PID/实例变化</td>
+<td>Guest boot与VM generation连续</td>
+<td>Framework或VM重启</td>
+</tr>
+<tr>
+<td>L2 Framework</td>
+<td>system_server/zygote重建、boot phase重走</td>
+<td>Guest boot ID和uptime连续</td>
+<td>Guest kernel重启</td>
+</tr>
+<tr>
+<td>L3 Guest OS</td>
+<td>Guest boot ID/uptime重置、Guest kernel启动</td>
+<td>Host boot ID连续</td>
+<td>Host或SoC重启</td>
+</tr>
+<tr>
+<td>L4 VM</td>
+<td>VMM kill/terminate/destroy/create、generation变化</td>
+<td>Host boot ID与VMM实例连续</td>
+<td>最初触发来自Hypervisor</td>
+</tr>
+<tr>
+<td>L5 Host</td>
+<td>Host boot ID/uptime重置、全部Guest生命周期变化</td>
+<td>MCU可能连续</td>
+<td>SoC或MCU必然复位</td>
+</tr>
+<tr>
+<td>L6/L7 SoC、MCU、PMIC</td>
+<td>bootloader/reset/rail/MCU计数等当前版本证据</td>
+<td>视复位域而定</td>
+<td>冷启动原因或上游责任</td>
+</tr>
+</tbody></table>
+<p>只有同一对象、同一 generation、可信时间轴上的证据才能组合。VM destroy/create 是 L4 生命周期直接证据；它可能是 Guest panic 后的响应、VMM watchdog策略、电源策略或外部管理命令的结果。恢复动作说明覆盖范围，不等于最初触发。</p>
+<pre class="mermaid">flowchart LR
+    U[用户现象] --&gt; L1[L1 App或服务]
+    L1 --&gt; L2[L2 Framework]
+    L2 --&gt; L3[L3 Guest OS]
+    L3 --&gt; L4[L4 VM与Hypervisor]
+    L4 --&gt; L5[L5 Host或Yocto]
+    L5 --&gt; L6[L6 SoC]
+    L6 --&gt; L7[L7 MCU或PMIC]
+    L4 --&gt; VF[Guest frontend]
+    VF --&gt; VQ[virtqueue与transport]
+    VQ --&gt; BE[Host backend或VMM]
+    BE --&gt; PD[物理设备或驱动]
+    PD --&gt; OUT[业务输出]</pre>
+<p>故障域与设备事务是两条相关但不同的线：上方回答生命周期在哪一层中断，下方回答目标请求停在哪一段。不能看到 fence timeout 就直接定责物理GPU，也不能看到 KillAndWait 就把所有 Guest 侧超时忽略。</p>
+<h2>4. 核心概念二：重建 VM 不等于重建设备状态</h2>
+<p>新 VM 必须得到一套与新 generation 一致的资源，而不是继续消费旧 VM 的残留：</p>
+<table>
+<thead>
+<tr>
+<th>对象</th>
+<th>旧代需要终止或隔离</th>
+<th>新代需要重新建立</th>
+<th>完成证据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>VM/Guest</td>
+<td>旧vCPU、内存映射、旧callback</td>
+<td>新VM generation、Guest boot身份</td>
+<td>Host与Guest双侧generation一致</td>
+</tr>
+<tr>
+<td>virtio设备</td>
+<td>停止旧queue通知；处理在途请求的不确定性</td>
+<td>feature协商、device status、queue地址与ready</td>
+<td>当前接口定义的ready，且新queue可闭环</td>
+</tr>
+<tr>
+<td>buffer/DMA/IOMMU</td>
+<td>旧handle、mapping、fence不可跨代误用</td>
+<td>新映射、所有权和访问权限</td>
+<td>同一新代buffer完成submit→complete</td>
+</tr>
+<tr>
+<td>跨域会话</td>
+<td>旧session、subscription、credit和request失效</td>
+<td>新session/generation、订阅与freshness</td>
+<td>新sequence到consumer并更新状态</td>
+</tr>
+<tr>
+<td>业务资源</td>
+<td>旧surface、audio route、camera session等失效</td>
+<td>当前目标重新绑定</td>
+<td>目标业务的可见/可听/可用验收</td>
+</tr>
+</tbody></table>
+<p>重建契约至少包含：</p>
+<ul>
+<li><strong>身份</strong>：boot ID、VM generation、service generation、device generation、session generation。</li>
+<li><strong>栅栏</strong>：旧代不再产生新完成；迟到回调必须被拒绝或隔离。</li>
+<li><strong>顺序</strong>：reset完成 → feature/queue初始化 → backend ready → subscription/resource rebind → 业务重放。</li>
+<li><strong>在途请求</strong>：明确 cancel、失败、重试或重放策略；不允许把未知完成状态直接记成功。</li>
+<li><strong>完成语义</strong>：ACK只表示收到或进入恢复流程；设备ready只表示局部完成；业务完成需目标结果验收。</li>
+<li><strong>预算</strong>：teardown、reset、recreate、rebind、replay和业务验收共享总deadline，重试必须有界。</li>
+</ul>
+<p>OASIS Virtio规范要求 device reset 完成后状态回到0；驱动随后重新初始化。若设备报告 DEVICE_NEEDS_RESET，在途请求不能被假设为“全完成”或“全没完成”。这正是为什么恢复契约需要 request identity、幂等键和最终验收。</p>
+<h2>5. 正常与异常时序</h2>
+<pre class="mermaid">sequenceDiagram
+    participant G as Guest前端 G7
+    participant V as Hypervisor/VMM
+    participant B as Host后端
+    participant D as 物理设备
+    participant C as 业务验收
+
+    G-&gt;&gt;B: submit r41 / deviceGen d7
+    B-&gt;&gt;D: physical job j41
+    D--&gt;&gt;B: complete j41
+    B--&gt;&gt;G: used ring + interrupt
+    G--&gt;&gt;C: 业务输出与当前身份
+    C--&gt;&gt;G: business complete
+
+    Note over G,V: 故障后旧代 G7 进入终止
+    V-&gt;&gt;G: quiesce / kill policy
+    V-&gt;&gt;B: detach G7 device contexts
+    B--&gt;&gt;V: teardown ACK（局部完成）
+    V-&gt;&gt;V: create G8
+    V-&gt;&gt;B: reset / bind deviceGen d8
+    B--&gt;&gt;V: backend ready（局部完成）
+    V--&gt;&gt;G: expose device to G8
+    G-&gt;&gt;B: negotiate + queues ready
+    G-&gt;&gt;B: replay r42 / G8 / d8
+    B-&gt;&gt;D: physical job j42
+    D--&gt;&gt;B: complete j42
+    B--&gt;&gt;G: completion G8
+    G--&gt;&gt;C: 当前业务结果
+    C--&gt;&gt;G: business complete
+
+    B--xG: 迟到 completion r41 / G7
+    Note over B,G: 必须拒绝或隔离，不能污染 G8</pre>
+<p>需要把三条“完成”分开：</p>
+<ol>
+<li>teardown ACK：旧资源清理流程已受理或达到合同定义的局部完成；</li>
+<li>backend/device ready：新代虚拟设备可以接收请求；</li>
+<li>business complete：新代请求已在目标业务端产生正确效果。</li>
+</ol>
+<p>若VM create后仅看到Guest启动和服务存活，没有queue闭环、资源重绑与业务验收，最多能说“计算域恢复”，不能说“座舱功能恢复”。</p>
+<h2>6. 教学构造案例：VM恢复后仪表画面仍旧</h2>
+<p>以下事件为合成案例，不是实车证据。所有ID和相对时间仅服务推理。</p>
+<table>
+<thead>
+<tr>
+<th>证据</th>
+<th>构造事件</th>
+<th>类型与边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E1</td>
+<td>Host boot ID连续；Guest G7 的boot ID在故障后变化为G8</td>
+<td>直接支持VM/Guest重建，不支持Host reset</td>
+</tr>
+<tr>
+<td>E2</td>
+<td>G7的显示请求r41已进入backend，physical job尚无完成记录</td>
+<td>在途状态未知；不能写完成或未执行</td>
+</tr>
+<tr>
+<td>E3</td>
+<td>VMM记录G7 terminate/destroy，随后create G8</td>
+<td>L4直接生命周期证据</td>
+</tr>
+<tr>
+<td>E4</td>
+<td>destroy后出现旧display context missing</td>
+<td>默认cleanup；尚不能倒推触发</td>
+</tr>
+<tr>
+<td>E5</td>
+<td>backend为G8创建d8并返回ready，Guest服务也ready</td>
+<td>局部恢复，不等于正确画面可见</td>
+</tr>
+<tr>
+<td>E6</td>
+<td>一条r41 completion迟到，只携带旧device context，没有被generation guard拒绝</td>
+<td>直接证据：旧完成进入新消费窗口</td>
+</tr>
+<tr>
+<td>E7</td>
+<td>consumer把r41结果写入当前状态，r42被判“无需刷新”</td>
+<td>直接证据：旧代污染新代业务状态</td>
+</tr>
+<tr>
+<td>E8</td>
+<td>清理当前cache并重新发r42后，目标画面正确显示</td>
+<td>恢复范围证据；不独立证明最初VM为何重建</td>
+</tr>
+</tbody></table>
+<p>分析步骤：</p>
+<ol>
+<li><strong>现象与范围</strong>：VM重建后目标屏显示旧状态，其他未共享该consumer的业务正常。</li>
+<li><strong>定层</strong>：E1、E3确认L4 VM重建；Host连续。没有证据支持SoC或MCU复位。</li>
+<li><strong>三槽</strong>：E3是直接终止机制；E2是kill前未完成事务；E4是cleanup；VM为何进入destroy仍待VMM reason或Guest fatal证据。</li>
+<li><strong>设备事务断点</strong>：E6表明旧代completion越过代际边界，E7证明它污染当前cache。这解释“恢复后旧画面”。</li>
+<li><strong>不要越界</strong>：E8只说明cache/replay覆盖了症状，不能证明VM重建由display引起，也不能证明物理显示设备无缺陷。</li>
+<li><strong>竞争假设</strong>：H1 backend completion缺少generation校验；H2 consumer虽有generation但持久化cache恢复时丢失来源代际；H3 r42确实到达，但状态机的幂等键只使用requestId，未包含generation。</li>
+<li><strong>区分实验</strong>：分别记录backend发出、transport到达、consumer写cache三点的VM/device/session generation；在隔离环境注入一条旧代迟到完成，检查每层是否拒绝。</li>
+<li><strong>修复边界</strong>：backend负责携带并校验device generation；transport负责不把旧队列完成注入新VM；consumer负责对旧代数据fail-closed并触发当前状态重取。</li>
+<li><strong>验证</strong>：正常重建、destroy中有在途请求、迟到回调、重复回调、重建再次失败五类都必须覆盖。</li>
+</ol>
+<p>当前可确认的教学结论是“代际隔离缺失导致旧完成污染新状态”；<strong>VM最初被重建的触发原因仍未证实</strong>。</p>
+<h2>7. 日志与证据设计</h2>
+<p>统一字段建议：</p>
+<p>domain | originalTime | clockId | bootId | vmGeneration | serviceGeneration | deviceGeneration | sessionGeneration | requestId | queue/index | job/fence | phase | result | deadlineRemaining</p>
+<p>取证顺序：</p>
+<ol>
+<li>先判各域连续性，不能跨boot或VM generation拼接；</li>
+<li>再沿同一请求检查 Guest submit → avail/kick → Host dequeue → physical submit/complete → used/IRQ → Guest callback；</li>
+<li>单独记录VMM kill caller、reason、policy和destroy/create；</li>
+<li>destroy后的资源错误放cleanup槽，除非证明同一context在kill前已异常并传播到kill；</li>
+<li>有DB/KE、panic、tombstone或watchdog包时，先按固定八步做异常包取证；</li>
+<li>secure日志只记录脱敏UUID、command、result和关联ID，不复制payload、key或token。</li>
+</ol>
+<h2>8. 可执行验证</h2>
+<table>
+<thead>
+<tr>
+<th>测试</th>
+<th>操作</th>
+<th>必须观察</th>
+<th>通过标准</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T1 正常重建</td>
+<td>在获批实验环境执行受控VM重建</td>
+<td>旧代quiesce、destroy、新代create、queue初始化、业务恢复</td>
+<td>旧代无后续有效完成；新代业务闭环</td>
+</tr>
+<tr>
+<td>T2 在途请求</td>
+<td>物理job处理中触发受控重建</td>
+<td>request最终状态、buffer/fence释放、重放决策</td>
+<td>无双重完成、无泄漏、无假成功</td>
+</tr>
+<tr>
+<td>T3 迟到完成</td>
+<td>注入带旧generation的completion</td>
+<td>backend、transport、consumer拒绝点</td>
+<td>旧数据不进入新cache，且有可审计记录</td>
+</tr>
+<tr>
+<td>T4 backend慢恢复</td>
+<td>延迟backend ready但保持总deadline</td>
+<td>早到请求处理、重试预算、最终状态</td>
+<td>明确defer/reject；ready后仅重放当前代</td>
+</tr>
+<tr>
+<td>T5 连续失败</td>
+<td>新VM初始化再次失败</td>
+<td>重试上限、降级、用户状态和诊断保留</td>
+<td>不无限循环；失败可见且证据不被覆盖</td>
+</tr>
+</tbody></table>
+<p>T1—T3为本课必做设计，T4—T5为扩展。设备操作、故障注入和VM重建仅限已授权实验环境；本课不授权控制实车。</p>
+<h2>9. 今日练习与交付</h2>
+<p>以下题目不附参考答案，请独立作答：</p>
+<ol>
+<li>看到“Guest service ready → VMM create success → 黑屏”时，写出至少6个仍缺失的恢复里程碑，并说明每个里程碑的完成证据。</li>
+<li>一条virtio请求在VM reset时处于in-flight。设计它的身份字段、最终状态、重放规则和buffer释放规则，避免双重完成与旧代污染。</li>
+<li>给出一张竞争假设表：Guest先fatal、VMM策略先kill、backend事务卡住三种假设分别需要什么直接证据和反证。</li>
+<li>扩展：如果Host与另一VM使用同一物理设备，如何通过消费者矩阵区分全局设备故障与单queue/context故障？</li>
+<li>扩展：设计“局部虚拟设备reset”和“整VM重建”两个恢复方案，比较影响范围、恢复时间、状态残留、实现复杂度与验证成本。</li>
+</ol>
+<p>今日交付物：《VM恢复与设备状态重建检查表 V1》，至少包含：</p>
+<ul>
+<li>L1—L7连续性表；</li>
+<li>VM、device、session、request四类generation；</li>
+<li>teardown、device ready、business complete三种完成语义；</li>
+<li>在途请求、迟到回调、buffer/fence、旧cache处理；</li>
+<li>T1—T3测试步骤、Owner、预期证据和通过标准。</li>
+</ul>
+<p>课程编号为 <strong>day-41</strong>。完成后使用页面末尾“上传／提交答卷”提交文字或附件；也可从<a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html">答卷中心</a>进入。请勿上传不可公开的项目日志、密钥或未脱敏身份信息。</p>
+<h2>附录：21项技能适用性检查（选读）</h2>
+<table>
+<thead>
+<tr>
+<th>技能</th>
+<th>判断</th>
+<th>本课覆盖</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cockpit-diagnosis</td>
+<td>适用，深入</td>
+<td>先定层、再定事务断点与责任边界</td>
+</tr>
+<tr>
+<td>log-analysis</td>
+<td>适用，深入</td>
+<td>跨域时间、generation和三槽证据</td>
+</tr>
+<tr>
+<td>platform-architecture</td>
+<td>适用，深入</td>
+<td>Guest/Host/Hypervisor/设备边界</td>
+</tr>
+<tr>
+<td>display-black-freeze</td>
+<td>条件适用</td>
+<td>业务验收示例为画面；不把显示后果当VM触发</td>
+</tr>
+<tr>
+<td>touch-input</td>
+<td>当前不适用</td>
+<td>未涉及触摸链</td>
+</tr>
+<tr>
+<td>avm-camera-stream</td>
+<td>当前不适用</td>
+<td>未涉及Camera源流</td>
+</tr>
+<tr>
+<td>power-sleep-str</td>
+<td>材料不足</td>
+<td>若电源事件早于VM重建再进入attempt分析</td>
+</tr>
+<tr>
+<td>audio-path</td>
+<td>当前不适用</td>
+<td>未涉及音频链</td>
+</tr>
+<tr>
+<td>stability-crash-reset</td>
+<td>适用，深入</td>
+<td>L1—L7、连续性与直接终止机制</td>
+</tr>
+<tr>
+<td>performance-jank</td>
+<td>材料不足</td>
+<td>尚无backend调度、CPU或IO证据</td>
+</tr>
+<tr>
+<td>ethernet-sgmii</td>
+<td>当前不适用</td>
+<td>未涉及有线物理链</td>
+</tr>
+<tr>
+<td>wireless-phone-link</td>
+<td>当前不适用</td>
+<td>未涉及无线或手机互联</td>
+</tr>
+<tr>
+<td>cross-domain-msg</td>
+<td>适用，深入</td>
+<td>generation、迟到消息和freshness</td>
+</tr>
+<tr>
+<td>boot-hmi</td>
+<td>条件适用</td>
+<td>VM重建后的ready与业务首帧分离</td>
+</tr>
+<tr>
+<td>log-storm</td>
+<td>材料不足</td>
+<td>连续重建可能造成刷屏，但无量化证据</td>
+</tr>
+<tr>
+<td>usb-typec-storage</td>
+<td>当前不适用</td>
+<td>未涉及USB/卷生命周期</td>
+</tr>
+<tr>
+<td>virtualization-tee</td>
+<td>适用，深入</td>
+<td>virtqueue、device reset、VM生命周期</td>
+</tr>
+<tr>
+<td>db-ke-forensics</td>
+<td>条件适用</td>
+<td>若有异常包必须按固定八步取证</td>
+</tr>
+<tr>
+<td>mcu</td>
+<td>材料不足</td>
+<td>未知是否参与本次VM管理或电源策略</td>
+</tr>
+<tr>
+<td>tpm-triage</td>
+<td>适用，深入</td>
+<td>触发、直接修复、恢复和验证Owner分开</td>
+</tr>
+<tr>
+<td>tpm-5y8d</td>
+<td>当前不适用</td>
+<td>无真实根因与逃逸证据，不生成5Y/8D</td>
+</tr>
+</tbody></table>
+<p>关键缺口：本车拓扑与版本、VM/device映射、VMM reason字典、实际reset能力、在途请求合同、共享设备拓扑、TEE安全字典和实机证据。下一课按实际日期与星期规则处理，不提前给出“看门狗责任”题的答案。</p>
+</article><section class="answer-panel" data-course="day-41" aria-label="Day 41 - Hypervisor / VM Reset I：故障域与设备状态重建 答卷提交"><h3>提交本课答卷</h3><p>在 GitHub 登录后填写文字，或把图片、PDF、Word 等文件拖入“答卷正文与附件”框；点击 Submit new issue（提交）才算上传成功。答卷和附件将保存在公开的 GitHub 仓库，请只提交可公开的学习材料。</p><p><a class="answer-submit" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues/new?template=answer.yml&amp;title=%5B%E7%AD%94%E5%8D%B7%5D%5Bday-41%5D+Day+41+-+Hypervisor+%2F+VM+Reset+I%EF%BC%9A%E6%95%85%E9%9A%9C%E5%9F%9F%E4%B8%8E%E8%AE%BE%E5%A4%87%E7%8A%B6%E6%80%81%E9%87%8D%E5%BB%BA&amp;lesson=day-41&amp;course=https%3A%2F%2Fqiantao18817568425-art.github.io%2FArchitecture_Learning-%2F%23day-41" target="_blank" rel="noopener">上传／提交答卷 ↗</a> <a class="answer-view" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues?q=is%3Aissue+in%3Atitle+%22%5B%E7%AD%94%E5%8D%B7%5D%5Bday-41%5D%22" target="_blank" rel="noopener">查看答卷与批改 ↗</a> <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html#day-41">归档与批改状态</a></p><p>课程编号：<code>day-41</code>。补交请在同一答卷下评论，以 <strong>[补交]</strong> 开头，并注明题号；也可编辑原答卷。每天 20:00 先检查并批改新答卷，再安排当天任务。</p></section></main><script src="../architecture/vendor/mermaid-10.9.5.min.js"></script><script>mermaid.initialize({startOnLoad:true,theme:'neutral',securityLevel:'strict'});</script></body></html>
