@@ -1,0 +1,517 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Day 42 - Hypervisor / VM Reset II：看门狗责任与恢复策略</title><style>
+    :root { color-scheme: light; font-family: "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif; color: #18212f; background: #f6f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.75; }
+    a { color: #075fbd; overflow-wrap: anywhere; }
+    code { background: #edf1f6; border-radius: 3px; padding: .08rem .28rem; }
+    pre { overflow: auto; background: #111827; color: #e5e7eb; padding: 1rem; border-radius: 6px; white-space: pre-wrap; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
+    header { border-left: 5px solid #db5a2a; padding: 12px 20px; margin-bottom: 28px; background: #fff; }
+    h1, h2, h3, h4, h5, h6 { line-height: 1.35; margin: 1.35em 0 .5em; }
+    h1 { margin: 0; font-size: 2rem; }
+    .lede { max-width: 840px; margin: .5rem 0 0; color: #4b5563; }
+    .metrics { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 26px; }
+    .metric { background: #e6eff8; border: 1px solid #bfd5ea; padding: 6px 12px; border-radius: 4px; color: #174a76; }
+    .metric strong { font-size: 1.15rem; }
+    .guide { background: #fff; border-top: 2px solid #1d8093; padding: 18px 22px; margin: 24px 0; }
+    .guide ol { margin-bottom: 0; }
+    .lesson { background: #fff; border: 1px solid #d8dee8; margin: 10px 0; }
+    summary { cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 18px; }
+    summary::-webkit-details-marker { color: #db5a2a; }
+    .lesson-title { font-weight: 700; font-size: 1.05rem; }
+    .lesson-meta { color: #52606d; font-size: .86rem; white-space: nowrap; }
+    .lesson-body { border-top: 1px solid #d8dee8; padding: 4px 22px 24px; }
+    .archive-note { color: #52606d; font-size: .92rem; border-left: 3px solid #1d8093; padding-left: 10px; }
+    .format-audit { border: 1px solid #b8d5cf; background: #f4fbf8; padding: 16px; margin: 18px 0; border-radius: 6px; }
+    .format-audit h3 { margin-top: 0; }
+    .format-audit ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+    .format-audit li { border: 1px solid #d8dee8; background: #fff; border-radius: 5px; padding: 8px; font-size: .9rem; }
+    .format-audit span { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+    .format-audit .present span { background: #dbece8; color: #126458; }
+    .format-audit .missing span { background: #f4e3cb; color: #8a4604; }
+    article h2 { font-size: 1.35rem; }
+    article h3 { font-size: 1.15rem; }
+    article h4, article h5 { font-size: 1rem; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    blockquote { margin: 1rem 0; padding: .45rem 1rem; border-left: 3px solid #1d8093; background: #f4f8fb; color: #435467; }
+    table { border-collapse: collapse; width: 100%; min-width: 32rem; font-size: .94rem; }
+    th, td { border: 1px solid #d8dee8; padding: .55rem .7rem; text-align: left; vertical-align: top; }
+    th { background: #edf4f9; }
+    .mermaid { background: #fff; color: #18212f; border: 1px solid #d8dee8; }
+    footer { margin-top: 32px; color: #52606d; font-size: .9rem; }
+    @media (max-width: 640px) { main { padding: 16px 12px 36px; } h1 { font-size: 1.55rem; } summary { align-items: flex-start; } .lesson-body { padding: 2px 14px 18px; } .format-audit ul { grid-template-columns: 1fr; } }
+  </style><style>.answer-panel{margin:22px 0;padding:18px;border:1px solid #9ab8d8;border-left:5px solid #1763a3;border-radius:8px;background:#f2f7fc}.answer-panel h3{margin-top:0}.answer-submit,.answer-view{display:inline-block;padding:10px 14px;margin:4px 8px 4px 0;border-radius:6px;background:#12578f;color:#fff;text-decoration:none}.answer-view{background:#e0ecf6;color:#153e61}.answer-panel a:focus-visible{outline:3px solid #db5a2a;outline-offset:3px}.answer-panel code{overflow-wrap:anywhere}.answer-list{padding:0;list-style:none}.answer-list li{margin:12px 0;padding:16px;background:#fff;border:1px solid #d8dee8;border-radius:6px}body{font-family:system-ui,'Microsoft YaHei',sans-serif;line-height:1.75;color:#18212f;background:#f6f8fb}main{max-width:1180px;margin:auto;padding:24px}a{overflow-wrap:anywhere}</style></head><body><main><nav><a href="../index.html#day-42">课程档案</a> · <a href="../architecture/index.html">项目架构实践</a></nav><article><h1>Day 42 — Hypervisor / VM Reset II：看门狗责任与恢复策略</h1>
+<p>学习日期：2026-10-15，星期四，Asia/Shanghai；Week 14。能力阶段：第二阶段“系统链路与问题分析”。目标：从“超时后重启”提升到可评审的看门狗分层、故障升级与恢复契约设计。总用时约 60 分钟，附录选读。</p>
+<p>最新远端在10月9日后没有新的正式任务，本课按今天真实日期与实际进度安排 Day 42；不补造10月10—14日的发布或学习记录，也不跳到 Day 43。执行前已扫描全部状态的答卷 Issue 和评论，无新答卷；Day 34—42仍待真实作答评审。</p>
+<h2>1. 资料、版本与教学边界</h2>
+<p>本课承接 <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-41.html">Day 41 的故障域与设备状态重建</a>，集中回答四个问题：谁监测谁、什么叫“失去进展”、谁有权结束哪个对象、重建后怎样证明业务真正恢复。</p>
+<p>官方资料核验日期：2026-10-15。</p>
+<ul>
+<li><a href="https://docs.kernel.org/watchdog/watchdog-api.html">Linux Watchdog driver API</a>：用户态按周期通知 watchdog；通知停止后，watchdog可能复位系统。不同驱动的能力并不完全一致，必须读取本机能力而非照搬参数。</li>
+<li><a href="https://docs.kernel.org/watchdog/watchdog-kernel-api.html">Linux Watchdog kernel API</a>：区分 watchdog core、driver、超时和 pretimeout 等机制；项目实现与超时仍需现场确认。</li>
+<li><a href="https://android.googlesource.com/platform/frameworks/base/+/master/services/core/java/com/android/server/Watchdog.java">AOSP Watchdog 源码</a>：Android Framework watchdog会检查关键线程/监视器的进展，并保留诊断与终止策略。量产分支行为必须以当前版本源码为准。</li>
+<li><a href="https://source.android.com/docs/core/virtualization/architecture">AOSP AVF architecture</a>：提供 Hypervisor、VMM、Guest 和虚拟设备后端的参考职责；AVF不是本项目实现证明。</li>
+<li><a href="https://docs.oasis-open.org/virtio/virtio/v1.3/virtio-v1.3.html">OASIS Virtio 1.3</a>：设备reset之后必须重新初始化；在途请求、queue与device status的处理要遵守当前transport和设备规范。</li>
+</ul>
+<p><strong>当前缺少本车车型、SoC与板级版本、Hypervisor/VMM版本、VM配置、watchdog层级与owner、超时/预超时、复位目标、喂狗路径、reason字典、共享设备拓扑和实机日志。</strong> 下文是教学架构与合成日志；VMID、时间、reason、重试次数和阈值均为占位，正式项目必须标“待确认”。</p>
+<p>本课从用户指定的F盘优化版目录读取并检查全部21项T12T技能。深入使用通用三入口、稳定性复位、虚拟化/TEE、跨域消息、异常包取证与TPM首轮分责；MCU、电源、启动和显示用于边界校验。附录列出完整覆盖结果。</p>
+<h2>2. 一小时学习主线</h2>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>学习任务</th>
+<th>输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0—10分钟</td>
+<td>回顾4题</td>
+<td>看门狗层级与完成语义短答</td>
+</tr>
+<tr>
+<td>10—30分钟</td>
+<td>两个核心概念</td>
+<td>责任矩阵、恢复状态机</td>
+</tr>
+<tr>
+<td>30—50分钟</td>
+<td>工程案例</td>
+<td>三槽证据、竞争假设与区分实验</td>
+</tr>
+<tr>
+<td>50—60分钟</td>
+<td>可复用产物</td>
+<td>《VM看门狗与恢复责任矩阵 V1》</td>
+</tr>
+</tbody></table>
+<p>回顾题：</p>
+<ol>
+<li>Guest service heartbeat停止、VMM执行KillAndWait、Guest boot ID变化，各自最多能证明什么？</li>
+<li>为什么“watchdog timeout”常是检测结果，不自动等于最初根因？</li>
+<li>VM create成功、backend ready和business complete之间有什么区别？</li>
+<li>新VM收到旧generation的迟到completion时，为什么不能只按requestId去重？</li>
+</ol>
+<h2>3. 核心概念一：看门狗是检测与升级机制</h2>
+<p>架构评审不要只问“有没有watchdog”，要把下面五个角色写清楚：</p>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>必答问题</th>
+<th>合格证据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>被监测对象</td>
+<td>线程、服务、Guest、VM、Host还是硬件域？</td>
+<td>objectId、boot/VM/service generation</td>
+</tr>
+<tr>
+<td>进展信号</td>
+<td>心跳、主循环checkpoint、事务完成还是硬件喂狗？</td>
+<td>progressSeq、lastKick、lastCompletedRequest</td>
+</tr>
+<tr>
+<td>检测者</td>
+<td>谁计算超时，使用什么时钟？</td>
+<td>watchdogOwner、clockId、arm/deadline</td>
+</tr>
+<tr>
+<td>升级者</td>
+<td>谁决定dump、abort、kill、reset或降级？</td>
+<td>caller、policy、reason、targetScope</td>
+</tr>
+<tr>
+<td>恢复验证者</td>
+<td>谁确认资源重绑和业务结果？</td>
+<td>readiness与业务验收里程碑</td>
+</tr>
+</tbody></table>
+<p>“存活”与“有业务进展”也要分开。心跳线程可能仍在运行，而目标queue、binder线程池、virtqueue或业务状态机已经没有进展；反过来，系统高负载导致心跳迟到，也不等于被监测对象已经永久失效。超时策略至少需要：</p>
+<ul>
+<li>用单调时钟记录 arm、last progress、pretimeout、expiry 和 recovery；</li>
+<li>把线程进展、服务进展、VM heartbeat与硬件喂狗分层；</li>
+<li>在pretimeout阶段先固定证据，避免reset后只剩reason码；</li>
+<li>抑制重复升级，保证同一incident只由一个策略owner主导；</li>
+<li>为误报、迟到心跳、时钟漂移和调度饥饿保留竞争假设；</li>
+<li>限定复位半径：优先恢复最小可隔离对象，扩大范围必须有升级条件。</li>
+</ul>
+<h3>看门狗分层责任表</h3>
+<table>
+<thead>
+<tr>
+<th>层级示例</th>
+<th>可能监测对象</th>
+<th>直接动作</th>
+<th>需要额外证明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Android Framework watchdog</td>
+<td>system_server关键线程/monitor</td>
+<td>dump、终止Framework进程</td>
+<td>Guest/VM是否也被重建</td>
+</tr>
+<tr>
+<td>Guest service watchdog</td>
+<td>业务服务或daemon</td>
+<td>restart/abort服务</td>
+<td>为何服务无进展、是否跨域依赖阻塞</td>
+</tr>
+<tr>
+<td>VM heartbeat/watchdog</td>
+<td>Guest或VM实例</td>
+<td>VMM kill/destroy/recreate</td>
+<td>Guest先fatal还是Host策略先kill</td>
+</tr>
+<tr>
+<td>Host userspace→hardware watchdog</td>
+<td>Host用户态/系统进展</td>
+<td>watchdog到期触发目标域reset</td>
+<td>最后喂狗、driver能力、复位域</td>
+</tr>
+<tr>
+<td>MCU/SWT/PMIC watchdog</td>
+<td>MCU调度或电源域</td>
+<td>MCU、SoC或电源域复位</td>
+<td>当前协议字典、reset source和rail证据</td>
+</tr>
+</tbody></table>
+<p>这些层级不能靠日志中的“WDT”三个字母合并。Android、Hypervisor、MCU SWT和PMIC/hardware watchdog的owner、时钟、复位目标和证据包都不同。</p>
+<h2>4. 核心概念二：恢复必须有状态机和完成合同</h2>
+<p>恢复策略要回答“从检测到业务恢复”的全部状态，而不是把reset当终点。</p>
+<pre class="mermaid">stateDiagram-v2
+    [*] --&gt; RUNNING
+    RUNNING --&gt; SUSPECT: 进展超过预警窗口
+    SUSPECT --&gt; RUNNING: 当前代进展恢复且证据一致
+    SUSPECT --&gt; SNAPSHOT: pretimeout固定证据
+    SNAPSHOT --&gt; TERMINATING: 策略确认且去重成功
+    TERMINATING --&gt; RECREATING: 旧代隔离与终止完成
+    RECREATING --&gt; REBINDING: 新VM和Guest身份建立
+    REBINDING --&gt; RESYNCING: 设备、会话、订阅重绑
+    RESYNCING --&gt; PROBING: 当前状态重取与新代探针
+    PROBING --&gt; READY: 业务验收通过
+    PROBING --&gt; DEGRADED: deadline到期或关键依赖失败
+    DEGRADED --&gt; RECREATING: 有界升级且预算允许</pre>
+<p>每个状态都应有进入条件、退出证据、deadline、owner和失败去向。尤其要区分四种完成：</p>
+<ol>
+<li><strong>命令ACK</strong>：接收方确认收到或排队；不证明动作开始。</li>
+<li><strong>生命周期完成</strong>：旧VM已终止或新VM已创建；不证明虚拟设备ready。</li>
+<li><strong>资源ready</strong>：queue、mapping、session、subscription已经重建；不证明状态新鲜。</li>
+<li><strong>业务完成</strong>：当前generation的新请求产生正确可观察结果，例如目标画面首帧present、目标音频可听或目标信号进入当前状态机。</li>
+</ol>
+<h3>旧消息、复位与超时规则</h3>
+<ul>
+<li>每个事件至少携带 bootId、vmGeneration、serviceGeneration、session/deviceGeneration和requestId中的适用组合。</li>
+<li>reset边界关闭旧代输入；旧代completion只能进入审计或隔离路径，不能写入当前cache。</li>
+<li>在途事务必须有终态：completed、cancelled、failed、unknown之一；unknown不能被当作成功重放。</li>
+<li>重放需要幂等键包含generation或业务版本，并重新读取当前source state，不能盲播旧快照。</li>
+<li>teardown、create、rebind、resync、probe共享端到端预算；局部重试不得无限消耗总deadline。</li>
+<li>连续恢复失败要进入明确降级并保留首轮证据，避免重启循环覆盖最早断点。</li>
+</ul>
+<h2>5. 正常、超时与恢复时序</h2>
+<pre class="mermaid">sequenceDiagram
+    participant M as Monitor/Watchdog
+    participant G as Guest G42
+    participant V as VMM/Recovery Coordinator
+    participant B as Host Backend
+    participant S as State Owner/MCU
+    participant U as Business Probe
+
+    G--&gt;&gt;M: progressSeq=84 / generation=G42
+    G-&gt;&gt;B: request r420 / deviceGen=d42
+    B--&gt;&gt;G: completion r420 / d42
+    G--&gt;&gt;M: progressSeq=85
+
+    Note over G,M: 之后目标事务不再前进，心跳状态待判
+    M-&gt;&gt;M: pretimeout / snapshot
+    M-&gt;&gt;V: escalate incident i42 / target G42
+    V--&gt;&gt;M: command ACK（仅已受理）
+    V-&gt;&gt;G: quiesce/terminate G42
+    V-&gt;&gt;B: detach old contexts G42/d42
+    B--&gt;&gt;V: teardown complete（生命周期局部完成）
+    V-&gt;&gt;V: create G43
+    V-&gt;&gt;B: bind deviceGen d43
+    B--&gt;&gt;V: backend ready（资源局部完成）
+    V-&gt;&gt;S: request current state / generation G43
+    S--&gt;&gt;V: current state + sourceSeq
+    V-&gt;&gt;U: run business probe G43
+    U--&gt;&gt;V: business complete
+    V--&gt;&gt;M: recovery complete / current generation G43
+
+    B--xG: late completion r420 / G42 / d42
+    Note over B,G: 旧代必须拒绝或隔离</pre>
+<p>若只看到monitor发出kill并收到ACK，最多能确认恢复流程被受理。若只看到G43创建和backend ready，也不能确认状态已同步、旧消息被隔离或业务探针通过。</p>
+<h2>6. 教学构造案例：VM watchdog触发后恢复循环</h2>
+<p>以下是合成案例，不是实车根因。相对时间仅用于练习。</p>
+<table>
+<thead>
+<tr>
+<th>证据</th>
+<th>构造事件</th>
+<th>角色与边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E1</td>
+<td>Host boot ID连续，Guest G42 boot ID与uptime随后变化</td>
+<td>支持Guest/VM重建；不支持Host/SoC复位</td>
+</tr>
+<tr>
+<td>E2</td>
+<td>G42最后progressSeq=85；最后完成的事务是r420</td>
+<td>进展基线；尚不解释为何停止</td>
+</tr>
+<tr>
+<td>E3</td>
+<td>pretimeout阶段抓到Guest waiter等待virtqueue q3的used entry</td>
+<td>kill前诱因候选，需追同一descriptor</td>
+</tr>
+<tr>
+<td>E4</td>
+<td>Host backend已dequeue同一descriptor，但没有physical complete或backend complete记录</td>
+<td>最早可观察事务断点位于backend→physical→completion区间</td>
+</tr>
+<tr>
+<td>E5</td>
+<td>VM watchdog到期，VMM以reason <code>待当前字典确认</code> 执行kill/destroy</td>
+<td>直接终止机制；watchdog是检测/升级者</td>
+</tr>
+<tr>
+<td>E6</td>
+<td>destroy后旧queue返回一次迟到completion，因generation不匹配被丢弃</td>
+<td>cleanup/隔离正确；不能倒推它触发kill</td>
+</tr>
+<tr>
+<td>E7</td>
+<td>G43创建后backend ready，但当前状态重取连续超时，probe失败</td>
+<td>恢复未业务完成</td>
+</tr>
+<tr>
+<td>E8</td>
+<td>recovery coordinator再次触发整VM重建，产生循环</td>
+<td>恢复策略缺少有界降级或依赖判定</td>
+</tr>
+</tbody></table>
+<p>完整分析：</p>
+<ol>
+<li><strong>现象</strong>：用户看到目标业务长时间不可用，并伴随两次VM重建。</li>
+<li><strong>失效层级</strong>：E1、E5确认Host连续下的L4 VM重建。没有证据支持SoC或MCU复位。</li>
+<li><strong>三槽证据</strong>：E5是直接终止；E3、E4是终止前触发候选；E6是destroy后的cleanup；E7、E8属于恢复失败与升级后果。</li>
+<li><strong>最早可证实断点</strong>：同一descriptor已由backend取出，但未见physical complete或backend complete。现有证据只能把边界放在backend、physical job及completion之间，不能直接定责物理设备。</li>
+<li><strong>看门狗边界</strong>：VM watchdog正确检测“无进展”并执行策略，但它未说明q3为何停止。最后打印timeout的monitor是检测者，不自动是根因owner。</li>
+<li><strong>恢复缺陷</strong>：G43的create/ready没有闭环到状态重取和业务probe；再次整VM重建未改变失效依赖，因此形成循环。</li>
+<li><strong>竞争假设</strong>：H1 backend线程/锁不前进；H2 physical job或dependency未完成；H3 physical complete存在但used ring/IRQ链丢失；H4恢复后的state owner/session没有换代成功。每个假设都要用同一queue、descriptor、job/fence、session和generation区分。</li>
+<li><strong>责任边界</strong>：VMM owner负责kill reason与有界升级；virtio/backend owner负责q3事务闭环；物理驱动owner仅在job/fence证据指向时进入；state owner和跨域owner负责G43状态重取；TPM负责组织共同ID和验收标准。</li>
+<li><strong>修复方向</strong>：在pretimeout固定ring/backend/job/IRQ证据；恢复前判断依赖是否可用；旧代fail-closed；重复失败转降级并保留原incident；成功仅由business probe签字。</li>
+<li><strong>置信度</strong>：VM重建与恢复循环为高；事务断点区间为中；具体backend或物理根因为低，待区分实验。</li>
+</ol>
+<h2>7. 证据与埋点设计</h2>
+<p>建议统一事件字段：</p>
+<p><code>domain | originalTime | clockId | bootId | vmGeneration | serviceGeneration | watchdogOwner | monitoredObject | progressSeq | armTime | pretimeoutTime | expiryTime | caller | reason | targetScope | device/queue | descriptor/request/job/fence | sessionGeneration | phase | result | deadlineRemaining | incidentId</code></p>
+<p>证据顺序：</p>
+<ol>
+<li>先用boot ID、uptime、VM generation证明停止与重建层级；</li>
+<li>固定watchdog owner、最后成功kick/进展、arm/expiry、caller、reason和reset target；</li>
+<li>沿同一事务查submit→avail/kick→dequeue→physical job→complete→used/IRQ→callback；</li>
+<li>把直接kill、kill前触发、destroy后cleanup分槽；</li>
+<li>用新generation的resource ready、state resync和business probe证明恢复；</li>
+<li>有DB/KE或reset包时先核验manifest、类型、身份、寄存器、匹配符号、first fatal、前序上下文与reset佐证；无stack是证据缺口，不是“没有底层问题”；</li>
+<li>当前项目reason字典、timeout和复位域缺失时保留原值并标unknown，不能借用历史项目常量。</li>
+</ol>
+<h2>8. 可执行验证矩阵</h2>
+<table>
+<thead>
+<tr>
+<th>测试</th>
+<th>操作</th>
+<th>关键观测</th>
+<th>通过标准</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T1 正常进展</td>
+<td>固定负载运行并记录progressSeq与事务里程碑</td>
+<td>kick、完成、业务结果</td>
+<td>无误报，进展定义可解释业务</td>
+</tr>
+<tr>
+<td>T2 单线程卡住</td>
+<td>在获批台架阻塞目标线程，保留heartbeat分支</td>
+<td>pretimeout、waiter、caller、target</td>
+<td>仅升级目标范围，证据先于终止保存</td>
+</tr>
+<tr>
+<td>T3 迟到心跳</td>
+<td>注入调度延迟或迟到progress</td>
+<td>SUSPECT撤销、incident去重</td>
+<td>当前代真实进展可恢复，不重复kill</td>
+</tr>
+<tr>
+<td>T4 backend不完成</td>
+<td>固定descriptor并阻断一个里程碑</td>
+<td>ring、backend、job/fence、IRQ</td>
+<td>能定位首个缺失阶段，不笼统定责硬件</td>
+</tr>
+<tr>
+<td>T5 reset中有在途事务</td>
+<td>在受控VM重建时保留旧请求</td>
+<td>terminal state、迟到completion、资源释放</td>
+<td>无双重完成、旧代不污染新代</td>
+</tr>
+<tr>
+<td>T6 rebind失败</td>
+<td>让新代session或subscription建立失败</td>
+<td>ready、state resync、probe、deadline</td>
+<td>不宣告恢复；有界重试后进入降级</td>
+</tr>
+<tr>
+<td>T7 重复恢复失败</td>
+<td>连续两次让同一依赖不可用</td>
+<td>策略计数、证据留存、影响半径</td>
+<td>不无限重启；首个incident证据仍可取</td>
+</tr>
+<tr>
+<td>T8 邻域回归</td>
+<td>比较其他VM、Host消费者和共享设备</td>
+<td>消费者矩阵、同步异常</td>
+<td>能区分全局设备与单context/queue</td>
+</tr>
+</tbody></table>
+<p>所有故障注入、watchdog到期和VM重建仅限已经授权的隔离环境。本课不授权操作实车。具体超时、次数和降级门槛均待项目评审确认。</p>
+<h2>9. 今日练习与交付</h2>
+<p>以下题目不附参考答案，请独立完成：</p>
+<ol>
+<li>为Android Framework、Guest service、VM、Host hardware和MCU/PMIC五类watchdog填写“被监测对象—进展信号—检测者—动作—复位范围—恢复验收”表。</li>
+<li>给出一条“heartbeat仍正常但业务无进展”的时序，指出应该新增哪三个progress checkpoint。</li>
+<li>针对案例E1—E8，画出kill前触发、直接终止、cleanup、恢复失败四个槽，并为H1—H4各写一项支持证据和反证。</li>
+<li>设计G42→G43恢复状态机的deadline预算。所有数值先写“待项目确认”，说明预算如何从总目标分配到snapshot、terminate、create、rebind、resync和probe。</li>
+<li>扩展：比较“重启Guest服务、reset单个virtio设备、重建整VM、重启Host”四种恢复半径的适用条件、状态残留、用户影响和验证成本。</li>
+</ol>
+<p>今日交付物：《VM看门狗与恢复责任矩阵 V1》，至少包含：</p>
+<ul>
+<li>五类watchdog的owner、时钟、进展定义、caller、reason与target scope；</li>
+<li>RUNNING→SUSPECT→SNAPSHOT→TERMINATING→RECREATING→REBINDING→RESYNCING→PROBING→READY/DEGRADED状态；</li>
+<li>ACK、生命周期完成、资源ready、business complete四种语义；</li>
+<li>旧generation、迟到消息、在途请求和重复incident处理；</li>
+<li>T2、T5、T6、T7的Owner、预期证据与通过标准。</li>
+</ul>
+<p>课程编号为 <strong>day-42</strong>。完成后使用页面末尾“上传／提交答卷”提交文字或附件，也可从<a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html">答卷中心</a>进入。请勿上传未脱敏项目日志、密钥、受保护payload或身份信息。</p>
+<h2>附录：21项T12T技能适用性检查（选读）</h2>
+<table>
+<thead>
+<tr>
+<th>技能</th>
+<th>判断</th>
+<th>本课覆盖</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cockpit-diagnosis</td>
+<td>适用，深入</td>
+<td>从现象路由到稳定性、虚拟化和恢复策略</td>
+</tr>
+<tr>
+<td>log-analysis</td>
+<td>适用，深入</td>
+<td>多时钟、boot/VM generation、三槽证据</td>
+</tr>
+<tr>
+<td>platform-architecture</td>
+<td>适用，深入</td>
+<td>Android Guest、Yocto Host、Hypervisor、MCU边界</td>
+</tr>
+<tr>
+<td>display-black-freeze</td>
+<td>条件适用</td>
+<td>可作为business probe；无显示证据不定显示根因</td>
+</tr>
+<tr>
+<td>touch-input</td>
+<td>当前不适用</td>
+<td>未涉及触摸链</td>
+</tr>
+<tr>
+<td>avm-camera-stream</td>
+<td>当前不适用</td>
+<td>未涉及Camera源流与AVM会话</td>
+</tr>
+<tr>
+<td>power-sleep-str</td>
+<td>条件适用</td>
+<td>电源状态早于watchdog时进入；当前材料不足</td>
+</tr>
+<tr>
+<td>audio-path</td>
+<td>当前不适用</td>
+<td>未涉及音频业务</td>
+</tr>
+<tr>
+<td>stability-crash-reset</td>
+<td>适用，深入</td>
+<td>L1—L7、直接终止与连续性</td>
+</tr>
+<tr>
+<td>performance-jank</td>
+<td>材料不足</td>
+<td>调度饥饿是假设，尚无CPU/IO/PSI证据</td>
+</tr>
+<tr>
+<td>ethernet-sgmii</td>
+<td>当前不适用</td>
+<td>未涉及有线链路</td>
+</tr>
+<tr>
+<td>wireless-phone-link</td>
+<td>当前不适用</td>
+<td>未涉及无线或手机互联</td>
+</tr>
+<tr>
+<td>cross-domain-msg</td>
+<td>适用，深入</td>
+<td>heartbeat与topic progress分离、generation和旧消息</td>
+</tr>
+<tr>
+<td>boot-hmi</td>
+<td>条件适用</td>
+<td>VM重建后的服务ready与业务ready分离</td>
+</tr>
+<tr>
+<td>log-storm</td>
+<td>材料不足</td>
+<td>重启循环可能刷屏，需先量化才进入</td>
+</tr>
+<tr>
+<td>usb-typec-storage</td>
+<td>当前不适用</td>
+<td>未涉及USB或卷生命周期</td>
+</tr>
+<tr>
+<td>virtualization-tee</td>
+<td>适用，深入</td>
+<td>virtqueue、VMM kill、destroy/create与共享设备</td>
+</tr>
+<tr>
+<td>db-ke-forensics</td>
+<td>适用，深入</td>
+<td>watchdog/reset包的固定八步与无stack边界</td>
+</tr>
+<tr>
+<td>mcu</td>
+<td>条件适用</td>
+<td>区分MCU SWT、PMIC和VM watchdog；reason须查当前字典</td>
+</tr>
+<tr>
+<td>tpm-triage</td>
+<td>适用，深入</td>
+<td>触发、直接终止、恢复策略、验证Owner分离</td>
+</tr>
+<tr>
+<td>tpm-5y8d</td>
+<td>当前不适用</td>
+<td>无真实根因和逃逸证据，不编造5Y/8D</td>
+</tr>
+</tbody></table>
+<p>关键证据缺口：当前车型/SoC/软硬件版本、真实VM与共享设备拓扑、watchdog owner与进展定义、超时/预超时、caller/reason字典、reset target、ring/job/IRQ关联ID、异常包完整性、状态重取合同、业务probe和实测恢复预算。下一任务按真实日期与星期规则处理，不提前推进Day 43。</p>
+</article><section class="answer-panel" data-course="day-42" aria-label="Day 42 - Hypervisor / VM Reset II：看门狗责任与恢复策略 答卷提交"><h3>提交本课答卷</h3><p>在 GitHub 登录后填写文字，或把图片、PDF、Word 等文件拖入“答卷正文与附件”框；点击 Submit new issue（提交）才算上传成功。答卷和附件将保存在公开的 GitHub 仓库，请只提交可公开的学习材料。</p><p><a class="answer-submit" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues/new?template=answer.yml&amp;title=%5B%E7%AD%94%E5%8D%B7%5D%5Bday-42%5D+Day+42+-+Hypervisor+%2F+VM+Reset+II%EF%BC%9A%E7%9C%8B%E9%97%A8%E7%8B%97%E8%B4%A3%E4%BB%BB%E4%B8%8E%E6%81%A2%E5%A4%8D%E7%AD%96%E7%95%A5&amp;lesson=day-42&amp;course=https%3A%2F%2Fqiantao18817568425-art.github.io%2FArchitecture_Learning-%2F%23day-42" target="_blank" rel="noopener">上传／提交答卷 ↗</a> <a class="answer-view" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues?q=is%3Aissue+in%3Atitle+%22%5B%E7%AD%94%E5%8D%B7%5D%5Bday-42%5D%22" target="_blank" rel="noopener">查看答卷与批改 ↗</a> <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html#day-42">归档与批改状态</a></p><p>课程编号：<code>day-42</code>。补交请在同一答卷下评论，以 <strong>[补交]</strong> 开头，并注明题号；也可编辑原答卷。每天 20:00 先检查并批改新答卷，再安排当天任务。</p></section></main><script src="../architecture/vendor/mermaid-10.9.5.min.js"></script><script>mermaid.initialize({startOnLoad:true,theme:'neutral',securityLevel:'strict'});</script></body></html>
