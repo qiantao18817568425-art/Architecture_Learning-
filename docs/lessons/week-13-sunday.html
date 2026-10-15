@@ -1,0 +1,208 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Week 13 - 周日整合：跨层取证、恢复设计与测试闭环</title><style>
+    :root { color-scheme: light; font-family: "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif; color: #18212f; background: #f6f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.75; }
+    a { color: #075fbd; overflow-wrap: anywhere; }
+    code { background: #edf1f6; border-radius: 3px; padding: .08rem .28rem; }
+    pre { overflow: auto; background: #111827; color: #e5e7eb; padding: 1rem; border-radius: 6px; white-space: pre-wrap; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
+    header { border-left: 5px solid #db5a2a; padding: 12px 20px; margin-bottom: 28px; background: #fff; }
+    h1, h2, h3, h4, h5, h6 { line-height: 1.35; margin: 1.35em 0 .5em; }
+    h1 { margin: 0; font-size: 2rem; }
+    .lede { max-width: 840px; margin: .5rem 0 0; color: #4b5563; }
+    .metrics { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 26px; }
+    .metric { background: #e6eff8; border: 1px solid #bfd5ea; padding: 6px 12px; border-radius: 4px; color: #174a76; }
+    .metric strong { font-size: 1.15rem; }
+    .guide { background: #fff; border-top: 2px solid #1d8093; padding: 18px 22px; margin: 24px 0; }
+    .guide ol { margin-bottom: 0; }
+    .lesson { background: #fff; border: 1px solid #d8dee8; margin: 10px 0; }
+    summary { cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 18px; }
+    summary::-webkit-details-marker { color: #db5a2a; }
+    .lesson-title { font-weight: 700; font-size: 1.05rem; }
+    .lesson-meta { color: #52606d; font-size: .86rem; white-space: nowrap; }
+    .lesson-body { border-top: 1px solid #d8dee8; padding: 4px 22px 24px; }
+    .archive-note { color: #52606d; font-size: .92rem; border-left: 3px solid #1d8093; padding-left: 10px; }
+    .format-audit { border: 1px solid #b8d5cf; background: #f4fbf8; padding: 16px; margin: 18px 0; border-radius: 6px; }
+    .format-audit h3 { margin-top: 0; }
+    .format-audit ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+    .format-audit li { border: 1px solid #d8dee8; background: #fff; border-radius: 5px; padding: 8px; font-size: .9rem; }
+    .format-audit span { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+    .format-audit .present span { background: #dbece8; color: #126458; }
+    .format-audit .missing span { background: #f4e3cb; color: #8a4604; }
+    article h2 { font-size: 1.35rem; }
+    article h3 { font-size: 1.15rem; }
+    article h4, article h5 { font-size: 1rem; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    blockquote { margin: 1rem 0; padding: .45rem 1rem; border-left: 3px solid #1d8093; background: #f4f8fb; color: #435467; }
+    table { border-collapse: collapse; width: 100%; min-width: 32rem; font-size: .94rem; }
+    th, td { border: 1px solid #d8dee8; padding: .55rem .7rem; text-align: left; vertical-align: top; }
+    th { background: #edf4f9; }
+    .mermaid { background: #fff; color: #18212f; border: 1px solid #d8dee8; }
+    footer { margin-top: 32px; color: #52606d; font-size: .9rem; }
+    @media (max-width: 640px) { main { padding: 16px 12px 36px; } h1 { font-size: 1.55rem; } summary { align-items: flex-start; } .lesson-body { padding: 2px 14px 18px; } .format-audit ul { grid-template-columns: 1fr; } }
+  </style><style>.answer-panel{margin:22px 0;padding:18px;border:1px solid #9ab8d8;border-left:5px solid #1763a3;border-radius:8px;background:#f2f7fc}.answer-panel h3{margin-top:0}.answer-submit,.answer-view{display:inline-block;padding:10px 14px;margin:4px 8px 4px 0;border-radius:6px;background:#12578f;color:#fff;text-decoration:none}.answer-view{background:#e0ecf6;color:#153e61}.answer-panel a:focus-visible{outline:3px solid #db5a2a;outline-offset:3px}.answer-panel code{overflow-wrap:anywhere}.answer-list{padding:0;list-style:none}.answer-list li{margin:12px 0;padding:16px;background:#fff;border:1px solid #d8dee8;border-radius:6px}body{font-family:system-ui,'Microsoft YaHei',sans-serif;line-height:1.75;color:#18212f;background:#f6f8fb}main{max-width:1180px;margin:auto;padding:24px}a{overflow-wrap:anywhere}</style></head><body><main><nav><a href="../index.html#week-13-sunday">课程档案</a> · <a href="../architecture/index.html">项目架构实践</a></nav><article><h1>Week 13 — 周日整合：跨层取证、恢复设计与测试闭环</h1>
+<p>计划学习日期：2026-10-11，星期日，Asia/Shanghai；于2026-10-15按用户明确要求补录。补录不表示10月11日已经发布、学习或完成。本单元只整合Day 40—41，不新增普通专题、不推进Day、不提前给未来课答案。建议用时60分钟。</p>
+<h2>1. 今日目标</h2>
+<p>把本周知识压成一套可在真实问题中复用的闭环：</p>
+<p><strong>用户现象 → 版本与拓扑 → 统一时间/generation → 最早断点 → 竞争假设 → 恢复契约 → 可执行验证 → 关闭证据</strong></p>
+<p>执行前答卷扫描无新增。没有真实作答证据时，只记录“待验证”，不虚构掌握或错题。</p>
+<h2>2. 60分钟安排</h2>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>任务</th>
+<th>产物</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0—10分钟</td>
+<td>回顾4题</td>
+<td>分层判断</td>
+</tr>
+<tr>
+<td>10—25分钟</td>
+<td>跨层取证</td>
+<td>一张双时间线</td>
+</tr>
+<tr>
+<td>25—40分钟</td>
+<td>恢复设计</td>
+<td>恢复合同</td>
+</tr>
+<tr>
+<td>40—55分钟</td>
+<td>测试闭环</td>
+<td>验证矩阵</td>
+</tr>
+<tr>
+<td>55—60分钟</td>
+<td>TPM收口</td>
+<td>行动项与关闭标准</td>
+</tr>
+</tbody></table>
+<h2>3. 回顾题</h2>
+<ol>
+<li>为什么“VM create成功”不能作为黑屏关闭标准？</li>
+<li>显示数据路径和背光/电源路径为何要分开画？</li>
+<li>旧generation消息到达新VM时，哪些层都应具备防护？</li>
+<li>如何用Host连续、Guest重建和另一消费者状态区分故障域？</li>
+</ol>
+<h2>4. 周日综合案例</h2>
+<p>教学场景：车辆从低功耗状态恢复后，主屏背光亮但停在旧画面；另一屏可正常刷新。Host boot ID连续，目标Android VM发生一次destroy/create。旧VM最后一帧已submit，但fence状态未知。新VM服务ready，显示backend也ready；目标业务状态仍来自旧cache。清cache并重新触发后画面恢复。</p>
+<p>请独立完成以下任务，不预设根因：</p>
+<h3>任务A：双时间线</h3>
+<p>分别画生命周期线（power/resume → Host连续性 → VM旧代终止 → 新代create → 服务/设备/业务ready）和显示事务线（request → buffer → fence → SurfaceFlinger/HWC或Host合成 → present/scanout → 物理屏可见）。</p>
+<p>用共同事件、request/fence或generation对齐；不同域wall clock未校准时只保留域内顺序。</p>
+<h3>任务B：三槽与最早断点</h3>
+<p>把证据放入A直接kill/reset、B kill/reset前诱因、C destroy后cleanup、R恢复与验收。标出最后成功和首个缺失里程碑。未采集与未打印要写成“未观测”，不能写“未发生”。</p>
+<h3>任务C：恢复合同</h3>
+<p>至少定义旧代输入关闭和在途帧终态、新代device/session/surface绑定、当前状态重取与旧cache失效、ACK/resource ready/first present/business complete、超时与重试上限、降级与证据留存，以及重复恢复时的incident去重。</p>
+<h3>任务D：关闭矩阵</h3>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>操作</th>
+<th>必须保留证据</th>
+<th>关闭标准</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>正常resume</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>VM重建</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>旧fence迟到</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>backend晚ready</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>状态重取失败</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>连续两次恢复失败</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2>5. TPM协查表</h2>
+<table>
+<thead>
+<tr>
+<th>架构节点/接口</th>
+<th>TPM应问的问题</th>
+<th>所需证据</th>
+<th>建议责任域</th>
+<th>验证判据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>VM生命周期</td>
+<td>谁调用destroy，reason与target是什么？</td>
+<td>VMM caller/reason/generation</td>
+<td>稳定性/虚拟化</td>
+<td>终止层级和策略可解释</td>
+</tr>
+<tr>
+<td>virtio/backend</td>
+<td>同一请求停在哪个里程碑？</td>
+<td>queue/request/fence/IRQ</td>
+<td>Guest/Host backend</td>
+<td>首个缺失阶段可复现</td>
+</tr>
+<tr>
+<td>显示合成</td>
+<td>新代是否有first present？</td>
+<td>layer/present/vblank</td>
+<td>Android/Host显示</td>
+<td>当前代画面提交并扫描</td>
+</tr>
+<tr>
+<td>状态同步</td>
+<td>是否重取当前source？</td>
+<td>sequence/session/cache generation</td>
+<td>跨域/状态Owner</td>
+<td>旧值不能覆盖新值</td>
+</tr>
+<tr>
+<td>物理输出</td>
+<td>背光、链路、面板状态是否匹配？</td>
+<td>GPIO/SerDes/panel/测量</td>
+<td>BSP/硬件</td>
+<td>可见结果与软件证据一致</td>
+</tr>
+</tbody></table>
+<p>首轮分析Owner不等于最终根因Owner。没有证据时，Owner列为“待确认”，动作必须包含输入、输出件和验收标准。</p>
+<h2>6. 今日交付</h2>
+<p>提交《Week 13周日跨层闭环包》，包含双时间线、三槽账本、恢复合同、六项关闭矩阵和TPM协查表。课程编号为 <strong>week-13-sunday</strong>。题目不附答案；请用页面末尾“上传／提交答卷”提交。</p>
+<h2>7. 技能覆盖与边界</h2>
+<p>本次从F盘优化版目录检查全部21项T12T技能。深入：通用三入口、显示、稳定性、虚拟化、跨域、启动与TPM分责。条件适用：电源、性能、DB/KE、MCU、日志风暴。其他专项当前不适用或材料不足；没有真实根因和逃逸证据，不展开5Y/8D。</p>
+<p>关键缺口：真实车型与版本、控制/数据/电源路径、跨域时钟锚点、VM与显示资源映射、旧消息合同、实测恢复时间和用户可见验收。</p>
+</article><section class="answer-panel" data-course="week-13-sunday" aria-label="Week 13 - 周日整合：跨层取证、恢复设计与测试闭环 答卷提交"><h3>提交本课答卷</h3><p>在 GitHub 登录后填写文字，或把图片、PDF、Word 等文件拖入“答卷正文与附件”框；点击 Submit new issue（提交）才算上传成功。答卷和附件将保存在公开的 GitHub 仓库，请只提交可公开的学习材料。</p><p><a class="answer-submit" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues/new?template=answer.yml&amp;title=%5B%E7%AD%94%E5%8D%B7%5D%5Bweek-13-sunday%5D+Week+13+-+%E5%91%A8%E6%97%A5%E6%95%B4%E5%90%88%EF%BC%9A%E8%B7%A8%E5%B1%82%E5%8F%96%E8%AF%81%E3%80%81%E6%81%A2%E5%A4%8D%E8%AE%BE%E8%AE%A1%E4%B8%8E%E6%B5%8B%E8%AF%95%E9%97%AD%E7%8E%AF&amp;lesson=week-13-sunday&amp;course=https%3A%2F%2Fqiantao18817568425-art.github.io%2FArchitecture_Learning-%2F%23week-13-sunday" target="_blank" rel="noopener">上传／提交答卷 ↗</a> <a class="answer-view" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues?q=is%3Aissue+in%3Atitle+%22%5B%E7%AD%94%E5%8D%B7%5D%5Bweek-13-sunday%5D%22" target="_blank" rel="noopener">查看答卷与批改 ↗</a> <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html#week-13-sunday">归档与批改状态</a></p><p>课程编号：<code>week-13-sunday</code>。补交请在同一答卷下评论，以 <strong>[补交]</strong> 开头，并注明题号；也可编辑原答卷。每天 20:00 先检查并批改新答卷，再安排当天任务。</p></section></main><script src="../architecture/vendor/mermaid-10.9.5.min.js"></script><script>mermaid.initialize({startOnLoad:true,theme:'neutral',securityLevel:'strict'});</script></body></html>

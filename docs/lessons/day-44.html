@@ -1,0 +1,357 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Day 44 - Ethernet / SOME-IP II：故障隔离、恢复策略与测试闭环</title><style>
+    :root { color-scheme: light; font-family: "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif; color: #18212f; background: #f6f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.75; }
+    a { color: #075fbd; overflow-wrap: anywhere; }
+    code { background: #edf1f6; border-radius: 3px; padding: .08rem .28rem; }
+    pre { overflow: auto; background: #111827; color: #e5e7eb; padding: 1rem; border-radius: 6px; white-space: pre-wrap; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
+    header { border-left: 5px solid #db5a2a; padding: 12px 20px; margin-bottom: 28px; background: #fff; }
+    h1, h2, h3, h4, h5, h6 { line-height: 1.35; margin: 1.35em 0 .5em; }
+    h1 { margin: 0; font-size: 2rem; }
+    .lede { max-width: 840px; margin: .5rem 0 0; color: #4b5563; }
+    .metrics { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 26px; }
+    .metric { background: #e6eff8; border: 1px solid #bfd5ea; padding: 6px 12px; border-radius: 4px; color: #174a76; }
+    .metric strong { font-size: 1.15rem; }
+    .guide { background: #fff; border-top: 2px solid #1d8093; padding: 18px 22px; margin: 24px 0; }
+    .guide ol { margin-bottom: 0; }
+    .lesson { background: #fff; border: 1px solid #d8dee8; margin: 10px 0; }
+    summary { cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 18px; }
+    summary::-webkit-details-marker { color: #db5a2a; }
+    .lesson-title { font-weight: 700; font-size: 1.05rem; }
+    .lesson-meta { color: #52606d; font-size: .86rem; white-space: nowrap; }
+    .lesson-body { border-top: 1px solid #d8dee8; padding: 4px 22px 24px; }
+    .archive-note { color: #52606d; font-size: .92rem; border-left: 3px solid #1d8093; padding-left: 10px; }
+    .format-audit { border: 1px solid #b8d5cf; background: #f4fbf8; padding: 16px; margin: 18px 0; border-radius: 6px; }
+    .format-audit h3 { margin-top: 0; }
+    .format-audit ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+    .format-audit li { border: 1px solid #d8dee8; background: #fff; border-radius: 5px; padding: 8px; font-size: .9rem; }
+    .format-audit span { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+    .format-audit .present span { background: #dbece8; color: #126458; }
+    .format-audit .missing span { background: #f4e3cb; color: #8a4604; }
+    article h2 { font-size: 1.35rem; }
+    article h3 { font-size: 1.15rem; }
+    article h4, article h5 { font-size: 1rem; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    blockquote { margin: 1rem 0; padding: .45rem 1rem; border-left: 3px solid #1d8093; background: #f4f8fb; color: #435467; }
+    table { border-collapse: collapse; width: 100%; min-width: 32rem; font-size: .94rem; }
+    th, td { border: 1px solid #d8dee8; padding: .55rem .7rem; text-align: left; vertical-align: top; }
+    th { background: #edf4f9; }
+    .mermaid { background: #fff; color: #18212f; border: 1px solid #d8dee8; }
+    footer { margin-top: 32px; color: #52606d; font-size: .9rem; }
+    @media (max-width: 640px) { main { padding: 16px 12px 36px; } h1 { font-size: 1.55rem; } summary { align-items: flex-start; } .lesson-body { padding: 2px 14px 18px; } .format-audit ul { grid-template-columns: 1fr; } }
+  </style><style>.answer-panel{margin:22px 0;padding:18px;border:1px solid #9ab8d8;border-left:5px solid #1763a3;border-radius:8px;background:#f2f7fc}.answer-panel h3{margin-top:0}.answer-submit,.answer-view{display:inline-block;padding:10px 14px;margin:4px 8px 4px 0;border-radius:6px;background:#12578f;color:#fff;text-decoration:none}.answer-view{background:#e0ecf6;color:#153e61}.answer-panel a:focus-visible{outline:3px solid #db5a2a;outline-offset:3px}.answer-panel code{overflow-wrap:anywhere}.answer-list{padding:0;list-style:none}.answer-list li{margin:12px 0;padding:16px;background:#fff;border:1px solid #d8dee8;border-radius:6px}body{font-family:system-ui,'Microsoft YaHei',sans-serif;line-height:1.75;color:#18212f;background:#f6f8fb}main{max-width:1180px;margin:auto;padding:24px}a{overflow-wrap:anywhere}</style></head><body><main><nav><a href="../index.html#day-44">课程档案</a> · <a href="../architecture/index.html">项目架构实践</a></nav><article><h1>Day 44 — Ethernet / SOME-IP II：故障隔离、恢复策略与测试闭环</h1>
+<p>计划学习日期：2026-10-14，星期三，Asia/Shanghai；于2026-10-15按用户明确要求补录。补录不表示10月14日已经发布、学习或完成。能力阶段：第二阶段“系统链路与问题分析”。目标：把服务异常收敛到最小故障域，并设计不会放大故障的恢复与验收。总用时约60分钟。</p>
+<h2>1. 资料与边界</h2>
+<p>官方资料核验日期：2026-10-15。</p>
+<ul>
+<li><a href="https://www.autosar.org/fileadmin/standards/R21-11/FO/AUTOSAR_PRS_SOMEIPProtocol.pdf">AUTOSAR SOME/IP Protocol Specification R21-11</a>：用于request/response、notification、error、Request ID、版本和Return Code边界。</li>
+<li><a href="https://www.autosar.org/fileadmin/standards/R21-11/FO/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf">AUTOSAR SOME/IP-SD Specification R21-11</a>：用于Offer/Find/Subscribe、TTL、启动/关闭行为和SD状态机。</li>
+<li><a href="https://docs.kernel.org/networking/operstates.html">Linux Operational States</a>：admin状态、carrier和接口可用性应分层判断。</li>
+<li><a href="https://docs.kernel.org/networking/kapi.html">Linux networking APIs / phylink</a>：PCS、PHY、in-band状态与carrier同步属于独立链路环节，具体驱动实现以项目版本为准。</li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc8085.html">RFC 8085 UDP Usage Guidelines</a>：UDP消息可能丢失、重复或重排；应用必须设计拥塞、重试和恢复，而不能把keep-alive当可靠业务完成。</li>
+</ul>
+<p>当前缺少现车拓扑、交换机与PHY配置、VLAN/IP/路由、防火墙、SOME/IP实现、服务部署、SD参数、E2E、安全和真实故障数据。下文所有阈值、重试、ID、错误码和owner均待项目确认。</p>
+<p>执行前答卷扫描无新增；Day 34—44待真实评审。本课重新检查F盘全部21项T12T技能，深入以太网、跨域消息、日志证据、平台架构、稳定性、日志风暴与TPM分责。</p>
+<h2>2. 一小时主线</h2>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>学习任务</th>
+<th>输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0—10分钟</td>
+<td>回顾4题</td>
+<td>恢复边界短答</td>
+</tr>
+<tr>
+<td>10—30分钟</td>
+<td>两个核心概念</td>
+<td>故障域矩阵、恢复阶梯</td>
+</tr>
+<tr>
+<td>30—50分钟</td>
+<td>工程案例</td>
+<td>故障树与区分实验</td>
+</tr>
+<tr>
+<td>50—60分钟</td>
+<td>可复用产物</td>
+<td>《SOME/IP恢复与关闭矩阵 V1》</td>
+</tr>
+</tbody></table>
+<p>回顾题：</p>
+<ol>
+<li>link、carrier、IP、socket、Offer、Subscribe、event fresh为什么不能合并？</li>
+<li>reconnect后恢复最多证明什么？</li>
+<li>对非幂等method进行timeout retry会产生什么风险？</li>
+<li>为什么先恢复最小对象，再扩大到服务、网络接口或VM？</li>
+</ol>
+<h2>3. 核心概念一：按共享范围隔离故障</h2>
+<p>架构师不仅找“哪条日志报错”，还要比较同一资源的其他消费者：</p>
+<table>
+<thead>
+<tr>
+<th>影响范围</th>
+<th>优先检查</th>
+<th>需要的反证</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单字段/单event</td>
+<td>source、映射、producer cache、topic路由、consumer freshness</td>
+<td>同服务其他event持续</td>
+</tr>
+<tr>
+<td>单Service/Instance</td>
+<td>service进程、endpoint、SD状态、版本与资源</td>
+<td>同ECU其他服务正常</td>
+</tr>
+<tr>
+<td>单VLAN/接口</td>
+<td>route、VLAN、防火墙、netdev、MAC/PCS/PHY</td>
+<td>其他VLAN/接口链路</td>
+</tr>
+<tr>
+<td>多服务/多ECU</td>
+<td>交换机公共端口、时钟/电源、网络管理</td>
+<td>独立路径消费者</td>
+</tr>
+<tr>
+<td>单VM/Guest</td>
+<td>virtio-net、vSwitch/backend、Guest网络栈</td>
+<td>Host与其他VM同物理口</td>
+</tr>
+<tr>
+<td>全SoC/整车网络</td>
+<td>公共电源、交换机、SoC/Host、网络管理</td>
+<td>域外或独立电源路径</td>
+</tr>
+</tbody></table>
+<p>责任落到“最后有输入、首个无预期输出”的最小域。最后打印timeout的consumer通常只是检测者；交换机、PHY或SOME/IP名字出现在日志中也不等于它们是根因。</p>
+<pre class="mermaid">flowchart TD
+    F[用户业务失败] --&gt; A{同服务其他event正常?}
+    A -- 是 --&gt; T[单topic/source/route/freshness]
+    A -- 否 --&gt; B{同ECU其他服务正常?}
+    B -- 是 --&gt; S[单Service/Instance/endpoint]
+    B -- 否 --&gt; C{同接口其他VLAN或peer正常?}
+    C -- 是 --&gt; V[VLAN/route/firewall/配置]
+    C -- 否 --&gt; D{Host或其他VM共享物理口正常?}
+    D -- 是 --&gt; G[Guest/virtio-net/vSwitch上下文]
+    D -- 否 --&gt; P[公共MAC/PCS/PHY/Switch/电源]</pre>
+<h2>4. 核心概念二：恢复阶梯与完成合同</h2>
+<p>建议从最小范围依次评估：</p>
+<ol>
+<li><strong>刷新当前状态</strong>：重读source、重发当前值、重建consumer cache；</li>
+<li><strong>重订阅</strong>：解除旧Eventgroup并以新session/generation订阅；</li>
+<li><strong>重连endpoint</strong>：重建TCP/UDP socket或RPC channel；</li>
+<li><strong>重启单服务</strong>：重建producer/router资源；</li>
+<li><strong>重置网络接口/虚拟设备</strong>：影响同接口所有服务；</li>
+<li><strong>重建VM/Host</strong>：影响半径最大，仅在前级无法隔离且满足升级条件时使用。</li>
+</ol>
+<p>每一级都必须定义：</p>
+<ul>
+<li>触发条件和防抖；</li>
+<li>只执行一次的incident/generation；</li>
+<li>旧请求、旧订阅、旧event的清理；</li>
+<li>在途method的幂等性与最终状态；</li>
+<li>恢复budget和升级上限；</li>
+<li>resource ready与business complete；</li>
+<li>失败时保留原始证据，不让恢复日志覆盖首个断点。</li>
+</ul>
+<h3>ACK与业务完成</h3>
+<table>
+<thead>
+<tr>
+<th>事件</th>
+<th>最多证明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>link up/carrier on</td>
+<td>当前链路层报告可用</td>
+</tr>
+<tr>
+<td>socket connect成功</td>
+<td>传输端点建立</td>
+</tr>
+<tr>
+<td>OfferService/Subscribe ACK</td>
+<td>发现或订阅控制关系成立</td>
+</tr>
+<tr>
+<td>SOME/IP Response E_OK</td>
+<td>对应request被协议端成功处理</td>
+</tr>
+<tr>
+<td>当前代首个event</td>
+<td>数据面恢复一个里程碑</td>
+</tr>
+<tr>
+<td>consumer状态更新</td>
+<td>本地业务状态接收当前数据</td>
+</tr>
+<tr>
+<td>用户结果/读回验收</td>
+<td>业务完成</td>
+</tr>
+</tbody></table>
+<p>若method启动异步动作，E_OK不能替代完成事件。若method timeout后重试，必须先知道原请求是否可能已经执行；否则可能产生重复动作。</p>
+<h2>5. 恢复时序</h2>
+<pre class="mermaid">sequenceDiagram
+    participant C as Client
+    participant SD as SOME/IP-SD
+    participant S as Server
+    participant N as Network/Endpoint
+    participant B as Business Verifier
+
+    C-&gt;&gt;S: method r44 / session g14
+    S--&gt;&gt;C: Response E_OK（协议处理）
+    S--&gt;&gt;B: 异步业务执行
+    B--&gt;&gt;C: business complete / current state
+
+    Note over C,S: 故障后进入最小恢复
+    C-&gt;&gt;C: invalidate old session g14
+    C-&gt;&gt;SD: SubscribeEventgroup / g15
+    SD--&gt;&gt;C: Subscribe ACK（控制面）
+    S-&gt;&gt;N: event seq=501 / g15
+    N--&gt;&gt;C: event seq=501 / g15
+    C-&gt;&gt;B: current state applied
+    B--&gt;&gt;C: business complete
+
+    S--xC: late response r44 / old g14
+    Note over S,C: 旧代拒绝；不能完成新请求</pre>
+<p>超时策略应区分：</p>
+<ul>
+<li>detection timeout：触发证据固定与SUSPECT；</li>
+<li>operation timeout：单个request的合同；</li>
+<li>freshness timeout：目标数据年龄；</li>
+<li>recovery timeout：重订阅/重连/重启；</li>
+<li>end-to-end deadline：用户业务最终期限。</li>
+</ul>
+<p>局部重试的总时间必须受端到端deadline约束。多个层各自“重试三次”可能把总恢复时间无限叠加，必须由一个coordinator持有剩余预算。</p>
+<h2>6. 教学构造案例：冷启动后单服务反复离线</h2>
+<p>合成场景：冷启动后，目标服务A反复Offer/StopOffer；同接口的服务B稳定。carrier始终Up，IP与ARP正常。A的provider进程未退出。日志显示A的Offer开始后，client订阅ACK成功，但首个event迟迟不到；随后client freshness timeout并触发reconnect。每次reconnect后仍重复。目标source在provider cache中已有新值，但publish trigger没有执行。手工触发一次cache update后event立即到达。</p>
+<p>分析：</p>
+<ol>
+<li>同接口B稳定、carrier/IP/ARP正常，降低公共物理链和L3故障优先级；</li>
+<li>A反复Offer说明SD状态变化，但不能解释数据面首event缺失；</li>
+<li>provider进程存活不能证明publish状态机ready；</li>
+<li>source cache已有新值而producer未publish，最早可见断点位于publish trigger/state guard；</li>
+<li>client freshness timeout是检测结果，reconnect只重建client/session，未改变server内部状态，因此无效；</li>
+<li>手工cache update后恢复说明该动作覆盖producer状态，但不独立证明根因；需要比较正常启动的resource-ready与publish-trigger顺序；</li>
+<li>竞争假设包括：resource ready事件丢失、旧generation guard阻止首次publish、启动竞态导致trigger先于订阅状态、配置/版本使eventgroup映射不一致；</li>
+<li>最小实验要逐一固定source update、resource ready、Offer、Subscribe、publish trigger和首event顺序，不直接归责网络。</li>
+</ol>
+<h3>故障责任表</h3>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>本案任务</th>
+<th>关闭证据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Provider owner</td>
+<td>证明cache→publish trigger→event</td>
+<td>当前代首event与连续sequence</td>
+</tr>
+<tr>
+<td>SOME/IP/SD owner</td>
+<td>证明Offer/Subscribe与映射</td>
+<td>控制面状态及版本一致</td>
+</tr>
+<tr>
+<td>Network owner</td>
+<td>提供carrier/IP/抓包反证</td>
+<td>同窗包与错误计数</td>
+</tr>
+<tr>
+<td>Consumer owner</td>
+<td>提供lastGood/firstStale与恢复</td>
+<td>当前代cache更新</td>
+</tr>
+<tr>
+<td>TPM</td>
+<td>统一generation、时钟、测试场景</td>
+<td>行动项都有Owner和验收</td>
+</tr>
+</tbody></table>
+<h2>7. 可执行测试闭环</h2>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>故障注入/操作</th>
+<th>关键证据</th>
+<th>通过标准</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T1 冷启动顺序</td>
+<td>采集正常与异常启动</td>
+<td>resource ready、Offer、Subscribe、首event</td>
+<td>顺序稳定，早到事件有处理</td>
+</tr>
+<tr>
+<td>T2 单topic停更</td>
+<td>只停止publish trigger</td>
+<td>source/cache/event/freshness</td>
+<td>隔离到producer，不重置整网</td>
+</tr>
+<tr>
+<td>T3 TTL过期</td>
+<td>停止Offer refresh</td>
+<td>SD状态、subscription、业务降级</td>
+<td>过期后旧服务不可用且可恢复</td>
+</tr>
+<tr>
+<td>T4 provider重启</td>
+<td>保持链路与client</td>
+<td>session/generation/首event</td>
+<td>旧订阅失效，新代闭环</td>
+</tr>
+<tr>
+<td>T5 client重启</td>
+<td>保持provider</td>
+<td>旧cache/重订阅/状态重取</td>
+<td>不显示旧值，当前态恢复</td>
+</tr>
+<tr>
+<td>T6 迟到response</td>
+<td>延迟旧session响应</td>
+<td>幂等键与拒绝日志</td>
+<td>不重复业务、不污染新请求</td>
+</tr>
+<tr>
+<td>T7 link flap</td>
+<td>受控down/up</td>
+<td>PCS/PHY/carrier/IP/SD/event</td>
+<td>分层恢复，有界且可观测</td>
+</tr>
+<tr>
+<td>T8 重复失败</td>
+<td>连续让publish不ready</td>
+<td>升级次数、降级、证据留存</td>
+<td>不形成重连/日志风暴</td>
+</tr>
+</tbody></table>
+<p>不要在量产车上执行未授权故障注入。通过标准必须用当前项目业务目标和基线填写，不能直接采用示例时限。</p>
+<h2>8. 今日练习与交付</h2>
+<p>新题不附参考答案：</p>
+<ol>
+<li>为“单event、单服务、单VLAN、单VM、全接口”设计消费者矩阵和区分证据；</li>
+<li>针对一个非幂等method，设计request identity、timeout、查询最终状态和安全重试；</li>
+<li>把案例拆成trigger、direct failure、aggravator、consequence和recovery；</li>
+<li>设计从重订阅到VM重建的升级门槛，写清每一级影响半径；</li>
+<li>输出TPM行动项表：动作、Owner、输入、输出、截止待确认、验证标准。</li>
+</ol>
+<p>今日交付物：《SOME/IP恢复与关闭矩阵 V1》，包含故障域树、恢复阶梯、ACK/完成表、超时预算、T1—T8测试和责任表。课程编号为 <strong>day-44</strong>。使用页面末尾“上传／提交答卷”提交。</p>
+<h2>9. 21项技能覆盖（选读）</h2>
+<p>深入：cockpit-diagnosis、log-analysis、platform-architecture、ethernet-sgmii、cross-domain-msg、boot-hmi、log-storm、stability-crash-reset、tpm-triage。条件适用：power-sleep-str、performance-jank、virtualization-tee、mcu。其余显示、触摸、AVM、音频、无线、USB、DB/KE与5Y/8D在当前案例中不适用或材料不足。</p>
+<p>关键缺口：现车物理和虚拟网络拓扑、服务部署、正常启动顺序、SD与SOME/IP配置、method幂等合同、状态查询接口、恢复coordinator、实测预算、故障注入权限和关闭样本。</p>
+</article><section class="answer-panel" data-course="day-44" aria-label="Day 44 - Ethernet / SOME-IP II：故障隔离、恢复策略与测试闭环 答卷提交"><h3>提交本课答卷</h3><p>在 GitHub 登录后填写文字，或把图片、PDF、Word 等文件拖入“答卷正文与附件”框；点击 Submit new issue（提交）才算上传成功。答卷和附件将保存在公开的 GitHub 仓库，请只提交可公开的学习材料。</p><p><a class="answer-submit" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues/new?template=answer.yml&amp;title=%5B%E7%AD%94%E5%8D%B7%5D%5Bday-44%5D+Day+44+-+Ethernet+%2F+SOME-IP+II%EF%BC%9A%E6%95%85%E9%9A%9C%E9%9A%94%E7%A6%BB%E3%80%81%E6%81%A2%E5%A4%8D%E7%AD%96%E7%95%A5%E4%B8%8E%E6%B5%8B%E8%AF%95%E9%97%AD%E7%8E%AF&amp;lesson=day-44&amp;course=https%3A%2F%2Fqiantao18817568425-art.github.io%2FArchitecture_Learning-%2F%23day-44" target="_blank" rel="noopener">上传／提交答卷 ↗</a> <a class="answer-view" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues?q=is%3Aissue+in%3Atitle+%22%5B%E7%AD%94%E5%8D%B7%5D%5Bday-44%5D%22" target="_blank" rel="noopener">查看答卷与批改 ↗</a> <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html#day-44">归档与批改状态</a></p><p>课程编号：<code>day-44</code>。补交请在同一答卷下评论，以 <strong>[补交]</strong> 开头，并注明题号；也可编辑原答卷。每天 20:00 先检查并批改新答卷，再安排当天任务。</p></section></main><script src="../architecture/vendor/mermaid-10.9.5.min.js"></script><script>mermaid.initialize({startOnLoad:true,theme:'neutral',securityLevel:'strict'});</script></body></html>

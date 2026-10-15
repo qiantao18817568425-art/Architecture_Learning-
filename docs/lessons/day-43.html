@@ -1,0 +1,341 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Day 43 - Ethernet / SOME-IP I：服务可用性、会话与数据新鲜度</title><style>
+    :root { color-scheme: light; font-family: "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif; color: #18212f; background: #f6f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.75; }
+    a { color: #075fbd; overflow-wrap: anywhere; }
+    code { background: #edf1f6; border-radius: 3px; padding: .08rem .28rem; }
+    pre { overflow: auto; background: #111827; color: #e5e7eb; padding: 1rem; border-radius: 6px; white-space: pre-wrap; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
+    header { border-left: 5px solid #db5a2a; padding: 12px 20px; margin-bottom: 28px; background: #fff; }
+    h1, h2, h3, h4, h5, h6 { line-height: 1.35; margin: 1.35em 0 .5em; }
+    h1 { margin: 0; font-size: 2rem; }
+    .lede { max-width: 840px; margin: .5rem 0 0; color: #4b5563; }
+    .metrics { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 26px; }
+    .metric { background: #e6eff8; border: 1px solid #bfd5ea; padding: 6px 12px; border-radius: 4px; color: #174a76; }
+    .metric strong { font-size: 1.15rem; }
+    .guide { background: #fff; border-top: 2px solid #1d8093; padding: 18px 22px; margin: 24px 0; }
+    .guide ol { margin-bottom: 0; }
+    .lesson { background: #fff; border: 1px solid #d8dee8; margin: 10px 0; }
+    summary { cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 18px; }
+    summary::-webkit-details-marker { color: #db5a2a; }
+    .lesson-title { font-weight: 700; font-size: 1.05rem; }
+    .lesson-meta { color: #52606d; font-size: .86rem; white-space: nowrap; }
+    .lesson-body { border-top: 1px solid #d8dee8; padding: 4px 22px 24px; }
+    .archive-note { color: #52606d; font-size: .92rem; border-left: 3px solid #1d8093; padding-left: 10px; }
+    .format-audit { border: 1px solid #b8d5cf; background: #f4fbf8; padding: 16px; margin: 18px 0; border-radius: 6px; }
+    .format-audit h3 { margin-top: 0; }
+    .format-audit ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+    .format-audit li { border: 1px solid #d8dee8; background: #fff; border-radius: 5px; padding: 8px; font-size: .9rem; }
+    .format-audit span { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+    .format-audit .present span { background: #dbece8; color: #126458; }
+    .format-audit .missing span { background: #f4e3cb; color: #8a4604; }
+    article h2 { font-size: 1.35rem; }
+    article h3 { font-size: 1.15rem; }
+    article h4, article h5 { font-size: 1rem; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    blockquote { margin: 1rem 0; padding: .45rem 1rem; border-left: 3px solid #1d8093; background: #f4f8fb; color: #435467; }
+    table { border-collapse: collapse; width: 100%; min-width: 32rem; font-size: .94rem; }
+    th, td { border: 1px solid #d8dee8; padding: .55rem .7rem; text-align: left; vertical-align: top; }
+    th { background: #edf4f9; }
+    .mermaid { background: #fff; color: #18212f; border: 1px solid #d8dee8; }
+    footer { margin-top: 32px; color: #52606d; font-size: .9rem; }
+    @media (max-width: 640px) { main { padding: 16px 12px 36px; } h1 { font-size: 1.55rem; } summary { align-items: flex-start; } .lesson-body { padding: 2px 14px 18px; } .format-audit ul { grid-template-columns: 1fr; } }
+  </style><style>.answer-panel{margin:22px 0;padding:18px;border:1px solid #9ab8d8;border-left:5px solid #1763a3;border-radius:8px;background:#f2f7fc}.answer-panel h3{margin-top:0}.answer-submit,.answer-view{display:inline-block;padding:10px 14px;margin:4px 8px 4px 0;border-radius:6px;background:#12578f;color:#fff;text-decoration:none}.answer-view{background:#e0ecf6;color:#153e61}.answer-panel a:focus-visible{outline:3px solid #db5a2a;outline-offset:3px}.answer-panel code{overflow-wrap:anywhere}.answer-list{padding:0;list-style:none}.answer-list li{margin:12px 0;padding:16px;background:#fff;border:1px solid #d8dee8;border-radius:6px}body{font-family:system-ui,'Microsoft YaHei',sans-serif;line-height:1.75;color:#18212f;background:#f6f8fb}main{max-width:1180px;margin:auto;padding:24px}a{overflow-wrap:anywhere}</style></head><body><main><nav><a href="../index.html#day-43">课程档案</a> · <a href="../architecture/index.html">项目架构实践</a></nav><article><h1>Day 43 — Ethernet / SOME-IP I：服务可用性、会话与数据新鲜度</h1>
+<p>计划学习日期：2026-10-13，星期二，Asia/Shanghai；于2026-10-15按用户明确要求补录。补录时间与计划日期分开记录，不表示10月13日已经发布、学习或完成。能力阶段：第二阶段“系统链路与问题分析”。总用时约60分钟，附录选读。</p>
+<h2>1. 资料、版本与边界</h2>
+<p>官方资料核验日期：2026-10-15。</p>
+<ul>
+<li><a href="https://www.autosar.org/fileadmin/standards/R21-11/FO/AUTOSAR_PRS_SOMEIPProtocol.pdf">AUTOSAR SOME/IP Protocol Specification R21-11</a>：用于核对Message ID、Request ID、Protocol/Interface Version、Message Type与Return Code等协议字段。Response成功只表示该请求的协议处理结果，不能代替物理链、服务新鲜度或用户业务验收。</li>
+<li><a href="https://www.autosar.org/fileadmin/standards/R21-11/FO/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf">AUTOSAR SOME/IP Service Discovery Specification R21-11</a>：用于理解OfferService、FindService、SubscribeEventgroup、TTL与SD状态机。</li>
+<li><a href="https://docs.kernel.org/networking/operstates.html">Linux网络接口Operational States</a>：管理up与可传输用户数据不是同一概念；carrier只是分层证据之一。</li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc9293.html">RFC 9293 TCP</a>：TCP连接与keep-alive有独立语义；一个探测无响应不能被简单解释为peer永久死亡。</li>
+</ul>
+<p>当前没有本车车型、SoC、交换机/PHY拓扑、VLAN、IP规划、AUTOSAR release、SOME/IP栈实现、Service/Instance/Eventgroup ID、TTL、周期、E2E Profile、进程映射或实车日志。所有ID、时限、状态码和拓扑均待项目确认。教学重点是分层方法，不把规范默认值当项目配置。</p>
+<p>执行前已扫描全部答卷Issue和评论，无新答卷；Day 34—43仍待真实作答评审。本课从F盘优化版目录检查全部21项T12T技能，深入平台架构、日志、以太网、跨域消息、启动与TPM分责。</p>
+<h2>2. 一小时主线</h2>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>学习任务</th>
+<th>输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0—10分钟</td>
+<td>回顾4题</td>
+<td>分层判断短答</td>
+</tr>
+<tr>
+<td>10—30分钟</td>
+<td>两个核心概念</td>
+<td>可用性四层、freshness账本</td>
+</tr>
+<tr>
+<td>30—50分钟</td>
+<td>工程案例</td>
+<td>双链路与最早断点</td>
+</tr>
+<tr>
+<td>50—60分钟</td>
+<td>可复用产物</td>
+<td>《SOME/IP服务可用性证据表 V1》</td>
+</tr>
+</tbody></table>
+<p>回顾题：</p>
+<ol>
+<li>netdev admin up、carrier up、IP可达、OfferService存在各自证明什么？</li>
+<li>为什么SD服务可发现不等于目标event持续新鲜？</li>
+<li>Response的E_OK与用户业务完成之间还缺哪些步骤？</li>
+<li>heartbeat正常但单一topic停止，首查顺序应该怎样改变？</li>
+</ol>
+<h2>3. 核心概念一：把“服务在线”拆成四层</h2>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>关键问题</th>
+<th>成功证据</th>
+<th>不能推出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>物理/链路</td>
+<td>PCS、PHY、carrier是否建立？</td>
+<td>当前接口的link/carrier与错误计数</td>
+<td>IP、SD或业务可用</td>
+</tr>
+<tr>
+<td>网络/传输</td>
+<td>IP/VLAN/route/ARP邻居、UDP/TCP端点是否通？</td>
+<td>双端地址、socket、抓包和计数</td>
+<td>服务已Offer或版本匹配</td>
+</tr>
+<tr>
+<td>SOME/IP/SD</td>
+<td>Service/Instance可发现，Eventgroup订阅有效？</td>
+<td>Offer/Find/Subscribe与TTL/session</td>
+<td>目标数据持续更新</td>
+</tr>
+<tr>
+<td>业务/freshness</td>
+<td>当前source产生新数据，consumer正确消费？</td>
+<td>sourceSeq→publish→arrival→callback→state</td>
+<td>上游没有独立缺陷</td>
+</tr>
+</tbody></table>
+<p>物理链alive、RPC/SD会话alive、目标topic fresh、业务状态正确必须写成四个结论。SOME/IP-SD负责发现与订阅关系；它不替代source、producer、router、consumer的端到端新鲜度。</p>
+<pre class="mermaid">flowchart LR
+    SRC[CAN或业务Source] --&gt; P[Producer Cache]
+    P --&gt; S[序列化 SOME/IP]
+    S --&gt; EP[UDP/TCP Endpoint]
+    EP --&gt; NET[VLAN/IP/MAC]
+    NET --&gt; PHY[MAC/PCS/PHY/Switch]
+    PHY --&gt; RNET[Peer MAC/IP]
+    RNET --&gt; D[反序列化/Router]
+    D --&gt; SUB[Subscriber Callback]
+    SUB --&gt; C[Consumer Cache/Freshness]
+    C --&gt; B[业务状态与用户结果]
+    SD[SOME/IP-SD Offer/Find/Subscribe/TTL] -.控制关系.-&gt; S
+    SD -.控制关系.-&gt; D</pre>
+<p>控制流与数据流要分开：Offer/Subscribe是控制关系；event payload、method request/response是数据或业务事务。链路恢复后，控制面重建不自动证明数据面已经产生新sequence。</p>
+<h2>4. 核心概念二：会话可用与数据新鲜度</h2>
+<h3>Request/Response</h3>
+<p>同一请求至少关联Client ID、Session ID或当前实现的Request ID，并观察：</p>
+<ol>
+<li>client创建并发送request；</li>
+<li>server接收且版本/方法匹配；</li>
+<li>server执行并生成response；</li>
+<li>client收到并匹配当前session；</li>
+<li>consumer应用结果；</li>
+<li>用户业务状态达到目标。</li>
+</ol>
+<p>协议response或Return Code只覆盖第3—4步的合同语义。若方法是“请求开始某动作”，E_OK可能只是接受执行；必须另定义业务完成事件或读回验证。</p>
+<h3>Publish/Subscribe</h3>
+<p>新鲜度账本至少记录：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>sourceSeq/sourceTime</td>
+<td>上游是否产生新值</td>
+</tr>
+<tr>
+<td>producerSeq/publishTime</td>
+<td>cache与publish是否继续</td>
+</tr>
+<tr>
+<td>SD/sessionGeneration</td>
+<td>当前Offer/Subscribe属于哪一代</td>
+</tr>
+<tr>
+<td>arrivalTime/callbackSeq</td>
+<td>transport/router是否交付</td>
+</tr>
+<tr>
+<td>cacheGeneration/lastGood</td>
+<td>consumer是否写入当前代</td>
+</tr>
+<tr>
+<td>firstStale/sourceAge</td>
+<td>谁在什么时钟上判过期</td>
+</tr>
+</tbody></table>
+<p>TTL未到期最多支持“当前SD状态尚未按规则失效”；它不能证明目标event已经在业务周期内更新。类似地，TCP连接仍ESTABLISHED或UDP端点存在，也不能证明producer仍在publish。</p>
+<h2>5. 状态与时序</h2>
+<pre class="mermaid">sequenceDiagram
+    participant S as Service Provider
+    participant SD as SOME/IP-SD
+    participant N as Network
+    participant C as Client/Consumer
+    participant B as Business State
+
+    S-&gt;&gt;SD: OfferService service/instance/version/TTL
+    SD--&gt;&gt;C: Offer observed
+    C-&gt;&gt;SD: SubscribeEventgroup / client generation g13
+    SD--&gt;&gt;C: Subscribe ACK（控制面）
+    S-&gt;&gt;N: Event seq=201 / sourceTime
+    N--&gt;&gt;C: Event seq=201
+    C-&gt;&gt;B: cache update g13 / seq=201
+    B--&gt;&gt;C: business state updated
+
+    Note over S,C: 服务会话保持，但目标source停止更新
+    S-&gt;&gt;SD: Offer refresh continues
+    SD--&gt;&gt;C: service still offered
+    C-&gt;&gt;C: sourceAge超过项目阈值（待确认）
+    C--&gt;&gt;B: stale/degraded
+    Note over C,B: SD在线不等于目标topic新鲜</pre>
+<p>超时与恢复规则：</p>
+<ul>
+<li>链路down/up时增加network/session generation，旧response与旧event不得写当前cache；</li>
+<li>TTL过期、Subscribe丢失、server restart、client restart分别记录，不合并成“断网”；</li>
+<li>reconnect后重新Offer/Find/Subscribe，并要求目标topic出现当前代的新sequence；</li>
+<li>request超时区分未发出、server未收、未处理、response丢失、旧session无法匹配；</li>
+<li>retry必须有界并携带幂等键；不能因重连重复执行非幂等业务；</li>
+<li>source-age使用明确时钟；跨域wall clock未校准时不直接相减。</li>
+</ul>
+<h2>6. 教学构造案例：服务仍可发现但车速冻结</h2>
+<p>以下事件为合成教学数据：</p>
+<table>
+<thead>
+<tr>
+<th>证据</th>
+<th>构造事件</th>
+<th>边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E1</td>
+<td>netdev carrier持续Up，双端TX/RX byte均增长</td>
+<td>反证整条物理链中断；不能证明目标topic</td>
+</tr>
+<tr>
+<td>E2</td>
+<td>provider持续发送OfferService，client TTL未过期</td>
+<td>SD控制面仍在；不能证明event新鲜</td>
+</tr>
+<tr>
+<td>E3</td>
+<td>door与climate event sequence持续递增</td>
+<td>反证共享channel整体失效</td>
+</tr>
+<tr>
+<td>E4</td>
+<td>speed sourceSeq在320停止；producerSeq也停在320</td>
+<td>最早可观察断点在source→producer之前或内部</td>
+</tr>
+<tr>
+<td>E5</td>
+<td>consumer每周期报告speed stale，lastGood=320</td>
+<td>检测结果，不是根因</td>
+</tr>
+<tr>
+<td>E6</td>
+<td>reconnect SOME/IP session后仍没有speed 321</td>
+<td>恢复动作未改变上游断点</td>
+</tr>
+<tr>
+<td>E7</td>
+<td>在producer入口注入递增测试sequence后consumer恢复</td>
+<td>将断点收窄到真实source到producer入口</td>
+</tr>
+</tbody></table>
+<p>完整分析：</p>
+<ol>
+<li>用户现象是车速显示冻结，范围是单一业务对象；</li>
+<li>E1与E3降低整链、交换机公共端口或RPC channel整体失效的优先级；</li>
+<li>E2只证明服务发现控制关系仍在；</li>
+<li>E4是最早可证实断点，E5是下游检测；</li>
+<li>E6说明重连覆盖session，但不能证明session原先是根因；</li>
+<li>E7把transport/router/consumer的大部分路径作为可用基线，但真实source、CAN接收、映射与producer触发仍需逐层区分；</li>
+<li>当前责任边界先落在source/CAN/gateway/producer链，SOME/IP与consumer owner继续提供反证和关联计数；</li>
+<li>置信度：单topic上游停止为中高；具体CAN停报、解析错误或publish trigger异常为待验证假设。</li>
+</ol>
+<h2>7. 日志与可执行验证</h2>
+<p>统一字段建议：</p>
+<p>domain | clockId | bootId | networkGeneration | service/instance | interfaceVersion | client/session | eventgroup/topic | requestId | sourceSeq | producerSeq | arrivalSeq | sourceTime | publishTime | arrivalTime | lastGood | firstStale | TTL | phase | result</p>
+<table>
+<thead>
+<tr>
+<th>测试</th>
+<th>操作</th>
+<th>观察</th>
+<th>通过标准</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T1 正常启动</td>
+<td>同步采集Link→IP→Offer→Subscribe→首个event</td>
+<td>每层里程碑与generation</td>
+<td>可重建完整基线</td>
+</tr>
+<tr>
+<td>T2 单topic停更</td>
+<td>保持其他topic与SD正常，停止目标source</td>
+<td>source/publish/arrival/freshness</td>
+<td>断点落到正确层，不误报整链</td>
+</tr>
+<tr>
+<td>T3 provider重启</td>
+<td>受控重启provider</td>
+<td>TTL、Offer、Subscribe、首个新event</td>
+<td>旧session失效，当前代恢复</td>
+</tr>
+<tr>
+<td>T4 client重启</td>
+<td>受控重启consumer</td>
+<td>cache、订阅、旧event</td>
+<td>不消费旧代，重新建立freshness</td>
+</tr>
+<tr>
+<td>T5 request迟到</td>
+<td>延迟旧session response</td>
+<td>Request ID/session/generation</td>
+<td>旧response不完成新请求</td>
+</tr>
+<tr>
+<td>T6 链路抖动</td>
+<td>受控link down/up</td>
+<td>carrier/IP/SD/data恢复顺序</td>
+<td>每层状态可观测，重试有界</td>
+</tr>
+</tbody></table>
+<p>参数与故障注入仅限获批环境；具体TTL、周期与timeout全部待项目确认。</p>
+<h2>8. 今日练习与交付</h2>
+<p>新题不附参考答案：</p>
+<ol>
+<li>画出一个车信号从CAN/source到Android HMI的控制流和数据流，逐边写观测点；</li>
+<li>对“carrier Up、Offer存在、订阅ACK成功、数据仍冻结”提出4个竞争假设；</li>
+<li>设计request/response与event两套generation和旧消息拒绝规则；</li>
+<li>写一张正常/异常freshness账本，说明时钟、sequence回绕和重启如何处理；</li>
+<li>扩展：比较TCP连接存活、应用heartbeat、SD TTL和目标event新鲜度的覆盖范围。</li>
+</ol>
+<p>今日交付物：《SOME/IP服务可用性证据表 V1》，包含四层可用性、双链图、freshness字段、ACK与业务完成、T1—T5验证。课程编号为 <strong>day-43</strong>。使用页面末尾“上传／提交答卷”提交。</p>
+<h2>9. 21项技能覆盖（选读）</h2>
+<p>深入：cockpit-diagnosis、log-analysis、platform-architecture、ethernet-sgmii、cross-domain-msg、boot-hmi、tpm-triage。条件适用：power-sleep-str、performance-jank、stability-crash-reset、log-storm、virtualization-tee、mcu。显示、触摸、AVM、音频、无线、USB、DB/KE与5Y/8D在当前案例中不适用或材料不足。</p>
+<p>关键缺口：现车MAC/PCS/PHY/Switch/VLAN拓扑、SOME/IP栈与AUTOSAR release、ID与版本字典、TTL/周期/超时、E2E与安全配置、各层sequence埋点和实机正常/异常样本。</p>
+</article><section class="answer-panel" data-course="day-43" aria-label="Day 43 - Ethernet / SOME-IP I：服务可用性、会话与数据新鲜度 答卷提交"><h3>提交本课答卷</h3><p>在 GitHub 登录后填写文字，或把图片、PDF、Word 等文件拖入“答卷正文与附件”框；点击 Submit new issue（提交）才算上传成功。答卷和附件将保存在公开的 GitHub 仓库，请只提交可公开的学习材料。</p><p><a class="answer-submit" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues/new?template=answer.yml&amp;title=%5B%E7%AD%94%E5%8D%B7%5D%5Bday-43%5D+Day+43+-+Ethernet+%2F+SOME-IP+I%EF%BC%9A%E6%9C%8D%E5%8A%A1%E5%8F%AF%E7%94%A8%E6%80%A7%E3%80%81%E4%BC%9A%E8%AF%9D%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%96%B0%E9%B2%9C%E5%BA%A6&amp;lesson=day-43&amp;course=https%3A%2F%2Fqiantao18817568425-art.github.io%2FArchitecture_Learning-%2F%23day-43" target="_blank" rel="noopener">上传／提交答卷 ↗</a> <a class="answer-view" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues?q=is%3Aissue+in%3Atitle+%22%5B%E7%AD%94%E5%8D%B7%5D%5Bday-43%5D%22" target="_blank" rel="noopener">查看答卷与批改 ↗</a> <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html#day-43">归档与批改状态</a></p><p>课程编号：<code>day-43</code>。补交请在同一答卷下评论，以 <strong>[补交]</strong> 开头，并注明题号；也可编辑原答卷。每天 20:00 先检查并批改新答卷，再安排当天任务。</p></section></main><script src="../architecture/vendor/mermaid-10.9.5.min.js"></script><script>mermaid.initialize({startOnLoad:true,theme:'neutral',securityLevel:'strict'});</script></body></html>
