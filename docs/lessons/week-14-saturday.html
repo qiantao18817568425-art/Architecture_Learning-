@@ -1,0 +1,592 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Week 14 - 周六巩固：恢复决策、代际隔离与 SOME/IP 证据链训练</title><style>
+    :root { color-scheme: light; font-family: "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif; color: #18212f; background: #f6f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.75; }
+    a { color: #075fbd; overflow-wrap: anywhere; }
+    code { background: #edf1f6; border-radius: 3px; padding: .08rem .28rem; }
+    pre { overflow: auto; background: #111827; color: #e5e7eb; padding: 1rem; border-radius: 6px; white-space: pre-wrap; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
+    header { border-left: 5px solid #db5a2a; padding: 12px 20px; margin-bottom: 28px; background: #fff; }
+    h1, h2, h3, h4, h5, h6 { line-height: 1.35; margin: 1.35em 0 .5em; }
+    h1 { margin: 0; font-size: 2rem; }
+    .lede { max-width: 840px; margin: .5rem 0 0; color: #4b5563; }
+    .metrics { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 26px; }
+    .metric { background: #e6eff8; border: 1px solid #bfd5ea; padding: 6px 12px; border-radius: 4px; color: #174a76; }
+    .metric strong { font-size: 1.15rem; }
+    .guide { background: #fff; border-top: 2px solid #1d8093; padding: 18px 22px; margin: 24px 0; }
+    .guide ol { margin-bottom: 0; }
+    .lesson { background: #fff; border: 1px solid #d8dee8; margin: 10px 0; }
+    summary { cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 18px; }
+    summary::-webkit-details-marker { color: #db5a2a; }
+    .lesson-title { font-weight: 700; font-size: 1.05rem; }
+    .lesson-meta { color: #52606d; font-size: .86rem; white-space: nowrap; }
+    .lesson-body { border-top: 1px solid #d8dee8; padding: 4px 22px 24px; }
+    .archive-note { color: #52606d; font-size: .92rem; border-left: 3px solid #1d8093; padding-left: 10px; }
+    .format-audit { border: 1px solid #b8d5cf; background: #f4fbf8; padding: 16px; margin: 18px 0; border-radius: 6px; }
+    .format-audit h3 { margin-top: 0; }
+    .format-audit ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+    .format-audit li { border: 1px solid #d8dee8; background: #fff; border-radius: 5px; padding: 8px; font-size: .9rem; }
+    .format-audit span { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+    .format-audit .present span { background: #dbece8; color: #126458; }
+    .format-audit .missing span { background: #f4e3cb; color: #8a4604; }
+    article h2 { font-size: 1.35rem; }
+    article h3 { font-size: 1.15rem; }
+    article h4, article h5 { font-size: 1rem; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    blockquote { margin: 1rem 0; padding: .45rem 1rem; border-left: 3px solid #1d8093; background: #f4f8fb; color: #435467; }
+    table { border-collapse: collapse; width: 100%; min-width: 32rem; font-size: .94rem; }
+    th, td { border: 1px solid #d8dee8; padding: .55rem .7rem; text-align: left; vertical-align: top; }
+    th { background: #edf4f9; }
+    .mermaid { background: #fff; color: #18212f; border: 1px solid #d8dee8; }
+    footer { margin-top: 32px; color: #52606d; font-size: .9rem; }
+    @media (max-width: 640px) { main { padding: 16px 12px 36px; } h1 { font-size: 1.55rem; } summary { align-items: flex-start; } .lesson-body { padding: 2px 14px 18px; } .format-audit ul { grid-template-columns: 1fr; } }
+  </style><style>.answer-panel{margin:22px 0;padding:18px;border:1px solid #9ab8d8;border-left:5px solid #1763a3;border-radius:8px;background:#f2f7fc}.answer-panel h3{margin-top:0}.answer-submit,.answer-view{display:inline-block;padding:10px 14px;margin:4px 8px 4px 0;border-radius:6px;background:#12578f;color:#fff;text-decoration:none}.answer-view{background:#e0ecf6;color:#153e61}.answer-panel a:focus-visible{outline:3px solid #db5a2a;outline-offset:3px}.answer-panel code{overflow-wrap:anywhere}.answer-list{padding:0;list-style:none}.answer-list li{margin:12px 0;padding:16px;background:#fff;border:1px solid #d8dee8;border-radius:6px}body{font-family:system-ui,'Microsoft YaHei',sans-serif;line-height:1.75;color:#18212f;background:#f6f8fb}main{max-width:1180px;margin:auto;padding:24px}a{overflow-wrap:anywhere}</style></head><body><main><nav><a href="../index.html#week-14-saturday">课程档案</a> · <a href="../architecture/index.html">项目架构实践</a></nav><article><h1>Week 14 — 周六巩固：恢复决策、代际隔离与 SOME/IP 证据链训练</h1>
+<p>学习日期：2026-10-17，星期六，Asia/Shanghai；Week 14。能力阶段：第二阶段“系统链路与问题分析”。今天只巩固本周已经安排的 Day 42—44，不推进 Day、不提前讲 Day 45，也不加入新的普通专题。建议用时 60 分钟。</p>
+<p>执行前已完整扫描仓库全部状态的 Issue；当前没有答卷 Issue、编辑版本或本人 <code>[补交]</code> 评论，本聊天也没有新增真实作答。因此 Day 34—44 仍为待评审。本课只提供独立作答、画图和证据链训练，不写参考答案、不预设根因、不代写个人反思。</p>
+<h2>1. 范围、资料和项目边界</h2>
+<table>
+<thead>
+<tr>
+<th>已安排单元</th>
+<th>今天的巩固重点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-42.html">Day 42：看门狗责任与恢复策略</a></td>
+<td>检测、裁决、执行、状态重建和业务验收的责任分离；恢复半径与失败出口</td>
+</tr>
+<tr>
+<td><a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-43.html">Day 43：服务可用性、会话与数据新鲜度</a></td>
+<td>Link/IP/传输/发现/订阅/业务值的分层；会话与新鲜度</td>
+</tr>
+<tr>
+<td><a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-44.html">Day 44：故障隔离、恢复策略与测试闭环</a></td>
+<td>故障范围、恢复阶梯、旧消息处理、证据与验证闭环</td>
+</tr>
+</tbody></table>
+<p>三课于 2026-10-15 补录；计划日期、实际发布时间和学习证据保持分开。本次发布不把材料存在写成已经学习或掌握。</p>
+<p>官方资料复核日期：2026-10-17：</p>
+<ul>
+<li><a href="https://www.autosar.org/fileadmin/standards/R21-11/FO/AUTOSAR_PRS_SOMEIPProtocol.pdf">AUTOSAR SOME/IP Protocol Specification R21-11</a>：复核 RPC、事件通知、消息序列与协议语义。</li>
+<li><a href="https://www.autosar.org/fileadmin/standards/R21-11/FO/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf">AUTOSAR SOME/IP Service Discovery Protocol Specification R21-11</a>：复核 Find/Offer、订阅、TTL 与服务发现边界。</li>
+<li><a href="https://docs.kernel.org/networking/operstates.html">Linux 网络接口运行状态</a>：复核 admin state、carrier、operstate 与用户数据可用性的区别。</li>
+<li><a href="https://docs.oasis-open.org/virtio/virtio/v1.3/virtio-v1.3.html">OASIS Virtio 1.3</a>：复核 device/virtqueue reset 后的重新初始化和旧队列边界。</li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc9293">RFC 9293：TCP</a> 与 <a href="https://www.rfc-editor.org/rfc/rfc8085">RFC 8085：UDP 使用指南</a>：复核传输确认、重传、重复、拥塞和超时不能替代业务完成。</li>
+</ul>
+<p>当前没有车型、SoC、硬件阶段、Android/Yocto/Hypervisor 版本、物理网络拓扑、SOME/IP 配置、服务和实例 ID、TTL、看门狗阈值、时限预算或实机日志。下文全部是教学构造；数值、接口、错误码与恢复策略须按项目版本确认。</p>
+<p>本次从 <code>F:/座舱日志分析/交付物/T12T诊断技能家族-优化版/</code> 读取并检查全部 21 项技能入口；深入使用通用三入口、虚拟化、稳定性、以太网、跨域消息和 TPM 分责专项。</p>
+<h2>2. 一小时安排</h2>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>独立任务</th>
+<th>必交产出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0—10 分钟</td>
+<td>回答 5 道回顾题</td>
+<td>5 条短答，未知项标“待确认”</td>
+</tr>
+<tr>
+<td>10—25 分钟</td>
+<td>画三层状态图</td>
+<td>VM/服务、通信会话、业务新鲜度三层状态</td>
+</tr>
+<tr>
+<td>25—45 分钟</td>
+<td>分析综合案例</td>
+<td>异常时序、最早未闭环点、竞争假设</td>
+</tr>
+<tr>
+<td>45—55 分钟</td>
+<td>建证据链与恢复决策表</td>
+<td>证据账本、恢复阶梯、区分实验</td>
+</tr>
+<tr>
+<td>55—60 分钟</td>
+<td>个人反思</td>
+<td>一条易错认知、一条改进动作</td>
+</tr>
+</tbody></table>
+<h3>2.1 回顾题</h3>
+<ol>
+<li>看门狗“超时”是事实、故障定位还是恢复触发？必须附带哪些对象、代际和时钟信息？</li>
+<li>Offer 可见、订阅 ACK、事件到达、业务值新鲜、UI 更新分别属于哪一层的完成？</li>
+<li>为什么 VM generation 已更新，SOME/IP session、订阅关系和业务缓存仍可能保留旧语义？</li>
+<li>transport success 后哪些情况会使业务结果仍然未知？怎样查询当前实态而不重复制造副作用？</li>
+<li>选择恢复层级时，怎样用故障范围、恢复预算、共享资源影响和证据保护共同决策？</li>
+</ol>
+<h2>3. 画图训练：三层状态必须对齐</h2>
+<p>请先独立重画下图，不要直接照抄。为每个状态补充进入条件、退出条件、超时、观测点和 Owner。</p>
+<pre class="mermaid">stateDiagram-v2
+    state &quot;运行层&quot; as Runtime {
+        [*] --&gt; VM_Starting
+        VM_Starting --&gt; VM_Ready
+        VM_Ready --&gt; VM_Degraded
+        VM_Degraded --&gt; VM_Resetting
+        VM_Resetting --&gt; VM_Starting
+    }
+    state &quot;通信层&quot; as Comm {
+        [*] --&gt; Link_Unknown
+        Link_Unknown --&gt; Service_Discovered
+        Service_Discovered --&gt; Subscribed
+        Subscribed --&gt; Session_Stale
+        Session_Stale --&gt; Service_Discovered
+    }
+    state &quot;业务层&quot; as Biz {
+        [*] --&gt; Value_Unknown
+        Value_Unknown --&gt; Value_Fresh
+        Value_Fresh --&gt; Value_Expired
+        Value_Expired --&gt; Resyncing
+        Resyncing --&gt; Value_Fresh
+    }</pre>
+<p>图后回答：</p>
+<ol>
+<li>哪些跨层转换需要 generation fence？</li>
+<li>哪个模块负责把旧缓存从“可显示”变为“未知/已过期”？</li>
+<li>VM Ready 是否允许通信层直接进入 Subscribed？还缺什么证据？</li>
+<li>Resyncing 超时后是重试、升级恢复还是进入降级？决定依据是什么？</li>
+<li>三层分别使用什么时钟；跨域时怎样建立共同锚点？</li>
+</ol>
+<h2>4. 综合案例：VM 重建后车门状态只在主屏冻结</h2>
+<p>以下记录是教学构造，日志来自不同运行域且尚未完成时钟校准。编号表示收集顺序，不表示可直接相减的统一时间。题目没有预设根因。</p>
+<h3>4.1 现象</h3>
+<ul>
+<li>车辆处于上电运行状态；主屏和副屏都订阅车门状态。</li>
+<li>一次 Android Guest VM 重建后，副屏继续刷新，主屏一直显示重建前的“左前门关闭”。</li>
+<li>再次开关车门后，Provider 侧状态正确；人工重启主屏 Consumer 后恢复。</li>
+<li>没有提供当前车型、构建号、拓扑、抓包、VM reset 原因或物理车门录像。</li>
+</ul>
+<h3>4.2 构造记录</h3>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>记录</th>
+<th>需核对的边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E1</td>
+<td>Host 记录 VM g31 结束、g32 创建；reset request 带 reason=<code>health-timeout</code></td>
+<td>触发对象、检测门限、裁决者和实际复位范围</td>
+</tr>
+<tr>
+<td>E2</td>
+<td>g32 中主屏 Consumer 记录 <code>service available</code></td>
+<td>是发现、连接还是业务 ready；service generation 缺失</td>
+</tr>
+<tr>
+<td>E3</td>
+<td>主屏记录 Subscribe ACK，client/session=<code>07/19</code></td>
+<td>ACK 语义、旧 session 是否复用、事件组和 TTL</td>
+</tr>
+<tr>
+<td>E4</td>
+<td>Provider 记录车门事件 sequence 4312、4313、4314</td>
+<td>是否发到两个 Consumer；payload、instance 和服务代际</td>
+</tr>
+<tr>
+<td>E5</td>
+<td>副屏记录 sequence 4312—4314 并更新 UI</td>
+<td>Provider 与部分网络路径可用的范围；不能自动证明主屏路径</td>
+</tr>
+<tr>
+<td>E6</td>
+<td>主屏只记录 g31 缓存值 sequence 4308，没有 4312—4314</td>
+<td>缓存来源、过期策略、订阅与接收证据缺口</td>
+</tr>
+<tr>
+<td>E7</td>
+<td>Host 接口 operstate=UP；未给 PHY/交换机错误计数与抓包</td>
+<td>只覆盖哪个接口和时窗；UP 不等于所有业务路径完成</td>
+</tr>
+<tr>
+<td>E8</td>
+<td>主屏发 GET，记录 <code>transport ok</code>；没有响应 payload 与应用状态日志</td>
+<td>传输层局部完成；业务结果仍未知</td>
+</tr>
+<tr>
+<td>E9</td>
+<td>人工重启主屏 Consumer，新 session=<code>09/03</code>，收到 sequence 4320</td>
+<td>恢复覆盖范围；不能独立证明此前唯一根因</td>
+</tr>
+<tr>
+<td>E10</td>
+<td>没有旧 g31 的迟到事件、重复事件或拒绝日志</td>
+<td>未观测不等于没有发生；需明确观测能力</td>
+</tr>
+</tbody></table>
+<h3>4.3 必须独立完成的异常时序</h3>
+<pre class="mermaid">sequenceDiagram
+    participant Door as 车门/上游
+    participant P as Provider
+    participant Net as SOME/IP与网络
+    participant Host as Host/Hypervisor
+    participant Main as 主屏Consumer
+    participant Sub as 副屏Consumer
+    participant UI as 主屏UI/验收
+    Host--&gt;&gt;Main: VM g31结束，g32创建
+    Main-&gt;&gt;Net: 重新发现/订阅（语义待核）
+    P--&gt;&gt;Net: 事件4312—4314
+    Net--&gt;&gt;Sub: 事件到达
+    Sub--&gt;&gt;Sub: 状态更新
+    Net--xMain: 此段证据未闭环
+    Main-&gt;&gt;Net: GET
+    Net--&gt;&gt;Main: transport ok（payload缺失）
+    Main--xUI: 正确新鲜值未证实</pre>
+<p>请在自己的图中补充：</p>
+<ul>
+<li>每条消息的控制/数据/状态/生命周期分类；</li>
+<li>boot、VM、service、connection、session、subscription、business generation；</li>
+<li>request、client/session、event group、sequence、状态版本；</li>
+<li>ACK、局部完成、业务完成和结果未知；</li>
+<li>超时、复位、迟到消息、重复消息与缓存过期；</li>
+<li>观察点、时钟域和共同锚点。</li>
+</ul>
+<h2>5. 证据链训练</h2>
+<h3>5.1 最早未闭环点</h3>
+<p>先写出：</p>
+<ul>
+<li>最后一个已证实成功交接；</li>
+<li>下一个预期输出；</li>
+<li>该输出是明确失败、没有观测，还是无法关联；</li>
+<li>能否被 E5、E7、E9 支持或反驳；</li>
+<li>当前可以划到哪个初步责任域，不能划到哪里。</li>
+</ul>
+<h3>5.2 竞争假设</h3>
+<p>至少提出三个假设，不预设正确答案：</p>
+<table>
+<thead>
+<tr>
+<th>假设</th>
+<th>支持证据</th>
+<th>反证</th>
+<th>关键缺口</th>
+<th>单变量区分实验</th>
+<th>成立/否定判据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>H1</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>H2</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>H3</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>假设必须覆盖不同接口边界，例如：订阅关系没有真正重建、事件到达但被旧代际过滤、事件已进入 Consumer 但业务缓存或 UI 没更新。这里只给分类边界，不给答案。</p>
+<h3>5.3 证据账本</h3>
+<table>
+<thead>
+<tr>
+<th>证据</th>
+<th>来源/行号</th>
+<th>原始时钟与域</th>
+<th>代际与对象 ID</th>
+<th>原始事实</th>
+<th>证据类型</th>
+<th>支持/反驳</th>
+<th>覆盖边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E1…E10</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>直接/相关/反证/背景/缺失</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2>6. 恢复决策训练</h2>
+<p>为以下候选动作填写完整表格：</p>
+<table>
+<thead>
+<tr>
+<th>候选恢复</th>
+<th>触发条件</th>
+<th>前置证据</th>
+<th>影响面</th>
+<th>证据损失</th>
+<th>预算</th>
+<th>失败出口</th>
+<th>业务完成判据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>业务重取当前状态</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>重新订阅/重连</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>重启主屏 Consumer</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>重启 Provider</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>重建 Guest VM</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>再回答：</p>
+<ol>
+<li>哪个动作是你在当前证据下的最小候选？为什么只是候选？</li>
+<li>何种观察会要求扩大恢复半径？</li>
+<li>每个动作前应保存哪些证据，避免恢复成功后无法定位？</li>
+<li>如何防止旧 g31 事件或响应覆盖 g32 的新结果？</li>
+<li>如何验证主屏恢复时副屏和其他共享业务没有回归？</li>
+</ol>
+<h2>7. 可执行验证矩阵</h2>
+<table>
+<thead>
+<tr>
+<th>用例</th>
+<th>注入或步骤</th>
+<th>观测点</th>
+<th>预期结果</th>
+<th>反例</th>
+<th>回退</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>正常启动</td>
+<td>Provider/Consumer 不同启动顺序</td>
+<td>Offer、订阅、首个新鲜值</td>
+<td></td>
+<td></td>
+<td></td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>VM 重建</td>
+<td>在事件发送前/中/后重建 Guest</td>
+<td>generation、session、sequence</td>
+<td></td>
+<td></td>
+<td></td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>旧消息迟到</td>
+<td>延迟 g31 响应或事件</td>
+<td>丢弃原因与计数</td>
+<td></td>
+<td></td>
+<td></td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>重复与乱序</td>
+<td>重复/调换 sequence</td>
+<td>状态版本与 UI</td>
+<td></td>
+<td></td>
+<td></td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>TTL/断链</td>
+<td>让 Offer/订阅过期再恢复</td>
+<td>SD、重订阅、状态重取</td>
+<td></td>
+<td></td>
+<td></td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>共享业务</td>
+<td>主屏恢复时持续操作副屏</td>
+<td>两侧业务验收</td>
+<td></td>
+<td></td>
+<td></td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>连续恢复</td>
+<td>重复 20 轮</td>
+<td>资源、队列、会话、时限</td>
+<td></td>
+<td></td>
+<td></td>
+<td>待执行</td>
+</tr>
+</tbody></table>
+<h2>8. 可复用产物：《跨域恢复证据包 V1》</h2>
+<p>提交一个可复用模板，至少包含：</p>
+<ol>
+<li>项目身份和版本；</li>
+<li>四条路径与跨域边界图；</li>
+<li>三层状态和全部 generation；</li>
+<li>完成语义与时限预算；</li>
+<li>异常时序和最早未闭环点；</li>
+<li>证据账本和竞争假设；</li>
+<li>恢复决策表；</li>
+<li>测试矩阵；</li>
+<li>TPM 分责表：首轮牵头、触发候选、直接修复、接口/恢复策略、验证；</li>
+<li>未确认项和下一次取证清单。</li>
+</ol>
+<p>个人反思由你本人填写：</p>
+<ul>
+<li>今天哪一条证据最容易被我过度解释？</li>
+<li>我是否把“没有日志”写成了“没有发生”？</li>
+<li>我选择的恢复动作是否大于当前已证明的故障范围？</li>
+<li>下次面对“重启后恢复”，我先保全哪三类证据？</li>
+</ul>
+<h2>9. 提交说明</h2>
+<p>本课编号 <strong>week-14-saturday</strong>。请提交：5 道回顾题、三层状态图、异常时序、最早未闭环点、竞争假设表、证据账本、恢复决策表、验证矩阵、《跨域恢复证据包 V1》和个人反思。</p>
+<p>使用页面末尾“上传／提交答卷”，或进入<a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html">答卷中心</a>。答卷、附件与批改公开，请只提交可公开且已脱敏的学习材料。编辑原答卷或本人以 <code>[补交]</code> 开头评论会生成新版本并重新评审。</p>
+<h2>附录：21 项 T12T 技能覆盖检查</h2>
+<table>
+<thead>
+<tr>
+<th>技能</th>
+<th>本次判断</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>t12t-cockpit-diagnosis</td>
+<td>适用，深入：定义现象、范围、版本、时间与运行域</td>
+</tr>
+<tr>
+<td>t12t-log-analysis</td>
+<td>适用，深入：跨域时间、代际、最早未闭环点与证据类型</td>
+</tr>
+<tr>
+<td>t12t-platform-architecture</td>
+<td>适用，深入：控制、数据、状态、生命周期路径和边界</td>
+</tr>
+<tr>
+<td>t12t-display-black-freeze</td>
+<td>本题不适用：没有显示链故障证据，UI 状态仅作业务验收</td>
+</tr>
+<tr>
+<td>t12t-touch-input</td>
+<td>本题不适用：没有触摸输入现象</td>
+</tr>
+<tr>
+<td>t12t-avm-camera-stream</td>
+<td>本题不适用：没有 Camera/AVM 链路</td>
+</tr>
+<tr>
+<td>t12t-power-sleep-str</td>
+<td>材料不足：有 VM 生命周期但没有 STR/电源状态转换证据</td>
+</tr>
+<tr>
+<td>t12t-audio-path</td>
+<td>本题不适用：没有音频链路</td>
+</tr>
+<tr>
+<td>t12t-stability-crash-reset</td>
+<td>适用，深入：VM/进程复位层级、触发与恢复半径</td>
+</tr>
+<tr>
+<td>t12t-performance-jank</td>
+<td>材料不足：没有 CPU、调度、内存、I/O 或连续时延数据</td>
+</tr>
+<tr>
+<td>t12t-ethernet-sgmii</td>
+<td>适用，深入：carrier/operstate 与业务链分层、物理证据缺口</td>
+</tr>
+<tr>
+<td>t12t-wireless-phone-link</td>
+<td>本题不适用：没有无线或手机互联</td>
+</tr>
+<tr>
+<td>t12t-cross-domain-msg</td>
+<td>适用，深入：服务、会话、sequence、新鲜度和旧消息隔离</td>
+</tr>
+<tr>
+<td>t12t-boot-hmi</td>
+<td>材料不足：涉及 VM 重建后的 ready，但无启动里程碑</td>
+</tr>
+<tr>
+<td>t12t-log-storm</td>
+<td>材料不足：没有刷屏、丢日志、轮转或存储压力证据</td>
+</tr>
+<tr>
+<td>t12t-usb-typec-storage</td>
+<td>本题不适用：没有 USB 或存储链路</td>
+</tr>
+<tr>
+<td>t12t-virtualization-tee</td>
+<td>适用，深入：VM generation、虚拟设备/队列重建；无 TEE 证据</td>
+</tr>
+<tr>
+<td>t12t-db-ke-forensics</td>
+<td>材料不足：没有 AEE/DB、KE、panic、tombstone 或符号</td>
+</tr>
+<tr>
+<td>t12t-mcu</td>
+<td>材料不足：上游车门状态涉及 MCU 的可能性待拓扑确认</td>
+</tr>
+<tr>
+<td>t12t-tpm-triage</td>
+<td>适用，深入：首轮牵头与触发、修复、策略、验证责任分离</td>
+</tr>
+<tr>
+<td>t12t-tpm-5y8d</td>
+<td>暂不展开：根因和逃逸原因未证实，不强行写 5Y/8D</td>
+</tr>
+</tbody></table>
+<p>关键证据缺口：现车拓扑与版本、上游状态源、SOME/IP 配置、服务/实例/事件组、TTL、VM/service/session generation、跨域时钟映射、Provider/Consumer 原始日志、抓包、恢复调用链、物理动作与 UI 同步录像、重复恢复测试结果。</p>
+</article><section class="answer-panel" data-course="week-14-saturday" aria-label="Week 14 - 周六巩固：恢复决策、代际隔离与 SOME/IP 证据链训练 答卷提交"><h3>提交本课答卷</h3><p>在 GitHub 登录后填写文字，或把图片、PDF、Word 等文件拖入“答卷正文与附件”框；点击 Submit new issue（提交）才算上传成功。答卷和附件将保存在公开的 GitHub 仓库，请只提交可公开的学习材料。</p><p><a class="answer-submit" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues/new?template=answer.yml&amp;title=%5B%E7%AD%94%E5%8D%B7%5D%5Bweek-14-saturday%5D+Week+14+-+%E5%91%A8%E5%85%AD%E5%B7%A9%E5%9B%BA%EF%BC%9A%E6%81%A2%E5%A4%8D%E5%86%B3%E7%AD%96%E3%80%81%E4%BB%A3%E9%99%85%E9%9A%94%E7%A6%BB%E4%B8%8E+SOME%2FIP+%E8%AF%81%E6%8D%AE%E9%93%BE%E8%AE%AD%E7%BB%83&amp;lesson=week-14-saturday&amp;course=https%3A%2F%2Fqiantao18817568425-art.github.io%2FArchitecture_Learning-%2F%23week-14-saturday" target="_blank" rel="noopener">上传／提交答卷 ↗</a> <a class="answer-view" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues?q=is%3Aissue+in%3Atitle+%22%5B%E7%AD%94%E5%8D%B7%5D%5Bweek-14-saturday%5D%22" target="_blank" rel="noopener">查看答卷与批改 ↗</a> <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html#week-14-saturday">归档与批改状态</a></p><p>课程编号：<code>week-14-saturday</code>。补交请在同一答卷下评论，以 <strong>[补交]</strong> 开头，并注明题号；也可编辑原答卷。每天 20:00 先检查并批改新答卷，再安排当天任务。</p></section></main><script src="../architecture/vendor/mermaid-10.9.5.min.js"></script><script>mermaid.initialize({startOnLoad:true,theme:'neutral',securityLevel:'strict'});</script></body></html>
