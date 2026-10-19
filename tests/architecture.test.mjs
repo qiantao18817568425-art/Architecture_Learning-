@@ -10,7 +10,7 @@ test('all 25 Chinese and 17 original chapters have full text and beginner guides
   assert.ok(html.includes('新手导读'));assert.ok(html.includes('项目练习'));assert.ok(html.includes('本章目录'));
   const sourceHeadings=item.markdown.match(/^#{1,6}\s/gm)||[];
   const body=html.split('<article id="chapter-text">')[1].split('</article>')[0];
-  assert.equal((body.match(/<h[1-6] id=/g)||[]).length,sourceHeadings.length,`all headings present: ${item.edition} ${item.id}`);
+  assert.ok((body.match(/<h[1-6] id=/g)||[]).length>=sourceHeadings.length,`all source headings present: ${item.edition} ${item.id}`);
  }
 });
 test('course archive preserves legacy articles and adds new courses with stable destinations',()=>{
@@ -32,4 +32,33 @@ test('full text search includes interface names inside code blocks and beginner 
  const index=JSON.parse(read('docs/architecture/search.json'));
  assert.ok(index.some(x=>x.url.startsWith('06.html#')&&x.text.includes('dequeueBuffer')),'code-block API is searchable');
  assert.ok(index.some(x=>x.url==='02.html#beginner-guide'&&x.text.includes('物理 CPU')),'beginner guide is searchable');
+});
+
+test('Day35 through Day45 contribute reusable knowledge and reverse links to architecture chapters',()=>{
+ const data=JSON.parse(read('content/architecture.json'));
+ const mapped=data.days.filter(x=>x.day>=35&&x.day<=45);
+ assert.deepEqual(mapped.map(x=>x.day),[35,36,37,38,39,40,41,42,43,44,45]);
+ assert.equal(new Set(data.days.map(x=>x.day)).size,data.days.length,'course mappings must stay unique');
+
+ const expectations=[
+  ['12.html',['Day 35','Day 36','Day 37','音频焦点、路由、DSP 与功放的分层完成语义']],
+  ['14.html',['Day 38','Day 39','STR / Resume 的屏障、代际与恢复预算']],
+  ['11.html',['Day 40','显示首帧不能由服务 Ready 或图层 submit 代替']],
+  ['02.html',['Day 41','Day 42','VM Reset 的故障域、重建顺序与升级边界']],
+  ['13.html',['Day 43','Day 44','Ethernet / SOME-IP 的链路、服务、会话与数据新鲜度']],
+  ['15.html',['Day 45','Health signal → event → qualification → DTC → snapshot → storage → tester','健康事件—DTC 证据合同']]
+ ];
+ for(const [page,texts] of expectations){
+  const html=read(`docs/architecture/${page}`);
+  for(const text of texts)assert.ok(html.includes(text),`${page} contains ${text}`);
+ }
+
+ const search=JSON.parse(read('docs/architecture/search.json'));
+ assert.ok(search.some(x=>x.url.startsWith('15.html#')&&x.text.includes('EventID')&&x.text.includes('tester')),'integrated diagnostic contract is searchable');
+});
+
+test('knowledge home exposes the latest course integration entry',()=>{
+ const home=read('docs/architecture/index.html');
+ assert.ok(home.includes('Day 35—45 课程知识沉淀'));
+ assert.ok(home.includes('15.html#课程沉淀健康状态故障码与跨复位证据合同'));
 });
