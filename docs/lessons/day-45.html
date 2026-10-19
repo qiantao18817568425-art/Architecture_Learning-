@@ -1,0 +1,602 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Day 45 - 诊断架构 I：健康状态、故障码与证据留存</title><style>
+    :root { color-scheme: light; font-family: "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif; color: #18212f; background: #f6f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.75; }
+    a { color: #075fbd; overflow-wrap: anywhere; }
+    code { background: #edf1f6; border-radius: 3px; padding: .08rem .28rem; }
+    pre { overflow: auto; background: #111827; color: #e5e7eb; padding: 1rem; border-radius: 6px; white-space: pre-wrap; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
+    header { border-left: 5px solid #db5a2a; padding: 12px 20px; margin-bottom: 28px; background: #fff; }
+    h1, h2, h3, h4, h5, h6 { line-height: 1.35; margin: 1.35em 0 .5em; }
+    h1 { margin: 0; font-size: 2rem; }
+    .lede { max-width: 840px; margin: .5rem 0 0; color: #4b5563; }
+    .metrics { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 26px; }
+    .metric { background: #e6eff8; border: 1px solid #bfd5ea; padding: 6px 12px; border-radius: 4px; color: #174a76; }
+    .metric strong { font-size: 1.15rem; }
+    .guide { background: #fff; border-top: 2px solid #1d8093; padding: 18px 22px; margin: 24px 0; }
+    .guide ol { margin-bottom: 0; }
+    .lesson { background: #fff; border: 1px solid #d8dee8; margin: 10px 0; }
+    summary { cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 18px; }
+    summary::-webkit-details-marker { color: #db5a2a; }
+    .lesson-title { font-weight: 700; font-size: 1.05rem; }
+    .lesson-meta { color: #52606d; font-size: .86rem; white-space: nowrap; }
+    .lesson-body { border-top: 1px solid #d8dee8; padding: 4px 22px 24px; }
+    .archive-note { color: #52606d; font-size: .92rem; border-left: 3px solid #1d8093; padding-left: 10px; }
+    .format-audit { border: 1px solid #b8d5cf; background: #f4fbf8; padding: 16px; margin: 18px 0; border-radius: 6px; }
+    .format-audit h3 { margin-top: 0; }
+    .format-audit ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+    .format-audit li { border: 1px solid #d8dee8; background: #fff; border-radius: 5px; padding: 8px; font-size: .9rem; }
+    .format-audit span { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+    .format-audit .present span { background: #dbece8; color: #126458; }
+    .format-audit .missing span { background: #f4e3cb; color: #8a4604; }
+    article h2 { font-size: 1.35rem; }
+    article h3 { font-size: 1.15rem; }
+    article h4, article h5 { font-size: 1rem; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    blockquote { margin: 1rem 0; padding: .45rem 1rem; border-left: 3px solid #1d8093; background: #f4f8fb; color: #435467; }
+    table { border-collapse: collapse; width: 100%; min-width: 32rem; font-size: .94rem; }
+    th, td { border: 1px solid #d8dee8; padding: .55rem .7rem; text-align: left; vertical-align: top; }
+    th { background: #edf4f9; }
+    .mermaid { background: #fff; color: #18212f; border: 1px solid #d8dee8; }
+    footer { margin-top: 32px; color: #52606d; font-size: .9rem; }
+    @media (max-width: 640px) { main { padding: 16px 12px 36px; } h1 { font-size: 1.55rem; } summary { align-items: flex-start; } .lesson-body { padding: 2px 14px 18px; } .format-audit ul { grid-template-columns: 1fr; } }
+  </style><style>.answer-panel{margin:22px 0;padding:18px;border:1px solid #9ab8d8;border-left:5px solid #1763a3;border-radius:8px;background:#f2f7fc}.answer-panel h3{margin-top:0}.answer-submit,.answer-view{display:inline-block;padding:10px 14px;margin:4px 8px 4px 0;border-radius:6px;background:#12578f;color:#fff;text-decoration:none}.answer-view{background:#e0ecf6;color:#153e61}.answer-panel a:focus-visible{outline:3px solid #db5a2a;outline-offset:3px}.answer-panel code{overflow-wrap:anywhere}.answer-list{padding:0;list-style:none}.answer-list li{margin:12px 0;padding:16px;background:#fff;border:1px solid #d8dee8;border-radius:6px}body{font-family:system-ui,'Microsoft YaHei',sans-serif;line-height:1.75;color:#18212f;background:#f6f8fb}main{max-width:1180px;margin:auto;padding:24px}a{overflow-wrap:anywhere}</style></head><body><main><nav><a href="../index.html#day-45">课程档案</a> · <a href="../architecture/index.html">项目架构实践</a></nav><article><h1>Day 45 — 诊断架构 I：健康状态、故障码与证据留存</h1>
+<p>学习日期：2026-10-19，星期一，Asia/Shanghai；Week 15。能力阶段：第二阶段“系统链路与问题分析”。目标深度：从 L2 机制解释进入 L3 证据诊断，能把健康监控、事件资格化、DTC、冻结帧、日志和崩溃转储放进一条可验证的诊断链。总用时约 60 分钟。</p>
+<p>执行前已完整扫描仓库全部状态的 Issue；当前没有答卷 Issue、编辑版本、本人 <code>[补交]</code> 评论或本聊天新增作答。因此 Day 34—45 均保持待评审，本课不把材料发布记为已经掌握。</p>
+<h2>1. 今日资料、术语与项目边界</h2>
+<p>官方资料核验日期：2026-10-19。</p>
+<ul>
+<li><a href="https://www.autosar.org/fileadmin/standards/R22-11/CP/AUTOSAR_SWS_DiagnosticEventManager.pdf">AUTOSAR Diagnostic Event Manager R22-11</a>：用于事件报告、资格化/去抖、UDS 状态、事件存储、Snapshot Record、Extended Data 和 NVRAM 边界。</li>
+<li><a href="https://www.autosar.org/fileadmin/standards/R22-11/CP/AUTOSAR_SWS_DiagnosticCommunicationManager.pdf">AUTOSAR Diagnostic Communication Manager R22-11</a>：用于诊断请求入口、会话、安全条件、正/负响应与 Dem 数据读取边界。</li>
+<li><a href="https://www.autosar.org/fileadmin/standards/R22-11/AP/AUTOSAR_SWS_PlatformHealthManagement.pdf">AUTOSAR Platform Health Management R22-11</a>：用于监督状态、健康监控、通知 State Management 与恢复责任边界。</li>
+<li><a href="https://www.autosar.org/fileadmin/standards/R22-11/AP/AUTOSAR_SWS_LogAndTrace.pdf">AUTOSAR Log and Trace R22-11</a>：用于日志上下文、严重度、传输和过滤边界；日志不是 DTC 的替代品。</li>
+<li><a href="https://docs.kernel.org/admin-guide/ramoops.html">Linux ramoops/pstore</a>：用于理解 Oops/Panic 发生后跨重启保存内核证据的机制和容量限制。</li>
+<li><a href="https://source.android.com/docs/core/tests/debug">AOSP：Debug native Android platform code</a>：用于理解 Android native crash 的 tombstone、线程回溯、内存映射与 Build ID。</li>
+<li>本仓库<a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/architecture/15.html">第 15 章：统一诊断手册</a>的 15.1、15.4、15.8、15.9，以及<a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/architecture/08.html">第 08 章：MCU 内部机制</a>的 DTC 生成/存储与诊断工具链，用于对齐现有架构资料。</li>
+</ul>
+<h3>1.1 六个对象不能混为一谈</h3>
+<table>
+<thead>
+<tr>
+<th>对象</th>
+<th>定义</th>
+<th>不能单独证明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Health signal</td>
+<td>心跳、checkpoint、资源阈值或自检结果</td>
+<td>已形成故障或需要复位</td>
+</tr>
+<tr>
+<td>Diagnostic event</td>
+<td>监控路径报告的候选故障事实</td>
+<td>已满足 DTC 存储条件</td>
+</tr>
+<tr>
+<td>Event status</td>
+<td>去抖、资格化和 operation cycle 后的状态</td>
+<td>DTC 已持久化且可被 tester 读取</td>
+</tr>
+<tr>
+<td>DTC</td>
+<td>对一个或多个诊断事件的标准化故障表达</td>
+<td>当前故障仍 active、根因已定位</td>
+</tr>
+<tr>
+<td>Snapshot/Extended Data</td>
+<td>故障时环境和累计数据</td>
+<td>数据完整、时钟可比、版本匹配</td>
+</tr>
+<tr>
+<td>Log/Dump</td>
+<td>执行路径、错误上下文和崩溃现场</td>
+<td>已完成诊断状态机和售后闭环</td>
+</tr>
+</tbody></table>
+<p>当前缺少车型、SoC、硬件阶段、Android/Yocto/MCU/TBox 版本、诊断字典、EventID—DTC 映射、operation cycle、去抖、storage/enable condition、NVRAM 布局、UDS/DoIP 配置、权限策略和实机样本。下文编号、阈值、次数、错误码、SID/DID/NRC 和保留周期全部待项目确认。</p>
+<p>本次从 <code>F:/座舱日志分析/交付物/T12T诊断技能家族-优化版/</code> 重新读取全部 21 项技能入口，并读取平台架构、证据方法、日志时间、稳定性复位、DB/KE、MCU 和 TPM 分责参考手册。深入使用通用三入口、稳定性复位、DB/KE 取证、MCU 和 TPM 分责专项。</p>
+<h2>2. 一小时主线</h2>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>学习任务</th>
+<th>输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0—10 分钟</td>
+<td>回顾 5 题</td>
+<td>分清监控、事件、DTC、日志和业务恢复</td>
+</tr>
+<tr>
+<td>10—30 分钟</td>
+<td>两个核心概念</td>
+<td>诊断事件状态机、证据合同</td>
+</tr>
+<tr>
+<td>30—50 分钟</td>
+<td>工程案例</td>
+<td>正向诊断链、最早断点、责任与恢复</td>
+</tr>
+<tr>
+<td>50—60 分钟</td>
+<td>可复用产物</td>
+<td>《健康事件—DTC 证据合同 V1》</td>
+</tr>
+</tbody></table>
+<p>回顾题：</p>
+<ol>
+<li>看门狗 heartbeat timeout 与 DTC 有什么关系，为什么不能直接画等号？</li>
+<li>“事件报告接口返回成功”“事件 qualified”“DTC stored”“tester 读到 DTC”分别是哪一层完成？</li>
+<li>为什么清除 DTC 不能证明故障修复？</li>
+<li>复位前、复位中、复位后各应保留哪些身份和时间字段？</li>
+<li>普通日志、冻结帧、tombstone、pstore 各自覆盖什么证据，容量和覆盖风险如何管理？</li>
+</ol>
+<h2>3. 核心概念一：诊断链是状态机，不是一次报错</h2>
+<h3>3.1 正常职责链</h3>
+<pre class="mermaid">flowchart LR
+    M[Monitor&lt;br/&gt;SW-C/BSW/Driver/Service] --&gt;|event + result + context| Q[资格化/去抖]
+    Q --&gt; S[Event Status&lt;br/&gt;operation cycle]
+    S --&gt; D[EventID—DTC 映射]
+    D --&gt; F[Snapshot / Extended Data]
+    F --&gt; N[诊断存储/NVRAM]
+    N --&gt; C[DCM/Diagnostic Management]
+    C --&gt; T[Tester via UDS/DoIP/CAN]
+    M --&gt; L[DLT/logcat/syslog]
+    M --&gt; X[tombstone/DB/KE/pstore]
+    L --&gt; E[证据平台]
+    X --&gt; E
+    N --&gt; E</pre>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>Owner</th>
+<th>输入</th>
+<th>输出</th>
+<th>关键观测</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>监控</td>
+<td>功能/驱动/服务 Owner</td>
+<td>原始信号、checkpoint、错误返回</td>
+<td>passed/failed/pre-failed 等项目状态</td>
+<td>source、对象、采样时刻、阈值版本</td>
+</tr>
+<tr>
+<td>资格化</td>
+<td>Dem 或诊断策略</td>
+<td>连续监控结果、条件、cycle</td>
+<td>qualified event status</td>
+<td>去抖计数、enable/storage condition、状态转换原因</td>
+</tr>
+<tr>
+<td>映射与存储</td>
+<td>Dem/诊断存储</td>
+<td>EventID、DTC 配置、环境数据</td>
+<td>DTC 状态、快照、扩展数据</td>
+<td>DTC、status byte、occurrence、first/most recent fail</td>
+</tr>
+<tr>
+<td>诊断服务</td>
+<td>DCM/DM/网关</td>
+<td>tester request、会话、安全、路由</td>
+<td>正/负响应、数据记录</td>
+<td>tester、SID、session、security、NRC、目标 ECU</td>
+</tr>
+<tr>
+<td>运维分析</td>
+<td>平台/问题 Owner</td>
+<td>DTC、log、dump、trace、版本</td>
+<td>假设、反证、修复与验证</td>
+<td>bootId、generation、buildId、时钟映射、证据哈希</td>
+</tr>
+</tbody></table>
+<h3>3.2 状态机与复位边界</h3>
+<pre class="mermaid">stateDiagram-v2
+    [*] --&gt; NotTested
+    NotTested --&gt; PreFailed: monitor异常
+    PreFailed --&gt; Failed: 去抖/资格化满足
+    PreFailed --&gt; Passed: 异常消失
+    Failed --&gt; Stored: 存储条件满足且写入完成
+    Stored --&gt; PendingRecovery: 修复或条件恢复
+    PendingRecovery --&gt; Healed: operation cycle满足项目策略
+    Healed --&gt; Cleared: 授权清除或老化策略满足
+    Failed --&gt; Failed: 同故障再次出现/更新扩展数据
+    Stored --&gt; Stored: 复位后持久状态恢复</pre>
+<p>这张图是教学抽象，不替代 AUTOSAR 的完整状态位和项目配置。架构设计必须明确：</p>
+<ul>
+<li>operation cycle 由谁开启/结束，掉电、STR、Guest 重建和 MCU reset 是否属于同一 cycle；</li>
+<li>去抖是在 Monitor 还是 Dem，计数跨不跨复位；</li>
+<li>enable condition 与 storage condition 分别控制“是否评价”和“是否存储”；</li>
+<li>EventID、DTC、Snapshot Record、Extended Data 的映射和版本；</li>
+<li>NVRAM 写入时机、掉电原子性、空间满和淘汰规则；</li>
+<li>active、pending、confirmed、healed、aged、cleared 在项目中的准确语义。</li>
+</ul>
+<h2>4. 核心概念二：证据合同必须跨域、跨复位且可关联</h2>
+<p>一个可用的诊断事件至少要回答“哪个对象、哪一代、什么状态、何时、依据什么、保存到哪里”。建议最小字段：</p>
+<table>
+<thead>
+<tr>
+<th>字段组</th>
+<th>字段</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>身份</td>
+<td>vehicle/config/build、ECU/VM/process、component、EventID、DTC</td>
+<td>防止错版本、错对象和错配置</td>
+</tr>
+<tr>
+<td>代际</td>
+<td>powerCycle、bootId、VM generation、process incarnation、incidentId</td>
+<td>隔离复位前后的旧事件</td>
+</tr>
+<tr>
+<td>时间</td>
+<td>source monotonic、wall/UTC、sync status、uncertainty、anchor</td>
+<td>跨 Android/Yocto/MCU/TBox 关联</td>
+</tr>
+<tr>
+<td>状态</td>
+<td>monitor result、debounce、event status、DTC status、operation cycle</td>
+<td>解释状态如何演进</td>
+</tr>
+<tr>
+<td>环境</td>
+<td>电源模式、网络/资源状态、关键输入、最近成功里程碑</td>
+<td>形成可区分的冻结帧</td>
+</tr>
+<tr>
+<td>证据</td>
+<td>log cursor、dump/tombstone/pstore ID、hash、retention</td>
+<td>找到原始现场并防止覆盖</td>
+</tr>
+<tr>
+<td>动作</td>
+<td>recovery request、ACK、actual reset scope、result、business validation</td>
+<td>区分恢复动作和最终恢复</td>
+</tr>
+</tbody></table>
+<h3>ACK 与业务完成</h3>
+<table>
+<thead>
+<tr>
+<th>事件</th>
+<th>最多证明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ReportErrorStatus()</code> 或等价接口返回</td>
+<td>报告调用按接口语义被接收/处理</td>
+</tr>
+<tr>
+<td>监控进入 Failed</td>
+<td>当前监控与资格化达到故障态</td>
+</tr>
+<tr>
+<td>DTC memory entry created</td>
+<td>诊断记录进入指定事件内存</td>
+</tr>
+<tr>
+<td>NvM write completed</td>
+<td>该数据块按存储合同写入；仍需核对掉电保持与版本</td>
+</tr>
+<tr>
+<td>UDS/DoIP 正响应</td>
+<td>本次诊断服务请求成功完成到规定层级</td>
+</tr>
+<tr>
+<td>tester 读到 DTC 与快照</td>
+<td>外部读取链可见一致记录</td>
+</tr>
+<tr>
+<td>修复后状态恢复、故障不再激活</td>
+<td>当前运行满足业务与诊断恢复判据</td>
+</tr>
+<tr>
+<td>清除请求成功</td>
+<td>记录按授权策略被清除，不代表缺陷已修复</td>
+</tr>
+</tbody></table>
+<p>超时与复位规则至少包含：报告队列满时是否丢弃或降级；存储写入超时的重试上限；复位前证据 flush 的预算；旧 boot/generation 事件是否允许更新新代状态；DTC 清除、老化和业务恢复各自独立；重复 incident 如何去重而不覆盖首错。</p>
+<h2>5. 完整故障分析：有异常日志但售后读不到 DTC</h2>
+<p>以下是教学构造案例，用来演示完整分析方法；其中事实和结论不代表当前车辆。</p>
+<h3>5.1 现象与构造证据</h3>
+<ul>
+<li>冷启动后 Camera 服务三次记录 serializer lock lost，HMI 一度降级提示；约 8 秒后画面自行恢复。</li>
+<li>同一次运行中，售后 tester 通过 DoIP 读取目标 ECU，未见对应 DTC。</li>
+<li>重新上电后普通日志已轮转，仍能从持久区取到一次 reset reason，但没有目标事件冻结帧。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>证据</th>
+<th>构造事实</th>
+<th>证据边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E1</td>
+<td>Driver 记录三次 lock lost，带 bootId=b17、monotonic、port=2</td>
+<td>直接证明驱动观察到异常，不证明诊断事件 qualified</td>
+</tr>
+<tr>
+<td>E2</td>
+<td>Camera service 记录 degrade enter/exit</td>
+<td>证明业务降级发生，不证明 DTC 存储</td>
+</tr>
+<tr>
+<td>E3</td>
+<td>Monitor 调用 event report 返回 OK</td>
+<td>证明报告接口局部完成，不证明 Dem 状态变化</td>
+</tr>
+<tr>
+<td>E4</td>
+<td>Dem trace 显示 storage condition=false</td>
+<td>证明当前条件阻止存储；条件来源和配置原因待查</td>
+</tr>
+<tr>
+<td>E5</td>
+<td>没有 debounce counter、operation cycle 与 status transition 记录</td>
+<td>这是证据缺口，不能写成“没有资格化”</td>
+</tr>
+<tr>
+<td>E6</td>
+<td>tester routing activation 与诊断会话成功，其他 DTC 可读</td>
+<td>降低 DoIP 公共链路故障优先级，不证明目标记录存在</td>
+</tr>
+<tr>
+<td>E7</td>
+<td>目标 EventID—DTC 映射来自另一配置版本</td>
+<td>构成版本不一致风险，仍需核对现车加载配置</td>
+</tr>
+<tr>
+<td>E8</td>
+<td>pstore 只有 reset reason，没有本事件冻结帧</td>
+<td>pstore 与 Dem 存储职责不同，不能互相替代</td>
+</tr>
+</tbody></table>
+<h3>5.2 正向链、最早断点与竞争假设</h3>
+<ol>
+<li>最后已证实成功：Monitor 的事件报告接口在 b17 中返回 OK。</li>
+<li>下一预期里程碑：当前配置下 Dem 接收同一 EventID，并按 enable/storage、去抖和 cycle 产生可解释的状态转换。</li>
+<li>当前最早可证实的异常边界：E4 表明存储条件为 false；但 E5 使“资格化是否完成”仍未知。</li>
+<li>不能下的结论：不能只因 E4 就断言 storage condition 配置错误，也不能因 tester 读不到 DTC 就归责 DoIP/DCM。</li>
+<li>竞争假设：条件策略按设计抑制瞬态故障；现车配置版本或映射错误；Monitor 与 Dem 的 EventID 不一致；资格化尚未满足；存储队列/持久化失败但缺日志。</li>
+<li>区分实验：固定同一镜像和诊断配置，记录 Monitor→Dem 输入、条件值来源、去抖计数、status byte、memory entry 与 tester read；每次只改变一个条件或故障持续时间。</li>
+<li>初步责任：首轮由诊断配置/Dem Owner 牵头，Camera/Driver 提供事件产生证据，平台存储提供写入证据，DCM/DoIP 提供读取反证，TPM 维护同一版本和时间线。</li>
+</ol>
+<h3>5.3 恢复与关闭</h3>
+<ul>
+<li>现场保护：先保存 b17 原始日志、Dem 状态、诊断配置哈希、tester trace 和环境，再重启或清除。</li>
+<li>临时措施：若业务已恢复但证据不足，保留降级统计和采集增强；不得为了“产生 DTC”随意放宽量产门限。</li>
+<li>修复候选：依据区分实验决定是修正条件来源、配置映射、去抖设计、存储路径还是观测能力，不能预先指定。</li>
+<li>验证：正常启动不误报码；瞬态、持续、间歇故障各符合策略；掉电/Guest reset/服务重启后状态一致；tester 读到正确 DTC 和快照；清除受会话与权限约束；修复后业务和诊断状态按 operation cycle 收敛。</li>
+</ul>
+<h3>5.4 TPM 可对研发与管理层说明</h3>
+<p>当前证据证明 Camera 业务经历过短时降级，也证明事件报告接口返回成功；尚未证明事件完成资格化和持久存储。外部诊断链能读取其他 DTC，因此首轮应集中核对目标 EventID、条件、去抖、配置版本和存储状态。责任将按 Monitor→Dem→Memory→DCM/DoIP 的最早可证实断点收敛，修复关闭必须同时验证业务恢复、DTC 状态、冻结帧和复位后的持久一致性。</p>
+<h2>6. 可执行测试矩阵</h2>
+<table>
+<thead>
+<tr>
+<th>用例</th>
+<th>注入/步骤</th>
+<th>关键观测</th>
+<th>通过标准</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>正常路径</td>
+<td>正常启动并完成一次 operation cycle</td>
+<td>event/status/memory/tester</td>
+<td>无误报码，状态可解释</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>瞬态异常</td>
+<td>小于项目去抖门限</td>
+<td>pre-failed、counter、业务影响</td>
+<td>按策略不误确认，证据可追踪</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>持续异常</td>
+<td>超过资格化门限</td>
+<td>qualified、DTC、snapshot</td>
+<td>目标记录完整且可读取</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>间歇异常</td>
+<td>fail/pass 交替</td>
+<td>debounce 与 occurrence</td>
+<td>状态不抖动，计数规则一致</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>条件门控</td>
+<td>切换 enable/storage condition</td>
+<td>条件来源与转换原因</td>
+<td>评价和存储行为符合配置</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>掉电边界</td>
+<td>存储前/中/后受控断电</td>
+<td>NvM 状态、记录完整性</td>
+<td>无半条记录和错误代际</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>Guest/服务重启</td>
+<td>只重建 Consumer 或诊断服务</td>
+<td>boot/generation、恢复读取</td>
+<td>旧事件不污染，新状态可重建</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>MCU/SoC reset</td>
+<td>分别触发授权复位</td>
+<td>reset reason、pstore、DTC</td>
+<td>复位原因和事件可关联</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>存储满/日志风暴</td>
+<td>受控填充容量</td>
+<td>淘汰、drop、rate limit</td>
+<td>首错与关键快照不被冲掉</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>tester 异常</td>
+<td>会话不满足、未解锁、链路中断</td>
+<td>SID/session/security/NRC</td>
+<td>拒绝可解释，不改写 DTC</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>清除与复现</td>
+<td>授权清除后重新注入</td>
+<td>clear audit、新 incident</td>
+<td>清除不冒充修复，新事件可记录</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>隐私与权限</td>
+<td>读取受限数据</td>
+<td>ACL、脱敏、审计</td>
+<td>未授权读取被拒绝</td>
+<td>待执行</td>
+</tr>
+</tbody></table>
+<p>不要在量产车或未授权设备上执行故障注入、清除 DTC、改配置、复位或存储填充。所有门限、循环次数和通过标准以项目合同为准。</p>
+<h2>7. 今日独立练习</h2>
+<p>新题不附参考答案、示范作答或预设根因。</p>
+<p>构造场景：车辆发生一次“音频功放无输出”，Android Audio service、Yocto 音频服务、DSP、MCU 和 Amp 各有部分日志；重启音频服务后恢复，tester 读取到一个历史 DTC，但时间与本次现象尚未关联。</p>
+<p>请独立完成：</p>
+<ol>
+<li>画出 Health signal→event→资格化→DTC→快照→存储→tester 的状态与时序图；</li>
+<li>将 Android、Yocto、DSP、MCU、Amp 的控制、数据、状态和电源路径分开；</li>
+<li>至少提出三个竞争假设，填写支持、反证、缺口和单变量实验；</li>
+<li>指出最早可证实断点，并说明当前不能归责的域；</li>
+<li>定义事件报告 ACK、DTC stored、tester read 和“声音恢复”的不同完成语义；</li>
+<li>设计 timeout、复位、旧消息、重复 incident、日志覆盖和存储满策略；</li>
+<li>给出从现场保护到修复关闭的测试矩阵与 TPM 分责表。</li>
+</ol>
+<h2>8. 可复用产物：《健康事件—DTC 证据合同 V1》</h2>
+<p>至少包含：</p>
+<ol>
+<li>事件目录：对象、Monitor、EventID、DTC、严重度、业务影响；</li>
+<li>状态合同：条件、去抖、operation cycle、确认/恢复/老化/清除；</li>
+<li>快照合同：触发时机、字段、来源、时间、代际、隐私；</li>
+<li>存储合同：介质、写入 ACK、容量、淘汰、掉电原子性、保留周期；</li>
+<li>读取合同：DCM/DM、UDS/DoIP、会话、安全、正/负响应；</li>
+<li>证据合同：日志、dump、pstore、tombstone、配置哈希和关联 ID；</li>
+<li>恢复合同：动作、影响半径、预算、失败出口和业务验收；</li>
+<li>测试与分责：正常、边界、异常、复位、共享资源、隐私和回归。</li>
+</ol>
+<h2>9. 提交说明</h2>
+<p>本课编号 <strong>day-45</strong>。请提交 5 道回顾题、诊断状态图、音频功放场景分析、竞争假设、证据账本、测试矩阵、TPM 分责表和《健康事件—DTC 证据合同 V1》。个人反思由你本人填写：哪一个“成功”最容易被我误当成 DTC 或业务闭环？哪项证据最容易在复位后丢失？</p>
+<p>使用页面末尾“上传／提交答卷”，或进入<a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html">答卷中心</a>。答卷、附件与批改公开，请只提交可公开且已脱敏的学习材料。编辑原答卷或本人以 <code>[补交]</code> 开头评论会生成新版本并重新评审。</p>
+<h2>附录：21 项 T12T 技能覆盖检查</h2>
+<table>
+<thead>
+<tr>
+<th>技能</th>
+<th>本次判断</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>t12t-cockpit-diagnosis</td>
+<td>适用，深入：现象、版本、材料、时间与运行域入口</td>
+</tr>
+<tr>
+<td>t12t-log-analysis</td>
+<td>适用，深入：证据分级、三槽、跨域时间与最早断点</td>
+</tr>
+<tr>
+<td>t12t-platform-architecture</td>
+<td>适用，深入：Android、Yocto、MCU、TBox、Hypervisor 边界和四路路径</td>
+</tr>
+<tr>
+<td>t12t-display-black-freeze</td>
+<td>条件适用：显示故障可生成事件，本课没有显示链实机证据</td>
+</tr>
+<tr>
+<td>t12t-touch-input</td>
+<td>条件适用：触摸自检与错误事件可接入，当前无触摸现象</td>
+</tr>
+<tr>
+<td>t12t-avm-camera-stream</td>
+<td>适用：教学案例涉及 Camera 事件；器件、端口和 ID 均待确认</td>
+</tr>
+<tr>
+<td>t12t-power-sleep-str</td>
+<td>适用：operation cycle、掉电存储和复位边界需对齐电源状态</td>
+</tr>
+<tr>
+<td>t12t-audio-path</td>
+<td>适用：独立练习涉及跨 Android/Yocto/DSP/MCU/Amp 诊断链</td>
+</tr>
+<tr>
+<td>t12t-stability-crash-reset</td>
+<td>适用，深入：复位层级、reset reason、连续性和恢复半径</td>
+</tr>
+<tr>
+<td>t12t-performance-jank</td>
+<td>条件适用：资源阈值可进入健康监控，当前无性能实测</td>
+</tr>
+<tr>
+<td>t12t-ethernet-sgmii</td>
+<td>条件适用：DoIP 与网络证据需分层，当前无 PHY/PCS 故障</td>
+</tr>
+<tr>
+<td>t12t-wireless-phone-link</td>
+<td>本课无无线/手机互联现象，专项不展开</td>
+</tr>
+<tr>
+<td>t12t-cross-domain-msg</td>
+<td>适用：事件、DTC、tester 响应和代际关联跨域</td>
+</tr>
+<tr>
+<td>t12t-boot-hmi</td>
+<td>适用：启动、operation cycle 和证据恢复顺序需观测</td>
+</tr>
+<tr>
+<td>t12t-log-storm</td>
+<td>适用：容量、轮转、rate limit 与首错留存设计</td>
+</tr>
+<tr>
+<td>t12t-usb-typec-storage</td>
+<td>条件适用：诊断存储介质可能相关，当前无 USB 故障</td>
+</tr>
+<tr>
+<td>t12t-virtualization-tee</td>
+<td>适用：VM generation、持久存储与安全访问边界</td>
+</tr>
+<tr>
+<td>t12t-db-ke-forensics</td>
+<td>适用，深入：DB/KE/tombstone/pstore 分类、版本和原始证据保全</td>
+</tr>
+<tr>
+<td>t12t-mcu</td>
+<td>适用，深入：MCU Event/DTC、operation cycle、reset reason 与现车协议核验</td>
+</tr>
+<tr>
+<td>t12t-tpm-triage</td>
+<td>适用，深入：Monitor、Dem、存储、DCM/DoIP、验证责任分离</td>
+</tr>
+<tr>
+<td>t12t-tpm-5y8d</td>
+<td>暂不展开：独立练习没有确认根因与逃逸原因，不强行生成 5Y/8D</td>
+</tr>
+</tbody></table>
+<p>关键证据缺口：现车版本和拓扑、诊断字典、EventID—DTC 映射、operation cycle、去抖/门控、DTC memory、NVRAM 策略、UDS/DoIP 会话与安全、跨域时钟、隐私分级、真实日志/dump、故障注入权限与关闭样本。</p>
+</article><section class="answer-panel" data-course="day-45" aria-label="Day 45 - 诊断架构 I：健康状态、故障码与证据留存 答卷提交"><h3>提交本课答卷</h3><p>在 GitHub 登录后填写文字，或把图片、PDF、Word 等文件拖入“答卷正文与附件”框；点击 Submit new issue（提交）才算上传成功。答卷和附件将保存在公开的 GitHub 仓库，请只提交可公开的学习材料。</p><p><a class="answer-submit" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues/new?template=answer.yml&amp;title=%5B%E7%AD%94%E5%8D%B7%5D%5Bday-45%5D+Day+45+-+%E8%AF%8A%E6%96%AD%E6%9E%B6%E6%9E%84+I%EF%BC%9A%E5%81%A5%E5%BA%B7%E7%8A%B6%E6%80%81%E3%80%81%E6%95%85%E9%9A%9C%E7%A0%81%E4%B8%8E%E8%AF%81%E6%8D%AE%E7%95%99%E5%AD%98&amp;lesson=day-45&amp;course=https%3A%2F%2Fqiantao18817568425-art.github.io%2FArchitecture_Learning-%2F%23day-45" target="_blank" rel="noopener">上传／提交答卷 ↗</a> <a class="answer-view" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues?q=is%3Aissue+in%3Atitle+%22%5B%E7%AD%94%E5%8D%B7%5D%5Bday-45%5D%22" target="_blank" rel="noopener">查看答卷与批改 ↗</a> <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html#day-45">归档与批改状态</a></p><p>课程编号：<code>day-45</code>。补交请在同一答卷下评论，以 <strong>[补交]</strong> 开头，并注明题号；也可编辑原答卷。每天 20:00 先检查并批改新答卷，再安排当天任务。</p></section></main><script src="../architecture/vendor/mermaid-10.9.5.min.js"></script><script>mermaid.initialize({startOnLoad:true,theme:'neutral',securityLevel:'strict'});</script></body></html>
