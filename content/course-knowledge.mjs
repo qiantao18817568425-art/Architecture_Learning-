@@ -35,9 +35,11 @@ VM 重建或链路 flap 后，Host 需要拒绝旧 generation 的 queue/packet/c
 
   '10': `## 课程沉淀：诊断读取链与清除边界
 
-关联课程：Day 45。外部 tester 经 DoIP/CAN、路由和 DCM/诊断管理读取故障时，要分开验证链路可达、会话、安全访问、目标 ECU 路由、DTC memory entry、Snapshot/Extended Data 和响应结果。能读取其他 DTC 只降低公共链故障优先级，不能证明目标事件已生成。
+关联课程：Day 45、Day 46。外部 tester 经 DoIP/CAN、路由和 DCM/诊断管理读取故障时，要分开验证链路可达、会话、安全访问、目标 ECU 路由、DTC memory entry、Snapshot/Extended Data 和响应结果。能读取其他 DTC 只降低公共链故障优先级，不能证明目标事件已生成。
 
-清除 DTC 是受会话、权限和条件约束的诊断操作，不代表业务已经修复。关闭问题前应同时验证触发条件消失、业务恢复、事件状态按 operation cycle 收敛、持久记录和审计符合要求，并能在再次注入时生成新的 incident。`,
+DoIP Routing Activation 只建立当前 tester/socket 到配置目标的路由资格；0x8002 positive ACK 只证明 DoIP 节点接受处理该诊断消息。它们都不能替代 DCM/应用的最终 UDS 响应。若 ACK 后无最终响应，应沿 DoIP → router/PduR → DCM → Dem/handler 找相同 SA、TA、SID、transaction 与 generation 的首个缺失里程碑。
+
+清除 DTC 是受会话、权限和条件约束的诊断操作，不代表业务已经修复。0x14 正响应后还要 0x19 readback、核对 Dem/NvM 终态、覆盖 active fault 与下一 operation cycle，并验证再次注入能生成新的 incident。清除前保存 DTC、status、Snapshot/Extended Data、配置版本、tester trace 和原始日志。`,
 
   '11': `## 课程沉淀：显示首帧不能由服务 Ready 或图层 submit 代替
 
@@ -57,11 +59,13 @@ VM 重建或链路 flap 后，Host 需要拒绝旧 generation 的 queue/packet/c
 
   '13': `## 课程沉淀：Ethernet / SOME-IP 的链路、服务、会话与数据新鲜度
 
-关联课程：Day 43、Day 44。“网络在线”至少拆成四层：物理/链路（SerDes/PCS/PHY/MAC/carrier）、网络（VLAN/IP/ARP/ND/routing/firewall）、服务（process/socket/Offer/Find/Subscribe/TTL）、业务数据（sequence/source timestamp/quality/consumer apply）。物理 link up、SD 可发现、RPC 会话存活和目标 topic 新鲜是四个不同结论。
+关联课程：Day 43、Day 44、Day 46。“网络在线”至少拆成四层：物理/链路（SerDes/PCS/PHY/MAC/carrier）、网络（VLAN/IP/ARP/ND/routing/firewall）、服务（process/socket/Offer/Find/Subscribe/TTL）、业务数据（sequence/source timestamp/quality/consumer apply）。物理 link up、SD 可发现、RPC 会话存活和目标 topic 新鲜是四个不同结论。
 
 故障定位以最后正常输入和首个缺失输出为边界；consumer timeout 通常只是检测点。恢复按最小影响半径逐级推进，并在每一级验证 session 重建、订阅有效、sequence 继续、数据足够新且业务状态正确。ACK、SOME/IP E_OK、订阅成功与业务完成分别记录，不互相替代。
 
-[AUTOSAR SOME/IP](https://www.autosar.org/fileadmin/standards/R21-11/FO/AUTOSAR_PRS_SOMEIPProtocol.pdf)、[SOME/IP-SD](https://www.autosar.org/fileadmin/standards/R21-11/FO/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf)和[Linux Operational States](https://docs.kernel.org/networking/operstates.html)用于机制核验。`,
+DoIP Routing Activation 在 TCP 之上建立 tester 注册和逻辑地址路由；DoIP 还包含 Alive Check、source/target address 和诊断消息 ACK。TCP connected、Routing Activation accepted、DoIP 0x8002、UDS 正/负响应、DTC/例程状态与业务验收是不同里程碑。reset/reconnect 后要重建 routing、session 与 security，并按 connection、bootId/generation 拒绝旧响应。
+
+[AUTOSAR SOME/IP](https://www.autosar.org/fileadmin/standards/R21-11/FO/AUTOSAR_PRS_SOMEIPProtocol.pdf)、[SOME/IP-SD](https://www.autosar.org/fileadmin/standards/R21-11/FO/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf)、[AUTOSAR DoIP](https://www.autosar.org/fileadmin/standards/R22-11/CP/AUTOSAR_SWS_DiagnosticOverIP.pdf)和[Linux Operational States](https://docs.kernel.org/networking/operstates.html)用于机制核验。`,
 
   '14': `## 课程沉淀：STR / Resume 的屏障、代际与恢复预算
 
@@ -73,7 +77,7 @@ VM 重建或链路 flap 后，Host 需要拒绝旧 generation 的 queue/packet/c
 
   '15': `## 课程沉淀：健康状态、故障码与跨复位证据合同
 
-关联课程：Day 35—45。诊断链应明确为：Health signal → event → qualification → DTC → snapshot → storage → tester。Monitor 报告接口返回、事件 qualified、DTC memory entry 创建、NVRAM 持久化、tester 成功读取和业务恢复属于不同完成点。
+关联课程：Day 35—46。诊断链应明确为：Health signal → event → qualification → DTC → snapshot → storage → tester。Monitor 报告接口返回、事件 qualified、DTC memory entry 创建、NVRAM 持久化、tester 成功读取和业务恢复属于不同完成点。
 
 事件合同至少包含 component/instance、EventID/DTC、severity、monitor result、debounce、enable/storage condition、operation cycle、status byte、occurrence、first/most-recent fail、vehicle/build/config、powerCycle/bootId/VM generation/process incarnation/incidentId、monotonic 与域内时间、Snapshot/Extended Data、log/dump/pstore/tombstone 引用、hash 和 retention。跨复位后旧代事件不得修改新代状态；DTC 清除、老化与业务恢复分别管理。
 
@@ -90,15 +94,21 @@ flowchart LR
   E -. incidentId / bootId / generation .-> L[Log / dump / pstore / tombstone]
 ~~~
 
-《健康事件—DTC 证据合同》用于评审“谁监控、何时成立、保存什么、怎样读取、跨复位如何关联、清除和恢复怎样验收”。[AUTOSAR Dem](https://www.autosar.org/fileadmin/standards/R22-11/CP/AUTOSAR_SWS_DiagnosticEventManager.pdf)、[DCM](https://www.autosar.org/fileadmin/standards/R22-11/CP/AUTOSAR_SWS_DiagnosticCommunicationManager.pdf)、[Platform Health Management](https://www.autosar.org/fileadmin/standards/R22-11/AP/AUTOSAR_SWS_PlatformHealthManagement.pdf)与[Linux ramoops](https://docs.kernel.org/admin-guide/ramoops.html)用于机制核验。`,
+### UDS/DoIP 服务链与清除闭环
 
-  '20': `## 课程沉淀：Day 35—45 的统一关联键与旧消息规则
+tester → TCP/DoIP Entity → Routing Activation → diagnostic router/PduR → DCM → Dem/应用/Routine → UDS response 是逐层链路。DoIP ACK 只证明诊断消息被 DoIP 节点接受处理；NRC 0x78 只表示仍在等待最终结果；UDS 正响应只按该 SID 的服务合同解释。三者都不能直接证明用户业务已经恢复。
+
+0x19 读取要把 DTC/status/Snapshot 与 incident、operation cycle、bootId/generation 和业务日志关联。0x14 清除前保存原始证据，清除后做 readback、复位/掉电一致性、active fault、下一 cycle 和故障再注入验证。若清除或例程在复位时终态未知，必须记录为 unknown 并以新代 readback 收敛；旧连接或旧 ECU generation 的迟到响应不得更新当前事务。
+
+《健康事件—DTC 证据合同》和《UDS/DoIP 诊断服务—清除—验证闭环合同》用于评审“谁监控、何时成立、保存什么、怎样读取、跨复位如何关联、清除和恢复怎样验收”。[AUTOSAR Dem](https://www.autosar.org/fileadmin/standards/R22-11/CP/AUTOSAR_SWS_DiagnosticEventManager.pdf)、[DCM](https://www.autosar.org/fileadmin/standards/R22-11/CP/AUTOSAR_SWS_DiagnosticCommunicationManager.pdf)、[DoIP](https://www.autosar.org/fileadmin/standards/R22-11/CP/AUTOSAR_SWS_DiagnosticOverIP.pdf)、[Platform Health Management](https://www.autosar.org/fileadmin/standards/R22-11/AP/AUTOSAR_SWS_PlatformHealthManagement.pdf)与[Linux ramoops](https://docs.kernel.org/admin-guide/ramoops.html)用于机制核验。`,
+
+  '20': `## 课程沉淀：Day 35—46 的统一关联键与旧消息规则
 
 跨音频、STR、显示、VM、Ethernet/SOME-IP 和诊断链，统一关联键至少包含 vehicle/config/build、powerCycle、Host bootId、VM generation、process incarnation、session/request/transaction/frame/incident ID、对象/音区/显示/服务实例和域内 monotonic 时间。跨域时间必须记录映射方法和误差；两事件间隔小于误差时，不只凭时间排序断言因果。
 
 每个接口分别定义 received/ACK、local applied/completed、downstream observable 和 business accepted。超时、取消、复位后按 generation 拒绝旧消息；重试保留原始 deadline，并说明幂等键、在途事务终态和状态重取策略。`,
 
-  '23': `## 课程沉淀：Day 35—45 的通用验证闭环
+  '23': `## 课程沉淀：Day 35—46 的通用验证闭环
 
 可复用验证矩阵覆盖：正常链、边界时序、瞬态/持续故障、丢包/乱序/重复、局部服务重启、Guest/设备/Host 分层复位、旧消息重放、资源压力、证据容量/轮转、恢复失败升级和相邻业务回归。每项记录目标、前置、注入、步骤、观测点、预期、实测、原始证据链接和通过判据。
 

@@ -34,10 +34,10 @@ test('full text search includes interface names inside code blocks and beginner 
  assert.ok(index.some(x=>x.url==='02.html#beginner-guide'&&x.text.includes('物理 CPU')),'beginner guide is searchable');
 });
 
-test('Day35 through Day45 contribute reusable knowledge and reverse links to architecture chapters',()=>{
+test('Day35 through Day46 contribute reusable knowledge and reverse links to architecture chapters',()=>{
  const data=JSON.parse(read('content/architecture.json'));
- const mapped=data.days.filter(x=>x.day>=35&&x.day<=45);
- assert.deepEqual(mapped.map(x=>x.day),[35,36,37,38,39,40,41,42,43,44,45]);
+ const mapped=data.days.filter(x=>x.day>=35&&x.day<=46);
+ assert.deepEqual(mapped.map(x=>x.day),[35,36,37,38,39,40,41,42,43,44,45,46]);
  assert.equal(new Set(data.days.map(x=>x.day)).size,data.days.length,'course mappings must stay unique');
 
  const expectations=[
@@ -45,8 +45,8 @@ test('Day35 through Day45 contribute reusable knowledge and reverse links to arc
   ['14.html',['Day 38','Day 39','STR / Resume 的屏障、代际与恢复预算']],
   ['11.html',['Day 40','显示首帧不能由服务 Ready 或图层 submit 代替']],
   ['02.html',['Day 41','Day 42','VM Reset 的故障域、重建顺序与升级边界']],
-  ['13.html',['Day 43','Day 44','Ethernet / SOME-IP 的链路、服务、会话与数据新鲜度']],
-  ['15.html',['Day 45','Health signal → event → qualification → DTC → snapshot → storage → tester','健康事件—DTC 证据合同']]
+  ['13.html',['Day 43','Day 44','Day 46','Ethernet / SOME-IP 的链路、服务、会话与数据新鲜度','DoIP Routing Activation']],
+  ['15.html',['Day 45','Day 46','Health signal → event → qualification → DTC → snapshot → storage → tester','健康事件—DTC 证据合同','DoIP ACK 只证明诊断消息被 DoIP 节点接受处理']]
  ];
  for(const [page,texts] of expectations){
   const html=read(`docs/architecture/${page}`);
@@ -59,6 +59,6 @@ test('Day35 through Day45 contribute reusable knowledge and reverse links to arc
 
 test('knowledge home exposes the latest course integration entry',()=>{
  const home=read('docs/architecture/index.html');
- assert.ok(home.includes('Day 35—45 课程知识沉淀'));
+ assert.ok(home.includes('Day 35—46 课程知识沉淀'));
  assert.ok(home.includes('15.html#课程沉淀健康状态故障码与跨复位证据合同'));
 });
