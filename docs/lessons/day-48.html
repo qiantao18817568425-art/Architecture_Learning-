@@ -1,0 +1,481 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Day 48 - OTA / 回滚 II：跨域编排、安全提交与整车验证</title><style>
+    :root { color-scheme: light; font-family: "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif; color: #18212f; background: #f6f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.75; }
+    a { color: #075fbd; overflow-wrap: anywhere; }
+    code { background: #edf1f6; border-radius: 3px; padding: .08rem .28rem; }
+    pre { overflow: auto; background: #111827; color: #e5e7eb; padding: 1rem; border-radius: 6px; white-space: pre-wrap; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
+    header { border-left: 5px solid #db5a2a; padding: 12px 20px; margin-bottom: 28px; background: #fff; }
+    h1, h2, h3, h4, h5, h6 { line-height: 1.35; margin: 1.35em 0 .5em; }
+    h1 { margin: 0; font-size: 2rem; }
+    .lede { max-width: 840px; margin: .5rem 0 0; color: #4b5563; }
+    .metrics { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 26px; }
+    .metric { background: #e6eff8; border: 1px solid #bfd5ea; padding: 6px 12px; border-radius: 4px; color: #174a76; }
+    .metric strong { font-size: 1.15rem; }
+    .guide { background: #fff; border-top: 2px solid #1d8093; padding: 18px 22px; margin: 24px 0; }
+    .guide ol { margin-bottom: 0; }
+    .lesson { background: #fff; border: 1px solid #d8dee8; margin: 10px 0; }
+    summary { cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 18px; }
+    summary::-webkit-details-marker { color: #db5a2a; }
+    .lesson-title { font-weight: 700; font-size: 1.05rem; }
+    .lesson-meta { color: #52606d; font-size: .86rem; white-space: nowrap; }
+    .lesson-body { border-top: 1px solid #d8dee8; padding: 4px 22px 24px; }
+    .archive-note { color: #52606d; font-size: .92rem; border-left: 3px solid #1d8093; padding-left: 10px; }
+    .format-audit { border: 1px solid #b8d5cf; background: #f4fbf8; padding: 16px; margin: 18px 0; border-radius: 6px; }
+    .format-audit h3 { margin-top: 0; }
+    .format-audit ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+    .format-audit li { border: 1px solid #d8dee8; background: #fff; border-radius: 5px; padding: 8px; font-size: .9rem; }
+    .format-audit span { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+    .format-audit .present span { background: #dbece8; color: #126458; }
+    .format-audit .missing span { background: #f4e3cb; color: #8a4604; }
+    article h2 { font-size: 1.35rem; }
+    article h3 { font-size: 1.15rem; }
+    article h4, article h5 { font-size: 1rem; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    blockquote { margin: 1rem 0; padding: .45rem 1rem; border-left: 3px solid #1d8093; background: #f4f8fb; color: #435467; }
+    table { border-collapse: collapse; width: 100%; min-width: 32rem; font-size: .94rem; }
+    th, td { border: 1px solid #d8dee8; padding: .55rem .7rem; text-align: left; vertical-align: top; }
+    th { background: #edf4f9; }
+    .mermaid { background: #fff; color: #18212f; border: 1px solid #d8dee8; }
+    footer { margin-top: 32px; color: #52606d; font-size: .9rem; }
+    @media (max-width: 640px) { main { padding: 16px 12px 36px; } h1 { font-size: 1.55rem; } summary { align-items: flex-start; } .lesson-body { padding: 2px 14px 18px; } .format-audit ul { grid-template-columns: 1fr; } }
+  </style><style>.answer-panel{margin:22px 0;padding:18px;border:1px solid #9ab8d8;border-left:5px solid #1763a3;border-radius:8px;background:#f2f7fc}.answer-panel h3{margin-top:0}.answer-submit,.answer-view{display:inline-block;padding:10px 14px;margin:4px 8px 4px 0;border-radius:6px;background:#12578f;color:#fff;text-decoration:none}.answer-view{background:#e0ecf6;color:#153e61}.answer-panel a:focus-visible{outline:3px solid #db5a2a;outline-offset:3px}.answer-panel code{overflow-wrap:anywhere}.answer-list{padding:0;list-style:none}.answer-list li{margin:12px 0;padding:16px;background:#fff;border:1px solid #d8dee8;border-radius:6px}body{font-family:system-ui,'Microsoft YaHei',sans-serif;line-height:1.75;color:#18212f;background:#f6f8fb}main{max-width:1180px;margin:auto;padding:24px}a{overflow-wrap:anywhere}</style></head><body><main><nav><a href="../index.html#day-48">课程档案</a> · <a href="../architecture/index.html">项目架构实践</a></nav><article><h1>Day 48 — OTA / 回滚 II：跨域编排、安全提交与整车验证</h1>
+<p>计划学习日期：2026-10-22，星期四，Asia/Shanghai；2026-10-23 补充登记并首次发布。Week 15。能力阶段：第二阶段“系统链路与问题分析”。目标深度：L3，能设计 Hypervisor、Yocto、Android、MCU、TBox 或外部 ECU 的升级依赖、提交屏障、安全降级边界和整车关闭标准。总用时约 60 分钟。</p>
+<p>执行前答卷扫描没有发现新的授权答卷、补交或附件。本课不把发布记为学习完成，Day 34—48 继续等待真实作答评审。</p>
+<h2>1. 资料与项目边界</h2>
+<p>官方资料核验日期：2026-10-23。</p>
+<ul>
+<li><a href="https://www.autosar.org/standards/adaptive-platform">AUTOSAR Adaptive Platform：Vehicle Update and Configuration Management</a>：V-UCM 协调整车 campaign、依赖、安全条件、软件包分发、历史和失败恢复。</li>
+<li><a href="https://www.autosar.org/fileadmin/standards/R22-11/AP/AUTOSAR_SWS_UpdateAndConfigurationManagement.pdf">AUTOSAR AP UCM R22-11</a>：单个 Adaptive Platform 的安全安装、激活、回滚和记录职责。</li>
+<li><a href="https://source.android.com/docs/security/features/verifiedboot/avb">AOSP Android Verified Boot</a>：信任根、签名验证和 rollback protection 的通用机制。</li>
+<li><a href="https://source.android.com/docs/security/features/verifiedboot/boot-flow">AOSP Verified Boot flow</a>：A/B 设备在更新 rollback protection metadata 前先把新 Slot 标为 successful 的边界。</li>
+<li>本知识库 <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/architecture/source-SRC0219.html">MT8676 Hypervisor OTA 来源页</a>、<a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/architecture/source-SRC0263.html">Yocto OTA 来源页</a>和<a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/architecture/source-SRC0071.html">安全启动来源页</a>用于来源追溯，实际车型与版本仍待核对。</li>
+</ul>
+<p>当前没有现车 ECU 清单、升级拓扑、UCM/V-UCM 实现、车辆安全状态、证书/密钥和 rollback index 配置、跨域版本兼容矩阵、数据迁移策略或实车 campaign。下文所有顺序、门限、时间和 Owner 都是架构合同模板。</p>
+<h2>2. 一小时主线</h2>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>学习任务</th>
+<th>输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0—10 分钟</td>
+<td>回顾 5 题</td>
+<td>分清单域提交、整车提交和安全不可回退</td>
+</tr>
+<tr>
+<td>10—30 分钟</td>
+<td>两个核心概念</td>
+<td>依赖图与提交屏障；安全回退边界</td>
+</tr>
+<tr>
+<td>30—50 分钟</td>
+<td>工程案例</td>
+<td>Android 已新版本但 MCU 仍旧版本</td>
+</tr>
+<tr>
+<td>50—60 分钟</td>
+<td>可复用产物</td>
+<td>《整车 OTA Campaign 与提交屏障合同 V1》</td>
+</tr>
+</tbody></table>
+<p>回顾题：</p>
+<ol>
+<li>为什么每个 ECU 都返回安装成功，整车 campaign 仍可能失败？</li>
+<li>依赖图、安装顺序、激活顺序和回滚顺序为什么不能只用一张线性表表示？</li>
+<li>rollback protection 与业务回滚是什么关系，为什么安全计数器不能提前提交？</li>
+<li>一个域首启健康但跨域协议不兼容，哪个完成条件尚未满足？</li>
+<li>断电后 campaign 状态为 unknown 时，为什么不能直接重放所有安装和激活动作？</li>
+</ol>
+<h2>3. 核心概念一：跨域升级是依赖图上的事务</h2>
+<pre class="mermaid">flowchart LR
+    B[Backend / Campaign] --&gt; O[Vehicle OTA Orchestrator]
+    O --&gt; P[Policy + Vehicle State]
+    O --&gt; H[Hypervisor / Boot chain]
+    O --&gt; Y[Yocto Host / Drivers / Backends]
+    O --&gt; A[Android Guest / Apps]
+    O --&gt; M[MCU / AUTOSAR CP]
+    O --&gt; T[TBox / Connectivity]
+    H --&gt; Y
+    Y --&gt; A
+    M --&gt;|power and wake contract| H
+    T --&gt;|download/report path| O
+    Y --&gt;|virtio / devices / network| A
+    P --&gt; G[Global Commit Gate]
+    H --&gt; G
+    Y --&gt; G
+    A --&gt; G
+    M --&gt; G
+    T --&gt; G
+    G --&gt; C[Commit or coordinated rollback]</pre>
+<p>依赖边至少说明：接口/数据版本、启动依赖、共享硬件、供电和唤醒、更新承载、诊断和回滚能力。安装可以并行，激活可能必须分批；提交必须等所有规定门禁对同一 campaign generation 给出权威结果。</p>
+<table>
+<thead>
+<tr>
+<th>状态</th>
+<th>含义</th>
+<th>不可替代的证据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Prepared</td>
+<td>所需包、空间、权限、车辆条件和回滚目标已确认</td>
+<td>manifest、依赖解算、车辆状态快照</td>
+</tr>
+<tr>
+<td>Staged</td>
+<td>各目标完成写入/处理但尚未成为权威版本</td>
+<td>每域 staged result 与版本 readback</td>
+</tr>
+<tr>
+<td>Activation in progress</td>
+<td>按依赖进入新版本</td>
+<td>boot/generation、重启范围、在途事务</td>
+</tr>
+<tr>
+<td>Locally healthy</td>
+<td>单域健康检查通过</td>
+<td>本域启动、资源、服务和数据</td>
+</tr>
+<tr>
+<td>Cross-domain compatible</td>
+<td>关键接口、数据和状态协同通过</td>
+<td>双端版本、握手、业务序列与反证</td>
+</tr>
+<tr>
+<td>Globally committed</td>
+<td>campaign 的全部门禁通过并持久提交</td>
+<td>全局 commit record 与各域 readback</td>
+</tr>
+<tr>
+<td>Rolled back / degraded</td>
+<td>回到兼容集合或进入明确降级</td>
+<td>版本集合、用户功能、诊断和审计</td>
+</tr>
+</tbody></table>
+<h2>4. 核心概念二：安全提交与业务回滚必须协调</h2>
+<p>Verified Boot 负责验证启动链上的完整性和真实性；rollback protection 防止启动低于安全版本下限的镜像。业务层希望在新版本失败时回到旧版本，但旧版本只有在安全策略允许、数据格式仍兼容且依赖集合完整时才是有效回退目标。</p>
+<p>因此设计顺序通常是：验证新镜像 → trial activation → 本地与跨域健康门禁 → mark successful / 全局提交 → 在正确时点更新不可逆安全元数据。具体顺序必须由当前 Bootloader、TEE/安全存储和项目安全设计确认。过早更新不可逆 rollback index 可能让旧版本失去启动资格；过晚或不更新又可能留下安全降级窗口。</p>
+<h3>4.1 四种“成功”</h3>
+<table>
+<thead>
+<tr>
+<th>成功</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>包成功</td>
+<td>包身份、完整性、真实性和适配规则满足</td>
+</tr>
+<tr>
+<td>单域安装成功</td>
+<td>某 ECU/VM 完成 staged/installed 接口合同</td>
+</tr>
+<tr>
+<td>单域运行成功</td>
+<td>目标版本启动并通过本地健康门禁</td>
+</tr>
+<tr>
+<td>整车 campaign 成功</td>
+<td>所有依赖域对同一版本集合完成业务、诊断、安全和提交</td>
+</tr>
+</tbody></table>
+<p>安全启动通过不等于接口兼容；单域业务可用不等于整车可提交；回滚动作完成也不等于车辆恢复到安全且兼容的版本集合。</p>
+<h2>5. 跨域提交时序</h2>
+<pre class="mermaid">sequenceDiagram
+    participant O as Vehicle Orchestrator
+    participant M as MCU
+    participant H as Hypervisor/Yocto
+    participant A as Android
+    participant T as TBox/Other ECU
+    O-&gt;&gt;O: Resolve version set, dependency, vehicle condition
+    par stage domains
+      O-&gt;&gt;M: Stage package(campaignId)
+      O-&gt;&gt;H: Stage package(campaignId)
+      O-&gt;&gt;A: Stage package(campaignId)
+      O-&gt;&gt;T: Stage package(campaignId)
+    end
+    M--&gt;&gt;O: staged + version evidence
+    H--&gt;&gt;O: staged + version evidence
+    A--&gt;&gt;O: staged + version evidence
+    T--&gt;&gt;O: staged + version evidence
+    O-&gt;&gt;O: Staging barrier
+    O-&gt;&gt;M: Enter agreed power/update state
+    O-&gt;&gt;H: Activate host/boot generation
+    H-&gt;&gt;A: Recreate/boot compatible guest generation
+    O-&gt;&gt;T: Activate dependent domains
+    par health and compatibility gates
+      M--&gt;&gt;O: local health + power contract
+      H--&gt;&gt;O: host/device/backend health
+      A--&gt;&gt;O: service + HMI/business health
+      T--&gt;&gt;O: connectivity/reporting health
+    end
+    alt all gates pass before global deadline
+      O-&gt;&gt;O: Persist global commit record
+      O--&gt;&gt;M: Commit current generation
+      O--&gt;&gt;H: Commit current generation
+      O--&gt;&gt;A: Commit current generation
+      O--&gt;&gt;T: Commit current generation
+    else failed, timeout or unknown
+      O-&gt;&gt;O: Reconcile readback and choose compatible recovery set
+      O--&gt;&gt;M: Rollback/degrade instruction
+      O--&gt;&gt;H: Rollback/degrade instruction
+      O--&gt;&gt;A: Rollback/degrade instruction
+      O--&gt;&gt;T: Rollback/degrade instruction
+    end</pre>
+<p>每条消息携带 campaignId、target set、domain generation、transactionId、phase、deadline 和幂等键。复位后域内 ACK 只有在版本 readback、generation 和阶段一致时才有效。旧 campaign 的迟到 <code>healthy</code> 不得推进新 campaign；全局超时不能因某个域重试而无限延长。</p>
+<h2>6. 完整故障分析：Android 已升级，但 MCU 仍是旧版本</h2>
+<p>以下为教学构造案例，不代表当前车辆。</p>
+<h3>6.1 构造证据</h3>
+<table>
+<thead>
+<tr>
+<th>证据</th>
+<th>构造事实</th>
+<th>证据边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E1</td>
+<td>campaign manifest 要求 Android vN 与 MCU vM 同组提交</td>
+<td>证明目标依赖，不证明实际顺序正确</td>
+</tr>
+<tr>
+<td>E2</td>
+<td>Android 新 Slot 已启动并 mark-successful</td>
+<td>证明 Android 本地提交；不证明整车提交</td>
+</tr>
+<tr>
+<td>E3</td>
+<td>MCU staged ACK 存在，但激活后的版本 readback 仍为旧版</td>
+<td>把首个不一致收窄到 MCU 激活/提交边界</td>
+</tr>
+<tr>
+<td>E4</td>
+<td>Android 收到 MCU 旧协议状态后进入兼容降级</td>
+<td>证明下游影响与保护生效，不证明 MCU 未激活的原因</td>
+</tr>
+<tr>
+<td>E5</td>
+<td>Orchestrator 没有持久化 staging barrier 的成员列表</td>
+<td>说明全局事务证据不足</td>
+</tr>
+<tr>
+<td>E6</td>
+<td>断电发生在 MCU staged 与 activation 之间</td>
+<td>强相关触发条件；仍需 MCU 持久状态与电源证据</td>
+</tr>
+<tr>
+<td>E7</td>
+<td>重启后旧 campaign 的 Android healthy 回调再次到达</td>
+<td>证明存在迟到消息风险，不证明它已推进状态机</td>
+</tr>
+</tbody></table>
+<h3>6.2 断点、责任与恢复</h3>
+<p>最后完整的全局里程碑是各域 staged；下一预期是 MCU 按同一 campaign 激活并 readback 为 vM。当前最早可证实断点在 MCU staged → activation/readback 边界。Android 已本地提交说明提交屏障或依赖执行存在风险，但不能据此断言 Android 是根因域。</p>
+<p>竞争假设：MCU staged 状态未持久化；电源切换使激活命令丢失；Orchestrator 在 barrier 未完成前允许 Android 提交；campaign 恢复读取了旧状态；MCU 激活成功但 readback 来源陈旧；安全/版本策略拒绝 vM。最小实验必须贯通 orchestrator journal、MCU 双银行/版本状态、命令 ACK 与应用 ACK、电源状态、boot counter、readback 来源和 global commit record。</p>
+<p>恢复先冻结新的 campaign 和旧回调，读取所有域当前版本与安全状态，再选择一个允许启动且接口兼容的版本集合。若 Android 旧版本仍安全可用，可按合同回退；若不可回退，则保持新 Android 并对旧 MCU 进入明确兼容降级或服务限制。恢复策略必须由版本矩阵和安全策略决定，不能只追求“都回旧版”。</p>
+<h2>7. 可执行验证矩阵</h2>
+<table>
+<thead>
+<tr>
+<th>用例</th>
+<th>注入/步骤</th>
+<th>关键观测</th>
+<th>通过标准</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>正常整车 campaign</td>
+<td>多域 staged、分批激活与提交</td>
+<td>campaign、版本集、barrier、health</td>
+<td>只有完整兼容集合被提交</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>依赖不满足</td>
+<td>缺失某域目标包</td>
+<td>resolver、manifest、拒绝原因</td>
+<td>安装前安全拒绝</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>staging 中断</td>
+<td>某域下载/写入失败</td>
+<td>每域阶段、retry、空间</td>
+<td>未跨越全局屏障</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>激活中断电</td>
+<td>staged 后激活前掉电</td>
+<td>journal、boot counter、readback</td>
+<td>恢复后终态可收敛</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>单域健康失败</td>
+<td>Android/MCU 任一门禁失败</td>
+<td>local 与 global gate</td>
+<td>不全局提交并进入兼容恢复</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>旧 healthy 迟到</td>
+<td>重放旧 campaign 回调</td>
+<td>campaign/generation</td>
+<td>旧消息被拒并审计</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>安全降级阻止</td>
+<td>回退目标低于允许下限</td>
+<td>rollback index、验证结果</td>
+<td>不启动不安全版本</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>数据迁移不可逆</td>
+<td>升级后触发回退</td>
+<td>schema/version/readback</td>
+<td>按合同迁移或阻止不安全回退</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>诊断链恢复</td>
+<td>升级/回退后读 DTC 与版本</td>
+<td>DoIP/UDS、DID/DTC</td>
+<td>版本与故障证据一致</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>相邻业务回归</td>
+<td>电源、网络、显示、音频、Camera</td>
+<td>端到端业务里程碑</td>
+<td>共享资源无回归</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>连续两次 campaign</td>
+<td>v1→v2→v3</td>
+<td>history、rollback target</td>
+<td>代际隔离且审计完整</td>
+<td>待执行</td>
+</tr>
+</tbody></table>
+<h2>8. 今日独立练习</h2>
+<p>新题不附参考答案、示范作答或预设根因。</p>
+<p>场景：一次整车 OTA 同时涉及 Hypervisor、Yocto、Android 与 MCU。Android 新版本已显示在设置页，车辆却出现唤醒后部分信号不刷新；平台计划“全部回滚”，但安全团队提示某个域的旧版本已低于允许的 rollback index。</p>
+<p>请独立完成：</p>
+<ol>
+<li>画四域依赖图、staging barrier、activation 顺序和 global commit gate；</li>
+<li>分别描述控制、数据、状态、电源和安全路径；</li>
+<li>指出局部 ACK、本地健康、跨域兼容和整车成功的区别；</li>
+<li>提出至少四个竞争假设及区分实验；</li>
+<li>设计掉电、复位、旧消息、重复 campaign、部分提交和终态 unknown 的恢复；</li>
+<li>给出安全允许的回退/降级候选及其取舍，不预设最终方案；</li>
+<li>产出《整车 OTA Campaign 与提交屏障合同 V1》和验证矩阵。</li>
+</ol>
+<h2>9. 提交说明</h2>
+<p>本课编号 <strong>day-48</strong>。使用页面末尾“上传／提交答卷”或进入<a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html">答卷中心</a>。请提交回顾题、架构图、状态/时序图、案例分析、竞争假设、证据账本、方案权衡、测试矩阵和 TPM 分责。个人反思由你本人填写：跨域升级中，我最容易漏掉哪个不可逆边界？</p>
+<h2>附录：21 项 T12T 技能覆盖检查</h2>
+<table>
+<thead>
+<tr>
+<th>技能</th>
+<th>本次判断</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>t12t-cockpit-diagnosis</td>
+<td>适用，深入：跨域拓扑、版本集合、最早断点和责任边界</td>
+</tr>
+<tr>
+<td>t12t-log-analysis</td>
+<td>适用，深入：campaign/generation 时间线、证据与竞争假设</td>
+</tr>
+<tr>
+<td>t12t-platform-architecture</td>
+<td>适用，深入：Hypervisor、Yocto、Android、MCU、TBox 与外设边界</td>
+</tr>
+<tr>
+<td>t12t-display-black-freeze</td>
+<td>条件适用：升级后黑屏需区分版本、恢复与显示链断点</td>
+</tr>
+<tr>
+<td>t12t-touch-input</td>
+<td>条件适用：升级后接口与配置回归；当前无触摸实证</td>
+</tr>
+<tr>
+<td>t12t-avm-camera-stream</td>
+<td>条件适用：Camera 跨域版本和设备后端兼容性回归</td>
+</tr>
+<tr>
+<td>t12t-power-sleep-str</td>
+<td>适用，深入：车辆可升级状态、断电、唤醒和恢复屏障</td>
+</tr>
+<tr>
+<td>t12t-audio-path</td>
+<td>条件适用：跨域版本组合需覆盖音频链回归</td>
+</tr>
+<tr>
+<td>t12t-stability-crash-reset</td>
+<td>适用，深入：分层重启、boot counter、提交和回滚连续性</td>
+</tr>
+<tr>
+<td>t12t-performance-jank</td>
+<td>条件适用：首启与迁移预算，当前无性能实测</td>
+</tr>
+<tr>
+<td>t12t-ethernet-sgmii</td>
+<td>条件适用：下载与域间承载，当前无链路层故障</td>
+</tr>
+<tr>
+<td>t12t-wireless-phone-link</td>
+<td>条件适用：远程升级承载与 TBox 联网，当前无无线日志</td>
+</tr>
+<tr>
+<td>t12t-cross-domain-msg</td>
+<td>适用，深入：barrier、ACK、版本 readback、旧 campaign 隔离</td>
+</tr>
+<tr>
+<td>t12t-boot-hmi</td>
+<td>适用：启动门禁、HMI 展示版本和端到端业务 ready</td>
+</tr>
+<tr>
+<td>t12t-log-storm</td>
+<td>适用：多域升级日志容量、轮转、首错与审计留存</td>
+</tr>
+<tr>
+<td>t12t-usb-typec-storage</td>
+<td>条件适用：离线包、介质和存储失败；当前无 USB 实证</td>
+</tr>
+<tr>
+<td>t12t-virtualization-tee</td>
+<td>适用，深入：Hypervisor/VM 更新、可信启动、rollback protection</td>
+</tr>
+<tr>
+<td>t12t-db-ke-forensics</td>
+<td>条件适用：升级后崩溃/复位需关联异常包，当前无 DB/KE</td>
+</tr>
+<tr>
+<td>t12t-mcu</td>
+<td>适用，深入：双银行/版本状态、供电、激活与诊断 readback</td>
+</tr>
+<tr>
+<td>t12t-tpm-triage</td>
+<td>适用，深入：Orchestrator、各域安装、接口、安全与验证责任分离</td>
+</tr>
+<tr>
+<td>t12t-tpm-5y8d</td>
+<td>暂不展开：构造案例尚无确认根因和逃逸证据</td>
+</tr>
+</tbody></table>
+<p>关键证据缺口：当前车型升级拓扑、每域包与激活机制、版本兼容矩阵、UCM/V-UCM/私有编排实现、车辆状态策略、安全启动与 rollback index、数据迁移、整车门禁、真实 campaign 日志和授权测试环境。</p>
+</article><section class="answer-panel" data-course="day-48" aria-label="Day 48 - OTA / 回滚 II：跨域编排、安全提交与整车验证 答卷提交"><h3>提交本课答卷</h3><p>在 GitHub 登录后填写文字，或把图片、PDF、Word 等文件拖入“答卷正文与附件”框；点击 Submit new issue（提交）才算上传成功。答卷和附件将保存在公开的 GitHub 仓库，请只提交可公开的学习材料。</p><p><a class="answer-submit" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues/new?template=answer.yml&amp;title=%5B%E7%AD%94%E5%8D%B7%5D%5Bday-48%5D+Day+48+-+OTA+%2F+%E5%9B%9E%E6%BB%9A+II%EF%BC%9A%E8%B7%A8%E5%9F%9F%E7%BC%96%E6%8E%92%E3%80%81%E5%AE%89%E5%85%A8%E6%8F%90%E4%BA%A4%E4%B8%8E%E6%95%B4%E8%BD%A6%E9%AA%8C%E8%AF%81&amp;lesson=day-48&amp;course=https%3A%2F%2Fqiantao18817568425-art.github.io%2FArchitecture_Learning-%2F%23day-48" target="_blank" rel="noopener">上传／提交答卷 ↗</a> <a class="answer-view" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues?q=is%3Aissue+in%3Atitle+%22%5B%E7%AD%94%E5%8D%B7%5D%5Bday-48%5D%22" target="_blank" rel="noopener">查看答卷与批改 ↗</a> <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html#day-48">归档与批改状态</a></p><p>课程编号：<code>day-48</code>。补交请在同一答卷下评论，以 <strong>[补交]</strong> 开头，并注明题号；也可编辑原答卷。每天 20:00 先检查并批改新答卷，再安排当天任务。</p></section></main><script src="../architecture/vendor/mermaid-10.9.5.min.js"></script><script>mermaid.initialize({startOnLoad:true,theme:'neutral',securityLevel:'strict'});</script></body></html>

@@ -4,6 +4,7 @@ import {mkdtempSync,readFileSync,existsSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 const mod=await import('../scripts/answer-queue.mjs').catch(()=>({}));
+const testTmpRoot=process.env.TEST_TMP_ROOT||tmpdir();
 const owner='qiantao18817568425-art';
 const index=()=>({schemaVersion:1,authorizedLearners:[owner],submissions:[]});
 const units=[{id:'day-1',title:'Day 1'},{id:'week-entry-1',title:'Week 2'}];
@@ -29,7 +30,7 @@ test('edits and learner supplements trigger a new revision without erasing the o
   original.comments=[{id:13,user:{login:owner},body:'[补交] 第2题：补充的时序分析。'}];
   const second=plan(snapshot([original]),previous);
   assert.notEqual(second.pending[0].revision,first.pending[0].revision);
-  const dir=mkdtempSync(join(tmpdir(),'cockpit-answers-'));
+  const dir=mkdtempSync(join(testTmpRoot,'cockpit-answers-'));
   mod.archiveAnswerQueue(first,index(),dir);
   mod.archiveAnswerQueue(second,previous,dir);
   assert.ok(existsSync(join(dir,first.pending[0].answerPath)));
@@ -39,7 +40,7 @@ test('edits and learner supplements trigger a new revision without erasing the o
 test('attachments are retained as links and unreadable files never become passing grades',()=>{
   const first=plan(snapshot([issue({body:issue().body+'\n[答卷.pdf](https://github.com/user-attachments/files/123/answer.pdf)'})]));
   assert.deepEqual(first.pending[0].attachmentUrls,['https://github.com/user-attachments/files/123/answer.pdf']);
-  const dir=mkdtempSync(join(tmpdir(),'cockpit-review-'));
+  const dir=mkdtempSync(join(testTmpRoot,'cockpit-review-'));
   const saved=mod.archiveAnswerQueue(first,index(),dir);
   assert.throws(()=>mod.recordAnswerReview(saved,{issueNumber:7,revision:first.pending[0].revision,status:'passed',feedback:'通过',attachmentsRead:false},dir),/attachment/i);
   const reviewed=mod.recordAnswerReview(saved,{issueNumber:7,revision:first.pending[0].revision,status:'needs_revision',feedback:'第1题已解释模块，但缺少时序证据，请补充。',attachmentsRead:true},dir);

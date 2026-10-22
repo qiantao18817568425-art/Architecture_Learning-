@@ -69,15 +69,37 @@ DoIP Routing Activation 在 TCP 之上建立 tester 注册和逻辑地址路由�
 
   '14': `## 课程沉淀：STR / Resume 的屏障、代际与恢复预算
 
-关联课程：Day 38、Day 39、Day 40。STR、s2idle、熄屏、runtime PM、冷启动和 VM recreate 必须依据 power state、内核 PM 阶段、bootId/generation、设备上下文和耗时判定。恢复顺序由真实依赖决定：电源/时钟、Host/backend、Guest/driver、系统服务、业务状态、数据路径和物理输出分别设里程碑。
+关联课程：Day 38、Day 39、Day 40、Day 47、Day 48。STR、s2idle、熄屏、runtime PM、冷启动和 VM recreate 必须依据 power state、内核 PM 阶段、bootId/generation、设备上下文和耗时判定。恢复顺序由真实依赖决定：电源/时钟、Host/backend、Guest/driver、系统服务、业务状态、数据路径和物理输出分别设里程碑。
 
 依赖图描述谁依赖谁，等待图描述运行时谁正在等谁；两者应同时审查以识别环路。全局 deadline 从用户触发开始，不因局部重试重新计时。目标改变、取消或 generation 更新时，旧工作必须结束；迟到 ACK、旧状态和旧帧不得推进当前状态机。最终验收使用当前目标下的新鲜业务输出，而非单个模块 Ready。
 
-[AOSP 车辆电源管理](https://source.android.com/docs/automotive/power/power)、[Linux 系统睡眠状态](https://docs.kernel.org/admin-guide/pm/sleep-states.html)和[Linux 设备电源管理](https://docs.kernel.org/driver-api/pm/devices.html)提供通用机制，项目状态名、屏障和预算待确认。`,
+[AOSP 车辆电源管理](https://source.android.com/docs/automotive/power/power)、[Linux 系统睡眠状态](https://docs.kernel.org/admin-guide/pm/sleep-states.html)和[Linux 设备电源管理](https://docs.kernel.org/driver-api/pm/devices.html)提供通用机制，项目状态名、屏障和预算待确认。
+
+### OTA 版本合同、安装状态机与跨域提交
+
+OTA 的完成链为：版本/依赖预检 → 包下载与真实性/完整性验证 → 非活动或暂存目标写入 → post-install → 激活 → trial boot → 本地健康 → 跨域兼容 → 全局提交或协调回滚。下载完成、包校验、写入完成、set-active ACK、系统启动、健康门禁、mark-successful 与整车业务验收是不同里程碑，前一项不能替代后一项。
+
+单域状态至少区分 available、downloading、verified、installing、staged、activation-pending、trial-boot、committed、rollback-pending、rolled-back、failed/unknown。掉电或进程/VM 重启后，先以持久 journal、当前版本、Slot/SoftwareCluster 状态和 boot/generation readback 收敛，再决定 resume、retry 或 rollback；旧 campaign/旧 generation 的完成回调不得推进当前事务。
+
+跨域 campaign 使用依赖图和提交屏障管理 Hypervisor、Yocto Host、Android Guest、MCU、TBox 与其他 ECU。每域 staged 或 locally healthy 只说明局部状态；只有所有规定成员对同一 campaign generation 完成本地健康、接口/数据兼容、关键业务和安全门禁，才允许全局提交。回退目标还必须同时满足安全 rollback protection、数据格式和接口依赖，不能机械地“全部回旧版”。
+
+~~~mermaid
+flowchart LR
+  P[Version / dependency contract] --> V[Package verify]
+  V --> S[Stage inactive target]
+  S --> A[Activate target generation]
+  A --> H[Local health gates]
+  H --> X[Cross-domain compatibility]
+  X --> C[Global commit]
+  H --> R[Rollback / degrade]
+  X --> R
+~~~
+
+[AOSP A/B updates](https://source.android.com/docs/core/ota/ab)、[Android Verified Boot](https://source.android.com/docs/security/features/verifiedboot/avb)以及[AUTOSAR UCM](https://www.autosar.org/fileadmin/standards/R22-11/AP/AUTOSAR_SWS_UpdateAndConfigurationManagement.pdf)用于核对通用机制；当前车型的分区、包、密钥、rollback index、依赖图、车辆状态和门禁仍需项目证据。`,
 
   '15': `## 课程沉淀：健康状态、故障码与跨复位证据合同
 
-关联课程：Day 35—46。诊断链应明确为：Health signal → event → qualification → DTC → snapshot → storage → tester。Monitor 报告接口返回、事件 qualified、DTC memory entry 创建、NVRAM 持久化、tester 成功读取和业务恢复属于不同完成点。
+关联课程：Day 35—48。诊断链应明确为：Health signal → event → qualification → DTC → snapshot → storage → tester。Monitor 报告接口返回、事件 qualified、DTC memory entry 创建、NVRAM 持久化、tester 成功读取和业务恢复属于不同完成点。
 
 事件合同至少包含 component/instance、EventID/DTC、severity、monitor result、debounce、enable/storage condition、operation cycle、status byte、occurrence、first/most-recent fail、vehicle/build/config、powerCycle/bootId/VM generation/process incarnation/incidentId、monotonic 与域内时间、Snapshot/Extended Data、log/dump/pstore/tombstone 引用、hash 和 retention。跨复位后旧代事件不得修改新代状态；DTC 清除、老化与业务恢复分别管理。
 
@@ -102,13 +124,13 @@ tester → TCP/DoIP Entity → Routing Activation → diagnostic router/PduR →
 
 《健康事件—DTC 证据合同》和《UDS/DoIP 诊断服务—清除—验证闭环合同》用于评审“谁监控、何时成立、保存什么、怎样读取、跨复位如何关联、清除和恢复怎样验收”。[AUTOSAR Dem](https://www.autosar.org/fileadmin/standards/R22-11/CP/AUTOSAR_SWS_DiagnosticEventManager.pdf)、[DCM](https://www.autosar.org/fileadmin/standards/R22-11/CP/AUTOSAR_SWS_DiagnosticCommunicationManager.pdf)、[DoIP](https://www.autosar.org/fileadmin/standards/R22-11/CP/AUTOSAR_SWS_DiagnosticOverIP.pdf)、[Platform Health Management](https://www.autosar.org/fileadmin/standards/R22-11/AP/AUTOSAR_SWS_PlatformHealthManagement.pdf)与[Linux ramoops](https://docs.kernel.org/admin-guide/ramoops.html)用于机制核验。`,
 
-  '20': `## 课程沉淀：Day 35—46 的统一关联键与旧消息规则
+  '20': `## 课程沉淀：Day 35—48 的统一关联键与旧消息规则
 
 跨音频、STR、显示、VM、Ethernet/SOME-IP 和诊断链，统一关联键至少包含 vehicle/config/build、powerCycle、Host bootId、VM generation、process incarnation、session/request/transaction/frame/incident ID、对象/音区/显示/服务实例和域内 monotonic 时间。跨域时间必须记录映射方法和误差；两事件间隔小于误差时，不只凭时间排序断言因果。
 
 每个接口分别定义 received/ACK、local applied/completed、downstream observable 和 business accepted。超时、取消、复位后按 generation 拒绝旧消息；重试保留原始 deadline，并说明幂等键、在途事务终态和状态重取策略。`,
 
-  '23': `## 课程沉淀：Day 35—46 的通用验证闭环
+  '23': `## 课程沉淀：Day 35—48 的通用验证闭环
 
 可复用验证矩阵覆盖：正常链、边界时序、瞬态/持续故障、丢包/乱序/重复、局部服务重启、Guest/设备/Host 分层复位、旧消息重放、资源压力、证据容量/轮转、恢复失败升级和相邻业务回归。每项记录目标、前置、注入、步骤、观测点、预期、实测、原始证据链接和通过判据。
 

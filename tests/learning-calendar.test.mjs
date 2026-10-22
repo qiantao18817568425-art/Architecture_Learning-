@@ -13,7 +13,7 @@ test('China midnight changes task type even while UTC is still Friday',()=>{
   assert.equal(scheduleForDate(shanghaiDate(new Date('2026-09-25T16:00:00Z'))).kind,'saturday-review');
 });
 
-test('current review excludes prepublished Monday material from assigned progress',()=>{
+test('current unit follows its scheduled date even when a later date records an authorized catch-up',()=>{
   const progress=JSON.parse(readFileSync(new URL('../content/learning-progress.json',import.meta.url),'utf8'));
   for(const lesson of progress.lessons){
     const schedule=scheduleForDate(lesson.scheduledFor||lesson.date);
@@ -21,6 +21,7 @@ test('current review excludes prepublished Monday material from assigned progres
     if(lesson.status==='scheduled') assert.ok(lesson.day>progress.lastAssignedDay);
   }
   const current=progress.lessons.find(x=>x.id===progress.currentUnitId);
-  assert.equal(current.kind==='day',scheduleForDate(progress.updatedOn).allowsNewDay);
+  assert.equal(current.kind==='day',scheduleForDate(current.scheduledFor||current.date).allowsNewDay);
+  if(progress.updatedOn!==current.scheduledFor) assert.ok(current.assignmentRecordedOn===progress.updatedOn||current.assignedOn===progress.updatedOn);
   assert.ok(progress.lastAssignedDay<=progress.lastPublishedDay);
 });
