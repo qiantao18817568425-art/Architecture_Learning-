@@ -124,13 +124,37 @@ tester → TCP/DoIP Entity → Routing Activation → diagnostic router/PduR →
 
 《健康事件—DTC 证据合同》和《UDS/DoIP 诊断服务—清除—验证闭环合同》用于评审“谁监控、何时成立、保存什么、怎样读取、跨复位如何关联、清除和恢复怎样验收”。[AUTOSAR Dem](https://www.autosar.org/fileadmin/standards/R22-11/CP/AUTOSAR_SWS_DiagnosticEventManager.pdf)、[DCM](https://www.autosar.org/fileadmin/standards/R22-11/CP/AUTOSAR_SWS_DiagnosticCommunicationManager.pdf)、[DoIP](https://www.autosar.org/fileadmin/standards/R22-11/CP/AUTOSAR_SWS_DiagnosticOverIP.pdf)、[Platform Health Management](https://www.autosar.org/fileadmin/standards/R22-11/AP/AUTOSAR_SWS_PlatformHealthManagement.pdf)与[Linux ramoops](https://docs.kernel.org/admin-guide/ramoops.html)用于机制核验。`,
 
-  '20': `## 课程沉淀：Day 35—48 的统一关联键与旧消息规则
+  '19': `## 课程沉淀：共享缓冲、DMA/IOMMU 与资源生命周期合同
+
+关联课程：Day 49。共享资源必须区分 authority/policy owner、allocator/exporter、importer/device attachment、producer、consumer 和最终回收者。拿到 handle、完成 allocation、建立 IOMMU mapping、提交硬件任务、fence signaled、consumer release 与用户业务完成是不同里程碑，不能互相替代。
+
+CPU 虚拟地址、RAM 物理地址与设备使用的 DMA/IOVA 地址属于不同地址空间。IOMMU 提供地址翻译和访问隔离，但不会自动完成 buffer ownership handoff、cache 同步、fence 等待、引用回收或 reset 后旧映射失效。资源合同至少记录 resource/buffer ID、exporter/importer/device、format/usage/security、power/boot/VM/device/mapping generation、attachment/map/unmap、fence context/seq/status、pool/queue 水位、deadline、backpressure、降级与业务验收。
+
+共享缓冲按 allocate/export → attach/map → producer write → producer fence → consumer read → release fence → unmap/reclaim 推进。reset、VM recreate 或 device reset 后，先停止或隔离 DMA、固定在途证据、建立新 generation、重建 attachment/mapping，再恢复数据流；旧 handle、旧 fence、旧 release 和旧 timeout 不得更新新代账本。无法证明设备已停止访问时，资源进入 quarantine 而不是立即回收复用。
+
+~~~mermaid
+stateDiagram-v2
+  [*] --> Allocated
+  Allocated --> Mapped: export / attach / map
+  Mapped --> ProducerWriting
+  ProducerWriting --> Ready: producer fence
+  Ready --> ConsumerReading
+  ConsumerReading --> Released: release fence
+  Released --> ProducerWriting: current generation reuse
+  Released --> Reclaimed: unmap + no live reference
+  ProducerWriting --> Quarantined: reset / ownership unknown
+  ConsumerReading --> Quarantined: reset / ownership unknown
+~~~
+
+[AOSP BufferQueue 与 Gralloc](https://source.android.com/docs/core/graphics/arch-bq-gralloc)、[AOSP Synchronization framework](https://source.android.com/docs/core/graphics/sync)、[Linux DMA mapping guide](https://docs.kernel.org/core-api/dma-api-howto.html)和[Linux dma-buf](https://docs.kernel.org/driver-api/dma-buf.html)用于核对通用机制；当前车型的 allocator、IOMMU/SMMU、cache 属性、stream/VM/device ID、格式、阈值和恢复顺序仍需项目证据。`,
+
+  '20': `## 课程沉淀：Day 35—49 的统一关联键与旧消息规则
 
 跨音频、STR、显示、VM、Ethernet/SOME-IP 和诊断链，统一关联键至少包含 vehicle/config/build、powerCycle、Host bootId、VM generation、process incarnation、session/request/transaction/frame/incident ID、对象/音区/显示/服务实例和域内 monotonic 时间。跨域时间必须记录映射方法和误差；两事件间隔小于误差时，不只凭时间排序断言因果。
 
 每个接口分别定义 received/ACK、local applied/completed、downstream observable 和 business accepted。超时、取消、复位后按 generation 拒绝旧消息；重试保留原始 deadline，并说明幂等键、在途事务终态和状态重取策略。`,
 
-  '23': `## 课程沉淀：Day 35—48 的通用验证闭环
+  '23': `## 课程沉淀：Day 35—49 的通用验证闭环
 
 可复用验证矩阵覆盖：正常链、边界时序、瞬态/持续故障、丢包/乱序/重复、局部服务重启、Guest/设备/Host 分层复位、旧消息重放、资源压力、证据容量/轮转、恢复失败升级和相邻业务回归。每项记录目标、前置、注入、步骤、观测点、预期、实测、原始证据链接和通过判据。
 

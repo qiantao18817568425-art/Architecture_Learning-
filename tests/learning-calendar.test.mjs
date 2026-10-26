@@ -25,3 +25,14 @@ test('current unit follows its scheduled date even when a later date records an 
   if(progress.updatedOn!==current.scheduledFor) assert.ok(current.assignmentRecordedOn===progress.updatedOn||current.assignedOn===progress.updatedOn);
   assert.ok(progress.lastAssignedDay<=progress.lastPublishedDay);
 });
+
+test('an unpublished Sunday is not backfilled when Monday assigns Day49',()=>{
+  const progress=JSON.parse(readFileSync(new URL('../content/learning-progress.json',import.meta.url),'utf8'));
+  const skipped=progress.skippedUnits.find(x=>x.id==='week-15-sunday');
+  const day49=progress.lessons.find(x=>x.id==='day-49');
+  assert.equal(scheduleForDate('2026-10-25').kind,'sunday-review');
+  assert.equal(skipped?.status,'not_published');
+  assert.equal(skipped?.recordedOn,'2026-10-26');
+  assert.equal(scheduleForDate(day49.scheduledFor).kind,'day');
+  assert.equal(day49.firstPublishedOn,'2026-10-26');
+});

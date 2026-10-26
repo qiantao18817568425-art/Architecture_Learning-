@@ -1,0 +1,11 @@
+stateDiagram-v2
+  [*] --> Allocated
+  Allocated --> Mapped: export / attach / map
+  Mapped --> ProducerWriting
+  ProducerWriting --> Ready: producer fence
+  Ready --> ConsumerReading
+  ConsumerReading --> Released: release fence
+  Released --> ProducerWriting: current generation reuse
+  Released --> Reclaimed: unmap + no live reference
+  ProducerWriting --> Quarantined: reset / ownership unknown
+  ConsumerReading --> Quarantined: reset / ownership unknown

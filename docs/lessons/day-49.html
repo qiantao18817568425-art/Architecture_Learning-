@@ -1,0 +1,590 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Day 49 - 系统资源 I：资源所有权、DMA/IOMMU 与共享缓冲生命周期</title><style>
+    :root { color-scheme: light; font-family: "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif; color: #18212f; background: #f6f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.75; }
+    a { color: #075fbd; overflow-wrap: anywhere; }
+    code { background: #edf1f6; border-radius: 3px; padding: .08rem .28rem; }
+    pre { overflow: auto; background: #111827; color: #e5e7eb; padding: 1rem; border-radius: 6px; white-space: pre-wrap; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
+    header { border-left: 5px solid #db5a2a; padding: 12px 20px; margin-bottom: 28px; background: #fff; }
+    h1, h2, h3, h4, h5, h6 { line-height: 1.35; margin: 1.35em 0 .5em; }
+    h1 { margin: 0; font-size: 2rem; }
+    .lede { max-width: 840px; margin: .5rem 0 0; color: #4b5563; }
+    .metrics { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 26px; }
+    .metric { background: #e6eff8; border: 1px solid #bfd5ea; padding: 6px 12px; border-radius: 4px; color: #174a76; }
+    .metric strong { font-size: 1.15rem; }
+    .guide { background: #fff; border-top: 2px solid #1d8093; padding: 18px 22px; margin: 24px 0; }
+    .guide ol { margin-bottom: 0; }
+    .lesson { background: #fff; border: 1px solid #d8dee8; margin: 10px 0; }
+    summary { cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 18px; }
+    summary::-webkit-details-marker { color: #db5a2a; }
+    .lesson-title { font-weight: 700; font-size: 1.05rem; }
+    .lesson-meta { color: #52606d; font-size: .86rem; white-space: nowrap; }
+    .lesson-body { border-top: 1px solid #d8dee8; padding: 4px 22px 24px; }
+    .archive-note { color: #52606d; font-size: .92rem; border-left: 3px solid #1d8093; padding-left: 10px; }
+    .format-audit { border: 1px solid #b8d5cf; background: #f4fbf8; padding: 16px; margin: 18px 0; border-radius: 6px; }
+    .format-audit h3 { margin-top: 0; }
+    .format-audit ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+    .format-audit li { border: 1px solid #d8dee8; background: #fff; border-radius: 5px; padding: 8px; font-size: .9rem; }
+    .format-audit span { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+    .format-audit .present span { background: #dbece8; color: #126458; }
+    .format-audit .missing span { background: #f4e3cb; color: #8a4604; }
+    article h2 { font-size: 1.35rem; }
+    article h3 { font-size: 1.15rem; }
+    article h4, article h5 { font-size: 1rem; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    blockquote { margin: 1rem 0; padding: .45rem 1rem; border-left: 3px solid #1d8093; background: #f4f8fb; color: #435467; }
+    table { border-collapse: collapse; width: 100%; min-width: 32rem; font-size: .94rem; }
+    th, td { border: 1px solid #d8dee8; padding: .55rem .7rem; text-align: left; vertical-align: top; }
+    th { background: #edf4f9; }
+    .mermaid { background: #fff; color: #18212f; border: 1px solid #d8dee8; }
+    footer { margin-top: 32px; color: #52606d; font-size: .9rem; }
+    @media (max-width: 640px) { main { padding: 16px 12px 36px; } h1 { font-size: 1.55rem; } summary { align-items: flex-start; } .lesson-body { padding: 2px 14px 18px; } .format-audit ul { grid-template-columns: 1fr; } }
+  </style><style>.answer-panel{margin:22px 0;padding:18px;border:1px solid #9ab8d8;border-left:5px solid #1763a3;border-radius:8px;background:#f2f7fc}.answer-panel h3{margin-top:0}.answer-submit,.answer-view{display:inline-block;padding:10px 14px;margin:4px 8px 4px 0;border-radius:6px;background:#12578f;color:#fff;text-decoration:none}.answer-view{background:#e0ecf6;color:#153e61}.answer-panel a:focus-visible{outline:3px solid #db5a2a;outline-offset:3px}.answer-panel code{overflow-wrap:anywhere}.answer-list{padding:0;list-style:none}.answer-list li{margin:12px 0;padding:16px;background:#fff;border:1px solid #d8dee8;border-radius:6px}body{font-family:system-ui,'Microsoft YaHei',sans-serif;line-height:1.75;color:#18212f;background:#f6f8fb}main{max-width:1180px;margin:auto;padding:24px}a{overflow-wrap:anywhere}</style></head><body><main><nav><a href="../index.html#day-49">课程档案</a> · <a href="../architecture/index.html">项目架构实践</a></nav><article><h1>Day 49 — 系统资源 I：资源所有权、DMA/IOMMU 与共享缓冲生命周期</h1>
+<p>正式安排日期：2026-10-26，星期一，Asia/Shanghai。Week 16。能力阶段仍为第二阶段“系统链路与问题分析”；今天补齐总控队列中尚未实际覆盖的“系统资源”专题，不因材料发布自动升级个人能力。目标深度：L3，能解释跨 Android Guest、Yocto Host、GPU/Camera/Display 等设备的资源所有权、DMA/IOMMU 地址边界、共享缓冲生命周期、同步与恢复合同。总用时约 60 分钟。</p>
+<p>执行前已扫描仓库全部状态的答卷 Issue 与评论，没有发现授权学习者的新答卷、补交或附件。本课发布不代表已经掌握；Day 34—49 均等待真实作答评审。2026-10-25 的 Week 15 周日单元远端未发布，本课不补造昨日内容或学习记录。</p>
+<h2>1. 官方依据与项目边界</h2>
+<p>官方资料核验日期：2026-10-26。</p>
+<ul>
+<li><a href="https://source.android.com/docs/core/graphics/arch-bq-gralloc">AOSP：BufferQueue and Gralloc</a>：producer/consumer 通过 buffer handle 共享图形缓冲，dequeue、queue、acquire、release 构成生命周期，实际分配由 usage、format 等合同决定。</li>
+<li><a href="https://source.android.com/docs/core/graphics/sync">AOSP：Synchronization framework</a>：fence 显式描述异步硬件操作依赖；buffer 可先传递，consumer 必须等 producer 的完成 fence。</li>
+<li><a href="https://docs.kernel.org/core-api/dma-api-howto.html">Linux：Dynamic DMA mapping Guide</a>：CPU 虚拟地址、物理地址和 device/bus DMA 地址是不同空间；dma_map 建立设备可用映射，使用结束后必须按合同解除。</li>
+<li><a href="https://docs.kernel.org/driver-api/dma-buf.html">Linux：Buffer Sharing and Synchronization（dma-buf）</a>：exporter、importer、attachment、mapping、reservation/fence 与引用生命周期构成跨设备共享合同。</li>
+<li><a href="https://source.android.com/docs/core/virtualization/architecture">AOSP：AVF architecture</a>：用于核对 Guest、VMM/Host 与虚拟设备 backend 的通用责任边界；它不证明当前车型采用相同实现。</li>
+</ul>
+<p>当前缺少现车 SoC/build、IOMMU/SMMU 配置、内存堆与 allocator、Camera/GPU/Display 设备归属、Host/Guest 共享机制、cache coherent 属性、protected memory、buffer 格式/stride、配额、阈值和实机 trace。下文拓扑、状态名、故障证据和数值均为教学抽象，不是车型事实；实际 IOVA、VMID、stream ID、地址、错误码和门限不得沿用历史案例，必须由当前版本证据确认。</p>
+<h2>2. 一小时主线</h2>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>学习任务</th>
+<th>输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0—10 分钟</td>
+<td>回顾 5 题</td>
+<td>区分服务 ready、buffer 提交、fence 完成与用户结果</td>
+</tr>
+<tr>
+<td>10—20 分钟</td>
+<td>核心概念一</td>
+<td>资源 Owner、使用权、生命周期与资源账本</td>
+</tr>
+<tr>
+<td>20—30 分钟</td>
+<td>核心概念二</td>
+<td>DMA/IOMMU、dma-buf、fence 与代际隔离</td>
+</tr>
+<tr>
+<td>30—50 分钟</td>
+<td>工程案例</td>
+<td>Android Guest 重建后 AVM 偶发绿帧/冻帧</td>
+</tr>
+<tr>
+<td>50—60 分钟</td>
+<td>可复用产物</td>
+<td>《跨域共享缓冲与设备资源合同 V1》</td>
+</tr>
+</tbody></table>
+<p>回顾题：</p>
+<ol>
+<li>Day 40 中 queueBuffer、HWC present、scanout 和用户可见首帧为什么不能互相替代？</li>
+<li>Day 41—42 的 VM recreate 为什么必须给虚拟设备、队列和在途事务建立新 generation？</li>
+<li>Day 43—44 的 service alive 为什么不能证明目标数据足够新？</li>
+<li>Day 47—48 的单域 healthy 为什么不能替代跨域兼容与整车提交？</li>
+<li>reset 后某个旧 callback 成功返回，为什么不能直接释放或复用当前代资源？</li>
+</ol>
+<h2>3. 核心概念一：资源不是“谁拿到句柄谁拥有”</h2>
+<p>系统资源至少区分四种角色：</p>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>责任</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Authority / policy owner</td>
+<td>决定哪些域、设备和业务可使用资源，定义优先级、配额、隔离、降级和回收</td>
+</tr>
+<tr>
+<td>Allocator / exporter</td>
+<td>分配 backing storage，定义大小、格式、usage、安全属性，导出可共享对象并管理最终释放</td>
+</tr>
+<tr>
+<td>Importer / device attachment</td>
+<td>为具体 consumer/device 建立 attachment 与 DMA 映射，遵守访问方向和同步合同</td>
+</tr>
+<tr>
+<td>Producer / consumer</td>
+<td>按 fence 和 ownership handoff 写入/读取，不越过当前 generation、lease 与生命周期</td>
+</tr>
+</tbody></table>
+<p>“持有 handle/fd”只说明某进程能引用一个共享对象，不等于拥有 backing storage，不等于已映射给目标设备，也不等于可以立即读写。资源 Owner 必须回答：谁分配、谁能访问、谁负责同步、谁可回收、谁承担泄漏/超时、reset 后如何失效、业务完成后由谁最终验收。</p>
+<h3>3.1 资源账本的最小字段</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>必填字段</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>身份</td>
+<td>resourceId、bufferId、exporter、importer、device、power/boot/VM/device generation</td>
+</tr>
+<tr>
+<td>形态</td>
+<td>size、format、stride、usage、security/protected、cache 属性；项目值待确认</td>
+</tr>
+<tr>
+<td>生命周期</td>
+<td>allocate/export/attach/map/submit/complete/release/unmap/reclaim 时间与状态</td>
+</tr>
+<tr>
+<td>所有权</td>
+<td>当前读者/写者、lease、引用计数/attachment、允许的下一状态</td>
+</tr>
+<tr>
+<td>同步</td>
+<td>producer/consumer fence context、seqno、status、deadline</td>
+</tr>
+<tr>
+<td>隔离</td>
+<td>IOMMU domain/context、IOVA mapping generation、权限与访问方向</td>
+</tr>
+<tr>
+<td>预算</td>
+<td>pool/queue 水位、单对象占用、并发数、背压、回收和降级策略</td>
+</tr>
+<tr>
+<td>证据</td>
+<td>关联日志、trace、IOMMU fault、queue/fence、用户业务结果与原始工件链接</td>
+</tr>
+</tbody></table>
+<h2>4. 核心概念二：三个地址空间与一条共享缓冲生命线</h2>
+<p>CPU 虚拟地址、RAM 物理地址和设备使用的 DMA/IOVA 地址不是同一个概念。IOMMU 可以把设备看到的 IOVA 翻译到允许的物理页并隔离访问，但它不会自动替架构完成 Owner 交接、cache 同步、fence 等待、引用释放或 reset 后旧映射失效。</p>
+<pre class="mermaid">flowchart LR
+  P[Producer CPU or device] --&gt;|allocate / write| B[Backing buffer]
+  B --&gt;|export handle| X[dma-buf / shared object]
+  X --&gt;|attach + map| I[IOMMU domain / IOVA]
+  I --&gt; D[GPU / ISP / Display / codec]
+  P -. producer fence .-&gt; C[Consumer]
+  X --&gt; C
+  C -. release fence .-&gt; P
+  H[Host allocator / backend] --- X
+  G[Guest frontend / process] --- C</pre>
+<p>对 Android 图形链，BufferQueue 的典型顺序是 dequeue → producer 写入 → queue → consumer acquire → consumer 读取/显示 → release。跨 Linux 设备共享时，dma-buf 的 exporter 提供 backing storage，importer 针对某个 device attach/map；fence 说明异步读写何时完成。具体平台是否使用相同对象、隐式或显式同步、零拷贝或中间复制，都必须用当前实现确认。</p>
+<h3>4.1 教学状态机：对象生命周期与 reset 分支</h3>
+<pre class="mermaid">stateDiagram-v2
+  [*] --&gt; Allocated
+  Allocated --&gt; Exported
+  Exported --&gt; Attached
+  Attached --&gt; Mapped
+  Mapped --&gt; ProducerWriting
+  ProducerWriting --&gt; Ready: producer fence signaled
+  Ready --&gt; ConsumerReading
+  ConsumerReading --&gt; Released: consumer/release fence signaled
+  Released --&gt; ProducerWriting: current generation reuse
+  Released --&gt; Unmapped: no in-flight access
+  Unmapped --&gt; Reclaimed: no references/attachments
+  ProducerWriting --&gt; Quarantined: reset / timeout / ownership unknown
+  ConsumerReading --&gt; Quarantined: reset / timeout / ownership unknown
+  Quarantined --&gt; Released: authoritative reconciliation
+  Quarantined --&gt; Failed: cannot prove safe reuse</pre>
+<p>reset、VM recreate 或 device reset 后，不得仅凭旧 handle 仍是整数就继续使用。先停止/隔离 DMA，固定 in-flight 与 fault 证据，建立新 device/VM generation，重建 attachment/mapping，重新同步权威状态；旧 generation 的 submit、fence、release 和 timeout 都不得修改新代资源账本。若无法证明设备已停止访问，资源应进入 Quarantined，而不是立即 unmap/reclaim/reuse。</p>
+<h2>5. 上下游职责与完整完成阶梯</h2>
+<p>以下为教学抽象，非现车拓扑。</p>
+<pre class="mermaid">sequenceDiagram
+  participant C as Camera / Producer
+  participant H as Yocto Host allocator/backend
+  participant I as IOMMU / DMA mapping
+  participant G as Android Guest consumer
+  participant P as GPU / Composer
+  participant D as Display / User result
+  G-&gt;&gt;H: Request buffer pool(generation, format, usage)
+  H--&gt;&gt;G: Allocation/export accepted (local ACK)
+  H-&gt;&gt;I: Attach/map buffer for target device
+  I--&gt;&gt;H: Mapping created (map ACK)
+  C-&gt;&gt;C: DMA write current frame
+  C--&gt;&gt;G: buffer + producer fence + frame/generation
+  G-&gt;&gt;G: Wait fence, validate identity/freshness
+  G-&gt;&gt;P: Submit current buffer
+  P--&gt;&gt;G: GPU/composition completion fence
+  G-&gt;&gt;H: Release current-generation ownership
+  H-&gt;&gt;D: Present/scanout current frame
+  D--&gt;&gt;G: Business evidence: fresh frame visible</pre>
+<table>
+<thead>
+<tr>
+<th>里程碑</th>
+<th>能证明什么</th>
+<th>不能证明什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>allocation/export ACK</td>
+<td>对象已分配并可引用</td>
+<td>目标设备已经映射、数据有效</td>
+</tr>
+<tr>
+<td>attach/map ACK</td>
+<td>当前 device 获得可用 DMA 映射</td>
+<td>DMA 已完成、cache/数据已同步</td>
+</tr>
+<tr>
+<td>submit/queue ACK</td>
+<td>工作已进入队列</td>
+<td>硬件完成、consumer 已读</td>
+</tr>
+<tr>
+<td>producer fence signaled</td>
+<td>该 fence 所代表的 producer 操作已完成或报错</td>
+<td>consumer 完成、画面可见</td>
+</tr>
+<tr>
+<td>consumer/release fence signaled</td>
+<td>该 consumer 的访问已结束</td>
+<td>其他 consumer 结束、对象可最终回收</td>
+</tr>
+<tr>
+<td>HWC/DRM present/scanout</td>
+<td>显示链推进到相应本地节点</td>
+<td>屏端和用户看到当前新鲜正确内容</td>
+</tr>
+<tr>
+<td>business accepted</td>
+<td>当前 generation、正确对象和新鲜度满足用户结果</td>
+<td>不能反推此前所有异常的唯一根因</td>
+</tr>
+</tbody></table>
+<p>超时必须指明等待谁、原始 deadline、超时后谁停止 DMA、谁持有对象、是否可重试、是否进入隔离/降级。重试不得重复增加无法回收的 reference/attachment；取消必须能回答在途硬件访问何时真正结束。局部 reset 不应把全局 deadline 重新计时。</p>
+<h2>6. 完整故障分析：Guest 重建后 AVM 偶发绿帧/冻帧</h2>
+<p>以下为教学构造案例，不代表当前车辆，也不预设你的练习答案。</p>
+<h3>6.1 构造证据</h3>
+<table>
+<thead>
+<tr>
+<th>证据</th>
+<th>构造事实</th>
+<th>证据边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E1</td>
+<td>倒挡请求与 AVM 服务 ACK 均按时出现</td>
+<td>证明控制请求到达；不证明帧有效或可见</td>
+</tr>
+<tr>
+<td>E2</td>
+<td>Android Guest 发生 recreate，VM generation 从 G7 变为 G8</td>
+<td>证明 consumer 环境换代；不证明 Host/device 同步完成</td>
+</tr>
+<tr>
+<td>E3</td>
+<td>G8 建立了新 buffer pool，但一条 G7 的 release callback 随后到达</td>
+<td>证明旧代迟到；尚不证明它修改了账本</td>
+</tr>
+<tr>
+<td>E4</td>
+<td>Host 账本把相同 buffer slot 标成 free，并在旧 device attachment 仍存在时重新分配</td>
+<td>证明所有权/生命周期不一致</td>
+</tr>
+<tr>
+<td>E5</td>
+<td>IOMMU fault 记录指向已回收映射的 device access；具体地址与 stream ID 仅在私有原始证据保存</td>
+<td>把断点收窄到 device DMA 访问与 mapping 生命周期边界</td>
+</tr>
+<tr>
+<td>E6</td>
+<td>Guest 侧 queueBuffer 和 present 均成功，但 frame generation/CRC 显示内容不是当前新鲜帧</td>
+<td>证明局部提交成功不能替代业务完成</td>
+</tr>
+<tr>
+<td>E7</td>
+<td>完整停止 producer、重建 mapping 后画面恢复</td>
+<td>支持恢复路径有效；单独不能证明最初触发为何发生</td>
+</tr>
+</tbody></table>
+<h3>6.2 最早可证实断点与竞争假设</h3>
+<p>最后一致的里程碑是 G8 新 pool 已建立；下一个应满足“只有 G8 的有效引用/attachment 能推动当前账本”。E3—E5 共同支持的最早断点是：<strong>旧代 release 与未完成的 device access 使 Host 的资源账本、IOMMU mapping 和实际 DMA 所有权不一致。</strong></p>
+<p>仍需区分：generation 校验遗漏；producer quiesce 与 unmap 顺序错误；refcount/attachment 泄漏或提前归零；fence 错误被当成成功；slot ID 在不同 pool 复用；cache/format 不一致；IOMMU fault 是原因还是后果。恢复成功不能单独选择其中一个根因。</p>
+<h3>6.3 证据链与 TPM 分责</h3>
+<table>
+<thead>
+<tr>
+<th>节点</th>
+<th>应索取证据</th>
+<th>首轮责任域</th>
+<th>关闭判据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Guest/consumer</td>
+<td>VM generation、pool/buffer/frame ID、queue/acquire/release、fence status</td>
+<td>Android/AVM</td>
+<td>旧代事件不更新新代</td>
+</tr>
+<tr>
+<td>Host allocator/backend</td>
+<td>exporter、ref/attachment、map/unmap/reclaim、账本状态</td>
+<td>Yocto/虚拟设备</td>
+<td>账本与实际访问一致</td>
+</tr>
+<tr>
+<td>Producer/device</td>
+<td>start/stop、DMA submit/complete、device generation</td>
+<td>Camera/驱动</td>
+<td>quiesce 后无在途访问</td>
+</tr>
+<tr>
+<td>IOMMU</td>
+<td>domain/context、mapping generation、fault 与时间</td>
+<td>BSP/内核/安全</td>
+<td>只访问授权且存活映射</td>
+</tr>
+<tr>
+<td>GPU/Display</td>
+<td>import、fence、compose/present/scanout</td>
+<td>图形/显示</td>
+<td>当前新鲜帧到达物理输出</td>
+</tr>
+<tr>
+<td>系统/集成</td>
+<td>reset 编排、deadline、降级、统一关联键</td>
+<td>系统架构/集成</td>
+<td>端到端恢复且无旧代污染</td>
+</tr>
+<tr>
+<td>测试</td>
+<td>故障注入、长稳、资源压力与原始工件</td>
+<td>测试</td>
+<td>通过标准可重复、可追溯</td>
+</tr>
+</tbody></table>
+<p>首轮牵头应是系统集成/资源合同 Owner；Host、Guest、设备和 IOMMU 分别提供本地事实。最终根因 Owner 等待跨域时间线和区分实验确认，不按最后报错模块定责。</p>
+<h2>7. 可执行验证矩阵</h2>
+<table>
+<thead>
+<tr>
+<th>用例</th>
+<th>注入/步骤</th>
+<th>关键观测</th>
+<th>通过标准</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>正常生命周期</td>
+<td>allocate→map→produce→consume→release→unmap</td>
+<td>账本、fence、DMA、用户结果</td>
+<td>状态单向收敛且无泄漏</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>producer 快于 consumer</td>
+<td>提高 producer 速率或阻塞 consumer</td>
+<td>queue/pool 水位、背压、drop</td>
+<td>按策略阻塞/丢弃/降级，无越界复用</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>consumer 卡住</td>
+<td>延迟 release fence</td>
+<td>reference、attachment、deadline</td>
+<td>不提前回收，超时有明确出口</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>Guest recreate</td>
+<td>Producer 工作中重建 Guest</td>
+<td>VM/device/buffer generation</td>
+<td>旧 handle/callback 被拒，新 mapping 重建</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>Producer/device reset</td>
+<td>在 DMA in-flight 时复位</td>
+<td>quiesce、fence error、IOMMU</td>
+<td>终态可知，不把错误 fence 当成功</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>旧 release 迟到</td>
+<td>重放旧代 release/timeout</td>
+<td>generation fence、资源账本</td>
+<td>不释放当前代对象并留审计</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>重复 attach/retry</td>
+<td>重试 import/map</td>
+<td>ref/attachment、idempotency key</td>
+<td>幂等，无重复映射或泄漏</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>IOMMU fault</td>
+<td>权限/失效映射故障注入</td>
+<td>fault、domain、device、generation</td>
+<td>隔离最小故障域并保存证据</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>内存压力</td>
+<td>收紧 pool/heap 或并发业务</td>
+<td>allocation、reclaim、OOM、降级</td>
+<td>关键链受保护，娱乐先降级</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>fence timeout/error</td>
+<td>延迟或错误完成</td>
+<td>fence context/seq/status、owner</td>
+<td>不错误复用；按合同恢复/失败</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>protected buffer</td>
+<td>跨安全域错误访问</td>
+<td>usage/security、拒绝结果</td>
+<td>未授权域不可读写或降级泄露</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>长稳循环</td>
+<td>反复启动/停止/STR/recreate</td>
+<td>水位、泄漏、fault、业务帧</td>
+<td>资源基线稳定，证据可追溯</td>
+<td>待执行</td>
+</tr>
+</tbody></table>
+<p>实际数值、故障注入授权、采集工具和通过阈值均待项目确认。未经授权不操作车机或注入设备故障。</p>
+<h2>8. 今日可复用产物：《跨域共享缓冲与设备资源合同 V1》</h2>
+<p>模板至少包含：</p>
+<ol>
+<li>业务场景、system-of-interest、上下游、当前车型/build 与未知项；</li>
+<li>资源 authority、allocator/exporter、importer、producer、consumer、最终回收者；</li>
+<li>backing storage、format/stride/usage/security/cache/访问方向；</li>
+<li>resourceId、bufferId、power/boot/VM/device/mapping generation 与关联时间；</li>
+<li>allocate/export/attach/map/submit/fence/release/unmap/reclaim 状态机；</li>
+<li>received/ACK/local complete/device complete/downstream observable/business accepted 阶梯；</li>
+<li>pool/queue 配额、水位、背压、回收、优先级与降级；</li>
+<li>timeout、cancel、retry/idempotency、reset、quarantine、旧 handle/callback 拒绝；</li>
+<li>跨 Host/Guest/device/IOMMU 的观测点、原始证据与保留策略；</li>
+<li>故障注入、实测结果、Owner、期限与变更记录。</li>
+</ol>
+<h2>9. 今日独立练习</h2>
+<p>新题不附参考答案、示范作答或预设根因。</p>
+<p>场景：挂入 R 挡后 AVM 偶发首帧绿屏；Android Guest 最近发生过一次重建，随后画面又自行恢复。当前只有“请求 ACK、Guest present 成功、Host 偶发 IOMMU fault”三类线索。</p>
+<p>请独立完成：</p>
+<ol>
+<li>画出 Camera/producer → Host allocator/backend → IOMMU → Android Guest → GPU/HWC → Display 的控制、数据和资源状态流；</li>
+<li>列出 CPU VA、物理地址、IOVA、handle、bufferId 和 generation 的区别；</li>
+<li>为每个资源状态指定 Owner、进入条件、退出条件和不可接受的旧代事件；</li>
+<li>区分 allocation/map/queue/fence/present ACK 与用户可见当前新鲜帧；</li>
+<li>提出至少四个竞争假设及一项能支持/否定它的证据；</li>
+<li>设计 timeout、Guest/device reset、旧 release、重复 retry、内存压力和 IOMMU fault 的恢复；</li>
+<li>完成验证矩阵与《跨域共享缓冲与设备资源合同 V1》；</li>
+<li>写出 TPM 首轮牵头、各域供证、最终修复和验证责任，未知人员与期限保持待确认。</li>
+</ol>
+<h2>10. 提交说明</h2>
+<p>本课编号 <strong>day-49</strong>。使用页面末尾“上传／提交答卷”或进入<a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html">答卷中心</a>。请提交回顾题、三流图、资源状态机、完成阶梯、竞争假设、证据表、恢复设计、验证矩阵和资源合同。个人反思由你本人填写：我过去最容易把哪一种“拿到句柄/收到 ACK”误认为资源已经安全可用？</p>
+<h2>附录：21 项 T12T 技能覆盖检查</h2>
+<p>技能来源：F:/座舱日志分析/交付物/T12T诊断技能家族-优化版/。本次已先读三个入口，再逐项读取其余 18 个 SKILL.md，完成全部 21 项适用性检查。</p>
+<table>
+<thead>
+<tr>
+<th>技能</th>
+<th>本次判断</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>t12t-cockpit-diagnosis</td>
+<td>适用，深入：跨域拓扑、首个资源断点和竞争假设</td>
+</tr>
+<tr>
+<td>t12t-log-analysis</td>
+<td>适用，深入：多 generation 时间线、证据强弱和首错</td>
+</tr>
+<tr>
+<td>t12t-platform-architecture</td>
+<td>适用，深入：Android Guest、Yocto Host、Hypervisor、设备与外设边界</td>
+</tr>
+<tr>
+<td>t12t-display-black-freeze</td>
+<td>适用：buffer/fence、compose、present、scanout 与屏端完成边界</td>
+</tr>
+<tr>
+<td>t12t-touch-input</td>
+<td>条件适用：输入 buffer/DMA 异常时再深入；本课无触摸实证</td>
+</tr>
+<tr>
+<td>t12t-avm-camera-stream</td>
+<td>适用，深入：Camera frame、共享 buffer、旧帧与用户可见 AVM</td>
+</tr>
+<tr>
+<td>t12t-power-sleep-str</td>
+<td>条件适用：STR/电源代际改变资源身份；本课无现车电源实证</td>
+</tr>
+<tr>
+<td>t12t-audio-path</td>
+<td>条件适用：音频 DMA/ring buffer 可复用合同；本课案例非音频</td>
+</tr>
+<tr>
+<td>t12t-stability-crash-reset</td>
+<td>适用，深入：Guest/device reset、恢复半径和 quarantine</td>
+</tr>
+<tr>
+<td>t12t-performance-jank</td>
+<td>适用，深入：pool/queue 水位、背压、内存压力；预算量化留给 Day50</td>
+</tr>
+<tr>
+<td>t12t-ethernet-sgmii</td>
+<td>条件适用：网络 DMA/descriptor 场景可复用；本课无链路实证</td>
+</tr>
+<tr>
+<td>t12t-wireless-phone-link</td>
+<td>条件适用：无线/视频共享资源冲突时再深入；当前无无线证据</td>
+</tr>
+<tr>
+<td>t12t-cross-domain-msg</td>
+<td>适用：handle/fence/callback 的身份、超时、幂等与旧代隔离</td>
+</tr>
+<tr>
+<td>t12t-boot-hmi</td>
+<td>适用：Guest 重建后资源重取与当前新鲜业务首帧</td>
+</tr>
+<tr>
+<td>t12t-log-storm</td>
+<td>支撑：高频 buffer 日志采样、证据容量和轮转</td>
+</tr>
+<tr>
+<td>t12t-usb-typec-storage</td>
+<td>条件适用：USB DMA/块 I/O 进入场景时再深入</td>
+</tr>
+<tr>
+<td>t12t-virtualization-tee</td>
+<td>适用，深入：虚拟设备 frontend/backend、IOMMU 与安全内存边界</td>
+</tr>
+<tr>
+<td>t12t-db-ke-forensics</td>
+<td>条件适用：IOMMU fault 导致 fatal/reset 时固定 DB/KE；当前无异常包</td>
+</tr>
+<tr>
+<td>t12t-mcu</td>
+<td>条件适用：电源/外设 ownership 与 reset 协调；当前无 MCU 实证</td>
+</tr>
+<tr>
+<td>t12t-tpm-triage</td>
+<td>适用，深入：资源合同、首轮牵头、修复和验证责任边界</td>
+</tr>
+<tr>
+<td>t12t-tpm-5y8d</td>
+<td>暂不展开：构造案例没有真实根因与逃逸证据，不强造 5Y/8D</td>
+</tr>
+</tbody></table>
+<p>本课实际深入使用：t12t-cockpit-diagnosis、t12t-log-analysis、t12t-platform-architecture、t12t-display-black-freeze、t12t-avm-camera-stream、t12t-stability-crash-reset、t12t-performance-jank、t12t-cross-domain-msg、t12t-boot-hmi、t12t-virtualization-tee 和 t12t-tpm-triage。关键证据缺口包括：当前车型/SoC/build、资源与设备拓扑、allocator/heap、IOMMU domain/stream、Host/Guest 共享实现、cache/安全属性、pool/queue/带宽阈值、真实 fault/trace、恢复策略和授权测试环境。</p>
+</article><section class="answer-panel" data-course="day-49" aria-label="Day 49 - 系统资源 I：资源所有权、DMA/IOMMU 与共享缓冲生命周期 答卷提交"><h3>提交本课答卷</h3><p>在 GitHub 登录后填写文字，或把图片、PDF、Word 等文件拖入“答卷正文与附件”框；点击 Submit new issue（提交）才算上传成功。答卷和附件将保存在公开的 GitHub 仓库，请只提交可公开的学习材料。</p><p><a class="answer-submit" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues/new?template=answer.yml&amp;title=%5B%E7%AD%94%E5%8D%B7%5D%5Bday-49%5D+Day+49+-+%E7%B3%BB%E7%BB%9F%E8%B5%84%E6%BA%90+I%EF%BC%9A%E8%B5%84%E6%BA%90%E6%89%80%E6%9C%89%E6%9D%83%E3%80%81DMA%2FIOMMU+%E4%B8%8E%E5%85%B1%E4%BA%AB%E7%BC%93%E5%86%B2%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F&amp;lesson=day-49&amp;course=https%3A%2F%2Fqiantao18817568425-art.github.io%2FArchitecture_Learning-%2F%23day-49" target="_blank" rel="noopener">上传／提交答卷 ↗</a> <a class="answer-view" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues?q=is%3Aissue+in%3Atitle+%22%5B%E7%AD%94%E5%8D%B7%5D%5Bday-49%5D%22" target="_blank" rel="noopener">查看答卷与批改 ↗</a> <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html#day-49">归档与批改状态</a></p><p>课程编号：<code>day-49</code>。补交请在同一答卷下评论，以 <strong>[补交]</strong> 开头，并注明题号；也可编辑原答卷。每天 20:00 先检查并批改新答卷，再安排当天任务。</p></section></main><script src="../architecture/vendor/mermaid-10.9.5.min.js"></script><script>mermaid.initialize({startOnLoad:true,theme:'neutral',securityLevel:'strict'});</script></body></html>
