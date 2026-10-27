@@ -68,7 +68,7 @@ flowchart LR
   Q --> D[Display / storage / network consumers]
   P[Power / thermal / devfreq policy] -. controls available service .-> M
   O[Counters / trace / PSI / queue depth] -. observes .-> M
-~~+
+~~~
 
 ## 4. 核心概念二：性能故障是“截止期没满足”，不是某个利用率高
 
@@ -106,7 +106,7 @@ stateDiagram-v2
   Missed --> Degraded: drop / lower quality / preserve safety path
   Missed --> Recovering: current-generation recovery
   Recovering --> Triggered: authoritative restart
-~~+
+~~~
 
 全局 deadline 从用户/传感器触发开始，不因局部 retry 重置。每条 trace 必须带 powerCycle、bootId、VM/process/device generation、frame/request ID 和单调时间。跨域时间误差大于候选事件间隔时，只能保留竞争假设。
 

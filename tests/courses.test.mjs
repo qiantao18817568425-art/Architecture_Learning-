@@ -28,6 +28,17 @@ test('independent lesson includes diagrams, sources, exercises and honest assess
   for (const href of [...html.matchAll(/href="([^"]+)"/g)].map(m => m[1])) assert.ok(/^https:\/\//.test(href) || ['../index.html#day-37', '../architecture/index.html'].includes(href), href);
 });
 
+test('every lesson closes Mermaid fences and renders each latest diagram as its own block', () => {
+  const progress = JSON.parse(read('content/learning-progress.json'));
+  for (const lesson of progress.lessons) {
+    const markdown = read(lesson.source);
+    assert.equal((markdown.match(/^~~~mermaid\s*$/gm) || []).length, (markdown.match(/^~~~\s*$/gm) || []).length, `${lesson.id} Mermaid fences`);
+  }
+  const latest = read(`docs/lessons/day-${progress.lastPublishedDay}.html`);
+  assert.equal((latest.match(/class="mermaid"/g) || []).length, 2);
+  assert.doesNotMatch(latest, /~~~mermaid|~~\+/);
+});
+
 test('repeat builds are deterministic and keep latest courses and counts', () => {
   const paths = ['docs/index.html', 'docs/lessons/day-37.html'];
   const before = paths.map(read);
