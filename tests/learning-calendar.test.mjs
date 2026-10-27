@@ -36,3 +36,15 @@ test('an unpublished Sunday is not backfilled when Monday assigns Day49',()=>{
   assert.equal(scheduleForDate(day49.scheduledFor).kind,'day');
   assert.equal(day49.firstPublishedOn,'2026-10-26');
 });
+
+test('Tuesday 2026-10-27 assigns Day50 once and prepares Wednesday Day51',()=>{
+  const progress=JSON.parse(readFileSync(new URL('../content/learning-progress.json',import.meta.url),'utf8'));
+  const day50=progress.lessons.find(x=>x.id==='day-50');
+  assert.equal(scheduleForDate('2026-10-27').kind,'day');
+  assert.equal(day50?.scheduledFor,'2026-10-27');
+  assert.equal(day50?.firstPublishedOn,'2026-10-27');
+  assert.equal(progress.currentUnitId,'day-50');
+  assert.equal(progress.lastPublishedDay,50);
+  assert.equal(progress.nextUnit?.id,'day-51');
+  assert.equal(progress.nextUnit?.scheduledFor,'2026-10-28');
+});

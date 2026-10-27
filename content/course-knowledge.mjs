@@ -146,15 +146,38 @@ stateDiagram-v2
   ConsumerReading --> Quarantined: reset / ownership unknown
 ~~~
 
-[AOSP BufferQueue 与 Gralloc](https://source.android.com/docs/core/graphics/arch-bq-gralloc)、[AOSP Synchronization framework](https://source.android.com/docs/core/graphics/sync)、[Linux DMA mapping guide](https://docs.kernel.org/core-api/dma-api-howto.html)和[Linux dma-buf](https://docs.kernel.org/driver-api/dma-buf.html)用于核对通用机制；当前车型的 allocator、IOMMU/SMMU、cache 属性、stream/VM/device ID、格式、阈值和恢复顺序仍需项目证据。`,
+### GPU、DDR 带宽预算、拥塞与帧截止期合同
 
-  '20': `## 课程沉淀：Day 35—49 的统一关联键与旧消息规则
+关联课程：Day 50。单流有效载荷可写为 \`width × height × bytes_per_pixel × fps\`，但 DDR 需求必须按实际的每次读写 pass 累加，并明确 format/stride/padding、压缩、cache、复制、缩放、合成、编码参考帧、扫描输出和并发 client。理论峰值、可持续有效带宽、\`avg_bw\`/\`peak_bw\` 请求、实测 transaction 与业务吞吐是不同口径；请求被接受不等于资源已经按 deadline 交付。
+
+性能闭环以当前 generation 的帧截止期为主线：trigger/produce → producer fence → queue/acquire → GPU/HWC complete → present/scanout → fresh-and-correct business acceptance。GPU utilization、频率、DDR 总 counter、PSI 或平均 FPS 都不能单独证明根因；至少要用统一 frame/request ID 和单调时间，将 FrameTimeline、GPU stages/counters、BufferQueue/fence、ICC/DDR per-client、devfreq/thermal、PSI/sched/I/O 与用户结果放在同窗比较。
+
+~~~mermaid
+flowchart LR
+  T[Trigger / expected frame] --> P[Producer]
+  P --> Q[BufferQueue / fence]
+  Q --> G[GPU / HWC]
+  G --> S[Present / scanout]
+  S --> B[Fresh business frame]
+  C[Camera / codec / CPU clients] --> M[DDR / interconnect arbitration]
+  M --> P
+  M --> G
+  R[devfreq / thermal / QoS] -. available service .-> M
+  O[FrameTimeline / counters / PSI] -. evidence .-> Q
+  O -. evidence .-> M
+~~~
+
+发生 jank/冻帧时先确认最早超预算的阶段，再保留 DDR/互连拥塞、GPU 工作量或降频、consumer 背压、CPU/cgroup 调度、额外 copy/cache、日志/I/O 风暴等竞争假设。区分实验尽量只改变一个变量；关闭某功能后恢复只证明并发条件相关，不能自动确定最终责任。所有车型阈值、counter 名、频率和 QoS 配置均待当前版本证据确认。
+
+[AOSP BufferQueue 与 Gralloc](https://source.android.com/docs/core/graphics/arch-bq-gralloc)、[AOSP Synchronization framework](https://source.android.com/docs/core/graphics/sync)、[Linux DMA mapping guide](https://docs.kernel.org/core-api/dma-api-howto.html)、[Linux dma-buf](https://docs.kernel.org/driver-api/dma-buf.html)、[Linux Interconnect framework](https://docs.kernel.org/driver-api/interconnect.html)、[Linux PSI](https://docs.kernel.org/accounting/psi.html)、[Perfetto FrameTimeline](https://perfetto.dev/docs/data-sources/frametimeline)和[Perfetto GPU tracing](https://perfetto.dev/docs/data-sources/gpu)用于核对通用机制；当前车型的 allocator、IOMMU/SMMU、cache 属性、stream/VM/device ID、格式、counter、QoS、频率、阈值和恢复顺序仍需项目证据。`,
+
+  '20': `## 课程沉淀：Day 35—50 的统一关联键与旧消息规则
 
 跨音频、STR、显示、VM、Ethernet/SOME-IP 和诊断链，统一关联键至少包含 vehicle/config/build、powerCycle、Host bootId、VM generation、process incarnation、session/request/transaction/frame/incident ID、对象/音区/显示/服务实例和域内 monotonic 时间。跨域时间必须记录映射方法和误差；两事件间隔小于误差时，不只凭时间排序断言因果。
 
 每个接口分别定义 received/ACK、local applied/completed、downstream observable 和 business accepted。超时、取消、复位后按 generation 拒绝旧消息；重试保留原始 deadline，并说明幂等键、在途事务终态和状态重取策略。`,
 
-  '23': `## 课程沉淀：Day 35—49 的通用验证闭环
+  '23': `## 课程沉淀：Day 35—50 的通用验证闭环
 
 可复用验证矩阵覆盖：正常链、边界时序、瞬态/持续故障、丢包/乱序/重复、局部服务重启、Guest/设备/Host 分层复位、旧消息重放、资源压力、证据容量/轮转、恢复失败升级和相邻业务回归。每项记录目标、前置、注入、步骤、观测点、预期、实测、原始证据链接和通过判据。
 

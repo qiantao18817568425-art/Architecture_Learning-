@@ -1,0 +1,12 @@
+flowchart LR
+  T[Trigger / expected frame] --> P[Producer]
+  P --> Q[BufferQueue / fence]
+  Q --> G[GPU / HWC]
+  G --> S[Present / scanout]
+  S --> B[Fresh business frame]
+  C[Camera / codec / CPU clients] --> M[DDR / interconnect arbitration]
+  M --> P
+  M --> G
+  R[devfreq / thermal / QoS] -. available service .-> M
+  O[FrameTimeline / counters / PSI] -. evidence .-> Q
+  O -. evidence .-> M

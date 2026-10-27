@@ -34,10 +34,10 @@ test('full text search includes interface names inside code blocks and beginner 
  assert.ok(index.some(x=>x.url==='02.html#beginner-guide'&&x.text.includes('物理 CPU')),'beginner guide is searchable');
 });
 
-test('Day35 through Day49 contribute reusable knowledge and reverse links to architecture chapters',()=>{
+test('Day35 through Day50 contribute reusable knowledge and reverse links to architecture chapters',()=>{
  const data=JSON.parse(read('content/architecture.json'));
- const mapped=data.days.filter(x=>x.day>=35&&x.day<=49);
- assert.deepEqual(mapped.map(x=>x.day),[35,36,37,38,39,40,41,42,43,44,45,46,47,48,49]);
+ const mapped=data.days.filter(x=>x.day>=35&&x.day<=50);
+ assert.deepEqual(mapped.map(x=>x.day),[35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]);
  assert.equal(new Set(data.days.map(x=>x.day)).size,data.days.length,'course mappings must stay unique');
 
  const expectations=[
@@ -47,7 +47,7 @@ test('Day35 through Day49 contribute reusable knowledge and reverse links to arc
   ['02.html',['Day 41','Day 42','VM Reset 的故障域、重建顺序与升级边界']],
   ['13.html',['Day 43','Day 44','Day 46','Ethernet / SOME-IP 的链路、服务、会话与数据新鲜度','DoIP Routing Activation']],
   ['15.html',['Day 45','Day 46','Health signal → event → qualification → DTC → snapshot → storage → tester','健康事件—DTC 证据合同','DoIP ACK 只证明诊断消息被 DoIP 节点接受处理']],
-  ['19.html',['Day 49','共享缓冲、DMA/IOMMU 与资源生命周期合同','ProducerWriting','Quarantined']]
+  ['19.html',['Day 49','Day 50','共享缓冲、DMA/IOMMU 与资源生命周期合同','GPU、DDR 带宽预算、拥塞与帧截止期合同','ProducerWriting','Quarantined','avg_bw','peak_bw','FrameTimeline','PSI']]
  ];
  for(const [page,texts] of expectations){
   const html=read(`docs/architecture/${page}`);
@@ -57,10 +57,11 @@ test('Day35 through Day49 contribute reusable knowledge and reverse links to arc
  const search=JSON.parse(read('docs/architecture/search.json'));
  assert.ok(search.some(x=>x.url.startsWith('15.html#')&&x.text.includes('EventID')&&x.text.includes('tester')),'integrated diagnostic contract is searchable');
  assert.ok(search.some(x=>x.url.startsWith('19.html#')&&x.text.includes('IOMMU')&&x.text.includes('quarantine')),'shared-resource lifecycle contract is searchable');
+ assert.ok(search.some(x=>x.url.startsWith('19.html#')&&x.text.includes('FrameTimeline')&&x.text.includes('PSI')),'performance evidence contract is searchable');
 });
 
 test('knowledge home exposes the latest course integration entry',()=>{
  const home=read('docs/architecture/index.html');
- assert.ok(home.includes('Day 35—49 课程知识沉淀'));
- assert.ok(home.includes('19.html#课程沉淀共享缓冲dmaiommu-与资源生命周期合同'));
+ assert.ok(home.includes('Day 35—50 课程知识沉淀'));
+ assert.ok(home.includes('19.html#gpu-ddr-带宽预算拥塞与帧截止期合同'));
 });
