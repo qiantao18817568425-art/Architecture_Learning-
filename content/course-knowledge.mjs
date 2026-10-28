@@ -171,15 +171,39 @@ flowchart LR
 
 [AOSP BufferQueue 与 Gralloc](https://source.android.com/docs/core/graphics/arch-bq-gralloc)、[AOSP Synchronization framework](https://source.android.com/docs/core/graphics/sync)、[Linux DMA mapping guide](https://docs.kernel.org/core-api/dma-api-howto.html)、[Linux dma-buf](https://docs.kernel.org/driver-api/dma-buf.html)、[Linux Interconnect framework](https://docs.kernel.org/driver-api/interconnect.html)、[Linux PSI](https://docs.kernel.org/accounting/psi.html)、[Perfetto FrameTimeline](https://perfetto.dev/docs/data-sources/frametimeline)和[Perfetto GPU tracing](https://perfetto.dev/docs/data-sources/gpu)用于核对通用机制；当前车型的 allocator、IOMMU/SMMU、cache 属性、stream/VM/device ID、格式、counter、QoS、频率、阈值和恢复顺序仍需项目证据。`,
 
-  '20': `## 课程沉淀：Day 35—50 的统一关联键与旧消息规则
+  '20': `## 课程沉淀：Day 35—51 的统一关联键与旧消息规则
 
 跨音频、STR、显示、VM、Ethernet/SOME-IP 和诊断链，统一关联键至少包含 vehicle/config/build、powerCycle、Host bootId、VM generation、process incarnation、session/request/transaction/frame/incident ID、对象/音区/显示/服务实例和域内 monotonic 时间。跨域时间必须记录映射方法和误差；两事件间隔小于误差时，不只凭时间排序断言因果。
 
-每个接口分别定义 received/ACK、local applied/completed、downstream observable 和 business accepted。超时、取消、复位后按 generation 拒绝旧消息；重试保留原始 deadline，并说明幂等键、在途事务终态和状态重取策略。`,
+每个接口分别定义 received/ACK、local applied/completed、downstream observable 和 business accepted。超时、取消、复位后按 generation 拒绝旧消息；重试保留原始 deadline，并说明幂等键、在途事务终态和状态重取策略。
 
-  '23': `## 课程沉淀：Day 35—50 的通用验证闭环
+## 需求分解、场景边界与系统级验收合同
+
+Day 51 将模糊功能诉求分成“Need/ConOps → system shall requirement → architecture allocation → subsystem/interface contract → verification evidence → intended-use validation”。每条需求应有唯一标识、来源、rationale、Owner、版本、量化判据和双向 traceability；未知项目值写成 TBD，并记录关闭责任与条件，不能将猜测固化成平台事实。
+
+场景合同同时定义 actor、前置与禁止条件、触发/取消/并发、power/boot/VM/device generation、控制/数据/状态/电源路径、deadline/freshness/质量边界、降级与恢复出口。request received、ACK、local applied、device/data complete、state readback 与 business accepted 分层验收；局部成功不能替代当前代、正确、新鲜、及时且可恢复的系统结果。
+
+~~~mermaid
+flowchart LR
+  N[Need and ConOps] --> R[System requirement]
+  R --> A[Architecture allocation]
+  A --> I[Interface and subsystem contracts]
+  I --> V[Verification evidence]
+  V --> B[Business validation]
+  B -. gap or change .-> N
+  G[Generation / freshness / deadline / recovery] -. constrains .-> I
+~~~
+`,
+
+  '23': `## 课程沉淀：Day 35—51 的通用验证闭环
 
 可复用验证矩阵覆盖：正常链、边界时序、瞬态/持续故障、丢包/乱序/重复、局部服务重启、Guest/设备/Host 分层复位、旧消息重放、资源压力、证据容量/轮转、恢复失败升级和相邻业务回归。每项记录目标、前置、注入、步骤、观测点、预期、实测、原始证据链接和通过判据。
 
-关闭标准同时回答：用户业务是否恢复；当前状态是否与权威源一致；旧代是否被隔离；DTC/log/dump 是否可追溯；恢复预算是否满足；共享资源和相邻业务是否回归。没有实机记录时只标“待执行”，不能把课程矩阵写成已验证结论。`
+关闭标准同时回答：用户业务是否恢复；当前状态是否与权威源一致；旧代是否被隔离；DTC/log/dump 是否可追溯；恢复预算是否满足；共享资源和相邻业务是否回归。没有实机记录时只标“待执行”，不能把课程矩阵写成已验证结论。
+
+## 需求—场景—验收—证据追踪矩阵
+
+追踪矩阵至少包含 Need/ConOps、System Req、Architecture allocation、Interface/Sub-system Req、verification criteria、validation scenario 和原始 evidence。每一列保存 ID、版本、Owner、状态与变更影响，并建立双向 traceability；每一行既能从需求追到测试，也能从失败证据反查需求、场景与责任边界。
+
+Verification 回答是否满足技术规格，validation 回答在预期使用环境中是否满足真实需要。验证矩阵应覆盖正常、边界、异常、恢复、旧消息、分层复位、资源并发、证据缺失和相邻业务回归；没有实机证据时状态只能是待执行。`
 };

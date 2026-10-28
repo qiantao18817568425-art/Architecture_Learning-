@@ -1,0 +1,643 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Day 51 - 方案设计 I：需求分解、场景边界与系统级验收合同</title><style>
+    :root { color-scheme: light; font-family: "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif; color: #18212f; background: #f6f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.75; }
+    a { color: #075fbd; overflow-wrap: anywhere; }
+    code { background: #edf1f6; border-radius: 3px; padding: .08rem .28rem; }
+    pre { overflow: auto; background: #111827; color: #e5e7eb; padding: 1rem; border-radius: 6px; white-space: pre-wrap; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
+    header { border-left: 5px solid #db5a2a; padding: 12px 20px; margin-bottom: 28px; background: #fff; }
+    h1, h2, h3, h4, h5, h6 { line-height: 1.35; margin: 1.35em 0 .5em; }
+    h1 { margin: 0; font-size: 2rem; }
+    .lede { max-width: 840px; margin: .5rem 0 0; color: #4b5563; }
+    .metrics { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 26px; }
+    .metric { background: #e6eff8; border: 1px solid #bfd5ea; padding: 6px 12px; border-radius: 4px; color: #174a76; }
+    .metric strong { font-size: 1.15rem; }
+    .guide { background: #fff; border-top: 2px solid #1d8093; padding: 18px 22px; margin: 24px 0; }
+    .guide ol { margin-bottom: 0; }
+    .lesson { background: #fff; border: 1px solid #d8dee8; margin: 10px 0; }
+    summary { cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 18px; }
+    summary::-webkit-details-marker { color: #db5a2a; }
+    .lesson-title { font-weight: 700; font-size: 1.05rem; }
+    .lesson-meta { color: #52606d; font-size: .86rem; white-space: nowrap; }
+    .lesson-body { border-top: 1px solid #d8dee8; padding: 4px 22px 24px; }
+    .archive-note { color: #52606d; font-size: .92rem; border-left: 3px solid #1d8093; padding-left: 10px; }
+    .format-audit { border: 1px solid #b8d5cf; background: #f4fbf8; padding: 16px; margin: 18px 0; border-radius: 6px; }
+    .format-audit h3 { margin-top: 0; }
+    .format-audit ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+    .format-audit li { border: 1px solid #d8dee8; background: #fff; border-radius: 5px; padding: 8px; font-size: .9rem; }
+    .format-audit span { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+    .format-audit .present span { background: #dbece8; color: #126458; }
+    .format-audit .missing span { background: #f4e3cb; color: #8a4604; }
+    article h2 { font-size: 1.35rem; }
+    article h3 { font-size: 1.15rem; }
+    article h4, article h5 { font-size: 1rem; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    blockquote { margin: 1rem 0; padding: .45rem 1rem; border-left: 3px solid #1d8093; background: #f4f8fb; color: #435467; }
+    table { border-collapse: collapse; width: 100%; min-width: 32rem; font-size: .94rem; }
+    th, td { border: 1px solid #d8dee8; padding: .55rem .7rem; text-align: left; vertical-align: top; }
+    th { background: #edf4f9; }
+    .mermaid { background: #fff; color: #18212f; border: 1px solid #d8dee8; }
+    footer { margin-top: 32px; color: #52606d; font-size: .9rem; }
+    @media (max-width: 640px) { main { padding: 16px 12px 36px; } h1 { font-size: 1.55rem; } summary { align-items: flex-start; } .lesson-body { padding: 2px 14px 18px; } .format-audit ul { grid-template-columns: 1fr; } }
+  </style><style>.answer-panel{margin:22px 0;padding:18px;border:1px solid #9ab8d8;border-left:5px solid #1763a3;border-radius:8px;background:#f2f7fc}.answer-panel h3{margin-top:0}.answer-submit,.answer-view{display:inline-block;padding:10px 14px;margin:4px 8px 4px 0;border-radius:6px;background:#12578f;color:#fff;text-decoration:none}.answer-view{background:#e0ecf6;color:#153e61}.answer-panel a:focus-visible{outline:3px solid #db5a2a;outline-offset:3px}.answer-panel code{overflow-wrap:anywhere}.answer-list{padding:0;list-style:none}.answer-list li{margin:12px 0;padding:16px;background:#fff;border:1px solid #d8dee8;border-radius:6px}body{font-family:system-ui,'Microsoft YaHei',sans-serif;line-height:1.75;color:#18212f;background:#f6f8fb}main{max-width:1180px;margin:auto;padding:24px}a{overflow-wrap:anywhere}</style></head><body><main><nav><a href="../index.html#day-51">课程档案</a> · <a href="../architecture/index.html">项目架构实践</a></nav><article><h1>Day 51 — 方案设计 I：需求分解、场景边界与系统级验收合同</h1>
+<p>正式安排日期：2026-10-28，星期三，Asia/Shanghai。Week 16。能力阶段仍为第二阶段“系统链路与问题分析”，从本课开始衔接阶段三的方案设计方法；发布材料不等于能力升级。目标深度：L3，能把一句模糊功能诉求分解为可追踪、可验证、可恢复的系统合同，并能说明跨域边界与验收证据。总用时约 60 分钟。</p>
+<p>执行前已完整扫描仓库开放和关闭状态的答卷 Issue、全部评论与附件，没有发现授权学习者的新答卷或补交。本课及 Day 34—50 均等待真实作答评审。</p>
+<h2>1. 官方依据与项目边界</h2>
+<p>官方资料核验日期：2026-10-28。</p>
+<ul>
+<li><a href="https://www.nasa.gov/reference/4-0-system-design-processes/">NASA Systems Engineering Handbook：System Design Processes</a>：从 stakeholder expectations、ConOps/use cases 出发，递归形成 technical requirements、logical decomposition 和 design solution；需求应覆盖输入、输出、约束、接口、功能、性能与行为。</li>
+<li><a href="https://www.nasa.gov/reference/system-engineering-handbook-appendix/">NASA Systems Engineering Handbook：Appendix C/D</a>：好的需求应清晰、单一、完整、可验证，并带容差、依据和假设；Verification Matrix 用唯一标识把“shall”需求连接到验证方法与证据。</li>
+<li><a href="https://swehb.nasa.gov/spaces/SWEHBVB/pages/32604503/SWE-050%2B-%2BSoftware%2BRequirements">NASA Software Engineering Handbook：Software Requirements</a>：技术需求应唯一、定量、可测，清晰完整、一致，并可追踪到更高层需求。</li>
+<li><a href="https://automotivespice.com/fileadmin/software-download/automotiveSIG_PRM_v45.pdf">Automotive SPICE Process Reference Model 4.5：ENG.2</a>：系统需求分析应把客户需求转为系统技术需求，分析正确性与可测试性，并建立双向追踪；验证准则需说明定性和定量的验证条件。</li>
+</ul>
+<p>当前没有指定车型、SoC/build、现车拓扑、DBC/IDL、功能安全等级、目标时延、温度/电源边界和实机基线。下文的 AVM 场景、阈值变量和接口名称用于训练方法；任何项目数值均标为 TBD/待项目确认，不写成现车事实。</p>
+<h2>2. 一小时主线</h2>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>学习任务</th>
+<th>输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0—10 分钟</td>
+<td>回顾 5 题</td>
+<td>区分需求、设计、ACK、完成和证据</td>
+</tr>
+<tr>
+<td>10—20 分钟</td>
+<td>核心概念一</td>
+<td>需求分层与双向追踪</td>
+</tr>
+<tr>
+<td>20—30 分钟</td>
+<td>核心概念二</td>
+<td>场景边界与系统级验收合同</td>
+</tr>
+<tr>
+<td>30—50 分钟</td>
+<td>工程案例</td>
+<td>“挂 R 挡后显示 360”从模糊诉求到可验收合同</td>
+</tr>
+<tr>
+<td>50—60 分钟</td>
+<td>可复用产物</td>
+<td>《需求—场景—验收—证据追踪矩阵 V1》</td>
+</tr>
+</tbody></table>
+<p>回顾题：</p>
+<ol>
+<li>Day 50 的 <code>QoS request accepted</code>、GPU fence、present 和 business accepted 为什么是四种不同完成语义？</li>
+<li>“系统要快”“启动后尽快显示”为什么不能直接作为测试通过判据？</li>
+<li>requirement、architecture decision 和 implementation detail 应怎样分开？</li>
+<li>为什么 happy path 通过仍不能说明 reset、旧消息、并发和降级边界正确？</li>
+<li>没有统一 generation、request ID 和单调时间时，跨 Android、Yocto、MCU 的日志能否直接证明因果？</li>
+</ol>
+<h2>3. 核心概念一：从愿望到可追踪的系统需求</h2>
+<p>需求不是“把某个模块做出来”，而是系统在已定义边界内必须提供的可观察能力。先写 stakeholder need 与 ConOps，再形成 system requirement；随后按功能、性能、接口、状态/模式、安全、资源、诊断与恢复分解到 subsystem/interface requirement。设计方案回答“如何实现”，验证合同回答“怎样证明满足”。</p>
+<h3>3.1 六层分解</h3>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>核心问题</th>
+<th>必须产出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>利益相关方需要</td>
+<td>用户为何需要、什么算成功</td>
+<td>Need ID、场景、MOE、约束、批准者</td>
+</tr>
+<tr>
+<td>运行场景/ConOps</td>
+<td>谁在什么环境、状态和生命周期中使用</td>
+<td>actor、前置、触发、主流程、异常、结束</td>
+</tr>
+<tr>
+<td>系统需求</td>
+<td>系统必须做什么、做到多好</td>
+<td>唯一 ReqID、shall、量化判据、来源</td>
+</tr>
+<tr>
+<td>架构分配</td>
+<td>哪个域/模块承担什么职责</td>
+<td>Android Guest、Yocto Host、MCU、TBox、Hypervisor、外设边界</td>
+</tr>
+<tr>
+<td>接口与派生需求</td>
+<td>每次交接如何定义输入、输出、时序和错误</td>
+<td>IDL/DBC/schema、ACK、deadline、generation、恢复</td>
+</tr>
+<tr>
+<td>验证与确认</td>
+<td>怎么证明“按规格做对”且“真实场景做的是对的”</td>
+<td>verification method、validation scenario、证据与关闭准则</td>
+</tr>
+</tbody></table>
+<pre class="mermaid">flowchart TD
+  N[Stakeholder need / MOE] --&gt; C[ConOps and bounded scenarios]
+  C --&gt; S[System shall requirements]
+  S --&gt; F[Functional / performance / interface / state / recovery]
+  F --&gt; A[Architecture allocation]
+  A --&gt; X[Subsystem and interface contracts]
+  X --&gt; V[Verification criteria and evidence]
+  V --&gt; B[Business validation in intended use]
+  B -. gap or change .-&gt; N
+  S -. bidirectional traceability .-&gt; V
+  A -. rationale and assumptions .-&gt; S</pre>
+<h3>3.2 需求质量闸门</h3>
+<p>每条需求至少检查：唯一、必要、单一、明确、可行、量化、可验证、可追踪、无矛盾、层级正确。把“快速、稳定、友好、正常、适当、尽快、等”改为变量和边界；变量暂未知时写 <code>TBD-xxx</code>，同时记录 Owner、决策依据和关闭日期，不把猜测固化为事实。</p>
+<p>示例对比：</p>
+<ul>
+<li>模糊：挂 R 挡后系统快速显示 360。</li>
+<li>可分析：在前置状态 P、有效倒挡事件 E、当前 powerCycle/VM generation G 下，系统应在 <code>T_total &lt;= TBD_AVM_LATENCY</code> 内提供与当前 E/G 匹配的新鲜四路融合画面；若任一必需输入或链路在 <code>T_fault &lt;= TBD</code> 内不可用，应进入定义的降级状态并输出可追踪故障证据。</li>
+</ul>
+<p>这仍不是最终需求：P、E、新鲜度、四路完整性、画面质量、降级方式、恢复条件、显示目标、计时起止点和安全边界都要展开。</p>
+<h2>4. 核心概念二：场景边界与系统级验收合同</h2>
+<h3>4.1 场景要有边界，不只写主流程</h3>
+<p>一份可验收场景至少包含：</p>
+<ol>
+<li>actor 与目标用户结果；</li>
+<li>车型/配置/build、power state、boot/VM/process/device generation；</li>
+<li>前置条件和禁止条件；</li>
+<li>触发、去抖、取消与并发事件；</li>
+<li>控制路径、数据路径、状态路径和电源路径；</li>
+<li>正常、边界、异常、恢复和退出；</li>
+<li>输入有效性、timestamp/sequence、freshness；</li>
+<li>deadline、容差、资源与安全约束；</li>
+<li>降级、重试、幂等、旧消息拒绝、权威状态重取；</li>
+<li>可观察证据、验证方法和 business accepted 判据。</li>
+</ol>
+<h3>4.2 四条路径必须分画</h3>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>AVM 示例</th>
+<th>验收问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>控制</td>
+<td>倒挡事件 → 仲裁 → show/start → pipeline/layer</td>
+<td>谁请求、谁批准、取消如何传播？</td>
+</tr>
+<tr>
+<td>数据</td>
+<td>camera frame → buffer/fence → stitch → present/scanout</td>
+<td>是否为当前 generation 的新鲜、完整、正确数据？</td>
+</tr>
+<tr>
+<td>状态</td>
+<td>source ready、session active、first frame、visible、degraded</td>
+<td>谁是权威状态，何时允许迁移？</td>
+</tr>
+<tr>
+<td>电源</td>
+<td>rail/reset/clock → Host/Guest/device ready</td>
+<td>当前模式是否允许服务，resume 后如何重建？</td>
+</tr>
+</tbody></table>
+<h3>4.3 ACK 到业务完成的阶梯</h3>
+<table>
+<thead>
+<tr>
+<th>里程碑</th>
+<th>可以证明</th>
+<th>不能替代</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>request received</td>
+<td>对端收到请求</td>
+<td>语义合法、已执行</td>
+</tr>
+<tr>
+<td>request accepted / ACK</td>
+<td>当前接口接受处理</td>
+<td>下游 ready、物理输出</td>
+</tr>
+<tr>
+<td>local applied</td>
+<td>本模块状态已更新</td>
+<td>下游消费和端到端结果</td>
+</tr>
+<tr>
+<td>device/data complete</td>
+<td>设备或数据任务完成</td>
+<td>当前用户场景可见且正确</td>
+</tr>
+<tr>
+<td>state readback</td>
+<td>权威状态可读取</td>
+<td>新鲜度、画面/声音质量、deadline</td>
+</tr>
+<tr>
+<td>business accepted</td>
+<td>当前 generation 的结果在场景边界内正确、及时、可恢复</td>
+<td>不能反推所有上游从未发生异常</td>
+</tr>
+</tbody></table>
+<h2>5. 工程案例：挂 R 挡后“360 已启动”但屏幕仍是旧画面</h2>
+<p>以下为构造案例，不代表当前车辆，也不预设练习结论。</p>
+<h3>5.1 模糊需求暴露的问题</h3>
+<p>原句：“挂 R 挡后 360 在规定时间内出现。”</p>
+<p>缺口包括：什么事件算挂 R；计时从 CAN/MCU/Host/应用哪一层开始；冷启动、STR resume、VM recreate 是否同一预算；360 是 request accepted、AVM session active、首帧、四路融合帧还是物理屏可见；旧帧能否算出现；一路缺失如何降级；退出 R 挡、重复事件和反向乱序如何处理；哪些日志可证明通过。</p>
+<h3>5.2 系统链路与职责</h3>
+<table>
+<thead>
+<tr>
+<th>节点</th>
+<th>输入/职责</th>
+<th>输出/证据</th>
+<th>边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>车辆信号/MCU</td>
+<td>接收并资格化挡位事件</td>
+<td>sequence、source timestamp、有效性</td>
+<td>当前 DBC/去抖待确认</td>
+</tr>
+<tr>
+<td>Yocto Host/gateway</td>
+<td>解析、缓存、发布目标状态</td>
+<td>producer sequence、publish、generation</td>
+<td>channel alive 不等于 topic fresh</td>
+</tr>
+<tr>
+<td>Android/AVM policy</td>
+<td>校验场景、仲裁 show/start</td>
+<td>request ID、decision、reject/defer reason</td>
+<td>ACK 不等于画面</td>
+</tr>
+<tr>
+<td>Camera/Host pipeline</td>
+<td>启动四路采集与处理</td>
+<td>per-camera sequence、PTS、buffer/fence</td>
+<td>某一路 FPS 不代表四路完整</td>
+</tr>
+<tr>
+<td>Hypervisor/共享资源</td>
+<td>隔离 VM 与共享 buffer/device</td>
+<td>VM/device generation、mapping、queue</td>
+<td>旧句柄不得跨代生效</td>
+</tr>
+<tr>
+<td>Weston/SF/HWC/DRM</td>
+<td>合成、present、scanout</td>
+<td>layer、fence、present/vblank</td>
+<td>present 不自动证明用户可见</td>
+</tr>
+<tr>
+<td>屏端/用户结果</td>
+<td>当前画面物理可见</td>
+<td>新鲜度、质量、deadline、降级状态</td>
+<td>最终 business accepted</td>
+</tr>
+</tbody></table>
+<h3>5.3 构造证据账本</h3>
+<table>
+<thead>
+<tr>
+<th>证据</th>
+<th>构造观察</th>
+<th>当前最大解释范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E1</td>
+<td>当前 R 挡 sequence 到达 gateway，topic freshness 正常</td>
+<td>上游事件与发布推进；不证明业务消费</td>
+</tr>
+<tr>
+<td>E2</td>
+<td>AVM policy 对 request 返回 accepted</td>
+<td>请求被接受；不证明 pipeline 或显示完成</td>
+</tr>
+<tr>
+<td>E3</td>
+<td>Camera 四路均有递增 frame sequence</td>
+<td>采集在推进；不证明 buffer 交付/融合/可见</td>
+</tr>
+<tr>
+<td>E4</td>
+<td>旧 VM generation 的 surface handle 在 resume 后被重用</td>
+<td>支持代际错误假设；需验证 consumer 是否实际绑定旧对象</td>
+</tr>
+<tr>
+<td>E5</td>
+<td>当前 generation 首帧 fence signaled，但 present ID 未对应物理屏</td>
+<td>数据阶段完成；缺少显示映射/scanout闭环</td>
+</tr>
+<tr>
+<td>E6</td>
+<td>用户看到旧画面，切换页面后恢复</td>
+<td>证明恢复动作覆盖一段链路；不能单独确定根因</td>
+</tr>
+</tbody></table>
+<p>最早可证实的断点只能写成：<strong>当前 generation 的新鲜帧已经在上游产生，但从共享 buffer/surface 到目标物理屏的完成链未闭环</strong>。E4 和 E5 支持“generation/映射/消费边界”优先，但还不能唯一确定根因。</p>
+<h3>5.4 竞争假设与区分实验</h3>
+<table>
+<thead>
+<tr>
+<th>假设</th>
+<th>所需支持证据</th>
+<th>反证/最小实验</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>H1 旧 surface/buffer 跨代复用</td>
+<td>handle、producer/consumer generation、bind 记录</td>
+<td>强制当前代重新分配并核对同一 frame ID</td>
+</tr>
+<tr>
+<td>H2 目标 display/layer 映射错误</td>
+<td>physical screen、displayId、output、layer、present ID</td>
+<td>固定图案分别注入当前 producer 与目标 output；需授权</td>
+</tr>
+<tr>
+<td>H3 consumer 背压或 fence 未消费</td>
+<td>dequeue/acquire/present wait 和 owner</td>
+<td>保持 producer 不变，隔离 consumer 并追同一 fence</td>
+</tr>
+<tr>
+<td>H4 topic 新鲜但业务状态机 guard 错误</td>
+<td>subscriber callback、cache、state transition</td>
+<td>注入递增脱敏 sequence，核对 guard 输入输出</td>
+</tr>
+<tr>
+<td>H5 电源/设备 ready 晚于 request</td>
+<td>power/display/device ready 与 request 单调时间</td>
+<td>ready 后仅重放当前代请求，观察首帧链</td>
+</tr>
+<tr>
+<td>H6 四路采集虽活跃但融合输入不完整</td>
+<td>每路 frame/PTS、stitch input/output</td>
+<td>单路受控替代源，检查融合质量与降级；需授权</td>
+</tr>
+</tbody></table>
+<h3>5.5 状态、超时与恢复合同</h3>
+<pre class="mermaid">stateDiagram-v2
+  [*] --&gt; Inactive
+  Inactive --&gt; Requested: valid current-generation trigger
+  Requested --&gt; Accepted: policy ACK
+  Accepted --&gt; DataReady: all required inputs current and fresh
+  DataReady --&gt; Presented: current frame present/scanout evidence
+  Presented --&gt; BusinessAccepted: correct + fresh + within deadline
+  Requested --&gt; Degraded: prerequisite missing / timeout
+  Accepted --&gt; Degraded: pipeline or input timeout
+  DataReady --&gt; Degraded: present deadline missed
+  Degraded --&gt; Recovering: authoritative state and resources rebuilt
+  Recovering --&gt; Requested: replay current intent only
+  Recovering --&gt; Inactive: trigger no longer valid
+  BusinessAccepted --&gt; Inactive: cancel / exit</pre>
+<p>超时从场景触发开始，不因局部 retry 重置。reset/reconnect 后必须重新取得权威挡位与当前 generation，拒绝旧 request/frame/surface；重放要带幂等键。恢复成功后仍需验证当前画面新鲜、四路质量、deadline 和相邻业务，不以“服务活着”结束。</p>
+<h2>6. 系统级验收合同模板</h2>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>必填内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>需求身份</td>
+<td>ReqID、版本、来源 Need/ConOps、rationale、Owner、批准者</td>
+</tr>
+<tr>
+<td>范围</td>
+<td>in-scope、out-of-scope、车型/配置/build、假设、TBD/TBR及关闭计划</td>
+</tr>
+<tr>
+<td>场景</td>
+<td>actor、前置、禁止条件、触发、并发、取消、退出</td>
+</tr>
+<tr>
+<td>分层职责</td>
+<td>Android Guest、Yocto Host、MCU、TBox、Hypervisor、外设输入/输出</td>
+</tr>
+<tr>
+<td>接口</td>
+<td>source、consumer、schema/DBC/IDL、request/sequence/timestamp、generation</td>
+</tr>
+<tr>
+<td>完成语义</td>
+<td>received、ACK、applied、device/data complete、readback、business accepted</td>
+</tr>
+<tr>
+<td>时间与质量</td>
+<td>起止点、deadline、P95/P99/最大值、freshness、容差、质量门槛</td>
+</tr>
+<tr>
+<td>异常恢复</td>
+<td>timeout、retry、idempotency、cancel、degrade、reset、旧消息、恢复出口</td>
+</tr>
+<tr>
+<td>证据</td>
+<td>日志、counter、trace、状态快照、物理输出、时钟与误差、保存位置</td>
+</tr>
+<tr>
+<td>V&amp;V</td>
+<td>verification 方法/用例、validation 场景、通过判据、回归、签署</td>
+</tr>
+</tbody></table>
+<p>Verification 回答“是否符合技术要求”，Validation 回答“在预期使用环境中是否满足真实需要”。模块单测、接口 ACK、系统端到端和用户场景确认不可互相替代。</p>
+<h2>7. 可执行验证矩阵</h2>
+<table>
+<thead>
+<tr>
+<th>用例</th>
+<th>变量/步骤</th>
+<th>必采证据</th>
+<th>通过判据</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>正常热态</td>
+<td>当前 generation 触发一次</td>
+<td>全链 request/frame/present ID</td>
+<td>business accepted 在 TBD deadline 内</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>冷启动</td>
+<td>服务未 ready 前后触发</td>
+<td>boot/VM generation、queue/replay</td>
+<td>无丢失、无旧代执行、当前意图完成</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>STR resume</td>
+<td>request 早到/晚到各一次</td>
+<td>suspend attempt、ready barrier、首帧</td>
+<td>只重放当前意图，恢复预算满足</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>VM recreate</td>
+<td>in-flight 时重建 Guest</td>
+<td>VM/device/surface generation</td>
+<td>旧资源隔离，当前状态重取</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>消息异常</td>
+<td>丢包、重复、乱序、迟到</td>
+<td>sequence、source/arrival time、cache</td>
+<td>幂等、freshness 与超时语义正确</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>单路无帧</td>
+<td>任一路输入失效</td>
+<td>per-camera frame/PTS、降级状态</td>
+<td>在 TBD 内明确降级且无假正常</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>显示阻塞</td>
+<td>consumer/present 延迟</td>
+<td>fence、queue、present/vblank</td>
+<td>超时可见、恢复有界、旧帧不冒充</td>
+<td></td>
+</tr>
+<tr>
+<td>退出竞态</td>
+<td>R 挡退出与首帧并发</td>
+<td>cancel ID、state transition</td>
+<td>取消后不显示过期场景</td>
+<td></td>
+</tr>
+<tr>
+<td>长稳与并发</td>
+<td>导航/视频/音频并发</td>
+<td>deadline、resource、相邻业务</td>
+<td>关键场景通过且无相邻回归</td>
+<td></td>
+</tr>
+<tr>
+<td>证据缺失</td>
+<td>关闭一个非关键观测点</td>
+<td>health/coverage status</td>
+<td>明确“不具备判定条件”，不误判通过</td>
+<td></td>
+</tr>
+</tbody></table>
+<h2>8. 今日可复用产物：《需求—场景—验收—证据追踪矩阵 V1》</h2>
+<p>至少建立五列追踪：<code>Need/ConOps → System Req → Architecture allocation → Interface/subsystem Req → Verification/Validation evidence</code>。每一行都必须有唯一 ID、双向链接、Owner、状态、版本和变更影响；每个 TBD 都要有关闭人和关闭条件。另附四流图、状态机、ACK 完成阶梯、异常恢复表和验证矩阵。</p>
+<h2>9. 今日独立练习</h2>
+<p>新题不附参考答案、示范作答或预设根因。</p>
+<p>场景：产品只给出一句“用户挂 R 挡后应快速看到清晰的 360 画面，异常时不能长时间黑屏”。请独立完成：</p>
+<ol>
+<li>列出至少 12 个澄清问题，覆盖用户、车辆状态、生命周期、接口、时序、质量、安全、降级和验证；</li>
+<li>写 1 条 stakeholder need、2 条 system requirements、至少 6 条派生需求；所有未知数值用 TBD 管理；</li>
+<li>画控制、数据、状态和电源四条路径，标出 Android Guest、Yocto Host、MCU、Hypervisor 和外设边界；</li>
+<li>写出完整场景：正常、早到、迟到、取消、重复、乱序、STR、VM recreate、单路无帧和显示阻塞；</li>
+<li>定义 received/ACK/applied/device complete/readback/business accepted；</li>
+<li>保留至少五个竞争假设，并为每个假设写支持证据、反证和尽量单变量的实验；</li>
+<li>完成验证矩阵和双向追踪表，区分 verification 与 validation；</li>
+<li>写出首轮牵头、触发方、直接修复方、接口/恢复策略方和验证方；未知人员/期限保持待确认。</li>
+</ol>
+<h2>10. 提交说明</h2>
+<p>本课编号 <strong>day-51</strong>。使用页面末尾“上传／提交答卷”或进入<a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html">答卷中心</a>。请提交需求分解、四流图、状态机、完成阶梯、竞争假设、验证矩阵和《需求—场景—验收—证据追踪矩阵 V1》。个人反思由你本人填写：我过去最容易把“需求”“实现方案”还是“局部 ACK”误当成系统验收？</p>
+<h2>附录：21 项 T12T 技能覆盖检查</h2>
+<p>技能来源：F:/座舱日志分析/交付物/T12T诊断技能家族-优化版/。本次先读取 <code>t12t-cockpit-diagnosis</code>、<code>t12t-log-analysis</code>、<code>t12t-platform-architecture</code>，再逐项读取其余 18 个 <code>SKILL.md</code>，已完成全部 21 项覆盖检查。</p>
+<table>
+<thead>
+<tr>
+<th>技能</th>
+<th>本次适用性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>t12t-cockpit-diagnosis</td>
+<td>适用，深入：从现象到主链、最早断点和竞争假设</td>
+</tr>
+<tr>
+<td>t12t-log-analysis</td>
+<td>适用，深入：统一时基、generation、证据分级与缺口</td>
+</tr>
+<tr>
+<td>t12t-platform-architecture</td>
+<td>适用，深入：域边界、控制/数据/状态/电源路径与观测点</td>
+</tr>
+<tr>
+<td>t12t-display-black-freeze</td>
+<td>条件适用：AVM 的 present/scanout/物理屏验收边界</td>
+</tr>
+<tr>
+<td>t12t-touch-input</td>
+<td>条件适用：输入类需求可复用场景和完成语义；本课无触摸实证</td>
+</tr>
+<tr>
+<td>t12t-avm-camera-stream</td>
+<td>适用：R 挡—四路帧—融合—送显链路；无现车实证</td>
+</tr>
+<tr>
+<td>t12t-power-sleep-str</td>
+<td>适用：冷启/STR、ready barrier 和恢复预算</td>
+</tr>
+<tr>
+<td>t12t-audio-path</td>
+<td>条件适用：音频需求可复用 zone/route/物理输出合同</td>
+</tr>
+<tr>
+<td>t12t-stability-crash-reset</td>
+<td>适用：VM/process/device generation 与分层复位</td>
+</tr>
+<tr>
+<td>t12t-performance-jank</td>
+<td>适用：deadline、P95/P99、资源并发与端到端时延</td>
+</tr>
+<tr>
+<td>t12t-ethernet-sgmii</td>
+<td>条件适用：网络链路需求须分物理、carrier、L3、服务完成</td>
+</tr>
+<tr>
+<td>t12t-wireless-phone-link</td>
+<td>条件适用：角色、L2/L3、会话与业务激活合同</td>
+</tr>
+<tr>
+<td>t12t-cross-domain-msg</td>
+<td>适用，深入：topic freshness、sequence、ACK、旧消息和幂等</td>
+</tr>
+<tr>
+<td>t12t-boot-hmi</td>
+<td>适用：启动 generation、早到请求、first frame 与 HMI ready</td>
+</tr>
+<tr>
+<td>t12t-log-storm</td>
+<td>条件适用：证据预算、轮转和可观测性不能破坏业务</td>
+</tr>
+<tr>
+<td>t12t-usb-typec-storage</td>
+<td>条件适用：设备/块/卷/App 的分层完成合同</td>
+</tr>
+<tr>
+<td>t12t-virtualization-tee</td>
+<td>适用：Guest/Host、virtqueue、共享对象和安全服务边界</td>
+</tr>
+<tr>
+<td>t12t-db-ke-forensics</td>
+<td>条件适用：异常包完整性和 build/symbol 约束应进入证据合同</td>
+</tr>
+<tr>
+<td>t12t-mcu</td>
+<td>适用：车辆事件、状态机、电源/心跳与协议字典边界</td>
+</tr>
+<tr>
+<td>t12t-tpm-triage</td>
+<td>适用，深入：需求 Owner、供证、行动项和关闭标准</td>
+</tr>
+<tr>
+<td>t12t-tpm-5y8d</td>
+<td>暂不展开：没有真实根因、发生原因和逃逸原因，不强造 5Y/8D</td>
+</tr>
+</tbody></table>
+<p>本课实际深入使用：<code>t12t-cockpit-diagnosis</code>、<code>t12t-log-analysis</code>、<code>t12t-platform-architecture</code>、<code>t12t-cross-domain-msg</code> 和 <code>t12t-tpm-triage</code>；并用 AVM、显示、启动、电源、虚拟化、稳定性与性能专项约束案例边界。关键证据缺口：现车拓扑、车型/SoC/build、DBC/IDL、AVM/显示映射、项目 deadline/质量门槛、功能安全要求、跨域时钟误差、完整实机 trace 与真实作答。缺口关闭前只提供方法和待验证合同，不宣称现车方案通过。</p>
+</article><section class="answer-panel" data-course="day-51" aria-label="Day 51 - 方案设计 I：需求分解、场景边界与系统级验收合同 答卷提交"><h3>提交本课答卷</h3><p>在 GitHub 登录后填写文字，或把图片、PDF、Word 等文件拖入“答卷正文与附件”框；点击 Submit new issue（提交）才算上传成功。答卷和附件将保存在公开的 GitHub 仓库，请只提交可公开的学习材料。</p><p><a class="answer-submit" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues/new?template=answer.yml&amp;title=%5B%E7%AD%94%E5%8D%B7%5D%5Bday-51%5D+Day+51+-+%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1+I%EF%BC%9A%E9%9C%80%E6%B1%82%E5%88%86%E8%A7%A3%E3%80%81%E5%9C%BA%E6%99%AF%E8%BE%B9%E7%95%8C%E4%B8%8E%E7%B3%BB%E7%BB%9F%E7%BA%A7%E9%AA%8C%E6%94%B6%E5%90%88%E5%90%8C&amp;lesson=day-51&amp;course=https%3A%2F%2Fqiantao18817568425-art.github.io%2FArchitecture_Learning-%2F%23day-51" target="_blank" rel="noopener">上传／提交答卷 ↗</a> <a class="answer-view" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues?q=is%3Aissue+in%3Atitle+%22%5B%E7%AD%94%E5%8D%B7%5D%5Bday-51%5D%22" target="_blank" rel="noopener">查看答卷与批改 ↗</a> <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html#day-51">归档与批改状态</a></p><p>课程编号：<code>day-51</code>。补交请在同一答卷下评论，以 <strong>[补交]</strong> 开头，并注明题号；也可编辑原答卷。每天 20:00 先检查并批改新答卷，再安排当天任务。</p></section></main><script src="../architecture/vendor/mermaid-10.9.5.min.js"></script><script>mermaid.initialize({startOnLoad:true,theme:'neutral',securityLevel:'strict'});</script></body></html>
