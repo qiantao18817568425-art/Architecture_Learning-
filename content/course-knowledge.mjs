@@ -7,6 +7,12 @@ export const courseKnowledge = {
 
 恢复按“冻结旧代 → 处置在途事务 → 重建虚拟设备 → 重建 Guest 服务 → 重取当前权威状态 → 端到端验收”推进。每次恢复携带 bootId、VM generation、device generation 和 transactionId；旧队列通知、旧 fence、旧 callback 与旧业务状态不得更新新代。只有局部恢复超时、失败或共享资源证据指向更大故障域时，才升级到设备 reset、整 VM 重建、Host/SoC reset。具体 VMID、设备直通/共享方式、看门狗阈值和恢复时限均待当前项目确认。
 
+## 模块分层、权威状态与恢复责任
+
+Day 52 把模块责任拆成策略/权威、执行、数据所有权、状态权威和恢复协调五类。每个模块责任卡记录部署域、唯一 Owner、输入/输出、前置/后置、资源、权威状态、失败模式、恢复动作、观测点和升级边界。HMI 展示状态、服务进程 Running 或命令 ACK 均不能替代资源/业务 Owner 的当前状态读回。
+
+跨 VM 或服务复位时，由恢复协调者建立新 generation 和依赖屏障；各 Owner 在新代重建资源、交换权威快照后才放行业务。旧代 callback、timeout、fence、handle、completion 和 cancel 只归档，不得推进新代状态；sequenceId 需与 producer identity、bootId/generation 组合使用。
+
 [AOSP AVF architecture](https://source.android.com/docs/core/virtualization/architecture)与[OASIS Virtio 1.3](https://docs.oasis-open.org/virtio/virtio/v1.3/virtio-v1.3.html)用于核对通用职责和设备 reset 后重新初始化的边界；它们不是本车型实现证明。`,
 
   '05': `## 课程沉淀：SOME/IP 消息成功与业务完成的边界
@@ -171,7 +177,7 @@ flowchart LR
 
 [AOSP BufferQueue 与 Gralloc](https://source.android.com/docs/core/graphics/arch-bq-gralloc)、[AOSP Synchronization framework](https://source.android.com/docs/core/graphics/sync)、[Linux DMA mapping guide](https://docs.kernel.org/core-api/dma-api-howto.html)、[Linux dma-buf](https://docs.kernel.org/driver-api/dma-buf.html)、[Linux Interconnect framework](https://docs.kernel.org/driver-api/interconnect.html)、[Linux PSI](https://docs.kernel.org/accounting/psi.html)、[Perfetto FrameTimeline](https://perfetto.dev/docs/data-sources/frametimeline)和[Perfetto GPU tracing](https://perfetto.dev/docs/data-sources/gpu)用于核对通用机制；当前车型的 allocator、IOMMU/SMMU、cache 属性、stream/VM/device ID、格式、counter、QoS、频率、阈值和恢复顺序仍需项目证据。`,
 
-  '20': `## 课程沉淀：Day 35—51 的统一关联键与旧消息规则
+  '20': `## 课程沉淀：Day 35—52 的统一关联键与旧消息规则
 
 跨音频、STR、显示、VM、Ethernet/SOME-IP 和诊断链，统一关联键至少包含 vehicle/config/build、powerCycle、Host bootId、VM generation、process incarnation、session/request/transaction/frame/incident ID、对象/音区/显示/服务实例和域内 monotonic 时间。跨域时间必须记录映射方法和误差；两事件间隔小于误差时，不只凭时间排序断言因果。
 
@@ -193,9 +199,15 @@ flowchart LR
   B -. gap or change .-> N
   G[Generation / freshness / deadline / recovery] -. constrains .-> I
 ~~~
+
+## 接口合同、完成语义与旧代隔离
+
+Day 52 的 Interface Control Table 至少覆盖身份/版本、数据语义、关联键、前置、时间/TTL、分层完成、错误分类、一致性/readback、生命周期、恢复和证据治理。每条接口明确 transport ACK、command accepted、logical completed 与 business accepted；上游成功不能外推下游、物理端点或用户结果已经成立。
+
+超时首先代表最终状态未知。固定动作是冻结 transaction 证据、查询权威状态、按相同幂等键选择继续/补偿/有限重试，超过恢复预算后降级并升级。换新 transactionId 盲重发可能有副作用的命令，会破坏因果和对账。
 `,
 
-  '23': `## 课程沉淀：Day 35—51 的通用验证闭环
+  '23': `## 课程沉淀：Day 35—52 的通用验证闭环
 
 可复用验证矩阵覆盖：正常链、边界时序、瞬态/持续故障、丢包/乱序/重复、局部服务重启、Guest/设备/Host 分层复位、旧消息重放、资源压力、证据容量/轮转、恢复失败升级和相邻业务回归。每项记录目标、前置、注入、步骤、观测点、预期、实测、原始证据链接和通过判据。
 
@@ -205,5 +217,11 @@ flowchart LR
 
 追踪矩阵至少包含 Need/ConOps、System Req、Architecture allocation、Interface/Sub-system Req、verification criteria、validation scenario 和原始 evidence。每一列保存 ID、版本、Owner、状态与变更影响，并建立双向 traceability；每一行既能从需求追到测试，也能从失败证据反查需求、场景与责任边界。
 
-Verification 回答是否满足技术规格，validation 回答在预期使用环境中是否满足真实需要。验证矩阵应覆盖正常、边界、异常、恢复、旧消息、分层复位、资源并发、证据缺失和相邻业务回归；没有实机证据时状态只能是待执行。`
+Verification 回答是否满足技术规格，validation 回答在预期使用环境中是否满足真实需要。验证矩阵应覆盖正常、边界、异常、恢复、旧消息、分层复位、资源并发、证据缺失和相邻业务回归；没有实机证据时状态只能是待执行。
+
+## 模块—接口—恢复验证矩阵
+
+验证矩阵将 module/interface/Owner、前置、注入、ACK/completed/business accepted、权威 readback、generation、恢复预算、降级、原始证据和通过判据放在同一行。正常路径之外至少覆盖：调用超时但动作可能已执行、peer reset、旧 callback/handle/fence、依赖恢复乱序、幂等重试、资源安全回收和相邻业务回归。
+
+架构关闭同时要求责任唯一、接口语义无歧义、旧代零污染、恢复有界、用户结果和权威状态一致。测试未执行、附件不可读或车型参数未确认时只能标待验证，不得写成平台事实。`
 };

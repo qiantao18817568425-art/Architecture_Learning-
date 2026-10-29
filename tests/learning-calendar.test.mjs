@@ -47,15 +47,26 @@ test('Tuesday 2026-10-27 keeps the historical Day50 assignment',()=>{
   assert.equal(day50?.assessment,'awaiting_answers');
 });
 
-test('Wednesday 2026-10-28 assigns Day51 once and prepares Thursday Day52',()=>{
+test('Wednesday 2026-10-28 records Day51 exactly once',()=>{
   const progress=JSON.parse(readFileSync(new URL('../content/learning-progress.json',import.meta.url),'utf8'));
   const day51=progress.lessons.find(x=>x.id==='day-51');
   assert.equal(scheduleForDate('2026-10-28').kind,'day');
   assert.equal(day51?.scheduledFor,'2026-10-28');
   assert.equal(day51?.firstPublishedOn,'2026-10-28');
-  assert.equal(progress.currentUnitId,'day-51');
-  assert.equal(progress.lastPublishedDay,51);
-  assert.equal(progress.lastAssignedDay,51);
-  assert.equal(progress.nextUnit?.id,'day-52');
-  assert.equal(progress.nextUnit?.scheduledFor,'2026-10-29');
+  assert.equal(progress.lessons.filter(x=>x.id==='day-51').length,1);
+});
+
+test('Thursday 2026-10-29 assigns Day52 once and prepares the Friday review',()=>{
+  const progress=JSON.parse(readFileSync(new URL('../content/learning-progress.json',import.meta.url),'utf8'));
+  const day52=progress.lessons.find(x=>x.id==='day-52');
+  assert.equal(scheduleForDate('2026-10-29').kind,'day');
+  assert.equal(day52?.scheduledFor,'2026-10-29');
+  assert.equal(day52?.firstPublishedOn,'2026-10-29');
+  assert.equal(day52?.status,'assigned');
+  assert.equal(day52?.assessment,'awaiting_answers');
+  assert.equal(progress.currentUnitId,'day-52');
+  assert.equal(progress.lastPublishedDay,52);
+  assert.equal(progress.lastAssignedDay,52);
+  assert.equal(progress.nextUnit?.kind,'friday-review');
+  assert.equal(progress.nextUnit?.scheduledFor,'2026-10-30');
 });
