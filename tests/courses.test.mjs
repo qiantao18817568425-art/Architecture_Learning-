@@ -48,3 +48,13 @@ test('repeat builds are deterministic and keep latest courses and counts', () =>
   assert.equal(stats.maxDay, progress.lastPublishedDay);
   assert.equal(stats.count, progress.legacyArchive.articleCount + progress.lessons.length);
 });
+
+test('Week16 Friday review stays independent and exposes answer workflows',()=>{
+  const markdown=read('content/lessons/week-16-friday.md');
+  for(const text of ['Day 49—52','不推进 Day 53','不附参考答案','个人反思由你本人填写','week-16-friday','答卷中心']) assert.ok(markdown.includes(text),text);
+  assert.doesNotMatch(markdown,/^#{1,6}\s*(参考答案|示范作答|预设根因)\s*[:：]?/m);
+  const html=read('docs/lessons/week-16-friday.html');
+  assert.ok(html.includes('上传／提交答卷'));
+  assert.ok(html.includes('查看答卷与批改'));
+  assert.ok(html.includes('Day 49—52'));
+});
