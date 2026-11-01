@@ -1,0 +1,487 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Week 16 - 周日整合：跨层取证、恢复设计、测试闭环与方案整合</title><style>
+    :root { color-scheme: light; font-family: "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif; color: #18212f; background: #f6f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.75; }
+    a { color: #075fbd; overflow-wrap: anywhere; }
+    code { background: #edf1f6; border-radius: 3px; padding: .08rem .28rem; }
+    pre { overflow: auto; background: #111827; color: #e5e7eb; padding: 1rem; border-radius: 6px; white-space: pre-wrap; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
+    header { border-left: 5px solid #db5a2a; padding: 12px 20px; margin-bottom: 28px; background: #fff; }
+    h1, h2, h3, h4, h5, h6 { line-height: 1.35; margin: 1.35em 0 .5em; }
+    h1 { margin: 0; font-size: 2rem; }
+    .lede { max-width: 840px; margin: .5rem 0 0; color: #4b5563; }
+    .metrics { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 26px; }
+    .metric { background: #e6eff8; border: 1px solid #bfd5ea; padding: 6px 12px; border-radius: 4px; color: #174a76; }
+    .metric strong { font-size: 1.15rem; }
+    .guide { background: #fff; border-top: 2px solid #1d8093; padding: 18px 22px; margin: 24px 0; }
+    .guide ol { margin-bottom: 0; }
+    .lesson { background: #fff; border: 1px solid #d8dee8; margin: 10px 0; }
+    summary { cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 18px; }
+    summary::-webkit-details-marker { color: #db5a2a; }
+    .lesson-title { font-weight: 700; font-size: 1.05rem; }
+    .lesson-meta { color: #52606d; font-size: .86rem; white-space: nowrap; }
+    .lesson-body { border-top: 1px solid #d8dee8; padding: 4px 22px 24px; }
+    .archive-note { color: #52606d; font-size: .92rem; border-left: 3px solid #1d8093; padding-left: 10px; }
+    .format-audit { border: 1px solid #b8d5cf; background: #f4fbf8; padding: 16px; margin: 18px 0; border-radius: 6px; }
+    .format-audit h3 { margin-top: 0; }
+    .format-audit ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+    .format-audit li { border: 1px solid #d8dee8; background: #fff; border-radius: 5px; padding: 8px; font-size: .9rem; }
+    .format-audit span { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+    .format-audit .present span { background: #dbece8; color: #126458; }
+    .format-audit .missing span { background: #f4e3cb; color: #8a4604; }
+    article h2 { font-size: 1.35rem; }
+    article h3 { font-size: 1.15rem; }
+    article h4, article h5 { font-size: 1rem; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    blockquote { margin: 1rem 0; padding: .45rem 1rem; border-left: 3px solid #1d8093; background: #f4f8fb; color: #435467; }
+    table { border-collapse: collapse; width: 100%; min-width: 32rem; font-size: .94rem; }
+    th, td { border: 1px solid #d8dee8; padding: .55rem .7rem; text-align: left; vertical-align: top; }
+    th { background: #edf4f9; }
+    .mermaid { background: #fff; color: #18212f; border: 1px solid #d8dee8; }
+    footer { margin-top: 32px; color: #52606d; font-size: .9rem; }
+    @media (max-width: 640px) { main { padding: 16px 12px 36px; } h1 { font-size: 1.55rem; } summary { align-items: flex-start; } .lesson-body { padding: 2px 14px 18px; } .format-audit ul { grid-template-columns: 1fr; } }
+  </style><style>.answer-panel{margin:22px 0;padding:18px;border:1px solid #9ab8d8;border-left:5px solid #1763a3;border-radius:8px;background:#f2f7fc}.answer-panel h3{margin-top:0}.answer-submit,.answer-view{display:inline-block;padding:10px 14px;margin:4px 8px 4px 0;border-radius:6px;background:#12578f;color:#fff;text-decoration:none}.answer-view{background:#e0ecf6;color:#153e61}.answer-panel a:focus-visible{outline:3px solid #db5a2a;outline-offset:3px}.answer-panel code{overflow-wrap:anywhere}.answer-list{padding:0;list-style:none}.answer-list li{margin:12px 0;padding:16px;background:#fff;border:1px solid #d8dee8;border-radius:6px}body{font-family:system-ui,'Microsoft YaHei',sans-serif;line-height:1.75;color:#18212f;background:#f6f8fb}main{max-width:1180px;margin:auto;padding:24px}a{overflow-wrap:anywhere}</style></head><body><main><nav><a href="../index.html#week-16-sunday">课程档案</a> · <a href="../architecture/index.html">项目架构实践</a></nav><article><h1>Week 16 — 周日整合：跨层取证、恢复设计、测试闭环与方案整合</h1>
+<p>学习日期：2026-11-01，星期日，Asia/Shanghai；Week 16。今天只整合本周实际安排的 Day 49—52，不推进 Day 53、不新增普通专题、不提前讲未来课。能力阶段仍按第二阶段“系统链路与问题分析”记录，建议用时 60 分钟。</p>
+<p>执行前已扫描仓库全部开放与关闭 Issue、全部评论及附件索引；授权学习者没有新答卷、正文编辑或本人 <code>[补交]</code> 评论。因此 Day 34—52 继续标记为待评审，材料发布不代表已经学习或掌握。本课要求你独立完成跨层取证、恢复设计、测试闭环和方案整合，不附参考答案、示范作答或预设根因，个人反思由你本人填写。</p>
+<h2>1. 整合范围与官方边界</h2>
+<table>
+<thead>
+<tr>
+<th>已安排单元</th>
+<th>今天纳入整合的稳定合同</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-49.html">Day 49：资源所有权、DMA/IOMMU 与共享缓冲</a></td>
+<td>authority、export/import、mapping、fence、generation、回收与隔离</td>
+</tr>
+<tr>
+<td><a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-50.html">Day 50：GPU、DDR 带宽预算与性能验证</a></td>
+<td>avg/peak、P95/P99/max、deadline、队列、背压与单变量实验</td>
+</tr>
+<tr>
+<td><a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-51.html">Day 51：需求分解、场景边界与系统验收</a></td>
+<td>Need/ConOps、系统需求、架构分配、V&amp;V 双向追踪</td>
+</tr>
+<tr>
+<td><a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-52.html">Day 52：模块、接口与异常恢复</a></td>
+<td>模块责任、完成阶梯、unknown 终态、拒旧与有界恢复</td>
+</tr>
+<tr>
+<td><a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/week-16-saturday.html">Week 16 周五/周六</a></td>
+<td>六流、双时间线、证据账本、竞争假设与评审门禁</td>
+</tr>
+</tbody></table>
+<p>官方资料复核日期：2026-11-01。本课不扩展新专题，只复用以下已核验边界：</p>
+<ul>
+<li><a href="https://source.android.com/docs/core/graphics/arch-bq-gralloc">AOSP BufferQueue and Gralloc</a> 与 <a href="https://source.android.com/docs/core/graphics/sync">Synchronization framework</a>：核对 producer/consumer、buffer 与 fence 的生命周期和完成边界。</li>
+<li><a href="https://docs.kernel.org/driver-api/dma-buf.html">Linux dma-buf</a>、<a href="https://docs.kernel.org/driver-api/interconnect.html">Interconnect framework</a> 与 <a href="https://docs.kernel.org/accounting/psi.html">PSI</a>：核对共享资源、avg/peak 请求与资源压力证据。</li>
+<li><a href="https://perfetto.dev/docs/data-sources/frametimeline">Perfetto FrameTimeline</a> 与 <a href="https://perfetto.dev/docs/data-sources/gpu">GPU tracing</a>：核对帧 deadline、jank 分类、GPU 阶段和平台可用 counter。</li>
+<li><a href="https://www.nasa.gov/reference/4-0-system-design-processes/">NASA System Design Processes</a>、<a href="https://www.nasa.gov/reference/6-3-interface-management/">Interface Management</a> 与 <a href="https://automotivespice.com/fileadmin/software-download/automotiveSIG_PRM_v45.pdf">Automotive SPICE ENG.3</a>：核对需求分解、接口基线、动态行为、追踪和验证准则。</li>
+</ul>
+<p>这些资料说明通用机制，不证明当前车型采用同一实现。现车车型、SoC/build、Guest/Host/Hypervisor/MCU/TBox 与物理连接、allocator/IOMMU/GPU/DDR/显示配置、IDL/DBC、业务 deadline、资源基线、恢复预算和实机 trace 均待项目确认；题中记录是教学构造。</p>
+<h2>2. 一小时任务</h2>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>任务</th>
+<th>必交输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0—8 分钟</td>
+<td>回答 5 道回顾题</td>
+<td>5 条短答，未知项标 TBD</td>
+</tr>
+<tr>
+<td>8—23 分钟</td>
+<td>重建跨层证据链</td>
+<td>六流图、双时间线、证据资格表</td>
+</tr>
+<tr>
+<td>23—38 分钟</td>
+<td>设计有界恢复</td>
+<td>恢复状态机、权限与预算表</td>
+</tr>
+<tr>
+<td>38—53 分钟</td>
+<td>建立测试闭环</td>
+<td>需求—用例—证据—判据追踪矩阵</td>
+</tr>
+<tr>
+<td>53—60 分钟</td>
+<td>形成方案评审包</td>
+<td>《STR 后 AVM 资源异常整合方案 V1》</td>
+</tr>
+</tbody></table>
+<p>回顾题：</p>
+<ol>
+<li>传输 ACK、执行 accepted、逻辑完成、可见 readback 和业务验收分别能证明什么，不能证明什么？</li>
+<li>buffer/fence/attachment 与 boot、VM、device generation 如何绑定，旧代消息如何留下接受或拒绝审计？</li>
+<li>为什么 GPU/DDR 总 counter、队列积压和局部 rebind 恢复都不能独立证明根因？</li>
+<li>timeout 后权威状态未知时，查询、重试、取消、回收和扩大复位的先后约束是什么？</li>
+<li>一条系统 requirement 怎样追踪到接口合同、资源预算、故障注入、原始证据和最终关闭判据？</li>
+</ol>
+<h2>3. 综合场景与跨层架构</h2>
+<p>沿用周六教学场景：STR resume 后 Android HMI 请求 AVM；Camera source sequence 递增，producer fence 完成，consumer acquire 间歇超出 deadline；存在旧 generation callback、未闭环 attachment、BufferQueue backlog、总 GPU/DDR counter 同窗升高、可见端点缺 current-frame readback；局部 rebind 和更大范围恢复都曾短期恢复，但第一处异常前部分日志已被轮转覆盖。</p>
+<p>你必须把控制、数据、状态、电源/复位、资源、证据六条路径放入同一 transaction/frame/generation 上，并明确 Android Guest、Yocto Host、Hypervisor、MCU/TBox 与 Camera/Display 外设边界。</p>
+<pre class="mermaid">sequenceDiagram
+  participant MCU as MCU/Power Authority
+  participant APP as Android HMI
+  participant ORC as Host Orchestrator
+  participant CAM as Camera Producer
+  participant HV as Hypervisor/Shared Resource
+  participant DISP as Display Consumer
+  participant LED as Evidence Ledger
+  MCU-&gt;&gt;ORC: resume(epoch, bootId)
+  APP-&gt;&gt;ORC: StartAVM(txId, vmGeneration)
+  ORC--&gt;&gt;APP: transport/accepted ACK
+  ORC-&gt;&gt;CAM: create current-generation stream
+  CAM-&gt;&gt;HV: buffer + producer fence + frameId
+  HV-&gt;&gt;DISP: mapped buffer + consumer wait
+  DISP--&gt;&gt;ORC: present/visible readback
+  ORC--&gt;&gt;APP: business result
+  ORC-&gt;&gt;LED: authority, state, resource, deadline evidence
+  alt timeout, reset or stale generation
+    ORC-&gt;&gt;LED: freeze evidence before recovery
+    ORC-&gt;&gt;ORC: query authority and reconcile
+    ORC--&gt;&gt;APP: explicit unknown/degraded/final result
+  end</pre>
+<p>对每条跨域边填写 <code>input → authority/state → output → observer</code>。业务时间线与资源时间线分别记录原始时间、时钟类型、共同锚点、误差、boot/VM/device generation、transactionId、frameId、bufferId、fenceId 和 attachmentId；无法校准时只保留域内顺序，不把文件行序当全局时间。</p>
+<h2>4. 跨层取证：从最后成功交接到最早断点</h2>
+<p>先建立证据资格表，不直接定根因：</p>
+<table>
+<thead>
+<tr>
+<th>证据项</th>
+<th>直接证明</th>
+<th>不能证明</th>
+<th>关联键/时间资格</th>
+<th>缺失项</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>current-generation request 与 ACK</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>source sequence / producer fence</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>import/map/attachment 生命周期</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>consumer acquire/release 与 backlog</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>GPU/DDR/CPU/IO 与 FrameTimeline</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>present 与 visible current-frame readback</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>reset/rebind/recreate 与恢复结果</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>日志轮转和未观测窗口</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>然后独立完成：</p>
+<ol>
+<li>标出最后一个被证实成功的交接、下一个预期输出和对应 observer。</li>
+<li>将断点分类为明确失败、未观测、无法关联、证据冲突或已被清理；“没有日志”不能写成“没有发生”。</li>
+<li>至少提出六个可证伪竞争假设，覆盖代际、资源生命周期、consumer 背压、GPU/DDR/调度、显示绑定/可见端点、业务验收；每个假设必须写支持、反证、缺失证据、单变量实验和否定判据。</li>
+<li>区分触发候选、直接失效、加剧因素、恢复动作和后续清理；恢复成功只能说明覆盖范围，不能单独证明最初根因。</li>
+<li>给出当前置信度和证据上限，不能把“首轮供证域”写成“最终根因域”。</li>
+</ol>
+<h2>5. 恢复设计：证据冻结、对账、局部恢复与降级</h2>
+<pre class="mermaid">stateDiagram-v2
+  [*] --&gt; Observing
+  Observing --&gt; Active: current generation + authority ready
+  Active --&gt; Verifying: accepted / frame in flight
+  Verifying --&gt; Completed: visible current-frame + business criteria
+  Active --&gt; EvidenceFrozen: timeout / reset / stale callback
+  Verifying --&gt; EvidenceFrozen: deadline miss / unknown state
+  EvidenceFrozen --&gt; Reconciling: snapshot IDs, queues, ownership, clocks
+  Reconciling --&gt; Active: authority proves resumable current state
+  Reconciling --&gt; Rebinding: interface or resource binding invalid
+  Rebinding --&gt; Verifying: new binding readback
+  Reconciling --&gt; LocalReset: bounded local recovery approved
+  LocalReset --&gt; Verifying: new generation and clean ownership
+  Reconciling --&gt; WiderRecovery: local budget exhausted
+  WiderRecovery --&gt; Verifying: dependencies rebuilt and audited
+  WiderRecovery --&gt; Degraded: deadline or safety budget exhausted
+  Degraded --&gt; [*]: explicit user-visible terminal result</pre>
+<p>为查询权威、拒绝旧代、同幂等键有限重试、局部 rebind、单服务重建、device reset、VM recreate 和降级分别填写：</p>
+<ul>
+<li>触发条件与执行 Owner；</li>
+<li>前置 authority readback、资源所有权和幂等条件；</li>
+<li>总 deadline、单步 timeout、次数/时间预算与复位后是否续算；</li>
+<li>影响面、不可逆风险、证据损失和相邻业务；</li>
+<li>成功 readback、失败出口与对用户可见的终态；</li>
+<li>旧 callback/fence/handle/timeout/cancel 的隔离和审计。</li>
+</ul>
+<p>禁止把新 transactionId 盲重试当恢复；attachment 所有权未知时禁止重复释放或复用；扩大复位前先冻结证据，并确保恢复动作不会越过项目授权和安全边界。</p>
+<h2>6. 测试闭环：需求、故障、证据与回归</h2>
+<table>
+<thead>
+<tr>
+<th>需求/风险</th>
+<th>场景与单变量注入</th>
+<th>必采原始证据</th>
+<th>通过/失败判据</th>
+<th>恢复/退出</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>正常冷启与 STR 首帧</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>ACK 与业务完成语义</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>旧 callback/fence/handle</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>consumer 阻塞与背压</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>GPU/DDR/CPU/IO 并发</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>timeout、迟到完成与取消</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>服务/device/VM 分层复位</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>资源回收失败与所有权未知</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>日志轮转/证据缺失</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>相邻显示、导航、音频业务</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>连续 STR 与长稳压力</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>待执行</td>
+</tr>
+</tbody></table>
+<p>每一行必须回链唯一 requirementId、interface/resource contract、testId、artifact URI/hash、环境版本和执行结论。未执行保持“待执行”；没有原始证据不得写“通过”。破坏性故障注入只在获得项目授权、具备恢复条件的环境执行。</p>
+<h2>7. 方案整合与评审门禁</h2>
+<p>提交《STR 后 AVM 资源异常整合方案 V1》，至少包含：</p>
+<ol>
+<li>现象、影响、适用/不适用范围、车型/SoC/build 与待确认项；</li>
+<li>Guest/Host/Hypervisor/MCU/TBox/外设边界及六流架构图；</li>
+<li>模块责任卡、三条关键接口的十一项合同、资源生命周期与预算；</li>
+<li>ACK → accepted → logical complete → visible readback → business accepted 完成阶梯；</li>
+<li>业务/资源双时间线、证据资格表、最早可证实断点与六个竞争假设；</li>
+<li>证据冻结、对账、拒旧、幂等重试、局部/扩大恢复、降级状态机；</li>
+<li>需求—用例—证据—判据—结果双向追踪矩阵；</li>
+<li>安全、性能、连续性、资源、运维、证据完整性与变更风险；</li>
+<li>TPM 闭环表：首轮牵头、触发候选、直接修复、接口/资源/恢复策略、验证责任和升级条件；</li>
+<li>200—300 字评审结论：通过/有条件通过/拒绝、证据上限、未关闭风险、Owner 与关闭证据。</li>
+</ol>
+<p>评审门禁：</p>
+<ul>
+<li>架构边界、权威状态、接口完成语义和资源所有权能被同一版本基线核对；</li>
+<li>正常、边界、故障、恢复、旧代、证据丢失、相邻业务和长稳场景均有可执行判据；</li>
+<li>恢复半径不大于证据支持范围，扩大动作有授权、预算、证据保护和退出路径；</li>
+<li>所有结论可追到原始工件；未观测、假设和项目待确认项没有被改写成平台事实。</li>
+</ul>
+<p>个人反思由你本人填写：</p>
+<ul>
+<li>哪个跨层交接最容易被我跳过，导致过早定责？</li>
+<li>哪个恢复动作的半径大于当前证据支持范围？</li>
+<li>哪个“通过判据”其实只验证了局部 ACK，没有验证用户可见结果？</li>
+<li>如果只能补三个观测点，我会放在哪里，各自关闭哪个关键不确定性？</li>
+</ul>
+<h2>8. TPM 总结模板</h2>
+<p>请用一段话向研发或管理层说明：问题位于哪条架构链的哪个待证交接，当前证据能证明什么、不能证明什么；候选触发、直接失效、加剧因素和恢复动作如何区分；首轮供证、直接修复、接口/恢复策略与验证责任分别落在哪个域；方案将如何通过正常、异常恢复和相邻业务回归关闭风险。人员与期限未知时保持 TBD。</p>
+<h2>9. 提交说明</h2>
+<p>本课编号 <strong>week-16-sunday</strong>。请提交 5 道短答、六流图、双时间线、证据资格表、竞争假设、恢复状态图、验证追踪矩阵、《STR 后 AVM 资源异常整合方案 V1》、TPM 总结和个人反思。</p>
+<p>使用页面末尾“上传／提交答卷”，或进入<a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html">答卷中心</a>。答卷、附件和批改公开，请只提交可公开且已脱敏的材料。编辑原答卷或本人以 <code>[补交]</code> 开头评论会触发新版本评审。</p>
+<h2>附录：21 项 T12T 技能覆盖检查</h2>
+<p>技能来源：<code>F:/座舱日志分析/交付物/T12T诊断技能家族-优化版/</code>。本次已读取全部 21 个 <code>SKILL.md</code> 并完成适用性检查。</p>
+<table>
+<thead>
+<tr>
+<th>技能</th>
+<th>本次判断</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>t12t-cockpit-diagnosis</td>
+<td>适用，深入：主链、最早断点、证据等级与竞争假设</td>
+</tr>
+<tr>
+<td>t12t-log-analysis</td>
+<td>适用，深入：跨域时间、代际、直接失效/触发/加剧/清理边界</td>
+</tr>
+<tr>
+<td>t12t-platform-architecture</td>
+<td>适用，深入：Guest/Host/Hypervisor/MCU/TBox/外设边界与六流</td>
+</tr>
+<tr>
+<td>t12t-display-black-freeze</td>
+<td>适用：present、scanout、可见端点与 current-frame 语义</td>
+</tr>
+<tr>
+<td>t12t-touch-input</td>
+<td>材料不足：只列相邻业务回归，无触摸原始证据</td>
+</tr>
+<tr>
+<td>t12t-avm-camera-stream</td>
+<td>适用：逐路 source、buffer、首帧、可见画面与拆流边界</td>
+</tr>
+<tr>
+<td>t12t-power-sleep-str</td>
+<td>适用，深入：STR barrier、epoch、恢复顺序和长稳验证</td>
+</tr>
+<tr>
+<td>t12t-audio-path</td>
+<td>条件适用：共享资源和相邻业务回归，无音频故障证据</td>
+</tr>
+<tr>
+<td>t12t-stability-crash-reset</td>
+<td>适用，深入：服务/device/VM/SoC 分层复位和恢复半径</td>
+</tr>
+<tr>
+<td>t12t-performance-jank</td>
+<td>适用，深入：deadline、队列、尾时延、资源压力和单变量实验</td>
+</tr>
+<tr>
+<td>t12t-ethernet-sgmii</td>
+<td>材料不足：无 PHY/carrier/IP 证据</td>
+</tr>
+<tr>
+<td>t12t-wireless-phone-link</td>
+<td>材料不足：无无线或手机互联证据</td>
+</tr>
+<tr>
+<td>t12t-cross-domain-msg</td>
+<td>适用，深入：sequence、freshness、ACK/readback、unknown 与拒旧</td>
+</tr>
+<tr>
+<td>t12t-boot-hmi</td>
+<td>适用：早到请求、依赖就绪、replay 与 current 首帧</td>
+</tr>
+<tr>
+<td>t12t-log-storm</td>
+<td>条件适用：轮转覆盖和证据留存，无日志速率实证</td>
+</tr>
+<tr>
+<td>t12t-usb-typec-storage</td>
+<td>不适用：无 USB/块设备/卷生命周期证据</td>
+</tr>
+<tr>
+<td>t12t-virtualization-tee</td>
+<td>适用，深入：VM generation、共享资源、旧代隔离和重建边界</td>
+</tr>
+<tr>
+<td>t12t-db-ke-forensics</td>
+<td>条件适用：出现 fatal/reset 才进入固定八步；当前无异常包</td>
+</tr>
+<tr>
+<td>t12t-mcu</td>
+<td>条件适用：电源/车辆意图源和 epoch，无协议字典及实机日志</td>
+</tr>
+<tr>
+<td>t12t-tpm-triage</td>
+<td>适用，深入：首轮牵头、供证、修复、策略与验证闭环</td>
+</tr>
+<tr>
+<td>t12t-tpm-5y8d</td>
+<td>暂不展开：无确认根因、逃逸原因和修复验证，不强造 5Y/8D</td>
+</tr>
+</tbody></table>
+<p>实际深入使用的平台架构、日志证据、电源/STR、稳定性复位、虚拟化、性能、跨域消息与 TPM 分责参考手册共同约束本课。关键缺口仍是现车版本与拓扑、协议字典、资源基线、完整实机 trace、故障注入授权和学习者真实作答；补齐前不能宣布现车根因、验证通过或个人掌握。</p>
+</article><section class="answer-panel" data-course="week-16-sunday" aria-label="Week 16 - 周日整合：跨层取证、恢复设计、测试闭环与方案整合 答卷提交"><h3>提交本课答卷</h3><p>在 GitHub 登录后填写文字，或把图片、PDF、Word 等文件拖入“答卷正文与附件”框；点击 Submit new issue（提交）才算上传成功。答卷和附件将保存在公开的 GitHub 仓库，请只提交可公开的学习材料。</p><p><a class="answer-submit" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues/new?template=answer.yml&amp;title=%5B%E7%AD%94%E5%8D%B7%5D%5Bweek-16-sunday%5D+Week+16+-+%E5%91%A8%E6%97%A5%E6%95%B4%E5%90%88%EF%BC%9A%E8%B7%A8%E5%B1%82%E5%8F%96%E8%AF%81%E3%80%81%E6%81%A2%E5%A4%8D%E8%AE%BE%E8%AE%A1%E3%80%81%E6%B5%8B%E8%AF%95%E9%97%AD%E7%8E%AF%E4%B8%8E%E6%96%B9%E6%A1%88%E6%95%B4%E5%90%88&amp;lesson=week-16-sunday&amp;course=https%3A%2F%2Fqiantao18817568425-art.github.io%2FArchitecture_Learning-%2F%23week-16-sunday" target="_blank" rel="noopener">上传／提交答卷 ↗</a> <a class="answer-view" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues?q=is%3Aissue+in%3Atitle+%22%5B%E7%AD%94%E5%8D%B7%5D%5Bweek-16-sunday%5D%22" target="_blank" rel="noopener">查看答卷与批改 ↗</a> <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html#week-16-sunday">归档与批改状态</a></p><p>课程编号：<code>week-16-sunday</code>。补交请在同一答卷下评论，以 <strong>[补交]</strong> 开头，并注明题号；也可编辑原答卷。每天 20:00 先检查并批改新答卷，再安排当天任务。</p></section></main><script src="../architecture/vendor/mermaid-10.9.5.min.js"></script><script>mermaid.initialize({startOnLoad:true,theme:'neutral',securityLevel:'strict'});</script></body></html>
