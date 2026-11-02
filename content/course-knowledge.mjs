@@ -177,7 +177,7 @@ flowchart LR
 
 [AOSP BufferQueue 与 Gralloc](https://source.android.com/docs/core/graphics/arch-bq-gralloc)、[AOSP Synchronization framework](https://source.android.com/docs/core/graphics/sync)、[Linux DMA mapping guide](https://docs.kernel.org/core-api/dma-api-howto.html)、[Linux dma-buf](https://docs.kernel.org/driver-api/dma-buf.html)、[Linux Interconnect framework](https://docs.kernel.org/driver-api/interconnect.html)、[Linux PSI](https://docs.kernel.org/accounting/psi.html)、[Perfetto FrameTimeline](https://perfetto.dev/docs/data-sources/frametimeline)和[Perfetto GPU tracing](https://perfetto.dev/docs/data-sources/gpu)用于核对通用机制；当前车型的 allocator、IOMMU/SMMU、cache 属性、stream/VM/device ID、格式、counter、QoS、频率、阈值和恢复顺序仍需项目证据。`,
 
-  '20': `## 课程沉淀：Day 35—52 的统一关联键与旧消息规则
+  '20': `## 课程沉淀：Day 35—53 的统一关联键与旧消息规则
 
 跨音频、STR、显示、VM、Ethernet/SOME-IP 和诊断链，统一关联键至少包含 vehicle/config/build、powerCycle、Host bootId、VM generation、process incarnation、session/request/transaction/frame/incident ID、对象/音区/显示/服务实例和域内 monotonic 时间。跨域时间必须记录映射方法和误差；两事件间隔小于误差时，不只凭时间排序断言因果。
 
@@ -205,9 +205,19 @@ flowchart LR
 Day 52 的 Interface Control Table 至少覆盖身份/版本、数据语义、关联键、前置、时间/TTL、分层完成、错误分类、一致性/readback、生命周期、恢复和证据治理。每条接口明确 transport ACK、command accepted、logical completed 与 business accepted；上游成功不能外推下游、物理端点或用户结果已经成立。
 
 超时首先代表最终状态未知。固定动作是冻结 transaction 证据、查询权威状态、按相同幂等键选择继续/补偿/有限重试，超过恢复预算后降级并升级。换新 transactionId 盲重发可能有副作用的命令，会破坏因果和对账。
+
+## A/B 方案权衡、风险与决策记录
+
+关联课程：Day 53。架构权衡先确认决策上下文、范围、需求、硬约束、备选和决策权主体。安全/法规、必须功能、资源上限、接口兼容、恢复终态与证据留存属于硬门槛；未通过的方案不能用其他高分抵消。通过门槛后，才按预先定义的客观量表比较性能、成本、进度、复杂度、可维护性、故障隔离、可观测性与扩展性。
+
+加权评分必须分开记录 criterion weight、option score 与 evidence confidence。权重由有权主体批准，评分保存数据来源、版本、环境、样本、模型、误差和 artifact；证据薄弱时用区间或 TBD，不制造精确单点。结论至少经过权重、评分区间和关键假设的敏感性分析；若合理变化会使推荐翻转，应先收集高价值区分证据或由决策权主体明确接受不确定性。
+
+风险写成“导致性能下降的场景—可能性—后果”三元组，并记录触发信号、缓解、contingency、残余风险和接受人。推荐、最终决定和配置基线是三个不同里程碑：技术团队提出建议，决策权主体记录决定与理由，接口/需求/测试进入变更控制后才算基线生效。决策记录还应保存未选方案、后果、rollout/rollback、验证、过期条件和 reopen trigger。
+
+[NASA Decision Analysis](https://www.nasa.gov/reference/6-8-decision-analysis/)、[Design Solution Definition](https://www.nasa.gov/reference/4-4-design-solution-definition/)和[Technical Risk Management](https://www.nasa.gov/reference/6-4-technical-risk-management/)用于核对通用方法；当前项目的硬门槛、权重、风险概率、成本和批准权仍待项目确认。
 `,
 
-  '23': `## 课程沉淀：Day 35—52 的通用验证闭环
+  '23': `## 课程沉淀：Day 35—53 的通用验证闭环
 
 可复用验证矩阵覆盖：正常链、边界时序、瞬态/持续故障、丢包/乱序/重复、局部服务重启、Guest/设备/Host 分层复位、旧消息重放、资源压力、证据容量/轮转、恢复失败升级和相邻业务回归。每项记录目标、前置、注入、步骤、观测点、预期、实测、原始证据链接和通过判据。
 
@@ -223,5 +233,11 @@ Verification 回答是否满足技术规格，validation 回答在预期使用�
 
 验证矩阵将 module/interface/Owner、前置、注入、ACK/completed/business accepted、权威 readback、generation、恢复预算、降级、原始证据和通过判据放在同一行。正常路径之外至少覆盖：调用超时但动作可能已执行、peer reset、旧 callback/handle/fence、依赖恢复乱序、幂等重试、资源安全回收和相邻业务回归。
 
-架构关闭同时要求责任唯一、接口语义无歧义、旧代零污染、恢复有界、用户结果和权威状态一致。测试未执行、附件不可读或车型参数未确认时只能标待验证，不得写成平台事实。`
+架构关闭同时要求责任唯一、接口语义无歧义、旧代零污染、恢复有界、用户结果和权威状态一致。测试未执行、附件不可读或车型参数未确认时只能标待验证，不得写成平台事实。
+
+## 方案权衡验证与决策闭环
+
+关联课程：Day 53。对比试验必须让 A/B 在同一硬件、软件、负载、注入、采集与判据下运行，并把 requirement/criterion ID、option/version、testId、artifact URI/hash、环境与结论连接起来。正常、边界、故障、恢复、旧代消息、资源未知终态、证据丢失、版本演进、相邻业务和长稳场景均需覆盖。
+
+方案得分不能替代系统验证。先证明硬门槛，再用原始证据支撑增强准则；未执行项保持待执行。若敏感性分析显示推荐会因关键缺失证据翻转，验证计划应优先收集能区分方案的证据。决策生效后仍需监控触发阈值、残余风险和假设，出现验证失败、接口/车型变化、风险越限或新证据时重新打开决策。`
 };

@@ -78,3 +78,13 @@ test('Week16 Sunday integration stays independent and exposes answer workflows',
   assert.ok(html.includes('查看答卷与批改'));
   assert.ok(html.includes('Day 49—52'));
 });
+
+test('Day53 trade study is independent, evidence bounded and exposes answer workflows',()=>{
+  const markdown=read('content/lessons/day-53.md');
+  for(const text of ['A/B 方案权衡','硬门槛','敏感性分析','风险三元组','决策记录','ACK','业务完成','旧消息','待项目确认','day-53','答卷中心']) assert.ok(markdown.includes(text),text);
+  assert.equal((markdown.match(/^~~~mermaid\s*$/gm)||[]).length,2);
+  const html=read('docs/lessons/day-53.html');
+  assert.ok(html.includes('上传／提交答卷'));
+  assert.ok(html.includes('查看答卷与批改'));
+  assert.ok(html.includes('NASA'));
+});

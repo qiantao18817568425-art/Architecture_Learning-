@@ -34,10 +34,10 @@ test('full text search includes interface names inside code blocks and beginner 
  assert.ok(index.some(x=>x.url==='02.html#beginner-guide'&&x.text.includes('物理 CPU')),'beginner guide is searchable');
 });
 
-test('Day35 through Day52 contribute reusable knowledge and reverse links to architecture chapters',()=>{
+test('Day35 through Day53 contribute reusable knowledge and reverse links to architecture chapters',()=>{
  const data=JSON.parse(read('content/architecture.json'));
- const mapped=data.days.filter(x=>x.day>=35&&x.day<=52);
- assert.deepEqual(mapped.map(x=>x.day),[35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52]);
+ const mapped=data.days.filter(x=>x.day>=35&&x.day<=53);
+ assert.deepEqual(mapped.map(x=>x.day),[35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53]);
  assert.equal(new Set(data.days.map(x=>x.day)).size,data.days.length,'course mappings must stay unique');
 
  const expectations=[
@@ -48,8 +48,8 @@ test('Day35 through Day52 contribute reusable knowledge and reverse links to arc
   ['13.html',['Day 43','Day 44','Day 46','Ethernet / SOME-IP 的链路、服务、会话与数据新鲜度','DoIP Routing Activation']],
   ['15.html',['Day 45','Day 46','Health signal → event → qualification → DTC → snapshot → storage → tester','健康事件—DTC 证据合同','DoIP ACK 只证明诊断消息被 DoIP 节点接受处理']],
   ['19.html',['Day 49','Day 50','共享缓冲、DMA/IOMMU 与资源生命周期合同','GPU、DDR 带宽预算、拥塞与帧截止期合同','ProducerWriting','Quarantined','avg_bw','peak_bw','FrameTimeline','PSI']],
-  ['20.html',['Day 51','Day 52','需求分解、场景边界与系统级验收合同','接口合同、完成语义与旧代隔离','business accepted','generation','TBD']],
-  ['23.html',['Day 51','Day 52','需求—场景—验收—证据追踪矩阵','模块—接口—恢复验证矩阵','verification','validation','traceability']]
+  ['20.html',['Day 51','Day 52','Day 53','需求分解、场景边界与系统级验收合同','接口合同、完成语义与旧代隔离','A/B 方案权衡、风险与决策记录','敏感性分析','business accepted','generation','TBD']],
+  ['23.html',['Day 51','Day 52','Day 53','需求—场景—验收—证据追踪矩阵','模块—接口—恢复验证矩阵','方案权衡验证与决策闭环','verification','validation','traceability']]
  ];
  for(const [page,texts] of expectations){
   const html=read(`docs/architecture/${page}`);
@@ -64,6 +64,6 @@ test('Day35 through Day52 contribute reusable knowledge and reverse links to arc
 
 test('knowledge home exposes the latest course integration entry',()=>{
  const home=read('docs/architecture/index.html');
- assert.ok(home.includes('Day 35—52 课程知识沉淀'));
- assert.ok(home.includes('20.html#接口合同完成语义与旧代隔离'));
+ assert.ok(home.includes('Day 35—53 课程知识沉淀'));
+ assert.ok(home.includes('20.html#ab-方案权衡风险与决策记录'));
 });
