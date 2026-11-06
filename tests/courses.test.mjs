@@ -35,7 +35,7 @@ test('every lesson closes Mermaid fences and renders each latest diagram as its 
     assert.equal((markdown.match(/^~~~mermaid\s*$/gm) || []).length, (markdown.match(/^~~~\s*$/gm) || []).length, `${lesson.id} Mermaid fences`);
   }
   const latest = read(`docs/lessons/day-${progress.lastPublishedDay}.html`);
-  assert.equal((latest.match(/class="mermaid"/g) || []).length, 2);
+  assert.ok((latest.match(/class="mermaid"/g) || []).length >= 2);
   assert.doesNotMatch(latest, /~~~mermaid|~~\+/);
 });
 
@@ -87,4 +87,26 @@ test('Day53 trade study is independent, evidence bounded and exposes answer work
   assert.ok(html.includes('上传／提交答卷'));
   assert.ok(html.includes('查看答卷与批改'));
   assert.ok(html.includes('NASA'));
+});
+
+for(const [id,texts,minDiagrams] of [
+  ['day-54',['可观测性与验证设计','OpenTelemetry','business accepted','待项目确认','答卷中心'],3],
+  ['day-55',['评审基线','场景走查','证据准入','待项目确认','答卷中心'],2],
+  ['day-56',['变更影响','发布门禁','rollback','风险','答卷中心'],3]
+]) test(`${id} is independently publishable and evidence bounded`,()=>{
+  const markdown=read(`content/lessons/${id}.md`);
+  for(const text of texts) assert.ok(markdown.includes(text),`${id} contains ${text}`);
+  assert.ok((markdown.match(/^~~~mermaid\s*$/gm)||[]).length>=minDiagrams,`${id} diagrams`);
+  const html=read(`docs/lessons/${id}.html`);
+  assert.ok(html.includes('上传／提交答卷'));
+  assert.ok(html.includes('查看答卷与批改'));
+});
+
+test('Week17 Friday review covers only Day53 through Day56 and does not advance Day57',()=>{
+  const markdown=read('content/lessons/week-17-friday.md');
+  for(const text of ['Day 53—56','不推进 Day 57','不附参考答案','个人反思由你本人填写','week-17-friday','答卷中心']) assert.ok(markdown.includes(text),text);
+  assert.doesNotMatch(markdown,/^#{1,6}\s*(参考答案|示范作答|预设根因)\s*[:：]?/m);
+  const html=read('docs/lessons/week-17-friday.html');
+  assert.ok(html.includes('上传／提交答卷'));
+  assert.ok(html.includes('查看答卷与批改'));
 });

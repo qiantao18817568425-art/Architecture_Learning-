@@ -177,7 +177,7 @@ flowchart LR
 
 [AOSP BufferQueue 与 Gralloc](https://source.android.com/docs/core/graphics/arch-bq-gralloc)、[AOSP Synchronization framework](https://source.android.com/docs/core/graphics/sync)、[Linux DMA mapping guide](https://docs.kernel.org/core-api/dma-api-howto.html)、[Linux dma-buf](https://docs.kernel.org/driver-api/dma-buf.html)、[Linux Interconnect framework](https://docs.kernel.org/driver-api/interconnect.html)、[Linux PSI](https://docs.kernel.org/accounting/psi.html)、[Perfetto FrameTimeline](https://perfetto.dev/docs/data-sources/frametimeline)和[Perfetto GPU tracing](https://perfetto.dev/docs/data-sources/gpu)用于核对通用机制；当前车型的 allocator、IOMMU/SMMU、cache 属性、stream/VM/device ID、格式、counter、QoS、频率、阈值和恢复顺序仍需项目证据。`,
 
-  '20': `## 课程沉淀：Day 35—53 的统一关联键与旧消息规则
+  '20': `## 课程沉淀：Day 35—56 的统一关联键与旧消息规则
 
 跨音频、STR、显示、VM、Ethernet/SOME-IP 和诊断链，统一关联键至少包含 vehicle/config/build、powerCycle、Host bootId、VM generation、process incarnation、session/request/transaction/frame/incident ID、对象/音区/显示/服务实例和域内 monotonic 时间。跨域时间必须记录映射方法和误差；两事件间隔小于误差时，不只凭时间排序断言因果。
 
@@ -215,9 +215,29 @@ Day 52 的 Interface Control Table 至少覆盖身份/版本、数据语义、�
 风险写成“导致性能下降的场景—可能性—后果”三元组，并记录触发信号、缓解、contingency、残余风险和接受人。推荐、最终决定和配置基线是三个不同里程碑：技术团队提出建议，决策权主体记录决定与理由，接口/需求/测试进入变更控制后才算基线生效。决策记录还应保存未选方案、后果、rollout/rollback、验证、过期条件和 reopen trigger。
 
 [NASA Decision Analysis](https://www.nasa.gov/reference/6-8-decision-analysis/)、[Design Solution Definition](https://www.nasa.gov/reference/4-4-design-solution-definition/)和[Technical Risk Management](https://www.nasa.gov/reference/6-4-technical-risk-management/)用于核对通用方法；当前项目的硬门槛、权重、风险概率、成本和批准权仍待项目确认。
+
+## 可观测性与证据合同
+
+关联课程：Day 54。可观测性不是“多打日志”，而是让一次业务能跨 Android Guest、Yocto Host、Hypervisor、MCU/TBox 与外设边界被关联、解释和复核。每个事件至少携带 signal/schema version、domain/process、boot/VM/process generation、incident/session/transaction/frame ID、域内单调时间、时间映射误差、状态前后值、结果阶段、错误分类和原始 artifact 指针。trace、metric 与 log 互补：trace 解释一次请求经过哪里，metric 解释总体是否退化，log 保存离散状态与诊断上下文。
+
+收到请求、transport ACK、local applied、downstream observable、权威 readback 与 business accepted 必须分层；超时只说明观测窗口内未取得所需完成证据。复位、重连或 schema 变化后，应以 generation 和版本拒绝旧事件，保留原始 deadline，并在证据缺失时标记 unknown，而不是用“恢复成功”倒推根因。
+
+## 评审基线、发现项与证据准入
+
+关联课程：Day 55。架构评审的输入基线至少冻结 requirement、场景、架构版本、接口/状态/恢复合同、风险、验证矩阵和待确认项。场景走查沿控制、数据、状态、电源和证据路径逐接口询问输入、状态、输出、完成语义、超时与复位；评审 finding 必须有 ID、事实/假设边界、影响、Owner、目标证据、关闭判据和配置版本。会议纪要或口头同意不等于设计关闭。
+
+证据准入要求来源、版本、适用场景、采集方法、时间基准、完整性、可重复性和 artifact URI/hash 可复核。构造案例、未确认车型参数和未执行测试只能作为假设或待办，不能进入平台事实基线。
+
+## 变更影响、风险关闭与发布门禁
+
+关联课程：Day 56。变更影响分析从受控基线出发，追踪 requirement、接口、状态机、依赖、资源、诊断、验证和回滚项。发布门禁区分已修复、已验证、已接受残余风险和临时豁免；每项都要绑定版本、证据、批准角色、有效期与 reopen 条件。混合版本、灰度失败、回滚失败、旧消息和证据丢失必须进入发布前场景，而不是只验证新版本正常路径。
+
+发布、回滚和恢复是三个不同承诺。rollout 成功需当前代业务结果与权威状态一致；rollback 成功还需兼容旧数据/配置、资源安全释放、相邻业务回归和诊断可追溯。当前项目的门禁阈值、批准权限、灰度比例和恢复预算仍待项目确认。
+
+[OpenTelemetry signals](https://opentelemetry.io/docs/concepts/signals/)、[OpenTelemetry semantic conventions](https://opentelemetry.io/docs/concepts/semantic-conventions/)、[NASA Product Verification](https://www.nasa.gov/reference/5-3-product-verification/)、[NASA Technical Assessment](https://www.nasa.gov/reference/6-7-technical-assessment/)、[NASA Configuration Management](https://www.nasa.gov/reference/6-5-configuration-management/)和[NASA Technical Risk Management](https://www.nasa.gov/reference/6-4-technical-risk-management/)用于核对通用机制；OEM 流程与现车数值须以当前项目证据为准。
 `,
 
-  '23': `## 课程沉淀：Day 35—53 的通用验证闭环
+  '23': `## 课程沉淀：Day 35—56 的通用验证闭环
 
 可复用验证矩阵覆盖：正常链、边界时序、瞬态/持续故障、丢包/乱序/重复、局部服务重启、Guest/设备/Host 分层复位、旧消息重放、资源压力、证据容量/轮转、恢复失败升级和相邻业务回归。每项记录目标、前置、注入、步骤、观测点、预期、实测、原始证据链接和通过判据。
 
@@ -239,5 +259,15 @@ Verification 回答是否满足技术规格，validation 回答在预期使用�
 
 关联课程：Day 53。对比试验必须让 A/B 在同一硬件、软件、负载、注入、采集与判据下运行，并把 requirement/criterion ID、option/version、testId、artifact URI/hash、环境与结论连接起来。正常、边界、故障、恢复、旧代消息、资源未知终态、证据丢失、版本演进、相邻业务和长稳场景均需覆盖。
 
-方案得分不能替代系统验证。先证明硬门槛，再用原始证据支撑增强准则；未执行项保持待执行。若敏感性分析显示推荐会因关键缺失证据翻转，验证计划应优先收集能区分方案的证据。决策生效后仍需监控触发阈值、残余风险和假设，出现验证失败、接口/车型变化、风险越限或新证据时重新打开决策。`
+方案得分不能替代系统验证。先证明硬门槛，再用原始证据支撑增强准则；未执行项保持待执行。若敏感性分析显示推荐会因关键缺失证据翻转，验证计划应优先收集能区分方案的证据。决策生效后仍需监控触发阈值、残余风险和假设，出现验证失败、接口/车型变化、风险越限或新证据时重新打开决策。
+
+## 可观测性—验证证据闭环
+
+关联课程：Day 54。验证设计先为 requirement/scenario 定义 verification method、注入、观测点、时间与 generation 关联、预期阶段、原始证据和通过判据，再决定采集哪些 traces、metrics、logs 与状态快照。证据合同应能回答最早可证实断点、此前触发、加剧因素和后续清理；“没有看到”只有在采集范围、容量、轮转与时钟可靠时才可转化为否定证据。
+
+## 评审与发布证据门禁
+
+关联课程：Day 55—56。评审矩阵把场景、架构节点/接口、关键问题、所需证据、首轮牵头、直接修复方、接口/恢复策略方和验证方放在同一行。finding 只有在对应版本的可读证据满足关闭判据、回归范围完成且残余风险被有权主体接受后才能关闭。
+
+发布验证至少覆盖正常、边界、异常恢复、混合版本、旧代隔离、rollback、共享资源和相邻业务；发布失败与回滚失败分别定义安全终态和升级条件。豁免不是通过：必须有原因、影响、补偿措施、Owner、到期日、监控阈值和重新打开条件。`
 };

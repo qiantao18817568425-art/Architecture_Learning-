@@ -1,0 +1,434 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Day 54 - 方案设计 IV：可观测性与验证设计</title><style>
+    :root { color-scheme: light; font-family: "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif; color: #18212f; background: #f6f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.75; }
+    a { color: #075fbd; overflow-wrap: anywhere; }
+    code { background: #edf1f6; border-radius: 3px; padding: .08rem .28rem; }
+    pre { overflow: auto; background: #111827; color: #e5e7eb; padding: 1rem; border-radius: 6px; white-space: pre-wrap; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
+    header { border-left: 5px solid #db5a2a; padding: 12px 20px; margin-bottom: 28px; background: #fff; }
+    h1, h2, h3, h4, h5, h6 { line-height: 1.35; margin: 1.35em 0 .5em; }
+    h1 { margin: 0; font-size: 2rem; }
+    .lede { max-width: 840px; margin: .5rem 0 0; color: #4b5563; }
+    .metrics { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 26px; }
+    .metric { background: #e6eff8; border: 1px solid #bfd5ea; padding: 6px 12px; border-radius: 4px; color: #174a76; }
+    .metric strong { font-size: 1.15rem; }
+    .guide { background: #fff; border-top: 2px solid #1d8093; padding: 18px 22px; margin: 24px 0; }
+    .guide ol { margin-bottom: 0; }
+    .lesson { background: #fff; border: 1px solid #d8dee8; margin: 10px 0; }
+    summary { cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 18px; }
+    summary::-webkit-details-marker { color: #db5a2a; }
+    .lesson-title { font-weight: 700; font-size: 1.05rem; }
+    .lesson-meta { color: #52606d; font-size: .86rem; white-space: nowrap; }
+    .lesson-body { border-top: 1px solid #d8dee8; padding: 4px 22px 24px; }
+    .archive-note { color: #52606d; font-size: .92rem; border-left: 3px solid #1d8093; padding-left: 10px; }
+    .format-audit { border: 1px solid #b8d5cf; background: #f4fbf8; padding: 16px; margin: 18px 0; border-radius: 6px; }
+    .format-audit h3 { margin-top: 0; }
+    .format-audit ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+    .format-audit li { border: 1px solid #d8dee8; background: #fff; border-radius: 5px; padding: 8px; font-size: .9rem; }
+    .format-audit span { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+    .format-audit .present span { background: #dbece8; color: #126458; }
+    .format-audit .missing span { background: #f4e3cb; color: #8a4604; }
+    article h2 { font-size: 1.35rem; }
+    article h3 { font-size: 1.15rem; }
+    article h4, article h5 { font-size: 1rem; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    blockquote { margin: 1rem 0; padding: .45rem 1rem; border-left: 3px solid #1d8093; background: #f4f8fb; color: #435467; }
+    table { border-collapse: collapse; width: 100%; min-width: 32rem; font-size: .94rem; }
+    th, td { border: 1px solid #d8dee8; padding: .55rem .7rem; text-align: left; vertical-align: top; }
+    th { background: #edf4f9; }
+    .mermaid { background: #fff; color: #18212f; border: 1px solid #d8dee8; }
+    footer { margin-top: 32px; color: #52606d; font-size: .9rem; }
+    @media (max-width: 640px) { main { padding: 16px 12px 36px; } h1 { font-size: 1.55rem; } summary { align-items: flex-start; } .lesson-body { padding: 2px 14px 18px; } .format-audit ul { grid-template-columns: 1fr; } }
+  </style><style>.answer-panel{margin:22px 0;padding:18px;border:1px solid #9ab8d8;border-left:5px solid #1763a3;border-radius:8px;background:#f2f7fc}.answer-panel h3{margin-top:0}.answer-submit,.answer-view{display:inline-block;padding:10px 14px;margin:4px 8px 4px 0;border-radius:6px;background:#12578f;color:#fff;text-decoration:none}.answer-view{background:#e0ecf6;color:#153e61}.answer-panel a:focus-visible{outline:3px solid #db5a2a;outline-offset:3px}.answer-panel code{overflow-wrap:anywhere}.answer-list{padding:0;list-style:none}.answer-list li{margin:12px 0;padding:16px;background:#fff;border:1px solid #d8dee8;border-radius:6px}body{font-family:system-ui,'Microsoft YaHei',sans-serif;line-height:1.75;color:#18212f;background:#f6f8fb}main{max-width:1180px;margin:auto;padding:24px}a{overflow-wrap:anywhere}</style></head><body><main><nav><a href="../index.html#day-54">课程档案</a> · <a href="../architecture/index.html">项目架构实践</a></nav><article><h1>Day 54 — 方案设计 IV：可观测性与验证设计</h1>
+<p>计划学习日期：2026-11-03，星期二，Asia/Shanghai；因任务漏发，于 2026-11-06 首次补录和发布。Week 17，能力阶段仍按第二阶段“系统链路与问题分析”记录。今天把“出了问题能看见”升级为架构合同：每项需求、接口、状态、资源和恢复动作都必须有可关联、可校准、可留存、可判定的证据。建议用时 60 分钟。</p>
+<p>执行前已扫描仓库全部开放与关闭 Issue、全部评论和附件索引；授权学习者没有新答卷、正文编辑或本人 <code>[补交]</code> 评论。Day 34—54 继续待评审；补发课件不代表已经学习或掌握。车型、SoC/build、部署、字段字典、阈值和实机数据未知时均标“待项目确认”。</p>
+<h2>1. 官方依据与边界</h2>
+<p>官方资料核验日期：2026-11-06。</p>
+<ul>
+<li><a href="https://opentelemetry.io/docs/concepts/signals/">OpenTelemetry Signals</a>：trace、metric、log 和 baggage 从不同角度描述系统活动，信号之间应通过上下文关联。</li>
+<li><a href="https://opentelemetry.io/docs/concepts/semantic-conventions/">OpenTelemetry Semantic Conventions</a>：统一字段名称和语义，减少跨组件、跨平台解释歧义。</li>
+<li><a href="https://opentelemetry.io/docs/concepts/signals/logs/">OpenTelemetry Logs</a>：结构化日志需要稳定 schema；仅“JSON 格式”并不自动等于字段稳定、可验证。</li>
+<li><a href="https://www.nasa.gov/reference/5-3-product-verification/">NASA Product Verification</a>：验证应回到批准的需求基线，明确方法、环境、版本、程序、原始结果、偏差和纠正措施。</li>
+<li><a href="https://www.nasa.gov/reference/system-engineering-handbook-appendix/">NASA Systems Engineering Handbook Appendix</a>：V&amp;V 计划需要把需求、方法、责任、环境、判据和结果建立可追踪关系。</li>
+<li><a href="https://automotivespice.com/fileadmin/software-download/automotiveSIG_PRM_v45.pdf">Automotive SPICE PRM 4.5</a>：系统架构、验证、问题解决和变更管理需要保持一致性、追踪和可复核的工作产品。</li>
+</ul>
+<p>这些来源提供通用方法，不说明本车已经部署 OpenTelemetry，也不规定具体埋点、周期、容量或隐私策略。T12T/T29/T16A 的 Android Guest、Yocto Host、Hypervisor、MCU、TBox 与物理外设边界必须由现车资料确认。</p>
+<h2>2. 一小时安排</h2>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>任务</th>
+<th>必交输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0—10 分钟</td>
+<td>回顾 5 题</td>
+<td>五段短答，未知项标 TBD</td>
+</tr>
+<tr>
+<td>10—30 分钟</td>
+<td>设计“需求—观测—判据”合同</td>
+<td>一张可观测性合同表</td>
+</tr>
+<tr>
+<td>30—50 分钟</td>
+<td>完成 STR 后 AVM 证据设计案例</td>
+<td>六流图、证据点和故障分析</td>
+</tr>
+<tr>
+<td>50—60 分钟</td>
+<td>固化验证产物</td>
+<td>《可观测性与 V&amp;V 计划 V1》</td>
+</tr>
+</tbody></table>
+<p>回顾题：</p>
+<ol>
+<li>transport ACK、command accepted、local applied、downstream observable 和 business accepted 各需要谁证明？</li>
+<li>为什么没有日志只能写“未观测”，不能写“没有发生”？</li>
+<li>traceId、bootId、VM generation、frameId 和 monotonic time 分别解决什么关联问题？</li>
+<li>为什么平均时延正常不能替代 P95/P99、失败率和 deadline miss 证据？</li>
+<li>旧代 callback 被拒绝时，什么证据能证明“拒绝正确且没有污染当前状态”？</li>
+</ol>
+<h2>3. 核心概念一：把可观测性写成架构合同</h2>
+<p>每个关键交接建立一行 Observability Contract：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>设计要求</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Object</td>
+<td>requirement/interface/state/resource/recovery step 的唯一 ID 与版本</td>
+</tr>
+<tr>
+<td>Producer</td>
+<td>谁产生事实，属于哪个运行域、进程和 generation</td>
+</tr>
+<tr>
+<td>Observer</td>
+<td>谁采集，采集失败如何显式暴露</td>
+</tr>
+<tr>
+<td>Signal</td>
+<td>event/log/metric/trace/readback/dump/physical measurement</td>
+</tr>
+<tr>
+<td>Correlation</td>
+<td>powerCycle、bootId、VM/device/process generation、txId、sequence、frame/buffer/fence ID</td>
+</tr>
+<tr>
+<td>Clock</td>
+<td>wall/monotonic/boottime/MCU tick、单位、锚点、换算和误差</td>
+</tr>
+<tr>
+<td>Semantics</td>
+<td>received/accepted/applied/completed/business accepted 的精确定义</td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>完整性、采样、drop、延迟、schema/version、校准和可信度</td>
+</tr>
+<tr>
+<td>Retention</td>
+<td>容量、轮转、触发冻结、artifact URI/hash、访问和脱敏</td>
+</tr>
+<tr>
+<td>Decision</td>
+<td>哪个判据消费证据，pass/fail/unknown 如何计算</td>
+</tr>
+</tbody></table>
+<p>关键规则：</p>
+<ul>
+<li>服务在线、channel heartbeat、目标 topic 新鲜、consumer 状态更新和用户结果是五个不同结论。</li>
+<li>同一字段必须有 schema/version；字段不存在、采集失败、解析失败和真实值为空不能共用一个 null。</li>
+<li>关联 ID 应贯穿请求、资源、状态和业务结果；仅靠相近墙上时间不能拼接跨域因果。</li>
+<li>采样、聚合和隐私脱敏必须保留判定所需信息；否则“有数据”仍不能支持结论。</li>
+<li>观测系统自身也要可观测：drop counter、queue backlog、clock sync、collector generation、存储余量和轮转状态属于证据质量。</li>
+</ul>
+<pre class="mermaid">flowchart LR
+  N[Need / Requirement] --&gt; A[Architecture &amp; Interface]
+  A --&gt; R[Runtime request / state / resource]
+  R --&gt; O[Observation contract]
+  O --&gt; C[Correlation + clock calibration]
+  C --&gt; Q[Evidence quality gate]
+  Q --&gt; V[Verification criterion]
+  V --&gt; B[Business acceptance]
+  R -. traceId / generation .-&gt; O
+  O -. raw artifact / hash .-&gt; E[Evidence ledger]
+  V -. verdict / discrepancy .-&gt; E</pre>
+<h2>4. 核心概念二：验证设计不是“列测试用例”</h2>
+<p>一项验证记录至少包含：</p>
+<ol>
+<li>requirementId、版本和双向 traceability；</li>
+<li>验证对象及精确配置基线；</li>
+<li>方法：analysis、inspection、demonstration 或 test；</li>
+<li>前置、环境、工具版本、校准状态和数据质量门槛；</li>
+<li>输入、故障注入、步骤和停止条件；</li>
+<li>必采原始证据与关联字段；</li>
+<li>量化通过/失败/unknown 判据；</li>
+<li>结果、偏差、重试理由、纠正措施和复验；</li>
+<li>Owner、复核者、批准者和 artifact URI/hash。</li>
+</ol>
+<p>验证和确认分开：</p>
+<ul>
+<li>**Verification：**实现是否满足批准的技术需求与接口合同；</li>
+<li>**Validation：**在真实或代表性场景中，用户目的是否被正确满足。</li>
+</ul>
+<p>ACK 只证明当前接口定义的接收或接受，不证明最终状态。超时首先意味着终态 unknown：冻结证据、查询 authority/readback、判断幂等与 generation，再决定继续等待、同幂等键重试、补偿、局部恢复或降级。复位后必须重新建立当前代的证据链，旧消息只能拒绝并审计。</p>
+<h2>5. 工程案例：STR 后 AVM 偶发“accepted 但无当前新鲜画面”</h2>
+<p>教学构造场景：STR resume 后，HMI 发出 AVM 请求；Camera producer、共享资源、Host/Hypervisor、Display consumer 和屏端需在当前 generation 收敛。不要预设根因。</p>
+<h3>5.1 观测点设计</h3>
+<pre class="mermaid">sequenceDiagram
+  participant H as Android HMI
+  participant X as Cross-domain Router
+  participant C as Camera Producer
+  participant R as Resource/Hypervisor
+  participant D as Display Consumer
+  participant P as Physical/Visible Endpoint
+  H-&gt;&gt;X: StartAVM(txId,generation)
+  X--&gt;&gt;H: received / accepted
+  X-&gt;&gt;C: apply current intent
+  C-&gt;&gt;R: frame(bufferId,fence,sequence)
+  R-&gt;&gt;D: current-generation handoff
+  D-&gt;&gt;P: present(frameId)
+  P--&gt;&gt;H: visible readback + business accepted
+  Note over H,P: 每一跳记录 monotonic time、version、result、drop 与 artifact</pre>
+<table>
+<thead>
+<tr>
+<th>位置</th>
+<th>必采证据</th>
+<th>证据上限</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HMI 意图</td>
+<td>txId、目标屏、generation、deadline</td>
+<td>证明请求产生，不证明对端收到</td>
+</tr>
+<tr>
+<td>Router</td>
+<td>receive/route/queue/drop、schema 版本</td>
+<td>证明当前层处理，不证明 Camera 应用</td>
+</tr>
+<tr>
+<td>Camera</td>
+<td>source sequence、首帧、buffer/fence</td>
+<td>证明 producer 产帧，不证明 consumer</td>
+</tr>
+<tr>
+<td>Resource</td>
+<td>owner、map/attach/ref、fence、quarantine</td>
+<td>证明资源交接状态，不证明画面可见</td>
+</tr>
+<tr>
+<td>Display</td>
+<td>acquire/latch/present/vblank</td>
+<td>证明局部呈现里程碑，不证明正确屏与新鲜内容</td>
+</tr>
+<tr>
+<td>Visible endpoint</td>
+<td>当前 frame readback、屏映射、用户条件</td>
+<td>证明业务结果，需要与原始意图关联</td>
+</tr>
+</tbody></table>
+<h3>5.2 构造证据与完整故障分析</h3>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>构造记录</th>
+<th>当前最多能证明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E1</td>
+<td>G21 的请求 T900 被 accepted</td>
+<td>当前接口接受，不证明下游完成</td>
+</tr>
+<tr>
+<td>E2</td>
+<td>Camera sequence 递增，traceId 缺失</td>
+<td>producer 活跃，但无法确认是否对应 T900</td>
+</tr>
+<tr>
+<td>E3</td>
+<td>G20 callback 在 G21 到达并被记录为 stale</td>
+<td>旧消息存在；是否被正确拒绝需看状态写入审计</td>
+</tr>
+<tr>
+<td>E4</td>
+<td>resource ledger 有一次 attach，无最终 release</td>
+<td>生命周期未闭环，不证明它阻塞本次帧</td>
+</tr>
+<tr>
+<td>E5</td>
+<td>consumer acquire P99 超出待确认 deadline</td>
+<td>consumer 等待异常，触发点仍未知</td>
+</tr>
+<tr>
+<td>E6</td>
+<td>present 计数增长，目标屏 visible readback 缺失</td>
+<td>局部显示推进，端到端验收缺口</td>
+</tr>
+<tr>
+<td>E7</td>
+<td>collector 报 drop counter 增长</td>
+<td>证据不完整；不能据缺失日志判断未执行</td>
+</tr>
+<tr>
+<td>E8</td>
+<td>rebind 后恢复</td>
+<td>重建覆盖了某段状态，不证明初始根因</td>
+</tr>
+</tbody></table>
+<p>分析顺序：</p>
+<ol>
+<li>绑定同一 powerCycle、boot/VM/device generation、tx/frame/buffer/fence ID；</li>
+<li>校准各域时钟并记录误差，小于误差的先后不用于定因果；</li>
+<li>找最后有证据的成功交接和首个缺失预期输出；</li>
+<li>区分“真实失败、未采集、采集丢失、无法关联、证据冲突”；</li>
+<li>保留旧代污染、资源生命周期、consumer 背压、显示映射、证据系统失真等竞争假设；</li>
+<li>为每个假设设计一个尽量单变量的区分实验；</li>
+<li>将恢复动作、后续 cleanup 与最初触发分开。</li>
+</ol>
+<h2>6. 证据生命周期与降级</h2>
+<pre class="mermaid">stateDiagram-v2
+  [*] --&gt; Defined
+  Defined --&gt; Instrumented: schema + correlation + clock
+  Instrumented --&gt; Collecting
+  Collecting --&gt; Qualified: completeness / drop / calibration pass
+  Collecting --&gt; Suspect: missing / drift / schema mismatch
+  Suspect --&gt; Recollecting: safe repeat possible
+  Suspect --&gt; Unknown: evidence cannot be repaired
+  Qualified --&gt; Evaluated: criterion executed
+  Evaluated --&gt; Passed: objective evidence meets criterion
+  Evaluated --&gt; Failed: discrepancy found
+  Failed --&gt; Correcting
+  Correcting --&gt; Recollecting
+  Passed --&gt; Archived: baseline + artifact hash
+  Unknown --&gt; Escalated: decision authority accepts or blocks</pre>
+<p>观测不可用时，业务设计不能默默继续：</p>
+<ul>
+<li>安全/硬门槛判据证据缺失：阻断通过；</li>
+<li>非关键增强指标缺失：标 unknown，记录风险接受人和 reopen trigger；</li>
+<li>collector 失效：按项目定义降级、保留本地关键证据或触发 incident freeze；</li>
+<li>日志风暴：先保留关键事件和 drop/rotation 证据，再做限流；不能用“全局关日志”掩盖根因。</li>
+</ul>
+<h2>7. 可执行验证矩阵</h2>
+<table>
+<thead>
+<tr>
+<th>用例</th>
+<th>单变量/注入</th>
+<th>必采证据</th>
+<th>通过判据</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>正常冷启/STR</td>
+<td>无故障</td>
+<td>全链 trace + visible readback</td>
+<td>当前代业务完成</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>请求早到/迟到</td>
+<td>改变 ready 相对顺序</td>
+<td>queue/replay/generation</td>
+<td>不丢失、不旧代污染</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>旧 callback/fence</td>
+<td>注入旧 generation</td>
+<td>拒绝与状态写入审计</td>
+<td>旧代零污染</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>consumer 阻塞</td>
+<td>单点阻塞</td>
+<td>queue/fence/P95/P99</td>
+<td>有界超时与恢复</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>collector 丢包</td>
+<td>受控降低证据质量</td>
+<td>drop/schema/clock status</td>
+<td>verdict 转 unknown 或阻断</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>service/device/VM reset</td>
+<td>分层复位</td>
+<td>continuity + authority readback</td>
+<td>状态与资源收敛</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>证据轮转</td>
+<td>压缩留存窗口</td>
+<td>freeze/index/hash</td>
+<td>关键链仍可追溯</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>相邻业务与长稳</td>
+<td>共享资源并发</td>
+<td>per-client + 用户结果</td>
+<td>无不可接受回归</td>
+<td>待执行</td>
+</tr>
+</tbody></table>
+<h2>8. 练习与可复用产物</h2>
+<p>提交《可观测性与 V&amp;V 计划 V1》：</p>
+<ol>
+<li>需求—接口—状态—资源—业务结果追踪矩阵；</li>
+<li>控制、数据、状态、电源、资源、证据六流图；</li>
+<li>至少 12 行 Observability Contract；</li>
+<li>correlation key、时钟校准、schema/version 与 drop/retention 设计；</li>
+<li>E1—E8 证据资格表、最早断点、至少五个竞争假设与区分实验；</li>
+<li>ACK→accepted→applied→observable→business accepted 完成阶梯；</li>
+<li>timeout/reset/旧消息/证据缺失的状态机；</li>
+<li>正常、边界、故障、恢复、长稳与相邻业务验证矩阵；</li>
+<li>artifact 索引、hash、Owner、复核者和判据。</li>
+</ol>
+<p>个人反思由你本人填写：哪三个观测点最能改变方案决策？哪个字段最容易因跨域重名而误关联？哪项判据会被采样或轮转破坏？若证据缺失，你会阻断、降级还是接受风险，谁有权决定？</p>
+<h2>9. 提交说明</h2>
+<p>本课编号 <strong>day-54</strong>。使用页面末尾“上传／提交答卷”，或进入<a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html">答卷中心</a>。请只提交公开、脱敏材料。</p>
+<h2>附录：21 项 T12T 技能覆盖检查</h2>
+<p>技能来源：<code>F:/座舱日志分析/交付物/T12T诊断技能家族-优化版/</code>。本次已读取全部 21 个 <code>SKILL.md</code>。</p>
+<table>
+<thead>
+<tr>
+<th>结论</th>
+<th>技能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>深入使用</td>
+<td>t12t-cockpit-diagnosis、t12t-log-analysis、t12t-platform-architecture、t12t-cross-domain-msg、t12t-boot-hmi、t12t-stability-crash-reset、t12t-tpm-triage</td>
+</tr>
+<tr>
+<td>适用约束</td>
+<td>t12t-display-black-freeze、t12t-avm-camera-stream、t12t-power-sleep-str、t12t-performance-jank、t12t-log-storm、t12t-virtualization-tee、t12t-mcu</td>
+</tr>
+<tr>
+<td>相邻业务回归</td>
+<td>t12t-touch-input、t12t-audio-path、t12t-ethernet-sgmii、t12t-wireless-phone-link、t12t-usb-typec-storage</td>
+</tr>
+<tr>
+<td>条件入口</td>
+<td>t12t-db-ke-forensics（出现异常包才执行固定八步）、t12t-tpm-5y8d（有确认根因与修复验证后再展开）</td>
+</tr>
+</tbody></table>
+<p>关键缺口：现车车型/SoC/build、真实拓扑与协议字典、需求阈值、统一关联字段、collector 配置、证据容量、实机 trace、故障注入授权和学习者真实作答。补齐前只能形成可观测性与验证设计，不能宣称现车验证通过。</p>
+</article><section class="answer-panel" data-course="day-54" aria-label="Day 54 - 方案设计 IV：可观测性与验证设计 答卷提交"><h3>提交本课答卷</h3><p>在 GitHub 登录后填写文字，或把图片、PDF、Word 等文件拖入“答卷正文与附件”框；点击 Submit new issue（提交）才算上传成功。答卷和附件将保存在公开的 GitHub 仓库，请只提交可公开的学习材料。</p><p><a class="answer-submit" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues/new?template=answer.yml&amp;title=%5B%E7%AD%94%E5%8D%B7%5D%5Bday-54%5D+Day+54+-+%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1+IV%EF%BC%9A%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7%E4%B8%8E%E9%AA%8C%E8%AF%81%E8%AE%BE%E8%AE%A1&amp;lesson=day-54&amp;course=https%3A%2F%2Fqiantao18817568425-art.github.io%2FArchitecture_Learning-%2F%23day-54" target="_blank" rel="noopener">上传／提交答卷 ↗</a> <a class="answer-view" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues?q=is%3Aissue+in%3Atitle+%22%5B%E7%AD%94%E5%8D%B7%5D%5Bday-54%5D%22" target="_blank" rel="noopener">查看答卷与批改 ↗</a> <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html#day-54">归档与批改状态</a></p><p>课程编号：<code>day-54</code>。补交请在同一答卷下评论，以 <strong>[补交]</strong> 开头，并注明题号；也可编辑原答卷。每天 20:00 先检查并批改新答卷，再安排当天任务。</p></section></main><script src="../architecture/vendor/mermaid-10.9.5.min.js"></script><script>mermaid.initialize({startOnLoad:true,theme:'neutral',securityLevel:'strict'});</script></body></html>

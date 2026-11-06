@@ -119,7 +119,36 @@ test('Monday 2026-11-02 assigns Day53 once after the Week16 weekend',()=>{
   assert.equal(day53?.status,'assigned');
   assert.equal(day53?.assessment,'awaiting_answers');
   assert.equal(progress.lessons.filter(x=>x.id==='day-53').length,1);
-  assert.equal(progress.currentUnitId,'day-53');
-  assert.equal(progress.lastPublishedDay,53);
-  assert.equal(progress.lastAssignedDay,53);
+  assert.ok(progress.lastPublishedDay>=53);
+  assert.ok(progress.lastAssignedDay>=53);
+});
+
+test('authorized catch-up preserves planned weekday dates and the real first publication date',()=>{
+  const progress=JSON.parse(readFileSync(new URL('../content/learning-progress.json',import.meta.url),'utf8'));
+  for(const [id,date] of [['day-54','2026-11-03'],['day-55','2026-11-04'],['day-56','2026-11-05']]){
+    const lesson=progress.lessons.find(x=>x.id===id);
+    assert.equal(scheduleForDate(date).kind,'day');
+    assert.equal(lesson?.scheduledFor,date);
+    assert.equal(lesson?.originalScheduledFor,date);
+    assert.equal(lesson?.firstPublishedOn,'2026-11-06');
+    assert.equal(lesson?.assignmentRecordedOn,'2026-11-06');
+    assert.equal(lesson?.assessment,'awaiting_answers');
+    assert.equal(progress.lessons.filter(x=>x.id===id).length,1);
+  }
+  const catchUp=progress.catchUpHistory.find(x=>x.recordedOn==='2026-11-06');
+  assert.deepEqual(catchUp?.unitIds,['day-54','day-55','day-56']);
+});
+
+test('Friday 2026-11-06 publishes one Week17 review without advancing Day57',()=>{
+  const progress=JSON.parse(readFileSync(new URL('../content/learning-progress.json',import.meta.url),'utf8'));
+  const review=progress.lessons.find(x=>x.id==='week-17-friday');
+  assert.equal(scheduleForDate('2026-11-06').kind,'friday-review');
+  assert.equal(review?.kind,'review');
+  assert.deepEqual(review?.scope,[53,54,55,56]);
+  assert.equal(review?.firstPublishedOn,'2026-11-06');
+  assert.equal(progress.currentUnitId,'week-17-friday');
+  assert.equal(progress.lastPublishedDay,56);
+  assert.equal(progress.lastAssignedDay,56);
+  assert.equal(progress.nextUnit.id,'day-57');
+  assert.equal(progress.nextUnit.scheduledFor,'2026-11-09');
 });

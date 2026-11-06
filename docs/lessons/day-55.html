@@ -1,0 +1,329 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Day 55 - 方案评审 I：评审基线、场景走查与证据准入</title><style>
+    :root { color-scheme: light; font-family: "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif; color: #18212f; background: #f6f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.75; }
+    a { color: #075fbd; overflow-wrap: anywhere; }
+    code { background: #edf1f6; border-radius: 3px; padding: .08rem .28rem; }
+    pre { overflow: auto; background: #111827; color: #e5e7eb; padding: 1rem; border-radius: 6px; white-space: pre-wrap; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
+    header { border-left: 5px solid #db5a2a; padding: 12px 20px; margin-bottom: 28px; background: #fff; }
+    h1, h2, h3, h4, h5, h6 { line-height: 1.35; margin: 1.35em 0 .5em; }
+    h1 { margin: 0; font-size: 2rem; }
+    .lede { max-width: 840px; margin: .5rem 0 0; color: #4b5563; }
+    .metrics { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 26px; }
+    .metric { background: #e6eff8; border: 1px solid #bfd5ea; padding: 6px 12px; border-radius: 4px; color: #174a76; }
+    .metric strong { font-size: 1.15rem; }
+    .guide { background: #fff; border-top: 2px solid #1d8093; padding: 18px 22px; margin: 24px 0; }
+    .guide ol { margin-bottom: 0; }
+    .lesson { background: #fff; border: 1px solid #d8dee8; margin: 10px 0; }
+    summary { cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 18px; }
+    summary::-webkit-details-marker { color: #db5a2a; }
+    .lesson-title { font-weight: 700; font-size: 1.05rem; }
+    .lesson-meta { color: #52606d; font-size: .86rem; white-space: nowrap; }
+    .lesson-body { border-top: 1px solid #d8dee8; padding: 4px 22px 24px; }
+    .archive-note { color: #52606d; font-size: .92rem; border-left: 3px solid #1d8093; padding-left: 10px; }
+    .format-audit { border: 1px solid #b8d5cf; background: #f4fbf8; padding: 16px; margin: 18px 0; border-radius: 6px; }
+    .format-audit h3 { margin-top: 0; }
+    .format-audit ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+    .format-audit li { border: 1px solid #d8dee8; background: #fff; border-radius: 5px; padding: 8px; font-size: .9rem; }
+    .format-audit span { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+    .format-audit .present span { background: #dbece8; color: #126458; }
+    .format-audit .missing span { background: #f4e3cb; color: #8a4604; }
+    article h2 { font-size: 1.35rem; }
+    article h3 { font-size: 1.15rem; }
+    article h4, article h5 { font-size: 1rem; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    blockquote { margin: 1rem 0; padding: .45rem 1rem; border-left: 3px solid #1d8093; background: #f4f8fb; color: #435467; }
+    table { border-collapse: collapse; width: 100%; min-width: 32rem; font-size: .94rem; }
+    th, td { border: 1px solid #d8dee8; padding: .55rem .7rem; text-align: left; vertical-align: top; }
+    th { background: #edf4f9; }
+    .mermaid { background: #fff; color: #18212f; border: 1px solid #d8dee8; }
+    footer { margin-top: 32px; color: #52606d; font-size: .9rem; }
+    @media (max-width: 640px) { main { padding: 16px 12px 36px; } h1 { font-size: 1.55rem; } summary { align-items: flex-start; } .lesson-body { padding: 2px 14px 18px; } .format-audit ul { grid-template-columns: 1fr; } }
+  </style><style>.answer-panel{margin:22px 0;padding:18px;border:1px solid #9ab8d8;border-left:5px solid #1763a3;border-radius:8px;background:#f2f7fc}.answer-panel h3{margin-top:0}.answer-submit,.answer-view{display:inline-block;padding:10px 14px;margin:4px 8px 4px 0;border-radius:6px;background:#12578f;color:#fff;text-decoration:none}.answer-view{background:#e0ecf6;color:#153e61}.answer-panel a:focus-visible{outline:3px solid #db5a2a;outline-offset:3px}.answer-panel code{overflow-wrap:anywhere}.answer-list{padding:0;list-style:none}.answer-list li{margin:12px 0;padding:16px;background:#fff;border:1px solid #d8dee8;border-radius:6px}body{font-family:system-ui,'Microsoft YaHei',sans-serif;line-height:1.75;color:#18212f;background:#f6f8fb}main{max-width:1180px;margin:auto;padding:24px}a{overflow-wrap:anywhere}</style></head><body><main><nav><a href="../index.html#day-55">课程档案</a> · <a href="../architecture/index.html">项目架构实践</a></nav><article><h1>Day 55 — 方案评审 I：评审基线、场景走查与证据准入</h1>
+<p>计划学习日期：2026-11-04，星期三，Asia/Shanghai；因任务漏发，于 2026-11-06 首次补录和发布。Week 17。今天从“会画方案”进入“能主持可关闭的架构评审”：明确评审对象、版本、进入条件、场景、角色、证据、发现项、决策权和退出条件。建议用时 60 分钟。</p>
+<p>答卷扫描覆盖全部开放/关闭 Issue、评论与附件索引，未发现授权学习者新作答。Day 34—55 继续待评审；材料发布不等于掌握。下文案例为教学构造，现车参数与结论均待项目确认。</p>
+<h2>1. 官方依据</h2>
+<ul>
+<li><a href="https://www.nasa.gov/reference/6-7-technical-assessment/">NASA Technical Assessment</a>：技术评估使用已建立的度量、趋势、偏差和评审结果支撑决策，评审报告应保留发现、建议和行动项。</li>
+<li><a href="https://www.nasa.gov/reference/5-3-product-verification/">NASA Product Verification</a>：验证进入前应有批准的需求基线、程序、环境、配置和判据；偏差需要记录、分析、纠正和复验。</li>
+<li><a href="https://www.nasa.gov/reference/2-0-fundamentals-of-systems-engineering/">NASA Systems Engineering Fundamentals</a>：系统工程需要管理边界、需求分配、接口、方案权衡、风险与 V&amp;V。</li>
+<li><a href="https://automotivespice.com/fileadmin/software-download/automotiveSIG_PRM_v45.pdf">Automotive SPICE PRM 4.5</a>：架构、需求、验证、问题和变更工作产品需要一致、可追踪并接受评审。</li>
+</ul>
+<p>官方方法不替代本项目的评审流程、批准权、严重度定义或安全机制；这些均由项目治理文件确认。</p>
+<h2>2. 一小时安排</h2>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>任务</th>
+<th>产物</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0—10 分钟</td>
+<td>回顾 Day 53—54</td>
+<td>5 题短答</td>
+</tr>
+<tr>
+<td>10—30 分钟</td>
+<td>建立评审基线和准入门禁</td>
+<td>评审章程</td>
+</tr>
+<tr>
+<td>30—50 分钟</td>
+<td>走查 STR 后 AVM A/B 方案</td>
+<td>场景表、发现项和行动项</td>
+</tr>
+<tr>
+<td>50—60 分钟</td>
+<td>形成结论</td>
+<td>《架构评审记录 V1》</td>
+</tr>
+</tbody></table>
+<p>回顾题：</p>
+<ol>
+<li>为什么没有确定的 baseline/version，评审结论无法复现？</li>
+<li>需求通过、接口通过、实现通过和业务验收通过分别依赖什么证据？</li>
+<li>“没有发现问题”与“证据覆盖充分”有什么区别？</li>
+<li>为什么评审发现项必须带 Owner、关闭证据和 reopen 条件？</li>
+<li>A/B 方案评分接近时，评审应如何利用敏感性和高价值缺失证据？</li>
+</ol>
+<h2>3. 评审章程：先定义评什么、谁能决定</h2>
+<p>评审包至少包含：</p>
+<ul>
+<li>reviewId、类型、目标、范围、非范围、日期、主持人与决策权主体；</li>
+<li>车型/SoC/build、硬件阶段、软件/接口/模型/测试基线和 hash；</li>
+<li>Need/ConOps、需求、架构、接口、资源、状态机、风险、ADR 与验证追踪；</li>
+<li>参与角色：业务、系统、Android、Yocto、MCU、Hypervisor、外设、测试、质量/安全、运维；</li>
+<li>进入条件、成功条件、阻断条件、允许的 waiver/deviation 规则；</li>
+<li>场景清单、预读材料、证据索引和未关闭 TBD；</li>
+<li>发现项分类、行动项字段、复评方式和最终批准者。</li>
+</ul>
+<p>评审结论只有四类：通过、有条件通过、拒绝、因证据不足暂停。不得用“会议开完”表示通过，也不得把未到场 Owner 的沉默写成同意。</p>
+<pre class="mermaid">flowchart LR
+  B[Baseline frozen] --&gt; E[Entry criteria]
+  E --&gt; S[Scenario walk-through]
+  S --&gt; C[Contract / state / resource checks]
+  C --&gt; Q[Evidence qualification]
+  Q --&gt; F[Findings + risks]
+  F --&gt; D{Decision authority}
+  D --&gt;|pass| P[Approved baseline]
+  D --&gt;|conditional| A[Actions + closure evidence]
+  D --&gt;|reject| R[Rework]
+  D --&gt;|insufficient evidence| H[Hold / collect evidence]
+  A --&gt; Q
+  R --&gt; B
+  H --&gt; Q</pre>
+<h2>4. 场景走查：从用户意图到恢复终态</h2>
+<p>每个场景按同一模板走查：</p>
+<ol>
+<li>触发者、车辆/电源/启动状态、目标对象和预期用户结果；</li>
+<li>控制、数据、状态、电源/复位、资源和证据六条路径；</li>
+<li>每个跨域交接的输入、输出、版本、ID、时钟和 Owner；</li>
+<li>received/ACK、accepted、applied、readback、business accepted；</li>
+<li>正常、早到、迟到、重复、乱序、取消、超时、peer reset、旧代、资源压力和证据丢失；</li>
+<li>权威状态、最终一致性、恢复 deadline、降级和升级；</li>
+<li>验证方法、环境、原始工件和通过判据。</li>
+</ol>
+<pre class="mermaid">sequenceDiagram
+  participant U as User/Vehicle Intent
+  participant H as HMI
+  participant O as Orchestrator/Router
+  participant P as Producer
+  participant R as Resource/Hypervisor
+  participant C as Consumer/Display
+  U-&gt;&gt;H: scenario trigger
+  H-&gt;&gt;O: request(txId,generation)
+  O--&gt;&gt;H: received / accepted
+  O-&gt;&gt;P: apply intent
+  P-&gt;&gt;R: data + ownership + fence
+  R-&gt;&gt;C: current-generation handoff
+  C--&gt;&gt;H: readback / visible result
+  Note over U,C: 评审逐跳询问 输入、状态、输出、失败、证据、恢复</pre>
+<h2>5. 教学案例：评审 STR 后 AVM 的 A/B 恢复架构</h2>
+<p>候选 A 为 Host 集中协调，候选 B 为域内自治加一致性合同。评审不预设赢家。</p>
+<h3>5.1 评审证据包</h3>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>证据</th>
+<th>资格判断</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E1</td>
+<td>A/B 架构图均有控制与数据路径，但 B 未标状态 authority</td>
+<td>B 的状态责任不完整</td>
+</tr>
+<tr>
+<td>E2</td>
+<td>A 有单点 coordinator 故障恢复草案，但无资源开销基线</td>
+<td>不能评价可用性与性能权衡</td>
+</tr>
+<tr>
+<td>E3</td>
+<td>B 有 versioned contract，但混合版本兼容矩阵缺失</td>
+<td>演进风险待关闭</td>
+</tr>
+<tr>
+<td>E4</td>
+<td>两方案均记录 accepted，只有 A 有 visible readback 原型</td>
+<td>证据覆盖不对称，不能直接比较</td>
+</tr>
+<tr>
+<td>E5</td>
+<td>旧 callback 注入只跑 1 次且无 drop/clock 质量记录</td>
+<td>样本与证据质量不足</td>
+</tr>
+<tr>
+<td>E6</td>
+<td>VM reset 后两方案都恢复，但 A/B 使用了不同负载</td>
+<td>对比条件不一致</td>
+</tr>
+<tr>
+<td>E7</td>
+<td>风险表缺残余风险接受人</td>
+<td>决策治理不闭环</td>
+</tr>
+<tr>
+<td>E8</td>
+<td>一项硬门槛仍标 TBD</td>
+<td>不能进入最终通过</td>
+</tr>
+</tbody></table>
+<h3>5.2 完整故障/评审分析</h3>
+<ol>
+<li>先做 evidence qualification，剔除不可比较、无法关联或配置不一致的结论；</li>
+<li>对每个方案检查硬门槛，再检查增强准则，评分和证据置信度分开；</li>
+<li>对正常、早到、乱序、旧代、超时、复位、资源压力、证据系统故障逐场景走查；</li>
+<li>找每条路径最后成功交接与下一个预期输出，未观测不等于失败；</li>
+<li>区分设计缺陷、实现缺陷、验证缺口、材料缺口和治理缺口；</li>
+<li>每个发现项写明影响、证据、Owner、到期、关闭证据、复核者和 reopen trigger；</li>
+<li>最终结论由有权主体基于硬门槛、残余风险和关闭证据作出。</li>
+</ol>
+<h2>6. 评审门禁与发现项</h2>
+<table>
+<thead>
+<tr>
+<th>门禁</th>
+<th>必须回答</th>
+<th>阻断示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>基线</td>
+<td>评的是哪一版需求/架构/接口/测试</td>
+<td>版本或 hash 不明</td>
+</tr>
+<tr>
+<td>场景</td>
+<td>生命周期、异常和恢复是否覆盖</td>
+<td>只有 happy path</td>
+</tr>
+<tr>
+<td>责任</td>
+<td>authority、执行、恢复、验证是否唯一</td>
+<td>多 Owner 或无人负责</td>
+</tr>
+<tr>
+<td>接口</td>
+<td>ACK/完成/业务验收、超时、幂等、拒旧</td>
+<td>ACK 被当作业务完成</td>
+</tr>
+<tr>
+<td>资源</td>
+<td>ownership、mapping、fence、回收、预算</td>
+<td>终态未知仍复用</td>
+</tr>
+<tr>
+<td>证据</td>
+<td>关联、时钟、质量、留存和判据</td>
+<td>只有截图或口头结论</td>
+</tr>
+<tr>
+<td>风险</td>
+<td>scenario/likelihood/consequence、缓解、接受人</td>
+<td>硬风险无接受权</td>
+</tr>
+<tr>
+<td>变更</td>
+<td>影响、兼容、回滚、复验</td>
+<td>影响范围未分析</td>
+</tr>
+</tbody></table>
+<p>发现项模板：</p>
+<p><code>Finding ID / baseline / scenario / violated criterion / evidence / impact / owner / corrective action / closure evidence / reviewer / due / status / reopen trigger</code></p>
+<p>“关闭”必须有新证据，不等于 Owner 回复“已修复”。如果补丁改变接口、状态机或恢复策略，需要重新做影响分析并复验受影响场景。</p>
+<h2>7. 可执行验证</h2>
+<table>
+<thead>
+<tr>
+<th>评审问题</th>
+<th>最小验证</th>
+<th>通过判据</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A/B 是否可比较</td>
+<td>同配置、同负载、同注入、同采集</td>
+<td>对比条件一致</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>旧代是否隔离</td>
+<td>注入旧 callback/fence/timeout</td>
+<td>拒绝且当前状态不变</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>reset 是否有界恢复</td>
+<td>service/device/VM 分层复位</td>
+<td>authority 与业务结果收敛</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>证据是否可信</td>
+<td>注入 collector drop/schema mismatch</td>
+<td>verdict 变 unknown/阻断</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>资源是否安全</td>
+<td>注入 release 丢失与 consumer 阻塞</td>
+<td>quarantine，不早复用/重复释放</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>混合版本是否安全</td>
+<td>双端版本组合与 feature gate</td>
+<td>兼容、明确拒绝或降级</td>
+<td>待执行</td>
+</tr>
+<tr>
+<td>相邻业务是否回归</td>
+<td>显示/音频/导航并发</td>
+<td>项目判据满足</td>
+<td>待执行</td>
+</tr>
+</tbody></table>
+<h2>8. 练习</h2>
+<p>提交《架构评审记录 V1》：</p>
+<ol>
+<li>评审章程、参与角色、决策权与 baseline 清单；</li>
+<li>Day 53 A/B 六流图和 Day 54 观测合同；</li>
+<li>至少 12 个场景的走查表；</li>
+<li>E1—E8 证据资格与竞争假设；</li>
+<li>硬门槛、权衡矩阵、敏感性与风险接受；</li>
+<li>至少 10 个发现项，区分设计/实现/验证/材料/治理；</li>
+<li>行动项与关闭证据；</li>
+<li>通过/有条件通过/拒绝/暂停的评审结论。</li>
+</ol>
+<p>个人反思由你本人填写：我是否因材料齐全而误判设计正确？哪个评审问题能最早暴露跨域责任空洞？什么证据会让我撤销当前结论？</p>
+<h2>9. 提交说明</h2>
+<p>本课编号 <strong>day-55</strong>。使用页面末尾“上传／提交答卷”，或进入<a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html">答卷中心</a>。</p>
+<h2>附录：21 项 T12T 技能覆盖</h2>
+<p>已从 F 盘优化版目录读取全部 21 项。深入使用综合路由、日志证据、平台架构、跨域消息、启动 HMI、稳定性和 TPM 分责；显示、AVM、电源、性能、虚拟化、MCU用于场景与恢复约束；触摸、音频、有线、无线、USB用于相邻业务覆盖；日志风暴用于证据质量；DB/KE 与 5Y/8D 仅在有异常包或确认根因后进入。关键缺口仍为现车基线、真实 Owner/批准权、接口字典、资源/性能数据、完整 trace 和学习者作答。</p>
+</article><section class="answer-panel" data-course="day-55" aria-label="Day 55 - 方案评审 I：评审基线、场景走查与证据准入 答卷提交"><h3>提交本课答卷</h3><p>在 GitHub 登录后填写文字，或把图片、PDF、Word 等文件拖入“答卷正文与附件”框；点击 Submit new issue（提交）才算上传成功。答卷和附件将保存在公开的 GitHub 仓库，请只提交可公开的学习材料。</p><p><a class="answer-submit" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues/new?template=answer.yml&amp;title=%5B%E7%AD%94%E5%8D%B7%5D%5Bday-55%5D+Day+55+-+%E6%96%B9%E6%A1%88%E8%AF%84%E5%AE%A1+I%EF%BC%9A%E8%AF%84%E5%AE%A1%E5%9F%BA%E7%BA%BF%E3%80%81%E5%9C%BA%E6%99%AF%E8%B5%B0%E6%9F%A5%E4%B8%8E%E8%AF%81%E6%8D%AE%E5%87%86%E5%85%A5&amp;lesson=day-55&amp;course=https%3A%2F%2Fqiantao18817568425-art.github.io%2FArchitecture_Learning-%2F%23day-55" target="_blank" rel="noopener">上传／提交答卷 ↗</a> <a class="answer-view" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues?q=is%3Aissue+in%3Atitle+%22%5B%E7%AD%94%E5%8D%B7%5D%5Bday-55%5D%22" target="_blank" rel="noopener">查看答卷与批改 ↗</a> <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html#day-55">归档与批改状态</a></p><p>课程编号：<code>day-55</code>。补交请在同一答卷下评论，以 <strong>[补交]</strong> 开头，并注明题号；也可编辑原答卷。每天 20:00 先检查并批改新答卷，再安排当天任务。</p></section></main><script src="../architecture/vendor/mermaid-10.9.5.min.js"></script><script>mermaid.initialize({startOnLoad:true,theme:'neutral',securityLevel:'strict'});</script></body></html>

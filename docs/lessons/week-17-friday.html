@@ -1,0 +1,233 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Week 17 - 周五反思总结：方案权衡、可观测性与架构评审闭环</title><style>
+    :root { color-scheme: light; font-family: "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif; color: #18212f; background: #f6f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.75; }
+    a { color: #075fbd; overflow-wrap: anywhere; }
+    code { background: #edf1f6; border-radius: 3px; padding: .08rem .28rem; }
+    pre { overflow: auto; background: #111827; color: #e5e7eb; padding: 1rem; border-radius: 6px; white-space: pre-wrap; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
+    header { border-left: 5px solid #db5a2a; padding: 12px 20px; margin-bottom: 28px; background: #fff; }
+    h1, h2, h3, h4, h5, h6 { line-height: 1.35; margin: 1.35em 0 .5em; }
+    h1 { margin: 0; font-size: 2rem; }
+    .lede { max-width: 840px; margin: .5rem 0 0; color: #4b5563; }
+    .metrics { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 26px; }
+    .metric { background: #e6eff8; border: 1px solid #bfd5ea; padding: 6px 12px; border-radius: 4px; color: #174a76; }
+    .metric strong { font-size: 1.15rem; }
+    .guide { background: #fff; border-top: 2px solid #1d8093; padding: 18px 22px; margin: 24px 0; }
+    .guide ol { margin-bottom: 0; }
+    .lesson { background: #fff; border: 1px solid #d8dee8; margin: 10px 0; }
+    summary { cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 18px; }
+    summary::-webkit-details-marker { color: #db5a2a; }
+    .lesson-title { font-weight: 700; font-size: 1.05rem; }
+    .lesson-meta { color: #52606d; font-size: .86rem; white-space: nowrap; }
+    .lesson-body { border-top: 1px solid #d8dee8; padding: 4px 22px 24px; }
+    .archive-note { color: #52606d; font-size: .92rem; border-left: 3px solid #1d8093; padding-left: 10px; }
+    .format-audit { border: 1px solid #b8d5cf; background: #f4fbf8; padding: 16px; margin: 18px 0; border-radius: 6px; }
+    .format-audit h3 { margin-top: 0; }
+    .format-audit ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+    .format-audit li { border: 1px solid #d8dee8; background: #fff; border-radius: 5px; padding: 8px; font-size: .9rem; }
+    .format-audit span { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+    .format-audit .present span { background: #dbece8; color: #126458; }
+    .format-audit .missing span { background: #f4e3cb; color: #8a4604; }
+    article h2 { font-size: 1.35rem; }
+    article h3 { font-size: 1.15rem; }
+    article h4, article h5 { font-size: 1rem; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    blockquote { margin: 1rem 0; padding: .45rem 1rem; border-left: 3px solid #1d8093; background: #f4f8fb; color: #435467; }
+    table { border-collapse: collapse; width: 100%; min-width: 32rem; font-size: .94rem; }
+    th, td { border: 1px solid #d8dee8; padding: .55rem .7rem; text-align: left; vertical-align: top; }
+    th { background: #edf4f9; }
+    .mermaid { background: #fff; color: #18212f; border: 1px solid #d8dee8; }
+    footer { margin-top: 32px; color: #52606d; font-size: .9rem; }
+    @media (max-width: 640px) { main { padding: 16px 12px 36px; } h1 { font-size: 1.55rem; } summary { align-items: flex-start; } .lesson-body { padding: 2px 14px 18px; } .format-audit ul { grid-template-columns: 1fr; } }
+  </style><style>.answer-panel{margin:22px 0;padding:18px;border:1px solid #9ab8d8;border-left:5px solid #1763a3;border-radius:8px;background:#f2f7fc}.answer-panel h3{margin-top:0}.answer-submit,.answer-view{display:inline-block;padding:10px 14px;margin:4px 8px 4px 0;border-radius:6px;background:#12578f;color:#fff;text-decoration:none}.answer-view{background:#e0ecf6;color:#153e61}.answer-panel a:focus-visible{outline:3px solid #db5a2a;outline-offset:3px}.answer-panel code{overflow-wrap:anywhere}.answer-list{padding:0;list-style:none}.answer-list li{margin:12px 0;padding:16px;background:#fff;border:1px solid #d8dee8;border-radius:6px}body{font-family:system-ui,'Microsoft YaHei',sans-serif;line-height:1.75;color:#18212f;background:#f6f8fb}main{max-width:1180px;margin:auto;padding:24px}a{overflow-wrap:anywhere}</style></head><body><main><nav><a href="../index.html#week-17-friday">课程档案</a> · <a href="../architecture/index.html">项目架构实践</a></nav><article><h1>Week 17 — 周五反思总结：权衡、可观测性、评审与发布闭环</h1>
+<p>学习日期：2026-11-06，星期五，Asia/Shanghai；Week 17。今天只复盘本周实际安排并于今天补录的 Day 53—56，不推进 Day 57，不提前讲未来专题。建议用时 60 分钟。</p>
+<p>执行前已扫描仓库全部开放与关闭 Issue、评论和附件索引，授权学习者没有新答卷或补交。Day 34—56 继续待评审；没有真实作答时不虚构掌握、错题或薄弱点。本复盘题不附参考答案、示范作答或预设根因，个人反思由你本人填写。</p>
+<h2>1. 本周范围</h2>
+<table>
+<thead>
+<tr>
+<th>单元</th>
+<th>核心产物</th>
+<th>不能混淆</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-53.html">Day 53</a></td>
+<td>A/B 权衡、硬门槛、敏感性、风险与 ADR</td>
+<td>推荐、最终决定、基线生效</td>
+</tr>
+<tr>
+<td><a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-54.html">Day 54</a></td>
+<td>可观测性合同与 V&amp;V 计划</td>
+<td>有日志、证据合格、判据通过</td>
+</tr>
+<tr>
+<td><a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-55.html">Day 55</a></td>
+<td>评审章程、场景走查、发现项和关闭证据</td>
+<td>会议结束、发现项关闭、方案批准</td>
+</tr>
+<tr>
+<td><a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-56.html">Day 56</a></td>
+<td>变更影响、发布门禁、rollout/rollback</td>
+<td>合入、安装、健康检查、业务验收</td>
+</tr>
+</tbody></table>
+<h2>2. 一小时安排</h2>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>任务</th>
+<th>输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0—10 分钟</td>
+<td>回顾 5 题</td>
+<td>五段短答</td>
+</tr>
+<tr>
+<td>10—25 分钟</td>
+<td>重画知识地图</td>
+<td>一张闭环图</td>
+</tr>
+<tr>
+<td>25—45 分钟</td>
+<td>综合故障与架构题</td>
+<td>证据账本、假设、评审发现</td>
+</tr>
+<tr>
+<td>45—55 分钟</td>
+<td>发布决策与行动项</td>
+<td>门禁结论和 TPM 表</td>
+</tr>
+<tr>
+<td>55—60 分钟</td>
+<td>个人反思</td>
+<td>学习者本人填写</td>
+</tr>
+</tbody></table>
+<p>回顾题：</p>
+<ol>
+<li>硬门槛、权衡准则、评分、证据置信度和残余风险各解决什么问题？</li>
+<li>一条跨域请求从 received 到 business accepted 至少要经过哪些可区分里程碑？</li>
+<li>评审发现项何时才能关闭，为什么“已修改”不够？</li>
+<li>mixed-version 下如何证明兼容、明确拒绝或安全降级？</li>
+<li>哪些情况必须把验证结论标为 unknown，而不是 pass 或 fail？</li>
+</ol>
+<h2>3. 知识地图</h2>
+<pre class="mermaid">flowchart LR
+  N[Need / ConOps] --&gt; R[Requirements + hard gates]
+  R --&gt; A[Alternatives + trade study]
+  A --&gt; D[Decision + ADR]
+  D --&gt; O[Observability contract]
+  O --&gt; V[Verification / validation]
+  V --&gt; P[Architecture review]
+  P --&gt; C[Controlled change]
+  C --&gt; G[Release gate]
+  G --&gt; M[Monitor / rollback / reopen]
+  M -. new evidence / risk .-&gt; A
+  O -. raw evidence .-&gt; L[Evidence ledger]
+  P -. findings / actions .-&gt; L
+  G -. approval / baseline .-&gt; L</pre>
+<p>闭环必须保持同一组关联：requirementId、decisionId、changeId、baseline/build、scenarioId、txId、boot/VM/device generation、artifact URI/hash 和批准记录。</p>
+<h2>4. 综合题：新版 AVM 恢复上线后偶发旧帧</h2>
+<p>教学构造记录：</p>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>记录</th>
+<th>证据上限</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E1</td>
+<td>A/B trade study 推荐域内自治，但一项权重对结论敏感</td>
+<td>推荐尚不稳健</td>
+</tr>
+<tr>
+<td>E2</td>
+<td>评审有条件通过，两个阻断行动项未附关闭证据</td>
+<td>不能视为完全批准</td>
+</tr>
+<tr>
+<td>E3</td>
+<td>mixed-version capability negotiation 成功</td>
+<td>不证明语义与状态迁移正确</td>
+</tr>
+<tr>
+<td>E4</td>
+<td>accepted 后 Camera sequence 正常，Display visible readback 偶发旧帧</td>
+<td>源端活跃、端点结果异常；中间断点未知</td>
+</tr>
+<tr>
+<td>E5</td>
+<td>旧 generation callback 到达，缺状态写入审计</td>
+<td>存在污染可能，尚未证明已应用</td>
+</tr>
+<tr>
+<td>E6</td>
+<td>resource epoch 切换时一项 attachment 终态 unknown</td>
+<td>所有权证据不闭环</td>
+</tr>
+<tr>
+<td>E7</td>
+<td>rollback 后恢复，但 rollback 前 collector drop 增长</td>
+<td>回退覆盖问题条件；最初证据不完整</td>
+</tr>
+<tr>
+<td>E8</td>
+<td>相邻导航画面未执行回归</td>
+<td>发布影响仍有空洞</td>
+</tr>
+</tbody></table>
+<p>独立完成：</p>
+<ol>
+<li>画控制、数据、状态、电源/复位、资源、证据六流图；</li>
+<li>资格化 E1—E8，标直接、相关、反证、背景或缺失；</li>
+<li>找最后成功交接与首个缺失预期输出；</li>
+<li>提出至少六个竞争假设，不预设根因；</li>
+<li>为每个假设设计单变量区分实验；</li>
+<li>检查 ACK、accepted、applied、present、visible、business accepted；</li>
+<li>判断评审与发布门禁是否允许继续、暂停或回滚；</li>
+<li>给出首轮牵头、触发候选、直接修复、接口/恢复、验证和批准责任。</li>
+</ol>
+<h2>5. 决策—评审—发布状态</h2>
+<pre class="mermaid">stateDiagram-v2
+  [*] --&gt; Alternatives
+  Alternatives --&gt; Recommended: gates + evidence + sensitivity
+  Recommended --&gt; Decided: authority records decision
+  Decided --&gt; Baselined: configuration control
+  Baselined --&gt; ReviewReady: entry criteria met
+  ReviewReady --&gt; Conditional: findings remain
+  Conditional --&gt; ReviewReady: closure evidence
+  ReviewReady --&gt; ReleaseCandidate: review exits
+  ReleaseCandidate --&gt; RollingOut
+  RollingOut --&gt; Accepted: business + risk + evidence gates pass
+  RollingOut --&gt; RolledBack: stop trigger
+  Accepted --&gt; Reopened: assumption / risk / evidence changes
+  Reopened --&gt; Alternatives</pre>
+<h2>6. 复盘产物</h2>
+<p>提交《Week 17 架构方案评审包》：</p>
+<ol>
+<li>需求、硬门槛、A/B 权衡、敏感性和风险三元组；</li>
+<li>可观测性合同、时钟/关联、证据质量和 V&amp;V 矩阵；</li>
+<li>评审章程、场景走查、发现项、行动项与关闭证据；</li>
+<li>变更影响、兼容/迁移、rollout/rollback 和发布门禁；</li>
+<li>E1—E8 证据账本、竞争假设和区分实验；</li>
+<li>一页结论：通过/有条件通过/拒绝/证据不足暂停，及其决策权。</li>
+</ol>
+<p>个人反思由你本人填写：</p>
+<ul>
+<li>我最容易在哪个环节把局部成功写成系统完成？</li>
+<li>哪个关键结论依赖证据质量而非业务逻辑？</li>
+<li>如果只能关闭三个风险，我如何说明优先级？</li>
+<li>什么新证据会迫使我重新打开决策？</li>
+</ul>
+<h2>7. 提交说明</h2>
+<p>本课编号 <strong>week-17-friday</strong>。使用页面末尾“上传／提交答卷”，或进入<a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html">答卷中心</a>。周六只围绕 Day 53—56 做巩固、独立作答、画图和证据链训练，不推进 Day 57。</p>
+<h2>附录：21 项 T12T 技能覆盖</h2>
+<p>已从 F 盘优化版目录读取全部 21 项并完成覆盖检查。深入使用综合路由、日志证据、平台架构、跨域消息、启动、稳定性与 TPM 分责；显示、AVM、电源、性能、虚拟化、MCU用于案例主链；其余专项进入相邻业务和回归范围。DB/KE 与 5Y/8D 因无异常包、确认根因和修复验证，不强行展开。关键缺口仍是现车基线、原始 trace、接口字典、风险/门禁批准权、实机验证和学习者作答。</p>
+</article><section class="answer-panel" data-course="week-17-friday" aria-label="Week 17 - 周五反思总结：方案权衡、可观测性与架构评审闭环 答卷提交"><h3>提交本课答卷</h3><p>在 GitHub 登录后填写文字，或把图片、PDF、Word 等文件拖入“答卷正文与附件”框；点击 Submit new issue（提交）才算上传成功。答卷和附件将保存在公开的 GitHub 仓库，请只提交可公开的学习材料。</p><p><a class="answer-submit" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues/new?template=answer.yml&amp;title=%5B%E7%AD%94%E5%8D%B7%5D%5Bweek-17-friday%5D+Week+17+-+%E5%91%A8%E4%BA%94%E5%8F%8D%E6%80%9D%E6%80%BB%E7%BB%93%EF%BC%9A%E6%96%B9%E6%A1%88%E6%9D%83%E8%A1%A1%E3%80%81%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7%E4%B8%8E%E6%9E%B6%E6%9E%84%E8%AF%84%E5%AE%A1%E9%97%AD%E7%8E%AF&amp;lesson=week-17-friday&amp;course=https%3A%2F%2Fqiantao18817568425-art.github.io%2FArchitecture_Learning-%2F%23week-17-friday" target="_blank" rel="noopener">上传／提交答卷 ↗</a> <a class="answer-view" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues?q=is%3Aissue+in%3Atitle+%22%5B%E7%AD%94%E5%8D%B7%5D%5Bweek-17-friday%5D%22" target="_blank" rel="noopener">查看答卷与批改 ↗</a> <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html#week-17-friday">归档与批改状态</a></p><p>课程编号：<code>week-17-friday</code>。补交请在同一答卷下评论，以 <strong>[补交]</strong> 开头，并注明题号；也可编辑原答卷。每天 20:00 先检查并批改新答卷，再安排当天任务。</p></section></main><script src="../architecture/vendor/mermaid-10.9.5.min.js"></script><script>mermaid.initialize({startOnLoad:true,theme:'neutral',securityLevel:'strict'});</script></body></html>
