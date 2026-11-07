@@ -110,3 +110,13 @@ test('Week17 Friday review covers only Day53 through Day56 and does not advance 
   assert.ok(html.includes('上传／提交答卷'));
   assert.ok(html.includes('查看答卷与批改'));
 });
+
+test('Week17 Saturday provides independent evidence and architecture practice',()=>{
+  const markdown=read('content/lessons/week-17-saturday.md');
+  for(const text of ['Day 53—56','不推进 Day 57','不附参考答案','个人反思由你本人填写','竞争假设','六流图','待执行','week-17-saturday','答卷中心']) assert.ok(markdown.includes(text),text);
+  assert.doesNotMatch(markdown,/^#{1,6}\s*(参考答案|示范作答|预设根因)\s*[:：]?/m);
+  const html=read('docs/lessons/week-17-saturday.html');
+  assert.ok(html.includes('上传／提交答卷'));
+  assert.ok(html.includes('查看答卷与批改'));
+  assert.equal((html.match(/class="mermaid"/g)||[]).length,2);
+});
