@@ -120,3 +120,14 @@ test('Week17 Saturday provides independent evidence and architecture practice',(
   assert.ok(html.includes('查看答卷与批改'));
   assert.equal((html.match(/class="mermaid"/g)||[]).length,2);
 });
+
+test('Week17 Sunday integrates evidence recovery and verification without publishing the next Day',()=>{
+  const markdown=read('content/lessons/week-17-sunday.md');
+  for(const text of ['Day 53—56','不推进 Day 57','跨层取证','恢复设计','测试','证据账本','竞争假设','个人反思','week-17-sunday','答卷中心']) assert.ok(markdown.includes(text),text);
+  assert.doesNotMatch(markdown,/^#{1,6}\s*(参考答案|示范作答|预设根因)\s*[:：]?/m);
+  assert.ok((markdown.match(/^~~~mermaid\s*$/gm)||[]).length>=1);
+  const html=read('docs/lessons/week-17-sunday.html');
+  assert.ok(html.includes('上传／提交答卷'));
+  assert.ok(html.includes('查看答卷与批改'));
+  assert.ok(html.includes('Day 53—56'));
+});

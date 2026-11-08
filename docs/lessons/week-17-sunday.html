@@ -1,0 +1,330 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Week 17 - 周日整合：跨层取证、恢复设计与评审验证闭环</title><style>
+    :root { color-scheme: light; font-family: "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif; color: #18212f; background: #f6f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.75; }
+    a { color: #075fbd; overflow-wrap: anywhere; }
+    code { background: #edf1f6; border-radius: 3px; padding: .08rem .28rem; }
+    pre { overflow: auto; background: #111827; color: #e5e7eb; padding: 1rem; border-radius: 6px; white-space: pre-wrap; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
+    header { border-left: 5px solid #db5a2a; padding: 12px 20px; margin-bottom: 28px; background: #fff; }
+    h1, h2, h3, h4, h5, h6 { line-height: 1.35; margin: 1.35em 0 .5em; }
+    h1 { margin: 0; font-size: 2rem; }
+    .lede { max-width: 840px; margin: .5rem 0 0; color: #4b5563; }
+    .metrics { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 26px; }
+    .metric { background: #e6eff8; border: 1px solid #bfd5ea; padding: 6px 12px; border-radius: 4px; color: #174a76; }
+    .metric strong { font-size: 1.15rem; }
+    .guide { background: #fff; border-top: 2px solid #1d8093; padding: 18px 22px; margin: 24px 0; }
+    .guide ol { margin-bottom: 0; }
+    .lesson { background: #fff; border: 1px solid #d8dee8; margin: 10px 0; }
+    summary { cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 18px; }
+    summary::-webkit-details-marker { color: #db5a2a; }
+    .lesson-title { font-weight: 700; font-size: 1.05rem; }
+    .lesson-meta { color: #52606d; font-size: .86rem; white-space: nowrap; }
+    .lesson-body { border-top: 1px solid #d8dee8; padding: 4px 22px 24px; }
+    .archive-note { color: #52606d; font-size: .92rem; border-left: 3px solid #1d8093; padding-left: 10px; }
+    .format-audit { border: 1px solid #b8d5cf; background: #f4fbf8; padding: 16px; margin: 18px 0; border-radius: 6px; }
+    .format-audit h3 { margin-top: 0; }
+    .format-audit ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+    .format-audit li { border: 1px solid #d8dee8; background: #fff; border-radius: 5px; padding: 8px; font-size: .9rem; }
+    .format-audit span { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+    .format-audit .present span { background: #dbece8; color: #126458; }
+    .format-audit .missing span { background: #f4e3cb; color: #8a4604; }
+    article h2 { font-size: 1.35rem; }
+    article h3 { font-size: 1.15rem; }
+    article h4, article h5 { font-size: 1rem; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    blockquote { margin: 1rem 0; padding: .45rem 1rem; border-left: 3px solid #1d8093; background: #f4f8fb; color: #435467; }
+    table { border-collapse: collapse; width: 100%; min-width: 32rem; font-size: .94rem; }
+    th, td { border: 1px solid #d8dee8; padding: .55rem .7rem; text-align: left; vertical-align: top; }
+    th { background: #edf4f9; }
+    .mermaid { background: #fff; color: #18212f; border: 1px solid #d8dee8; }
+    footer { margin-top: 32px; color: #52606d; font-size: .9rem; }
+    @media (max-width: 640px) { main { padding: 16px 12px 36px; } h1 { font-size: 1.55rem; } summary { align-items: flex-start; } .lesson-body { padding: 2px 14px 18px; } .format-audit ul { grid-template-columns: 1fr; } }
+  </style><style>.answer-panel{margin:22px 0;padding:18px;border:1px solid #9ab8d8;border-left:5px solid #1763a3;border-radius:8px;background:#f2f7fc}.answer-panel h3{margin-top:0}.answer-submit,.answer-view{display:inline-block;padding:10px 14px;margin:4px 8px 4px 0;border-radius:6px;background:#12578f;color:#fff;text-decoration:none}.answer-view{background:#e0ecf6;color:#153e61}.answer-panel a:focus-visible{outline:3px solid #db5a2a;outline-offset:3px}.answer-panel code{overflow-wrap:anywhere}.answer-list{padding:0;list-style:none}.answer-list li{margin:12px 0;padding:16px;background:#fff;border:1px solid #d8dee8;border-radius:6px}body{font-family:system-ui,'Microsoft YaHei',sans-serif;line-height:1.75;color:#18212f;background:#f6f8fb}main{max-width:1180px;margin:auto;padding:24px}a{overflow-wrap:anywhere}</style></head><body><main><nav><a href="../index.html#week-17-sunday">课程档案</a> · <a href="../architecture/index.html">项目架构实践</a></nav><article><h1>Week 17 — 周日整合：跨层取证、恢复设计与评审验证闭环</h1>
+<p>学习日期：2026-11-08，星期日，Asia/Shanghai。能力评价仍处于第二阶段“系统链路与问题分析”，本次训练链路取证 L3 与方案评审 L4。范围仅为本周已安排的 Day 53—56：A/B 权衡、可观测性与验证、评审基线、变更与发布门禁。Day 49—52 的资源和接口知识可作为前置工具。今天不推进 Day 57，不提前讲下一专题。建议用时 60 分钟。</p>
+<p>开始前已完整扫描答卷 Issue 的开放与关闭状态及评论，授权学习者没有新答卷或补交，本聊天也没有新增作答。Day 34—56 与本周复盘仍待真实作答评审；个人薄弱点尚待验证。本课的构造记录只供独立练习，不附参考答案、示范作答、预设根因或替你填写的个人反思。</p>
+<h2>1. 本周材料与资料边界</h2>
+<table>
+<thead>
+<tr>
+<th>本周课程</th>
+<th>在本次整合中的作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-53.html">Day 53</a></td>
+<td>两种恢复方案的硬门槛、权衡、敏感性和决策记录</td>
+</tr>
+<tr>
+<td><a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-54.html">Day 54</a></td>
+<td>跨域关联键、时钟误差、完成阶梯与可观测性合同</td>
+</tr>
+<tr>
+<td><a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-55.html">Day 55</a></td>
+<td>评审基线、发现项、行动项与关闭证据</td>
+</tr>
+<tr>
+<td><a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/lessons/day-56.html">Day 56</a></td>
+<td>混合版本、发布影响、回滚及风险接受门禁</td>
+</tr>
+</tbody></table>
+<p>2026-11-08 复核的官方资料：AOSP 将 VHAL 定义为车辆属性读、写、订阅的抽象接口，但本车采用的后端、上游传输和属性字典须以当前构建确认。NASA 的决策分析要求记录备选、准则、假设、不确定性和最终决策；产品验证需要把版本、需求、方法、结果与异常放在同一证据链。OpenTelemetry 的语义约定可帮助各域统一观测字段名，不替代本车的时钟校准和业务验收。</p>
+<p><a href="https://source.android.com/docs/automotive/vhal">AOSP VHAL Overview</a> · <a href="https://www.nasa.gov/reference/6-8-decision-analysis/">NASA Decision Analysis</a> · <a href="https://www.nasa.gov/reference/5-3-product-verification/">NASA Product Verification</a> · <a href="https://www.nasa.gov/reference/6-7-technical-assessment/">NASA Technical Assessment</a> · <a href="https://opentelemetry.io/docs/concepts/semantic-conventions/">OpenTelemetry Semantic Conventions</a></p>
+<h2>2. 一小时安排</h2>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>已学知识的整合任务</th>
+<th>交付</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0—10 分钟</td>
+<td>四题回顾</td>
+<td>独立短答，未知写待确认</td>
+</tr>
+<tr>
+<td>10—30 分钟</td>
+<td>证据合同与有界恢复两条主线</td>
+<td>跨层链路和恢复草图</td>
+</tr>
+<tr>
+<td>30—50 分钟</td>
+<td>构造故障的取证、方案和验证</td>
+<td>证据账本、竞争假设、测试矩阵</td>
+</tr>
+<tr>
+<td>50—60 分钟</td>
+<td>形成可复用的评审包</td>
+<td>一页决策记录及本人反思</td>
+</tr>
+</tbody></table>
+<p>四题回顾：</p>
+<ol>
+<li>发送、收到、ACK、业务状态应用、HMI 可见和业务验收分别需要哪一个端点证明？</li>
+<li>两域时间戳无法可靠比较时，哪些关联键与域内顺序仍可支持断点定位？</li>
+<li>旧 generation 的回调迟到、状态终态 unknown、恢复后重连，各需要怎样的处理和证据？</li>
+<li>修复已合入、finding 已关闭、回滚作业 completed 和发布获批，各由什么证据与角色确认？</li>
+</ol>
+<h2>3. 已学方法的整合框架</h2>
+<p>请先闭卷画出本周的决策与验证关系，再用 Day 53—56 核对。下面的图只说明作业流程，不给构造案例的答案。</p>
+<pre class="mermaid">flowchart LR
+  A[冻结输入与版本] --&gt; B[按运行域和代际建证据账本]
+  B --&gt; C[比较相邻接口的输入 状态 输出]
+  C --&gt; D[列竞争假设与区分实验]
+  D --&gt; E[设计有界恢复和验证矩阵]
+  E --&gt; F[评审风险与发布门禁]
+  F --&gt;|新证据或变化| B</pre>
+<p>本次须画自己的业务链：车辆状态源 → MCU 与 Host 边界 → 跨域传输 → Android Guest 的 VHAL/CarService → HMI → 用户可见结果。TBox 是否参与由当前拓扑判断；Hypervisor 的 VM generation 及电源/复位边界要单列。控制、数据、状态、电源/复位、共享资源与证据六流分别标色或编号。各边填输入、前置状态、权威状态源、输出、ACK/业务完成、deadline、旧消息、超时、复位和可观测字段。协议、车型、SoC、软硬件版本、属性含义与时限均待项目确认。</p>
+<p>恢复草图须写清：什么条件允许局部恢复，何时扩大恢复范围，状态未知时如何取得权威值，怎样限制重试预算，如何隔离旧代数据，何时进入降级，哪个端点证明恢复后的业务结果。不要把 heartbeat、服务存活或一次重连成功直接写成系统完成。</p>
+<h2>4. 综合案例：混合版本后状态图标停在旧值</h2>
+<p>以下为<strong>教学构造</strong>，并非 T12T/T29/T16A 实机记录。一次受控混合版本发布和 VM 重建后，HMI 上某车辆状态图标仍显示先前值；重新建立一条服务连接后图标变为当前值。状态 <code>S0/S1</code> 只是题目占位符，具体属性、控制权限、风险等级和端到端时限均待项目字典确认。各域时钟未经完整校准，记录编号仅是材料整理顺序，不代表跨域发生顺序。</p>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>待分析的原始摘录或材料</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E1</td>
+<td>发布清单写 Host <code>H42</code>、Guest <code>G41</code>；Guest 二进制哈希栏为空，接口协商记录 <code>compatible</code>，MCU 固件和回滚基线栏待确认。</td>
+</tr>
+<tr>
+<td>E2</td>
+<td>MCU 采样记录的目标状态序列为 401、402、403，末条值 <code>S1</code>；该字段的协议版本和跨域时钟映射未随样本提交。</td>
+</tr>
+<tr>
+<td>E3</td>
+<td>Host 接收缓存记录目标序列 403、值 <code>S1</code>；同窗有目标 topic 的 publish 403，未附接收端逐消息确认。</td>
+</tr>
+<tr>
+<td>E4</td>
+<td>跨域 channel heartbeat 持续；目标 topic 的接收侧最后一条可读记录为序列 401，采集器在该窗口的 drop counter 增长。</td>
+</tr>
+<tr>
+<td>E5</td>
+<td>Hypervisor 记录 Guest instance 从 V12 结束并建立 V13；Android 侧能查到 V12 的订阅登记，V13 的登记与拒旧审计未归档。</td>
+</tr>
+<tr>
+<td>E6</td>
+<td>Android 某次属性读取返回 <code>success</code> 与缓存值 <code>S0</code>；source timestamp、source age、generation 和业务验收记录均为空。</td>
+</tr>
+<tr>
+<td>E7</td>
+<td>HMI 录像显示图标仍为 <code>S0</code>；屏端采样时间与 Guest 时钟误差未知，录像未附 frameId、请求 ID 或显示映射。</td>
+</tr>
+<tr>
+<td>E8</td>
+<td>现场只记录“重新建立服务连接后图标变为 S1”；动作前后 VHAL、Host、Guest 的状态快照和完整重试范围未留存。</td>
+</tr>
+<tr>
+<td>E9</td>
+<td>Finding F7 标为 closed，说明写“已合入恢复补丁”；验证工件的 build ID 早于该补丁，混合版本/旧代回调测试栏为空。</td>
+</tr>
+<tr>
+<td>E10</td>
+<td>回滚作业显示 completed；Host/Guest 版本读回、缓存迁移、相邻车辆状态与长稳结果仍未附证据。</td>
+</tr>
+</tbody></table>
+<h3>4.1 跨层取证</h3>
+<ol>
+<li>为 E1—E10 逐条写“来源、原始时间/时钟、版本、boot/VM generation、关联 ID、直接/相关/背景/反证/缺失、支持范围及局限”。没有采集的字段标未观测；不要写成没发生。</li>
+<li>在每个运行域内找最后能证实的成功交接和下一个预期输出。将“明确失败、未观测、无法关联、相互冲突”分开记录；跨域先后只有在误差允许时才推断。</li>
+<li>给至少三个处于不同边界的竞争假设，每个写能否定它的观测。区分直接失效、此前触发候选、加剧因素和恢复后的结果；先确定可证实的最小边界，再谈责任。</li>
+<li>设计一个最先执行的单变量区分实验。写明正常对照、保留的原始证据、预期区分力、停止条件和 Owner 责任域。实验仅在项目授权的可恢复环境执行。</li>
+</ol>
+<h3>4.2 恢复设计与方案权衡</h3>
+<p>比较两种候选恢复范围：A 为协调组件统一重建受影响链路，B 为从最早受影响的接口开始局部重取权威状态。它们只是待评价的方案范围，不预设优胜或根因。自行补充前置条件、权威状态、generation、重放/幂等策略、有限重试、超时终态、失败出口、降级影响面、性能与资源预算、观测点及业务验收端点。</p>
+<table>
+<thead>
+<tr>
+<th>评审项</th>
+<th>A 的证据与未知项</th>
+<th>B 的证据与未知项</th>
+<th>硬门槛/权衡准则</th>
+<th>决策权与复审条件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>当前状态恢复与旧代隔离</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>时间、资源与影响半径</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>混合版本及回滚兼容</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>证据质量与业务验收</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3>4.3 测试与评审闭环</h3>
+<p>写至少六行可执行验证矩阵，覆盖正常值变化、早到/迟到/乱序、旧 generation 回调、Host/Guest 重启、目标 topic 停报、采集丢失或时钟误差过大、混合版本、回滚与相邻状态回归。每行填：注入点与前置条件、版本/时钟/关联键、原始工件、业务端点结果、pass/fail/unknown 判据、恢复预算和退出条件。所有计划测试当前状态写“待执行”；实机结果不得由题目推定。</p>
+<p>为 F7、发布和回滚分别列出：基线、发现项和变更 ID、关闭所需的同版本证据、批准角色、风险接受条件、重新打开条件。首轮牵头、触发供证、直接修复、接口/恢复策略、独立验证与发布批准要分开；未知人员和截止日期写待确认。</p>
+<h2>5. 十分钟可复用产物</h2>
+<p>提交《Week 17 跨层取证—恢复—发布评审包》：</p>
+<ol>
+<li>四题短答、一张六流图和跨域时间/代际对照表。</li>
+<li>E1—E10 证据账本、三个以上竞争假设、反证及一个优先实验。</li>
+<li>A/B 恢复边界和状态图、硬门槛与敏感性表。</li>
+<li>六行以上验证矩阵、F7 关闭表、发布/回滚门禁与 TPM 责任表。</li>
+<li>200 字左右本人评审意见，并由你本人回答：最可能把哪一跳的局部成功误作业务完成？哪条缺失证据最可能改变你的决定？</li>
+</ol>
+<p>当前个人薄弱点保持“待真实作答验证”。本次复盘复用既有架构知识库第 20 章的接口与证据合同、第 23 章的验证、评审和发布门禁；构造案例结论及个人答案不写为平台事实。</p>
+<p><a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/architecture/20.html">架构第 20 章</a> · <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/architecture/23.html">架构第 23 章</a> · <a href="https://qiantao18817568425-art.github.io/Cockpit_Knowledge_Galaxy/">知识银河</a></p>
+<h2>6. 提交与归档</h2>
+<p>本单元编号 <strong>week-17-sunday</strong>。从页面末尾“上传／提交答卷”提交文字、架构图与证据表，或进入<a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html">答卷中心</a>。答卷和批改会公开同步 GitHub，请仅提交已脱敏且可公开的资料；本人编辑答卷或以 <code>[补交]</code> 开头的评论会生成新评审版本。</p>
+<h2>附录：T12T 优化版 21 项覆盖</h2>
+<p>本次从 <code>F:/座舱日志分析/交付物/T12T诊断技能家族-优化版/</code> 依序读取三个通用入口及其余 18 项，完成 21/21 适用性检查。深入使用平台域路径、日志时间与证据、跨域消息和 TPM 分责；题中不是实车日志。</p>
+<table>
+<thead>
+<tr>
+<th>技能</th>
+<th>本次适用性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>t12t-cockpit-diagnosis</td>
+<td>深入，现象、主链和证据边界</td>
+</tr>
+<tr>
+<td>t12t-log-analysis</td>
+<td>深入，时钟、generation 与最早可证实断点</td>
+</tr>
+<tr>
+<td>t12t-platform-architecture</td>
+<td>深入，Guest/Host/MCU/Hypervisor 边界与六流</td>
+</tr>
+<tr>
+<td>t12t-display-black-freeze</td>
+<td>条件适用，HMI 端点及屏幕映射，缺物理屏实证</td>
+</tr>
+<tr>
+<td>t12t-touch-input</td>
+<td>不适用，本题没有触控事件</td>
+</tr>
+<tr>
+<td>t12t-avm-camera-stream</td>
+<td>不适用，本题没有 Camera/AVM 事件</td>
+</tr>
+<tr>
+<td>t12t-power-sleep-str</td>
+<td>条件适用，VM 重建与电源态须区分，缺 suspend attempt</td>
+</tr>
+<tr>
+<td>t12t-audio-path</td>
+<td>不适用，本题没有音频故障</td>
+</tr>
+<tr>
+<td>t12t-stability-crash-reset</td>
+<td>条件适用，仅知 Guest generation 变化，直接重启机制待证</td>
+</tr>
+<tr>
+<td>t12t-performance-jank</td>
+<td>材料不足，无端到端时延和资源基线</td>
+</tr>
+<tr>
+<td>t12t-ethernet-sgmii</td>
+<td>不适用，物理承载未确认且无有线链证据</td>
+</tr>
+<tr>
+<td>t12t-wireless-phone-link</td>
+<td>不适用，无无线/手机互联记录</td>
+</tr>
+<tr>
+<td>t12t-cross-domain-msg</td>
+<td>深入，target topic freshness 与消息完成分层</td>
+</tr>
+<tr>
+<td>t12t-boot-hmi</td>
+<td>条件适用，重建后 ready、订阅与端点可见性待证</td>
+</tr>
+<tr>
+<td>t12t-log-storm</td>
+<td>条件适用，仅知采集丢失；没有日志风暴量化证据</td>
+</tr>
+<tr>
+<td>t12t-usb-typec-storage</td>
+<td>不适用，无 USB/存储材料</td>
+</tr>
+<tr>
+<td>t12t-virtualization-tee</td>
+<td>条件适用，VM generation 已知；无虚拟事务或 TEE 原始证据</td>
+</tr>
+<tr>
+<td>t12t-db-ke-forensics</td>
+<td>材料不足，无异常包</td>
+</tr>
+<tr>
+<td>t12t-mcu</td>
+<td>条件适用，车辆状态源与协议字典待确认</td>
+</tr>
+<tr>
+<td>t12t-tpm-triage</td>
+<td>深入，首轮牵头与验证/批准责任拆分</td>
+</tr>
+<tr>
+<td>t12t-tpm-5y8d</td>
+<td>材料不足，无确认根因与修复验证，不展开 5Y/8D</td>
+</tr>
+</tbody></table>
+<p>关键缺口为本车车型/SoC/build、现车拓扑、属性/协议字典、跨域时钟误差、完整采集覆盖、发布权限与真实学习者答卷。</p>
+</article><section class="answer-panel" data-course="week-17-sunday" aria-label="Week 17 - 周日整合：跨层取证、恢复设计与评审验证闭环 答卷提交"><h3>提交本课答卷</h3><p>在 GitHub 登录后填写文字，或把图片、PDF、Word 等文件拖入“答卷正文与附件”框；点击 Submit new issue（提交）才算上传成功。答卷和附件将保存在公开的 GitHub 仓库，请只提交可公开的学习材料。</p><p><a class="answer-submit" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues/new?template=answer.yml&amp;title=%5B%E7%AD%94%E5%8D%B7%5D%5Bweek-17-sunday%5D+Week+17+-+%E5%91%A8%E6%97%A5%E6%95%B4%E5%90%88%EF%BC%9A%E8%B7%A8%E5%B1%82%E5%8F%96%E8%AF%81%E3%80%81%E6%81%A2%E5%A4%8D%E8%AE%BE%E8%AE%A1%E4%B8%8E%E8%AF%84%E5%AE%A1%E9%AA%8C%E8%AF%81%E9%97%AD%E7%8E%AF&amp;lesson=week-17-sunday&amp;course=https%3A%2F%2Fqiantao18817568425-art.github.io%2FArchitecture_Learning-%2F%23week-17-sunday" target="_blank" rel="noopener">上传／提交答卷 ↗</a> <a class="answer-view" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues?q=is%3Aissue+in%3Atitle+%22%5B%E7%AD%94%E5%8D%B7%5D%5Bweek-17-sunday%5D%22" target="_blank" rel="noopener">查看答卷与批改 ↗</a> <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html#week-17-sunday">归档与批改状态</a></p><p>课程编号：<code>week-17-sunday</code>。补交请在同一答卷下评论，以 <strong>[补交]</strong> 开头，并注明题号；也可编辑原答卷。每天 20:00 先检查并批改新答卷，再安排当天任务。</p></section></main><script src="../architecture/vendor/mermaid-10.9.5.min.js"></script><script>mermaid.initialize({startOnLoad:true,theme:'neutral',securityLevel:'strict'});</script></body></html>
