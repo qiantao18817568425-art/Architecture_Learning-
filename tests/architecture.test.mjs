@@ -34,10 +34,10 @@ test('full text search includes interface names inside code blocks and beginner 
  assert.ok(index.some(x=>x.url==='02.html#beginner-guide'&&x.text.includes('物理 CPU')),'beginner guide is searchable');
 });
 
-test('Day35 through Day56 contribute reusable knowledge and reverse links to architecture chapters',()=>{
+test('Day35 through Day57 contribute reusable knowledge and reverse links to architecture chapters',()=>{
  const data=JSON.parse(read('content/architecture.json'));
- const mapped=data.days.filter(x=>x.day>=35&&x.day<=56);
- assert.deepEqual(mapped.map(x=>x.day),[35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56]);
+ const mapped=data.days.filter(x=>x.day>=35&&x.day<=57);
+ assert.deepEqual(mapped.map(x=>x.day),[35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57]);
  assert.equal(new Set(data.days.map(x=>x.day)).size,data.days.length,'course mappings must stay unique');
 
  const expectations=[
@@ -48,8 +48,8 @@ test('Day35 through Day56 contribute reusable knowledge and reverse links to arc
   ['13.html',['Day 43','Day 44','Day 46','Ethernet / SOME-IP 的链路、服务、会话与数据新鲜度','DoIP Routing Activation']],
   ['15.html',['Day 45','Day 46','Health signal → event → qualification → DTC → snapshot → storage → tester','健康事件—DTC 证据合同','DoIP ACK 只证明诊断消息被 DoIP 节点接受处理']],
   ['19.html',['Day 49','Day 50','共享缓冲、DMA/IOMMU 与资源生命周期合同','GPU、DDR 带宽预算、拥塞与帧截止期合同','ProducerWriting','Quarantined','avg_bw','peak_bw','FrameTimeline','PSI']],
-  ['20.html',['Day 51','Day 52','Day 53','Day 54','Day 55','Day 56','需求分解、场景边界与系统级验收合同','可观测性与证据合同','评审基线、发现项与证据准入','变更影响、风险关闭与发布门禁','business accepted','generation','TBD']],
-  ['23.html',['Day 51','Day 52','Day 53','Day 54','Day 55—56','需求—场景—验收—证据追踪矩阵','可观测性—验证证据闭环','评审与发布证据门禁','verification','validation','traceability']]
+  ['20.html',['Day 51','Day 52','Day 53','Day 54','Day 55','Day 56','Day 57','跨域架构评审决议与业务完成阶梯','需求分解、场景边界与系统级验收合同','可观测性与证据合同','评审基线、发现项与证据准入','变更影响、风险关闭与发布门禁','business accepted','generation','TBD']],
+  ['23.html',['Day 51','Day 52','Day 53','Day 54','Day 55—56','Day 57','跨域评审发现项的验证与处置','需求—场景—验收—证据追踪矩阵','可观测性—验证证据闭环','评审与发布证据门禁','verification','validation','traceability']]
  ];
  for(const [page,texts] of expectations){
   const html=read(`docs/architecture/${page}`);
@@ -60,10 +60,11 @@ test('Day35 through Day56 contribute reusable knowledge and reverse links to arc
  assert.ok(search.some(x=>x.url.startsWith('15.html#')&&x.text.includes('EventID')&&x.text.includes('tester')),'integrated diagnostic contract is searchable');
  assert.ok(search.some(x=>x.url.startsWith('19.html#')&&x.text.includes('IOMMU')&&x.text.includes('quarantine')),'shared-resource lifecycle contract is searchable');
  assert.ok(search.some(x=>x.url.startsWith('19.html#')&&x.text.includes('FrameTimeline')&&x.text.includes('PSI')),'performance evidence contract is searchable');
+ assert.ok(search.some(x=>x.url.startsWith('20.html#')&&x.text.includes('Day 57')&&x.text.includes('决议')),'Day57 decision contract is searchable');
 });
 
 test('knowledge home exposes the latest course integration entry',()=>{
  const home=read('docs/architecture/index.html');
- assert.ok(home.includes('Day 35—56 课程知识沉淀'));
+ assert.ok(home.includes('Day 35—57 课程知识沉淀'));
  assert.ok(home.includes('23.html#评审与发布证据门禁'));
 });

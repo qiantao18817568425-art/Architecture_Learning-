@@ -147,8 +147,7 @@ test('Friday 2026-11-06 publishes one Week17 review without advancing Day57',()=
   assert.deepEqual(review?.scope,[53,54,55,56]);
   assert.equal(review?.firstPublishedOn,'2026-11-06');
   assert.equal(progress.lessons.filter(x=>x.id==='week-17-friday').length,1);
-  assert.equal(progress.lastPublishedDay,56);
-  assert.equal(progress.lastAssignedDay,56);
+  assert.ok(progress.lessons.find(x=>x.id==='day-56'));
 });
 
 test('Saturday 2026-11-07 consolidates only Day53 through Day56',()=>{
@@ -161,9 +160,7 @@ test('Saturday 2026-11-07 consolidates only Day53 through Day56',()=>{
   assert.equal(review?.firstPublishedOn,'2026-11-07');
   assert.equal(review?.assessment,'awaiting_answers');
   assert.equal(progress.lessons.filter(x=>x.id==='week-17-saturday').length,1);
-  assert.equal(progress.lastPublishedDay,56);
-  assert.equal(progress.lastAssignedDay,56);
-  assert.equal(progress.lessons.some(x=>x.id==='day-57'),false);
+  assert.ok(progress.lessons.find(x=>x.id==='day-56'));
 });
 
 test('Sunday 2026-11-08 integrates Day53 through Day56 without advancing Day57',()=>{
@@ -176,10 +173,22 @@ test('Sunday 2026-11-08 integrates Day53 through Day56 without advancing Day57',
   assert.equal(review?.firstPublishedOn,'2026-11-08');
   assert.equal(review?.assessment,'awaiting_answers');
   assert.equal(progress.lessons.filter(x=>x.id==='week-17-sunday').length,1);
-  assert.equal(progress.currentUnitId,'week-17-sunday');
-  assert.equal(progress.lastPublishedDay,56);
-  assert.equal(progress.lastAssignedDay,56);
-  assert.equal(progress.lessons.some(x=>x.id==='day-57'),false);
-  assert.equal(progress.nextUnit.id,'day-57');
-  assert.equal(progress.nextUnit.scheduledFor,'2026-11-09');
+  assert.ok(progress.lessons.find(x=>x.id==='day-57'));
+});
+
+test('Monday 2026-11-09 formally assigns Day57 once and retains evidence status',()=>{
+  const progress=JSON.parse(readFileSync(new URL('../content/learning-progress.json',import.meta.url),'utf8'));
+  const lesson=progress.lessons.find(x=>x.id==='day-57');
+  assert.equal(scheduleForDate('2026-11-09').kind,'day');
+  assert.equal(lesson?.kind,'day');
+  assert.equal(lesson?.scheduledFor,'2026-11-09');
+  assert.equal(lesson?.firstPublishedOn,'2026-11-09');
+  assert.equal(lesson?.assessment,'awaiting_answers');
+  assert.equal(progress.lessons.filter(x=>x.id==='day-57').length,1);
+  assert.equal(progress.lastPublishedDay,57);
+  assert.equal(progress.lastAssignedDay,57);
+  assert.equal(progress.currentUnitId,'day-57');
+  assert.equal(progress.nextUnit.id,'day-58');
+  assert.equal(progress.nextUnit.scheduledFor,'2026-11-10');
+  assert.equal(progress.masteryEvidence.length,0);
 });

@@ -177,7 +177,7 @@ flowchart LR
 
 [AOSP BufferQueue 与 Gralloc](https://source.android.com/docs/core/graphics/arch-bq-gralloc)、[AOSP Synchronization framework](https://source.android.com/docs/core/graphics/sync)、[Linux DMA mapping guide](https://docs.kernel.org/core-api/dma-api-howto.html)、[Linux dma-buf](https://docs.kernel.org/driver-api/dma-buf.html)、[Linux Interconnect framework](https://docs.kernel.org/driver-api/interconnect.html)、[Linux PSI](https://docs.kernel.org/accounting/psi.html)、[Perfetto FrameTimeline](https://perfetto.dev/docs/data-sources/frametimeline)和[Perfetto GPU tracing](https://perfetto.dev/docs/data-sources/gpu)用于核对通用机制；当前车型的 allocator、IOMMU/SMMU、cache 属性、stream/VM/device ID、格式、counter、QoS、频率、阈值和恢复顺序仍需项目证据。`,
 
-  '20': `## 课程沉淀：Day 35—56 的统一关联键与旧消息规则
+  '20': `## 课程沉淀：Day 35—57 的统一关联键与旧消息规则
 
 跨音频、STR、显示、VM、Ethernet/SOME-IP 和诊断链，统一关联键至少包含 vehicle/config/build、powerCycle、Host bootId、VM generation、process incarnation、session/request/transaction/frame/incident ID、对象/音区/显示/服务实例和域内 monotonic 时间。跨域时间必须记录映射方法和误差；两事件间隔小于误差时，不只凭时间排序断言因果。
 
@@ -234,10 +234,30 @@ Day 52 的 Interface Control Table 至少覆盖身份/版本、数据语义、�
 
 发布、回滚和恢复是三个不同承诺。rollout 成功需当前代业务结果与权威状态一致；rollback 成功还需兼容旧数据/配置、资源安全释放、相邻业务回归和诊断可追溯。当前项目的门禁阈值、批准权限、灰度比例和恢复预算仍待项目确认。
 
+## 跨域架构评审决议与业务完成阶梯
+
+关联课程：Day 57。评审决议把 Need、系统需求、场景、接口/架构版本、finding、变更、测试、原始证据和批准后的受控基线连接成可正反向追踪的链。技术建议、批准决定和配置基线生效属于三个不同里程碑；附条件通过须逐项记录 Owner、可读工件、复验判据、批准角色和重新打开条件，不能把行动项创建或会议同意当成关闭。
+
+跨域状态业务从权威源采样、网关接收、传输 ACK、消费者应用，直到执行端读回与用户结果，逐段定义完成证据。跨 VM/服务复位时把 source sequence 与 boot/VM/process generation、对象、schema、域内时间及映射误差一起校验；旧代事件不得更新新代状态。超时只说明终态未证，先冻结证据、查权威状态，再执行有界重试/补偿/降级。属性不可用或证据缺片时报告 unknown，不继续展示未经确认的旧值。
+
+~~~mermaid
+flowchart LR
+  N[Need/Scenario] --> R[System Req]
+  R --> I[Architecture/Interface Baseline]
+  I --> F[Review Finding]
+  F --> C[Change and Verification]
+  C --> E[Raw Evidence/Readback]
+  E --> D[Authorized Disposition]
+  D --> B[Controlled Baseline]
+  B -. new evidence or version .-> F
+~~~
+
+[NASA Technical Assessment](https://www.nasa.gov/reference/6-7-technical-assessment/)、[NASA Decision Analysis](https://www.nasa.gov/reference/6-8-decision-analysis/)、[NASA Product Verification](https://www.nasa.gov/reference/5-3-product-verification/)和[AOSP VHAL](https://source.android.com/docs/automotive/vhal)用于核对通用机制；本车型信号来源、网关部署、协议、提示策略、时限和结果均须由当前版本证据确认。
+
 [OpenTelemetry signals](https://opentelemetry.io/docs/concepts/signals/)、[OpenTelemetry semantic conventions](https://opentelemetry.io/docs/concepts/semantic-conventions/)、[NASA Product Verification](https://www.nasa.gov/reference/5-3-product-verification/)、[NASA Technical Assessment](https://www.nasa.gov/reference/6-7-technical-assessment/)、[NASA Configuration Management](https://www.nasa.gov/reference/6-5-configuration-management/)和[NASA Technical Risk Management](https://www.nasa.gov/reference/6-4-technical-risk-management/)用于核对通用机制；OEM 流程与现车数值须以当前项目证据为准。
 `,
 
-  '23': `## 课程沉淀：Day 35—56 的通用验证闭环
+  '23': `## 课程沉淀：Day 35—57 的通用验证闭环
 
 可复用验证矩阵覆盖：正常链、边界时序、瞬态/持续故障、丢包/乱序/重复、局部服务重启、Guest/设备/Host 分层复位、旧消息重放、资源压力、证据容量/轮转、恢复失败升级和相邻业务回归。每项记录目标、前置、注入、步骤、观测点、预期、实测、原始证据链接和通过判据。
 
@@ -269,5 +289,11 @@ Verification 回答是否满足技术规格，validation 回答在预期使用�
 
 关联课程：Day 55—56。评审矩阵把场景、架构节点/接口、关键问题、所需证据、首轮牵头、直接修复方、接口/恢复策略方和验证方放在同一行。finding 只有在对应版本的可读证据满足关闭判据、回归范围完成且残余风险被有权主体接受后才能关闭。
 
-发布验证至少覆盖正常、边界、异常恢复、混合版本、旧代隔离、rollback、共享资源和相邻业务；发布失败与回滚失败分别定义安全终态和升级条件。豁免不是通过：必须有原因、影响、补偿措施、Owner、到期日、监控阈值和重新打开条件。`
+发布验证至少覆盖正常、边界、异常恢复、混合版本、旧代隔离、rollback、共享资源和相邻业务；发布失败与回滚失败分别定义安全终态和升级条件。豁免不是通过：必须有原因、影响、补偿措施、Owner、到期日、监控阈值和重新打开条件。
+
+## 跨域评审发现项的验证与处置
+
+关联课程：Day 57。每个 finding 从现象与影响出发，关联需求、架构节点、配置版本、最早可证实断点、竞争假设、直接修复方、接口/恢复策略方和验证方。测试计划覆盖正常、Guest/Host/源局部复位、重复乱序、旧代回调、超时未知终态、属性不可用、证据丢失与相邻业务。每项必须列注入方法、同一事务关联键、源与消费者读回、原始工件、通过判据和执行状态；未执行只记待执行。
+
+关闭顺序为：冻结基线 → 修复或受控处理 → 复验目标接口 → 端到端业务读回 → 回归/风险复核 → 有权处置 → 配置记账。若新证据否定假设、构建/协议变化、风险越限或证据质量退化，应重新打开对应 finding，而非沿用旧结论。`
 };

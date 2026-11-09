@@ -93,6 +93,7 @@ for(const [id,texts,minDiagrams] of [
   ['day-54',['可观测性与验证设计','OpenTelemetry','business accepted','待项目确认','答卷中心'],3],
   ['day-55',['评审基线','场景走查','证据准入','待项目确认','答卷中心'],2],
   ['day-56',['变更影响','发布门禁','rollback','风险','答卷中心'],3]
+  ,['day-57',['跨域架构评审实战','完成阶梯','ACK','业务完成','旧代','待项目确认','答卷中心'],2]
 ]) test(`${id} is independently publishable and evidence bounded`,()=>{
   const markdown=read(`content/lessons/${id}.md`);
   for(const text of texts) assert.ok(markdown.includes(text),`${id} contains ${text}`);
