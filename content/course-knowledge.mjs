@@ -13,7 +13,25 @@ Day 52 把模块责任拆成策略/权威、执行、数据所有权、状态权
 
 跨 VM 或服务复位时，由恢复协调者建立新 generation 和依赖屏障；各 Owner 在新代重建资源、交换权威快照后才放行业务。旧代 callback、timeout、fence、handle、completion 和 cancel 只归档，不得推进新代状态；sequenceId 需与 producer identity、bootId/generation 组合使用。
 
-[AOSP AVF architecture](https://source.android.com/docs/core/virtualization/architecture)与[OASIS Virtio 1.3](https://docs.oasis-open.org/virtio/virtio/v1.3/virtio-v1.3.html)用于核对通用职责和设备 reset 后重新初始化的边界；它们不是本车型实现证明。`,
+[AOSP AVF architecture](https://source.android.com/docs/core/virtualization/architecture)与[OASIS Virtio 1.3](https://docs.oasis-open.org/virtio/virtio/v1.3/virtio-v1.3.html)用于核对通用职责和设备 reset 后重新初始化的边界；它们不是本车型实现证明。
+
+## 域控制器系统边界与六视图方案包
+
+关联课程：Day 58。入门架构方案应先定义系统对象、外部参与者、使用场景和现车版本，再交付可相互追踪的场景/需求、逻辑/职责、部署/接口、六流/时序、预算/权衡、验证/演进六种视图。图中的 MCU、Yocto Host、Hypervisor、Android Guest、TBox 和外设各标运行域、输入/输出、状态权威、资源所有者、恢复协调者及观测点；不参与主业务的域也应说明环境关系或待确认，不把候选部署写成车型事实。
+
+六流为控制、数据、状态、电源、资源与证据。一次业务可能跨越多个故障域，但每个接口的负责方、当前代身份和完成阶段必须明确。系统边界改变时，要回查需求分配、接口版本、预算和验收证据。具体车型连接、SoC、虚拟化/设备共享方式与阈值由现车资料确认。
+
+~~~mermaid
+flowchart LR
+  N[Need/Scenario] --> L[Logic and authority]
+  L --> D[Deployment and interface]
+  D --> F[Control/Data/State/Power/Resource/Evidence]
+  F --> B[Timing and resource budgets]
+  B --> V[Verification and evolution]
+  V -. failed evidence or changed baseline .-> N
+~~~
+
+[NASA Logical Decomposition](https://www.nasa.gov/reference/4-3-logical-decomposition/)与[Interface Management](https://www.nasa.gov/reference/6-3-interface-management/)支持通用分配和接口管理方法；本车型部署必须独立核验。`,
 
   '05': `## 课程沉淀：SOME/IP 消息成功与业务完成的边界
 
@@ -177,7 +195,7 @@ flowchart LR
 
 [AOSP BufferQueue 与 Gralloc](https://source.android.com/docs/core/graphics/arch-bq-gralloc)、[AOSP Synchronization framework](https://source.android.com/docs/core/graphics/sync)、[Linux DMA mapping guide](https://docs.kernel.org/core-api/dma-api-howto.html)、[Linux dma-buf](https://docs.kernel.org/driver-api/dma-buf.html)、[Linux Interconnect framework](https://docs.kernel.org/driver-api/interconnect.html)、[Linux PSI](https://docs.kernel.org/accounting/psi.html)、[Perfetto FrameTimeline](https://perfetto.dev/docs/data-sources/frametimeline)和[Perfetto GPU tracing](https://perfetto.dev/docs/data-sources/gpu)用于核对通用机制；当前车型的 allocator、IOMMU/SMMU、cache 属性、stream/VM/device ID、格式、counter、QoS、频率、阈值和恢复顺序仍需项目证据。`,
 
-  '20': `## 课程沉淀：Day 35—57 的统一关联键与旧消息规则
+  '20': `## 课程沉淀：Day 35—58 的统一关联键与旧消息规则
 
 跨音频、STR、显示、VM、Ethernet/SOME-IP 和诊断链，统一关联键至少包含 vehicle/config/build、powerCycle、Host bootId、VM generation、process incarnation、session/request/transaction/frame/incident ID、对象/音区/显示/服务实例和域内 monotonic 时间。跨域时间必须记录映射方法和误差；两事件间隔小于误差时，不只凭时间排序断言因果。
 
@@ -254,10 +272,32 @@ flowchart LR
 
 [NASA Technical Assessment](https://www.nasa.gov/reference/6-7-technical-assessment/)、[NASA Decision Analysis](https://www.nasa.gov/reference/6-8-decision-analysis/)、[NASA Product Verification](https://www.nasa.gov/reference/5-3-product-verification/)和[AOSP VHAL](https://source.android.com/docs/automotive/vhal)用于核对通用机制；本车型信号来源、网关部署、协议、提示策略、时限和结果均须由当前版本证据确认。
 
+## 域控制器六流接口与分段预算合同
+
+关联课程：Day 58。系统级结果从有效触发到当前代的用户可见/可听业务结果，沿控制、数据、状态、电源、资源、证据六流逐接口检查。每条线注明 schema/version、authority、对象与 session、boot/VM/device generation、源时间和误差、TTL/deadline、request ACK、局部完成、消费者读回、未知终态、取消、复位重取和安全降级。局部 ready、buffer 入队、fence 或 present 只证明各自阶段，不能替代最终场景验收。
+
+端到端 deadline 分配到采集/计算/传输/消费/输出和恢复预算，同时核算 buffer、共享内存、峰值与持续带宽、IOMMU 映射、并发负载和安全裕量。预算必须有测量方法、当前配置与原始证据；未知阈值用 TBD 标记负责关闭的角色。超时冻结原事务并查权威状态，旧代资源与 callback 隔离后才按幂等合同继续、补偿或有界重试。
+
+~~~mermaid
+flowchart LR
+  S[Valid trigger] --> C[Control/authority]
+  C --> R[Resource owner and data producer]
+  R --> V[VM/IPC current generation]
+  V --> U[Consumer and output]
+  U --> O[Business readback]
+  P[Power/ready barrier] -. gates .-> C
+  P -. gates .-> V
+  E[IDs/time uncertainty/artifact] -. evidence .-> C
+  E -. evidence .-> V
+  E -. evidence .-> O
+~~~
+
+[NASA Stakeholder Expectations](https://www.nasa.gov/reference/4-1-stakeholder-expectations-definition/)与[Design Solution Definition](https://www.nasa.gov/reference/4-4-design-solution-definition/)用于核对场景和方案方法；实际预算及部署待项目确认。
+
 [OpenTelemetry signals](https://opentelemetry.io/docs/concepts/signals/)、[OpenTelemetry semantic conventions](https://opentelemetry.io/docs/concepts/semantic-conventions/)、[NASA Product Verification](https://www.nasa.gov/reference/5-3-product-verification/)、[NASA Technical Assessment](https://www.nasa.gov/reference/6-7-technical-assessment/)、[NASA Configuration Management](https://www.nasa.gov/reference/6-5-configuration-management/)和[NASA Technical Risk Management](https://www.nasa.gov/reference/6-4-technical-risk-management/)用于核对通用机制；OEM 流程与现车数值须以当前项目证据为准。
 `,
 
-  '23': `## 课程沉淀：Day 35—57 的通用验证闭环
+  '23': `## 课程沉淀：Day 35—58 的通用验证闭环
 
 可复用验证矩阵覆盖：正常链、边界时序、瞬态/持续故障、丢包/乱序/重复、局部服务重启、Guest/设备/Host 分层复位、旧消息重放、资源压力、证据容量/轮转、恢复失败升级和相邻业务回归。每项记录目标、前置、注入、步骤、观测点、预期、实测、原始证据链接和通过判据。
 
@@ -295,5 +335,13 @@ Verification 回答是否满足技术规格，validation 回答在预期使用�
 
 关联课程：Day 57。每个 finding 从现象与影响出发，关联需求、架构节点、配置版本、最早可证实断点、竞争假设、直接修复方、接口/恢复策略方和验证方。测试计划覆盖正常、Guest/Host/源局部复位、重复乱序、旧代回调、超时未知终态、属性不可用、证据丢失与相邻业务。每项必须列注入方法、同一事务关联键、源与消费者读回、原始工件、通过判据和执行状态；未执行只记待执行。
 
-关闭顺序为：冻结基线 → 修复或受控处理 → 复验目标接口 → 端到端业务读回 → 回归/风险复核 → 有权处置 → 配置记账。若新证据否定假设、构建/协议变化、风险越限或证据质量退化，应重新打开对应 finding，而非沿用旧结论。`
+关闭顺序为：冻结基线 → 修复或受控处理 → 复验目标接口 → 端到端业务读回 → 回归/风险复核 → 有权处置 → 配置记账。若新证据否定假设、构建/协议变化、风险越限或证据质量退化，应重新打开对应 finding，而非沿用旧结论。
+
+## 系统方案 V1 的需求—预算—验证闭环
+
+关联课程：Day 58。架构方案包把 Need/场景、system shall、逻辑与部署责任、六流接口、分段时序/资源预算、异常恢复、A/B 决策、验证与风险串成一条可正反向追踪的基线。每个预算和接口要有负责方、测量环境、版本、原始证据与通过判据；未知车型参数、未执行测试、证据缺片保持 TBD/待执行/unknown。不能用设计图的完整、服务 ready 或一次恢复成功代替符合性证明。
+
+验证至少包含正常与取消、STR/局部复位、旧代/乱序、超时未知终态、资源并发与相邻业务、混合版本、回滚和恢复失败。先检查安全、必须功能、资源、兼容与可观测硬门槛，再对候选架构做同环境对比；决定由有权主体记录并纳入受控配置。若系统边界、需求或版本变化，反向追踪受影响接口、预算、测试与风险后重新评审。
+
+[NASA Product Verification](https://www.nasa.gov/reference/5-3-product-verification/)和[Interface Management](https://www.nasa.gov/reference/6-3-interface-management/)用于核对客观证据与接口基线要求；现车测试结果仍待执行。`
 };

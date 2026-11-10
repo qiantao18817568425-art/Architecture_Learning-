@@ -185,10 +185,21 @@ test('Monday 2026-11-09 formally assigns Day57 once and retains evidence status'
   assert.equal(lesson?.firstPublishedOn,'2026-11-09');
   assert.equal(lesson?.assessment,'awaiting_answers');
   assert.equal(progress.lessons.filter(x=>x.id==='day-57').length,1);
-  assert.equal(progress.lastPublishedDay,57);
-  assert.equal(progress.lastAssignedDay,57);
-  assert.equal(progress.currentUnitId,'day-57');
-  assert.equal(progress.nextUnit.id,'day-58');
-  assert.equal(progress.nextUnit.scheduledFor,'2026-11-10');
+  assert.equal(progress.masteryEvidence.length,0);
+});
+
+test('Tuesday 2026-11-10 formally assigns Day58 once without inventing mastery',()=>{
+  const progress=JSON.parse(readFileSync(new URL('../content/learning-progress.json',import.meta.url),'utf8'));
+  const lesson=progress.lessons.find(x=>x.id==='day-58');
+  assert.equal(scheduleForDate('2026-11-10').kind,'day');
+  assert.equal(lesson?.scheduledFor,'2026-11-10');
+  assert.equal(lesson?.firstPublishedOn,'2026-11-10');
+  assert.equal(lesson?.assessment,'awaiting_answers');
+  assert.equal(progress.lessons.filter(x=>x.id==='day-58').length,1);
+  assert.equal(progress.lastPublishedDay,58);
+  assert.equal(progress.lastAssignedDay,58);
+  assert.equal(progress.currentUnitId,'day-58');
+  assert.equal(progress.nextUnit.id,'day-59');
+  assert.equal(progress.nextUnit.scheduledFor,'2026-11-11');
   assert.equal(progress.masteryEvidence.length,0);
 });
