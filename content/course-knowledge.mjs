@@ -71,7 +71,24 @@ DoIP Routing Activation 只建立当前 tester/socket 到配置目标的路由�
 
 首帧证据梯级至少覆盖 producer 提交新鲜 buffer、acquire fence 可用、consumer/HWC 处理、present/retire 进展、DRM/scanout 与面板/背光实态。恢复时丢弃旧 generation 的 frame/fence/callback，并用新鲜帧而非旧画面亮屏作为验收。具体 SerDes、屏 ID、GPIO/IRQ、fence 语义和时限待项目版本确认。
 
-[AOSP BufferQueue 与 Gralloc](https://source.android.com/docs/core/graphics/arch-bq-gralloc)、[AOSP 同步框架](https://source.android.com/docs/core/graphics/sync)和[Linux DRM UAPI](https://docs.kernel.org/gpu/drm-uapi.html)给出通用边界。`,
+[AOSP BufferQueue 与 Gralloc](https://source.android.com/docs/core/graphics/arch-bq-gralloc)、[AOSP 同步框架](https://source.android.com/docs/core/graphics/sync)和[Linux DRM UAPI](https://docs.kernel.org/gpu/drm-uapi.html)给出通用边界。
+
+## STR 后黑屏的四层定位合同
+
+关联课程：Day 59。黑屏须按内容源、合成/scanout、物理传输与面板、屏电与背光四层核查；每层分别保存输入、当前代 frameId/displayId、状态读回和完成语义。截图、buffer fence、HWC present、vblank、链路 lock 与背光读回各只能证明其观测边界；业务完成需要同一目标屏的当前内容可见证据。先核对 Guest displayId、Host connector 和物理屏的版本化映射，另一屏正常不能自动排除共享电源或资源问题。
+
+~~~mermaid
+flowchart LR
+  C[当前代内容源] --> Q[合成与scanout]
+  Q --> L[物理链路与面板]
+  L --> B[屏电背光与可见结果]
+  E[boot/VM/device generation与displayId] -. 逐层关联 .-> C
+  E -. 逐层关联 .-> Q
+  E -. 逐层关联 .-> L
+  E -. 逐层关联 .-> B
+~~~
+
+[AOSP 图形架构](https://source.android.com/docs/core/graphics/architecture)与[HWC](https://source.android.com/docs/core/graphics/implement-hwc)用于核对通用图形链；现车物理显示拓扑与器件需独立确认。`,
 
   '12': `## 课程沉淀：音频焦点、路由、DSP 与功放的分层完成语义
 
@@ -119,7 +136,13 @@ flowchart LR
   X --> R
 ~~~
 
-[AOSP A/B updates](https://source.android.com/docs/core/ota/ab)、[Android Verified Boot](https://source.android.com/docs/security/features/verifiedboot/avb)以及[AUTOSAR UCM](https://www.autosar.org/fileadmin/standards/R22-11/AP/AUTOSAR_SWS_UpdateAndConfigurationManagement.pdf)用于核对通用机制；当前车型的分区、包、密钥、rollback index、依赖图、车辆状态和门禁仍需项目证据。`,
+[AOSP A/B updates](https://source.android.com/docs/core/ota/ab)、[Android Verified Boot](https://source.android.com/docs/security/features/verifiedboot/avb)以及[AUTOSAR UCM](https://www.autosar.org/fileadmin/standards/R22-11/AP/AUTOSAR_SWS_UpdateAndConfigurationManagement.pdf)用于核对通用机制；当前车型的分区、包、密钥、rollback index、依赖图、车辆状态和门禁仍需项目证据。
+
+## STR 运行周期判别与显示恢复屏障
+
+关联课程：Day 59。先以 bootId、powerCycle、suspend entry/exit、uptime、VM/device generation 和 reset reason 区分真 STR、suspend abort、Guest 重建和整机重启，再讨论显示恢复的依赖顺序。恢复协调应以当前代物理状态读回校验缓存 ready；缓存若跨 suspend 或设备 reset 仍被使用，必须有明确失效与重建合同。恢复路径先保全证据与隔离旧代，查询电源权威，再按设备、虚拟接口、图形与物理可见结果逐层验收。有界重试失败进入项目定义的降级与升级；时限、阈值和实际控制方待项目确认。
+
+[AAOS Power Management](https://source.android.com/docs/automotive/power/power)与[Linux 设备电源管理](https://docs.kernel.org/driver-api/pm/devices.html)仅支持通用状态和回调边界，不证明当前车型实现。`,
 
   '15': `## 课程沉淀：健康状态、故障码与跨复位证据合同
 
@@ -195,7 +218,7 @@ flowchart LR
 
 [AOSP BufferQueue 与 Gralloc](https://source.android.com/docs/core/graphics/arch-bq-gralloc)、[AOSP Synchronization framework](https://source.android.com/docs/core/graphics/sync)、[Linux DMA mapping guide](https://docs.kernel.org/core-api/dma-api-howto.html)、[Linux dma-buf](https://docs.kernel.org/driver-api/dma-buf.html)、[Linux Interconnect framework](https://docs.kernel.org/driver-api/interconnect.html)、[Linux PSI](https://docs.kernel.org/accounting/psi.html)、[Perfetto FrameTimeline](https://perfetto.dev/docs/data-sources/frametimeline)和[Perfetto GPU tracing](https://perfetto.dev/docs/data-sources/gpu)用于核对通用机制；当前车型的 allocator、IOMMU/SMMU、cache 属性、stream/VM/device ID、格式、counter、QoS、频率、阈值和恢复顺序仍需项目证据。`,
 
-  '20': `## 课程沉淀：Day 35—58 的统一关联键与旧消息规则
+  '20': `## 课程沉淀：Day 35—59 的统一关联键与旧消息规则
 
 跨音频、STR、显示、VM、Ethernet/SOME-IP 和诊断链，统一关联键至少包含 vehicle/config/build、powerCycle、Host bootId、VM generation、process incarnation、session/request/transaction/frame/incident ID、对象/音区/显示/服务实例和域内 monotonic 时间。跨域时间必须记录映射方法和误差；两事件间隔小于误差时，不只凭时间排序断言因果。
 
@@ -295,9 +318,13 @@ flowchart LR
 [NASA Stakeholder Expectations](https://www.nasa.gov/reference/4-1-stakeholder-expectations-definition/)与[Design Solution Definition](https://www.nasa.gov/reference/4-4-design-solution-definition/)用于核对场景和方案方法；实际预算及部署待项目确认。
 
 [OpenTelemetry signals](https://opentelemetry.io/docs/concepts/signals/)、[OpenTelemetry semantic conventions](https://opentelemetry.io/docs/concepts/semantic-conventions/)、[NASA Product Verification](https://www.nasa.gov/reference/5-3-product-verification/)、[NASA Technical Assessment](https://www.nasa.gov/reference/6-7-technical-assessment/)、[NASA Configuration Management](https://www.nasa.gov/reference/6-5-configuration-management/)和[NASA Technical Risk Management](https://www.nasa.gov/reference/6-4-technical-risk-management/)用于核对通用机制；OEM 流程与现车数值须以当前项目证据为准。
-`,
 
-  '23': `## 课程沉淀：Day 35—58 的通用验证闭环
+
+## STR 黑屏的跨域关联键与最早断点
+
+关联课程：Day 59。跨域证据按 build/config、bootId、powerCycle、VM/device generation、displayId、session/frameId 与各域单调时间及映射误差关联。墙钟区间重叠时保留偏序；日志采集、轮转或屏端测量缺片时记 unknown，不能把未观察到当未发生。由最后已证实正常的交接与第一个已证实异常的读回界定断点，把 STR 触发、直接失效、可能的先前机制、加剧因素与重启清理分开；局部 ACK、ready 和恢复成功都不独立证明根因。`,
+
+  '23': `## 课程沉淀：Day 35—59 的通用验证闭环
 
 可复用验证矩阵覆盖：正常链、边界时序、瞬态/持续故障、丢包/乱序/重复、局部服务重启、Guest/设备/Host 分层复位、旧消息重放、资源压力、证据容量/轮转、恢复失败升级和相邻业务回归。每项记录目标、前置、注入、步骤、观测点、预期、实测、原始证据链接和通过判据。
 
@@ -343,5 +370,9 @@ Verification 回答是否满足技术规格，validation 回答在预期使用�
 
 验证至少包含正常与取消、STR/局部复位、旧代/乱序、超时未知终态、资源并发与相邻业务、混合版本、回滚和恢复失败。先检查安全、必须功能、资源、兼容与可观测硬门槛，再对候选架构做同环境对比；决定由有权主体记录并纳入受控配置。若系统边界、需求或版本变化，反向追踪受影响接口、预算、测试与风险后重新评审。
 
-[NASA Product Verification](https://www.nasa.gov/reference/5-3-product-verification/)和[Interface Management](https://www.nasa.gov/reference/6-3-interface-management/)用于核对客观证据与接口基线要求；现车测试结果仍待执行。`
+[NASA Product Verification](https://www.nasa.gov/reference/5-3-product-verification/)和[Interface Management](https://www.nasa.gov/reference/6-3-interface-management/)用于核对客观证据与接口基线要求；现车测试结果仍待执行。
+
+## STR 后黑屏的差分验证与关闭判据
+
+关联课程：Day 59。测试矩阵区分正常冷启动、真 STR、suspend abort、Guest/设备局部重建；分别注入内容停帧、合成/scanout 停止、物理链路失锁、屏电/背光失效、映射错误及证据采集缺片。每次冻结版本、负载、目标屏映射和关联键，保存原始日志、寄存器、仪器或屏端工件及哈希。候选修复须在同条件下复现、差分、回归，覆盖重复乱序、旧代回调、超时未知态、资源并发、混合版本和相邻业务；以当前帧实屏可见、有界恢复、旧代零污染及项目时限为关闭条件。未执行或证据不可读保持待验证。`
 };
