@@ -31,13 +31,35 @@ flowchart LR
   V -. failed evidence or changed baseline .-> N
 ~~~
 
-[NASA Logical Decomposition](https://www.nasa.gov/reference/4-3-logical-decomposition/)与[Interface Management](https://www.nasa.gov/reference/6-3-interface-management/)支持通用分配和接口管理方法；本车型部署必须独立核验。`,
+[NASA Logical Decomposition](https://www.nasa.gov/reference/4-3-logical-decomposition/)与[Interface Management](https://www.nasa.gov/reference/6-3-interface-management/)支持通用分配和接口管理方法；本车型部署必须独立核验。
+
+## 跨域恢复故障域与事务权威
+
+关联课程：Day 60。恢复设计先确定业务状态权威、事务所有者、各域复位权限和最小故障域，再将 Android Guest、Yocto Host、Hypervisor、MCU、TBox 与外设按实际部署画成控制、数据、状态、电源、资源、证据六流。Guest/Host/设备局部复位后的新 generation 必须拒绝旧 callback、queue、handle 与状态缓存；重建订阅后先从权威源取得当前快照，再恢复消费者。TBox 是否参与和具体控制者均依车型版本核实。
+
+~~~mermaid
+flowchart LR
+  A[Current-generation request] --> B[Transaction owner]
+  B --> C[Execution authority]
+  C --> D[Authoritative readback]
+  D --> E[User/business result]
+  R[Guest/Host/device reset] -. invalidates old generation .-> A
+  R -. rebuild subscription and snapshot .-> D
+  U[Unknown terminal state] --> Q[Query authority]
+  Q --> B
+~~~
+`,
 
   '05': `## 课程沉淀：SOME/IP 消息成功与业务完成的边界
 
 关联课程：Day 43、Day 44。SOME/IP 的 Response、Return Code、OfferService 和 Subscribe ACK 只覆盖各自协议步骤。架构评审必须继续检查 source、producer、router、consumer 和 actuator/display 是否处理同一代、同一对象且足够新的数据。Request ID 关联请求响应；发布订阅还需 sequence、source timestamp、receive timestamp、TTL/周期和当前 session/generation 才能判断重复、丢失、乱序和陈旧。
 
-恢复不能只做 reconnect。先识别最小故障域，再按 subscriber/resubscribe、service restart、Guest 网络重建、virtio/backend、VLAN/IP/routing/firewall、PHY/PCS/交换机逐级扩大，并在每一级验证数据恢复推进。`,
+恢复不能只做 reconnect。先识别最小故障域，再按 subscriber/resubscribe、service restart、Guest 网络重建、virtio/backend、VLAN/IP/routing/firewall、PHY/PCS/交换机逐级扩大，并在每一级验证数据恢复推进。
+
+## ACK、执行读回与未知终态的接口合同
+
+关联课程：Day 60。跨域请求把接收 ACK、协调者 accepted、执行端受理、权威状态读回和用户业务完成分别定义。超时只表示调用方没有证明终态，执行可能已发生；先保留 requestId、对象、代际及原始证据，向权威源查询，再按明确的幂等键、有效期、跨复位持久性和安全目标决定继续、补偿、有界重试或降级。物理连接、会话在线与服务 ready 不替代业务新鲜度和结果验收。
+`,
 
   '06': `## 课程沉淀：进程、Guest 与 Host 稳定性边界
 
@@ -218,7 +240,7 @@ flowchart LR
 
 [AOSP BufferQueue 与 Gralloc](https://source.android.com/docs/core/graphics/arch-bq-gralloc)、[AOSP Synchronization framework](https://source.android.com/docs/core/graphics/sync)、[Linux DMA mapping guide](https://docs.kernel.org/core-api/dma-api-howto.html)、[Linux dma-buf](https://docs.kernel.org/driver-api/dma-buf.html)、[Linux Interconnect framework](https://docs.kernel.org/driver-api/interconnect.html)、[Linux PSI](https://docs.kernel.org/accounting/psi.html)、[Perfetto FrameTimeline](https://perfetto.dev/docs/data-sources/frametimeline)和[Perfetto GPU tracing](https://perfetto.dev/docs/data-sources/gpu)用于核对通用机制；当前车型的 allocator、IOMMU/SMMU、cache 属性、stream/VM/device ID、格式、counter、QoS、频率、阈值和恢复顺序仍需项目证据。`,
 
-  '20': `## 课程沉淀：Day 35—59 的统一关联键与旧消息规则
+  '20': `## 课程沉淀：Day 35—60 的统一关联键与旧消息规则
 
 跨音频、STR、显示、VM、Ethernet/SOME-IP 和诊断链，统一关联键至少包含 vehicle/config/build、powerCycle、Host bootId、VM generation、process incarnation、session/request/transaction/frame/incident ID、对象/音区/显示/服务实例和域内 monotonic 时间。跨域时间必须记录映射方法和误差；两事件间隔小于误差时，不只凭时间排序断言因果。
 
@@ -322,9 +344,14 @@ flowchart LR
 
 ## STR 黑屏的跨域关联键与最早断点
 
-关联课程：Day 59。跨域证据按 build/config、bootId、powerCycle、VM/device generation、displayId、session/frameId 与各域单调时间及映射误差关联。墙钟区间重叠时保留偏序；日志采集、轮转或屏端测量缺片时记 unknown，不能把未观察到当未发生。由最后已证实正常的交接与第一个已证实异常的读回界定断点，把 STR 触发、直接失效、可能的先前机制、加剧因素与重启清理分开；局部 ACK、ready 和恢复成功都不独立证明根因。`,
+关联课程：Day 59。跨域证据按 build/config、bootId、powerCycle、VM/device generation、displayId、session/frameId 与各域单调时间及映射误差关联。墙钟区间重叠时保留偏序；日志采集、轮转或屏端测量缺片时记 unknown，不能把未观察到当未发生。由最后已证实正常的交接与第一个已证实异常的读回界定断点，把 STR 触发、直接失效、可能的先前机制、加剧因素与重启清理分开；局部 ACK、ready 和恢复成功都不独立证明根因。
 
-  '23': `## 课程沉淀：Day 35—59 的通用验证闭环
+## 跨域恢复事务的证据与代际合同
+
+关联课程：Day 60。每一事务关联 build/config、bootId、powerCycle、Guest/Host/process/device generation、requestId、业务对象、权威 source sequence、域内单调时间及映射误差；保留 ACK、accepted、执行读回、HMI 结果和原始工件 URI/hash。不同域时间不确定区间重叠时只保留可证明偏序。旧代消息与资源必须被隔离，订阅重建后的快照以权威源 sequence 和有效期判断。缺采集或日志轮转产生 unknown，不把“未看到”当“未发生”，也不把恢复后正常倒推为根因。
+`,
+
+  '23': `## 课程沉淀：Day 35—60 的通用验证闭环
 
 可复用验证矩阵覆盖：正常链、边界时序、瞬态/持续故障、丢包/乱序/重复、局部服务重启、Guest/设备/Host 分层复位、旧消息重放、资源压力、证据容量/轮转、恢复失败升级和相邻业务回归。每项记录目标、前置、注入、步骤、观测点、预期、实测、原始证据链接和通过判据。
 
@@ -374,5 +401,12 @@ Verification 回答是否满足技术规格，validation 回答在预期使用�
 
 ## STR 后黑屏的差分验证与关闭判据
 
-关联课程：Day 59。测试矩阵区分正常冷启动、真 STR、suspend abort、Guest/设备局部重建；分别注入内容停帧、合成/scanout 停止、物理链路失锁、屏电/背光失效、映射错误及证据采集缺片。每次冻结版本、负载、目标屏映射和关联键，保存原始日志、寄存器、仪器或屏端工件及哈希。候选修复须在同条件下复现、差分、回归，覆盖重复乱序、旧代回调、超时未知态、资源并发、混合版本和相邻业务；以当前帧实屏可见、有界恢复、旧代零污染及项目时限为关闭条件。未执行或证据不可读保持待验证。`
+关联课程：Day 59。测试矩阵区分正常冷启动、真 STR、suspend abort、Guest/设备局部重建；分别注入内容停帧、合成/scanout 停止、物理链路失锁、屏电/背光失效、映射错误及证据采集缺片。每次冻结版本、负载、目标屏映射和关联键，保存原始日志、寄存器、仪器或屏端工件及哈希。候选修复须在同条件下复现、差分、回归，覆盖重复乱序、旧代回调、超时未知态、资源并发、混合版本和相邻业务；以当前帧实屏可见、有界恢复、旧代零污染及项目时限为关闭条件。未执行或证据不可读保持待验证。
+
+## A/B 恢复方案的硬门槛与关闭
+
+关联课程：Day 60。方案 A 由协调者保存事务账本并在超时后查询权威状态；方案 B 在执行权威提供端到端幂等键、有效期与状态查询。两者都须证明跨复位账本/去重能力、旧代零污染、唯一动作或允许重复的语义、安全降级、恢复预算、接口兼容和证据可采集。先过硬门槛，再在相同硬件、版本、负载、注入和观测条件下比较资源、时延、复杂度与迁移成本；未知或未测只能标 TBD/待执行。
+
+验证覆盖正常、取消、响应丢失、超时未知态、Guest/Host/MCU 分层复位、重复乱序、旧代回调、订阅重建、混合版本、回滚、证据缺片、资源并发及相邻业务。每项关联需求/接口版本、testId、注入、权威读回、用户结果、原始工件和通过判据。finding 关闭还需责任边界、差分修复、有权批准和配置记账；新证据、版本变化或风险越限则重新打开。
+`
 };

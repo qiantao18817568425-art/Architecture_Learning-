@@ -96,6 +96,7 @@ for(const [id,texts,minDiagrams] of [
   ,['day-57',['跨域架构评审实战','完成阶梯','ACK','业务完成','旧代','待项目确认','答卷中心'],2]
   ,['day-58',['智能座舱域控制器入门架构方案','六流','系统边界','ACK','业务完成','待项目确认','答卷中心'],2]
   ,['day-59',['STR 后黑屏根因分析','最早断点','ACK','业务完成','旧代','待项目确认','答卷中心'],2]
+  ,['day-60',['跨域恢复方案评审','故障域','ACK','业务完成','旧代','待项目确认','答卷中心'],2]
 ]) test(`${id} is independently publishable and evidence bounded`,()=>{
   const markdown=read(`content/lessons/${id}.md`);
   for(const text of texts) assert.ok(markdown.includes(text),`${id} contains ${text}`);

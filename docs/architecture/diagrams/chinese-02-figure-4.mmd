@@ -1,0 +1,9 @@
+flowchart LR
+  A[Current-generation request] --> B[Transaction owner]
+  B --> C[Execution authority]
+  C --> D[Authoritative readback]
+  D --> E[User/business result]
+  R[Guest/Host/device reset] -. invalidates old generation .-> A
+  R -. rebuild subscription and snapshot .-> D
+  U[Unknown terminal state] --> Q[Query authority]
+  Q --> B
