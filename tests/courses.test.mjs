@@ -135,3 +135,14 @@ test('Week17 Sunday integrates evidence recovery and verification without publis
   assert.ok(html.includes('查看答卷与批改'));
   assert.ok(html.includes('Day 53—56'));
 });
+
+
+test('Week18 Friday review stays independent and exposes answer workflows',()=>{
+  const markdown=read('content/lessons/week-18-friday.md');
+  for(const text of ['Day 57—60','不新增普通 Day','不附新题参考答案','个人反思由你本人填写','week-18-friday','答卷中心']) assert.ok(markdown.includes(text),text);
+  assert.doesNotMatch(markdown,/^#{1,6}\s*(参考答案|示范作答|预设根因)\s*[:：]?/m);
+  const html=read('docs/lessons/week-18-friday.html');
+  assert.ok(html.includes('上传／提交答卷'));
+  assert.ok(html.includes('查看答卷与批改'));
+  assert.ok(html.includes('Day 57—60'));
+});
