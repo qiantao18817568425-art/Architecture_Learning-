@@ -146,3 +146,14 @@ test('Week18 Friday review stays independent and exposes answer workflows',()=>{
   assert.ok(html.includes('查看答卷与批改'));
   assert.ok(html.includes('Day 57—60'));
 });
+
+
+test('Week18 Saturday consolidation asks for independent evidence and answer submission',()=>{
+  const markdown=read('content/lessons/week-18-saturday.md');
+  for(const text of ['Day 57','Day 60','不新增普通 Day','独立取证','证据链','本人反思','week-18-saturday','答卷中心']) assert.ok(markdown.includes(text),text);
+  assert.doesNotMatch(markdown,/^#{1,6}\s*(参考答案|示范作答|预设根因)\s*[:：]?/m);
+  const html=read('docs/lessons/week-18-saturday.html');
+  assert.ok(html.includes('上传／提交答卷'));
+  assert.ok(html.includes('查看答卷与批改'));
+  assert.ok(html.includes('Day 57'));
+});

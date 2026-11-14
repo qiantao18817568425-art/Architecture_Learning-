@@ -1,0 +1,188 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Week 18 - 周六巩固：双链画图、独立取证与恢复验证</title><style>
+    :root { color-scheme: light; font-family: "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif; color: #18212f; background: #f6f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.75; }
+    a { color: #075fbd; overflow-wrap: anywhere; }
+    code { background: #edf1f6; border-radius: 3px; padding: .08rem .28rem; }
+    pre { overflow: auto; background: #111827; color: #e5e7eb; padding: 1rem; border-radius: 6px; white-space: pre-wrap; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
+    header { border-left: 5px solid #db5a2a; padding: 12px 20px; margin-bottom: 28px; background: #fff; }
+    h1, h2, h3, h4, h5, h6 { line-height: 1.35; margin: 1.35em 0 .5em; }
+    h1 { margin: 0; font-size: 2rem; }
+    .lede { max-width: 840px; margin: .5rem 0 0; color: #4b5563; }
+    .metrics { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 26px; }
+    .metric { background: #e6eff8; border: 1px solid #bfd5ea; padding: 6px 12px; border-radius: 4px; color: #174a76; }
+    .metric strong { font-size: 1.15rem; }
+    .guide { background: #fff; border-top: 2px solid #1d8093; padding: 18px 22px; margin: 24px 0; }
+    .guide ol { margin-bottom: 0; }
+    .lesson { background: #fff; border: 1px solid #d8dee8; margin: 10px 0; }
+    summary { cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 18px; }
+    summary::-webkit-details-marker { color: #db5a2a; }
+    .lesson-title { font-weight: 700; font-size: 1.05rem; }
+    .lesson-meta { color: #52606d; font-size: .86rem; white-space: nowrap; }
+    .lesson-body { border-top: 1px solid #d8dee8; padding: 4px 22px 24px; }
+    .archive-note { color: #52606d; font-size: .92rem; border-left: 3px solid #1d8093; padding-left: 10px; }
+    .format-audit { border: 1px solid #b8d5cf; background: #f4fbf8; padding: 16px; margin: 18px 0; border-radius: 6px; }
+    .format-audit h3 { margin-top: 0; }
+    .format-audit ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+    .format-audit li { border: 1px solid #d8dee8; background: #fff; border-radius: 5px; padding: 8px; font-size: .9rem; }
+    .format-audit span { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+    .format-audit .present span { background: #dbece8; color: #126458; }
+    .format-audit .missing span { background: #f4e3cb; color: #8a4604; }
+    article h2 { font-size: 1.35rem; }
+    article h3 { font-size: 1.15rem; }
+    article h4, article h5 { font-size: 1rem; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    blockquote { margin: 1rem 0; padding: .45rem 1rem; border-left: 3px solid #1d8093; background: #f4f8fb; color: #435467; }
+    table { border-collapse: collapse; width: 100%; min-width: 32rem; font-size: .94rem; }
+    th, td { border: 1px solid #d8dee8; padding: .55rem .7rem; text-align: left; vertical-align: top; }
+    th { background: #edf4f9; }
+    .mermaid { background: #fff; color: #18212f; border: 1px solid #d8dee8; }
+    footer { margin-top: 32px; color: #52606d; font-size: .9rem; }
+    @media (max-width: 640px) { main { padding: 16px 12px 36px; } h1 { font-size: 1.55rem; } summary { align-items: flex-start; } .lesson-body { padding: 2px 14px 18px; } .format-audit ul { grid-template-columns: 1fr; } }
+  </style><style>.answer-panel{margin:22px 0;padding:18px;border:1px solid #9ab8d8;border-left:5px solid #1763a3;border-radius:8px;background:#f2f7fc}.answer-panel h3{margin-top:0}.answer-submit,.answer-view{display:inline-block;padding:10px 14px;margin:4px 8px 4px 0;border-radius:6px;background:#12578f;color:#fff;text-decoration:none}.answer-view{background:#e0ecf6;color:#153e61}.answer-panel a:focus-visible{outline:3px solid #db5a2a;outline-offset:3px}.answer-panel code{overflow-wrap:anywhere}.answer-list{padding:0;list-style:none}.answer-list li{margin:12px 0;padding:16px;background:#fff;border:1px solid #d8dee8;border-radius:6px}body{font-family:system-ui,'Microsoft YaHei',sans-serif;line-height:1.75;color:#18212f;background:#f6f8fb}main{max-width:1180px;margin:auto;padding:24px}a{overflow-wrap:anywhere}</style></head><body><main><nav><a href="../index.html#week-18-saturday">课程档案</a> · <a href="../architecture/index.html">项目架构实践</a></nav><article><h1>Week 18 — 周六巩固：双链画图、独立取证与恢复验证</h1>
+<p>学习日期：2026-11-14，星期六，Asia/Shanghai；Week 18。建议用时 60 分钟。范围只含本周正式安排的 <a href="day-57.html">Day 57</a>、<a href="day-58.html">Day 58</a>、<a href="day-59.html">Day 59</a>、<a href="day-60.html">Day 60</a>；<a href="week-18-friday.html">周五复盘</a>用于交卷索引。今天不新增普通 Day，不提前讲未来专题。完整扫描全部状态的答卷 Issue 与评论后，未发现授权学习者的新答卷或补交；个人薄弱点与 Day34—60 的掌握仍待真实作答评审。新题不附参考答案、示范作答或预设根因，个人反思请由你本人填写。</p>
+<h2>1. 本周知识地图与官方边界</h2>
+<table>
+<thead>
+<tr>
+<th>已安排单元</th>
+<th>本次要练的动作</th>
+<th>交卷核验</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Day 57 跨域评审</td>
+<td>把局部完成、业务完成与有权决议分开</td>
+<td>决议、finding、基线和重开条件可追踪</td>
+</tr>
+<tr>
+<td>Day 58 域控制器方案</td>
+<td>用需求、职责、部署、六流与接口合同画系统</td>
+<td>每条跨域边有权威源和验收证据</td>
+</tr>
+<tr>
+<td>Day 59 STR 黑屏分析</td>
+<td>判运行周期，分四层显示证据，找最早可证实断点</td>
+<td>不用截图或 ready 代替目标屏可见</td>
+</tr>
+<tr>
+<td>Day 60 恢复方案评审</td>
+<td>比较故障域、代际隔离、未知终态和 A/B 门槛</td>
+<td>正常、异常、恢复和相邻业务均能验证</td>
+</tr>
+</tbody></table>
+<pre class="mermaid">flowchart LR
+  N[现象与版本] --&gt; R[运行周期和真实拓扑]
+  R --&gt; L[两条业务链与六流]
+  L --&gt; E[原始证据及代际关联]
+  E --&gt; B[各链最后正常点和首个异常观测]
+  B --&gt; H[竞争假设与区分试验]
+  H --&gt; A[恢复方案和硬门槛]
+  A --&gt; V[端点结果与回归验证]
+  V --&gt; D[评审决议及受控基线]</pre>
+<p>2026-11-14 核验的通用资料：<a href="https://source.android.com/docs/automotive/power/power">AAOS 电源管理</a>用于核对电源状态协同，<a href="https://source.android.com/docs/automotive/vhal/vhal-interface">AOSP VHAL 接口</a>用于核对属性订阅与响应，<a href="https://source.android.com/docs/core/graphics/architecture">AOSP 图形架构</a>及<a href="https://source.android.com/docs/core/graphics/sync">同步框架</a>用于核对 buffer、合成和 fence，<a href="https://docs.kernel.org/driver-api/pm/devices.html">Linux 设备电源管理</a>用于核对 suspend/resume 回调，<a href="https://docs.oasis-open.org/virtio/virtio/v1.3/virtio-v1.3.html">OASIS Virtio 1.3</a>用于核对虚拟设备重建边界，<a href="https://www.nasa.gov/reference/6-3-interface-management/">NASA 接口管理</a>与<a href="https://www.nasa.gov/reference/5-3-product-verification/">产品验证</a>用于核对接口基线及客观验证。OASIS 1.3 链接为委员会草案；上述通用资料均不证明本车型的 SoC、协议、屏映射、阈值或具体职责。知识库第 02、11、14、20、23 章及<a href="https://qiantao18817568425-art.github.io/Cockpit_Knowledge_Galaxy/">知识银河</a>提供已沉淀方法；练习结论不当作平台事实。</p>
+<h2>2. 一小时独立练习</h2>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>任务</th>
+<th>产物</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0—10 分钟</td>
+<td>闭卷回答四题</td>
+<td>完成语义、代际与证据短答</td>
+</tr>
+<tr>
+<td>10—30 分钟</td>
+<td>画双业务链、六流图和恢复状态图</td>
+<td>一张域图、一张状态图、三条接口合同</td>
+</tr>
+<tr>
+<td>30—50 分钟</td>
+<td>分析下面的构造记录并设计区分试验</td>
+<td>故障分析、竞争假设、证据账本</td>
+</tr>
+<tr>
+<td>50—60 分钟</td>
+<td>整理最小验证矩阵与本人反思</td>
+<td>可复用评审卡、待补证据清单</td>
+</tr>
+</tbody></table>
+<p><strong>四题回顾，先独立作答：</strong></p>
+<ol>
+<li>ACK、服务 ready、当前代状态读回和物理屏可见分别能证明到哪一跳？怎样定义本场景的业务完成？</li>
+<li>对一次疑似 STR 事件，如何区分进入失败、真实驻留后唤醒、Guest 局部重建和整机复位？至少需要哪几种连续性字段？</li>
+<li>原始墙钟误差区间重叠时，你如何用 boot/VM/process/device generation、requestId、source sequence 与域内单调顺序建立偏序？</li>
+<li>rebind 或重启后恢复，能说明什么、不能说明什么？关闭 finding 还需要哪类原始工件和谁的决议？</li>
+</ol>
+<h3>画图任务</h3>
+<p>请自行画两条主链：<strong>显示可见性</strong>与<strong>车门状态新鲜度</strong>。把 MCU/车身状态源、Yocto Host、Hypervisor、Android Guest、显示控制器/物理屏逐一写在实际部署位置，TBox 是否参与须按现车核实。分别用不同线型标注控制、数据、状态、电源、资源和证据流；不要把同名服务在线当作目标 topic 新鲜。显示链至少覆盖内容源、合成/scanout、物理链路/面板、屏电/背光四层。状态链至少覆盖源 sequence、网关/订阅、Guest 消费、HMI 当前值与权威读回。</p>
+<p>每条跨域边写输入、前置状态、输出、ACK/业务完成语义、schema/version、事务/帧 ID、generation、时间基准及误差、deadline、取消/超时、重复/迟到消息、局部复位后的重取和日志观测点。用实线标已有证据，虚线标待确认。另画恢复状态图，自己确定 unknown、旧代拒绝、权威重取、有界重试、降级及重新验收的进入和退出条件。图中任何车型参数或屏/信号 ID 未被资料核实均写“待项目确认”。</p>
+<h2>3. 综合案例：两条链在同一唤醒窗口偏离</h2>
+<p>以下 E1—E9 全是<strong>教学构造的待分析记录</strong>，不是实车日志；字母按资料收集顺序排列，不能直接当跨域时间顺序。某次从低功耗状态返回后，用户说中控屏延迟出现画面，画面上的车门提示仍为旧值。之后一次局部服务重建，画面与车门提示均看似正常。车型/SoC/build、物理屏与 displayId 映射、是否真正进入 STR、车门权威源及业务时限均待项目确认。</p>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>待分析记录</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E1</td>
+<td>用户视频记录黑屏、亮屏、提示值变化三个画面；视频设备时间尚未与域日志校准。</td>
+</tr>
+<tr>
+<td>E2</td>
+<td>Host 留有 suspend entry 与 resume 文本，但没有该 attempt 的 platform enter、稳定驻留区间或 abort reason。</td>
+</tr>
+<tr>
+<td>E3</td>
+<td>MCU 侧记录一次门状态源值变化；原始帧、source sequence、字段字典和与 Host 的时间锚仍未附。</td>
+</tr>
+<tr>
+<td>E4</td>
+<td>跨域通道有持续心跳；目标门状态 topic 的 send、receive、callback 和消费四个节点只提供其中两处截图，缺统一 request/sequence。</td>
+</tr>
+<tr>
+<td>E5</td>
+<td>Guest 报告 HMI 服务 ready；一次逻辑截图含当前页面，截图与用户视频是否同一代际、同一物理屏未知。</td>
+</tr>
+<tr>
+<td>E6</td>
+<td>Host 有一条目标输出 present 记录，但未导出 frameId、fence、connector/物理屏映射及屏端读回。</td>
+</tr>
+<tr>
+<td>E7</td>
+<td>某局部服务出现两次不同 PID；缺旧进程回调是否被新进程接收的审计，以及 bootId/VM/device generation 全量索引。</td>
+</tr>
+<tr>
+<td>E8</td>
+<td>现场执行局部 rebind 后症状消失；动作前的采集 drop counter 增长，早期日志轮转范围未核对。</td>
+</tr>
+<tr>
+<td>E9</td>
+<td>正常样本来自另一构建版本；它的图像、状态链及接口配置是否可作对照尚未确认。</td>
+</tr>
+</tbody></table>
+<p>**故障分析题：**独立完成一份从现象到最小验证的分析。先列材料清单、版本、时间基准、运行周期及缺口；再按两条链分别标最后已证实正常交接、下一个预期输出、首个有直接证据的异常。把 E1—E9 分成直接、强相关、背景、反证、缺失或无法关联，并说明每条证据最大解释范围。若目前只能定位到“上游输出与下游消费之间”，就如实保留该边界；不可把未观测写成未发生。对每条链列至少两个互相竞争的假设，再提出一个“共享触发”和“独立失效”之间的区分试验；每个假设要写能否定它的观察。明确此前触发、直接失效、加剧因素和重建后的清理，证据不够时不要填唯一根因或最终责任人。</p>
+<p>**架构评审题：**基于 Day58 的六流与 Day60 的接口合同，提出两种可比较的恢复方案。你自己确定事务权威、复位权限、旧代隔离、权威快照、超时后的未知终态、幂等/补偿、失败降级及可回滚边界；先列安全与业务硬门槛，再比较资源/时延/复杂度与残余风险。画一张当前代请求到端点读回的 Mermaid 时序图，分别标 ACK、accepted、applied、权威读回与用户可见结果。两方案都需覆盖旧消息、重复消息、局部复位与跨版本；没有实测参数则写 TBD 和验证办法，不给虚构评分。</p>
+<p>**证据链训练：**对四个交接分别填“上游输出—下游输入—权威状态—关联键—原始工件—可证结论—未证部分”：①睡眠/唤醒权威到 Host，②门状态源到 Guest/HMI，③图形 producer 到目标物理屏，④局部重建到当前业务结果。每段至少写一个可反证观察。完成后给 TPM 协查表，区分首轮牵头、触发侧供证、直接修复候选、接口/恢复策略、独立验证和有权批准者；未知姓名及期限写待确认。</p>
+<h2>4. 可执行验证与交卷</h2>
+<p>请选<strong>至少六个</strong>场景编写验证矩阵，覆盖正常冷启动、真实 STR、suspend abort、Guest/Host/设备局部重建、目标 topic 丢失/乱序、显示四层中任一层异常、旧代回调、超时、采集缺片、混合版本、恢复失败及相邻业务。每行写：版本与前置条件、单变量注入、预期、观测点与关联键、原始工件、实际结果（未执行写“待执行”）、通过/退出判据、责任域。真实设备注入必须另获项目授权，不能从课程文本自动执行。</p>
+<p>提交《Week 18 周六双链证据与恢复评审卡 V1》：</p>
+<ol>
+<li>四题短答、双链六流图、恢复状态图、三条关键接口合同。</li>
+<li>E1—E9 证据账本、双链最早可证实断点、竞争假设与区分试验。</li>
+<li>A/B 恢复方案、时序图、硬门槛、至少六行验证矩阵和 TPM 协查表。</li>
+<li>与周五《Week 18 综合评审包》或 Day58—60 正式交付的版本索引；注明哪些真实证据仍缺。</li>
+<li>本人反思：今天最想把哪一条局部成功误判为业务完成？什么反证会改变你的判断？你先向哪个责任域索取哪份原始工件？</li>
+</ol>
+<p>本课编号 <strong>week-18-saturday</strong>。页面末尾有“上传／提交答卷”和“查看答卷与批改”；也可到<a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html">答卷中心</a>按课程编号提交。没有本人真实答卷之前，所有个人薄弱点只记“待验证”，材料覆盖和自评不代表结业。</p>
+<h2>5. 技能覆盖与独立总结</h2>
+<p>本次从 <strong>F:/座舱日志分析/交付物/T12T诊断技能家族-优化版/</strong> 读取并检查全部 21 项 SKILL.md，并核查相关参考手册。深入使用综合路由、跨域日志、平台架构、显示、电源/STR、跨域消息、虚拟化、MCU 与 TPM 分责；稳定性、启动 HMI 与日志留存为条件分支。触摸、AVM、音频、性能、以太网、无线、USB、DB/KE 缺直接触发材料，5Y/8D 缺经证实根因，均不预设为本案结论。关键证据缺口为现车拓扑与版本、真实运行周期、目标屏/信号源映射、同窗原始工件、时钟锚、业务判据和学习者作答。</p>
+<p>**独立总结：**教学现象涉及唤醒依赖、显示可见性和车态新鲜度，当前 E1—E9 只支持用户观察及若干局部里程碑，不能确认两条链的共同根因；真实车故障的根因置信度未建立。TPM 下一步应先协调系统集成、电源/MCU、Host、Guest/跨域消息、显示及测试域冻结同一构建和运行周期的原始证据，再按各交接的输入、状态、输出收敛首个断点；把触发、直接修复、接口恢复和验证责任分开。向研发或管理层说明时，须将 ACK、ready、present、恢复后的正常与当前用户结果逐项区分，并以异常恢复及相邻业务回归的可追溯工件关闭评审 finding。</p>
+</article><section class="answer-panel" data-course="week-18-saturday" aria-label="Week 18 - 周六巩固：双链画图、独立取证与恢复验证 答卷提交"><h3>提交本课答卷</h3><p>在 GitHub 登录后填写文字，或把图片、PDF、Word 等文件拖入“答卷正文与附件”框；点击 Submit new issue（提交）才算上传成功。答卷和附件将保存在公开的 GitHub 仓库，请只提交可公开的学习材料。</p><p><a class="answer-submit" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues/new?template=answer.yml&amp;title=%5B%E7%AD%94%E5%8D%B7%5D%5Bweek-18-saturday%5D+Week+18+-+%E5%91%A8%E5%85%AD%E5%B7%A9%E5%9B%BA%EF%BC%9A%E5%8F%8C%E9%93%BE%E7%94%BB%E5%9B%BE%E3%80%81%E7%8B%AC%E7%AB%8B%E5%8F%96%E8%AF%81%E4%B8%8E%E6%81%A2%E5%A4%8D%E9%AA%8C%E8%AF%81&amp;lesson=week-18-saturday&amp;course=https%3A%2F%2Fqiantao18817568425-art.github.io%2FArchitecture_Learning-%2F%23week-18-saturday" target="_blank" rel="noopener">上传／提交答卷 ↗</a> <a class="answer-view" href="https://github.com/qiantao18817568425-art/Architecture_Learning-/issues?q=is%3Aissue+in%3Atitle+%22%5B%E7%AD%94%E5%8D%B7%5D%5Bweek-18-saturday%5D%22" target="_blank" rel="noopener">查看答卷与批改 ↗</a> <a href="https://qiantao18817568425-art.github.io/Architecture_Learning-/answers/index.html#week-18-saturday">归档与批改状态</a></p><p>课程编号：<code>week-18-saturday</code>。补交请在同一答卷下评论，以 <strong>[补交]</strong> 开头，并注明题号；也可编辑原答卷。每天 20:00 先检查并批改新答卷，再安排当天任务。</p></section></main><script src="../architecture/vendor/mermaid-10.9.5.min.js"></script><script>mermaid.initialize({startOnLoad:true,theme:'neutral',securityLevel:'strict'});</script></body></html>
