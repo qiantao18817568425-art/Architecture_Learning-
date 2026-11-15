@@ -78,7 +78,7 @@
 
 ## 9. 技能覆盖与证据缺口
 
-本次从F盘优化版目录检查全部21项T12T技能。深入：cockpit-diagnosis、log-analysis、platform-architecture、display-black-freeze、stability-crash-reset、virtualization-tee、cross-domain-msg、boot-hmi、tpm-triage。条件适用：power-sleep-str、performance-jank、db-ke-forensics、mcu、log-storm。其余音频、触摸、AVM、网络、无线、USB与5Y/8D在当前题目中不适用或材料不足。
+本次参考通用座舱诊断手册，检查全部21项技能。深入：cockpit-diagnosis、log-analysis、platform-architecture、display-black-freeze、stability-crash-reset、virtualization-tee、cross-domain-msg、boot-hmi、tpm-triage。条件适用：power-sleep-str、performance-jank、db-ke-forensics、mcu、log-storm。其余音频、触摸、AVM、网络、无线、USB与5Y/8D在当前题目中不适用或材料不足。
 
 关键缺口：本车车型/SoC/软硬件版本、display与物理屏映射、VM/device/session generation、VMM reason字典、共享设备拓扑和实机证据。
 

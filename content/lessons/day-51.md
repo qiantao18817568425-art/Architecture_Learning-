@@ -234,7 +234,7 @@ Verification 回答“是否符合技术要求”，Validation 回答“在预�
 
 ## 附录：21 项 T12T 技能覆盖检查
 
-技能来源：F:/座舱日志分析/交付物/T12T诊断技能家族-优化版/。本次先读取 `t12t-cockpit-diagnosis`、`t12t-log-analysis`、`t12t-platform-architecture`，再逐项读取其余 18 个 `SKILL.md`，已完成全部 21 项覆盖检查。
+技能来源：通用座舱诊断手册。本次先读取 `t12t-cockpit-diagnosis`、`t12t-log-analysis`、`t12t-platform-architecture`，再逐项读取其余 18 个 `SKILL.md`，已完成全部 21 项覆盖检查。
 
 | 技能 | 本次适用性 |
 | --- | --- |
