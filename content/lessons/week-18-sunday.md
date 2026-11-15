@@ -87,6 +87,6 @@ stateDiagram-v2
 
 2026-11-15 核验的官方资料：[AAOS 电源管理](https://source.android.com/docs/automotive/power/power)说明汽车电源状态协同与集成责任；[AIDL VHAL 接口](https://source.android.com/docs/automotive/vhal/vhal-interface)提供车辆属性操作与订阅的通用语义；[AOSP 图形架构](https://source.android.com/docs/core/graphics/architecture)与[同步框架](https://source.android.com/docs/core/graphics/sync)解释 buffer 和 fence 交接；[Linux 设备电源管理](https://docs.kernel.org/driver-api/pm/devices.html)解释设备 suspend/resume 回调；[OASIS Virtio 1.3 委员会草案](https://docs.oasis-open.org/virtio/virtio/v1.3/virtio-v1.3.html)提供虚拟设备的一般边界；[NASA 接口管理](https://www.nasa.gov/reference/6-3-interface-management/)和[产品验证](https://www.nasa.gov/reference/5-3-product-verification/)支持接口基线与客观验证。它们均不证明本车采用某协议、拓扑、阈值或器件配置。
 
-本次从 **F:/座舱日志分析/交付物/T12T诊断技能家族-优化版/** 读取并检查了全部 21 项 SKILL.md，按本案材料逐项判断适用性。深入使用综合路由、跨域日志、平台架构、显示、STR 电源、跨域消息、虚拟化、MCU 和 TPM 首轮分责的相关手册；稳定性、启动 HMI 与日志留存属于有证据时的条件分支。触摸、AVM、音频、性能、以太网、无线、USB、DB/KE 当前没有直接材料；5Y/8D 需要真实根因和验证后再形成正式闭环。当前缺本车版本和拓扑、同窗原始日志、屏/源映射、跨域时钟锚、接口期限及学习者作答。
+本次从 **通用座舱诊断手册** 读取并检查了全部 21 项 SKILL.md，按本案材料逐项判断适用性。深入使用综合路由、跨域日志、平台架构、显示、STR 电源、跨域消息、虚拟化、MCU 和 TPM 首轮分责的相关手册；稳定性、启动 HMI 与日志留存属于有证据时的条件分支。触摸、AVM、音频、性能、以太网、无线、USB、DB/KE 当前没有直接材料；5Y/8D 需要真实根因和验证后再形成正式闭环。当前缺本车版本和拓扑、同窗原始日志、屏/源映射、跨域时钟锚、接口期限及学习者作答。
 
 **独立总结：**本课讨论的教学现象跨电源连续性、显示可见性和车态新鲜度。给定记录只证明用户观察与若干局部里程碑，无法确认真实车辆的最早断点或共同根因，根因置信度尚未建立。TPM 应先协调系统集成、电源/MCU、Host、Guest/消息、显示和测试域冻结同一构建、同一运行周期的原始工件；逐接口核对输入、状态、输出，再组织竞争假设的区分实验。向研发或管理层说明时，应把触发、直接失效、恢复机制和用户结果分开，按 A/B 门槛、异常回归和有权决议关闭 finding，而不能用 ACK、ready、一次截屏或 rebind 后正常替代业务闭环。
